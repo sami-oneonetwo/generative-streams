@@ -1,0 +1,234 @@
+// Keeping the conversation going. After someone orders, says hello, helps out,
+// hangs a flag or brings the cat, the keeper follows up with one small question
+// for them, remembers he asked, and treats their next line as the answer. The
+// brain reads the open questions and the last few exchanges so its replies
+// carry on from what was said; without the brain he acknowledges from a bank.
+import { fill, pick, type Catalogue } from '../shared/catalogue.js';
+import { between, type Config } from '../shared/config.js';
+import type { Weather } from '../shared/state.js';
+import type { ChatUser, IncomingChat } from './ingest.js';
+import type { Regulars } from './regulars.js';
+
+export type Trigger = 'ordered' | 'greeted' | 'helped' | 'flag' | 'cat';
+
+export interface OpenQuestion {
+  user: ChatUser;
+  text: string;
+  askedAt: number;
+  /** What prompted it; `room` is a question to the whole street that anyone answered. */
+  trigger: Trigger | 'room';
+}
+
+interface RoomQuestion {
+  text: string;
+  askedAt: number;
+  answeredBy?: string;
+  answeredAt?: number;
+}
+
+interface Pending {
+  at: number;
+  user: ChatUser;
+  trigger: Trigger;
+  vars: Record<string, string>;
+  /** How long they had been away when this was triggered, for "been a while" questions. */
+  awayMs: number;
+}
+
+interface Line {
+  at: number;
+  from: 'keeper' | string;
+  text: string;
+}
+
+export interface ConversationDeps {
+  cfg: Config;
+  cat: Catalogue;
+  regulars: Regulars;
+  say: (text: string) => void;
+  now?: () => number;
+  rnd?: () => number;
+}
+
+const RECENT_KEEP = 10;
+const THREE_DAYS = 3 * 86_400_000;
+
+export class Conversation {
+  private readonly open = new Map<string, OpenQuestion>();
+  private readonly lastAsked = new Map<string, number>();
+  private readonly pending: Pending[] = [];
+  private readonly recent: Line[] = [];
+  private readonly names = new Map<string, string>();
+  private lastQuestionAt = 0;
+  private room: RoomQuestion | null = null;
+  private lastRoomAt = 0;
+  private readonly now: () => number;
+  private readonly rnd: () => number;
+
+  constructor(private readonly deps: ConversationDeps) {
+    this.now = deps.now ?? Date.now;
+    this.rnd = deps.rnd ?? Math.random;
+  }
+
+  /** Something happened for this viewer; maybe ask them something in a moment. */
+  followUp(trigger: Trigger, user: ChatUser, vars: Record<string, string> = {}, awayMs = 0): boolean {
+    const q = this.deps.cfg.questions;
+    const now = this.now();
+    if (!q.enabled) return false;
+    if (this.open.has(user.id) || this.pending.some((p) => p.user.id === user.id)) return false;
+    if (now - (this.lastAsked.get(user.id) ?? 0) < q.perUserCooldownMs) return false;
+    if (this.rnd() >= q.chance) return false;
+    this.pending.push({ at: now + between(q.delayMs, this.rnd), user, trigger, vars, awayMs });
+    return true;
+  }
+
+  /** Fire questions that are due, one at a time and not too close together. */
+  tick(now = this.now()): void {
+    const q = this.deps.cfg.questions;
+    for (const [id, o] of this.open) if (now - o.askedAt > q.answerWindowMs) this.open.delete(id);
+    this.expireRoom(now);
+    if (!this.pending.length) return;
+    if (now - this.lastQuestionAt < q.globalGapMs) return;
+    const idx = this.pending.findIndex((p) => p.at <= now);
+    if (idx < 0) return;
+    const [p] = this.pending.splice(idx, 1);
+    const text = this.compose(p);
+    if (!text) return;
+    this.open.set(p.user.id, { user: p.user, text, askedAt: now, trigger: p.trigger });
+    this.lastAsked.set(p.user.id, now);
+    this.lastQuestionAt = now;
+    this.deps.say(text);
+  }
+
+  private compose(p: Pending): string | undefined {
+    const banks = this.deps.cat.lines.questions ?? ({} as Catalogue['lines']['questions']);
+    const r = this.deps.regulars.get(p.user.id);
+    let bank: string[] | undefined;
+    // sometimes what he knows about them matters more than what just happened
+    if (this.rnd() < 0.45) {
+      if (p.awayMs > THREE_DAYS && banks.back?.length) bank = banks.back;
+      else if (r && r.days <= 1 && r.bowls <= 1 && banks.firstNight?.length) bank = banks.firstNight;
+      else if (r && (r.bowls >= 3 || r.days >= 4) && banks.regular?.length) bank = banks.regular;
+    }
+    bank ??= banks[p.trigger];
+    const t = pick(bank ?? [], this.rnd);
+    return t ? fill(t, { user: p.user.name, ...p.vars }) : undefined;
+  }
+
+  /** Is there a question waiting on this person? */
+  openFor(userId: string): OpenQuestion | undefined {
+    return this.open.get(userId);
+  }
+
+  /** The question to the street that is still waiting for anyone to answer. */
+  get roomOpen(): RoomQuestion | null {
+    return this.room && !this.room.answeredBy ? this.room : null;
+  }
+
+  /**
+   * Nobody has said anything for a while: ask the street something anyone can
+   * answer. Not while he is asleep, not into an empty room, and never close on
+   * the heels of another question.
+   */
+  roomTick(now: number, quietForMs: number, weather: Weather, asleep: boolean, viewers: number | null): boolean {
+    const q = this.deps.cfg.questions;
+    this.expireRoom(now);
+    if (!q.enabled || asleep || viewers === 0) return false;
+    if (this.room && !this.room.answeredBy) return false;
+    if (quietForMs < q.roomAfterMs) return false;
+    if (now - this.lastRoomAt < q.roomEveryMs) return false;
+    if (now - this.lastQuestionAt < q.globalGapMs) return false;
+    const banks = this.deps.cat.lines;
+    const byWeather = banks.roomWeather?.[weather] ?? [];
+    const bank = byWeather.length && this.rnd() < 0.4 ? byWeather : banks.roomQuestions ?? [];
+    const text = pick(bank, this.rnd);
+    if (!text) return false;
+    this.room = { text, askedAt: now };
+    this.lastRoomAt = now;
+    this.lastQuestionAt = now;
+    this.deps.say(text);
+    return true;
+  }
+
+  /**
+   * A plain line from a viewer. Returns the question it answers, if any, and
+   * closes it. Answering earns a point: a conversation is worth having.
+   */
+  heard(msg: IncomingChat): OpenQuestion | undefined {
+    this.names.set(msg.user.name.toLowerCase(), msg.user.id);
+    this.note(msg.user.name, msg.content);
+    const q = this.open.get(msg.user.id);
+    if (q) {
+      this.open.delete(msg.user.id);
+      this.deps.regulars.credit(msg.user.id, 1);
+      return q;
+    }
+    // anyone may answer the question to the street; the first to do so closes it
+    if (this.room && !this.room.answeredBy) {
+      this.room.answeredBy = msg.user.name;
+      this.room.answeredAt = this.now();
+      this.deps.regulars.credit(msg.user.id, 1);
+      return { user: msg.user, text: this.room.text, askedAt: this.room.askedAt, trigger: 'room' };
+    }
+    return undefined;
+  }
+
+  /** What he says to an answer when there is no brain to do better. */
+  ack(user: ChatUser): string | undefined {
+    const t = pick(this.deps.cat.lines.ack ?? [], this.rnd);
+    return t ? fill(t, { user: user.name }) : undefined;
+  }
+
+  /** Every line he says goes in the log, so the brain has the thread. */
+  noteKeeperLine(text: string): void {
+    this.note('keeper', text);
+  }
+
+  private note(from: string, text: string): void {
+    this.recent.push({ at: this.now(), from, text: text.replace(/\s+/g, ' ').slice(0, 120) });
+    if (this.recent.length > RECENT_KEEP) this.recent.splice(0, this.recent.length - RECENT_KEEP);
+  }
+
+  /** The thread as the brain should see it: open questions for these people, then the last exchanges. */
+  context(batch: IncomingChat[]): string | undefined {
+    const now = this.now();
+    const ids = new Set(batch.map((m) => m.user.id));
+    const blocks: string[] = [];
+    const asked = [...this.open.values()].filter((q) => ids.has(q.user.id));
+    if (asked.length) blocks.push(`You asked, and they are answering now:\n${asked.map((q) => `- ${q.user.name}, ${Math.round((now - q.askedAt) / 1000)}s ago: "${q.text}"`).join('\n')}`);
+    if (this.room && now - this.room.askedAt < this.deps.cfg.questions.roomWindowMs + 2 * 60_000) {
+      const who = this.room.answeredBy ? `${this.room.answeredBy} answered first; others may be answering too. Reply to them, and pull others in if it fits.` : 'Whoever speaks next is probably answering it.';
+      blocks.push(`You asked the whole street ${Math.round((now - this.room.askedAt) / 1000)}s ago: "${this.room.text}". ${who}`);
+    }
+    const recent = this.recent.filter((l) => now - l.at < 10 * 60_000).slice(-6);
+    if (recent.length) blocks.push(`Last exchanges:\n${recent.map((l) => `- ${l.from === 'keeper' ? 'he said' : l.from}: ${l.text}`).join('\n')}`);
+    const cooling = batch.filter((m) => now - (this.lastAsked.get(m.user.id) ?? 0) < this.deps.cfg.questions.perUserCooldownMs && !this.open.has(m.user.id)).map((m) => m.user.name);
+    if (cooling.length) blocks.push(`Asked recently, so no new question for: ${[...new Set(cooling)].join(', ')}.`);
+    return blocks.length ? blocks.join('\n\n') : undefined;
+  }
+
+  /** The brain asked someone something itself; remember it so the answer is recognised. */
+  brainAsked(user: ChatUser, text: string): void {
+    const now = this.now();
+    this.open.set(user.id, { user, text, askedAt: now, trigger: 'greeted' });
+    this.lastAsked.set(user.id, now);
+    this.lastQuestionAt = now;
+  }
+
+  /** An unanswered street question lapses after its window; an answered one is kept a little for the brain's context. */
+  private expireRoom(now: number): void {
+    if (!this.room) return;
+    const q = this.deps.cfg.questions;
+    if (!this.room.answeredBy && now - this.room.askedAt > q.roomWindowMs) this.room = null;
+    else if (this.room.answeredBy && now - (this.room.answeredAt ?? 0) > 2 * 60_000) this.room = null;
+  }
+
+  /** He dozed off and someone spoke: what he says as he comes to. */
+  wake(): string | undefined {
+    return pick(this.deps.cat.lines.wake ?? [], this.rnd);
+  }
+
+  status(): { open: number; pending: number; room: string | null } {
+    return { open: this.open.size, pending: this.pending.length, room: this.roomOpen?.text ?? null };
+  }
+}

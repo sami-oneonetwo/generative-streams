@@ -1,0 +1,12 @@
+name: bunny_ears
+slot: head
+dx: 2
+dy: -4
+tint: white
+aliases: rabbit ears, bunny, rabbit
+tags: hat, animal
+---
+.X.....X.
+.XI...IX.
+.XI...IX.
+.X.....X.

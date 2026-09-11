@@ -1,0 +1,26 @@
+name: balloon
+slot: hand
+dx: 10
+dy: -4
+tint: red
+aliases: red balloon, party balloon
+tags: hand, party
+---
+.XXX.
+XXXXX
+XXXXX
+.XXX.
+..X..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..
+..L..

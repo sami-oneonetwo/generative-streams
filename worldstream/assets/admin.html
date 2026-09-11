@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>worldstream admin</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: #0b0a1e; color: #c9c9e8; }
+  header { display: flex; gap: 16px; align-items: center; padding: 10px 14px; background: #141238; border-bottom: 1px solid #26205e; flex-wrap: wrap; }
+  header b { color: #7cff4f; }
+  main { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 14px; }
+  section { background: #11102a; border: 1px solid #26205e; border-radius: 6px; padding: 10px 12px; }
+  h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #8b5cf6; }
+  h2:not(:first-child) { margin-top: 14px; }
+  .row { margin: 4px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+  .row > span:first-child { color: #6e6e96; margin-right: 6px; min-width: 62px; }
+  button { background: #26205e; color: #f4f4ff; border: 1px solid #3b2d7a; border-radius: 4px; padding: 3px 8px; margin: 1px; cursor: pointer; font: inherit; }
+  button:hover { background: #3b2d7a; }
+  button.warn { border-color: #b0165a; }
+  button.chip { background: #1a1a2e; border-color: #2a2a44; }
+  button.chip.text { border-color: #b0165a; }
+  button.chip.anim { border-style: dashed; }
+  button.chip:hover { background: #26205e; }
+  input[type=text] { background: #07061a; color: #f4f4ff; border: 1px solid #3b2d7a; border-radius: 4px; padding: 4px 6px; font: inherit; width: 62%; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { text-align: left; padding: 2px 6px; border-bottom: 1px solid #1c1b4a; vertical-align: top; }
+  .ok { color: #7cff4f; } .no { color: #ff5fa2; } .q { color: #00e5ff; } .dim { color: #6e6e96; } .amber { color: #ffb347; }
+  #chat { max-height: 48vh; overflow: auto; }
+  .kick { font-size: 12px; }
+  .legend { color: #6e6e96; font-size: 12px; margin-top: 4px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border: 1px solid #2a2a44; border-radius: 2px; vertical-align: middle; margin: 0 3px 0 8px; background: #1a1a2e; }
+  .legend i.text { border-color: #b0165a; } .legend i.anim { border-style: dashed; }
+  pre.help { white-space: pre-wrap; color: #c9c9e8; background: #07061a; padding: 6px 8px; border-radius: 4px; margin: 4px 0 0; }
+</style>
+</head>
+<body>
+<header>
+  <b>worldstream</b>
+  <span id="hud">…</span>
+  <span id="drift"></span>
+  <span id="vitals" class="amber"></span>
+  <span id="nl" class="dim"></span>
+  <span id="kick" class="kick dim"></span>
+</header>
+<main>
+  <section>
+    <h2>Levers</h2>
+    <div class="row"><span>weather</span>
+      <button data-cmd="!weather rain">rain</button><button data-cmd="!weather clear">clear</button><button data-cmd="!weather fog">fog</button><button data-cmd="!weather storm">storm</button><button data-cmd="!weather snow">snow</button>
+    </div>
+    <div class="row"><span>time</span>
+      <button data-cmd="!time night">night</button><button data-cmd="!time dusk">dusk</button><button data-cmd="!time dawn">dawn</button><button data-cmd="!time day">day</button>
+    </div>
+    <div class="row"><span>travel</span><span id="worlds"></span></div>
+    <div class="row"><span>events</span><span id="events"></span></div>
+    <div class="row"><span>drift</span>
+      <button data-action="pause">pause</button><button data-action="resume">resume</button>
+      <span class="dim" style="margin:0 8px">·</span>
+      chatter: <button data-action="mute">mute</button><button data-action="unmute">unmute</button>
+      <span class="dim" style="margin:0 8px">·</span>
+      <button class="warn" data-action="clear" data-confirm="Clear every entity from the scene?">clear scene</button>
+    </div>
+    <div class="row"><span>kick chat</span>
+      <button data-kick-chat="true" title="post the character's lines into Kick chat as the bot">on</button><button data-kick-chat="false">off</button> <span id="kickChat" class="amber"></span>
+    </div>
+    <div class="row"><span>say</span>
+      <input id="say" type="text" placeholder="character says…" maxlength="140" /> <button id="sayBtn">say</button> <button data-action="release" title="let him talk on his own again">release mic</button> <span id="mic" class="amber"></span>
+    </div>
+    <div class="row"><span>command</span>
+      <input id="cmd" type="text" placeholder="!add cat left" /> <button id="cmdBtn">run as broadcaster</button>
+    </div>
+    <div id="cmdOut" class="dim" style="margin-left:70px"></div>
+
+    <div class="row"><span>music</span>
+      <button data-music='{"enabled":true}'>on</button><button data-music='{"enabled":false}'>off</button>
+      <span class="dim" style="margin:0 8px">·</span>
+      <button data-music='{"volume":0.25}'>25%</button><button data-music='{"volume":0.5}'>50%</button><button data-music='{"volume":0.75}'>75%</button><button data-music='{"volume":1}'>100%</button>
+      <span id="musicState" class="dim" style="margin-left:8px"></span>
+    </div>
+    <div class="row"><span>body</span>
+      <button data-vitals='{"food":100,"comfort":100,"rest":100,"spirit":100}'>heal all</button>
+      <button class="warn" data-vitals='{"food":5}'>starve</button>
+      <button class="warn" data-vitals='{"comfort":5}'>chill</button>
+      <button class="warn" data-vitals='{"rest":5}'>exhaust</button>
+      <button class="warn" data-vitals='{"spirit":5}'>sadden</button>
+    </div>
+
+    <h2>Host</h2>
+    <div id="hostStatus" class="dim">…</div>
+    <div class="row"><span>host</span>
+      <button data-action="host_ask">ask now</button><button data-action="host_skip">skip ask</button>
+      <span class="dim" style="margin:0 8px">·</span>
+      <button data-action="host_pause">pause host</button><button data-action="host_resume">resume host</button>
+    </div>
+
+    <h2>Things chat can add here <span id="worldName" class="amber"></span></h2>
+    <div id="things"></div>
+    <div class="legend">click a chip to load <code>!add …</code> into the command box; <i class="text"></i> takes text in quotes <i class="anim"></i> animated. Hover for aliases and layers.</div>
+    <div id="limits" class="legend"></div>
+
+    <h2>Drawn this session <span id="genStatus" class="dim"></span></h2>
+    <div id="gallery" class="row"></div>
+
+    <h2>Chat commands</h2>
+    <pre class="help" id="help"></pre>
+
+    <h2>Entities</h2>
+    <table id="entities"><tbody></tbody></table>
+  </section>
+  <section>
+    <h2>Chat</h2>
+    <div id="chat"><table><tbody></tbody></table></div>
+  </section>
+</main>
+<script>
+  const $ = (s) => document.querySelector(s);
+  const esc = (t) => String(t).replace(/[<>&"]/g, (ch) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[ch]));
+  const fmt = (t) => new Date(t).toLocaleTimeString();
+
+  async function post(body) {
+    const r = await fetch('/admin/api/action', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    return r.json();
+  }
+  async function runCommand(command) {
+    const out = await post({ action: 'command', command });
+    $('#cmdOut').textContent = out.reply ? `${out.applied ? '✓' : '·'} ${out.reply}` : JSON.stringify(out);
+    refresh();
+  }
+
+  document.body.addEventListener('click', async (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.confirm && !confirm(b.dataset.confirm)) return;
+    if (b.dataset.fill) { $('#cmd').value = b.dataset.fill; $('#cmd').focus(); return; }
+    if (b.dataset.vitals) { await post({ action: 'vitals', patch: JSON.parse(b.dataset.vitals) }); refresh(); return; }
+    if (b.dataset.music) { await post({ action: 'music', ...JSON.parse(b.dataset.music) }); refresh(); return; }
+    if (b.dataset.kickChat) { await post({ action: 'kick_chat', enabled: b.dataset.kickChat === 'true' }); refresh(); return; }
+    if (b.dataset.deleteSprite) { if (!confirm(`Delete ${b.dataset.deleteSprite} and everything placed with it?`)) return; await post({ action: 'delete_sprite', name: b.dataset.deleteSprite }); lastGallery = ''; refresh(); return; }
+    if (b.dataset.cmd) return runCommand(b.dataset.cmd);
+    if (b.dataset.action) { await post({ action: b.dataset.action, id: b.dataset.id }); refresh(); }
+  });
+  $('#sayBtn').onclick = async () => { await post({ action: 'say', text: $('#say').value }); $('#say').value = ''; refresh(); };
+  $('#cmdBtn').onclick = () => runCommand($('#cmd').value);
+  $('#cmd').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#cmdBtn').click(); });
+  $('#say').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#sayBtn').click(); });
+
+  // Built once per world: the world buttons, this world's events, and what chat can add.
+  let builtFor = null;
+  let lastGallery = '';
+  function drawGallery(snap) {
+    const g = snap.generate;
+    $('#genStatus').textContent = g ? `${g.enabled ? 'on' : 'off'} · ${g.callsThisHour}/${g.budget} this hour${g.queued ? ` · ${g.queued} queued` : ''}${g.busy ? ' · drawing' : ''}` : '';
+    const key = JSON.stringify((snap.generated || []).map((s) => s.name));
+    if (key === lastGallery) return;
+    lastGallery = key;
+    const box = $('#gallery');
+    box.innerHTML = snap.generated && snap.generated.length ? '' : '<span class="dim">nothing yet. when a viewer asks for something the world lacks, he draws it and it appears here.</span>';
+    for (const s of snap.generated || []) {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'display:inline-flex;flex-direction:column;align-items:center;gap:4px;margin:4px 8px;';
+      const c = document.createElement('canvas');
+      const scale = Math.max(2, Math.min(4, Math.floor(96 / Math.max(s.w, s.h))));
+      c.width = s.w * scale; c.height = s.h * scale;
+      const ctx = c.getContext('2d');
+      s.rows.forEach((row, y) => { for (let x = 0; x < row.length; x++) { const hex = snap.keys[row[x]]; if (hex) { ctx.fillStyle = hex; ctx.fillRect(x * scale, y * scale, scale, scale); } } });
+      const label = document.createElement('span');
+      label.textContent = `${s.name.replace(/_/g, ' ')} ${s.w}x${s.h}`;
+      label.className = 'dim';
+      label.title = s.aliases.join(', ');
+      const del = document.createElement('button');
+      del.textContent = 'delete';
+      del.className = 'warn';
+      del.dataset.deleteSprite = s.name;
+      wrap.append(c, label, del);
+      box.append(wrap);
+    }
+  }
+  function buildWorldPanels(snap) {
+    const world = snap.state.world;
+    if (builtFor === world) return;
+    builtFor = world;
+    $('#worlds').innerHTML = snap.worlds.map((w) => `<button data-cmd="!world ${esc(w)}" ${w === world ? 'disabled' : ''}>${esc(w)}</button>`).join('');
+    $('#events').innerHTML = snap.ambient.map((a) => `<button data-cmd="!event ${esc(a.name)}" title="${esc(a.sprite)}${a.departure ? ' · departure ride' : ''}">${esc(a.name.replace(/_/g, ' '))}</button>`).join('') || '<span class="dim">none</span>';
+    $('#worldName').textContent = `(${world})`;
+    const chip = (s) => `<button class="chip${s.acceptsText ? ' text' : ''}${s.animated ? ' anim' : ''}" data-fill="!add ${esc(s.name.replace(/_/g, ' '))}${s.acceptsText ? ' &quot;TEXT&quot;' : ''}" title="${esc([s.layers.join('/'), ...(s.aliases.length ? ['aliases: ' + s.aliases.join(', ')] : [])].join(' · '))}">${esc(s.name.replace(/_/g, ' '))}</button>`;
+    const text = snap.sprites.filter((s) => s.acceptsText);
+    const rest = snap.sprites.filter((s) => !s.acceptsText);
+    const buildChip = (b) => `<button class="chip" data-fill="!build ${esc(b.name.replace(/_/g, ' '))}" title="${esc([b.pieces.join(', '), ...(b.aliases.length ? ['aliases: ' + b.aliases.join(', ')] : [])].join(' · '))}">${esc(b.name.replace(/_/g, ' '))}</button>`;
+    $('#things').innerHTML =
+      (snap.builds && snap.builds.length ? `<div class="row"><span>builds</span>${snap.builds.map(buildChip).join('')}</div>` : '') +
+      (text.length ? `<div class="row"><span>with text</span>${text.map(chip).join('')}</div>` : '') +
+      `<div class="row"><span>things</span>${rest.map(chip).join('')}</div>` +
+      (snap.wardrobe
+        ? snap.wardrobe.items.length
+          ? ['head', 'face', 'back', 'hand'].map((slot) => `<div class="row"><span>wear · ${slot}</span>${snap.wardrobe.items.filter((i) => i.slot === slot).map((i) => `<button class="chip${i.tint ? ' anim' : ''}" data-fill="!wear ${esc(i.name.replace(/_/g, ' '))}" title="${esc([i.aliases.join(', '), i.tint ? 'tintable, e.g. !wear blue ' + i.name.replace(/_/g, ' ') : ''].filter(Boolean).join(' · '))}">${esc(i.name.replace(/_/g, ' '))}</button>`).join('')}</div>`).join('') +
+            `<div class="row"><span>wear · colour</span>${snap.wardrobe.slots.map((s) => `<button class="chip" data-fill="!wear ${esc(snap.wardrobe.colours[Math.floor(Math.random() * snap.wardrobe.colours.length)])} ${esc(s)}" title="${esc('colours: ' + snap.wardrobe.colours.join(', '))}">${esc(s)}</button>`).join('')}<button class="chip" data-fill="!wear nothing" title="back to his usual clothes">usual clothes</button></div>`
+          : ''
+        : '');
+    const l = snap.limits;
+    $('#limits').textContent = `limits: ${l.maxEntities} entities · one add per viewer every ${Math.round(l.addCooldownMs / 1000)}s (moderators exempt) · things fade ${Math.round(l.entityTtlMs / 60000)} min after last touch · sign text ${l.signMaxChars} chars · travel vote needs ${l.voters}`;
+    $('#help').textContent = snap.commands + '\n!move <thing> left|right · !event <name> (moderators) · !help';
+  }
+
+  async function refresh() {
+    const snap = await (await fetch('/admin/api/snapshot')).json();
+    const s = snap.state;
+    const hh = Math.floor(s.time), mm = Math.floor((s.time - hh) * 60);
+    $('#hud').textContent = `${s.world} · ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')} · ${s.weather} · ${s.entities.length} entities · v${s.version} · ${snap.character} at ${s.character.x} (${s.character.mode})${s.transition ? ` · travelling to ${s.transition.to}` : ''}${s.vote ? ` · vote: ${s.vote.to} ${s.vote.count}/${s.vote.needed}` : ''}`;
+    const vt = s.character.vitals; if (vt) $('#vitals').textContent = `food ${Math.round(vt.food)} · ${(snap.comfort||'comfort')} ${Math.round(vt.comfort)} · rest ${Math.round(vt.rest)} · spirit ${Math.round(vt.spirit)} · day ${vt.days} · deaths ${vt.deaths}${vt.collapsed ? ` · COLLAPSED (${vt.collapsed.need})` : ''}${s.character.sleeping ? ' · sleeping' : ''}${vt.blackout ? ' · BLACKOUT' : ''}${s.character.errand ? ` · errand: ${s.character.errand.item} → ${s.character.errand.target} (${s.character.errand.stage})` : ''}${s.character.inventory && s.character.inventory.length ? ` · bag: ${s.character.inventory.join(', ')}` : ''} · wearing: ${snap.outfit}`;
+    $('#drift').textContent = (snap.drift.paused ? 'drift PAUSED' : 'drift running') + (snap.drift.muted ? ' · chatter MUTED' : '');
+    $('#drift').className = snap.drift.paused || snap.drift.muted ? 'no' : 'ok';
+    $('#nl').textContent = `nl: ${snap.nl.mode}${snap.nl.mode !== 'off' ? ` (${snap.nl.model}, ${snap.nl.pending} queued)` : ''}`;
+    const k = snap.kick;
+    $('#kick').textContent = !k ? 'kick: off' : !k.configured ? 'kick: not configured' : !k.connected ? 'kick: not connected → /kick/login' : `kick: ${k.user ? k.user.name : 'connected'} · ${k.subscriptions.join(', ') || 'no subscriptions'}${k.lastError ? ' · ERROR ' + k.lastError : ''}`;
+    $('#kick').className = k && k.connected && !k.lastError ? 'kick ok' : 'kick dim';
+    $('#kickChat').textContent = !k ? 'no kick' : k.botReplies ? (k.connected ? 'posting as bot' : 'on, but not connected') : 'silent';
+    $('#kickChat').className = k && k.botReplies ? 'ok' : 'dim';
+    buildWorldPanels(snap);
+    drawGallery(snap);
+    $('#mic').textContent = snap.voiceHeldForS > 0 ? `you have the mic · ${snap.voiceHeldForS}s` : '';
+    const mu = s.music ?? { enabled: true, volume: 0.6 };
+    $('#musicState').textContent = `${mu.enabled ? 'playing' : 'off'} · ${Math.round(mu.volume * 100)}%`;
+    const h = snap.host;
+    $('#hostStatus').innerHTML = !h ? 'host off' : (h.paused ? '<span class="no">host PAUSED</span>' : '<span class="ok">host running</span>') + ` · <b>${esc(h.mode)}</b> mode${h.building ? ' · <span class="amber">building</span>' : ''}` + ` · ${h.ask ? `asking <b>${esc(h.ask.hook)}</b>: “${esc(h.ask.text)}” (${h.ask.secondsLeft}s, ${h.ask.answers} answers)` : `next ask in ${h.nextOutreachInS}s`} · quiet ${h.quietForS}s · model ${h.modelCallsThisHour}/${h.modelBudget} this hour · ${h.viewersKnown} viewers known${h.arc ? ` · arc <b>${esc(h.arc.id)}</b> step ${h.arc.step}/${h.arc.of}` : ''}`;
+    $('#entities tbody').innerHTML = s.entities.map((e) => `<tr><td class="dim">${esc(e.id)}</td><td>${esc(e.sprite)}${e.text ? ` <span class="q">"${esc(e.text)}"</span>` : ''}${e.motion ? ' <span class="dim">(moving)</span>' : ''}</td><td class="dim">${esc(e.layer)} ${e.x},${e.y}</td><td>${esc(e.addedByName)}</td><td class="dim">${fmt(e.expiresAt)}</td><td><button data-action="remove" data-id="${esc(e.id)}">x</button></td></tr>`).join('') || '<tr><td class="dim">nothing placed yet</td></tr>';
+    $('#chat tbody').innerHTML = snap.chat.map((c) => `<tr><td class="dim">${fmt(c.at)}</td><td>${esc(c.user)}${c.badges.length ? ' <span class="dim">' + esc(c.badges.join(',')) + '</span>' : ''}</td><td>${esc(c.content)}</td><td class="${c.applied ? 'ok' : c.queued ? 'q' : 'dim'}">${c.applied ? '✓' : c.queued ? '→ model' : '·'} ${c.reply ? esc(c.reply) : ''}</td></tr>`).join('') || '<tr><td class="dim">no chat yet</td></tr>';
+  }
+  refresh();
+  setInterval(refresh, 2000);
+</script>
+</body>
+</html>

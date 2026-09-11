@@ -1,0 +1,22 @@
+# Wardrobe palette: accessories are drawn with these keys, independent of the
+# world palette so an outfit looks the same everywhere. "X" is the tint key:
+# it takes the colour a viewer asked for, or the item's default tint.
+.  transparent
+K  #0b0a1e  black
+D  #2a2a44  dark
+G  #6e6e96  grey
+L  #c9c9e8  light
+W  #f4f4ff  white
+R  #ff3b3b  red
+O  #ff8a3d  orange
+Y  #ffe066  yellow
+A  #ffb347  amber
+N  #7cff4f  green
+T  #00e5ff  cyan
+B  #4f7cff  blue
+P  #8b5cf6  purple
+M  #ff2bd6  magenta
+I  #ff5fa2  pink
+S  #5c3a1e  brown
+E  #e0c9a6  sand
+X  #000000  tint

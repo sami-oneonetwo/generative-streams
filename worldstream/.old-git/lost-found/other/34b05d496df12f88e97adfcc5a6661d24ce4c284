@@ -1,0 +1,40 @@
+// Pixel data the packer builds from the sprite files and the server sends the
+// renderer once, in the hello message.
+import type { Catalogue, SpriteDef } from './catalogue.js';
+import type { KeeperMode } from './state.js';
+
+/** A frame of pixels: each row is a string of palette keys ('.' = transparent). */
+export interface PixelFrame {
+  w: number;
+  h: number;
+  rows: string[];
+}
+
+export interface AtlasSprite extends SpriteDef {
+  frames: PixelFrame[];
+}
+
+export interface FontData {
+  w: number;
+  h: number;
+  /** Glyph rows of '#' and '.' for each character. */
+  glyphs: Record<string, string[]>;
+}
+
+/** One animation set. */
+export interface Anim {
+  frames: PixelFrame[];
+  fps: number;
+  /** Play once and hold the last frame instead of cycling. */
+  loop: boolean;
+}
+
+export interface Atlas extends Catalogue {
+  /** Palette key -> hex colour; '.' maps to ''. */
+  keys: Record<string, string>;
+  sprites: AtlasSprite[];
+  font: FontData;
+  keeper: Partial<Record<KeeperMode, Anim>>;
+}
+
+export const FONT_ADVANCE = 6; // 5px glyph + 1px gap

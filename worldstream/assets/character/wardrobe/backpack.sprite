@@ -1,0 +1,15 @@
+name: backpack
+slot: back
+dx: -1
+dy: 8
+behind: yes
+tint: brown
+aliases: bag, rucksack, school bag, pack
+tags: back, travel
+---
+.XXX
+XXXX
+XXXX
+XAXX
+XXXX
+.XXX

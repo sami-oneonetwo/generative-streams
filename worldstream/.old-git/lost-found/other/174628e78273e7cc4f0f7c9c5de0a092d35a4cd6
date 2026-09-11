@@ -1,0 +1,233 @@
+// The parts of the picture that are not sprites: sky, stars, mountains, the
+// road and the foreground, the neon text, steam, the little overlays that show
+// a fixture's state, and the list of lights the shop gives off.
+import { FONT_ADVANCE } from '../shared/atlas.js';
+import { FIXTURES, GROUND, LANTERNS, NEON, STOVE, STREET_Y, TOP_SIGN, VIEW } from '../shared/scene.js';
+import type { WorldState } from '../shared/state.js';
+import { hashStr, makeCanvas, mulberry32, type Canvas } from './canvas.js';
+import type { PixelFont } from './font.js';
+import { BAYER4, type Light } from './lights.js';
+
+const SKY_TOP = '#07163c';
+const SKY_LOW = '#0a2a48';
+const MOUNTAIN_FAR = '#06193a';
+const MOUNTAIN_NEAR = '#041228';
+const ROAD = '#02020e';
+const ROAD_MARK = '#0b0e1d';
+const FOLIAGE = '#060d10';
+
+export class SceneView {
+  private backdrop: Canvas | null = null;
+  private foreground: Canvas | null = null;
+  private neonText: Map<string, Canvas> = new Map();
+  private stars: Array<{ x: number; y: number; phase: number }> = [];
+  private bulbs: Array<{ x: number; y: number }> = [];
+
+  constructor() {
+    const rnd = mulberry32(7);
+    for (let i = 0; i < 46; i++) this.stars.push({ x: Math.floor(rnd() * VIEW.w), y: Math.floor(rnd() * 110), phase: rnd() * 6.28 });
+    // the string-light bulbs, at the same places the rig hung them
+    const curve = (x0: number, y0: number, x1: number, y1: number, sag: number) => {
+      const n = Math.abs(x1 - x0);
+      const dir = x1 > x0 ? 1 : -1;
+      for (let i = 0; i <= n; i++) {
+        if (i % 9 !== 4) continue;
+        const t = i / Math.max(1, n);
+        this.bulbs.push({ x: x0 + i * dir, y: Math.round(y0 + (y1 - y0) * t + sag * 4 * t * (1 - t)) + 2 });
+      }
+    };
+    curve(140, 128, 52, 90, 16);
+    curve(344, 128, VIEW.w - 1, 92, 18);
+  }
+
+  /** Sky gradient and mountains, painted once. */
+  private buildBackdrop(): Canvas {
+    const c = makeCanvas(VIEW.w, VIEW.h);
+    const g = c.getContext('2d')!;
+    g.fillStyle = SKY_TOP;
+    g.fillRect(0, 0, VIEW.w, VIEW.h);
+    // a dithered band towards the horizon
+    g.fillStyle = SKY_LOW;
+    for (let y = 120; y < 240; y++) {
+      const t = (y - 120) / 120;
+      for (let x = 0; x < VIEW.w; x++) if (BAYER4[y & 3][x & 3] / 16 < t * 1.15) g.fillRect(x, y, 1, 1);
+    }
+    // two ranges of mountains, deterministic
+    const ridge = (x: number, a: number, b: number, c1: number, c2: number, base: number) => base - Math.round(a * Math.abs(Math.sin(x / c1)) + b * Math.abs(Math.sin(x / c2 + 2)));
+    g.fillStyle = MOUNTAIN_FAR;
+    for (let x = 0; x < VIEW.w; x++) {
+      const y = ridge(x, 26, 14, 73, 29, 206);
+      g.fillRect(x, y, 1, 240 - y);
+    }
+    g.fillStyle = MOUNTAIN_NEAR;
+    for (let x = 0; x < VIEW.w; x++) {
+      const y = ridge(x, 16, 10, 41, 17, 226);
+      g.fillRect(x, y, 1, 240 - y);
+    }
+    // a few lit windows on the far hills
+    const rnd = mulberry32(3);
+    g.fillStyle = '#453e14';
+    for (let i = 0; i < 9; i++) {
+      const x = Math.floor(rnd() * VIEW.w);
+      const y = ridge(x, 26, 14, 73, 29, 206) + 6 + Math.floor(rnd() * 10);
+      if ((x > 120 && x < 360) || y > 224) continue;
+      g.fillRect(x, y, 1, 1);
+    }
+    return c;
+  }
+
+  /** The road and the dark foliage in front of it, painted once. */
+  private buildForeground(): Canvas {
+    const c = makeCanvas(VIEW.w, VIEW.h);
+    const g = c.getContext('2d')!;
+    g.fillStyle = ROAD;
+    g.fillRect(0, STREET_Y, VIEW.w, VIEW.h - STREET_Y);
+    g.fillStyle = ROAD_MARK;
+    for (let x = 6; x < VIEW.w; x += 26) g.fillRect(x, STREET_Y + 14, 12, 1);
+    for (let x = 0; x < VIEW.w; x += 7) g.fillRect(x + ((x / 7) % 3), STREET_Y + 4 + ((x / 7) % 5), 1, 1);
+    // shrubs along the bottom edge
+    const rnd = mulberry32(11);
+    g.fillStyle = FOLIAGE;
+    for (let x = -10; x < VIEW.w + 10; x += 14 + Math.floor(rnd() * 12)) {
+      const r = 6 + Math.floor(rnd() * 7);
+      const cy = VIEW.h + 2 - Math.floor(rnd() * 5);
+      for (let dy = -r; dy <= 0; dy++) {
+        const half = Math.round(Math.sqrt(r * r - dy * dy));
+        g.fillRect(x - half, cy + dy, half * 2, 1);
+      }
+      for (let k = 0; k < 3; k++) g.fillRect(x - r + Math.floor(rnd() * r * 2), cy - r - 1 - Math.floor(rnd() * 3), 1, 3);
+    }
+    return c;
+  }
+
+  drawBackdrop(g: CanvasRenderingContext2D, now: number): void {
+    this.backdrop ??= this.buildBackdrop();
+    g.drawImage(this.backdrop, 0, 0);
+    const t = now / 1000;
+    for (const s of this.stars) {
+      const tw = Math.sin(t * 0.7 + s.phase);
+      if (tw < -0.2) continue;
+      g.fillStyle = tw > 0.85 ? '#c9d6ff' : '#4a6a9a';
+      g.fillRect(s.x, s.y, 1, 1);
+    }
+  }
+
+  drawForeground(g: CanvasRenderingContext2D): void {
+    this.foreground ??= this.buildForeground();
+    g.drawImage(this.foreground, 0, 0);
+  }
+
+  /** The shop's name in neon tubes on the first floor, two pixels per font pixel when it fits. */
+  private neonCanvas(font: PixelFont, name: string, dim: boolean): Canvas {
+    const key = `${name}|${dim}`;
+    const hit = this.neonText.get(key);
+    if (hit) return hit;
+    const scale = name.length <= 6 ? 2 : 1;
+    const w = font.measure(name) * scale + 4;
+    const h = font.data.h * scale + 4;
+    const c = makeCanvas(w, h);
+    const g = c.getContext('2d')!;
+    const tube = dim ? '#9f0d16' : '#ff1b20';
+    const core = dim ? '#9f0d16' : '#ff7a66';
+    let cx = 2;
+    for (const ch of font.chars(name)) {
+      const rows = font.data.glyphs[ch] ?? font.data.glyphs['?'];
+      if (rows && ch !== ' ') {
+        rows.forEach((r, y) => {
+          for (let x = 0; x < r.length; x++) {
+            if (r[x] !== '#') continue;
+            g.fillStyle = tube;
+            g.fillRect(cx + x * scale, 2 + y * scale, scale, scale);
+            if (scale === 2 && !dim) {
+              g.fillStyle = core;
+              g.fillRect(cx + x * scale, 2 + y * scale, 1, 1);
+            }
+          }
+        });
+      }
+      cx += FONT_ADVANCE * scale;
+    }
+    this.neonText.set(key, c);
+    return c;
+  }
+
+  /** Overlays on the building itself: neon text, glitching and dark signs, the lit tower room, blinking bulbs. */
+  drawBuildingOverlays(g: CanvasRenderingContext2D, state: WorldState, font: PixelFont | null, shopName: string, now: number): void {
+    const glitch = state.fixtures.sign.state === 'glitch';
+    const flickerOff = glitch && ((Math.floor(now / 80) * 7919) % 11 < 4);
+    if (font) {
+      const text = this.neonCanvas(font, shopName, flickerOff);
+      g.drawImage(text, NEON.textX + Math.round((74 - text.width) / 2), NEON.textY + Math.round((16 - text.height) / 2));
+    }
+    if (flickerOff) {
+      g.fillStyle = 'rgba(2,2,14,0.72)';
+      g.fillRect(NEON.cx - NEON.r, NEON.cy - NEON.r, NEON.r * 2 + 1, NEON.r * 2 + 1);
+    }
+    if (state.fixtures.lantern.state === 'out') {
+      g.fillStyle = 'rgba(2,2,14,0.82)';
+      g.fillRect(TOP_SIGN.cx - TOP_SIGN.r - 1, TOP_SIGN.cy - TOP_SIGN.r - 1, TOP_SIGN.r * 2 + 3, TOP_SIGN.r * 2 + 3);
+      g.fillStyle = 'rgba(2,2,14,0.55)';
+      g.fillRect(218, 22, 44, 34);
+    }
+    if (state.keeper.zone === 'upstairs') {
+      g.fillStyle = 'rgba(220,208,29,0.28)';
+      g.fillRect(209, 75, 18, 20);
+      g.fillRect(253, 75, 18, 20);
+    }
+    // one bulb at a time twinkles brighter
+    const lit = Math.floor(now / 140) % this.bulbs.length;
+    const b = this.bulbs[lit];
+    if (b) {
+      g.fillStyle = '#ff7a66';
+      g.fillRect(b.x, b.y, 1, 1);
+    }
+  }
+
+  /** Steam off the stove and the roof vent; more when he is cooking. */
+  drawSteam(g: CanvasRenderingContext2D, state: WorldState, now: number): void {
+    const cooking = state.keeper.mode === 'cook';
+    const puff = (sx: number, sy: number, n: number, seed: number, rise: number, spread: number) => {
+      for (let i = 0; i < n; i++) {
+        const life = 2600;
+        const t = ((now + i * (life / n) + seed * 977) % life) / life;
+        const r = mulberry32(seed * 31 + i + Math.floor((now + i * (life / n) + seed * 977) / life));
+        const x = sx + Math.round((r() - 0.5) * spread + Math.sin(t * 6 + i) * 1.5);
+        const y = sy - Math.round(t * rise);
+        const size = t < 0.3 ? 1 : t < 0.7 ? 2 : 1;
+        g.globalAlpha = (1 - t) * 0.55;
+        g.fillStyle = '#c9d6ff';
+        g.fillRect(x, y, size, size);
+      }
+      g.globalAlpha = 1;
+    };
+    puff(STOVE.x + 7, STOVE.y - 2, cooking ? 6 : 3, 1, cooking ? 16 : 10, 6);
+    puff(321, 98, 4, 2, 22, 6);
+    // steam off every bowl on the counter
+    for (const e of state.entities) if (e.kind === 'bowl') puff(e.x + 4, e.y - 8, 3, 3 + e.x, 9, 4);
+  }
+
+  /** Every light source, with its current level. */
+  lights(state: WorldState, now: number): Light[] {
+    const glitch = state.fixtures.sign.state === 'glitch';
+    const signLevel = glitch ? (((Math.floor(now / 80) * 7919) % 11 < 4) ? 0.15 : 0.8) : 1;
+    const out: Light[] = [
+      { x: NEON.cx, top: NEON.cy - NEON.r, footY: NEON.cy + NEON.r, radius: 34, hex: '#ff1b20', level: signLevel },
+      { x: NEON.textX + 36, top: NEON.textY, footY: NEON.textY + 16, radius: 18, hex: '#ff1b20', level: signLevel },
+      { x: TOP_SIGN.cx, top: TOP_SIGN.cy - TOP_SIGN.r, footY: TOP_SIGN.cy + TOP_SIGN.r, radius: 22, hex: '#ff1b20', level: state.fixtures.lantern.state === 'out' ? 0.05 : 1 },
+      { x: 200, top: 190, footY: 214, radius: 46, hex: '#dcd01d' },
+      { x: 320, top: 132, footY: 150, radius: 14, hex: '#fff931' },
+      { x: 344, top: 119, footY: 177, radius: 12, hex: '#e11119' },
+    ];
+    for (const l of LANTERNS) out.push({ x: l.x + 4, top: l.y, footY: l.y + 12, radius: 10, hex: '#ff1b20', flicker: true });
+    const door = state.fixtures.door.state === 'open';
+    out.push({ x: FIXTURES.door.x + 13, top: 196, footY: GROUND, radius: door ? 24 : 16, hex: door ? '#dcd01d' : '#1e6a8a' });
+    const vending = state.fixtures.vending.state;
+    out.push({ x: FIXTURES.vending.x + 9, top: GROUND - 32, footY: GROUND, radius: 14, hex: '#3ec7ff', level: vending === 'on' ? 1 : vending === 'flicker' ? (Math.floor(now / 110) % 3 === 0 ? 0.2 : 0.9) : 0 });
+    if (state.keeper.zone === 'upstairs') out.push({ x: 240, top: 74, footY: 96, radius: 16, hex: '#dcd01d', level: 0.6 });
+    return out;
+  }
+}
+
+export function seededHash(s: string): number {
+  return hashStr(s);
+}

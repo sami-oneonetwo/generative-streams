@@ -1,0 +1,56 @@
+// Rain, snow and fog over the scene. Particles are placed from time and a
+// seed so every renderer shows the same weather without any state.
+import { VIEW } from '../shared/scene.js';
+import type { Weather } from '../shared/state.js';
+import { mulberry32 } from './canvas.js';
+
+const RAIN_N = 110;
+const SNOW_N = 70;
+
+export function drawWeather(g: CanvasRenderingContext2D, weather: Weather, now: number): void {
+  if (weather === 'rain') {
+    const rnd = mulberry32(5);
+    g.fillStyle = 'rgba(140,170,210,0.55)';
+    for (let i = 0; i < RAIN_N; i++) {
+      const sx = rnd() * VIEW.w;
+      const sy = rnd() * VIEW.h;
+      const speed = 150 + rnd() * 80;
+      const y = (sy + (now / 1000) * speed) % (VIEW.h + 8);
+      const x = (sx - y * 0.25 + VIEW.w * 4) % VIEW.w;
+      g.fillRect(Math.round(x), Math.round(y) - 6, 1, 4);
+    }
+    // splashes on the pavement
+    g.fillStyle = 'rgba(140,170,210,0.35)';
+    for (let i = 0; i < 14; i++) {
+      const x = (rnd() * VIEW.w + Math.floor(now / 120) * 37 * (i + 1)) % VIEW.w;
+      if ((Math.floor(now / 120) + i) % 3 === 0) g.fillRect(Math.round(x), 233 + (i % 4), 2, 1);
+    }
+  } else if (weather === 'snow') {
+    const rnd = mulberry32(9);
+    for (let i = 0; i < SNOW_N; i++) {
+      const sx = rnd() * VIEW.w;
+      const sy = rnd() * VIEW.h;
+      const speed = 14 + rnd() * 12;
+      const y = (sy + (now / 1000) * speed) % (VIEW.h + 4);
+      const x = (sx + Math.sin(now / 900 + i) * 6 + VIEW.w) % VIEW.w;
+      const big = i % 5 === 0;
+      g.fillStyle = big ? 'rgba(253,252,244,0.9)' : 'rgba(220,226,240,0.7)';
+      g.fillRect(Math.round(x), Math.round(y), big ? 2 : 1, big ? 2 : 1);
+    }
+    // snow settled on the pavement
+    g.fillStyle = 'rgba(230,236,250,0.75)';
+    g.fillRect(0, 233, VIEW.w, 1);
+  } else if (weather === 'fog') {
+    for (let band = 0; band < 3; band++) {
+      const y = 150 + band * 30;
+      const drift = ((now / 1000) * (6 + band * 3)) % (VIEW.w * 2);
+      g.fillStyle = `rgba(10,42,72,${0.22 - band * 0.04})`;
+      for (let x = -VIEW.w; x < VIEW.w * 2; x += 90) {
+        const w = 60 + ((x / 90) % 3) * 15;
+        g.fillRect(Math.round(x + drift - VIEW.w), y, w, 26);
+      }
+    }
+    g.fillStyle = 'rgba(10,42,72,0.18)';
+    g.fillRect(0, 0, VIEW.w, VIEW.h);
+  }
+}

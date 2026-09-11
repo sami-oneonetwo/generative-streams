@@ -1,0 +1,151 @@
+// What the shop's lights do to the street: a pool on the pavement, a halo in
+// the air, a streak in the wet. Quantised to bands and dithered so it stays
+// pixel art.
+import { GROUND, VIEW } from '../shared/scene.js';
+import { hexToRgb, makeCanvas, type Canvas } from './canvas.js';
+
+export const BAYER4 = [
+  [0, 8, 2, 10],
+  [12, 4, 14, 6],
+  [3, 11, 1, 9],
+  [15, 7, 13, 5],
+];
+
+/** A light on screen this frame. */
+export interface Light {
+  /** Screen x of the centre. */
+  x: number;
+  /** Screen y of the source's top and bottom. */
+  top: number;
+  footY: number;
+  radius: number;
+  hex: string;
+  flicker?: boolean;
+  /** 0..1 dimming, for signs that are out or glitching. */
+  level?: number;
+}
+
+const pools = new Map<string, Canvas>();
+const halos = new Map<string, Canvas>();
+
+/** An ellipse of light on the ground: three alpha bands, the outer one dithered away. */
+export function poolCanvas(hex: string, radius: number): Canvas {
+  const key = `${hex}|${radius}`;
+  const hit = pools.get(key);
+  if (hit) return hit;
+  const rx = radius;
+  const ry = Math.max(2, Math.round(radius / 4));
+  const c = makeCanvas(rx * 2, ry * 2);
+  const g = c.getContext('2d')!;
+  const img = g.createImageData(c.width, c.height);
+  const [r, gg, b] = hexToRgb(hex);
+  for (let y = 0; y < c.height; y++) {
+    for (let x = 0; x < c.width; x++) {
+      const dx = (x + 0.5 - rx) / rx;
+      const dy = (y + 0.5 - ry) / ry;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d > 1) continue;
+      let alpha: number;
+      if (d > 0.72) {
+        if (BAYER4[y & 3][x & 3] / 16 > (1 - d) / 0.28) continue;
+        alpha = 0.1;
+      } else alpha = d > 0.45 ? 0.18 : 0.28;
+      const i = (y * c.width + x) * 4;
+      img.data[i] = r;
+      img.data[i + 1] = gg;
+      img.data[i + 2] = b;
+      img.data[i + 3] = Math.round(alpha * 255);
+    }
+  }
+  g.putImageData(img, 0, 0);
+  pools.set(key, c);
+  return c;
+}
+
+/** Glow in the air around a source: two octagon rings. */
+export function haloCanvas(hex: string, radius: number): Canvas {
+  const key = `${hex}|${radius}`;
+  const hit = halos.get(key);
+  if (hit) return hit;
+  const R = Math.max(3, Math.round(radius / 2));
+  const c = makeCanvas(R * 2, R * 2);
+  const g = c.getContext('2d')!;
+  const img = g.createImageData(c.width, c.height);
+  const [r, gg, b] = hexToRgb(hex);
+  const inner = Math.max(2, Math.round(R * 0.6));
+  for (let y = 0; y < c.height; y++) {
+    for (let x = 0; x < c.width; x++) {
+      const dx = Math.abs(x + 0.5 - R);
+      const dy = Math.abs(y + 0.5 - R);
+      const octagon = (lim: number) => Math.max(dx, dy) <= lim && dx + dy <= lim * 1.41;
+      let alpha = 0;
+      if (octagon(inner)) alpha = 0.12;
+      else if (octagon(R)) alpha = 0.06;
+      if (!alpha) continue;
+      const i = (y * c.width + x) * 4;
+      img.data[i] = r;
+      img.data[i + 1] = gg;
+      img.data[i + 2] = b;
+      img.data[i + 3] = Math.round(alpha * 255);
+    }
+  }
+  g.putImageData(img, 0, 0);
+  halos.set(key, c);
+  return c;
+}
+
+/** Flickering lights drop their outer glow on one tick in seven. */
+export function flickerDim(l: Light, t: number): boolean {
+  return Boolean(l.flicker) && (Math.floor(t / 90) + Math.round(l.x)) % 7 === 0;
+}
+
+function level(l: Light, t: number): number {
+  return (l.level ?? 1) * (flickerDim(l, t) ? 0.5 : 1);
+}
+
+/** Pools on the pavement under lights that are near it. */
+export function drawLightPools(g: CanvasRenderingContext2D, lights: Light[], t: number): void {
+  for (const l of lights) {
+    const lift = GROUND - l.footY;
+    if (lift > l.radius * 2.2) continue;
+    const alpha = (1 - lift / (l.radius * 2.2)) * level(l, t);
+    if (alpha <= 0.02) continue;
+    const pool = poolCanvas(l.hex, l.radius);
+    g.globalAlpha = alpha;
+    g.drawImage(pool, Math.round(l.x - pool.width / 2), GROUND - Math.round(pool.height / 2) + 2);
+  }
+  g.globalAlpha = 1;
+}
+
+/** Streaks of each light's colour in the wet road below it. */
+export function drawWetReflections(g: CanvasRenderingContext2D, lights: Light[], t: number, roadY: number): void {
+  const tick = Math.floor(t / 250);
+  for (const l of lights) {
+    const len = Math.max(6, Math.min(14, Math.round(l.radius / 2)));
+    const wobble = ((tick + Math.round(l.x)) % 3) - 1;
+    const x = Math.round(l.x) + wobble;
+    const wide = l.radius >= 24 ? 2 : 1;
+    g.fillStyle = l.hex;
+    g.globalAlpha = 0.22 * level(l, t);
+    g.fillRect(x, roadY + 1, wide, Math.round(len / 2));
+    g.globalAlpha = 0.1 * level(l, t);
+    g.fillRect(x, roadY + 1 + Math.round(len / 2), wide, len - Math.round(len / 2));
+  }
+  g.globalAlpha = 1;
+}
+
+/** Halos in the air around every source. */
+export function drawGlowHalos(g: CanvasRenderingContext2D, lights: Light[], t: number): void {
+  for (const l of lights) {
+    const halo = haloCanvas(l.hex, l.radius);
+    g.globalAlpha = level(l, t);
+    const cy = Math.round((l.top + l.footY) / 2);
+    g.drawImage(halo, Math.round(l.x - halo.width / 2), cy - Math.round(halo.height / 2));
+  }
+  g.globalAlpha = 1;
+}
+
+/** Keep the lights that can matter: on screen, capped. */
+export function pickLights(lights: Light[], max = 16): Light[] {
+  return lights.filter((l) => l.x + l.radius >= 0 && l.x - l.radius <= VIEW.w && (l.level ?? 1) > 0.02).slice(0, max);
+}

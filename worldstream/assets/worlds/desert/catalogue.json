@@ -1,0 +1,1248 @@
+{
+  "world": "desert",
+  "palette": [
+    "#1a0f2e",
+    "#2a1a14",
+    "#4a2c1e",
+    "#7a4a2a",
+    "#a34b2a",
+    "#b3703b",
+    "#d9a86c",
+    "#f2d5a0",
+    "#1a1a2e",
+    "#2a2a44",
+    "#3d3d5c",
+    "#6e6e96",
+    "#efe9dd",
+    "#f4f4ff",
+    "#00e5ff",
+    "#3ca6c9",
+    "#1b6d8a",
+    "#ff2bd6",
+    "#ff9f43",
+    "#c0392b",
+    "#ff8a3d",
+    "#ffb347",
+    "#ffe066",
+    "#8fd14f",
+    "#3f7d3a",
+    "#2c5a2a",
+    "#ff3b3b",
+    "#8a1c1c",
+    "#5c3a1e",
+    "#e0c9a6"
+  ],
+  "sprites": [
+    {
+      "name": "wood_sign",
+      "layers": [
+        "stage"
+      ],
+      "w": 40,
+      "h": 22,
+      "colour": "#5c3a1e",
+      "acceptsText": true,
+      "procedural": "wood_sign",
+      "tags": [
+        "sign",
+        "text",
+        "post"
+      ],
+      "aliases": [
+        "sign",
+        "signpost",
+        "post",
+        "wooden sign",
+        "neon sign",
+        "billboard"
+      ]
+    },
+    {
+      "name": "cactus",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 24,
+      "colour": "#3f7d3a",
+      "tags": [
+        "cactus",
+        "plant",
+        "green",
+        "nature"
+      ],
+      "aliases": [
+        "saguaro",
+        "cacti",
+        "plant",
+        "tree"
+      ]
+    },
+    {
+      "name": "barrel_cactus",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 8,
+      "colour": "#3f7d3a",
+      "tags": [
+        "cactus",
+        "small",
+        "plant"
+      ],
+      "aliases": [
+        "small cactus",
+        "bush",
+        "shrub"
+      ]
+    },
+    {
+      "name": "palm",
+      "layers": [
+        "stage"
+      ],
+      "w": 18,
+      "h": 30,
+      "colour": "#3f7d3a",
+      "tags": [
+        "palm",
+        "tree",
+        "oasis",
+        "plant",
+        "nature",
+        "shade"
+      ],
+      "aliases": [
+        "palm tree",
+        "palms"
+      ]
+    },
+    {
+      "name": "tent",
+      "layers": [
+        "stage"
+      ],
+      "w": 28,
+      "h": 18,
+      "colour": "#d9a86c",
+      "tags": [
+        "tent",
+        "camp",
+        "shelter",
+        "shade"
+      ],
+      "aliases": [
+        "camp",
+        "shelter",
+        "house"
+      ]
+    },
+    {
+      "name": "campfire",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 12,
+      "colour": "#ff8a3d",
+      "animated": 2,
+      "tags": [
+        "fire",
+        "camp",
+        "warm",
+        "light"
+      ],
+      "aliases": [
+        "fire",
+        "bonfire",
+        "barrel fire"
+      ]
+    },
+    {
+      "name": "rock",
+      "layers": [
+        "stage"
+      ],
+      "w": 16,
+      "h": 8,
+      "colour": "#a34b2a",
+      "tags": [
+        "rock",
+        "stone",
+        "boulder"
+      ],
+      "aliases": [
+        "stone",
+        "boulder",
+        "rocks"
+      ]
+    },
+    {
+      "name": "bones",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 6,
+      "colour": "#efe9dd",
+      "tags": [
+        "bones",
+        "skull",
+        "skeleton"
+      ],
+      "aliases": [
+        "skull",
+        "skeleton",
+        "bone"
+      ]
+    },
+    {
+      "name": "oasis",
+      "layers": [
+        "stage"
+      ],
+      "w": 40,
+      "h": 6,
+      "colour": "#3ca6c9",
+      "animated": 2,
+      "tags": [
+        "water",
+        "oasis",
+        "pool"
+      ],
+      "aliases": [
+        "water",
+        "pool",
+        "pond",
+        "puddle",
+        "lake"
+      ]
+    },
+    {
+      "name": "well",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 18,
+      "colour": "#a34b2a",
+      "tags": [
+        "well",
+        "water",
+        "stone"
+      ],
+      "aliases": [
+        "water well",
+        "wishing well"
+      ]
+    },
+    {
+      "name": "wagon",
+      "layers": [
+        "stage"
+      ],
+      "w": 31,
+      "h": 16,
+      "colour": "#5c3a1e",
+      "tags": [
+        "wagon",
+        "cart",
+        "vehicle"
+      ],
+      "aliases": [
+        "cart",
+        "caravan wagon",
+        "car"
+      ]
+    },
+    {
+      "name": "crate",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 12,
+      "colour": "#5c3a1e",
+      "tags": [
+        "crate",
+        "box",
+        "seat"
+      ],
+      "aliases": [
+        "box",
+        "crates",
+        "boxes"
+      ]
+    },
+    {
+      "name": "cat",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 6,
+      "colour": "#2a2a44",
+      "faces": "l",
+      "tags": [
+        "cat",
+        "animal",
+        "pet"
+      ],
+      "aliases": [
+        "kitty",
+        "kitten",
+        "cats"
+      ],
+      "behaviour": "wander",
+      "speed": 30
+    },
+    {
+      "name": "vulture",
+      "layers": [
+        "mid",
+        "near"
+      ],
+      "w": 14,
+      "h": 8,
+      "colour": "#2a1a14",
+      "animated": 2,
+      "tags": [
+        "bird",
+        "vulture",
+        "flying"
+      ],
+      "aliases": [
+        "bird",
+        "buzzard",
+        "eagle",
+        "drone"
+      ],
+      "behaviour": "perch"
+    },
+    {
+      "name": "lizard",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 4,
+      "colour": "#8fd14f",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "lizard",
+        "animal",
+        "small"
+      ],
+      "aliases": [
+        "gecko",
+        "iguana"
+      ],
+      "behaviour": "flee",
+      "speed": 70
+    },
+    {
+      "name": "tumbleweed",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 10,
+      "colour": "#7a4a2a",
+      "animated": 2,
+      "tags": [
+        "tumbleweed",
+        "rolling"
+      ],
+      "aliases": [
+        "weed",
+        "bush ball"
+      ]
+    },
+    {
+      "name": "caravan",
+      "layers": [
+        "near"
+      ],
+      "w": 52,
+      "h": 18,
+      "colour": "#b3703b",
+      "animated": 2,
+      "ambientOnly": true,
+      "tags": [
+        "camel",
+        "caravan",
+        "transit"
+      ]
+    },
+    {
+      "name": "camel",
+      "layers": [
+        "stage"
+      ],
+      "w": 20,
+      "h": 14,
+      "colour": "#b3703b",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "camel",
+        "animal"
+      ],
+      "aliases": [
+        "camels",
+        "dromedary"
+      ],
+      "behaviour": "wander",
+      "speed": 12
+    },
+    {
+      "name": "scorpion",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 4,
+      "colour": "#2a1a14",
+      "animated": 2,
+      "tags": [
+        "scorpion",
+        "animal",
+        "small"
+      ],
+      "aliases": [
+        "bug",
+        "insect"
+      ],
+      "behaviour": "flee",
+      "speed": 25
+    },
+    {
+      "name": "snake",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 4,
+      "colour": "#3f7d3a",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "snake",
+        "animal"
+      ],
+      "aliases": [
+        "serpent",
+        "rattlesnake",
+        "viper"
+      ],
+      "behaviour": "wander",
+      "speed": 15
+    },
+    {
+      "name": "prickly_pear",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 10,
+      "colour": "#3f7d3a",
+      "tags": [
+        "cactus",
+        "plant",
+        "nature"
+      ],
+      "aliases": [
+        "prickly pear",
+        "flat cactus",
+        "paddle cactus"
+      ]
+    },
+    {
+      "name": "dead_tree",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 23,
+      "colour": "#4a2c1e",
+      "tags": [
+        "tree",
+        "dead",
+        "wood"
+      ],
+      "aliases": [
+        "dead tree",
+        "bare tree",
+        "tree"
+      ]
+    },
+    {
+      "name": "skull",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#efe9dd",
+      "tags": [
+        "skull",
+        "bones"
+      ],
+      "aliases": [
+        "cow skull",
+        "bull skull",
+        "horns"
+      ]
+    },
+    {
+      "name": "windmill",
+      "layers": [
+        "stage"
+      ],
+      "w": 16,
+      "h": 34,
+      "colour": "#5c3a1e",
+      "animated": 2,
+      "tags": [
+        "windmill",
+        "wood",
+        "tall"
+      ],
+      "aliases": [
+        "mill",
+        "wind pump",
+        "water pump"
+      ]
+    },
+    {
+      "name": "barrel",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 10,
+      "colour": "#5c3a1e",
+      "tags": [
+        "barrel",
+        "wood",
+        "seat"
+      ],
+      "aliases": [
+        "keg",
+        "cask",
+        "barrels"
+      ]
+    },
+    {
+      "name": "lantern",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 9,
+      "colour": "#ffe066",
+      "animated": 2,
+      "tags": [
+        "lantern",
+        "light",
+        "lamp"
+      ],
+      "aliases": [
+        "lamp",
+        "oil lamp",
+        "light",
+        "street lamp"
+      ]
+    },
+    {
+      "name": "rug",
+      "layers": [
+        "stage"
+      ],
+      "w": 24,
+      "h": 4,
+      "colour": "#c0392b",
+      "tags": [
+        "rug",
+        "carpet",
+        "cloth",
+        "bed"
+      ],
+      "aliases": [
+        "carpet",
+        "mat",
+        "blanket"
+      ]
+    },
+    {
+      "name": "pot",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 8,
+      "colour": "#b3703b",
+      "tags": [
+        "pot",
+        "clay",
+        "vase"
+      ],
+      "aliases": [
+        "vase",
+        "urn",
+        "jar",
+        "clay pot"
+      ]
+    },
+    {
+      "name": "hut",
+      "layers": [
+        "stage"
+      ],
+      "w": 30,
+      "h": 22,
+      "colour": "#d9a86c",
+      "tags": [
+        "hut",
+        "house",
+        "building",
+        "adobe",
+        "shelter",
+        "shade"
+      ],
+      "aliases": [
+        "house",
+        "home",
+        "adobe",
+        "building",
+        "shack"
+      ]
+    },
+    {
+      "name": "ruins",
+      "layers": [
+        "stage"
+      ],
+      "w": 28,
+      "h": 16,
+      "colour": "#efe9dd",
+      "tags": [
+        "ruins",
+        "columns",
+        "stone"
+      ],
+      "aliases": [
+        "ruin",
+        "temple",
+        "columns",
+        "pillars"
+      ]
+    },
+    {
+      "name": "stone_arch",
+      "layers": [
+        "stage"
+      ],
+      "w": 30,
+      "h": 24,
+      "colour": "#a34b2a",
+      "tags": [
+        "arch",
+        "rock",
+        "stone",
+        "shade"
+      ],
+      "aliases": [
+        "arch",
+        "rock arch",
+        "gate"
+      ]
+    },
+    {
+      "name": "hot_air_balloon",
+      "layers": [
+        "mid",
+        "far"
+      ],
+      "w": 16,
+      "h": 23,
+      "colour": "#ff3b3b",
+      "animated": 2,
+      "tags": [
+        "balloon",
+        "flying",
+        "sky"
+      ],
+      "aliases": [
+        "balloon",
+        "hot air balloon",
+        "airship",
+        "blimp"
+      ]
+    },
+    {
+      "name": "dust_devil",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 20,
+      "colour": "#d9a86c",
+      "animated": 2,
+      "tags": [
+        "dust",
+        "wind",
+        "storm"
+      ],
+      "aliases": [
+        "tornado",
+        "whirlwind",
+        "dust storm",
+        "twister"
+      ]
+    },
+    {
+      "name": "tortoise",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 5,
+      "colour": "#2c5a2a",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "tortoise",
+        "animal",
+        "slow"
+      ],
+      "aliases": [
+        "turtle"
+      ],
+      "behaviour": "wander",
+      "speed": 5
+    },
+    {
+      "name": "banner",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 24,
+      "colour": "#ff3b3b",
+      "tags": [
+        "banner",
+        "flag",
+        "pole"
+      ],
+      "aliases": [
+        "flag",
+        "flagpole",
+        "pennant"
+      ]
+    },
+    {
+      "name": "bedroll",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 5,
+      "colour": "#c0392b",
+      "tags": [
+        "bedroll",
+        "camp",
+        "sleep",
+        "bed"
+      ],
+      "aliases": [
+        "bed",
+        "sleeping bag",
+        "blanket roll"
+      ]
+    },
+    {
+      "name": "guitar",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 9,
+      "colour": "#5c3a1e",
+      "tags": [
+        "guitar",
+        "music"
+      ],
+      "aliases": [
+        "banjo",
+        "instrument",
+        "music"
+      ]
+    },
+    {
+      "name": "coyote",
+      "layers": [
+        "stage"
+      ],
+      "w": 16,
+      "h": 8,
+      "colour": "#b3703b",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "coyote",
+        "animal",
+        "dog"
+      ],
+      "aliases": [
+        "dog",
+        "wolf",
+        "jackal",
+        "fox"
+      ],
+      "behaviour": "wander",
+      "speed": 45
+    },
+    {
+      "name": "sandcastle",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 10,
+      "colour": "#f2d5a0",
+      "tags": [
+        "sandcastle",
+        "castle",
+        "sand"
+      ],
+      "aliases": [
+        "sand castle",
+        "castle",
+        "fort"
+      ]
+    },
+    {
+      "name": "stew_pot",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 12,
+      "colour": "#ff8a3d",
+      "animated": 2,
+      "tags": [
+        "food",
+        "fire",
+        "camp"
+      ],
+      "aliases": [
+        "stew",
+        "pot of stew",
+        "cooking pot",
+        "soup",
+        "food",
+        "ramen stand",
+        "ramen"
+      ]
+    },
+    {
+      "name": "rations",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 8,
+      "colour": "#efe9dd",
+      "consumable": true,
+      "tags": [
+        "food",
+        "consumable"
+      ],
+      "aliases": [
+        "ration",
+        "snack",
+        "bread",
+        "jerky",
+        "noodle cup",
+        "meal"
+      ]
+    }
+  ],
+  "weatherWeights": {
+    "clear": 0.7,
+    "storm": 0.15,
+    "fog": 0.1,
+    "rain": 0.05
+  },
+  "ambient": [
+    {
+      "name": "caravan",
+      "sprite": "caravan",
+      "layer": "near",
+      "y": 202,
+      "from": -80,
+      "to": 1040,
+      "durationMs": 26000,
+      "everyMs": [
+        180000,
+        360000
+      ],
+      "lines": [
+        "a caravan. they never stop either.",
+        "someone is going somewhere",
+        "salt, silk, and stories"
+      ],
+      "departure": true
+    },
+    {
+      "name": "vulture_circle",
+      "sprite": "vulture",
+      "layer": "mid",
+      "y": [
+        50,
+        110
+      ],
+      "from": 1000,
+      "to": -30,
+      "durationMs": 14000,
+      "everyMs": [
+        60000,
+        180000
+      ],
+      "lines": [
+        "it is just curious. probably.",
+        "not today, bird"
+      ]
+    },
+    {
+      "name": "tumbleweed_roll",
+      "sprite": "tumbleweed",
+      "layer": "stage",
+      "y": 210,
+      "from": -20,
+      "to": 980,
+      "durationMs": 16000,
+      "everyMs": [
+        60000,
+        150000
+      ],
+      "lines": [
+        "there it goes",
+        "the classic"
+      ]
+    },
+    {
+      "name": "lizard_run",
+      "sprite": "lizard",
+      "layer": "stage",
+      "y": 216,
+      "from": 980,
+      "to": -20,
+      "durationMs": 11000,
+      "everyMs": [
+        120000,
+        240000
+      ],
+      "lines": [
+        "quick one",
+        "it lives under the rock, I think"
+      ]
+    },
+    {
+      "name": "coyote_cross",
+      "sprite": "coyote",
+      "layer": "stage",
+      "y": 212,
+      "from": -30,
+      "to": 990,
+      "durationMs": 20000,
+      "everyMs": [
+        180000,
+        420000
+      ],
+      "lines": [
+        "coyote. keep your noodles close.",
+        "it is just passing through. like me."
+      ]
+    },
+    {
+      "name": "balloon_drift",
+      "sprite": "hot_air_balloon",
+      "layer": "mid",
+      "y": [
+        40,
+        90
+      ],
+      "from": -40,
+      "to": 1000,
+      "durationMs": 60000,
+      "everyMs": [
+        300000,
+        600000
+      ],
+      "lines": [
+        "someone up there has the right idea",
+        "a balloon. of course. why not."
+      ]
+    },
+    {
+      "name": "dust_devil_pass",
+      "sprite": "dust_devil",
+      "layer": "stage",
+      "y": 200,
+      "from": -20,
+      "to": 980,
+      "durationMs": 25000,
+      "everyMs": [
+        240000,
+        480000
+      ],
+      "lines": [
+        "the desert is stretching its legs",
+        "dust devil. hold your hat."
+      ]
+    }
+  ],
+  "lines": {
+    "ambient": [
+      "the sand remembers nothing",
+      "hot. then cold. then hot.",
+      "I miss the noise, a little",
+      "somewhere out there is a road",
+      "nothing for miles. perfect.",
+      "the stars are louder here",
+      "if you listen, the dunes hum",
+      "water would be nice. so would shade.",
+      "the city feels like a dream from here",
+      "every rock out here has a name. I forget them.",
+      "the windmill turns for nobody",
+      "out here a rug counts as furniture"
+    ],
+    "weather": {
+      "clear": [
+        "not a cloud. not one.",
+        "clear again. shocking."
+      ],
+      "storm": [
+        "sandstorm. cover your eyes",
+        "here comes the sand"
+      ],
+      "fog": [
+        "dust on the wind",
+        "hazy. can't see the mesas."
+      ],
+      "rain": [
+        "rain? here? make a wish",
+        "the desert is drinking"
+      ]
+    },
+    "added": [
+      "{user} dragged a {thing} out here",
+      "a {thing}, in the middle of nowhere. {user}'s doing",
+      "{user} thinks the desert needed a {thing}",
+      "okay. a {thing}. thanks {user}"
+    ],
+    "addedText": [
+      "{user} carved \"{text}\" into the sign",
+      "a sign now reads \"{text}\". {user}.",
+      "\"{text}\", says a sign, says {user}"
+    ],
+    "removed": [
+      "the {thing} sinks into the sand",
+      "{thing}, buried",
+      "and the {thing} is gone. the desert wins."
+    ]
+  },
+  "survival": {
+    "comfort": "water",
+    "comfortDrain": {
+      "base": 0.015,
+      "night": 0.005,
+      "day": 0.06,
+      "rain": -0.02,
+      "storm": 0.05,
+      "fog": 0
+    },
+    "comfortTags": [
+      "water",
+      "shade",
+      "shelter"
+    ],
+    "foodTags": [
+      "food"
+    ],
+    "restTags": [
+      "bed",
+      "seat"
+    ],
+    "spiritTags": [
+      "person",
+      "animal",
+      "music",
+      "fun"
+    ]
+  },
+  "builds": [
+    {
+      "name": "camp",
+      "aliases": [
+        "campsite",
+        "campfire camp",
+        "base"
+      ],
+      "items": [
+        {
+          "sprite": "tent",
+          "dx": 0
+        },
+        {
+          "sprite": "campfire",
+          "dx": 34
+        },
+        {
+          "sprite": "bedroll",
+          "dx": 50
+        },
+        {
+          "sprite": "lantern",
+          "dx": 30
+        }
+      ]
+    },
+    {
+      "name": "market",
+      "aliases": [
+        "bazaar",
+        "stall",
+        "shop"
+      ],
+      "items": [
+        {
+          "sprite": "rug",
+          "dx": 0
+        },
+        {
+          "sprite": "pot",
+          "dx": 4
+        },
+        {
+          "sprite": "pot",
+          "dx": 14
+        },
+        {
+          "sprite": "barrel",
+          "dx": 26
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": 0,
+          "text": "MARKET"
+        }
+      ]
+    },
+    {
+      "name": "oasis_bar",
+      "aliases": [
+        "bar",
+        "oasis",
+        "watering hole"
+      ],
+      "items": [
+        {
+          "sprite": "oasis",
+          "dx": 0
+        },
+        {
+          "sprite": "palm",
+          "dx": 40
+        },
+        {
+          "sprite": "rug",
+          "dx": 44
+        },
+        {
+          "sprite": "stew_pot",
+          "dx": 70
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": 8,
+          "text": "OASIS BAR"
+        }
+      ]
+    },
+    {
+      "name": "lookout",
+      "aliases": [
+        "watchtower",
+        "viewpoint"
+      ],
+      "items": [
+        {
+          "sprite": "stone_arch",
+          "dx": 0
+        },
+        {
+          "sprite": "banner",
+          "dx": 34
+        },
+        {
+          "sprite": "crate",
+          "dx": 44
+        },
+        {
+          "sprite": "skull",
+          "dx": 60
+        }
+      ]
+    },
+    {
+      "name": "bone_garden",
+      "aliases": [
+        "graveyard",
+        "bones"
+      ],
+      "items": [
+        {
+          "sprite": "bones",
+          "dx": 0
+        },
+        {
+          "sprite": "skull",
+          "dx": 18
+        },
+        {
+          "sprite": "dead_tree",
+          "dx": 28
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": 0,
+          "text": "DO NOT DIG"
+        }
+      ]
+    },
+    {
+      "name": "viewer_spot",
+      "welcome": true,
+      "items": [
+        {
+          "sprite": "wood_sign",
+          "dx": 0,
+          "text": "{name}"
+        },
+        {
+          "sprite": "rug",
+          "dx": 4
+        },
+        {
+          "sprite": "pot",
+          "dx": 30
+        }
+      ]
+    }
+  ]
+}

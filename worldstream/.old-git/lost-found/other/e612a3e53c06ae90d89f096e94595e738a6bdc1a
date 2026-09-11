@@ -1,0 +1,134 @@
+# worldstream: the noodle shop
+
+A pixel-art noodle shop, open late, streamed on Kick through an OBS browser
+source. One building, one keeper. He cooks, serves, checks the mail, sweeps the
+step, straightens the board when it leans, kicks the vending machine when it
+flickers, and goes up to the balcony when the top lantern goes out. Chat comes
+in, gets a bowl, hangs about. Visiting the stream is visiting the shop.
+
+There is no storyline, no travelling, no events. Small things happen and he
+deals with them.
+
+## Run
+
+```
+npm install
+npm run dev          # packs the art, rebuilds the renderer on change, runs the server on :4400
+npm run chat         # mock chat REPL: "mika: !order miso" speaks as mika; /mod toggles the moderator badge
+```
+
+- OBS: add a **Browser** source, URL `http://localhost:4400/`, 1920x1080, 60 fps. `?hud=1` adds a debug line.
+- Sound: the page plays a quiet lo-fi loop with Web Audio (no files). Tick **Control audio via OBS** in the source properties. `?nomusic` disables it; the admin page has on/off and volume, saved in the state.
+- Operator page: `http://localhost:4400/admin` (localhost only): live state, recent chat with what happened to each line, weather, knock things over, spawn a passer-by or the cat, drop his current task, put words in his mouth.
+- Fixed scene without chat, for art checks: `http://localhost:4400/?demo=1&weather=rain&spot=door&mode=sweep&bin=fallen&bubble=hello`. Spots and modes are the ids in `src/shared/scene.ts` and `src/shared/state.ts`.
+
+## Chat
+
+Commands work at once. Everything else may go to the brain (below).
+
+| Command | What happens |
+|---|---|
+| `!order [dish]`, `!ramen`, `!udon` | a customer with your name walks in and takes a stool; he cooks, serves, the bowl steams, they leave when it is empty |
+| `!menu` | what is on tonight |
+| `!hi` | he waves and says hello back |
+| `!fix bin` (or `board`, `vending`, `mail`, `plants`, `lantern`, `sign`), `!bin` | you point at something that is off; he goes and sorts it, and thanks you |
+| `!flag [red\|white\|blue\|yellow] <words>` | regulars only: your banner stands by the kerb, up to 10 letters, for a few hours. `!flag remove` takes it down |
+| `!cat` | friends only: a cat comes to live at the shop for a while |
+| `!tab` | your standing: bowls, nights, points |
+| `!weather rain`, `!say ...`, `!knock bin` | moderators |
+
+**He asks back.** A few seconds after an order lands, a hello, a useful
+alert, a flag or the cat, he follows up with one small question for that
+viewer ("long day, mika?", "where are you tuning in from?", "does it have a
+name?"), remembers he asked, and treats their next line as the answer: the
+brain replies to what they said, or without the brain he acknowledges from a
+bank. Answering earns a point. One question per person every eight minutes,
+never two to chat within 45 seconds (`questions` in the config).
+
+**He asks the street.** When nobody has said anything for five minutes he asks
+the whole room something anyone can answer ("what's everyone eating tonight?",
+"rain here. what's it like where you are?"). The first answer closes it and the
+brain is told who answered so it can reply to them and pull others in. At most
+one every eight minutes, none while he naps or when Kick says nobody is
+watching. If he has dozed off on the stool, the first person to speak wakes him.
+
+**Rapport.** Every conversation earns a point (at most one every 30 seconds),
+every bowl five, every greeting two, every useful alert three, every new night
+two. At 15 you are a regular and can hang a flag; at 40 you are a friend and
+can bring the cat (`rapport` in the config). Moderators skip the gates.
+
+**The brain.** Plain chat is batched and read by Claude (`nl.mode` in the
+config: `all`, `mention` or `off`; needs `ANTHROPIC_API_KEY` in `.env`). It
+speaks as the keeper and acts only through tools that turn into the same
+commands as above, so the cooldowns, the menu and the rapport gates apply the
+same way. It sees the scene (weather, what he is doing, who is at the counter,
+what is broken) and short true notes about the people talking.
+
+## What he does on his own
+
+Idle jobs are picked by weight and cooldown (`src/server/jobs.ts`): tending the
+pot (most of the time), wiping the counter, sweeping the step (more when it
+snows), looking down the street, a sit on the end stool with tea (a nap when
+chat has been quiet), a look from the balcony, watering the plants, feeding the
+cat, bringing a delivery in, getting a can from the machine. He waves at
+passers-by when he is free.
+
+Mishaps arrive every few minutes (`street.mishapEveryMs`): the bin goes over,
+the board leans, the vending machine flickers, the plants wilt, the top lantern
+goes out, the neon glitches; mail comes now and then. He notices on his own
+after a while (`keeper.noticeMs`), or straight away when chat points. The cat,
+when there is one, wanders between its spots and now and then knocks the bin
+over itself.
+
+Weather drifts between clear, rain, snow and fog on the configured odds. It is
+always night.
+
+## Kick
+
+1. Create an app at kick.com/settings/developer (2FA required). Redirect URL:
+   `http://localhost:4400/kick/callback`. Enable webhooks and set the webhook
+   URL to your public tunnel plus `/kick/webhook`.
+2. Put `KICK_CLIENT_ID`, `KICK_CLIENT_SECRET` and `KICK_WEBHOOK_PUBLIC_URL` in `.env`.
+3. Expose the server: `cloudflared tunnel --url http://localhost:4400` (or any HTTPS tunnel).
+4. Start the server and open `http://localhost:4400/kick/login` while logged into Kick.
+   Tokens land in `state/kick-tokens.json`; subscriptions are created and re-checked on
+   every boot. `/kick/status` shows the connection.
+
+Webhooks are verified against Kick's published RSA key and de-duplicated. Set
+`kick.botRepliesEnabled` (or flip it on the admin page) to echo his lines into
+chat as the bot.
+
+## Layout
+
+- `src/shared/` the scene (every coordinate: spots, fixtures, stools, flag slots), state types and the pure reducer, the command parser, the catalogue types, config schema, rapport maths
+- `src/server/` HTTP + WebSocket server, store, the keeper engine and his jobs, the order flow, the street (weather, passers-by, mishaps, the cat), the interpreter, the regulars ledger, the brain, Kick, admin
+- `src/web/` Canvas 2D renderer: 480x270 internal, scaled x4; sky and mountains, the building sprites, the keeper, lights, weather, bubbles and flags, music
+- `assets/shop/` `palette.txt`, `catalogue.json` (sprites, menu, line banks, weather odds), `sprites/*.sprite`, `keeper/*.sprite`
+- `assets/font.txt` the 5x7 bitmap font
+- `scripts/rig/` the art is generated: `shop.ts` paints the building, `people.ts` the keeper, passers-by and customers, `props.ts` the fixtures, bowl and cat; `preview.ts` composes `dist/shop/preview.png` without a browser
+- `scripts/pack.ts` validates every pixel against the palette and writes `dist/shop/atlas.json` + `sheet.png`
+- `config/world.config.json` the shop's name and persona, limits and cooldowns, rapport thresholds, the keeper's timings, the street's odds, the brain, Kick
+- `docs/ART.md` the style guide
+- `state/` `shop.json`, `regulars.json`, `kick-tokens.json` (gitignored)
+
+## Sprites
+
+A sprite is a text grid over single-character palette keys, one file per sprite:
+
+```
+name: bowl
+anchor: bottom
+fps: 3
+---
+......v...
+....m..v..
+..kkkkkk..
+.mmmmmmmmz
+--
+(next frame)
+```
+
+`N* row` repeats a row, short rows are padded, `--` separates frames, and
+`npm run assets` refuses any pixel that is not a palette key. Most of the art is
+written by the rigs; edit the rig and rerun `npm run rig`, then look at
+`dist/shop/preview.png`.

@@ -1,0 +1,32 @@
+# key  hex      name   (keys 8 9 a d e h t are shared with the character art and keep their colours)
+.  transparent
+0  #1a0f2e  night-sky
+1  #2a1a14  shadow
+2  #4a2c1e  deep-brown
+3  #7a4a2a  earth
+4  #a34b2a  red-rock
+5  #b3703b  clay
+6  #d9a86c  sand
+7  #f2d5a0  light-sand
+8  #1a1a2e  near-black
+9  #2a2a44  slate
+a  #3d3d5c  grey-blue
+b  #6e6e96  lavender
+c  #efe9dd  bone
+d  #f4f4ff  white
+e  #00e5ff  cyan
+f  #3ca6c9  water
+g  #1b6d8a  deep-water
+h  #ff2bd6  magenta
+i  #ff9f43  sunset
+j  #c0392b  rust
+k  #ff8a3d  orange
+l  #ffb347  amber
+m  #ffe066  yellow
+n  #8fd14f  bright-green
+o  #3f7d3a  cactus
+p  #2c5a2a  dark-green
+q  #ff3b3b  red
+r  #8a1c1c  dark-red
+s  #5c3a1e  wood
+t  #e0c9a6  skin

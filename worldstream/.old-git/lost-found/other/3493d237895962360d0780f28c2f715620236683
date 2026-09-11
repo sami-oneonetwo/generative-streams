@@ -1,0 +1,249 @@
+// The keeper engine: runs one task at a time, step by step, on the wall clock.
+// Walking is expressed as scripted motion so the renderer glides; going
+// through the door or up the stairs is planned here from the zones.
+import { motionX, type KeeperState, type Motion, type Order } from '../shared/state.js';
+import type { Catalogue } from '../shared/catalogue.js';
+import type { Config } from '../shared/config.js';
+import { SPOTS, type Facing, type Spot, type Zone } from '../shared/scene.js';
+import { IDLE_JOBS, idleTask, makeJobCtx, type JobCtx, type Step, type Task } from './jobs.js';
+import { log } from './log.js';
+import type { Store } from './store.js';
+
+/** Task steps plus the primitive moves a `goto` is expanded into. */
+type Prim =
+  | Step
+  | { kind: 'move'; x: number }
+  | { kind: 'door'; state: 'open' | 'closed' }
+  | { kind: 'hide'; ms: number }
+  | { kind: 'appear'; zone: Zone; x: number; facing: Facing }
+  | { kind: 'face'; facing: Facing };
+
+export interface KeeperDeps {
+  store: Store;
+  cfg: Config;
+  cat: Catalogue;
+  say: (text: string) => void;
+  now?: () => number;
+  rnd?: () => number;
+}
+
+interface Running {
+  task: Task;
+  steps: Prim[];
+  i: number;
+  /** When the current step is done; 0 when it is instant. */
+  until: number;
+  started: boolean;
+}
+
+const DOOR_MS = 350;
+const DOOR_CROSS_MS = 500;
+const STAIRS_MS = 2600;
+
+export class Keeper {
+  private queue: Task[] = [];
+  private current: Running | null = null;
+  private readonly lastIdle = new Map<string, number>();
+  private readonly now: () => number;
+  private readonly rnd: () => number;
+
+  constructor(private readonly deps: KeeperDeps) {
+    this.now = deps.now ?? Date.now;
+    this.rnd = deps.rnd ?? Math.random;
+    // a restart mid-walk: put him down where he was
+    const k = this.k;
+    if (k.motion) this.patch({ x: Math.round(motionX(k.x, k.motion, this.now())), motion: undefined, mode: 'idle', job: undefined, carrying: undefined });
+    if (k.zone === 'hidden') this.patch({ zone: 'inside', x: SPOTS.door_in.x, mode: 'idle' });
+  }
+
+  private get k(): KeeperState {
+    return this.deps.store.state.keeper;
+  }
+
+  private patch(p: Partial<KeeperState>): void {
+    this.deps.store.dispatch({ type: 'keeper', patch: p });
+  }
+
+  ctx(now = this.now()): JobCtx {
+    return makeJobCtx(this.deps.store.state, this.deps.cat, this.deps.cfg, now, this.rnd);
+  }
+
+  /** What he is doing and what is waiting. */
+  status(): { current: string | null; queue: string[]; busy: boolean } {
+    return { current: this.current ? this.current.task.label : null, queue: this.queue.map((t) => t.label), busy: Boolean(this.current && !this.current.task.interruptible) };
+  }
+
+  /** Free to take something small right now (idle, or on an idle job). */
+  get free(): boolean {
+    return !this.current || this.current.task.interruptible;
+  }
+
+  /** Is this errand already running or queued? */
+  has(key: string): boolean {
+    return this.current?.task.key === key || this.queue.some((t) => t.key === key);
+  }
+
+  /** Queue a task. Returns false when the same errand is already on the list. */
+  request(task: Task): boolean {
+    if (this.has(task.key)) return false;
+    this.queue.push(task);
+    this.queue.sort((a, b) => b.priority - a.priority);
+    if (this.current && this.current.task.interruptible && task.priority > this.current.task.priority) this.cancel();
+    return true;
+  }
+
+  /** Drop the running task and stand still. */
+  cancel(): void {
+    if (!this.current) return;
+    const k = this.k;
+    const now = this.now();
+    this.patch({ x: Math.round(motionX(k.x, k.motion, now)), motion: undefined, mode: 'idle', modeSince: now, job: undefined, carrying: undefined, ...(k.zone === 'hidden' ? { zone: 'inside' as Zone, x: SPOTS.door_in.x } : {}) });
+    this.current = null;
+  }
+
+  tick(now = this.now()): void {
+    if (!this.current) this.start(this.next(now), now);
+    let guard = 0;
+    while (this.current && guard++ < 50) {
+      const run = this.current;
+      const step = run.steps[run.i];
+      if (!step) {
+        this.finish(now);
+        this.start(this.next(now), now);
+        continue;
+      }
+      if (!run.started) {
+        run.started = true;
+        run.until = this.begin(step, now);
+        if (run.until > now) return;
+      }
+      if (run.until > now) return;
+      this.end(step, now);
+      run.i++;
+      run.started = false;
+    }
+  }
+
+  private next(now: number): Task {
+    const queued = this.queue.shift();
+    if (queued) return queued;
+    const ctx = this.ctx(now);
+    const candidates = IDLE_JOBS.map((j) => ({ j, w: now - (this.lastIdle.get(j.id) ?? 0) >= j.cooldownMs ? j.weight(ctx) : 0 })).filter((c) => c.w > 0);
+    const total = candidates.reduce((a, c) => a + c.w, 0);
+    let r = this.rnd() * total;
+    let picked = candidates[0]?.j ?? IDLE_JOBS[0];
+    for (const c of candidates) {
+      r -= c.w;
+      if (r <= 0) {
+        picked = c.j;
+        break;
+      }
+    }
+    this.lastIdle.set(picked.id, now);
+    return idleTask(picked, ctx);
+  }
+
+  private start(task: Task, now: number): void {
+    this.current = { task, steps: task.steps as Prim[], i: 0, until: 0, started: false };
+    this.patch({ job: { id: task.id, label: task.label } });
+    if (task.priority > 0) log('keeper', task.label);
+    void now;
+  }
+
+  private finish(now: number): void {
+    this.current = null;
+    this.patch({ job: undefined, mode: 'idle', modeSince: now, motion: undefined, carrying: undefined });
+  }
+
+  /** Start a step; returns when it will be done (now for instant steps). */
+  private begin(step: Prim, now: number): number {
+    const k = this.k;
+    switch (step.kind) {
+      case 'goto': {
+        // expand into primitives in place and start the first of them
+        const prims = this.route(k, SPOTS[step.spot]);
+        const run = this.current!;
+        run.steps.splice(run.i, 1, ...prims);
+        const first = run.steps[run.i];
+        return first ? this.begin(first, now) : now;
+      }
+      case 'move': {
+        const dist = Math.abs(step.x - k.x);
+        if (dist < 1) return now;
+        const duration = Math.max(300, Math.round((dist / this.deps.cfg.keeper.walkSpeed) * 1000));
+        const motion: Motion = { fromX: k.x, toX: step.x, startAt: now, endAt: now + duration };
+        this.patch({ motion, mode: k.carrying === 'box' ? 'carry' : k.carrying === 'bowl' ? 'walk_bowl' : 'walk', modeSince: now, facing: step.x > k.x ? 'r' : 'l' });
+        return motion.endAt;
+      }
+      case 'do':
+        this.patch({ mode: step.mode, modeSince: now, ...(step.facing ? { facing: step.facing } : {}) });
+        return now + step.ms;
+      case 'say':
+        this.deps.say(step.text);
+        return now;
+      case 'maybe_say':
+        if (step.text && this.rnd() < step.chance) this.deps.say(step.text);
+        return now;
+      case 'fixture':
+        this.deps.store.dispatch({ type: 'fixture', id: step.id, state: step.state, at: now });
+        return now;
+      case 'carry':
+        this.patch({ carrying: step.what ?? undefined });
+        return now;
+      case 'fn':
+        step.run();
+        return now;
+      case 'wait':
+        return now + step.ms;
+      case 'door':
+        this.deps.store.dispatch({ type: 'fixture', id: 'door', state: step.state, at: now });
+        return now + DOOR_MS;
+      case 'hide':
+        this.patch({ zone: 'hidden', motion: undefined, mode: 'idle', modeSince: now });
+        return now + step.ms;
+      case 'appear':
+        this.patch({ zone: step.zone, x: step.x, facing: step.facing, motion: undefined, mode: 'idle', modeSince: now });
+        return now;
+      case 'face':
+        this.patch({ facing: step.facing });
+        return now;
+    }
+  }
+
+  private end(step: Prim, now: number): void {
+    if (step.kind === 'move') this.patch({ x: step.x, motion: undefined, mode: 'idle', modeSince: now });
+  }
+
+  /** The primitive moves from where he is to a spot, through the door or up the stairs as needed. */
+  route(k: KeeperState, to: Spot): Prim[] {
+    const out: Prim[] = [];
+    let zone: Zone = k.zone;
+    if (zone === 'hidden') {
+      out.push({ kind: 'appear', zone: 'inside', x: SPOTS.door_in.x, facing: 'l' });
+      zone = 'inside';
+    }
+    const hops = zonePath(zone, to.zone);
+    for (let i = 0; i + 1 < hops.length; i++) {
+      const [a, b] = [hops[i], hops[i + 1]];
+      if (a === 'inside' && b === 'outside') out.push({ kind: 'move', x: SPOTS.door_in.x }, { kind: 'door', state: 'open' }, { kind: 'hide', ms: DOOR_CROSS_MS }, { kind: 'appear', zone: 'outside', x: SPOTS.door.x, facing: 'r' }, { kind: 'door', state: 'closed' });
+      else if (a === 'outside' && b === 'inside') out.push({ kind: 'move', x: SPOTS.door.x }, { kind: 'door', state: 'open' }, { kind: 'hide', ms: DOOR_CROSS_MS }, { kind: 'appear', zone: 'inside', x: SPOTS.door_in.x, facing: 'l' }, { kind: 'door', state: 'closed' });
+      else if (a === 'inside' && b === 'upstairs') out.push({ kind: 'move', x: SPOTS.door_in.x }, { kind: 'hide', ms: STAIRS_MS }, { kind: 'appear', zone: 'upstairs', x: SPOTS.balcony.x, facing: 'l' });
+      else if (a === 'upstairs' && b === 'inside') out.push({ kind: 'hide', ms: STAIRS_MS }, { kind: 'appear', zone: 'inside', x: SPOTS.door_in.x, facing: 'l' });
+    }
+    out.push({ kind: 'move', x: to.x }, { kind: 'face', facing: to.facing });
+    return out;
+  }
+
+  /** For the order flow: is he mid-way through serving this order? */
+  serving(order: Order): boolean {
+    return this.has(`order:${order.id}`);
+  }
+}
+
+/** Zones to pass through, first to last inclusive. */
+export function zonePath(from: Zone, to: Zone): Zone[] {
+  if (from === to) return [from];
+  if (from === 'outside' && to === 'upstairs') return ['outside', 'inside', 'upstairs'];
+  if (from === 'upstairs' && to === 'outside') return ['upstairs', 'inside', 'outside'];
+  return [from, to];
+}

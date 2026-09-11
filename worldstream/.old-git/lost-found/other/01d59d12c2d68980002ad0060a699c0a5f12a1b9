@@ -1,0 +1,125 @@
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { Conversation } from '../src/server/conversation.js';
+import type { IncomingChat } from '../src/server/ingest.js';
+import { Regulars } from '../src/server/regulars.js';
+import { ConfigSchema } from '../src/shared/config.js';
+import { catalogue } from './helpers.js';
+
+function setup(rnd = () => 0.1) {
+  const cfg = ConfigSchema.parse({});
+  let t = 1_700_000_000_000;
+  const now = () => t;
+  const regulars = new Regulars(join(mkdtempSync(join(tmpdir(), 'conv-')), 'r.json'), cfg.rapport, cfg.rapport.messageCreditMs, now);
+  const said: string[] = [];
+  const conv = new Conversation({ cfg, cat: catalogue, regulars, say: (s) => said.push(s), now, rnd });
+  const advance = (ms: number) => {
+    const end = t + ms;
+    while (t < end) {
+      t = Math.min(end, t + 250);
+      conv.tick(t);
+    }
+  };
+  const user = (name: string) => ({ id: `k:${name}`, name, badges: [] });
+  const msg = (name: string, content: string): IncomingChat => ({ id: `${t}${name}`, user: user(name), content, at: t, source: 'mock' });
+  return { cfg, conv, regulars, said, advance, user, msg, now };
+}
+
+describe('conversation', () => {
+  it('asks a question a few seconds after an order and hears the answer', () => {
+    const { conv, regulars, said, advance, user, msg } = setup();
+    const mika = user('mika');
+    regulars.seen(mika);
+    expect(conv.followUp('ordered', mika, { dish: 'miso ramen' })).toBe(true);
+    expect(conv.followUp('ordered', mika, { dish: 'miso ramen' })).toBe(false);
+    advance(2000);
+    expect(said).toHaveLength(0);
+    advance(7000);
+    expect(said).toHaveLength(1);
+    expect(said[0]).toContain('mika');
+    expect(said[0]).toMatch(/\?/);
+    expect(conv.openFor(mika.id)?.text).toBe(said[0]);
+    const before = regulars.get(mika.id)!.rapport;
+    const q = conv.heard(msg('mika', 'first time, yeah. it was great'));
+    expect(q?.trigger).toBe('ordered');
+    expect(conv.openFor(mika.id)).toBeUndefined();
+    expect(regulars.get(mika.id)!.rapport).toBe(before + 1);
+    expect(conv.ack(mika)).toBeTruthy();
+    // and not again for a while
+    expect(conv.followUp('greeted', mika)).toBe(false);
+  });
+
+  it('spaces questions out across chat and forgets ones nobody answered', () => {
+    const { cfg, conv, said, advance, user } = setup();
+    conv.followUp('greeted', user('pip'));
+    conv.followUp('helped', user('ada'));
+    advance(9000);
+    expect(said).toHaveLength(1);
+    advance(cfg.questions.globalGapMs);
+    expect(said).toHaveLength(2);
+    expect(conv.status().open).toBe(2);
+    advance(cfg.questions.answerWindowMs + 1000);
+    expect(conv.status().open).toBe(0);
+  });
+
+  it('tells the brain what was asked and what was said', () => {
+    const { conv, advance, user, msg } = setup();
+    const kai = user('kai');
+    conv.followUp('cat', kai);
+    advance(9000);
+    conv.noteKeeperLine('off the counter.');
+    const ctx = conv.context([msg('kai', 'she is called noodle')]);
+    expect(ctx).toContain('You asked');
+    expect(ctx).toContain('kai');
+    expect(ctx).toContain('he said: off the counter.');
+    conv.brainAsked(user('ada'), 'ada, spicy or mild?');
+    expect(conv.openFor('k:ada')?.text).toContain('spicy');
+  });
+
+  it('respects the odds and the switch', () => {
+    const off = setup(() => 0.99);
+    expect(off.conv.followUp('ordered', off.user('x'))).toBe(false);
+    const cfg = ConfigSchema.parse({ questions: { enabled: false } });
+    expect(cfg.questions.enabled).toBe(false);
+  });
+});
+
+describe('questions to the street', () => {
+  it('asks the room once chat has gone quiet, lets anyone answer, and tells the brain who did', () => {
+    const { cfg, conv, said, user, msg, now, regulars } = setup();
+    const ask = (quietFor: number, asleep = false, viewers: number | null = null) => conv.roomTick(now(), quietFor, 'rain', asleep, viewers);
+    expect(ask(60_000)).toBe(false);
+    expect(ask(cfg.questions.roomAfterMs, true)).toBe(false);
+    expect(ask(cfg.questions.roomAfterMs, false, 0)).toBe(false);
+    expect(ask(cfg.questions.roomAfterMs)).toBe(true);
+    expect(said).toHaveLength(1);
+    expect(said[0]).toMatch(/\?/);
+    expect(conv.roomOpen?.text).toBe(said[0]);
+    expect(ask(cfg.questions.roomAfterMs)).toBe(false);
+    const ada = user('ada');
+    regulars.seen(ada);
+    const before = regulars.get(ada.id)!.rapport;
+    const q = conv.heard(msg('ada', 'pizza, sorry'));
+    expect(q?.trigger).toBe('room');
+    expect(conv.roomOpen).toBeNull();
+    expect(regulars.get(ada.id)!.rapport).toBe(before + 1);
+    expect(conv.heard(msg('kai', 'me too'))).toBeUndefined();
+    const ctx = conv.context([msg('kai', 'me too')]);
+    expect(ctx).toContain('asked the whole street');
+    expect(ctx).toContain('ada answered first');
+  });
+
+  it('spaces street questions out and forgets one nobody answered', () => {
+    const { cfg, conv, said, advance, now } = setup();
+    expect(conv.roomTick(now(), cfg.questions.roomAfterMs, 'clear', false, 12)).toBe(true);
+    advance(cfg.questions.roomWindowMs + 1000);
+    expect(conv.roomOpen).toBeNull();
+    expect(conv.roomTick(now(), cfg.questions.roomAfterMs, 'clear', false, 12)).toBe(false);
+    advance(cfg.questions.roomEveryMs);
+    expect(conv.roomTick(now(), cfg.questions.roomAfterMs, 'clear', false, 12)).toBe(true);
+    expect(said).toHaveLength(2);
+    expect(conv.wake()).toBeTruthy();
+  });
+});

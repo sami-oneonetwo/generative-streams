@@ -1,0 +1,32 @@
+# key  hex      name        (one character per key; "." is transparent)
+.  transparent
+0  #07061a  deep-night
+1  #0b0a1e  night
+2  #141238  navy
+3  #1c1b4a  indigo
+4  #26205e  violet-dark
+5  #3b2d7a  violet
+6  #5a3fa0  purple
+7  #8b5cf6  lilac
+8  #1a1a2e  near-black
+9  #2a2a44  slate
+a  #3d3d5c  grey-blue
+b  #6e6e96  lavender
+c  #c9c9e8  pale
+d  #f4f4ff  white
+e  #00e5ff  cyan
+f  #00a3b8  teal
+g  #0d5c6b  deep-teal
+h  #ff2bd6  magenta
+i  #ff5fa2  pink
+j  #b0165a  wine
+k  #ff8a3d  orange
+l  #ffb347  amber
+m  #ffe066  yellow
+n  #7cff4f  acid-green
+o  #2fbf71  green
+p  #1c5c3a  dark-green
+q  #ff3b3b  red
+r  #8a1c1c  dark-red
+s  #5c3a1e  brown
+t  #e0c9a6  sand

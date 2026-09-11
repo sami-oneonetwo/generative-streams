@@ -1,0 +1,16 @@
+name: wizard_hat
+slot: head
+dx: 2
+dy: -7
+tint: purple
+aliases: wizard, witch hat, pointy hat, mage hat, witch
+tags: hat, magic
+---
+....X....
+....X....
+...XXX...
+...XYX...
+..XXXXX..
+..XXXXX..
+.XXXXXXX.
+XXXXXXXXX

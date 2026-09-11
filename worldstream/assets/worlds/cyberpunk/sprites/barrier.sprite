@@ -1,0 +1,22 @@
+name: barrier
+anchor: bottom
+---
+.q................e.
+aaaaaaaaaaaaaaaaaaaa
+adqqddqqddqqddqqddqa
+adqqddqqddqqddqqddqa
+aaaaaaaaaaaaaaaaaaaa
+.a................a.
+.a................a.
+.a................a.
+aaa..............aaa
+--
+.e................q.
+aaaaaaaaaaaaaaaaaaaa
+adqqddqqddqqddqqddqa
+adqqddqqddqqddqqddqa
+aaaaaaaaaaaaaaaaaaaa
+.a................a.
+.a................a.
+.a................a.
+aaa..............aaa

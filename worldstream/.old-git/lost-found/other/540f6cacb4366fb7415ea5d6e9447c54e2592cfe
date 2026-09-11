@@ -1,0 +1,8 @@
+# The brain: plain chat is read by Claude, who speaks as the keeper (nl.mode in config/world.config.json)
+ANTHROPIC_API_KEY=
+
+# Kick public API (https://docs.kick.com)
+KICK_CLIENT_ID=
+KICK_CLIENT_SECRET=
+KICK_REDIRECT_URI=http://localhost:4400/kick/callback
+KICK_WEBHOOK_PUBLIC_URL=

@@ -1,0 +1,145 @@
+// Localhost-only operator page: live state, the recent chat with what happened
+// to each line, and levers for during the stream.
+import { readFileSync } from 'node:fs';
+import type { IncomingMessage, ServerResponse } from 'node:http';
+import { HELP_TEXT } from '../shared/commands.js';
+import { FIXTURES, FIXTURE_IDS, type FixtureId } from '../shared/scene.js';
+import { WEATHERS, type Weather } from '../shared/state.js';
+import type { IncomingChat } from './ingest.js';
+import type { Interpreter, Outcome } from './interpreter.js';
+import type { Keeper } from './keeper.js';
+import type { KickStatus } from './kick/index.js';
+import type { Regulars } from './regulars.js';
+import type { Store } from './store.js';
+import type { Street } from './street.js';
+
+export interface ChatLogEntry {
+  at: number;
+  user: string;
+  badges: string[];
+  content: string;
+  source: string;
+  applied: boolean;
+  reply?: string;
+  queued?: boolean;
+}
+
+export class ChatLog {
+  private items: ChatLogEntry[] = [];
+
+  push(msg: IncomingChat, outcome: Outcome & { queued?: boolean }): void {
+    this.items.push({ at: msg.at, user: msg.user.name, badges: msg.user.badges, content: msg.content, source: msg.source, applied: outcome.applied, reply: outcome.reply, queued: outcome.queued });
+    if (this.items.length > 100) this.items.splice(0, this.items.length - 100);
+  }
+
+  list(): ChatLogEntry[] {
+    return this.items.slice().reverse();
+  }
+}
+
+export interface AdminDeps {
+  store: Store;
+  htmlPath: string;
+  chatLog: ChatLog;
+  keeper: Keeper;
+  street: Street;
+  regulars: Regulars;
+  interpreter: Interpreter;
+  ingest: (msg: IncomingChat) => void;
+  say: (text: string) => void;
+  kickStatus: () => KickStatus | null;
+  setKickChat: (on: boolean) => boolean | null;
+  brain: () => { pending: number; callsThisHour: number; enabled: boolean };
+  shopName: string;
+}
+
+const OPERATOR: IncomingChat['user'] = { id: 'operator', name: 'operator', badges: ['broadcaster'] };
+
+async function readJson(req: IncomingMessage): Promise<Record<string, unknown>> {
+  const chunks: Buffer[] = [];
+  for await (const c of req) chunks.push(c as Buffer);
+  const text = Buffer.concat(chunks).toString('utf8');
+  return text ? (JSON.parse(text) as Record<string, unknown>) : {};
+}
+
+/** Returns true when the request was an admin route. The caller has already checked it is local. */
+export async function handleAdmin(req: IncomingMessage, res: ServerResponse, url: URL, deps: AdminDeps): Promise<boolean> {
+  if (url.pathname === '/admin') {
+    res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' });
+    res.end(readFileSync(deps.htmlPath));
+    return true;
+  }
+  if (url.pathname === '/admin/api/snapshot') {
+    const s = deps.store.state;
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-cache' });
+    res.end(
+      JSON.stringify({
+        state: s,
+        chat: deps.chatLog.list(),
+        keeper: deps.keeper.status(),
+        fixtures: FIXTURE_IDS.map((id) => ({ id, label: FIXTURES[id].label, state: s.fixtures[id].state, states: FIXTURES[id].states, noticed: Boolean(s.fixtures[id].noticed) })),
+        weathers: WEATHERS,
+        regulars: deps.regulars.top(15),
+        regularsCount: deps.regulars.size,
+        brain: deps.brain(),
+        kick: deps.kickStatus(),
+        commands: HELP_TEXT,
+        shopName: deps.shopName,
+      }),
+    );
+    return true;
+  }
+  if (url.pathname === '/admin/api/action' && req.method === 'POST') {
+    const body = await readJson(req);
+    const action = String(body.action ?? '');
+    const now = Date.now();
+    let result: unknown = { ok: true };
+    try {
+      switch (action) {
+        case 'weather':
+          deps.street.setWeather(body.weather as Weather, now);
+          break;
+        case 'mishap':
+          result = { ok: deps.street.mishap(body.id as FixtureId, now, 'operator') };
+          break;
+        case 'fixture':
+          deps.store.dispatch({ type: 'fixture', id: body.id as FixtureId, state: String(body.state), at: now });
+          break;
+        case 'passerby':
+          deps.street.spawnPasserby(now);
+          break;
+        case 'cat':
+          if (!deps.store.state.entities.some((e) => e.kind === 'cat')) deps.street.spawnCat({ id: 'operator', name: 'operator' }, 30 * 60_000, now);
+          break;
+        case 'clear':
+          deps.store.dispatch({ type: 'clear_entities', kind: body.kind ? (String(body.kind) as 'flag' | 'cat' | 'passerby') : undefined });
+          break;
+        case 'say':
+          deps.say(String(body.text ?? '').slice(0, 160));
+          break;
+        case 'chat': {
+          const msg: IncomingChat = { id: `op_${now}`, user: { ...OPERATOR, name: String(body.as ?? 'operator') }, content: String(body.text ?? ''), at: now, source: 'mock' };
+          deps.ingest(msg);
+          break;
+        }
+        case 'cancel':
+          deps.keeper.cancel();
+          break;
+        case 'music':
+          deps.store.dispatch({ type: 'music', enabled: typeof body.enabled === 'boolean' ? body.enabled : undefined, volume: typeof body.volume === 'number' ? body.volume : undefined });
+          break;
+        case 'kickChat':
+          result = { ok: true, on: deps.setKickChat(Boolean(body.on)) };
+          break;
+        default:
+          result = { ok: false, error: `unknown action ${action}` };
+      }
+    } catch (err) {
+      result = { ok: false, error: String(err) };
+    }
+    res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify(result));
+    return true;
+  }
+  return false;
+}

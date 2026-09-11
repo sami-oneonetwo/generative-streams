@@ -1,0 +1,8 @@
+import type { Atlas } from './atlas.js';
+import type { WorldState } from './state.js';
+
+export type ServerMessage =
+  | { type: 'hello'; atlas: Atlas; shopName: string; keeperName: string }
+  | { type: 'state'; state: WorldState; now: number }
+  | { type: 'toast'; text: string; at: number }
+  | { type: 'presence'; viewers: number | null };

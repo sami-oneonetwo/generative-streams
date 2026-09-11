@@ -1,0 +1,35 @@
+0000000000000000000000000000000000000000 f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 Sami Alakus <s.alakus@easygo.io> 1788669563 +1000	commit (initial): Init
+f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 Sami Alakus <s.alakus@easygo.io> 1788669596 +1000	checkout: moving from main to generative
+f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 f52ade986a64a77e8a4758bc56adc4c6b63f7632 Sami Alakus <s.alakus@easygo.io> 1788678311 +1000	commit: Art foundations: renderer split, palette v2, cached backdrop, dithered sky, lights
+f52ade986a64a77e8a4758bc56adc4c6b63f7632 fff84082eb227b06ff2b7b4b0c126adea1a7587c Sami Alakus <s.alakus@easygo.io> 1788678954 +1000	commit: Wanderer at 16x24 with eight animation sets; wardrobe re-anchored
+fff84082eb227b06ff2b7b4b0c126adea1a7587c 55ca970dd2eef16acd04fdf03f70c7b6c90771c6 Sami Alakus <s.alakus@easygo.io> 1788680176 +1000	commit: Sprite pass, event sprites, overlay layout, toasts, generator on the style guide
+55ca970dd2eef16acd04fdf03f70c7b6c90771c6 f1ef107752b922841e0353693dcd192c36716d43 Sami Alakus <s.alakus@easygo.io> 1788680933 +1000	commit: Memory foundations: sessions, journal, chronicle, landmarks, scars, district
+f1ef107752b922841e0353693dcd192c36716d43 eb420ad69fa88c988dda9f2f698590449b5dbcb4 Sami Alakus <s.alakus@easygo.io> 1788681536 +1000	commit: Trust, roles, refusals with negotiation, and memory in the brain prompt
+eb420ad69fa88c988dda9f2f698590449b5dbcb4 70795d8dc83748a8847bcad2d7f4283c89a778bc Sami Alakus <s.alakus@easygo.io> 1788681575 +1000	commit: Demo mode: presence and fresh-add hooks for name tag review
+70795d8dc83748a8847bcad2d7f4283c89a778bc 7598a47220d8a6ed9808b7fbdb36476637591be2 Sami Alakus <s.alakus@easygo.io> 1788682919 +1000	commit: Event machine: director, five events, stance vote, climax, consequences
+7598a47220d8a6ed9808b7fbdb36476637591be2 d4625735ab760434bc31fda04ee0e3125cfe629e Sami Alakus <s.alakus@easygo.io> 1788684274 +1000	commit: Content polish and progression: brownout dark, siren, fixtures, district look, plaques
+d4625735ab760434bc31fda04ee0e3125cfe629e 593f72722cba2ef1a3e867f218eefd693330494c Sami Alakus <s.alakus@easygo.io> 1788684789 +1000	commit: Aftermath destroys only what the climax wave left standing
+593f72722cba2ef1a3e867f218eefd693330494c e6fa4fb21a3317866da89f9ab0483cc14a18716f Sami Alakus <s.alakus@easygo.io> 1788687041 +1000	commit: Surfaces and slots: the walkway, the kerb and no more piling up
+e6fa4fb21a3317866da89f9ab0483cc14a18716f 4a12bd0d68c28884dadd2e6e68a567140033df2a Sami Alakus <s.alakus@easygo.io> 1788687152 +1000	commit: Lots with floors: window rows, lot edges, a set-back ground floor with doors
+4a12bd0d68c28884dadd2e6e68a567140033df2a 91061e9fa764f04872998662ece3125ca346bd7a Sami Alakus <s.alakus@easygo.io> 1788688609 +1000	commit: Art refresh: purple neon block, a rigged wanderer at real proportions
+91061e9fa764f04872998662ece3125ca346bd7a 1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 Sami Alakus <s.alakus@easygo.io> 1788690427 +1000	commit: Yeet
+1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 Sami Alakus <s.alakus@easygo.io> 1788690470 +1000	checkout: moving from generative to the-store-owner
+1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 Sami Alakus <s.alakus@easygo.io> 1788738242 +1000	checkout: moving from the-store-owner to build-the-rocket
+1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 00bc94f72cb6adc34aa4c96b4bd7aa9e5d31b176 Sami Alakus <s.alakus@easygo.io> 1788762663 +1000	commit: Space (its shit)
+00bc94f72cb6adc34aa4c96b4bd7aa9e5d31b176 f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 Sami Alakus <s.alakus@easygo.io> 1788762788 +1000	checkout: moving from build-the-rocket to main
+f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 Sami Alakus <s.alakus@easygo.io> 1788762972 +1000	checkout: moving from main to generative
+1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 Sami Alakus <s.alakus@easygo.io> 1788763002 +1000	checkout: moving from generative to the-store-owner
+1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 Sami Alakus <s.alakus@easygo.io> 1788764107 +1000	checkout: moving from the-store-owner to generative
+1d77b34cf0c8522ae9a97dca7b79760b8d7cb3a2 c243f65e656c1d305ac9a10858c8ae205e74789e Sami Alakus <s.alakus@easygo.io> 1788764127 +1000	commit: Fix the pack: share the character's steel key, drop dead generated entries
+c243f65e656c1d305ac9a10858c8ae205e74789e 00bc94f72cb6adc34aa4c96b4bd7aa9e5d31b176 Sami Alakus <s.alakus@easygo.io> 1788764178 +1000	checkout: moving from generative to build-the-rocket
+00bc94f72cb6adc34aa4c96b4bd7aa9e5d31b176 c243f65e656c1d305ac9a10858c8ae205e74789e Sami Alakus <s.alakus@easygo.io> 1788764179 +1000	checkout: moving from build-the-rocket to generative
+c243f65e656c1d305ac9a10858c8ae205e74789e c243f65e656c1d305ac9a10858c8ae205e74789e Sami Alakus <s.alakus@easygo.io> 1788764341 +1000	checkout: moving from generative to the-store-owner
+c243f65e656c1d305ac9a10858c8ae205e74789e f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 Sami Alakus <s.alakus@easygo.io> 1788765600 +1000	checkout: moving from the-store-owner to main
+f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 9456ecebccc47b19d5bf21de0820679928568c99 Sami Alakus <s.alakus@easygo.io> 1788766916 +1000	commit: Isolate per-branch state via WORLDSTREAM_STATE_DIR
+9456ecebccc47b19d5bf21de0820679928568c99 c243f65e656c1d305ac9a10858c8ae205e74789e Sami Alakus <s.alakus@easygo.io> 1788766944 +1000	checkout: moving from main to generative
+c243f65e656c1d305ac9a10858c8ae205e74789e 36f29729fdb8415be779c74918730975e2746ce4 Sami Alakus <s.alakus@easygo.io> 1788767001 +1000	commit: Pin per-branch state dir; keep kick tokens shared
+36f29729fdb8415be779c74918730975e2746ce4 c243f65e656c1d305ac9a10858c8ae205e74789e Sami Alakus <s.alakus@easygo.io> 1788767001 +1000	checkout: moving from generative to the-store-owner
+c243f65e656c1d305ac9a10858c8ae205e74789e 91ab72cd2ae2130271aba45e423afedc63c67665 Sami Alakus <s.alakus@easygo.io> 1788767038 +1000	commit: Pin per-branch state dir; keep kick tokens shared
+91ab72cd2ae2130271aba45e423afedc63c67665 00bc94f72cb6adc34aa4c96b4bd7aa9e5d31b176 Sami Alakus <s.alakus@easygo.io> 1788767067 +1000	checkout: moving from the-store-owner to build-the-rocket
+00bc94f72cb6adc34aa4c96b4bd7aa9e5d31b176 1ed5c57d7b23c772f9bb899073c2b7059d052e78 Sami Alakus <s.alakus@easygo.io> 1788767130 +1000	commit: Pin per-branch state dir; keep kick tokens shared
+1ed5c57d7b23c772f9bb899073c2b7059d052e78 9456ecebccc47b19d5bf21de0820679928568c99 Sami Alakus <s.alakus@easygo.io> 1788767131 +1000	checkout: moving from build-the-rocket to main

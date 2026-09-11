@@ -1,0 +1,156 @@
+// The order flow: a viewer orders, a customer walks in and takes a stool, the
+// keeper cooks and serves, the bowl steams for a while, the customer leaves.
+// The keeper's part is a task; the rest is timed here.
+import { randomUUID } from 'node:crypto';
+import { fill, pick, type Catalogue } from '../shared/catalogue.js';
+import { between, type Config } from '../shared/config.js';
+import { COUNTER, PASSER_Y, STOOLS, VIEW } from '../shared/scene.js';
+import type { Entity, Order } from '../shared/state.js';
+import { orderTask } from './jobs.js';
+import type { Keeper } from './keeper.js';
+import { log } from './log.js';
+import type { Store } from './store.js';
+
+export interface OrdersDeps {
+  store: Store;
+  cfg: Config;
+  cat: Catalogue;
+  keeper: Keeper;
+  /** Someone was served: the ledger and the chat echo hear about it. */
+  onServed: (order: Order) => void;
+  now?: () => number;
+  rnd?: () => number;
+}
+
+const WALK_SPEED = 30; // px/s for customers arriving and leaving
+
+export class Orders {
+  private readonly now: () => number;
+  private readonly rnd: () => number;
+
+  constructor(private readonly deps: OrdersDeps) {
+    this.now = deps.now ?? Date.now;
+    this.rnd = deps.rnd ?? Math.random;
+    // anything mid-flight when the server stopped is forgotten; the state reviver already dropped the customers
+    for (const o of this.deps.store.state.orders) this.deps.store.dispatch({ type: 'remove_order', id: o.id });
+  }
+
+  private get s() {
+    return this.deps.store.state;
+  }
+
+  /** Stools nobody is sitting on or walking towards. */
+  freeStools(): number[] {
+    const taken = new Set(this.s.orders.filter((o) => o.stool !== undefined && o.phase !== 'leaving').map((o) => o.stool));
+    return STOOLS.map((_, i) => i).filter((i) => !taken.has(i));
+  }
+
+  openFor(userId: string): Order | undefined {
+    return this.s.orders.find((o) => o.user.id === userId && o.phase !== 'leaving');
+  }
+
+  get waiting(): number {
+    return this.s.orders.filter((o) => o.phase === 'waiting').length;
+  }
+
+  /** Take an order. The caller has already checked cooldowns and the menu. */
+  place(user: Order['user'], dish: string): Order {
+    const order: Order = { id: randomUUID().slice(0, 8), user, dish, at: this.now(), phase: 'waiting' };
+    this.deps.store.dispatch({ type: 'add_order', order });
+    log('orders', `${user.name} ordered ${dish}`);
+    return order;
+  }
+
+  tick(now = this.now()): void {
+    const s = this.s;
+    // seat the next in line
+    const free = this.freeStools();
+    for (const o of s.orders.filter((o) => o.phase === 'waiting').sort((a, b) => a.at - b.at)) {
+      const stool = free.shift();
+      if (stool === undefined) break;
+      this.seat(o, stool, now);
+    }
+    for (const o of s.orders) {
+      const customer = o.customerId ? s.entities.find((e) => e.id === o.customerId) : undefined;
+      if (o.phase === 'seated' && customer) {
+        if (customer.motion && customer.motion.endAt <= now) {
+          // arrived: sit down
+          this.deps.store.dispatch({ type: 'entity', id: customer.id, patch: { motion: undefined, x: STOOLS[o.stool!] - 3, y: COUNTER.bottom + 8, sprite: pick(this.deps.cat.customers, this.rnd) ?? 'customer_a', facing: 'r' } });
+        }
+        if (!customer.motion && !this.deps.keeper.serving(o)) {
+          this.deps.store.dispatch({ type: 'order', id: o.id, patch: { phase: 'cooking' } });
+          this.deps.keeper.request(this.requestTask(o));
+        }
+      } else if (o.phase === 'cooking' && !this.deps.keeper.serving(o)) {
+        // the task was dropped (a restart, a cancel): ask again
+        this.deps.keeper.request(this.requestTask(o));
+      } else if (o.phase === 'eating' && o.eatUntil !== undefined && o.eatUntil <= now) {
+        this.leave(o, now);
+      } else if (o.phase === 'leaving') {
+        if (!customer || (customer.motion && customer.motion.endAt <= now)) {
+          if (customer) this.deps.store.dispatch({ type: 'remove_entity', id: customer.id });
+          this.deps.store.dispatch({ type: 'remove_order', id: o.id });
+        }
+      } else if (o.phase !== 'waiting' && !customer) {
+        // the customer vanished (cleared by the operator): close the order
+        if (o.bowlId) this.deps.store.dispatch({ type: 'remove_entity', id: o.bowlId });
+        this.deps.store.dispatch({ type: 'remove_order', id: o.id });
+      }
+    }
+  }
+
+  private requestTask(o: Order) {
+    return orderTask(this.deps.keeper.ctx(), o, () => this.served(o.id));
+  }
+
+  private seat(o: Order, stool: number, now: number): void {
+    const fromLeft = this.rnd() < 0.5;
+    const startX = fromLeft ? -18 : VIEW.w + 2;
+    const targetX = STOOLS[stool] - 3;
+    const walkers = this.deps.cat.walkers.filter((w) => (this.s.weather === 'rain' ? true : w !== 'walker_umbrella'));
+    const sprite = pick(walkers, this.rnd) ?? 'walker_coat';
+    const duration = Math.round((Math.abs(targetX - startX) / WALK_SPEED) * 1000);
+    const customer: Entity = {
+      id: `cust_${o.id}`, kind: 'customer', sprite, x: startX, y: PASSER_Y, facing: fromLeft ? 'r' : 'l',
+      motion: { fromX: startX, toX: targetX, startAt: now, endAt: now + duration },
+      addedBy: 'world', addedByName: o.user.name, addedAt: now, expiresAt: now + 3_600_000, stool,
+    };
+    this.deps.store.dispatch({ type: 'add_entity', entity: customer });
+    this.deps.store.dispatch({ type: 'order', id: o.id, patch: { phase: 'seated', stool, customerId: customer.id } });
+  }
+
+  /** The keeper put the bowl down. */
+  private served(orderId: string): void {
+    const o = this.s.orders.find((x) => x.id === orderId);
+    if (!o || o.stool === undefined) return;
+    const now = this.now();
+    const eatUntil = now + between(this.deps.cfg.limits.eatMs, this.rnd);
+    const bowl: Entity = { id: `bowl_${o.id}`, kind: 'bowl', sprite: 'bowl', x: STOOLS[o.stool] - 1, y: COUNTER.top + 1, facing: 'r', addedBy: 'world', addedByName: o.user.name, addedAt: now, expiresAt: eatUntil, stool: o.stool };
+    this.deps.store.dispatch({ type: 'add_entity', entity: bowl });
+    this.deps.store.dispatch({ type: 'order', id: o.id, patch: { phase: 'eating', bowlId: bowl.id, eatUntil } });
+    this.deps.store.dispatch({ type: 'served' });
+    this.deps.onServed({ ...o, phase: 'eating', bowlId: bowl.id, eatUntil });
+  }
+
+  private leave(o: Order, now: number): void {
+    const customer = o.customerId ? this.s.entities.find((e) => e.id === o.customerId) : undefined;
+    if (o.bowlId) this.deps.store.dispatch({ type: 'remove_entity', id: o.bowlId });
+    if (!customer) {
+      this.deps.store.dispatch({ type: 'remove_order', id: o.id });
+      return;
+    }
+    const toLeft = this.rnd() < 0.5;
+    const targetX = toLeft ? -18 : VIEW.w + 2;
+    const fromX = STOOLS[o.stool ?? 0] - 3;
+    const walkers = this.deps.cat.walkers.filter((w) => w !== 'walker_umbrella' && w !== 'walker_kid');
+    const duration = Math.round((Math.abs(targetX - fromX) / WALK_SPEED) * 1000);
+    this.deps.store.dispatch({ type: 'entity', id: customer.id, patch: { sprite: pick(walkers, this.rnd) ?? 'walker_coat', y: PASSER_Y, x: fromX, facing: toLeft ? 'l' : 'r', motion: { fromX, toX: targetX, startAt: now, endAt: now + duration }, expiresAt: now + duration + 500 } });
+    this.deps.store.dispatch({ type: 'order', id: o.id, patch: { phase: 'leaving' } });
+  }
+}
+
+/** Text the keeper says when an order comes in. */
+export function orderLine(cat: Catalogue, user: string, dish: string, rnd: () => number = Math.random): string {
+  return fill(pick(cat.lines.order, rnd) ?? '{dish} for {user}.', { user, dish });
+}
+

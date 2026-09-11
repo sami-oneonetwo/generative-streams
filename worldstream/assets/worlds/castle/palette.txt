@@ -1,0 +1,32 @@
+# key  hex      name   (8 9 a d e h t shared with the character art)
+.  transparent
+0  #0b0a1e  night
+1  #1a1420  shadow
+2  #2e2a38  dark-stone
+3  #4a4658  stone
+4  #6e6a7c  light-stone
+5  #8c889a  pale-stone
+6  #a8a4b4  highlight-stone
+7  #d8d4e0  very-pale
+8  #1a1a2e  near-black
+9  #2a2a44  slate
+a  #3d3d5c  grey-blue
+b  #6e6e96  lavender
+c  #efe9dd  bone
+d  #f4f4ff  white
+e  #00e5ff  cyan
+f  #3ca6c9  water
+g  #1b6d8a  deep-water
+h  #ff2bd6  magenta
+i  #7a5cc4  magic-purple
+j  #b0165a  banner-red
+k  #ff8a3d  torch
+l  #ffb347  amber
+m  #ffe066  yellow
+n  #7cff4f  ghost-green
+o  #3f7d3a  moss
+p  #1c5c3a  dark-moss
+q  #ff3b3b  red
+r  #8a1c1c  dark-red
+s  #5c3a1e  wood
+t  #e0c9a6  skin

@@ -1,0 +1,5 @@
+# pack-refs with: peeled fully-peeled sorted 
+12486f188156c9dfc7fc4a9ac0540ebf67635f6d refs/heads/design
+d8f8ac43244a09f8940502494cb80d1023c71910 refs/heads/noodles
+b95ac906f467674743208205310fec3841288e4a refs/heads/worktree-agent-a437764680f724803
+5ca94c725eb3e5828dbb95b818affde8ce8725d8 refs/original/refs/heads/design

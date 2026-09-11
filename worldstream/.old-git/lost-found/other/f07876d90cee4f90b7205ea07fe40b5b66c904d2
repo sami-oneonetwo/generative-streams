@@ -1,0 +1,66 @@
+import { describe, expect, it } from 'vitest';
+import { harness } from './helpers.js';
+
+describe('interpreter', () => {
+  it('gates flags on being a regular and the cat on being a friend', () => {
+    const h = harness();
+    const mika = h.user('mika');
+    h.regulars.seen(mika.user);
+    expect(h.interpreter.run({ kind: 'flag', text: 'hello' }, mika).applied).toBe(false);
+    h.regulars.credit(mika.user.id, h.cfg.rapport.regular);
+    const out = h.interpreter.run({ kind: 'flag', text: 'héllo world!!!' }, mika);
+    expect(out.applied).toBe(true);
+    const flag = h.store.state.entities.find((e) => e.kind === 'flag')!;
+    expect(flag.text).toBe('HLLO WORLD');
+    expect(flag.addedBy).toBe(mika.user.id);
+    // a second flag replaces the first, in the same slot
+    h.interpreter.run({ kind: 'flag', text: 'gg', colour: 'white' }, mika);
+    const flags = h.store.state.entities.filter((e) => e.kind === 'flag');
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatchObject({ text: 'GG', colour: 'm', x: flag.x });
+    expect(h.interpreter.run({ kind: 'cat' }, mika).applied).toBe(false);
+    h.regulars.credit(mika.user.id, h.cfg.rapport.friend);
+    expect(h.interpreter.run({ kind: 'cat' }, mika).applied).toBe(true);
+    expect(h.store.state.entities.some((e) => e.kind === 'cat')).toBe(true);
+    expect(h.interpreter.run({ kind: 'cat' }, h.user('mod', ['moderator'])).applied).toBe(false);
+  });
+
+  it('lets moderators skip the gates', () => {
+    const h = harness();
+    expect(h.interpreter.run({ kind: 'flag', text: 'mod' }, h.user('mod', ['moderator'])).applied).toBe(true);
+  });
+
+  it('sends him to a fixture chat points at, and shrugs when nothing is wrong', () => {
+    const h = harness();
+    const ada = h.user('ada');
+    h.regulars.seen(ada.user);
+    expect(h.interpreter.run({ kind: 'alert', target: 'bin' }, ada).applied).toBe(false);
+    h.store.dispatch({ type: 'fixture', id: 'bin', state: 'fallen', at: h.now() });
+    h.advance(h.cfg.limits.alertCooldownMs + 1);
+    const out = h.interpreter.run({ kind: 'alert', target: 'the rubbish' }, ada);
+    expect(out.applied).toBe(true);
+    expect(h.store.state.fixtures.bin.noticed).toBe(true);
+    expect(h.keeper.has('fix:bin')).toBe(true);
+    expect(h.regulars.get(ada.user.id)!.rapport).toBeGreaterThanOrEqual(3);
+    expect(h.interpreter.run({ kind: 'alert', target: 'flux capacitor' }, ada).reply).toContain('which thing');
+  });
+
+  it('answers the menu and the tab without speaking', () => {
+    const h = harness();
+    const menu = h.interpreter.run({ kind: 'menu' }, h.user('x'));
+    expect(menu.spoken).toBeUndefined();
+    expect(menu.reply).toContain('tonkotsu');
+    expect(h.interpreter.run({ kind: 'tab' }, h.user('x')).reply).toContain('stranger');
+    expect(h.interpreter.run({ kind: 'weather', weather: 'snow' }, h.user('x')).applied).toBe(false);
+    expect(h.interpreter.run({ kind: 'weather', weather: 'snow' }, h.user('x', ['broadcaster'])).applied).toBe(true);
+    expect(h.store.state.weather).toBe('snow');
+  });
+
+  it('greets back and waves, once per cooldown', () => {
+    const h = harness();
+    const out = h.interpreter.run({ kind: 'greet' }, h.user('kai'));
+    expect(out.spoken).toBe(true);
+    expect(h.said[0]).toContain('kai');
+    expect(h.interpreter.run({ kind: 'greet' }, h.user('kai')).applied).toBe(false);
+  });
+});

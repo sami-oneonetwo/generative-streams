@@ -1,0 +1,17 @@
+name: wings
+slot: back
+dx: -3
+dy: 5
+behind: yes
+tint: white
+aliases: angel wings, bird wings, bat wings, fairy wings, fly
+tags: back, magic
+---
+X...............X
+XX.............XX
+XXX...........XXX
+XXXX.........XXXX
+XXXXX.......XXXXX
+.XXXX.......XXXX.
+..XXX.......XXX..
+...XX.......XX...

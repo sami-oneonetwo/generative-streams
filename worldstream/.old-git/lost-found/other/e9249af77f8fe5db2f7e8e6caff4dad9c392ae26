@@ -1,0 +1,28 @@
+import { describe, expect, it } from 'vitest';
+import { FIXTURES, FIXTURE_IDS, FLAG_SLOTS, INSIDE, KEEPER, SPOTS, SPOT_IDS, VIEW } from '../src/shared/scene.js';
+
+describe('scene', () => {
+  it('keeps every spot on screen and inside spots behind the counter', () => {
+    for (const id of SPOT_IDS) {
+      const s = SPOTS[id];
+      expect(s.x, id).toBeGreaterThanOrEqual(0);
+      expect(s.x + KEEPER.w, id).toBeLessThanOrEqual(VIEW.w);
+      if (s.zone === 'inside') {
+        expect(s.x, id).toBeGreaterThanOrEqual(INSIDE.minX);
+        expect(s.x, id).toBeLessThanOrEqual(INSIDE.maxX);
+      }
+    }
+  });
+
+  it('gives every fixture a valid initial state and a label', () => {
+    for (const id of FIXTURE_IDS) {
+      expect(FIXTURES[id].states).toContain(FIXTURES[id].initial);
+      expect(FIXTURES[id].label.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('spaces the flag slots so the cloths never overlap', () => {
+    const sorted = [...FLAG_SLOTS].sort((a, b) => a - b);
+    for (let i = 1; i < sorted.length; i++) expect(sorted[i] - sorted[i - 1]).toBeGreaterThanOrEqual(12);
+  });
+});

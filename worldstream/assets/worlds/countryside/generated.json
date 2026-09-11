@@ -1,0 +1,53 @@
+[
+  {
+    "name": "wanderer_straw_hat",
+    "layers": [
+      "near"
+    ],
+    "w": 12,
+    "h": 8,
+    "colour": "#ffb347",
+    "tags": [
+      "hat",
+      "wearable",
+      "straw",
+      "travel",
+      "gear",
+      "generated"
+    ],
+    "aliases": [
+      "a hat for Wanderer",
+      "straw hat",
+      "traveler hat",
+      "sun hat",
+      "wide brim hat",
+      "wanderer's hat"
+    ],
+    "generated": true
+  },
+  {
+    "name": "suit_of_armour",
+    "layers": [
+      "stage"
+    ],
+    "w": 14,
+    "h": 24,
+    "colour": "#6e6e7a",
+    "tags": [
+      "armour",
+      "knight",
+      "metal",
+      "prop",
+      "generated"
+    ],
+    "aliases": [
+      "suit of armour for Wanderer",
+      "full plate armour",
+      "knight armor",
+      "suit of armor",
+      "plate mail",
+      "empty armour"
+    ],
+    "generated": true
+  }
+]

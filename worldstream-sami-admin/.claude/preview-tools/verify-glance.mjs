@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import { chromium } from './node_modules/playwright/index.mjs';
+const root = process.cwd();
+const browser = await chromium.launchPersistentContext(`${root}/.claude/preview-tools/profile`, { headless: true, viewport: { width: 1920, height: 1080 } });
+const page = browser.pages()[0];
+const errors = [];
+page.on('pageerror', e => errors.push(e.message));
+const scene = await (await fetch('http://127.0.0.1:4401/scene?case=screens')).json();
+let socket;
+const send = revision => {
+  const current = structuredClone(scene);
+  current.chatRevision = revision;
+  socket.send(JSON.stringify({ t: 'state', rev: revision + 1, serverTime: 1800000000000, scene: current }));
+};
+await page.routeWebSocket('**/ws*', ws => { socket = ws; send(0); });
+await page.goto('http://127.0.0.1:4401/?case=screens');
+await page.waitForFunction(() => document.fonts.check('20px "JetBrains Mono"') && document.fonts.check('bold 20px "JetBrains Mono"'));
+await page.waitForTimeout(500);
+const head = () => page.evaluate(() => Array.from(document.querySelector('canvas').getContext('2d').getImageData(868, 624, 84, 76).data));
+const baseline = await head();
+await page.screenshot({ path: `${root}/.claude/preview-tools/irc-neutral.png` });
+send(1);
+await page.waitForTimeout(650);
+const raised = await head();
+assert.notDeepEqual(raised, baseline);
+await page.screenshot({ path: `${root}/.claude/preview-tools/irc-looking-up.png` });
+for (let i = 2; i <= 22; i++) { send(i); await page.waitForTimeout(100); }
+const returned = await head();
+const diff = (a,b) => a.reduce((n,v,i) => n + (v !== b[i] ? 1 : 0),0);
+assert.ok(diff(returned, baseline) < diff(raised, baseline) / 4, 'head should return despite chat burst');
+await page.screenshot({ path: `${root}/.claude/preview-tools/irc-back-to-work.png` });
+assert.deepEqual(errors, []);
+console.log(JSON.stringify({ fontsLoaded: true, headChanges: diff(raised, baseline), returnedDifference: diff(returned, baseline), errors }));
+await browser.close();

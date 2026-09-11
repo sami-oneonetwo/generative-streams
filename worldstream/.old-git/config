@@ -1,0 +1,18 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = git@github.com:sami-easygo/the-wanderer.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	vscode-merge-base = origin/main
+[branch "the-store-owner"]
+	vscode-merge-base = origin/main
+[branch "build-the-rocket"]
+	vscode-merge-base = origin/main
+[branch "generative"]
+	vscode-merge-base = origin/main

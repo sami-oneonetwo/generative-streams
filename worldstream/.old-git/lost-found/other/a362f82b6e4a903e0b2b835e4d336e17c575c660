@@ -1,0 +1,286 @@
+// The things around the shop that have states (bins, the menu board, the
+// vending machine, the mailbox, the plants, the door), plus the bowl on the
+// counter and the cat. Run with `npx tsx scripts/rig/props.ts`.
+import { join } from 'node:path';
+import { Grid, writeSprite } from './grid.js';
+
+const ROOT = process.cwd();
+const SP = join(ROOT, 'assets/shop/sprites');
+const w = (name: string, frames: Grid[], extra: Record<string, string> = {}) => writeSprite(join(SP, `${name}.sprite`), name, frames, extra);
+
+// -- bin ------------------------------------------------------------------------------
+{
+  const g = new Grid(12, 16);
+  g.rect(1, 2, 10, 13, 'w');
+  g.rect(1, 2, 1, 13, 'x');
+  g.rect(9, 2, 2, 13, 'y');
+  for (let y = 4; y < 14; y += 3) g.hline(2, 9, y, 'y');
+  g.rect(0, 0, 12, 2, 'x');
+  g.rect(0, 1, 12, 1, 'w');
+  g.rect(4, -1 + 1, 4, 1, 'y');
+  g.rect(1, 15, 10, 1, '0');
+  g.px(11, 15, '0');
+  w('bin_up', [g]);
+
+  const f = new Grid(20, 10);
+  // on its side, lid off, rubbish spilling left
+  g.rect; // keep tsc quiet about unused
+  f.rect(6, 1, 13, 8, 'w');
+  f.rect(6, 1, 13, 1, 'x');
+  f.rect(6, 7, 13, 2, 'y');
+  for (let x = 9; x < 18; x += 3) f.vline(x, 2, 7, 'y');
+  f.rect(18, 0, 2, 10, 'x');
+  f.rect(19, 0, 1, 10, 'w');
+  f.rect(0, 6, 5, 3, 'z');
+  f.rect(1, 4, 3, 2, 't');
+  f.rect(3, 8, 3, 1, 'k');
+  f.px(0, 9, 'v');
+  f.rect(2, 9, 2, 1, 'v');
+  f.hline(5, 19, 9, '0');
+  w('bin_fallen', [f]);
+}
+
+// -- sandwich board ---------------------------------------------------------------------
+{
+  const board = (wonky: boolean) => {
+    const g = new Grid(wonky ? 18 : 14, 22);
+    const sk = (y: number) => (wonky ? Math.round((21 - y) / 6) : 0);
+    for (let y = 0; y < 22; y++) {
+      const half = Math.min(6, 1 + Math.floor(y / 3));
+      const cx = 6 + sk(y);
+      g.hline(cx - half, cx + half, y, '9');
+      if (y > 2 && y < 18) g.hline(cx - half + 1, cx + half - 1, y, '5');
+    }
+    // chalk: a bowl and lines of menu
+    const cx = 6 + sk(8);
+    g.hline(cx - 2, cx + 2, 6, 'm');
+    g.hline(cx - 1, cx + 1, 7, 'm');
+    g.hline(cx - 3, cx + 3, 10, 'k');
+    g.hline(cx - 3 + sk(12) - sk(8), cx + 2 + sk(12) - sk(8), 12, 'm');
+    g.hline(cx - 3 + sk(14) - sk(8), cx + 3 + sk(14) - sk(8), 14, 'k');
+    g.hline(cx - 2 + sk(16) - sk(8), cx + 1 + sk(16) - sk(8), 16, 'm');
+    // feet
+    g.rect(0 + sk(21), 21, 3, 1, '0');
+    g.rect(10 + sk(21), 21, 3, 1, '0');
+    if (wonky) {
+      // one leg kicked out
+      g.rect(13, 21, 5, 1, '0');
+      g.line(12, 18, 17, 21, '9');
+    }
+    return g;
+  };
+  w('board_straight', [board(false)]);
+  w('board_wonky', [board(true)]);
+}
+
+// -- vending machine --------------------------------------------------------------------
+{
+  const vend = (on: boolean) => {
+    const g = new Grid(18, 32);
+    g.rect(0, 0, 18, 32, 'y');
+    g.rect(0, 0, 1, 32, 'w');
+    g.rect(0, 0, 18, 1, 'x');
+    g.rect(17, 0, 1, 32, '0');
+    g.rect(0, 31, 18, 1, '0');
+    // the lit front
+    g.rect(2, 3, 12, 16, on ? 'o' : 'n');
+    if (on) {
+      g.rect(2, 3, 12, 1, 'q');
+      g.rect(2, 3, 1, 16, 'p');
+    }
+    // cans in rows
+    const cans = ['f', 'k', 'q', 'g', 'm', 'p'];
+    for (let r = 0; r < 3; r++)
+      for (let c = 0; c < 3; c++) {
+        const k = on ? cans[(r * 3 + c) % cans.length] : 'y';
+        g.rect(4 + c * 3, 5 + r * 4, 2, 3, k);
+      }
+    // slot column
+    g.rect(15, 4, 1, 14, on ? 'q' : 'w');
+    g.rect(15, 20, 2, 3, 'x');
+    // the dispensing tray
+    g.rect(2, 22, 13, 5, '5');
+    g.rect(3, 23, 11, 1, on ? 'p' : 'y');
+    g.rect(2, 27, 13, 1, 'x');
+    g.rect(1, 29, 16, 2, 'y');
+    return g;
+  };
+  w('vending_on', [vend(true)]);
+  w('vending_off', [vend(false)]);
+}
+
+// -- mailbox on the wall ----------------------------------------------------------------
+{
+  const mb = (flag: boolean) => {
+    const g = new Grid(10, 12);
+    g.rect(1, 2, 8, 9, 'f');
+    g.rect(1, 2, 1, 9, 'g');
+    g.rect(8, 2, 1, 9, 'd');
+    g.rect(2, 1, 6, 1, 'g');
+    g.rect(2, 5, 6, 1, 'd');
+    g.rect(3, 8, 4, 1, 'e');
+    g.rect(1, 11, 8, 1, '0');
+    if (flag) {
+      g.rect(3, 0, 1, 3, 'v');
+      g.rect(4, 0, 4, 2, 'z');
+    }
+    return g;
+  };
+  w('mailbox_empty', [mb(false)]);
+  w('mailbox_flag', [mb(true)]);
+}
+
+// -- plants -----------------------------------------------------------------------------
+{
+  const plant = (fresh: boolean) => {
+    const g = new Grid(14, 16);
+    // two pots
+    g.rect(1, 10, 6, 6, '9');
+    g.rect(1, 10, 6, 1, 'v');
+    g.rect(6, 10, 1, 6, '7');
+    g.rect(8, 12, 5, 4, '7');
+    g.rect(8, 12, 5, 1, '9');
+    g.rect(1, 15, 12, 1, '0');
+    if (fresh) {
+      g.disc(4, 6, 4, 's');
+      g.disc(3, 5, 2, 't');
+      g.px(6, 3, 't');
+      g.px(1, 8, 't');
+      g.rect(9, 7, 3, 5, 's');
+      g.px(10, 5, 't');
+      g.px(11, 6, 't');
+      g.px(9, 9, 't');
+      g.rect(3, 2, 1, 2, 'k'); // a flower
+      g.px(6, 5, 'g');
+    } else {
+      g.rect(3, 7, 3, 3, 's');
+      g.px(2, 9, 's');
+      g.px(6, 9, 's');
+      g.rect(9, 9, 3, 3, 's');
+      g.px(8, 11, 'v');
+      g.px(5, 11, 'v');
+    }
+    return g;
+  };
+  w('plant_fresh', [plant(true)]);
+  w('plant_wilted', [plant(false)]);
+}
+
+// -- door: closed is a sliding door with the round logo, open shows the way in --------------
+{
+  const W = 26, H = 37;
+  const closed = new Grid(W, H);
+  closed.rect(0, 0, W, H, 'o');
+  for (let x = 4; x < W; x += 5) closed.vline(x, 0, H - 1, 'n');
+  for (let y = 5; y < H; y += 6) closed.hline(0, W - 1, y, 'n');
+  closed.rect(0, 0, 1, H, 'p');
+  closed.rect(W - 1, 0, 1, H, 'n');
+  closed.disc(13, 17, 8, 'o');
+  closed.ring(13, 17, 8, 'p');
+  closed.ring(13, 17, 6, 'q');
+  // bowl logo in the ring
+  closed.hline(10, 16, 17, 'q');
+  closed.hline(11, 15, 18, 'q');
+  closed.hline(12, 14, 19, 'q');
+  closed.px(11, 14, 'q');
+  closed.px(13, 13, 'q');
+  closed.px(15, 14, 'q');
+  closed.rect(0, H - 1, W, 1, 'p');
+  closed.rect(11, 25, 4, 1, 'q'); // handle
+  w('door_closed', [closed]);
+
+  const open = new Grid(W, H);
+  open.rect(0, 0, W, H, 'n');
+  // warm light spilling from inside, brighter low down
+  open.rect(4, 0, 18, H, 'j');
+  open.rect(6, 6, 14, H - 6, 'k');
+  for (let y = 0; y < 6; y++) open.hline(6, 19, y, y % 2 ? 'j' : 'k');
+  // the door slid to the right, only a strip showing
+  open.rect(20, 0, 6, H, 'o');
+  open.vline(20, 0, H - 1, 'p');
+  open.vline(24, 0, H - 1, 'n');
+  for (let y = 5; y < H; y += 6) open.hline(21, 25, y, 'n');
+  open.rect(0, 0, 4, H, '5');
+  open.rect(0, H - 1, W, 1, 'p');
+  w('door_open', [open]);
+}
+
+// -- the bowl on the counter ------------------------------------------------------------
+{
+  const b = (i: number) => {
+    const g = new Grid(10, 8);
+    g.rect(2, 3, 6, 1, 'k');
+    g.rect(1, 4, 8, 2, 'm');
+    g.rect(2, 6, 6, 1, 'z');
+    g.rect(3, 7, 4, 1, '0');
+    g.px(8, 4, 'z');
+    g.px(8, 5, 'z');
+    g.rect(3, 3, 1, 1, 'l');
+    g.line(6, 0, 8, 3, 'v'); // chopsticks
+    g.px(4 + (i & 1), 1, 'm'); // a wisp
+    g.px(3 + ((i >> 1) & 1), 0, 'm');
+    return g;
+  };
+  w('bowl', [b(0), b(1), b(2), b(3)], { fps: '3' });
+}
+
+// -- the cat: cream with tan stripes -------------------------------------------------------
+{
+  const cat = (legs: number, tail: number, sit: boolean, sleep: boolean): Grid => {
+    const g = new Grid(14, 10);
+    if (sleep) {
+      // curled up
+      g.rect(2, 5, 10, 4, 'z');
+      g.rect(3, 4, 7, 1, 'z');
+      g.rect(4, 6, 2, 1, 'v');
+      g.rect(8, 6, 2, 1, 'v');
+      g.rect(9, 3, 3, 3, 'z');
+      g.px(9, 2, 'z');
+      g.px(11, 2, 'z');
+      g.rect(0, 7, 3, 1, 'v');
+      g.rect(2, 9, 10, 1, '0');
+      return g;
+    }
+    if (sit) {
+      g.rect(4, 3, 6, 6, 'z');
+      g.rect(5, 6, 1, 1, 'v');
+      g.rect(7, 6, 1, 1, 'v');
+      g.rect(8, 0, 5, 4, 'z');
+      g.px(8, -1 + 1, 'z');
+      g.px(9, 0, '.');
+      g.px(8, 0, 'z');
+      g.px(12, 0, 'z');
+      g.px(10, 2, 'q');
+      g.px(12, 2, 'q');
+      g.rect(9, 3, 3, 1, 'v');
+      g.rect(4, 9, 6, 1, '0');
+      g.rect(10, 8, 2, 2, 'z');
+      g.rect(10, 9, 2, 1, '0');
+      g.line(3, 8, 0 + tail, 4, 'v');
+      return g;
+    }
+    // walking, facing right
+    g.rect(2, 3, 9, 4, 'z');
+    g.rect(3, 4, 1, 1, 'v');
+    g.rect(6, 4, 1, 1, 'v');
+    g.rect(9, 4, 1, 1, 'v');
+    g.rect(9, 1, 5, 4, 'z');
+    g.px(9, 0, 'z');
+    g.px(13, 0, 'z');
+    g.px(11, 2, 'q');
+    g.px(13, 2, 'q');
+    g.rect(10, 4, 3, 1, 'v');
+    // legs
+    const lx = [3, 5, 8, 10];
+    for (let i = 0; i < 4; i++) {
+      const dx = i % 2 === 0 ? legs : -legs;
+      g.rect(lx[i] + dx, 7, 1, 2, 'z');
+      g.px(lx[i] + dx, 9, '0');
+    }
+    g.line(2, 3, 0, 0 + tail, 'v');
+    return g;
+  };
+  w('cat_walk', [cat(0, 1, false, false), cat(1, 2, false, false), cat(0, 1, false, false), cat(-1, 0, false, false)], { fps: '6' });
+  w('cat_sit', [cat(0, 0, true, false), cat(0, 2, true, false)], { fps: '1' });
+  w('cat_sleep', [cat(0, 0, false, true), cat(0, 0, false, true)], { fps: '1' });
+}

@@ -1,0 +1,11 @@
+name: cat_ears
+slot: head
+dx: 2
+dy: -2
+tint: grey
+aliases: kitty ears, ears, neko, cat
+tags: hat, animal
+---
+X.......X
+XX.....XX
+XIX...XIX

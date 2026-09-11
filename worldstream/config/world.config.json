@@ -1,0 +1,80 @@
+{
+  "port": 4400,
+  "world": "cyberpunk",
+  "character": {
+    "name": "Wanderer",
+    "persona": "A traveller who has lived in every world the stream visits, now hosting it. Warm, a little dry, curious about whatever chat brings in. Polite: thanks people by name, welcomes newcomers, never mocks a viewer or their request, and turns down things gently. Speaks in short lines."
+  },
+  "limits": {
+    "maxEntities": 40,
+    "maxPerLayer": {
+      "sky": 2,
+      "far": 4,
+      "mid": 6,
+      "near": 14,
+      "stage": 18,
+      "fg": 2
+    },
+    "addCooldownMs": 30000,
+    "entityTtlMs": 1200000,
+    "signMaxChars": 16
+  },
+  "votes": {
+    "worldChangeVoters": 5,
+    "windowMs": 120000
+  },
+  "drift": {
+    "minutesPerWorldHour": 5,
+    "weatherMinMs": 300000,
+    "weatherMaxMs": 900000,
+    "bubbleMs": 6000,
+    "chatter": true,
+    "ambientScale": 2.5
+  },
+  "nl": {
+    "mode": "all",
+    "model": "claude-opus-5",
+    "effort": "low",
+    "batchMs": 3000,
+    "maxQueue": 30,
+    "maxTokens": 1500
+  },
+  "kick": {
+    "botRepliesEnabled": false,
+    "chatAs": "bot",
+    "fallbackToUser": false
+  },
+  "denylist": [],
+  "host": {
+    "enabled": true,
+    "quietAfterMs": 120000,
+    "quietCadenceMs": 120000,
+    "busyCadenceMs": 300000,
+    "followUpCadenceMs": 40000,
+    "askTimeoutMs": 75000,
+    "maxModelCallsPerHour": 60,
+    "greetNewcomers": true,
+    "hintEveryMs": 45000,
+    "operatorHoldMs": 45000,
+    "mode": "streamer",
+    "buildEveryMs": 240000,
+    "welcomeBuilds": true
+  },
+  "survival": {
+    "enabled": true,
+    "collapseWindowMs": 90000,
+    "blackoutMs": 25000,
+    "sleepMs": 45000,
+    "decayScale": 0.6,
+    "showMeters": false
+  },
+  "generate": {
+    "enabled": true,
+    "model": "claude-opus-5",
+    "maxPerHour": 12,
+    "perUserCooldownMs": 180000,
+    "maxWidth": 40,
+    "maxHeight": 32,
+    "effort": "medium"
+  }
+}

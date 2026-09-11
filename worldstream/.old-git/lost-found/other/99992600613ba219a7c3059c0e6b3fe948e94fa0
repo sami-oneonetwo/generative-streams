@@ -1,0 +1,32 @@
+import { describe, expect, it } from 'vitest';
+import { cleanFlagText, parseCommand } from '../src/shared/commands.js';
+
+describe('commands', () => {
+  it('parses orders with and without a dish', () => {
+    expect(parseCommand('!order miso ramen')).toEqual({ kind: 'order', dish: 'miso ramen' });
+    expect(parseCommand('!order')).toEqual({ kind: 'order', dish: undefined });
+    expect(parseCommand('!ramen')).toEqual({ kind: 'order', dish: 'ramen' });
+    expect(parseCommand('!udon')).toEqual({ kind: 'order', dish: 'udon' });
+  });
+
+  it('parses greetings, alerts, flags and the cat', () => {
+    expect(parseCommand('!hi')).toEqual({ kind: 'greet' });
+    expect(parseCommand('!fix the bin')).toEqual({ kind: 'alert', target: 'the bin' });
+    expect(parseCommand('!bin')).toEqual({ kind: 'alert', target: 'bin' });
+    expect(parseCommand('!flag red hello there')).toEqual({ kind: 'flag', text: 'hello there', colour: 'red' });
+    expect(parseCommand('!sign "gg"')).toEqual({ kind: 'flag', text: 'gg', colour: undefined });
+    expect(parseCommand('!flag remove')).toEqual({ kind: 'unflag' });
+    expect(parseCommand('!cat')).toEqual({ kind: 'cat' });
+    expect(parseCommand('!cat shoo')).toEqual({ kind: 'shoo' });
+    expect(parseCommand('!weather rain')).toEqual({ kind: 'weather', weather: 'rain' });
+    expect(parseCommand('!weather lava')).toEqual({ kind: 'help' });
+    expect(parseCommand('hello')).toBeNull();
+    expect(parseCommand('!nonsense')).toBeNull();
+  });
+
+  it('cleans flag text to what the cloth can hold', () => {
+    expect(cleanFlagText('héllo wörld!!', 10)).toBe('HLLO WRLD!');
+    expect(cleanFlagText('   gg   ', 10)).toBe('GG');
+    expect(cleanFlagText('<script>', 10)).toBe('SCRIPT');
+  });
+});

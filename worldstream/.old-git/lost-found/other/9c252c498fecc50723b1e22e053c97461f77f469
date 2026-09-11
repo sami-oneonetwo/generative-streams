@@ -1,0 +1,68 @@
+import { describe, expect, it } from 'vitest';
+import { fixTask } from '../src/server/jobs.js';
+import { zonePath } from '../src/server/keeper.js';
+import { SPOTS } from '../src/shared/scene.js';
+import { harness } from './helpers.js';
+
+describe('keeper engine', () => {
+  it('walks out through the door to pick up the bin, and the door opens and shuts', () => {
+    const h = harness();
+    const doorStates: string[] = [];
+    let whereFixed: { x: number; zone: string } | null = null;
+    h.store.on('change', (m: { type: string; id?: string; state?: string }) => {
+      if (m.type === 'fixture' && m.id === 'door') doorStates.push(m.state!);
+      if (m.type === 'fixture' && m.id === 'bin' && m.state === 'up') whereFixed = { x: h.store.state.keeper.x, zone: h.store.state.keeper.zone };
+    });
+    h.store.dispatch({ type: 'fixture', id: 'bin', state: 'fallen', at: h.now() });
+    h.keeper.request(fixTask(h.keeper.ctx(), 'bin'));
+    h.advance(30_000);
+    expect(h.store.state.fixtures.bin.state).toBe('up');
+    expect(whereFixed).toEqual({ x: SPOTS.bins.x, zone: 'outside' });
+    expect(doorStates.slice(0, 2)).toEqual(['open', 'closed']);
+    expect(h.said.length).toBeGreaterThan(0);
+  });
+
+  it('goes upstairs for the lantern and comes back down to the kitchen', () => {
+    const h = harness();
+    h.store.dispatch({ type: 'fixture', id: 'lantern', state: 'out', at: h.now() });
+    h.keeper.request(fixTask(h.keeper.ctx(), 'lantern'));
+    const zones = new Set<string>();
+    const visited = new Set<string>();
+    for (let i = 0; i < 200; i++) {
+      h.advance(250);
+      zones.add(h.store.state.keeper.zone);
+      visited.add(`${h.store.state.keeper.zone}:${h.store.state.keeper.x}`);
+    }
+    expect(zones.has('upstairs')).toBe(true);
+    expect(zones.has('hidden')).toBe(true);
+    expect(h.store.state.fixtures.lantern.state).toBe('lit');
+    expect(visited.has(`upstairs:${SPOTS.balcony.x}`)).toBe(true);
+    expect(visited.has(`inside:${SPOTS.kitchen.x}`)).toBe(true);
+    expect(h.store.state.keeper.zone).toBe('inside');
+  });
+
+  it('drops an idle job for something pressing and never queues the same errand twice', () => {
+    const h = harness();
+    h.advance(1000);
+    expect(h.keeper.status().current).not.toBeNull();
+    h.store.dispatch({ type: 'fixture', id: 'board', state: 'wonky', at: h.now() });
+    expect(h.keeper.request(fixTask(h.keeper.ctx(), 'board'))).toBe(true);
+    expect(h.keeper.request(fixTask(h.keeper.ctx(), 'board'))).toBe(false);
+    h.advance(250);
+    expect(h.keeper.status().current).toBe('straightening the board');
+    h.advance(20_000);
+    expect(h.store.state.fixtures.board.state).toBe('straight');
+  });
+
+  it('plans routes between zones through the inside', () => {
+    expect(zonePath('outside', 'upstairs')).toEqual(['outside', 'inside', 'upstairs']);
+    expect(zonePath('inside', 'inside')).toEqual(['inside']);
+    expect(zonePath('upstairs', 'outside')).toEqual(['upstairs', 'inside', 'outside']);
+  });
+
+  it('always has something to do', () => {
+    const h = harness();
+    h.advance(120_000);
+    expect(h.store.state.keeper.job).toBeDefined();
+  });
+});

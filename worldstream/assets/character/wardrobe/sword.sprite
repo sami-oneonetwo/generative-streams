@@ -1,0 +1,17 @@
+name: sword
+slot: hand
+dx: 10
+dy: 4
+aliases: blade, katana, weapon, lightsaber
+tags: hand, war
+---
+.W.
+.L.
+.L.
+.L.
+.L.
+.L.
+.L.
+.L.
+AAA
+.S.

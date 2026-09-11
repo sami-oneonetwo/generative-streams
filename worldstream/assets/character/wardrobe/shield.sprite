@@ -1,0 +1,14 @@
+name: shield
+slot: hand
+dx: -1
+dy: 9
+tint: blue
+aliases: buckler, knight shield
+tags: hand, war
+---
+.AAA.
+AXXXA
+AXXXA
+AXXXA
+.AXA.
+..A..

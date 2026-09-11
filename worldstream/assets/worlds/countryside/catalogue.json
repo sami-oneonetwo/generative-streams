@@ -1,0 +1,981 @@
+{
+  "world": "countryside",
+  "palette": [
+    "#0e1a2e",
+    "#2a1a14",
+    "#4a3220",
+    "#7a5a3a",
+    "#6e6e7a",
+    "#9a9aa6",
+    "#b8d97a",
+    "#e8f0c8",
+    "#1a1a2e",
+    "#2a2a44",
+    "#3d3d5c",
+    "#6e6e96",
+    "#f2e6d0",
+    "#f4f4ff",
+    "#00e5ff",
+    "#4aa3df",
+    "#2a6fa8",
+    "#ff2bd6",
+    "#f28ab2",
+    "#c0392b",
+    "#ff8a3d",
+    "#ffb347",
+    "#ffe066",
+    "#8fd14f",
+    "#4f9a3a",
+    "#2f6b2a",
+    "#ff3b3b",
+    "#8a1c1c",
+    "#5c3a1e",
+    "#e0c9a6"
+  ],
+  "sprites": [
+    {
+      "name": "wood_sign",
+      "layers": [
+        "stage"
+      ],
+      "w": 40,
+      "h": 22,
+      "colour": "#5c3a1e",
+      "acceptsText": true,
+      "procedural": "wood_sign",
+      "tags": [
+        "sign",
+        "text",
+        "post"
+      ],
+      "aliases": [
+        "sign",
+        "signpost",
+        "post",
+        "neon sign",
+        "billboard"
+      ]
+    },
+    {
+      "name": "oak_tree",
+      "layers": [
+        "stage"
+      ],
+      "w": 18,
+      "h": 28,
+      "colour": "#4f9a3a",
+      "tags": [
+        "tree",
+        "plant",
+        "nature",
+        "shade"
+      ],
+      "aliases": [
+        "tree",
+        "oak",
+        "trees",
+        "big tree"
+      ]
+    },
+    {
+      "name": "pine_tree",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 17,
+      "colour": "#2f6b2a",
+      "tags": [
+        "tree",
+        "plant",
+        "nature",
+        "shade"
+      ],
+      "aliases": [
+        "pine",
+        "fir",
+        "christmas tree",
+        "conifer"
+      ]
+    },
+    {
+      "name": "bush",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 8,
+      "colour": "#4f9a3a",
+      "tags": [
+        "bush",
+        "plant",
+        "nature"
+      ],
+      "aliases": [
+        "shrub",
+        "hedge"
+      ]
+    },
+    {
+      "name": "flowers",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 6,
+      "colour": "#f28ab2",
+      "animated": 2,
+      "tags": [
+        "flowers",
+        "plant",
+        "nature",
+        "pretty"
+      ],
+      "aliases": [
+        "flower",
+        "wildflowers",
+        "daisies",
+        "roses"
+      ]
+    },
+    {
+      "name": "mushroom",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 6,
+      "colour": "#ff3b3b",
+      "consumable": true,
+      "tags": [
+        "food",
+        "mushroom",
+        "plant"
+      ],
+      "aliases": [
+        "mushrooms",
+        "shroom",
+        "toadstool"
+      ]
+    },
+    {
+      "name": "berries",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#c0392b",
+      "consumable": true,
+      "tags": [
+        "food",
+        "berries",
+        "plant"
+      ],
+      "aliases": [
+        "berry",
+        "fruit",
+        "snack",
+        "apple",
+        "apples"
+      ]
+    },
+    {
+      "name": "picnic",
+      "layers": [
+        "stage"
+      ],
+      "w": 22,
+      "h": 8,
+      "colour": "#c0392b",
+      "tags": [
+        "food",
+        "picnic",
+        "blanket"
+      ],
+      "aliases": [
+        "picnic basket",
+        "basket",
+        "lunch",
+        "food stand",
+        "ramen stand",
+        "ramen"
+      ]
+    },
+    {
+      "name": "log",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 6,
+      "colour": "#5c3a1e",
+      "tags": [
+        "log",
+        "seat",
+        "wood"
+      ],
+      "aliases": [
+        "fallen tree",
+        "bench"
+      ]
+    },
+    {
+      "name": "stump",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#7a5a3a",
+      "tags": [
+        "stump",
+        "seat",
+        "wood"
+      ],
+      "aliases": [
+        "tree stump"
+      ]
+    },
+    {
+      "name": "hay_bale",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 10,
+      "colour": "#ffb347",
+      "tags": [
+        "hay",
+        "bed",
+        "seat",
+        "farm"
+      ],
+      "aliases": [
+        "hay",
+        "bale",
+        "straw",
+        "bed"
+      ]
+    },
+    {
+      "name": "fence",
+      "layers": [
+        "stage"
+      ],
+      "w": 30,
+      "h": 8,
+      "colour": "#7a5a3a",
+      "tags": [
+        "fence",
+        "farm",
+        "wood"
+      ],
+      "aliases": [
+        "fencing",
+        "paddock"
+      ]
+    },
+    {
+      "name": "cottage",
+      "layers": [
+        "stage"
+      ],
+      "w": 31,
+      "h": 24,
+      "colour": "#e8f0c8",
+      "tags": [
+        "house",
+        "cottage",
+        "shelter",
+        "building"
+      ],
+      "aliases": [
+        "house",
+        "home",
+        "hut",
+        "cabin",
+        "building"
+      ]
+    },
+    {
+      "name": "well",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 18,
+      "colour": "#6e6e7a",
+      "tags": [
+        "well",
+        "water",
+        "stone"
+      ],
+      "aliases": [
+        "water well",
+        "wishing well",
+        "water"
+      ]
+    },
+    {
+      "name": "pond",
+      "layers": [
+        "stage"
+      ],
+      "w": 40,
+      "h": 6,
+      "colour": "#4aa3df",
+      "animated": 2,
+      "tags": [
+        "water",
+        "pond",
+        "pool"
+      ],
+      "aliases": [
+        "lake",
+        "pool",
+        "oasis",
+        "puddle"
+      ]
+    },
+    {
+      "name": "windmill",
+      "layers": [
+        "stage"
+      ],
+      "w": 16,
+      "h": 34,
+      "colour": "#5c3a1e",
+      "animated": 2,
+      "tags": [
+        "windmill",
+        "farm",
+        "tall"
+      ],
+      "aliases": [
+        "mill"
+      ]
+    },
+    {
+      "name": "scarecrow",
+      "layers": [
+        "stage"
+      ],
+      "w": 11,
+      "h": 20,
+      "colour": "#ffb347",
+      "tags": [
+        "scarecrow",
+        "farm",
+        "fun"
+      ],
+      "aliases": [
+        "straw man"
+      ]
+    },
+    {
+      "name": "beehive",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 10,
+      "colour": "#ffb347",
+      "animated": 2,
+      "tags": [
+        "bees",
+        "hive",
+        "farm",
+        "food"
+      ],
+      "aliases": [
+        "bees",
+        "hive",
+        "honey"
+      ]
+    },
+    {
+      "name": "cart",
+      "layers": [
+        "stage"
+      ],
+      "w": 31,
+      "h": 16,
+      "colour": "#5c3a1e",
+      "tags": [
+        "cart",
+        "wagon",
+        "vehicle",
+        "transit"
+      ],
+      "aliases": [
+        "wagon",
+        "hay cart",
+        "car"
+      ]
+    },
+    {
+      "name": "campfire",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 12,
+      "colour": "#ff8a3d",
+      "animated": 2,
+      "tags": [
+        "fire",
+        "camp",
+        "warm",
+        "light"
+      ],
+      "aliases": [
+        "fire",
+        "bonfire",
+        "barrel fire"
+      ]
+    },
+    {
+      "name": "lantern",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 9,
+      "colour": "#ffe066",
+      "animated": 2,
+      "tags": [
+        "lantern",
+        "light",
+        "lamp"
+      ],
+      "aliases": [
+        "lamp",
+        "oil lamp",
+        "light",
+        "street lamp"
+      ]
+    },
+    {
+      "name": "tent",
+      "layers": [
+        "stage"
+      ],
+      "w": 28,
+      "h": 18,
+      "colour": "#b8d97a",
+      "tags": [
+        "tent",
+        "camp",
+        "shelter"
+      ],
+      "aliases": [
+        "camp",
+        "shelter"
+      ]
+    },
+    {
+      "name": "cow",
+      "layers": [
+        "stage"
+      ],
+      "w": 18,
+      "h": 12,
+      "colour": "#f4f4ff",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "wander",
+      "speed": 8,
+      "tags": [
+        "cow",
+        "animal",
+        "farm"
+      ],
+      "aliases": [
+        "cows",
+        "cattle",
+        "bull"
+      ]
+    },
+    {
+      "name": "sheep",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 9,
+      "colour": "#f4f4ff",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "wander",
+      "speed": 10,
+      "tags": [
+        "sheep",
+        "animal",
+        "farm"
+      ],
+      "aliases": [
+        "lamb",
+        "ewe",
+        "wool"
+      ]
+    },
+    {
+      "name": "chicken",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 6,
+      "colour": "#f4f4ff",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "flee",
+      "speed": 40,
+      "tags": [
+        "chicken",
+        "animal",
+        "farm",
+        "small"
+      ],
+      "aliases": [
+        "hen",
+        "rooster",
+        "chick",
+        "bird"
+      ]
+    },
+    {
+      "name": "rabbit",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#e8f0c8",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "flee",
+      "speed": 60,
+      "tags": [
+        "rabbit",
+        "animal",
+        "small"
+      ],
+      "aliases": [
+        "bunny",
+        "hare"
+      ]
+    },
+    {
+      "name": "deer",
+      "layers": [
+        "stage"
+      ],
+      "w": 16,
+      "h": 14,
+      "colour": "#7a5a3a",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "wander",
+      "speed": 25,
+      "tags": [
+        "deer",
+        "animal"
+      ],
+      "aliases": [
+        "stag",
+        "doe",
+        "fawn"
+      ]
+    },
+    {
+      "name": "cat",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 6,
+      "colour": "#2a2a44",
+      "faces": "l",
+      "behaviour": "wander",
+      "speed": 30,
+      "tags": [
+        "cat",
+        "animal",
+        "pet"
+      ],
+      "aliases": [
+        "kitty",
+        "kitten",
+        "cats"
+      ]
+    },
+    {
+      "name": "songbird",
+      "layers": [
+        "near",
+        "stage"
+      ],
+      "w": 6,
+      "h": 4,
+      "colour": "#4aa3df",
+      "animated": 2,
+      "behaviour": "perch",
+      "tags": [
+        "bird",
+        "animal",
+        "small"
+      ],
+      "aliases": [
+        "birdie",
+        "robin",
+        "sparrow",
+        "bluebird"
+      ]
+    },
+    {
+      "name": "farmer",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 22,
+      "colour": "#7a5a3a",
+      "behaviour": "wander",
+      "speed": 12,
+      "lines": [
+        "fine weather for it",
+        "you are not from round here",
+        "mind the cows",
+        "the mill has not turned in years"
+      ],
+      "tags": [
+        "person",
+        "farmer",
+        "npc"
+      ],
+      "aliases": [
+        "person",
+        "villager",
+        "man",
+        "woman",
+        "someone"
+      ]
+    }
+  ],
+  "weatherWeights": {
+    "clear": 0.5,
+    "rain": 0.3,
+    "fog": 0.15,
+    "storm": 0.05
+  },
+  "ambient": [
+    {
+      "name": "cart",
+      "sprite": "cart",
+      "layer": "near",
+      "y": 204,
+      "from": -60,
+      "to": 1020,
+      "durationMs": 22000,
+      "everyMs": [
+        180000,
+        360000
+      ],
+      "departure": true,
+      "lines": [
+        "the cart to town. it goes where it wants.",
+        "someone is off to market"
+      ]
+    },
+    {
+      "name": "deer_cross",
+      "sprite": "deer",
+      "layer": "stage",
+      "y": 206,
+      "from": 990,
+      "to": -30,
+      "durationMs": 18000,
+      "everyMs": [
+        150000,
+        360000
+      ],
+      "lines": [
+        "quiet. a deer.",
+        "it has seen us. it does not mind."
+      ]
+    },
+    {
+      "name": "rabbit_run",
+      "sprite": "rabbit",
+      "layer": "stage",
+      "y": 214,
+      "from": -20,
+      "to": 980,
+      "durationMs": 9000,
+      "everyMs": [
+        90000,
+        240000
+      ],
+      "lines": [
+        "late for something",
+        "there it goes"
+      ]
+    },
+    {
+      "name": "bird_flock",
+      "sprite": "songbird",
+      "layer": "mid",
+      "y": [
+        60,
+        120
+      ],
+      "from": -20,
+      "to": 1000,
+      "durationMs": 12000,
+      "everyMs": [
+        60000,
+        150000
+      ],
+      "lines": [
+        "off south, probably",
+        "I would follow them if I could"
+      ]
+    }
+  ],
+  "lines": {
+    "ambient": [
+      "it smells like rain and cut grass",
+      "nothing is trying to sell me anything. suspicious.",
+      "I could get used to this. that is the danger.",
+      "every tree here is older than every building back home",
+      "the birds do not care who is watching",
+      "you can hear the wind think out here",
+      "somebody should fix that mill"
+    ],
+    "weather": {
+      "rain": [
+        "soft rain. the good kind.",
+        "the fields will be glad of it"
+      ],
+      "clear": [
+        "blue. all the way up.",
+        "a proper day"
+      ],
+      "fog": [
+        "mist in the hollows",
+        "cannot see the far hill"
+      ],
+      "storm": [
+        "that came from nowhere",
+        "under a tree is the wrong place to be. noted."
+      ]
+    },
+    "added": [
+      "{user} planted a {thing}",
+      "a {thing}. {user} brought it from somewhere.",
+      "{user} thinks the meadow needed a {thing}",
+      "okay. a {thing}. thanks {user}"
+    ],
+    "addedText": [
+      "{user} carved \"{text}\" into the sign",
+      "a sign now reads \"{text}\". {user}.",
+      "\"{text}\", says {user}, and the sign agrees"
+    ],
+    "removed": [
+      "the {thing} is gone. the grass will have it back.",
+      "{thing}, gone",
+      "no more {thing}"
+    ]
+  },
+  "survival": {
+    "comfort": "warmth",
+    "comfortDrain": {
+      "base": 0.015,
+      "night": 0.03,
+      "day": 0,
+      "rain": 0.03,
+      "storm": 0.05,
+      "fog": 0.005
+    },
+    "comfortTags": [
+      "warm",
+      "fire",
+      "shelter"
+    ],
+    "foodTags": [
+      "food"
+    ],
+    "restTags": [
+      "bed",
+      "seat"
+    ],
+    "spiritTags": [
+      "person",
+      "animal",
+      "music",
+      "fun"
+    ]
+  },
+  "builds": [
+    {
+      "name": "farm",
+      "aliases": [
+        "paddock",
+        "field",
+        "barnyard"
+      ],
+      "items": [
+        {
+          "sprite": "fence",
+          "dx": 0
+        },
+        {
+          "sprite": "cow",
+          "dx": 6
+        },
+        {
+          "sprite": "sheep",
+          "dx": 34
+        },
+        {
+          "sprite": "hay_bale",
+          "dx": 50
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": -6,
+          "text": "FARM"
+        }
+      ]
+    },
+    {
+      "name": "picnic_spot",
+      "aliases": [
+        "picnic",
+        "lunch",
+        "blanket"
+      ],
+      "items": [
+        {
+          "sprite": "picnic",
+          "dx": 0
+        },
+        {
+          "sprite": "flowers",
+          "dx": 26
+        },
+        {
+          "sprite": "berries",
+          "dx": 36
+        },
+        {
+          "sprite": "oak_tree",
+          "dx": -20
+        }
+      ]
+    },
+    {
+      "name": "campsite",
+      "aliases": [
+        "camp",
+        "tent camp"
+      ],
+      "items": [
+        {
+          "sprite": "tent",
+          "dx": 0
+        },
+        {
+          "sprite": "campfire",
+          "dx": 34
+        },
+        {
+          "sprite": "log",
+          "dx": 50
+        },
+        {
+          "sprite": "lantern",
+          "dx": 30
+        }
+      ]
+    },
+    {
+      "name": "fairy_ring",
+      "aliases": [
+        "mushroom ring",
+        "magic circle",
+        "ring"
+      ],
+      "items": [
+        {
+          "sprite": "mushroom",
+          "dx": 0
+        },
+        {
+          "sprite": "mushroom",
+          "dx": 10
+        },
+        {
+          "sprite": "mushroom",
+          "dx": 20
+        },
+        {
+          "sprite": "flowers",
+          "dx": 6
+        },
+        {
+          "sprite": "rabbit",
+          "dx": 30
+        }
+      ]
+    },
+    {
+      "name": "village_green",
+      "aliases": [
+        "village",
+        "green",
+        "square"
+      ],
+      "items": [
+        {
+          "sprite": "cottage",
+          "dx": 0
+        },
+        {
+          "sprite": "well",
+          "dx": 36
+        },
+        {
+          "sprite": "farmer",
+          "dx": 54
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": -8,
+          "text": "WELCOME"
+        }
+      ]
+    },
+    {
+      "name": "viewer_spot",
+      "welcome": true,
+      "items": [
+        {
+          "sprite": "wood_sign",
+          "dx": 0,
+          "text": "{name}"
+        },
+        {
+          "sprite": "flowers",
+          "dx": 6
+        },
+        {
+          "sprite": "stump",
+          "dx": 30
+        }
+      ]
+    }
+  ]
+}

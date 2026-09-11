@@ -1,0 +1,1552 @@
+{
+  "world": "cyberpunk",
+  "palette": [
+    "#07061a",
+    "#0b0a1e",
+    "#141238",
+    "#1c1b4a",
+    "#26205e",
+    "#3b2d7a",
+    "#5a3fa0",
+    "#8b5cf6",
+    "#1a1a2e",
+    "#2a2a44",
+    "#3d3d5c",
+    "#6e6e96",
+    "#c9c9e8",
+    "#f4f4ff",
+    "#00e5ff",
+    "#00a3b8",
+    "#0d5c6b",
+    "#ff2bd6",
+    "#ff5fa2",
+    "#b0165a",
+    "#ff8a3d",
+    "#ffb347",
+    "#ffe066",
+    "#7cff4f",
+    "#2fbf71",
+    "#1c5c3a",
+    "#ff3b3b",
+    "#8a1c1c",
+    "#5c3a1e",
+    "#e0c9a6"
+  ],
+  "sprites": [
+    {
+      "name": "neon_sign",
+      "layers": [
+        "near",
+        "stage"
+      ],
+      "w": 44,
+      "h": 14,
+      "colour": "#b0165a",
+      "acceptsText": true,
+      "tags": [
+        "sign",
+        "neon",
+        "text",
+        "light"
+      ],
+      "aliases": [
+        "sign",
+        "neon",
+        "billboard",
+        "neon sign"
+      ],
+      "procedural": "neon_sign"
+    },
+    {
+      "name": "holo_screen",
+      "layers": [
+        "near",
+        "mid"
+      ],
+      "w": 36,
+      "h": 24,
+      "colour": "#0d5c6b",
+      "acceptsText": true,
+      "tags": [
+        "screen",
+        "hologram",
+        "ad",
+        "text"
+      ],
+      "aliases": [
+        "screen",
+        "hologram",
+        "holo",
+        "ad",
+        "tv",
+        "holo screen"
+      ],
+      "procedural": "holo_screen"
+    },
+    {
+      "name": "graffiti",
+      "layers": [
+        "near"
+      ],
+      "w": 30,
+      "h": 14,
+      "colour": "#2fbf71",
+      "acceptsText": true,
+      "tags": [
+        "graffiti",
+        "tag",
+        "spray",
+        "text"
+      ],
+      "aliases": [
+        "tag",
+        "spray",
+        "spray paint"
+      ],
+      "procedural": "graffiti"
+    },
+    {
+      "name": "ramen_stand",
+      "layers": [
+        "stage"
+      ],
+      "w": 40,
+      "h": 28,
+      "colour": "#ff8a3d",
+      "tags": [
+        "food",
+        "shop",
+        "stall",
+        "ramen"
+      ],
+      "aliases": [
+        "ramen",
+        "stall",
+        "noodle stand",
+        "food stand",
+        "ramen shop"
+      ]
+    },
+    {
+      "name": "vending_machine",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 22,
+      "colour": "#00a3b8",
+      "tags": [
+        "machine",
+        "shop",
+        "vending"
+      ],
+      "aliases": [
+        "vending",
+        "vendo",
+        "machine"
+      ]
+    },
+    {
+      "name": "lantern_string",
+      "layers": [
+        "near"
+      ],
+      "w": 48,
+      "h": 6,
+      "colour": "#ffb347",
+      "tags": [
+        "light",
+        "lantern",
+        "festival"
+      ],
+      "aliases": [
+        "lanterns",
+        "lantern",
+        "lights",
+        "string lights"
+      ]
+    },
+    {
+      "name": "ac_unit",
+      "layers": [
+        "near"
+      ],
+      "w": 10,
+      "h": 8,
+      "colour": "#6e6e96",
+      "tags": [
+        "ac",
+        "aircon",
+        "unit"
+      ],
+      "aliases": [
+        "ac",
+        "aircon",
+        "air conditioner",
+        "air con"
+      ]
+    },
+    {
+      "name": "pipes",
+      "layers": [
+        "near"
+      ],
+      "w": 6,
+      "h": 40,
+      "colour": "#3d3d5c",
+      "tags": [
+        "pipe",
+        "industrial"
+      ],
+      "aliases": [
+        "pipe"
+      ]
+    },
+    {
+      "name": "awning",
+      "layers": [
+        "near"
+      ],
+      "w": 36,
+      "h": 5,
+      "colour": "#8a1c1c",
+      "tags": [
+        "awning",
+        "shop",
+        "shelter"
+      ],
+      "aliases": [
+        "canopy"
+      ]
+    },
+    {
+      "name": "cables",
+      "layers": [
+        "fg"
+      ],
+      "w": 140,
+      "h": 26,
+      "colour": "#0b0a1e",
+      "tags": [
+        "cable",
+        "wire"
+      ],
+      "aliases": [
+        "wires",
+        "cable",
+        "wire",
+        "power lines"
+      ],
+      "procedural": "cables"
+    },
+    {
+      "name": "drone",
+      "layers": [
+        "mid",
+        "near"
+      ],
+      "w": 10,
+      "h": 6,
+      "colour": "#7cff4f",
+      "animated": 2,
+      "tags": [
+        "drone",
+        "flying",
+        "robot"
+      ],
+      "aliases": [
+        "drones",
+        "quadcopter"
+      ]
+    },
+    {
+      "name": "flying_car",
+      "layers": [
+        "mid"
+      ],
+      "w": 22,
+      "h": 8,
+      "colour": "#ff5fa2",
+      "animated": 2,
+      "tags": [
+        "car",
+        "flying",
+        "vehicle",
+        "hover"
+      ],
+      "aliases": [
+        "car",
+        "hovercar",
+        "hover car",
+        "flying car",
+        "taxi"
+      ]
+    },
+    {
+      "name": "umbrella_person",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 24,
+      "colour": "#8b5cf6",
+      "tags": [
+        "person",
+        "npc",
+        "umbrella",
+        "walker"
+      ],
+      "aliases": [
+        "person",
+        "umbrella",
+        "pedestrian",
+        "someone",
+        "stranger"
+      ],
+      "behaviour": "visit",
+      "speed": 20,
+      "lines": [
+        "long night",
+        "ramen?",
+        "you look lost too",
+        "the rain never asks"
+      ]
+    },
+    {
+      "name": "cat",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 6,
+      "colour": "#2a2a44",
+      "tags": [
+        "cat",
+        "animal",
+        "pet"
+      ],
+      "aliases": [
+        "kitty",
+        "kitten",
+        "cats"
+      ],
+      "faces": "l",
+      "behaviour": "wander",
+      "speed": 30
+    },
+    {
+      "name": "plant",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 14,
+      "colour": "#2fbf71",
+      "tags": [
+        "plant",
+        "green",
+        "nature",
+        "pot"
+      ],
+      "aliases": [
+        "plants",
+        "potted plant",
+        "tree",
+        "bush",
+        "flower"
+      ]
+    },
+    {
+      "name": "puddle",
+      "layers": [
+        "stage"
+      ],
+      "w": 24,
+      "h": 3,
+      "colour": "#0d5c6b",
+      "tags": [
+        "puddle",
+        "water",
+        "rain"
+      ],
+      "aliases": [
+        "water"
+      ]
+    },
+    {
+      "name": "trash_can",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 12,
+      "colour": "#3d3d5c",
+      "tags": [
+        "bin",
+        "trash"
+      ],
+      "aliases": [
+        "bin",
+        "trash",
+        "garbage",
+        "rubbish"
+      ]
+    },
+    {
+      "name": "barrel_fire",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 16,
+      "colour": "#ff8a3d",
+      "animated": 2,
+      "tags": [
+        "fire",
+        "barrel",
+        "warm",
+        "light"
+      ],
+      "aliases": [
+        "fire",
+        "barrel",
+        "campfire",
+        "fire barrel"
+      ]
+    },
+    {
+      "name": "bench",
+      "layers": [
+        "stage"
+      ],
+      "w": 24,
+      "h": 8,
+      "colour": "#5c3a1e",
+      "tags": [
+        "bench",
+        "seat"
+      ],
+      "aliases": [
+        "seat"
+      ]
+    },
+    {
+      "name": "street_lamp",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 40,
+      "colour": "#ffe066",
+      "tags": [
+        "lamp",
+        "light",
+        "post"
+      ],
+      "aliases": [
+        "lamp",
+        "lamppost",
+        "light post",
+        "streetlight",
+        "street light"
+      ]
+    },
+    {
+      "name": "crate",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 12,
+      "colour": "#5c3a1e",
+      "tags": [
+        "crate",
+        "box",
+        "seat"
+      ],
+      "aliases": [
+        "box",
+        "crates",
+        "boxes"
+      ]
+    },
+    {
+      "name": "train",
+      "layers": [
+        "near"
+      ],
+      "w": 94,
+      "h": 8,
+      "colour": "#3d3d5c",
+      "tags": [
+        "train",
+        "rail",
+        "transit"
+      ],
+      "ambientOnly": true
+    },
+    {
+      "name": "robot",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 18,
+      "colour": "#6e6e96",
+      "animated": 2,
+      "tags": [
+        "robot",
+        "android",
+        "machine"
+      ],
+      "aliases": [
+        "android",
+        "bot",
+        "droid",
+        "mech"
+      ],
+      "behaviour": "wander",
+      "speed": 15,
+      "lines": [
+        "GREETINGS, CITIZEN",
+        "BATTERY AT 12 PERCENT",
+        "I HAVE SEEN THINGS",
+        "PLEASE STAND CLEAR"
+      ]
+    },
+    {
+      "name": "hoverbike",
+      "layers": [
+        "stage"
+      ],
+      "w": 26,
+      "h": 12,
+      "colour": "#3d3d5c",
+      "animated": 2,
+      "tags": [
+        "bike",
+        "vehicle",
+        "hover"
+      ],
+      "aliases": [
+        "bike",
+        "motorbike",
+        "motorcycle",
+        "hover bike",
+        "speeder"
+      ]
+    },
+    {
+      "name": "police_drone",
+      "layers": [
+        "mid",
+        "near"
+      ],
+      "w": 12,
+      "h": 7,
+      "colour": "#ff3b3b",
+      "animated": 2,
+      "tags": [
+        "drone",
+        "police",
+        "flying"
+      ],
+      "aliases": [
+        "cops",
+        "police",
+        "cop drone",
+        "surveillance drone"
+      ]
+    },
+    {
+      "name": "arcade_machine",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 22,
+      "colour": "#ff2bd6",
+      "animated": 2,
+      "tags": [
+        "arcade",
+        "game",
+        "machine",
+        "fun"
+      ],
+      "aliases": [
+        "arcade",
+        "cabinet",
+        "game machine",
+        "arcade cabinet"
+      ]
+    },
+    {
+      "name": "phone_booth",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 25,
+      "colour": "#0d5c6b",
+      "tags": [
+        "phone",
+        "booth",
+        "shelter"
+      ],
+      "aliases": [
+        "phone",
+        "booth",
+        "telephone",
+        "payphone"
+      ]
+    },
+    {
+      "name": "kiosk",
+      "layers": [
+        "stage"
+      ],
+      "w": 30,
+      "h": 24,
+      "colour": "#ff8a3d",
+      "tags": [
+        "shop",
+        "kiosk",
+        "newsstand",
+        "shelter"
+      ],
+      "aliases": [
+        "newsstand",
+        "stand",
+        "magazine stand",
+        "news stand",
+        "shop"
+      ]
+    },
+    {
+      "name": "dumpster",
+      "layers": [
+        "stage"
+      ],
+      "w": 20,
+      "h": 12,
+      "colour": "#1c5c3a",
+      "tags": [
+        "bin",
+        "trash",
+        "dumpster"
+      ],
+      "aliases": [
+        "skip",
+        "big bin"
+      ]
+    },
+    {
+      "name": "fire_hydrant",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 10,
+      "colour": "#ff3b3b",
+      "tags": [
+        "hydrant",
+        "street"
+      ],
+      "aliases": [
+        "hydrant"
+      ]
+    },
+    {
+      "name": "traffic_light",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 35,
+      "colour": "#ffb347",
+      "animated": 3,
+      "tags": [
+        "traffic",
+        "light",
+        "street"
+      ],
+      "aliases": [
+        "traffic lights",
+        "stoplight",
+        "signal"
+      ]
+    },
+    {
+      "name": "steam_vent",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 20,
+      "colour": "#c9c9e8",
+      "animated": 2,
+      "tags": [
+        "steam",
+        "vent",
+        "manhole"
+      ],
+      "aliases": [
+        "steam",
+        "vent",
+        "manhole",
+        "smoke"
+      ]
+    },
+    {
+      "name": "rat",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 4,
+      "colour": "#2a2a44",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "rat",
+        "animal",
+        "small"
+      ],
+      "aliases": [
+        "mouse",
+        "rats"
+      ],
+      "behaviour": "flee",
+      "speed": 60
+    },
+    {
+      "name": "crow",
+      "layers": [
+        "stage",
+        "near"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#1a1a2e",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "bird",
+        "crow",
+        "animal"
+      ],
+      "aliases": [
+        "bird",
+        "raven",
+        "pigeon"
+      ],
+      "behaviour": "perch"
+    },
+    {
+      "name": "dog",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 8,
+      "colour": "#2a2a44",
+      "animated": 2,
+      "faces": "l",
+      "tags": [
+        "dog",
+        "animal",
+        "pet"
+      ],
+      "aliases": [
+        "puppy",
+        "doggo",
+        "hound"
+      ],
+      "behaviour": "wander",
+      "speed": 40
+    },
+    {
+      "name": "hacker",
+      "layers": [
+        "stage"
+      ],
+      "w": 20,
+      "h": 18,
+      "colour": "#7cff4f",
+      "animated": 2,
+      "tags": [
+        "person",
+        "hacker",
+        "computer",
+        "desk"
+      ],
+      "aliases": [
+        "programmer",
+        "coder",
+        "netrunner",
+        "desk",
+        "computer"
+      ],
+      "behaviour": "perch",
+      "lines": [
+        "don't look at my screen",
+        "almost in",
+        "the city is just a database with weather",
+        "you did not see me here"
+      ]
+    },
+    {
+      "name": "samurai",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 22,
+      "colour": "#ff3b3b",
+      "tags": [
+        "person",
+        "samurai",
+        "warrior"
+      ],
+      "aliases": [
+        "ninja",
+        "warrior",
+        "cyber samurai",
+        "ronin"
+      ],
+      "behaviour": "patrol",
+      "speed": 25,
+      "lines": [
+        "the rain sharpens the blade",
+        "you are not my enemy. yet.",
+        "walk softly here",
+        "I guard nothing. I guard everything."
+      ]
+    },
+    {
+      "name": "satellite_dish",
+      "layers": [
+        "near"
+      ],
+      "w": 12,
+      "h": 10,
+      "colour": "#c9c9e8",
+      "tags": [
+        "dish",
+        "antenna",
+        "roof"
+      ],
+      "aliases": [
+        "dish",
+        "satellite"
+      ]
+    },
+    {
+      "name": "antenna_array",
+      "layers": [
+        "near"
+      ],
+      "w": 14,
+      "h": 16,
+      "colour": "#3d3d5c",
+      "animated": 2,
+      "tags": [
+        "antenna",
+        "tower",
+        "roof"
+      ],
+      "aliases": [
+        "antenna",
+        "aerial",
+        "radio tower",
+        "mast"
+      ]
+    },
+    {
+      "name": "laundry_line",
+      "layers": [
+        "near"
+      ],
+      "w": 40,
+      "h": 7,
+      "colour": "#c9c9e8",
+      "animated": 2,
+      "tags": [
+        "laundry",
+        "clothes",
+        "line"
+      ],
+      "aliases": [
+        "laundry",
+        "clothes",
+        "washing",
+        "clothes line",
+        "washing line"
+      ]
+    },
+    {
+      "name": "balcony",
+      "layers": [
+        "near"
+      ],
+      "w": 24,
+      "h": 12,
+      "colour": "#3d3d5c",
+      "tags": [
+        "balcony",
+        "plants",
+        "railing"
+      ],
+      "aliases": [
+        "terrace",
+        "garden"
+      ]
+    },
+    {
+      "name": "security_camera",
+      "layers": [
+        "near"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#3d3d5c",
+      "animated": 2,
+      "tags": [
+        "camera",
+        "security",
+        "surveillance"
+      ],
+      "aliases": [
+        "camera",
+        "cctv",
+        "surveillance camera"
+      ]
+    },
+    {
+      "name": "blimp",
+      "layers": [
+        "far"
+      ],
+      "w": 40,
+      "h": 16,
+      "colour": "#6e6e96",
+      "animated": 2,
+      "tags": [
+        "blimp",
+        "flying",
+        "ad",
+        "sky"
+      ],
+      "aliases": [
+        "airship",
+        "zeppelin",
+        "ad blimp"
+      ]
+    },
+    {
+      "name": "bicycle",
+      "layers": [
+        "stage"
+      ],
+      "w": 18,
+      "h": 10,
+      "colour": "#3d3d5c",
+      "tags": [
+        "bike",
+        "bicycle",
+        "vehicle"
+      ],
+      "aliases": [
+        "cycle",
+        "pushbike"
+      ]
+    },
+    {
+      "name": "tv_stack",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 20,
+      "colour": "#c9c9e8",
+      "animated": 2,
+      "tags": [
+        "tv",
+        "screens",
+        "junk",
+        "fun"
+      ],
+      "aliases": [
+        "tvs",
+        "televisions",
+        "monitors",
+        "crt"
+      ]
+    },
+    {
+      "name": "noodle_cup",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 6,
+      "colour": "#f4f4ff",
+      "tags": [
+        "food",
+        "noodles",
+        "cup"
+      ],
+      "aliases": [
+        "noodles",
+        "cup noodles",
+        "instant noodles",
+        "cup"
+      ],
+      "consumable": true
+    },
+    {
+      "name": "trash_bags",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 8,
+      "colour": "#1a1a2e",
+      "tags": [
+        "trash",
+        "bags",
+        "garbage"
+      ],
+      "aliases": [
+        "garbage bags",
+        "rubbish bags",
+        "bin bags"
+      ]
+    },
+    {
+      "name": "cone",
+      "layers": [
+        "stage"
+      ],
+      "w": 6,
+      "h": 8,
+      "colour": "#ff8a3d",
+      "tags": [
+        "cone",
+        "traffic",
+        "street"
+      ],
+      "aliases": [
+        "traffic cone",
+        "cones"
+      ]
+    },
+    {
+      "name": "barrier",
+      "layers": [
+        "stage"
+      ],
+      "w": 20,
+      "h": 9,
+      "colour": "#ff3b3b",
+      "animated": 2,
+      "tags": [
+        "barrier",
+        "police",
+        "street"
+      ],
+      "aliases": [
+        "police barrier",
+        "roadblock",
+        "barricade"
+      ]
+    }
+  ],
+  "weatherWeights": {
+    "rain": 0.5,
+    "clear": 0.25,
+    "fog": 0.15,
+    "storm": 0.1
+  },
+  "ambient": [
+    {
+      "name": "train",
+      "sprite": "train",
+      "layer": "near",
+      "y": 142,
+      "from": -100,
+      "to": 1060,
+      "durationMs": 9000,
+      "everyMs": [
+        90000,
+        240000
+      ],
+      "lines": [
+        "there goes the last train",
+        "the train never stops here",
+        "someone on that train is going home"
+      ],
+      "departure": true
+    },
+    {
+      "name": "drone_flyby",
+      "sprite": "drone",
+      "layer": "mid",
+      "y": [
+        88,
+        140
+      ],
+      "from": 1000,
+      "to": -20,
+      "durationMs": 8000,
+      "everyMs": [
+        40000,
+        120000
+      ],
+      "lines": [
+        "delivery drone. not for me.",
+        "it is always watching something"
+      ]
+    },
+    {
+      "name": "car_flyby",
+      "sprite": "flying_car",
+      "layer": "mid",
+      "y": [
+        84,
+        130
+      ],
+      "from": -40,
+      "to": 1000,
+      "durationMs": 6000,
+      "everyMs": [
+        30000,
+        90000
+      ],
+      "lines": [
+        "taxi. too rich for me.",
+        "nobody flies that low unless they are lost"
+      ]
+    },
+    {
+      "name": "cat_cross",
+      "sprite": "cat",
+      "layer": "stage",
+      "y": 214,
+      "from": -20,
+      "to": 980,
+      "durationMs": 30000,
+      "everyMs": [
+        120000,
+        300000
+      ],
+      "lines": [
+        "not my cat. someone's cat.",
+        "that cat owns this street"
+      ]
+    },
+    {
+      "name": "rat_run",
+      "sprite": "rat",
+      "layer": "stage",
+      "y": 216,
+      "from": 980,
+      "to": -20,
+      "durationMs": 12000,
+      "everyMs": [
+        90000,
+        200000
+      ],
+      "lines": [
+        "rat. big one.",
+        "it pays rent, probably"
+      ]
+    },
+    {
+      "name": "crow_flyby",
+      "sprite": "crow",
+      "layer": "mid",
+      "y": [
+        80,
+        130
+      ],
+      "from": -20,
+      "to": 1000,
+      "durationMs": 9000,
+      "everyMs": [
+        60000,
+        150000
+      ],
+      "lines": [
+        "crows know something",
+        "that one watches me"
+      ]
+    },
+    {
+      "name": "police_patrol",
+      "sprite": "police_drone",
+      "layer": "mid",
+      "y": [
+        90,
+        140
+      ],
+      "from": 1000,
+      "to": -30,
+      "durationMs": 10000,
+      "everyMs": [
+        120000,
+        300000
+      ],
+      "lines": [
+        "patrol. act normal.",
+        "nothing to see here, officer"
+      ]
+    }
+  ],
+  "lines": {
+    "ambient": [
+      "this rain never really stops",
+      "the signs hum louder after midnight",
+      "somewhere up there someone is still working",
+      "ramen would fix most of this",
+      "I keep expecting the train to be on time",
+      "nice night for it. whatever it is.",
+      "the rain smells like ozone and soy",
+      "every window up there is someone's whole world",
+      "I think the moon is an ad now",
+      "you can tell the time by which signs are still on",
+      "quiet. suspicious.",
+      "if you are reading this, say something",
+      "the arcade is always lit and always empty",
+      "somebody left the laundry out in the rain again"
+    ],
+    "weather": {
+      "rain": [
+        "and there it is again",
+        "back to rain. of course."
+      ],
+      "clear": [
+        "clear sky. that never lasts.",
+        "you can almost see stars"
+      ],
+      "fog": [
+        "fog rolling in off the river",
+        "cannot see the far towers anymore"
+      ],
+      "storm": [
+        "that is a storm coming",
+        "hold onto your umbrellas"
+      ]
+    },
+    "added": [
+      "{user} brought a {thing}",
+      "a {thing}. {user}'s idea.",
+      "{user} thinks we needed a {thing}",
+      "okay. a {thing}, courtesy of {user}",
+      "a {thing} appears. thanks {user}"
+    ],
+    "addedText": [
+      "{user} lit up \"{text}\"",
+      "\"{text}\", says {user}",
+      "new sign: \"{text}\". thanks {user}",
+      "{user} wrote \"{text}\" on the city"
+    ],
+    "removed": [
+      "{thing}, gone",
+      "and the {thing} is gone",
+      "farewell, {thing}",
+      "no more {thing}"
+    ]
+  },
+  "survival": {
+    "comfort": "warmth",
+    "comfortDrain": {
+      "base": 0.02,
+      "night": 0.03,
+      "day": 0,
+      "rain": 0.03,
+      "storm": 0.06,
+      "fog": 0
+    },
+    "comfortTags": [
+      "warm",
+      "fire",
+      "shelter"
+    ],
+    "foodTags": [
+      "food"
+    ],
+    "restTags": [
+      "bed",
+      "seat"
+    ],
+    "spiritTags": [
+      "person",
+      "animal",
+      "robot",
+      "music",
+      "fun"
+    ]
+  },
+  "builds": [
+    {
+      "name": "noodle_corner",
+      "aliases": [
+        "noodle bar",
+        "ramen corner",
+        "ramen shop",
+        "food corner"
+      ],
+      "items": [
+        {
+          "sprite": "ramen_stand",
+          "dx": 0
+        },
+        {
+          "sprite": "lantern_string",
+          "dx": -4
+        },
+        {
+          "sprite": "crate",
+          "dx": 44
+        },
+        {
+          "sprite": "noodle_cup",
+          "dx": 58
+        },
+        {
+          "sprite": "neon_sign",
+          "dx": 6,
+          "text": "NOODLES"
+        }
+      ]
+    },
+    {
+      "name": "street_party",
+      "aliases": [
+        "party",
+        "block party",
+        "rave"
+      ],
+      "items": [
+        {
+          "sprite": "barrel_fire",
+          "dx": 0
+        },
+        {
+          "sprite": "bench",
+          "dx": 16
+        },
+        {
+          "sprite": "lantern_string",
+          "dx": -6
+        },
+        {
+          "sprite": "arcade_machine",
+          "dx": 46
+        },
+        {
+          "sprite": "graffiti",
+          "dx": 10,
+          "text": "PARTY"
+        }
+      ]
+    },
+    {
+      "name": "hacker_den",
+      "aliases": [
+        "den",
+        "hackerspace",
+        "computer corner",
+        "lab"
+      ],
+      "items": [
+        {
+          "sprite": "hacker",
+          "dx": 0
+        },
+        {
+          "sprite": "tv_stack",
+          "dx": 24
+        },
+        {
+          "sprite": "cables",
+          "dx": -40
+        },
+        {
+          "sprite": "holo_screen",
+          "dx": 4,
+          "text": "NO ENTRY"
+        }
+      ]
+    },
+    {
+      "name": "rooftop_garden",
+      "aliases": [
+        "garden",
+        "green corner",
+        "plants"
+      ],
+      "items": [
+        {
+          "sprite": "balcony",
+          "dx": 0
+        },
+        {
+          "sprite": "plant",
+          "dx": 4
+        },
+        {
+          "sprite": "plant",
+          "dx": 18
+        },
+        {
+          "sprite": "bench",
+          "dx": 30
+        },
+        {
+          "sprite": "street_lamp",
+          "dx": 58
+        }
+      ]
+    },
+    {
+      "name": "bike_shop",
+      "aliases": [
+        "garage",
+        "bikes",
+        "workshop"
+      ],
+      "items": [
+        {
+          "sprite": "hoverbike",
+          "dx": 0
+        },
+        {
+          "sprite": "bicycle",
+          "dx": 30
+        },
+        {
+          "sprite": "cone",
+          "dx": 52
+        },
+        {
+          "sprite": "neon_sign",
+          "dx": 4,
+          "text": "BIKES"
+        }
+      ]
+    },
+    {
+      "name": "bus_stop",
+      "aliases": [
+        "stop",
+        "shelter"
+      ],
+      "items": [
+        {
+          "sprite": "bench",
+          "dx": 0
+        },
+        {
+          "sprite": "street_lamp",
+          "dx": 28
+        },
+        {
+          "sprite": "trash_can",
+          "dx": 38
+        },
+        {
+          "sprite": "awning",
+          "dx": -4
+        },
+        {
+          "sprite": "holo_screen",
+          "dx": 2,
+          "text": "NEXT: NEVER"
+        }
+      ]
+    },
+    {
+      "name": "rat_kingdom",
+      "aliases": [
+        "rats",
+        "alley",
+        "dumpster corner"
+      ],
+      "items": [
+        {
+          "sprite": "dumpster",
+          "dx": 0
+        },
+        {
+          "sprite": "trash_bags",
+          "dx": 22
+        },
+        {
+          "sprite": "rat",
+          "dx": 40
+        },
+        {
+          "sprite": "rat",
+          "dx": 12
+        },
+        {
+          "sprite": "graffiti",
+          "dx": 0,
+          "text": "RAT KING"
+        }
+      ]
+    },
+    {
+      "name": "shrine",
+      "aliases": [
+        "temple",
+        "altar",
+        "memorial"
+      ],
+      "items": [
+        {
+          "sprite": "lantern_string",
+          "dx": -10
+        },
+        {
+          "sprite": "plant",
+          "dx": 0
+        },
+        {
+          "sprite": "plant",
+          "dx": 30
+        },
+        {
+          "sprite": "neon_sign",
+          "dx": 4,
+          "text": "REMEMBER"
+        },
+        {
+          "sprite": "cat",
+          "dx": 16
+        }
+      ]
+    },
+    {
+      "name": "viewer_spot",
+      "welcome": true,
+      "items": [
+        {
+          "sprite": "neon_sign",
+          "dx": 0,
+          "text": "{name}"
+        },
+        {
+          "sprite": "bench",
+          "dx": 4
+        },
+        {
+          "sprite": "plant",
+          "dx": 30
+        }
+      ]
+    }
+  ]
+}

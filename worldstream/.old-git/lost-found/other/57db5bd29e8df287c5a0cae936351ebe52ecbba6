@@ -1,0 +1,58 @@
+// A whole server in a box with a fake clock, for the tests.
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import type { Catalogue } from '../src/shared/catalogue.js';
+import { ConfigSchema, type Config } from '../src/shared/config.js';
+import type { IncomingChat } from '../src/server/ingest.js';
+import { Interpreter } from '../src/server/interpreter.js';
+import { Keeper } from '../src/server/keeper.js';
+import { Orders } from '../src/server/orders.js';
+import { Regulars } from '../src/server/regulars.js';
+import { Store } from '../src/server/store.js';
+import { Street } from '../src/server/street.js';
+import type { Order } from '../src/shared/state.js';
+
+export const catalogue = JSON.parse(readFileSync(join(process.cwd(), 'assets/shop/catalogue.json'), 'utf8')) as Catalogue;
+
+export interface Harness {
+  cfg: Config;
+  store: Store;
+  keeper: Keeper;
+  orders: Orders;
+  street: Street;
+  regulars: Regulars;
+  interpreter: Interpreter;
+  said: string[];
+  served: Order[];
+  now: () => number;
+  advance: (ms: number) => void;
+  user: (name: string, badges?: string[]) => IncomingChat;
+}
+
+export function harness(overrides: Partial<Config> = {}, rnd: () => number = () => 0.5): Harness {
+  const dir = mkdtempSync(join(tmpdir(), 'noodle-'));
+  const cfg = ConfigSchema.parse({ ...overrides });
+  let t = 1_700_000_000_000;
+  const now = () => t;
+  const store = new Store(join(dir, 'shop.json'), now);
+  const said: string[] = [];
+  const served: Order[] = [];
+  const say = (text: string) => said.push(text);
+  const keeper = new Keeper({ store, cfg, cat: catalogue, say, now, rnd });
+  const orders = new Orders({ store, cfg, cat: catalogue, keeper, onServed: (o) => served.push(o), now, rnd });
+  const street = new Street({ store, cfg, cat: catalogue, keeper, say, now, rnd });
+  const regulars = new Regulars(join(dir, 'regulars.json'), cfg.rapport, cfg.rapport.messageCreditMs, now);
+  const interpreter = new Interpreter({ store, cfg, cat: catalogue, keeper, orders, street, regulars, say, now, rnd });
+  const advance = (ms: number) => {
+    const end = t + ms;
+    while (t < end) {
+      t = Math.min(end, t + cfg.keeper.tickMs);
+      street.tick(t);
+      orders.tick(t);
+      keeper.tick(t);
+    }
+  };
+  const user = (name: string, badges: string[] = []): IncomingChat => ({ id: `m${t}${name}`, user: { id: `mock:${name}`, name, badges }, content: '', at: t, source: 'mock' });
+  return { cfg, store, keeper, orders, street, regulars, interpreter, said, served, now, advance, user };
+}

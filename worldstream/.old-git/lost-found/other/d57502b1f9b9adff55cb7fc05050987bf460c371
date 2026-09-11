@@ -1,0 +1,125 @@
+// The one scene: where everything in the noodle shop is. Screen coordinates
+// in the 480x270 canvas, shared by the art rig, the server (which moves the
+// keeper between spots) and the renderer (which draws him there).
+
+export const VIEW = { w: 480, h: 270 } as const;
+
+/** The pavement: the keeper's feet and everything that stands outside rest on this row. */
+export const GROUND = 233;
+/** Passers-by walk a step closer to the camera. */
+export const PASSER_Y = 237;
+/** Where the kerb ends and the road begins. */
+export const STREET_Y = 240;
+/** The tower balcony floor. */
+export const BALCONY_Y = 112;
+
+/** The building's footprint on the ground floor. */
+export const BUILDING = { x: 132, right: 352, top: 14 } as const;
+
+/** The kitchen opening: yellow interior the keeper stands in front of. */
+export const KITCHEN = { x: 150, right: 250, top: 190, bottom: 214 } as const;
+/** The counter along the front of the kitchen, and the four stools under it (left edges, 8 wide). */
+export const COUNTER = { x: 144, right: 270, top: 214, bottom: 222 } as const;
+export const STOOLS = [156, 182, 208, 234] as const;
+export const STOOL_W = 8;
+
+export const DOOR = { x: 284, right: 310, top: 196 } as const;
+
+/** Layers the keeper can be in. Inside is behind the counter; upstairs is the balcony. */
+export type Zone = 'inside' | 'outside' | 'upstairs' | 'hidden';
+
+export type Facing = 'l' | 'r';
+
+export interface Spot {
+  /** Left edge of the keeper (16 wide). */
+  x: number;
+  zone: Zone;
+  facing: Facing;
+}
+
+export const SPOT_IDS = [
+  'kitchen', 'counter', 'stool0', 'stool1', 'stool2', 'stool3', 'door_in',
+  'door', 'mailbox', 'board', 'bins', 'plants', 'vending', 'sit', 'kerb_left', 'kerb_right',
+  'balcony',
+] as const;
+export type SpotId = (typeof SPOT_IDS)[number];
+
+export const SPOTS: Record<SpotId, Spot> = {
+  kitchen: { x: 168, zone: 'inside', facing: 'l' },
+  counter: { x: 226, zone: 'inside', facing: 'r' },
+  stool0: { x: STOOLS[0] - 4, zone: 'inside', facing: 'r' },
+  stool1: { x: STOOLS[1] - 4, zone: 'inside', facing: 'r' },
+  stool2: { x: STOOLS[2] - 4, zone: 'inside', facing: 'r' },
+  stool3: { x: STOOLS[3] - 4, zone: 'inside', facing: 'l' },
+  door_in: { x: 254, zone: 'inside', facing: 'r' },
+  door: { x: 290, zone: 'outside', facing: 'l' },
+  mailbox: { x: 314, zone: 'outside', facing: 'r' },
+  board: { x: 326, zone: 'outside', facing: 'r' },
+  bins: { x: 348, zone: 'outside', facing: 'r' },
+  plants: { x: 152, zone: 'outside', facing: 'l' },
+  vending: { x: 126, zone: 'outside', facing: 'l' },
+  sit: { x: STOOLS[3] - 4, zone: 'outside', facing: 'l' },
+  kerb_left: { x: 72, zone: 'outside', facing: 'l' },
+  kerb_right: { x: 420, zone: 'outside', facing: 'r' },
+  balcony: { x: 232, zone: 'upstairs', facing: 'l' },
+};
+
+/** The keeper's size. */
+export const KEEPER = { w: 16, h: 36 } as const;
+
+/** Where the inside zone ends: crossing this x means going through the door. */
+export const INSIDE = { minX: 152, maxX: 254 } as const;
+
+/** Things around the shop that have a state the keeper can change. */
+export const FIXTURE_IDS = ['bin', 'board', 'vending', 'mailbox', 'plant', 'door', 'lantern', 'sign'] as const;
+export type FixtureId = (typeof FIXTURE_IDS)[number];
+
+export interface FixtureDef {
+  /** Left edge and the row its bottom sits on. */
+  x: number;
+  y: number;
+  states: readonly string[];
+  initial: string;
+  /** Drawn from a sprite named `<id>_<state>`; otherwise the renderer draws the state as an overlay on the building. */
+  sprite: boolean;
+  /** How the keeper talks about it. */
+  label: string;
+  /** Words chat uses for it. */
+  aliases: string[];
+}
+
+export const FIXTURES: Record<FixtureId, FixtureDef> = {
+  bin: { x: 364, y: GROUND, states: ['up', 'fallen'], initial: 'up', sprite: true, label: 'the bin', aliases: ['bin', 'bins', 'trash', 'rubbish', 'garbage', 'trash can'] },
+  board: { x: 340, y: GROUND, states: ['straight', 'wonky'], initial: 'straight', sprite: true, label: 'the menu board', aliases: ['board', 'menu', 'menu board', 'sign board', 'chalkboard'] },
+  vending: { x: 104, y: GROUND, states: ['on', 'flicker', 'off'], initial: 'on', sprite: true, label: 'the vending machine', aliases: ['vending', 'vending machine', 'machine', 'vendo'] },
+  mailbox: { x: 322, y: 212, states: ['empty', 'flag'], initial: 'empty', sprite: true, label: 'the mailbox', aliases: ['mail', 'mailbox', 'post', 'letterbox', 'letters'] },
+  plant: { x: 136, y: GROUND, states: ['fresh', 'wilted'], initial: 'fresh', sprite: true, label: 'the plants', aliases: ['plant', 'plants', 'pot', 'flowers'] },
+  door: { x: DOOR.x, y: GROUND, states: ['closed', 'open'], initial: 'closed', sprite: true, label: 'the door', aliases: ['door'] },
+  lantern: { x: 214, y: 56, states: ['lit', 'out'], initial: 'lit', sprite: false, label: 'the lantern up top', aliases: ['lantern', 'lanterns', 'light', 'lights', 'top light', 'roof light'] },
+  sign: { x: 172, y: 176, states: ['on', 'glitch'], initial: 'on', sprite: false, label: 'the neon sign', aliases: ['sign', 'neon', 'neon sign', 'the sign'] },
+};
+
+/** The big round neon sign on the first floor. */
+export const NEON = { cx: 196, cy: 150, r: 24, textX: 226, textY: 140 } as const;
+/** The lantern sign at the top of the tower. */
+export const TOP_SIGN = { cx: 240, cy: 40, r: 13 } as const;
+/** Red lanterns: above the door and in the tower. Left edge, top. */
+export const LANTERNS = [
+  { x: 288, y: 182 }, { x: 302, y: 182 },
+  { x: 233, y: 76 }, { x: 243, y: 76 },
+] as const;
+/** The stove in the kitchen, for steam. */
+export const STOVE = { x: 154, y: 199 } as const;
+
+/** Where chat's flags stand: left edges along the kerb, three each side. */
+export const FLAG_SLOTS = [60, 82, 104, 380, 402, 424] as const;
+export const FLAG_W = 10;
+
+export function stoolCentre(i: number): number {
+  return STOOLS[i] + STOOL_W / 2;
+}
+
+/** Baseline y for a zone. */
+export function zoneGround(zone: Zone): number {
+  return zone === 'upstairs' ? BALCONY_Y : GROUND;
+}

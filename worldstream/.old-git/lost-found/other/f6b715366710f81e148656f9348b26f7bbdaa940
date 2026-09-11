@@ -1,0 +1,239 @@
+// Life around the shop that is not the keeper: passers-by, the weather, the
+// small mishaps (a bin goes over, the board leans, the machine flickers, mail
+// arrives), him noticing them, and the cat.
+import { randomUUID } from 'node:crypto';
+import { pick, type Catalogue } from '../shared/catalogue.js';
+import { between, type Config } from '../shared/config.js';
+import { DOOR, FIXTURES, FIXTURE_IDS, GROUND, PASSER_Y, VIEW, type FixtureId } from '../shared/scene.js';
+import { WEATHERS, motionX, type Entity, type Weather } from '../shared/state.js';
+import { BAD_STATES, fixTask, isBad, waveTask } from './jobs.js';
+import type { Keeper } from './keeper.js';
+import { log } from './log.js';
+import type { Store } from './store.js';
+
+export interface StreetDeps {
+  store: Store;
+  cfg: Config;
+  cat: Catalogue;
+  keeper: Keeper;
+  say: (text: string) => void;
+  now?: () => number;
+  rnd?: () => number;
+}
+
+/** Where the cat likes to be: left edge and the row its feet rest on. */
+const CAT_SPOTS: Array<{ x: number; y: number; name: string }> = [
+  { x: FIXTURES.vending.x + 2, y: GROUND - 32, name: 'vending' },
+  { x: DOOR.x + 2, y: GROUND, name: 'step' },
+  { x: 398, y: 221, name: 'crates' },
+  { x: 150, y: GROUND, name: 'plants' },
+  { x: 380, y: GROUND, name: 'bins' },
+  { x: 70, y: GROUND, name: 'kerb' },
+];
+
+const MISHAPS: Array<{ id: FixtureId; weight: number }> = [
+  { id: 'bin', weight: 4 }, { id: 'board', weight: 3 }, { id: 'vending', weight: 2 }, { id: 'plant', weight: 2 }, { id: 'lantern', weight: 1 }, { id: 'sign', weight: 2 },
+];
+
+export class Street {
+  private readonly now: () => number;
+  private readonly rnd: () => number;
+  private nextPasserby: number;
+  private nextMishap: number;
+  private nextMail: number;
+  private readonly noticeAt = new Map<FixtureId, number>();
+  private greeted = new Set<string>();
+
+  constructor(private readonly deps: StreetDeps) {
+    this.now = deps.now ?? Date.now;
+    this.rnd = deps.rnd ?? Math.random;
+    const now = this.now();
+    this.nextPasserby = now + between(deps.cfg.street.passerbyEveryMs, this.rnd) / 3;
+    this.nextMishap = now + between(deps.cfg.street.mishapEveryMs, this.rnd);
+    this.nextMail = now + between(deps.cfg.street.mailEveryMs, this.rnd);
+    for (const id of FIXTURE_IDS) if (isBad(deps.store.state, id)) this.noticeAt.set(id, now + between(deps.cfg.keeper.noticeMs, this.rnd) / 2);
+  }
+
+  private get s() {
+    return this.deps.store.state;
+  }
+
+  tick(now = this.now()): void {
+    this.deps.store.dispatch({ type: 'expire', now });
+    this.weather(now);
+    this.passersby(now);
+    this.mishaps(now);
+    this.notice(now);
+    this.cat(now);
+  }
+
+  // -- weather ------------------------------------------------------------------------
+
+  private weather(now: number): void {
+    if (now < this.s.weatherUntil) return;
+    const weights = this.deps.cfg.street.weatherWeights;
+    const options = WEATHERS.filter((w) => w !== this.s.weather && (weights[w] ?? 0) > 0);
+    const total = options.reduce((a, w) => a + (weights[w] ?? 0), 0);
+    let r = this.rnd() * total;
+    let next: Weather = options[0] ?? 'clear';
+    for (const w of options) {
+      r -= weights[w] ?? 0;
+      if (r <= 0) {
+        next = w;
+        break;
+      }
+    }
+    this.setWeather(next, now);
+    if (this.deps.keeper.free && this.rnd() < 0.7) {
+      const line = pick(this.deps.cat.lines.weather[next] ?? [], this.rnd);
+      if (line) this.deps.say(line);
+    }
+  }
+
+  setWeather(w: Weather, now = this.now()): void {
+    this.deps.store.dispatch({ type: 'set_weather', weather: w, until: now + between(this.deps.cfg.street.weatherMs, this.rnd) });
+    log('street', `weather: ${w}`);
+  }
+
+  // -- passers-by -----------------------------------------------------------------------
+
+  private passersby(now: number): void {
+    if (now >= this.nextPasserby) {
+      this.nextPasserby = now + between(this.deps.cfg.street.passerbyEveryMs, this.rnd);
+      if (this.s.entities.filter((e) => e.kind === 'passerby').length < 2) this.spawnPasserby(now);
+    }
+    // a wave as they pass the door, when he is out front or free
+    for (const p of this.s.entities.filter((e) => e.kind === 'passerby' && e.motion)) {
+      if (this.greeted.has(p.id)) continue;
+      const x = motionX(p.x, p.motion, now);
+      if (Math.abs(x - DOOR.x) < 14) {
+        this.greeted.add(p.id);
+        const k = this.s.keeper;
+        if (k.zone === 'hidden' || k.zone === 'upstairs' || !this.deps.keeper.free) continue;
+        if (this.rnd() < 0.6) {
+          const line = this.rnd() < 0.35 ? pick(this.deps.cat.lines.passerby, this.rnd) : undefined;
+          this.deps.keeper.request(waveTask(this.deps.keeper.ctx(now), `wave:${p.id}`, x < k.x ? 'l' : 'r', line, 2));
+        }
+      }
+    }
+    for (const id of this.greeted) if (!this.s.entities.some((e) => e.id === id)) this.greeted.delete(id);
+  }
+
+  spawnPasserby(now = this.now()): Entity {
+    const fromLeft = this.rnd() < 0.5;
+    const speed = 16 + this.rnd() * 10;
+    const startX = fromLeft ? -20 : VIEW.w + 4;
+    const endX = fromLeft ? VIEW.w + 4 : -20;
+    const rain = this.s.weather === 'rain';
+    const pool = this.deps.cat.walkers.filter((w) => (rain ? true : w !== 'walker_umbrella'));
+    const sprite = rain && this.rnd() < 0.5 ? 'walker_umbrella' : (pick(pool, this.rnd) ?? 'walker_coat');
+    const duration = Math.round((Math.abs(endX - startX) / speed) * 1000);
+    const e: Entity = {
+      id: `walk_${randomUUID().slice(0, 6)}`, kind: 'passerby', sprite, x: startX, y: PASSER_Y, facing: fromLeft ? 'r' : 'l',
+      motion: { fromX: startX, toX: endX, startAt: now, endAt: now + duration },
+      addedBy: 'world', addedAt: now, expiresAt: now + duration + 200,
+    };
+    this.deps.store.dispatch({ type: 'add_entity', entity: e });
+    return e;
+  }
+
+  // -- mishaps and noticing ----------------------------------------------------------------
+
+  private mishaps(now: number): void {
+    if (now >= this.nextMishap) {
+      this.nextMishap = now + between(this.deps.cfg.street.mishapEveryMs, this.rnd);
+      const options = MISHAPS.filter((m) => !isBad(this.s, m.id));
+      const total = options.reduce((a, m) => a + m.weight, 0);
+      let r = this.rnd() * total;
+      for (const m of options) {
+        r -= m.weight;
+        if (r <= 0) {
+          this.mishap(m.id, now);
+          break;
+        }
+      }
+    }
+    if (now >= this.nextMail) {
+      this.nextMail = now + between(this.deps.cfg.street.mailEveryMs, this.rnd);
+      if (!isBad(this.s, 'mailbox')) this.mishap('mailbox', now);
+    }
+  }
+
+  /** Something goes wrong with a fixture (or the post arrives). Returns false when it already has. */
+  mishap(id: FixtureId, now = this.now(), by = 'the street'): boolean {
+    const bad = BAD_STATES[id];
+    if (!bad || isBad(this.s, id)) return false;
+    this.deps.store.dispatch({ type: 'fixture', id, state: bad, at: now });
+    this.noticeAt.set(id, now + between(this.deps.cfg.keeper.noticeMs, this.rnd));
+    log('street', `${FIXTURES[id].label}: ${bad} (${by})`);
+    return true;
+  }
+
+  private notice(now: number): void {
+    for (const id of FIXTURE_IDS) {
+      if (!isBad(this.s, id)) continue;
+      if (this.s.fixtures[id].noticed) {
+        if (!this.deps.keeper.has(`fix:${id}`)) this.deps.keeper.request(fixTask(this.deps.keeper.ctx(now), id));
+        continue;
+      }
+      const at = this.noticeAt.get(id);
+      if (at === undefined) {
+        this.noticeAt.set(id, now + between(this.deps.cfg.keeper.noticeMs, this.rnd));
+        continue;
+      }
+      if (now < at) continue;
+      this.attend(id, now, false);
+    }
+  }
+
+  /** He turns to a fixture: on his own, or because chat pointed. Returns false when nothing is wrong with it. */
+  attend(id: FixtureId, now = this.now(), alerted: boolean): boolean {
+    if (!isBad(this.s, id)) return false;
+    this.deps.store.dispatch({ type: 'fixture_noticed', id });
+    if (!alerted) {
+      const line = pick(this.deps.cat.lines.noticed[id] ?? [], this.rnd);
+      if (line) this.deps.say(line);
+    }
+    this.deps.keeper.request(fixTask(this.deps.keeper.ctx(now), id));
+    return true;
+  }
+
+  // -- the cat -------------------------------------------------------------------------------
+
+  private cat(now: number): void {
+    const cat = this.s.entities.find((e) => e.kind === 'cat');
+    if (!cat) return;
+    if (cat.motion) {
+      if (cat.motion.endAt <= now) {
+        const spot = CAT_SPOTS.find((s) => s.name === cat.doing?.at) ?? CAT_SPOTS[1];
+        const sleepy = this.rnd() < 0.3;
+        this.deps.store.dispatch({ type: 'entity', id: cat.id, patch: { x: cat.motion.toX, y: spot.y, motion: undefined, sprite: sleepy ? 'cat_sleep' : 'cat_sit', doing: { what: sleepy ? 'sleep' : 'sit', until: now + (sleepy ? 90_000 : 35_000) + this.rnd() * 40_000, at: spot.name } } });
+        // it brushes past the bin on the way and, now and then, over it goes
+        if (spot.name === 'bins' && !isBad(this.s, 'bin') && this.rnd() < 0.35) this.mishap('bin', now, 'the cat');
+      }
+      return;
+    }
+    if (cat.doing && cat.doing.until > now) return;
+    // pick somewhere else to be
+    const options = CAT_SPOTS.filter((s) => s.name !== cat.doing?.at);
+    const spot = pick(options, this.rnd) ?? CAT_SPOTS[0];
+    const dist = Math.abs(spot.x - cat.x);
+    const duration = Math.max(600, Math.round((dist / 22) * 1000));
+    this.deps.store.dispatch({ type: 'entity', id: cat.id, patch: { y: GROUND, sprite: 'cat_walk', facing: spot.x > cat.x ? 'r' : 'l', motion: { fromX: cat.x, toX: spot.x, startAt: now, endAt: now + duration }, doing: { what: 'walk', until: now + duration, at: spot.name } } });
+  }
+
+  /** A viewer's cat arrives. */
+  spawnCat(by: { id: string; name: string }, ttlMs: number, now = this.now()): Entity {
+    const fromLeft = this.rnd() < 0.5;
+    const startX = fromLeft ? -16 : VIEW.w + 2;
+    const spot = CAT_SPOTS[1];
+    const duration = Math.round((Math.abs(spot.x - startX) / 22) * 1000);
+    const e: Entity = {
+      id: `cat_${randomUUID().slice(0, 6)}`, kind: 'cat', sprite: 'cat_walk', x: startX, y: GROUND, facing: fromLeft ? 'r' : 'l',
+      motion: { fromX: startX, toX: spot.x, startAt: now, endAt: now + duration }, doing: { what: 'walk', until: now + duration, at: spot.name },
+      addedBy: by.id, addedByName: by.name, addedAt: now, expiresAt: now + ttlMs,
+    };
+    this.deps.store.dispatch({ type: 'add_entity', entity: e });
+    return e;
+  }
+}

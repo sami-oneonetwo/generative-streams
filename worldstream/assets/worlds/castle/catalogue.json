@@ -1,0 +1,932 @@
+{
+  "world": "castle",
+  "palette": [
+    "#0b0a1e",
+    "#1a1420",
+    "#2e2a38",
+    "#4a4658",
+    "#6e6a7c",
+    "#8c889a",
+    "#a8a4b4",
+    "#d8d4e0",
+    "#1a1a2e",
+    "#2a2a44",
+    "#3d3d5c",
+    "#6e6e96",
+    "#efe9dd",
+    "#f4f4ff",
+    "#00e5ff",
+    "#3ca6c9",
+    "#1b6d8a",
+    "#ff2bd6",
+    "#7a5cc4",
+    "#b0165a",
+    "#ff8a3d",
+    "#ffb347",
+    "#ffe066",
+    "#7cff4f",
+    "#3f7d3a",
+    "#1c5c3a",
+    "#ff3b3b",
+    "#8a1c1c",
+    "#5c3a1e",
+    "#e0c9a6"
+  ],
+  "sprites": [
+    {
+      "name": "wood_sign",
+      "layers": [
+        "stage"
+      ],
+      "w": 40,
+      "h": 22,
+      "colour": "#5c3a1e",
+      "acceptsText": true,
+      "procedural": "wood_sign",
+      "tags": [
+        "sign",
+        "text",
+        "post"
+      ],
+      "aliases": [
+        "sign",
+        "signpost",
+        "post",
+        "neon sign",
+        "banner text",
+        "plaque"
+      ]
+    },
+    {
+      "name": "torch",
+      "layers": [
+        "near",
+        "stage"
+      ],
+      "w": 6,
+      "h": 14,
+      "colour": "#ff8a3d",
+      "animated": 2,
+      "tags": [
+        "torch",
+        "light",
+        "fire",
+        "warm"
+      ],
+      "aliases": [
+        "torches",
+        "wall torch",
+        "lamp",
+        "light",
+        "street lamp",
+        "lantern"
+      ]
+    },
+    {
+      "name": "brazier",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 14,
+      "colour": "#ff8a3d",
+      "animated": 2,
+      "tags": [
+        "fire",
+        "warm",
+        "light",
+        "brazier"
+      ],
+      "aliases": [
+        "fire",
+        "fire pit",
+        "campfire",
+        "barrel fire",
+        "bonfire"
+      ]
+    },
+    {
+      "name": "banner",
+      "layers": [
+        "near",
+        "stage"
+      ],
+      "w": 8,
+      "h": 24,
+      "colour": "#b0165a",
+      "tags": [
+        "banner",
+        "flag",
+        "heraldry"
+      ],
+      "aliases": [
+        "flag",
+        "standard",
+        "pennant"
+      ]
+    },
+    {
+      "name": "throne",
+      "layers": [
+        "stage"
+      ],
+      "w": 15,
+      "h": 18,
+      "colour": "#ffb347",
+      "tags": [
+        "throne",
+        "seat",
+        "royal"
+      ],
+      "aliases": [
+        "chair",
+        "seat",
+        "bench",
+        "king's chair"
+      ]
+    },
+    {
+      "name": "feast_table",
+      "layers": [
+        "stage"
+      ],
+      "w": 30,
+      "h": 14,
+      "colour": "#5c3a1e",
+      "tags": [
+        "food",
+        "table",
+        "feast"
+      ],
+      "aliases": [
+        "feast",
+        "table",
+        "banquet",
+        "food stand",
+        "ramen stand",
+        "dinner",
+        "food"
+      ]
+    },
+    {
+      "name": "bread",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#ffb347",
+      "consumable": true,
+      "tags": [
+        "food",
+        "bread",
+        "consumable"
+      ],
+      "aliases": [
+        "loaf",
+        "snack",
+        "meal",
+        "noodle cup",
+        "rations"
+      ]
+    },
+    {
+      "name": "cauldron",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 12,
+      "colour": "#2e2a38",
+      "animated": 2,
+      "tags": [
+        "food",
+        "fire",
+        "cauldron",
+        "warm"
+      ],
+      "aliases": [
+        "pot",
+        "stew",
+        "soup",
+        "witch pot"
+      ]
+    },
+    {
+      "name": "barrel",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 10,
+      "colour": "#5c3a1e",
+      "tags": [
+        "barrel",
+        "wood",
+        "seat"
+      ],
+      "aliases": [
+        "keg",
+        "cask",
+        "barrels"
+      ]
+    },
+    {
+      "name": "crate",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 12,
+      "colour": "#5c3a1e",
+      "tags": [
+        "crate",
+        "box",
+        "seat"
+      ],
+      "aliases": [
+        "box",
+        "crates",
+        "boxes"
+      ]
+    },
+    {
+      "name": "well",
+      "layers": [
+        "stage"
+      ],
+      "w": 14,
+      "h": 18,
+      "colour": "#6e6a7c",
+      "tags": [
+        "well",
+        "water",
+        "stone"
+      ],
+      "aliases": [
+        "water well",
+        "wishing well",
+        "water"
+      ]
+    },
+    {
+      "name": "gargoyle",
+      "layers": [
+        "near"
+      ],
+      "w": 10,
+      "h": 10,
+      "colour": "#6e6a7c",
+      "behaviour": "perch",
+      "tags": [
+        "gargoyle",
+        "statue",
+        "stone"
+      ],
+      "aliases": [
+        "statue",
+        "grotesque"
+      ]
+    },
+    {
+      "name": "armour",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 22,
+      "colour": "#a8a4b4",
+      "tags": [
+        "armour",
+        "fun",
+        "decor"
+      ],
+      "aliases": [
+        "armor",
+        "suit of armour",
+        "suit of armor",
+        "knight statue"
+      ]
+    },
+    {
+      "name": "chest",
+      "layers": [
+        "stage"
+      ],
+      "w": 13,
+      "h": 10,
+      "colour": "#5c3a1e",
+      "tags": [
+        "chest",
+        "treasure",
+        "fun"
+      ],
+      "aliases": [
+        "treasure",
+        "treasure chest",
+        "loot",
+        "gold"
+      ]
+    },
+    {
+      "name": "sword_stone",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 14,
+      "colour": "#a8a4b4",
+      "tags": [
+        "sword",
+        "stone",
+        "legend",
+        "fun"
+      ],
+      "aliases": [
+        "sword",
+        "excalibur",
+        "sword in the stone",
+        "blade"
+      ]
+    },
+    {
+      "name": "cannon",
+      "layers": [
+        "stage"
+      ],
+      "w": 16,
+      "h": 10,
+      "colour": "#2e2a38",
+      "tags": [
+        "cannon",
+        "weapon"
+      ],
+      "aliases": [
+        "gun",
+        "artillery"
+      ]
+    },
+    {
+      "name": "hay_bale",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 10,
+      "colour": "#ffb347",
+      "tags": [
+        "hay",
+        "bed",
+        "seat"
+      ],
+      "aliases": [
+        "hay",
+        "bale",
+        "straw",
+        "bed",
+        "bedroll"
+      ]
+    },
+    {
+      "name": "knight",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 24,
+      "colour": "#a8a4b4",
+      "behaviour": "patrol",
+      "speed": 18,
+      "lines": [
+        "halt. who goes there.",
+        "the king sees no one today",
+        "keep off the battlements",
+        "I have stood here since dawn. of a different year."
+      ],
+      "tags": [
+        "person",
+        "knight",
+        "guard",
+        "npc"
+      ],
+      "aliases": [
+        "guard",
+        "soldier",
+        "samurai",
+        "warrior",
+        "person"
+      ]
+    },
+    {
+      "name": "jester",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 22,
+      "colour": "#ff2bd6",
+      "behaviour": "wander",
+      "speed": 22,
+      "lines": [
+        "a wanderer walks into a castle. that is the whole joke.",
+        "the king laughed once. in 1402.",
+        "want to hear a riddle? too late.",
+        "juggling is just dropping, slowly"
+      ],
+      "tags": [
+        "person",
+        "jester",
+        "fun",
+        "npc"
+      ],
+      "aliases": [
+        "fool",
+        "clown",
+        "joker"
+      ]
+    },
+    {
+      "name": "wizard",
+      "layers": [
+        "stage"
+      ],
+      "w": 12,
+      "h": 24,
+      "colour": "#7a5cc4",
+      "behaviour": "perch",
+      "lines": [
+        "do not touch the cauldron",
+        "I foresaw you. you were shorter.",
+        "the dragon is a tenant, not a threat",
+        "magic is mostly paperwork"
+      ],
+      "tags": [
+        "person",
+        "wizard",
+        "magic",
+        "npc"
+      ],
+      "aliases": [
+        "mage",
+        "sorcerer",
+        "witch",
+        "hacker"
+      ]
+    },
+    {
+      "name": "bat",
+      "layers": [
+        "mid",
+        "near"
+      ],
+      "w": 8,
+      "h": 5,
+      "colour": "#2e2a38",
+      "animated": 2,
+      "tags": [
+        "bat",
+        "animal",
+        "flying",
+        "small"
+      ],
+      "aliases": [
+        "bats",
+        "drone",
+        "bird"
+      ]
+    },
+    {
+      "name": "ghost",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 14,
+      "colour": "#7cff4f",
+      "animated": 2,
+      "behaviour": "wander",
+      "speed": 14,
+      "lines": [
+        "boo. sorry. habit.",
+        "I used to own this place",
+        "you can see me? finally."
+      ],
+      "tags": [
+        "ghost",
+        "spirit",
+        "person",
+        "npc"
+      ],
+      "aliases": [
+        "spirit",
+        "spectre",
+        "phantom",
+        "spooky"
+      ]
+    },
+    {
+      "name": "crow",
+      "layers": [
+        "near",
+        "stage"
+      ],
+      "w": 8,
+      "h": 6,
+      "colour": "#1a1420",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "perch",
+      "tags": [
+        "bird",
+        "crow",
+        "animal"
+      ],
+      "aliases": [
+        "raven",
+        "bird"
+      ]
+    },
+    {
+      "name": "rat",
+      "layers": [
+        "stage"
+      ],
+      "w": 8,
+      "h": 4,
+      "colour": "#2a2a44",
+      "animated": 2,
+      "faces": "l",
+      "behaviour": "flee",
+      "speed": 60,
+      "tags": [
+        "rat",
+        "animal",
+        "small"
+      ],
+      "aliases": [
+        "mouse",
+        "rats"
+      ]
+    },
+    {
+      "name": "cat",
+      "layers": [
+        "stage"
+      ],
+      "w": 10,
+      "h": 6,
+      "colour": "#2a2a44",
+      "faces": "l",
+      "behaviour": "wander",
+      "speed": 30,
+      "tags": [
+        "cat",
+        "animal",
+        "pet"
+      ],
+      "aliases": [
+        "kitty",
+        "kitten",
+        "cats"
+      ]
+    },
+    {
+      "name": "dragon",
+      "layers": [
+        "mid"
+      ],
+      "w": 40,
+      "h": 20,
+      "colour": "#3f7d3a",
+      "animated": 2,
+      "ambientOnly": true,
+      "tags": [
+        "dragon",
+        "flying",
+        "transit"
+      ]
+    }
+  ],
+  "weatherWeights": {
+    "fog": 0.4,
+    "rain": 0.25,
+    "clear": 0.2,
+    "storm": 0.15
+  },
+  "ambient": [
+    {
+      "name": "dragon",
+      "sprite": "dragon",
+      "layer": "mid",
+      "y": [
+        40,
+        90
+      ],
+      "from": -80,
+      "to": 1040,
+      "durationMs": 14000,
+      "everyMs": [
+        240000,
+        480000
+      ],
+      "departure": true,
+      "lines": [
+        "the dragon. it is fine. it is always fine.",
+        "it only eats on tuesdays",
+        "that is my ride, technically"
+      ]
+    },
+    {
+      "name": "bat_swarm",
+      "sprite": "bat",
+      "layer": "mid",
+      "y": [
+        70,
+        140
+      ],
+      "from": 1000,
+      "to": -20,
+      "durationMs": 7000,
+      "everyMs": [
+        60000,
+        150000
+      ],
+      "lines": [
+        "bats. of course bats.",
+        "they nest in the east tower. so does everything."
+      ]
+    },
+    {
+      "name": "knight_patrol",
+      "sprite": "knight",
+      "layer": "stage",
+      "y": 196,
+      "from": -30,
+      "to": 990,
+      "durationMs": 40000,
+      "everyMs": [
+        180000,
+        360000
+      ],
+      "lines": [
+        "patrol. look busy.",
+        "he walks that route every hour. nobody told him the war ended."
+      ]
+    },
+    {
+      "name": "ghost_pass",
+      "sprite": "ghost",
+      "layer": "stage",
+      "y": 206,
+      "from": 980,
+      "to": -20,
+      "durationMs": 20000,
+      "everyMs": [
+        150000,
+        400000
+      ],
+      "lines": [
+        "did you see that. tell me you saw that.",
+        "the cold spot is moving again"
+      ]
+    }
+  ],
+  "lines": {
+    "ambient": [
+      "stone remembers everything. that is its problem.",
+      "somewhere in here there is a room nobody has opened in a century",
+      "the torches never go out. nobody lights them. do not think about it.",
+      "fog again. the castle prefers it.",
+      "the king is either asleep or a rumour",
+      "every stair in this place is a trap for the knees",
+      "I could live here. cold, but nobody asks questions."
+    ],
+    "weather": {
+      "fog": [
+        "the fog is back. it lives here.",
+        "cannot see the far towers"
+      ],
+      "rain": [
+        "rain on stone. the oldest sound.",
+        "the gutters are gargoyles. they are not enjoying this."
+      ],
+      "clear": [
+        "clear. the castle looks embarrassed.",
+        "you can see the whole valley from the wall"
+      ],
+      "storm": [
+        "lightning on the east tower. again.",
+        "the dragon hates this"
+      ]
+    },
+    "added": [
+      "{user} brought a {thing} into the keep",
+      "a {thing}. {user}'s doing. the guards did not notice.",
+      "{user} thinks the castle needed a {thing}",
+      "okay. a {thing}. thanks {user}"
+    ],
+    "addedText": [
+      "{user} had \"{text}\" carved into the stone",
+      "a plaque now reads \"{text}\". {user}.",
+      "\"{text}\", says {user}. very medieval."
+    ],
+    "removed": [
+      "the {thing} is gone. the castle took it.",
+      "{thing}, gone",
+      "no more {thing}"
+    ]
+  },
+  "survival": {
+    "comfort": "warmth",
+    "comfortDrain": {
+      "base": 0.025,
+      "night": 0.035,
+      "day": 0,
+      "rain": 0.02,
+      "storm": 0.05,
+      "fog": 0.01
+    },
+    "comfortTags": [
+      "warm",
+      "fire",
+      "shelter"
+    ],
+    "foodTags": [
+      "food"
+    ],
+    "restTags": [
+      "bed",
+      "seat"
+    ],
+    "spiritTags": [
+      "person",
+      "animal",
+      "music",
+      "fun"
+    ]
+  },
+  "builds": [
+    {
+      "name": "feast",
+      "aliases": [
+        "banquet",
+        "dinner",
+        "great hall"
+      ],
+      "items": [
+        {
+          "sprite": "feast_table",
+          "dx": 0
+        },
+        {
+          "sprite": "throne",
+          "dx": 34
+        },
+        {
+          "sprite": "torch",
+          "dx": -6
+        },
+        {
+          "sprite": "torch",
+          "dx": 52
+        },
+        {
+          "sprite": "bread",
+          "dx": 12
+        }
+      ]
+    },
+    {
+      "name": "guard_post",
+      "aliases": [
+        "gate",
+        "watch",
+        "barracks"
+      ],
+      "items": [
+        {
+          "sprite": "knight",
+          "dx": 0
+        },
+        {
+          "sprite": "brazier",
+          "dx": 16
+        },
+        {
+          "sprite": "banner",
+          "dx": 32
+        },
+        {
+          "sprite": "barrel",
+          "dx": 42
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": -4,
+          "text": "HALT"
+        }
+      ]
+    },
+    {
+      "name": "wizard_corner",
+      "aliases": [
+        "lab",
+        "study",
+        "magic corner"
+      ],
+      "items": [
+        {
+          "sprite": "wizard",
+          "dx": 0
+        },
+        {
+          "sprite": "cauldron",
+          "dx": 16
+        },
+        {
+          "sprite": "chest",
+          "dx": 34
+        },
+        {
+          "sprite": "torch",
+          "dx": -6
+        }
+      ]
+    },
+    {
+      "name": "haunted_hall",
+      "aliases": [
+        "haunted",
+        "ghost hall",
+        "crypt"
+      ],
+      "items": [
+        {
+          "sprite": "ghost",
+          "dx": 0
+        },
+        {
+          "sprite": "armour",
+          "dx": 18
+        },
+        {
+          "sprite": "torch",
+          "dx": 34
+        },
+        {
+          "sprite": "cannon",
+          "dx": 44
+        },
+        {
+          "sprite": "wood_sign",
+          "dx": 0,
+          "text": "BEWARE"
+        }
+      ]
+    },
+    {
+      "name": "armoury",
+      "aliases": [
+        "weapons",
+        "arsenal"
+      ],
+      "items": [
+        {
+          "sprite": "sword_stone",
+          "dx": 0
+        },
+        {
+          "sprite": "armour",
+          "dx": 14
+        },
+        {
+          "sprite": "cannon",
+          "dx": 28
+        },
+        {
+          "sprite": "crate",
+          "dx": 48
+        }
+      ]
+    },
+    {
+      "name": "viewer_spot",
+      "welcome": true,
+      "items": [
+        {
+          "sprite": "wood_sign",
+          "dx": 0,
+          "text": "{name}"
+        },
+        {
+          "sprite": "torch",
+          "dx": 6
+        },
+        {
+          "sprite": "barrel",
+          "dx": 30
+        }
+      ]
+    }
+  ]
+}

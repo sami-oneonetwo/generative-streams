@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>the noodle shop: operator</title>
+<style>
+  body { margin: 0; background: #07163c; color: #e8e6f0; font: 13px/1.4 ui-monospace, Menlo, monospace; }
+  header { padding: 10px 16px; background: #050e26; display: flex; gap: 16px; align-items: baseline; border-bottom: 1px solid #1e313e; }
+  header h1 { font-size: 15px; margin: 0; color: #ff7a66; }
+  main { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px 16px; }
+  section { background: #0a2a48; border: 1px solid #1e313e; border-radius: 6px; padding: 10px 12px; }
+  h2 { font-size: 12px; margin: 0 0 8px; color: #9a9aa8; text-transform: uppercase; letter-spacing: .06em; }
+  button { background: #1e313e; color: #e8e6f0; border: 1px solid #2c4a5a; border-radius: 4px; padding: 4px 8px; margin: 2px; cursor: pointer; font: inherit; }
+  button:hover { background: #2c4a5a; }
+  button.on { background: #9f0d16; border-color: #e11119; }
+  input[type=text] { background: #051834; color: #e8e6f0; border: 1px solid #2c4a5a; border-radius: 4px; padding: 4px 6px; font: inherit; width: 60%; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { text-align: left; padding: 2px 6px; vertical-align: top; border-bottom: 1px solid #12263a; }
+  th { color: #9a9aa8; font-weight: normal; }
+  .muted { color: #6b6b7a; }
+  .ok { color: #7cffb0; }
+  .no { color: #ff7a66; }
+  .chat { max-height: 360px; overflow: auto; }
+  .row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+  .pill { display: inline-block; padding: 1px 6px; border-radius: 10px; background: #1e313e; margin-right: 4px; }
+  .pill.bad { background: #9f0d16; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">the noodle shop</h1>
+  <span id="keeper" class="muted"></span>
+  <span id="kick" class="muted"></span>
+  <span id="brain" class="muted"></span>
+</header>
+<main>
+  <section>
+    <h2>Levers</h2>
+    <div class="row"><span class="muted">weather</span> <span id="weathers"></span></div>
+    <div class="row"><span class="muted">knock</span> <span id="mishaps"></span></div>
+    <div class="row"><span class="muted">street</span>
+      <button onclick="act({action:'passerby'})">passer-by</button>
+      <button onclick="act({action:'cat'})">cat</button>
+      <button onclick="act({action:'clear', kind:'cat'})">shoo cat</button>
+      <button onclick="act({action:'clear', kind:'flag'})">clear flags</button>
+      <button onclick="act({action:'cancel'})">drop his task</button>
+    </div>
+    <div class="row"><span class="muted">music</span>
+      <button onclick="act({action:'music', enabled:true})">on</button>
+      <button onclick="act({action:'music', enabled:false})">off</button>
+      <button onclick="act({action:'music', volume:0.3})">quiet</button>
+      <button onclick="act({action:'music', volume:0.7})">loud</button>
+      <span id="kickchat"></span>
+    </div>
+    <div class="row"><input id="say" type="text" placeholder="a line for him to say"> <button onclick="say()">say</button></div>
+    <div class="row"><input id="chat" type="text" placeholder="chat as the operator, e.g. !order miso"> <button onclick="chat()">send</button></div>
+    <p class="muted" id="commands"></p>
+  </section>
+  <section>
+    <h2>The shop</h2>
+    <div id="fixtures"></div>
+    <div id="orders"></div>
+    <div id="entities"></div>
+  </section>
+  <section>
+    <h2>Chat</h2>
+    <div class="chat"><table id="chatlog"></table></div>
+  </section>
+  <section>
+    <h2>Regulars</h2>
+    <table id="regulars"></table>
+  </section>
+</main>
+<script>
+  async function act(body) {
+    const r = await fetch('/admin/api/action', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json();
+    if (j && j.ok === false) alert(j.error || 'no');
+    refresh();
+  }
+  function say() { const el = document.getElementById('say'); if (el.value.trim()) act({ action: 'say', text: el.value.trim() }); el.value = ''; }
+  function chat() { const el = document.getElementById('chat'); if (el.value.trim()) act({ action: 'chat', text: el.value.trim() }); el.value = ''; }
+  document.getElementById('say').addEventListener('keydown', (e) => { if (e.key === 'Enter') say(); });
+  document.getElementById('chat').addEventListener('keydown', (e) => { if (e.key === 'Enter') chat(); });
+  const esc = (s) => String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const ago = (t) => { const s = Math.max(0, Math.round((Date.now() - t) / 1000)); return s < 60 ? s + 's' : Math.round(s / 60) + 'm'; };
+  async function refresh() {
+    const snap = await (await fetch('/admin/api/snapshot')).json();
+    const s = snap.state;
+    document.getElementById('title').textContent = snap.shopName.toLowerCase() + ': operator';
+    document.getElementById('keeper').textContent = `keeper: ${snap.keeper.current || 'idle'} @ ${s.keeper.zone} x${Math.round(s.keeper.x)} (${s.keeper.mode})` + (snap.keeper.queue.length ? ` | next: ${snap.keeper.queue.join(', ')}` : '') + ` | weather ${s.weather} | served ${s.served}`;
+    document.getElementById('kick').textContent = snap.kick ? (snap.kick.connected ? `kick: ${snap.kick.user?.name || 'connected'}${snap.kick.viewers != null ? ', ' + snap.kick.viewers + ' watching' : ''}` : 'kick: not connected') : 'kick: not configured';
+    document.getElementById('brain').textContent = snap.brain.enabled ? `brain: ${snap.brain.pending} queued, ${snap.brain.callsThisHour}/h` : 'brain: off';
+    document.getElementById('weathers').innerHTML = snap.weathers.map((w) => `<button class="${w === s.weather ? 'on' : ''}" onclick="act({action:'weather', weather:'${w}'})">${w}</button>`).join('');
+    document.getElementById('mishaps').innerHTML = snap.fixtures.filter((f) => f.id !== 'door').map((f) => `<button onclick="act({action:'mishap', id:'${f.id}'})">${f.id}</button>`).join('');
+    document.getElementById('kickchat').innerHTML = snap.kick ? `<button class="${snap.kick.botReplies ? 'on' : ''}" onclick="act({action:'kickChat', on:${!snap.kick.botReplies}})">his lines in kick chat: ${snap.kick.botReplies ? 'on' : 'off'}</button>` : '';
+    document.getElementById('commands').textContent = snap.commands;
+    document.getElementById('fixtures').innerHTML = snap.fixtures.map((f) => `<span class="pill ${f.state !== f.states[0] && f.id !== 'door' ? 'bad' : ''}" title="${f.label}">${f.id}: ${f.state}${f.noticed ? ' (noticed)' : ''}</span>`).join('');
+    document.getElementById('orders').innerHTML = '<p>' + (s.orders.length ? s.orders.map((o) => `${esc(o.user.name)}: ${esc(o.dish)} <span class="muted">${o.phase}${o.stool != null ? ' stool ' + (o.stool + 1) : ''}</span>`).join('<br>') : '<span class="muted">no orders</span>') + '</p>';
+    const kinds = {};
+    for (const e of s.entities) kinds[e.kind] = (kinds[e.kind] || 0) + 1;
+    document.getElementById('entities').innerHTML = '<p class="muted">' + Object.entries(kinds).map(([k, n]) => `${k}: ${n}`).join(', ') + (s.entities.filter((e) => e.kind === 'flag').length ? '<br>flags: ' + s.entities.filter((e) => e.kind === 'flag').map((e) => `${esc(e.text)} (${esc(e.addedByName)})`).join(', ') : '') + '</p>';
+    document.getElementById('chatlog').innerHTML = snap.chat.map((c) => `<tr><td class="muted">${ago(c.at)}</td><td>${esc(c.user)}${c.badges.includes('moderator') || c.badges.includes('broadcaster') ? ' <span class="muted">*</span>' : ''}</td><td>${esc(c.content)}</td><td class="${c.applied ? 'ok' : c.queued ? 'muted' : 'no'}">${c.queued ? 'to the brain' : esc(c.reply || (c.applied ? 'ok' : ''))}</td></tr>`).join('');
+    document.getElementById('regulars').innerHTML = `<tr><th>name</th><th>points</th><th>bowls</th><th>nights</th><th>last seen</th></tr>` + snap.regulars.map((r) => `<tr><td>${esc(r.name)}</td><td>${r.rapport}</td><td>${r.bowls}</td><td>${r.days}</td><td class="muted">${ago(r.lastSeen)} ago</td></tr>`).join('') + `<tr><td class="muted" colspan="5">${snap.regularsCount} people have been by</td></tr>`;
+  }
+  refresh();
+  setInterval(refresh, 2000);
+</script>
+</body>
+</html>

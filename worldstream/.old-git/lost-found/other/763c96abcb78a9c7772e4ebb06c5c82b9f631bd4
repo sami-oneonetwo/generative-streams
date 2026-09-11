@@ -1,0 +1,108 @@
+import { z } from 'zod';
+import { WEATHERS } from './state.js';
+
+const Range = z.tuple([z.number().int().nonnegative(), z.number().int().nonnegative()]);
+
+export const ConfigSchema = z.object({
+  port: z.number().int().positive().default(4400),
+  shop: z
+    .object({
+      /** Painted in neon on the first floor; keep it short. */
+      name: z.string().min(1).max(8).default('NOODLE'),
+      keeperName: z.string().min(1).max(24).default('the keeper'),
+      persona: z.string().default('The keeper of a small noodle shop open late. Cooks, serves, keeps the place tidy. Quiet, warm, dry humour, notices people. Speaks in short lowercase lines, no exclamation marks, never mocks a viewer. Thanks people by name. Talks about the food, the street, the weather, the cat. Does not do politics, never leaves the shop.'),
+    })
+    .prefault({}),
+  limits: z
+    .object({
+      flags: z.number().int().min(0).max(6).default(6),
+      flagMaxChars: z.number().int().min(3).max(12).default(10),
+      flagTtlMs: z.number().int().positive().default(3 * 3_600_000),
+      orderCooldownMs: z.number().int().nonnegative().default(180_000),
+      greetCooldownMs: z.number().int().nonnegative().default(120_000),
+      alertCooldownMs: z.number().int().nonnegative().default(20_000),
+      catTtlMs: z.number().int().positive().default(30 * 60_000),
+      catCooldownMs: z.number().int().nonnegative().default(3_600_000),
+      maxWaiting: z.number().int().min(1).max(12).default(6),
+      eatMs: Range.default([70_000, 120_000]),
+    })
+    .prefault({}),
+  rapport: z
+    .object({
+      /** Points needed to hang a flag, and to bring the cat. */
+      regular: z.number().int().nonnegative().default(15),
+      friend: z.number().int().nonnegative().default(40),
+      /** A message earns a point at most this often. */
+      messageCreditMs: z.number().int().nonnegative().default(30_000),
+    })
+    .prefault({}),
+  keeper: z
+    .object({
+      tickMs: z.number().int().min(50).default(250),
+      /** Pixels per second. */
+      walkSpeed: z.number().positive().default(26),
+      cookMs: z.number().int().positive().default(9_000),
+      /** How long he stirs the pot between other jobs. */
+      idleCookMs: Range.default([20_000, 50_000]),
+      /** How long before he notices something is off on his own. */
+      noticeMs: Range.default([150_000, 420_000]),
+      /** No chat for this long and he takes longer breaks. */
+      quietAfterMs: z.number().int().positive().default(12 * 60_000),
+      bubbleMs: z.number().int().positive().default(6_000),
+    })
+    .prefault({}),
+  questions: z
+    .object({
+      enabled: z.boolean().default(true),
+      /** Odds he follows an interaction with a question. */
+      chance: z.number().min(0).max(1).default(0.65),
+      delayMs: Range.default([4_000, 8_000]),
+      perUserCooldownMs: z.number().int().nonnegative().default(8 * 60_000),
+      /** Never two questions to chat within this. */
+      globalGapMs: z.number().int().nonnegative().default(45_000),
+      /** How long an unanswered question stays open. */
+      answerWindowMs: z.number().int().nonnegative().default(3 * 60_000),
+      /** Chat quiet for this long and he asks the whole street something. */
+      roomAfterMs: z.number().int().nonnegative().default(5 * 60_000),
+      /** At most one question to the street per this. */
+      roomEveryMs: z.number().int().nonnegative().default(8 * 60_000),
+      /** How long a question to the street waits for anyone. */
+      roomWindowMs: z.number().int().nonnegative().default(4 * 60_000),
+    })
+    .prefault({}),
+  street: z
+    .object({
+      passerbyEveryMs: Range.default([35_000, 110_000]),
+      mishapEveryMs: Range.default([240_000, 600_000]),
+      mailEveryMs: Range.default([900_000, 2_400_000]),
+      weatherMs: Range.default([420_000, 1_200_000]),
+      weatherWeights: z.partialRecord(z.enum(WEATHERS), z.number().nonnegative()).default({ clear: 5, rain: 3, snow: 1, fog: 1 }),
+    })
+    .prefault({}),
+  nl: z
+    .object({
+      mode: z.enum(['off', 'mention', 'all']).default('all'),
+      model: z.string().default('claude-opus-5'),
+      effort: z.enum(['low', 'medium', 'high']).default('low'),
+      batchMs: z.number().int().positive().default(3000),
+      maxQueue: z.number().int().positive().default(30),
+      maxTokens: z.number().int().positive().default(800),
+      maxCallsPerHour: z.number().int().positive().default(120),
+    })
+    .prefault({}),
+  kick: z
+    .object({
+      botRepliesEnabled: z.boolean().default(false),
+      chatAs: z.enum(['bot', 'user']).default('bot'),
+      fallbackToUser: z.boolean().default(false),
+    })
+    .prefault({}),
+  denylist: z.array(z.string()).default([]),
+});
+
+export type Config = z.infer<typeof ConfigSchema>;
+
+export function between(range: readonly [number, number], rnd: () => number = Math.random): number {
+  const [lo, hi] = range;
+  return lo + Math.floor(rnd() * Math.max(0, hi - lo + 1));
+}

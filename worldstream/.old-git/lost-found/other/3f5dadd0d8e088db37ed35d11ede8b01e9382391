@@ -1,0 +1,98 @@
+# Art guide: the noodle shop
+
+Everything on the stream is drawn at 480x270 and shown at x4 with no smoothing.
+One pixel is four screen pixels. The look is one image: a tall wooden noodle
+shop at night, deep navy sky, near-black plum wood, red neon and paper
+lanterns, one yellow kitchen window with the cook behind the counter, a blue
+door, the vending machine's cyan, clutter at the sides. Dense, warm, dark.
+
+## Palette
+
+`assets/shop/palette.txt`, 36 keys in ramps that read dark to light. Pick three
+tones from one ramp per material.
+
+| Ramp | Keys | For |
+|---|---|---|
+| Night | `0` `1` `2` `3` `4` | outline and road (`0`), sky, horizon, mountains, pavement |
+| Wood | `5` `6` `7` `8` `9` | walls (`5`-`7`), trim (`8`), warm posts, frames and the counter edge (`9`) |
+| Roof | `a` `b` `c` | olive awning stripe, slate tiles and their highlights |
+| Red | `d` `e` `f` `g` `h` `i` | deep shadow to neon core: lanterns, the disc, the banner, the mailbox |
+| Yellow | `j` `k` `l` `m` | dim window, the kitchen light, the bright slats, white |
+| Blue | `n` `o` `p` `q` | the door, its glow, the vending machine's cyan |
+| Green | `r` `s` `t` | foliage dark to lit |
+| Skin and misc | `u` `v` `w` `x` `y` `z` | skin, tan, metal, cream |
+
+The keeper: hair `0`, skin `u`/`v`, white jacket `m` shaded `z`, blue apron
+`o`/`n`, dark trousers `5`/`0`, boots `y`, red headband `f` with a `g` knot.
+Nothing else in the shop wears white with a blue apron.
+
+## Light
+
+- The scene is lit from inside: the kitchen window (yellow), the neon (red), the
+  door (blue), the vending machine (cyan). The sky is the only cool light.
+  Sprites bake a hint of their own glow (a rim in the light's colour); the
+  renderer adds pools on the pavement, halos in the air, streaks in the wet,
+  from the list in `SceneView.lights()`.
+- Shadow side is camera-right on everything.
+- No baked ground shadows.
+
+## Outline
+
+- People and animals get a full one-pixel outline in `0` (the rig does it).
+- Props: selective, `0` along the bottom row and the right side; the material's
+  own darkest step on the top and left.
+- The building has no outline; its depth comes from beams (`8`), posts (`9`)
+  and the `5` shadow row under every eave.
+
+## Sizes
+
+| What | Size |
+|---|---|
+| The keeper | 16x36, feet on the bottom row, faces right |
+| Passers-by | 16x36 (the kid 16x28), walk cycles of 6 at 6 to 8 fps |
+| Customers | 14x30, seen from behind on a stool, 2 frames |
+| Cat | 14x10: walk 4, sit 2, sleep 2 |
+| Fixtures | bin 12x16 / 20x10 fallen, board 14x22, vending 18x32, mailbox 10x12, plants 14x16, door 26x37 |
+| Bowl | 10x8, 4 frames of wisps |
+| Building | two 480x240 scenery sprites, `shop_back` and `shop_front` |
+
+Things that stand on the ground have a flat, fully painted bottom row. The
+renderer puts that row on the row in `scene.ts` (`GROUND` for the pavement,
+`PASSER_Y` a step closer to the camera, `BALCONY_Y` upstairs).
+
+## Where things go
+
+`src/shared/scene.ts` is the map. The kitchen opening is x 150..250, y
+190..214; the counter runs 144..270 with stools at 156, 182, 208, 234; the door
+is 284..310. The keeper stands behind the counter when `inside` (his legs are
+hidden by it, the way a ramen counter works), on the pavement when `outside`,
+on the balcony (y 112) when `upstairs`. Flags stand at six slots along the kerb.
+
+## Animation
+
+`fps:` in the sprite header; frames separated by `--`; `loop: no` holds the
+last frame. Keeper modes and their sets in `assets/shop/keeper/`: idle (6),
+walk (6), walk_bowl (6), talk (3), look (4, no loop), cook (4), serve (3),
+wave (3), fix (4), kick (4, no loop), sweep (4), carry (6), read (3), sit (2),
+nap (2), wipe (4). Missing sets fall back (`src/web/keeper.ts`).
+
+Every frame must differ from its neighbour by at least two pixels moved or four
+recoloured, or the change is lost at stream bitrates.
+
+## The rigs
+
+The art is code. `scripts/rig/shop.ts` paints the building with painters for
+roofs, walls, lattice windows, lanterns and the bowl glyph; `people.ts` poses
+figures from parts (arms, legs, head, held things) and outlines them;
+`props.ts` draws the fixtures in each state, the bowl and the cat. `npm run
+rig` runs them all and composes `dist/shop/preview.png`,
+`keeper-sheet.png` and `props-sheet.png`; look at those before packing.
+
+## Checking
+
+- `npm run rig && npm run assets` with zero warnings for anything you touched.
+- `dist/shop/preview.png`: does the building read at a glance, is the kitchen
+  window the brightest thing, does the keeper read against the yellow.
+- `npm run dev`, then `http://localhost:4400/?demo=1&hud=1` and the rain
+  variant (`&weather=rain`): rain at night over the lit street is the worst
+  case for both readability and frame time.

@@ -1,0 +1,56 @@
+// A fixed scene without a server, for screenshots and art checks:
+//   /?demo=1&weather=rain&spot=door&mode=sweep&bin=fallen&bubble=hello
+// Needs the packed atlas at /shop/atlas.json, so the server must be up.
+import type { Atlas } from '../shared/atlas.js';
+import { COUNTER, FIXTURES, GROUND, PASSER_Y, SPOTS, STOOLS, VIEW, type FixtureId, type SpotId } from '../shared/scene.js';
+import { initialState, type Entity, type KeeperMode, type Weather, type WorldState } from '../shared/state.js';
+
+export interface Demo {
+  atlas: Atlas;
+  state: WorldState;
+  tick: (now: number) => WorldState;
+}
+
+export async function loadDemo(params: URLSearchParams): Promise<Demo> {
+  const atlas = (await (await fetch('/shop/atlas.json')).json()) as Atlas;
+  const now = Date.now();
+  let state = initialState(now);
+  const weather = params.get('weather') as Weather | null;
+  if (weather) state = { ...state, weather };
+  const spot = (params.get('spot') ?? 'kitchen') as SpotId;
+  const s = SPOTS[spot] ?? SPOTS.kitchen;
+  const mode = (params.get('mode') ?? (spot === 'kitchen' ? 'cook' : 'idle')) as KeeperMode;
+  state = { ...state, keeper: { ...state.keeper, x: s.x, zone: s.zone, facing: s.facing, mode, modeSince: now, job: { id: 'demo', label: 'demo' } } };
+  for (const id of Object.keys(FIXTURES) as FixtureId[]) {
+    const v = params.get(id);
+    if (v && FIXTURES[id].states.includes(v)) state.fixtures[id] = { state: v, since: now };
+  }
+  const bubble = params.get('bubble');
+  if (bubble) state.keeper.bubble = { text: bubble, until: now + 3_600_000 };
+
+  const ent = (e: Partial<Entity> & Pick<Entity, 'id' | 'kind' | 'sprite' | 'x' | 'y'>): Entity => ({ facing: 'r', addedBy: 'world', addedAt: now, expiresAt: now + 3_600_000, ...e });
+  const entities: Entity[] = [
+    ent({ id: 'c1', kind: 'customer', sprite: 'customer_a', x: STOOLS[0] - 3, y: COUNTER.bottom + 8, addedByName: 'mika', stool: 0 }),
+    ent({ id: 'b1', kind: 'bowl', sprite: 'bowl', x: STOOLS[0] - 1, y: COUNTER.top + 1, stool: 0 }),
+    ent({ id: 'c2', kind: 'customer', sprite: 'customer_c', x: STOOLS[2] - 3, y: COUNTER.bottom + 8, addedByName: 'ossian_k', stool: 2 }),
+    ent({ id: 'cat', kind: 'cat', sprite: 'cat_sit', x: FIXTURES.vending.x + 2, y: GROUND - 32 }),
+    ent({ id: 'f1', kind: 'flag', sprite: 'flag', x: 82, y: GROUND, text: 'HELLO', colour: 'f', addedByName: 'mika' }),
+    ent({ id: 'f2', kind: 'flag', sprite: 'flag', x: 402, y: GROUND, text: 'RAMEN', colour: 'm', addedByName: 'ossian_k' }),
+    ent({ id: 'f3', kind: 'flag', sprite: 'flag', x: 424, y: GROUND, text: 'GG', colour: 'k', addedByName: 'pip' }),
+    ent({ id: 'p1', kind: 'passerby', sprite: state.weather === 'rain' ? 'walker_umbrella' : 'walker_coat', x: -20, y: PASSER_Y, motion: { fromX: -20, toX: VIEW.w + 4, startAt: now, endAt: now + 26_000 } }),
+  ];
+  if (params.has('empty')) entities.length = 0;
+  state = { ...state, entities };
+
+  const tick = (t: number): WorldState => {
+    const p = state.entities.find((e) => e.id === 'p1');
+    if (p?.motion && p.motion.endAt <= t) {
+      const fromLeft = Math.random() < 0.5;
+      const fromX = fromLeft ? -20 : VIEW.w + 4;
+      const toX = fromLeft ? VIEW.w + 4 : -20;
+      state = { ...state, entities: state.entities.map((e) => (e.id === 'p1' ? { ...e, facing: fromLeft ? 'r' : 'l', motion: { fromX, toX, startAt: t + 4000, endAt: t + 30_000 } } : e)) };
+    }
+    return state;
+  };
+  return { atlas, state, tick };
+}

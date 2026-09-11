@@ -1,0 +1,13 @@
+name: party_hat
+slot: head
+dx: 4
+dy: -4
+tint: pink
+aliases: birthday hat, cone hat, party
+tags: hat, party
+---
+..Y..
+..X..
+.XXX.
+.XMX.
+XXXXX

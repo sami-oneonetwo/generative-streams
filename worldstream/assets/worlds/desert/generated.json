@@ -1,0 +1,25 @@
+[
+  {
+    "name": "tall_skyscraper",
+    "layers": [
+      "stage"
+    ],
+    "w": 18,
+    "h": 32,
+    "colour": "#b3703b",
+    "tags": [
+      "building",
+      "city",
+      "tower",
+      "generated"
+    ],
+    "aliases": [
+      "tall skyscraper",
+      "skyscraper",
+      "tower",
+      "high rise",
+      "office building"
+    ],
+    "generated": true
+  }
+]

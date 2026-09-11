@@ -1,0 +1,109 @@
+// Text over the picture: speech bubbles, name tags, the flags, toasts and the
+// debug hud. All in the bitmap font on dark plates.
+import { FONT_ADVANCE } from '../shared/atlas.js';
+import { FLAG_W, GROUND, VIEW } from '../shared/scene.js';
+import type { Entity } from '../shared/state.js';
+import type { PixelFont } from './font.js';
+
+export interface Toast {
+  text: string;
+  at: number;
+  until: number;
+}
+
+const PLATE = 'rgba(2,2,14,0.86)';
+const INK = '#fdfcf4';
+const MUTED = '#9a9aa8';
+
+/** A speech bubble above a point; returns nothing when there is no font. */
+export function drawBubble(g: CanvasRenderingContext2D, font: PixelFont | null, text: string, cx: number, bottom: number): void {
+  if (!font) return;
+  const lines = font.wrap(text, 24, 3);
+  const w = Math.max(...lines.map((l) => font.measure(l))) + 8;
+  const h = lines.length * (font.data.h + 2) + 6;
+  let x = Math.round(cx - w / 2);
+  x = Math.max(2, Math.min(VIEW.w - w - 2, x));
+  const y = Math.max(2, bottom - h - 6);
+  g.fillStyle = PLATE;
+  g.fillRect(x, y, w, h);
+  g.fillStyle = '#2c4a5a';
+  g.fillRect(x, y, w, 1);
+  g.fillRect(x, y + h - 1, w, 1);
+  g.fillRect(x, y, 1, h);
+  g.fillRect(x + w - 1, y, 1, h);
+  // tail
+  const tx = Math.max(x + 3, Math.min(x + w - 6, Math.round(cx) - 1));
+  g.fillStyle = PLATE;
+  g.fillRect(tx, y + h, 3, 1);
+  g.fillRect(tx + 1, y + h + 1, 1, 1);
+  lines.forEach((l, i) => font.draw(g, l, x + 4, y + 3 + i * (font.data.h + 2), INK));
+}
+
+/** A small name over a customer. */
+export function drawTag(g: CanvasRenderingContext2D, font: PixelFont | null, text: string, cx: number, y: number): void {
+  if (!font) return;
+  const strip = font.strip(text.slice(0, 14), MUTED, PLATE, 2);
+  g.drawImage(strip, Math.round(cx - strip.width / 2), y);
+}
+
+const CLOTH: Record<string, { fill: string; edge: string; ink: string }> = {
+  f: { fill: '#9f0d16', edge: '#e11119', ink: '#fdfcf4' },
+  m: { fill: '#fdfcf4', edge: '#c9b48a', ink: '#0e0a14' },
+  o: { fill: '#0a3a5a', edge: '#1e6a8a', ink: '#fdfcf4' },
+  k: { fill: '#dcd01d', edge: '#fff931', ink: '#0e0a14' },
+};
+
+/** A viewer's banner on a pole by the kerb, the words running top to bottom. */
+export function drawFlag(g: CanvasRenderingContext2D, font: PixelFont | null, flag: Entity, now: number): void {
+  const text = (flag.text ?? '').slice(0, 10);
+  const cloth = CLOTH[flag.colour ?? 'f'] ?? CLOTH.f;
+  const clothH = Math.max(24, text.length * 8 + 6);
+  const poleTop = GROUND - clothH - 14;
+  const x = flag.x;
+  g.fillStyle = '#47332b';
+  g.fillRect(x, poleTop, 1, GROUND - poleTop);
+  g.fillRect(x, poleTop, FLAG_W, 1);
+  g.fillStyle = '#2b2634';
+  g.fillRect(x + 1, poleTop + 1, 1, GROUND - poleTop - 1);
+  // the cloth, with a sway in its lower half
+  const sway = Math.round(Math.sin(now / 700 + flag.x) * 1);
+  for (let row = 0; row < clothH; row++) {
+    const dx = row > clothH / 2 ? sway : 0;
+    g.fillStyle = cloth.fill;
+    g.fillRect(x + 1 + dx, poleTop + 2 + row, FLAG_W - 2, 1);
+    g.fillStyle = cloth.edge;
+    g.fillRect(x + 1 + dx, poleTop + 2 + row, 1, 1);
+  }
+  g.fillStyle = '#02020e';
+  g.fillRect(x + 1 + sway, poleTop + 2 + clothH, FLAG_W - 2, 1);
+  if (font) {
+    let cy = poleTop + 5;
+    for (const ch of font.chars(text)) {
+      const dx = cy - poleTop > clothH / 2 ? sway : 0;
+      font.draw(g, ch, x + 2 + dx, cy, cloth.ink);
+      cy += 8;
+    }
+  }
+}
+
+export function drawToasts(g: CanvasRenderingContext2D, font: PixelFont | null, toasts: Toast[], now: number): void {
+  if (!font) return;
+  let y = VIEW.h - 4;
+  for (const t of toasts.slice(-3).reverse()) {
+    const life = (t.until - now) / (t.until - t.at);
+    if (life <= 0) continue;
+    const strip = font.strip(t.text.slice(0, 40), INK, PLATE, 3);
+    y -= strip.height + 2;
+    g.globalAlpha = Math.min(1, life * 3);
+    g.drawImage(strip, 4, y);
+    g.globalAlpha = 1;
+  }
+}
+
+export function drawHud(g: CanvasRenderingContext2D, font: PixelFont | null, line: string, connected: boolean): void {
+  if (!font) return;
+  const strip = font.strip(line, connected ? '#7cffb0' : '#ff7a66', PLATE, 2);
+  g.drawImage(strip, VIEW.w - strip.width - 2, 2);
+}
+
+export { FONT_ADVANCE };

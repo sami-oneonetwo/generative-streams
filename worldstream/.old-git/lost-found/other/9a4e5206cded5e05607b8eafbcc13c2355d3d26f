@@ -1,0 +1,102 @@
+// The catalogue (assets/shop/catalogue.json): every sprite the renderer knows,
+// the menu, the keeper's line banks and the weather odds. The only list of
+// things there are.
+import type { FixtureId } from './scene.js';
+import type { Weather } from './state.js';
+
+export type SpriteKind = 'scenery' | 'fixture' | 'prop' | 'person' | 'customer' | 'animal';
+
+export interface SpriteDef {
+  name: string;
+  kind: SpriteKind;
+  w: number;
+  h: number;
+  tags: string[];
+  aliases?: string[];
+  /** Read from the sprite header by the packer. */
+  anchor?: 'bottom' | 'top';
+  fps?: number;
+  loop?: boolean;
+  /** Which way the art faces; moving things are flipped to match their direction. */
+  faces?: 'l' | 'r';
+  /** Casts light: a palette key and a reach in pixels. */
+  light?: { colour: string; radius: number; flicker?: boolean };
+}
+
+export interface Dish {
+  name: string;
+  aliases: string[];
+  /** What he says as he puts it down. {user} is the customer. */
+  line?: string;
+}
+
+/** Line banks. Templates take {user}, {dish}, {thing}, {text}, {shop}. */
+export interface Lines {
+  greet: string[];
+  greetBack: string[];
+  order: string[];
+  cooking: string[];
+  served: string[];
+  full: string[];
+  idle: string[];
+  cook: string[];
+  mail: string[];
+  break: string[];
+  balcony: string[];
+  passerby: string[];
+  cat: string[];
+  catArrives: string[];
+  flag: string[];
+  noticed: Record<FixtureId, string[]>;
+  fixed: Record<FixtureId, string[]>;
+  alerted: string[];
+  alertNothing: string[];
+  weather: Record<Weather, string[]>;
+  notYet: string[];
+}
+
+export interface Catalogue {
+  sprites: SpriteDef[];
+  menu: Dish[];
+  lines: Lines;
+  weatherWeights: Partial<Record<Weather, number>>;
+  /** Passers-by the street can spawn. */
+  walkers: string[];
+  /** Seated customer sprites, picked per order. */
+  customers: string[];
+}
+
+export function normaliseName(q: string): string {
+  return q
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s_-]/g, '')
+    .replace(/[\s-]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+/** Resolve free text ("tonkotsu", "the spicy one") to a dish. */
+export function findDish(cat: Catalogue, query: string | undefined): Dish | undefined {
+  if (!query) return undefined;
+  const q = normaliseName(query);
+  if (!q) return undefined;
+  for (const d of cat.menu) {
+    if (normaliseName(d.name) === q) return d;
+    if (d.aliases.some((a) => normaliseName(a) === q)) return d;
+  }
+  for (const d of cat.menu) {
+    const words = q.split('_');
+    if (words.some((w) => w.length > 3 && (normaliseName(d.name).includes(w) || d.aliases.some((a) => normaliseName(a).includes(w))))) return d;
+  }
+  return undefined;
+}
+
+/** Fill {vars} in a template. */
+export function fill(template: string, vars: Record<string, string | number | undefined>): string {
+  return template.replace(/\{(\w+)\}/g, (m, k: string) => (vars[k] === undefined ? m : String(vars[k])));
+}
+
+export function pick<T>(items: readonly T[], rnd: () => number = Math.random): T | undefined {
+  if (!items.length) return undefined;
+  return items[Math.min(items.length - 1, Math.floor(rnd() * items.length))];
+}

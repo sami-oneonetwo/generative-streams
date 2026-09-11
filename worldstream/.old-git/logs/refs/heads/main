@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 Sami Alakus <s.alakus@easygo.io> 1788669563 +1000	commit (initial): Init
+f2dad7e33a1e370e2bc008816c58a31d5fa6b0e3 9456ecebccc47b19d5bf21de0820679928568c99 Sami Alakus <s.alakus@easygo.io> 1788766916 +1000	commit: Isolate per-branch state via WORLDSTREAM_STATE_DIR

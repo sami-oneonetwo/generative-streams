@@ -1,0 +1,79 @@
+// The fast path: chat that starts with "!" is parsed here, no model needed.
+import { WEATHERS, type Weather } from './state.js';
+
+export type Command =
+  | { kind: 'order'; dish?: string }
+  | { kind: 'menu' }
+  | { kind: 'greet' }
+  | { kind: 'alert'; target: string }
+  | { kind: 'flag'; text: string; colour?: string }
+  | { kind: 'unflag' }
+  | { kind: 'cat' }
+  | { kind: 'shoo' }
+  | { kind: 'tab' }
+  | { kind: 'help' }
+  | { kind: 'weather'; weather: Weather }
+  | { kind: 'say'; text: string }
+  | { kind: 'mishap'; target: string };
+
+export const FLAG_COLOURS = ['red', 'white', 'blue', 'yellow'] as const;
+export type FlagColour = (typeof FLAG_COLOURS)[number];
+
+const ORDER_WORDS = new Set(['order', 'noodles', 'ramen', 'eat', 'food', 'bowl', 'hungry', 'udon', 'soba']);
+const GREET_WORDS = new Set(['hi', 'hello', 'hey', 'wave', 'greet', 'yo', 'hola', 'konnichiwa', 'evening']);
+const FLAG_WORDS = new Set(['flag', 'sign', 'banner', 'note']);
+const ALERT_WORDS = new Set(['fix', 'alert', 'psst', 'oi', 'look']);
+
+export function parseCommand(text: string): Command | null {
+  const t = text.trim();
+  if (!t.startsWith('!')) return null;
+  const [rawWord, ...restParts] = t.slice(1).trim().split(/\s+/);
+  const word = (rawWord ?? '').toLowerCase();
+  const rest = restParts.join(' ').trim();
+  if (!word) return null;
+
+  if (ORDER_WORDS.has(word)) {
+    // "!ramen" alone is an order for ramen; "!order miso" names the dish
+    const dish = rest || (word === 'order' || word === 'eat' || word === 'food' || word === 'hungry' || word === 'bowl' ? '' : word);
+    return { kind: 'order', dish: dish || undefined };
+  }
+  if (word === 'menu') return { kind: 'menu' };
+  if (GREET_WORDS.has(word)) return { kind: 'greet' };
+  if (ALERT_WORDS.has(word)) return rest ? { kind: 'alert', target: rest.toLowerCase() } : { kind: 'help' };
+  if (word === 'bin' || word === 'bins' || word === 'trash' || word === 'rubbish') return { kind: 'alert', target: 'bin' };
+  if (word === 'board' || word === 'vending' || word === 'mail' || word === 'mailbox' || word === 'plants' || word === 'plant' || word === 'lantern' || word === 'neon') return { kind: 'alert', target: word };
+  if (FLAG_WORDS.has(word)) {
+    if (!rest || rest.toLowerCase() === 'remove' || rest.toLowerCase() === 'down') return { kind: 'unflag' };
+    // an optional colour first: !flag red hello
+    const parts = rest.split(/\s+/);
+    const colour = FLAG_COLOURS.find((c) => c === parts[0].toLowerCase());
+    const textParts = colour ? parts.slice(1) : parts;
+    const body = textParts.join(' ').replace(/^"|"$/g, '').trim();
+    if (!body) return { kind: 'unflag' };
+    return { kind: 'flag', text: body, colour };
+  }
+  if (word === 'cat' || word === 'kitty') return rest.toLowerCase() === 'shoo' || rest.toLowerCase() === 'remove' ? { kind: 'shoo' } : { kind: 'cat' };
+  if (word === 'shoo') return { kind: 'shoo' };
+  if (word === 'tab' || word === 'me' || word === 'stats' || word === 'bowls') return { kind: 'tab' };
+  if (word === 'help' || word === 'commands') return { kind: 'help' };
+  if (word === 'weather') {
+    const w = rest.toLowerCase() as Weather;
+    return WEATHERS.includes(w) ? { kind: 'weather', weather: w } : { kind: 'help' };
+  }
+  if (word === 'say' && rest) return { kind: 'say', text: rest };
+  if ((word === 'knock' || word === 'break' || word === 'mishap') && rest) return { kind: 'mishap', target: rest.toLowerCase() };
+  return null;
+}
+
+/** Cut a flag's words to what fits on the cloth. */
+export function cleanFlagText(text: string, maxChars: number): string {
+  return text
+    .toUpperCase()
+    .replace(/[^A-Z0-9 !?.,'-]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, maxChars)
+    .trim();
+}
+
+export const HELP_TEXT = '!order [dish] takes a seat and eats. !menu. !hi says hello. !fix bin (or board, vending, mail, plants) tells him something is off. regulars: !flag <words> hangs your banner by the kerb, !flag remove. friends: !cat. !tab shows your standing.';

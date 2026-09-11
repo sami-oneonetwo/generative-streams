@@ -1,0 +1,153 @@
+// Asset pipeline: assets/shop/{catalogue.json,palette.txt,sprites/*.sprite,keeper/*.sprite}
+// and assets/font.txt -> dist/shop/atlas.json (what the server sends renderers)
+// and dist/shop/sheet.png (a contact sheet of every sprite and keeper frame).
+//
+// Sprite files are described in scripts/sprite-io.ts. Header lines the packer
+// reads: "anchor: bottom|top" (default bottom), "fps: N" (default 4) and
+// "loop: no". Every pixel must be a palette key.
+//
+//   npx tsx scripts/pack.ts
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import type { Anim, Atlas, AtlasSprite, FontData, PixelFrame } from '../src/shared/atlas.js';
+import type { Catalogue, SpriteDef } from '../src/shared/catalogue.js';
+import { KEEPER_MODES } from '../src/shared/state.js';
+import { encodePng } from './png.js';
+import { fail, hexToRgb, PackError, paintedPixels, parsePalette, parseSpriteFile, validateFrames } from './sprite-io.js';
+
+const ROOT = process.cwd();
+const DIR = join(ROOT, 'assets/shop');
+const OUT = join(ROOT, 'dist/shop');
+const DEFAULT_FPS = 4;
+
+function parseFont(text: string): FontData {
+  const w = 5, h = 7;
+  const glyphs: Record<string, string[]> = {};
+  let cur: string | null = null;
+  for (const raw of text.split('\n')) {
+    const l = raw.replace(/\s+$/, '');
+    if (l.startsWith('=') && l.length >= 2) {
+      cur = l[1];
+      glyphs[cur] = [];
+      continue;
+    }
+    if (!l || cur === null) continue;
+    glyphs[cur].push(l);
+  }
+  for (const [ch, rows] of Object.entries(glyphs)) {
+    if (rows.length !== h) fail(`font: glyph "${ch}" has ${rows.length} rows, want ${h}`);
+    for (const r of rows) if (r.length !== w || /[^#.]/.test(r)) fail(`font: glyph "${ch}" has a bad row "${r}"`);
+  }
+  return { w, h, glyphs };
+}
+
+/** An RGBA canvas at an integer scale for the review sheet. */
+class Sheet {
+  readonly rgba: Uint8Array;
+  constructor(readonly w: number, readonly h: number, readonly s: number, bg = '#0a2a48') {
+    this.rgba = new Uint8Array(w * s * h * s * 4);
+    const [r, g, b] = hexToRgb(bg);
+    for (let i = 0; i < w * s * h * s; i++) this.rgba.set([r, g, b, 255], i * 4);
+  }
+  put(px: number, py: number, hex: string): void {
+    if (px < 0 || py < 0 || px >= this.w || py >= this.h) return;
+    const [r, g, b] = hexToRgb(hex);
+    for (let dy = 0; dy < this.s; dy++)
+      for (let dx = 0; dx < this.s; dx++) {
+        const i = ((py * this.s + dy) * this.w * this.s + px * this.s + dx) * 4;
+        this.rgba[i] = r; this.rgba[i + 1] = g; this.rgba[i + 2] = b; this.rgba[i + 3] = 255;
+      }
+  }
+  frame(f: PixelFrame, keys: Record<string, string>, x: number, y: number): void {
+    f.rows.forEach((row, ry) => {
+      for (let rx = 0; rx < row.length; rx++) {
+        const hex = keys[row[rx]];
+        if (hex) this.put(x + rx, y + ry, hex);
+      }
+    });
+  }
+  png(): Buffer {
+    return encodePng(this.w * this.s, this.h * this.s, this.rgba);
+  }
+}
+
+function renderSheet(atlas: Atlas): Buffer {
+  const GAP = 6, MAXW = 320;
+  const cells: { frame: PixelFrame; x: number; y: number }[] = [];
+  let x = GAP, y = GAP, rowH = 0;
+  const place = (frames: PixelFrame[]) => {
+    const groupW = frames.reduce((a, f) => a + f.w + GAP, 0);
+    if (x > GAP && x + groupW > MAXW) { x = GAP; y += rowH + GAP; rowH = 0; }
+    for (const f of frames) { cells.push({ frame: f, x, y }); x += f.w + GAP; rowH = Math.max(rowH, f.h); }
+  };
+  for (const s of atlas.sprites) if (s.kind !== 'scenery') place(s.frames);
+  x = GAP; y += rowH + GAP * 2; rowH = 0;
+  for (const anim of Object.values(atlas.keeper)) if (anim) place(anim.frames);
+  x = GAP; y += rowH + GAP * 2; rowH = 0;
+  for (const rows of Object.values(atlas.font.glyphs)) {
+    if (x + atlas.font.w + 2 > MAXW) { x = GAP; y += atlas.font.h + 3; }
+    cells.push({ frame: { w: atlas.font.w, h: atlas.font.h, rows: rows.map((r) => r.replace(/#/g, 'm')) }, x, y });
+    x += atlas.font.w + 2;
+    rowH = atlas.font.h;
+  }
+  const sheet = new Sheet(MAXW, y + rowH + GAP, 4);
+  for (const c of cells) sheet.frame(c.frame, atlas.keys, c.x, c.y);
+  return sheet.png();
+}
+
+function main(): void {
+  const keys = parsePalette(readFileSync(join(DIR, 'palette.txt'), 'utf8'));
+  const catalogue = JSON.parse(readFileSync(join(DIR, 'catalogue.json'), 'utf8')) as Catalogue;
+  const font = parseFont(readFileSync(join(ROOT, 'assets/font.txt'), 'utf8'));
+  const warnings: string[] = [];
+  const byName = new Map(catalogue.sprites.map((s) => [s.name, s]));
+
+  const sprites: AtlasSprite[] = [];
+  const files = readdirSync(join(DIR, 'sprites')).filter((f) => f.endsWith('.sprite'));
+  for (const f of files) {
+    const file = `sprites/${f}`;
+    const sf = parseSpriteFile(readFileSync(join(DIR, 'sprites', f), 'utf8'), file);
+    const name = sf.meta.name ?? basename(f, '.sprite');
+    const def = byName.get(name);
+    if (!def) { warnings.push(`${file} is not in catalogue.json, skipped`); continue; }
+    validateFrames(sf.frames, keys, file);
+    const { w, h } = sf.frames[0];
+    const anchor = sf.meta.anchor === 'top' ? 'top' : 'bottom';
+    const fps = sf.meta.fps ? Number(sf.meta.fps) : DEFAULT_FPS;
+    if (!Number.isFinite(fps) || fps <= 0) fail(`${file}: bad fps "${sf.meta.fps}"`);
+    if (def.kind !== 'scenery') {
+      const maxH = def.kind === 'person' || def.kind === 'customer' ? 40 : 48;
+      if (w > 48 || h > maxH) warnings.push(`${name}: ${w}x${h} is large for a ${def.kind}`);
+      if (anchor === 'bottom' && !/[^.]/.test(sf.frames[0].rows[h - 1])) warnings.push(`${name}: anchored to the ground but its bottom row is empty`);
+      if (paintedPixels(sf.frames[0]) < 12) warnings.push(`${name}: only ${paintedPixels(sf.frames[0])} painted pixels`);
+    }
+    sprites.push({ ...def, w, h, anchor, fps, loop: sf.meta.loop !== 'no', frames: sf.frames });
+  }
+  for (const def of catalogue.sprites) if (!sprites.some((s) => s.name === def.name)) fail(`catalogue lists ${def.name} but sprites/${def.name}.sprite is missing`);
+
+  const keeper: Atlas['keeper'] = {};
+  for (const mode of KEEPER_MODES) {
+    const file = join(DIR, 'keeper', `${mode}.sprite`);
+    if (!existsSync(file)) { if (mode === 'idle' || mode === 'walk') fail(`keeper/${mode}.sprite is required`); continue; }
+    const sf = parseSpriteFile(readFileSync(file, 'utf8'), `keeper/${mode}.sprite`);
+    validateFrames(sf.frames, keys, `keeper/${mode}.sprite`);
+    const fps = sf.meta.fps ? Number(sf.meta.fps) : DEFAULT_FPS;
+    keeper[mode] = { frames: sf.frames, fps, loop: sf.meta.loop !== 'no' } satisfies Anim;
+  }
+
+  const atlas: Atlas = { ...catalogue, keys, sprites, font, keeper };
+  mkdirSync(OUT, { recursive: true });
+  writeFileSync(join(OUT, 'atlas.json'), JSON.stringify(atlas));
+  writeFileSync(join(OUT, 'sheet.png'), renderSheet(atlas));
+  for (const w of warnings) console.log(`warn: ${w}`);
+  const frames = sprites.reduce((a, s) => a + s.frames.length, 0);
+  const keeperFrames = Object.values(keeper).reduce((a, f) => a + (f?.frames.length ?? 0), 0);
+  console.log(`packed the shop: ${sprites.length} sprites (${frames} frames), keeper ${Object.keys(keeper).length} modes (${keeperFrames} frames), font ${Object.keys(font.glyphs).length} glyphs -> ${OUT}`);
+}
+
+try {
+  main();
+} catch (err) {
+  if (err instanceof PackError) { console.error(`pack: ${err.message}`); process.exit(1); }
+  throw err;
+}

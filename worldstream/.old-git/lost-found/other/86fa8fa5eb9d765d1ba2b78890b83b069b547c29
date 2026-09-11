@@ -1,0 +1,54 @@
+// How well the keeper knows someone. Grows with every conversation and every
+// bowl; the tiers gate what a viewer can add to the shop.
+export interface Regular {
+  id: string;
+  name: string;
+  firstSeen: number;
+  lastSeen: number;
+  messages: number;
+  bowls: number;
+  greetings: number;
+  /** Points: messages (rate-limited), bowls, greetings, help. */
+  rapport: number;
+  lastCreditAt: number;
+  /** Distinct days seen. */
+  days: number;
+  lastDay: string;
+}
+
+export type Tier = 'stranger' | 'regular' | 'friend';
+
+export interface RapportThresholds {
+  regular: number;
+  friend: number;
+}
+
+export function tierOf(r: Regular | undefined, t: RapportThresholds): Tier {
+  const p = r?.rapport ?? 0;
+  if (p >= t.friend) return 'friend';
+  if (p >= t.regular) return 'regular';
+  return 'stranger';
+}
+
+export function tierRank(t: Tier): number {
+  return t === 'friend' ? 2 : t === 'regular' ? 1 : 0;
+}
+
+export function meets(r: Regular | undefined, need: Tier, t: RapportThresholds): boolean {
+  return tierRank(tierOf(r, t)) >= tierRank(need);
+}
+
+/** Points still needed for a tier, 0 when there already. */
+export function shortBy(r: Regular | undefined, need: Tier, t: RapportThresholds): number {
+  const p = r?.rapport ?? 0;
+  const goal = need === 'friend' ? t.friend : need === 'regular' ? t.regular : 0;
+  return Math.max(0, goal - p);
+}
+
+export function newRegular(id: string, name: string, now: number): Regular {
+  return { id, name, firstSeen: now, lastSeen: now, messages: 0, bowls: 0, greetings: 0, rapport: 0, lastCreditAt: 0, days: 1, lastDay: dayKey(now) };
+}
+
+export function dayKey(at: number): string {
+  return new Date(at).toISOString().slice(0, 10);
+}

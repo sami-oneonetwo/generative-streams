@@ -1,0 +1,35 @@
+{
+  "name": "worldstream",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A chat-driven pixel-art noodle shop, open late, streamed on Kick.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run -s assets && concurrently -k -n web,server -c cyan,magenta \"vite build --watch\" \"tsx watch src/server/index.ts\"",
+    "build": "npm run -s assets && vite build && tsc -p tsconfig.json",
+    "start": "node dist/server/server/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p src/web/tsconfig.json --noEmit && tsc -p tsconfig.scripts.json",
+    "test": "vitest run",
+    "chat": "tsx scripts/mock-chat.ts",
+    "assets": "tsx scripts/pack.ts",
+    "rig": "tsx scripts/rig/shop.ts && tsx scripts/rig/people.ts && tsx scripts/rig/props.ts && tsx scripts/rig/preview.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.124.0",
+    "dotenv": "^17.4.2",
+    "ws": "^8.21.3",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@types/ws": "^8.18.1",
+    "concurrently": "^10.0.5",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6",
+    "vitest": "^3.2.7"
+  }
+}

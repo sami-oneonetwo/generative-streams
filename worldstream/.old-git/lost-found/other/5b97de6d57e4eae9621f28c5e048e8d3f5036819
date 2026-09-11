@@ -1,0 +1,36 @@
+import { describe, expect, it } from 'vitest';
+import { Brain, toCommand, type Completion } from '../src/server/brain.js';
+import { catalogue, harness } from './helpers.js';
+
+describe('brain', () => {
+  it('maps tool calls onto commands', () => {
+    expect(toCommand('serve', { viewer: 'a', dish: '' })).toEqual({ kind: 'order', dish: undefined });
+    expect(toCommand('serve', { viewer: 'a', dish: 'udon' })).toEqual({ kind: 'order', dish: 'udon' });
+    expect(toCommand('alert', { viewer: 'a', thing: 'bin' })).toEqual({ kind: 'alert', target: 'bin' });
+    expect(toCommand('flag', { viewer: 'a', text: 'hi', colour: 'blue' })).toEqual({ kind: 'flag', text: 'hi', colour: 'blue' });
+    expect(toCommand('reply', { text: 'x' })).toBeNull();
+  });
+
+  it('runs a batch through the interpreter and speaks once', async () => {
+    const h = harness();
+    const said: string[] = [];
+    const complete: Completion = async () =>
+      ({
+        content: [
+          { type: 'tool_use', id: '1', name: 'serve', input: { viewer: 'mika', dish: 'soba' } },
+          { type: 'tool_use', id: '2', name: 'reply', input: { text: 'soba for mika. sit down.' } },
+          { type: 'tool_use', id: '3', name: 'reply', input: { text: 'second line' } },
+        ],
+        stop_reason: 'tool_use',
+        usage: { input_tokens: 10, output_tokens: 5 },
+      }) as never;
+    const brain = new Brain({ cfg: { ...h.cfg, nl: { ...h.cfg.nl, batchMs: 1 } }, cat: catalogue, store: h.store, keeper: h.keeper, regulars: h.regulars, interpreter: h.interpreter, say: (t) => said.push(t), complete, now: h.now });
+    const msg = h.user('mika');
+    msg.content = 'can i get some soba please';
+    expect(brain.enqueue(msg)).toBe(true);
+    await new Promise((r) => setTimeout(r, 30));
+    expect(h.store.state.orders[0]).toMatchObject({ dish: 'soba', user: { name: 'mika' } });
+    expect(said).toEqual(['soba for mika. sit down.']);
+    expect(brain.callsThisHour).toBe(1);
+  });
+});

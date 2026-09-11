@@ -1,0 +1,48 @@
+import { describe, expect, it } from 'vitest';
+import { harness } from './helpers.js';
+
+describe('the order flow', () => {
+  it('seats a customer, cooks, serves a steaming bowl, and sees them off', () => {
+    const h = harness();
+    const out = h.interpreter.run({ kind: 'order', dish: 'miso' }, h.user('mika'));
+    expect(out.applied).toBe(true);
+    expect(h.said[0]).toContain('mika');
+    expect(h.store.state.orders[0]).toMatchObject({ dish: 'miso ramen', phase: 'waiting' });
+    h.advance(250);
+    const order = h.store.state.orders[0];
+    expect(order.phase).toBe('seated');
+    const customer = h.store.state.entities.find((e) => e.id === order.customerId)!;
+    expect(customer.motion).toBeDefined();
+    // they walk in, sit, and he starts cooking
+    h.advance(20_000);
+    expect(h.store.state.orders[0].phase).toBe('cooking');
+    expect(h.store.state.entities.find((e) => e.id === order.customerId)!.sprite).toMatch(/^customer_/);
+    // through the cook and the serve
+    h.advance(40_000);
+    const eating = h.store.state.orders[0];
+    expect(eating.phase).toBe('eating');
+    expect(h.store.state.entities.some((e) => e.kind === 'bowl')).toBe(true);
+    expect(h.store.state.served).toBe(1);
+    expect(h.served).toHaveLength(1);
+    // and off they go
+    h.advance(h.cfg.limits.eatMs[1] + 30_000);
+    expect(h.store.state.orders).toHaveLength(0);
+    expect(h.store.state.entities.filter((e) => e.kind === 'customer' || e.kind === 'bowl')).toHaveLength(0);
+  });
+
+  it('refuses a second order while one is open and waits out the cooldown', () => {
+    const h = harness();
+    expect(h.interpreter.run({ kind: 'order' }, h.user('pip')).applied).toBe(true);
+    expect(h.interpreter.run({ kind: 'order' }, h.user('pip')).applied).toBe(false);
+    expect(h.interpreter.run({ kind: 'order', dish: 'pizza' }, h.user('ada')).reply).toContain('pizza');
+  });
+
+  it('cooks for four stools and keeps the fifth waiting', () => {
+    const h = harness();
+    for (const n of ['a', 'b', 'c', 'd', 'e']) h.interpreter.run({ kind: 'order', dish: 'udon' }, h.user(n));
+    h.advance(500);
+    const phases = h.store.state.orders.map((o) => o.phase);
+    expect(phases.filter((p) => p === 'waiting')).toHaveLength(1);
+    expect(h.orders.freeStools()).toHaveLength(0);
+  });
+});

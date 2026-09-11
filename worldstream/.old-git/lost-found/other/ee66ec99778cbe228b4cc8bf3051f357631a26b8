@@ -1,0 +1,29 @@
+# CLAUDE.md
+
+worldstream is a chat-driven pixel-art noodle shop streamed on Kick via an OBS browser source. One building, one keeper; viewers order bowls, say hello, point out the fallen bin, and (once he knows them) hang a flag or bring the cat.
+
+## Shape
+
+- World state is plain JSON owned by the server (`src/shared/state.ts`). Every change goes through the pure reducer `apply(state, mutation)`. Never mutate state directly. One persisted file, `state/shop.json`; `reviveState` drops customers, orders and motion on boot.
+- The scene is fixed. Every coordinate lives in `src/shared/scene.ts`: `SPOTS` (where the keeper can stand, each with a `zone`), `FIXTURES` (things with states, drawn as `<id>_<state>` sprites or renderer overlays), the stools, the flag slots, the lantern and sign positions. The art rig, the server and the renderer all import it; never hard-code a position elsewhere.
+- Zones: `inside` is behind the counter (drawn between `shop_back` and `shop_front`), `outside` is the pavement, `upstairs` is the balcony, `hidden` is in transit. `Keeper.route()` plans door and stairs crossings; a `goto` step is the only way to move him.
+- The keeper runs tasks (`src/server/keeper.ts`), each a list of steps defined as data in `src/server/jobs.ts`. Priorities: idle 0, passers-by 2, orders 4, fixes 5, greetings 6. Idle jobs are interruptible; the rest are not. Dedupe by `key`. Timing is wall-clock in state so the renderer just reads it; tests drive it with a fake clock (`test/helpers.ts`).
+- Orders (`src/server/orders.ts`) own the customer lifecycle (walk in, sit, eat, leave); the keeper only cooks and serves. The street (`src/server/street.ts`) owns weather, passers-by, mishaps, noticing, and the cat.
+- Chat enters through one type, `IncomingChat` (`src/server/ingest.ts`), from Kick, the mock REPL, or the admin page. `parseCommand` is the fast path; everything else may go to the brain (`src/server/brain.ts`), which turns Claude tool calls into the same `Command`s. The `Interpreter` is the only place rules live (cooldowns, the menu, rapport gates, denylist); the brain cannot bypass it.
+- Rapport (`src/shared/rapport.ts`, ledger in `src/server/regulars.ts`) gates flags (regular) and the cat (friend). Moderators skip gates.
+- The renderer (`src/web/renderer.ts`) is Canvas 2D at 480x270, scaled x4 with smoothing off. All coordinates are integers in 480x270 space. It is always night; there is no day cycle.
+- The catalogue (`assets/shop/catalogue.json`) is the only list of sprites, dishes, line banks and weather odds. The keeper's lines come from the banks; the model only voices plain chat.
+- Shared and server code use NodeNext modules: imports need `.js` extensions.
+- The Kick integration (`src/server/kick/`) only ever talks to the public API (OAuth 2.1 PKCE, webhooks with RSA signature verification, `POST /public/v1/chat`). Nothing may depend on the unofficial Pusher socket.
+
+## Commands
+
+`npm run dev`, `npm test`, `npm run typecheck`, `npm run rig` (regenerate the art from the rigs and write `dist/shop/preview.png`), `npm run assets` (pack), `npm run chat` (REPL: `name: message` sends as that user, `/mod` toggles the moderator badge).
+
+## Editing files
+
+Prefer rewriting a whole small file over regex substitutions; several files in this repo were once corrupted by `perl -pi` edits whose patterns contained the delimiter character. The art is generated: edit `scripts/rig/*.ts`, not the `.sprite` files, then `npm run rig && npm run assets` and look at `dist/shop/preview.png` and `dist/shop/keeper-sheet.png`. New sprites go in the catalogue too, with a `kind`. Art rules are in `docs/ART.md`.
+
+## Checking a change end to end
+
+`npm run dev`, then `http://localhost:4400/?hud=1`. Headless Chrome can screenshot it: `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --screenshot=out.png --window-size=1920,1080 --virtual-time-budget=5000 "http://localhost:4400/?demo=1"`. The admin page can knock fixtures over and place orders as the operator.

@@ -1,0 +1,198 @@
+// What the keeper does, as data: each job is a list of steps (walk to a spot,
+// do an animation for a while, say a line, flip a fixture). The engine in
+// keeper.ts runs them; this file only decides what they are.
+import { fill, pick, type Catalogue, type Lines } from '../shared/catalogue.js';
+import { between, type Config } from '../shared/config.js';
+import type { Facing, FixtureId, SpotId } from '../shared/scene.js';
+import type { KeeperMode, Order, WorldState } from '../shared/state.js';
+
+export type Step =
+  | { kind: 'goto'; spot: SpotId }
+  | { kind: 'do'; mode: KeeperMode; ms: number; facing?: Facing }
+  | { kind: 'say'; text: string }
+  | { kind: 'maybe_say'; text: string | undefined; chance: number }
+  | { kind: 'fixture'; id: FixtureId; state: string }
+  | { kind: 'carry'; what: 'box' | 'bowl' | null }
+  | { kind: 'fn'; run: () => void }
+  | { kind: 'wait'; ms: number };
+
+export interface Task {
+  id: string;
+  /** Two tasks with the same key are the same errand; the second is dropped. */
+  key: string;
+  label: string;
+  /** Higher runs first. Idle jobs are 0, passers-by 2, orders 4, fixes 5, greetings 6. */
+  priority: number;
+  /** Something more pressing may cut this short. */
+  interruptible: boolean;
+  steps: Step[];
+}
+
+export interface JobCtx {
+  state: WorldState;
+  cat: Catalogue;
+  cfg: Config;
+  now: number;
+  rnd: () => number;
+  /** Nobody has said anything for a while. */
+  quiet: boolean;
+  line(key: keyof Omit<Lines, 'noticed' | 'fixed' | 'weather'>, vars?: Record<string, string | number>): string | undefined;
+  fixtureLine(bank: 'noticed' | 'fixed', id: FixtureId): string | undefined;
+  weatherLine(): string | undefined;
+}
+
+export function makeJobCtx(state: WorldState, cat: Catalogue, cfg: Config, now: number, rnd: () => number): JobCtx {
+  const quiet = now - state.lastChatAt > cfg.keeper.quietAfterMs;
+  return {
+    state, cat, cfg, now, rnd, quiet,
+    line: (key, vars = {}) => {
+      const t = pick(cat.lines[key] ?? [], rnd);
+      return t ? fill(t, { shop: cfg.shop.name, ...vars }) : undefined;
+    },
+    fixtureLine: (bank, id) => pick(cat.lines[bank][id] ?? [], rnd),
+    weatherLine: () => pick(cat.lines.weather[state.weather] ?? [], rnd),
+  };
+}
+
+const say = (text: string | undefined): Step[] => (text ? [{ kind: 'say', text }] : []);
+const maybe = (text: string | undefined, chance: number): Step => ({ kind: 'maybe_say', text, chance });
+
+/** Fixture states that mean something is off, and what he does about each. */
+export const BAD_STATES: Record<FixtureId, string | null> = {
+  bin: 'fallen', board: 'wonky', vending: 'flicker', mailbox: 'flag', plant: 'wilted', door: null, lantern: 'out', sign: 'glitch',
+};
+
+export function isBad(state: WorldState, id: FixtureId): boolean {
+  const bad = BAD_STATES[id];
+  return bad !== null && (state.fixtures[id].state === bad || (id === 'vending' && state.fixtures[id].state === 'off'));
+}
+
+export function fixTask(ctx: JobCtx, id: FixtureId): Task {
+  const fixed = ctx.fixtureLine('fixed', id);
+  const base = { id: `fix_${id}`, key: `fix:${id}`, priority: 5, interruptible: false };
+  switch (id) {
+    case 'bin':
+      return { ...base, label: 'picking up the bin', steps: [{ kind: 'goto', spot: 'bins' }, { kind: 'do', mode: 'fix', ms: 3200, facing: 'r' }, { kind: 'fixture', id, state: 'up' }, ...say(fixed)] };
+    case 'board':
+      return { ...base, label: 'straightening the board', steps: [{ kind: 'goto', spot: 'board' }, { kind: 'do', mode: 'fix', ms: 2600, facing: 'r' }, { kind: 'fixture', id, state: 'straight' }, ...say(fixed)] };
+    case 'vending':
+      return { ...base, label: 'kicking the vending machine', steps: [{ kind: 'goto', spot: 'vending' }, { kind: 'do', mode: 'look', ms: 1200, facing: 'l' }, { kind: 'do', mode: 'kick', ms: 1600, facing: 'l' }, { kind: 'fixture', id, state: 'on' }, ...say(fixed)] };
+    case 'mailbox':
+      return { ...base, label: 'checking the mail', steps: [{ kind: 'goto', spot: 'mailbox' }, { kind: 'do', mode: 'look', ms: 1200, facing: 'r' }, { kind: 'fixture', id, state: 'empty' }, { kind: 'do', mode: 'read', ms: 4000, facing: 'l' }, ...say(ctx.line('mail')), { kind: 'goto', spot: 'counter' }] };
+    case 'plant':
+      return { ...base, label: 'watering the plants', steps: [{ kind: 'goto', spot: 'plants' }, { kind: 'do', mode: 'fix', ms: 3000, facing: 'l' }, { kind: 'fixture', id, state: 'fresh' }, ...say(fixed)] };
+    case 'lantern':
+      return { ...base, label: 'relighting the lantern', steps: [{ kind: 'goto', spot: 'balcony' }, { kind: 'do', mode: 'fix', ms: 3600, facing: 'l' }, { kind: 'fixture', id, state: 'lit' }, { kind: 'do', mode: 'look', ms: 3000, facing: 'l' }, ...say(fixed), { kind: 'goto', spot: 'kitchen' }] };
+    case 'sign':
+      return { ...base, label: 'fixing the sign', steps: [{ kind: 'goto', spot: 'door' }, { kind: 'do', mode: 'look', ms: 2500, facing: 'l' }, maybe(ctx.fixtureLine('noticed', id), 0.6), { kind: 'goto', spot: 'kitchen' }, { kind: 'do', mode: 'fix', ms: 1800, facing: 'l' }, { kind: 'fixture', id, state: 'on' }, ...say(fixed)] };
+    default:
+      return { ...base, label: 'checking the door', steps: [{ kind: 'goto', spot: 'door' }, { kind: 'do', mode: 'look', ms: 1500 }] };
+  }
+}
+
+/** Cook and serve one order; `served` is called as the bowl goes down. */
+export function orderTask(ctx: JobCtx, order: Order, served: () => void): Task {
+  const dish = ctx.cat.menu.find((d) => d.name === order.dish);
+  const vars = { user: order.user.name, dish: order.dish };
+  const stool = `stool${order.stool ?? 0}` as SpotId;
+  const servedLine = dish?.line && ctx.rnd() < 0.4 ? dish.line : ctx.line('served', vars);
+  return {
+    id: 'serve',
+    key: `order:${order.id}`,
+    label: `cooking ${order.dish} for ${order.user.name}`,
+    priority: 4,
+    interruptible: false,
+    steps: [
+      { kind: 'goto', spot: 'kitchen' },
+      maybe(ctx.line('cooking', vars), 0.5),
+      { kind: 'do', mode: 'cook', ms: ctx.cfg.keeper.cookMs, facing: 'l' },
+      { kind: 'carry', what: 'bowl' },
+      { kind: 'goto', spot: stool },
+      { kind: 'do', mode: 'serve', ms: 2200, facing: 'r' },
+      { kind: 'carry', what: null },
+      { kind: 'fn', run: served },
+      ...say(servedLine),
+      { kind: 'do', mode: 'idle', ms: 1200, facing: 'r' },
+    ],
+  };
+}
+
+/** A quick wave in the direction of someone. */
+export function waveTask(ctx: JobCtx, key: string, facing: Facing, line?: string, priority = 6): Task {
+  return { id: 'wave', key, label: 'waving', priority, interruptible: false, steps: [{ kind: 'do', mode: 'wave', ms: 1800, facing }, ...(line ? [{ kind: 'say', text: line } as Step] : [])] };
+}
+
+export interface IdleJob {
+  id: string;
+  label: string;
+  cooldownMs: number;
+  weight: (ctx: JobCtx) => number;
+  build: (ctx: JobCtx) => Step[];
+}
+
+export const IDLE_JOBS: IdleJob[] = [
+  {
+    id: 'cook', label: 'tending the pot', cooldownMs: 0,
+    weight: () => 6,
+    build: (ctx) => [{ kind: 'goto', spot: 'kitchen' }, maybe(ctx.line('cook'), 0.25), { kind: 'do', mode: 'cook', ms: between(ctx.cfg.keeper.idleCookMs, ctx.rnd), facing: 'l' }],
+  },
+  {
+    id: 'wipe', label: 'wiping the counter', cooldownMs: 240_000,
+    weight: () => 2,
+    build: () => [{ kind: 'goto', spot: 'counter' }, { kind: 'do', mode: 'wipe', ms: 5000, facing: 'r' }, { kind: 'goto', spot: 'stool1' }, { kind: 'do', mode: 'wipe', ms: 3500, facing: 'l' }],
+  },
+  {
+    id: 'sweep', label: 'sweeping the step', cooldownMs: 360_000,
+    weight: (ctx) => (ctx.state.weather === 'snow' ? 4 : 2),
+    build: (ctx) => [{ kind: 'goto', spot: 'door' }, maybe(ctx.state.weather === 'snow' ? ctx.weatherLine() : undefined, 0.5), { kind: 'do', mode: 'sweep', ms: 6000, facing: 'l' }, { kind: 'goto', spot: 'plants' }, { kind: 'do', mode: 'sweep', ms: 4000, facing: 'l' }],
+  },
+  {
+    id: 'look_out', label: 'looking down the street', cooldownMs: 300_000,
+    weight: () => 2,
+    build: (ctx) => [{ kind: 'goto', spot: 'door' }, { kind: 'do', mode: 'look', ms: 5000, facing: 'l' }, maybe(ctx.weatherLine(), 0.5)],
+  },
+  {
+    id: 'break', label: 'having a sit', cooldownMs: 480_000,
+    weight: (ctx) => (ctx.quiet ? 4 : 1.5),
+    build: (ctx) => [
+      { kind: 'goto', spot: 'sit' },
+      maybe(ctx.line('break'), 0.7),
+      { kind: 'do', mode: 'sit', ms: ctx.quiet ? 50_000 : 25_000, facing: 'l' },
+      ...(ctx.quiet && ctx.rnd() < 0.5 ? [{ kind: 'do', mode: 'nap', ms: 40_000, facing: 'l' } as Step] : []),
+    ],
+  },
+  {
+    id: 'balcony', label: 'up on the balcony', cooldownMs: 900_000,
+    weight: (ctx) => (ctx.state.weather === 'clear' ? 0.8 : 0.4),
+    build: (ctx) => [{ kind: 'goto', spot: 'balcony' }, { kind: 'do', mode: 'look', ms: 9000, facing: 'l' }, maybe(ctx.line('balcony'), 0.8), { kind: 'goto', spot: 'kitchen' }],
+  },
+  {
+    id: 'plants', label: 'tending the plants', cooldownMs: 600_000,
+    weight: () => 1,
+    build: () => [{ kind: 'goto', spot: 'plants' }, { kind: 'do', mode: 'fix', ms: 3000, facing: 'l' }, { kind: 'fixture', id: 'plant', state: 'fresh' }],
+  },
+  {
+    id: 'stretch', label: 'a moment', cooldownMs: 180_000,
+    weight: () => 1.5,
+    build: (ctx) => [{ kind: 'do', mode: 'look', ms: 3000 }, maybe(ctx.line('idle'), 0.4)],
+  },
+  {
+    id: 'feed_cat', label: 'feeding the cat', cooldownMs: 360_000,
+    weight: (ctx) => (ctx.state.entities.some((e) => e.kind === 'cat') ? 3 : 0),
+    build: (ctx) => [{ kind: 'goto', spot: 'door' }, { kind: 'do', mode: 'look', ms: 1500, facing: 'l' }, ...say(ctx.line('cat')), { kind: 'do', mode: 'serve', ms: 2500, facing: 'l' }],
+  },
+  {
+    id: 'boxes', label: 'bringing the delivery in', cooldownMs: 1_200_000,
+    weight: () => 0.7,
+    build: () => [{ kind: 'goto', spot: 'mailbox' }, { kind: 'do', mode: 'fix', ms: 1500, facing: 'r' }, { kind: 'carry', what: 'box' }, { kind: 'goto', spot: 'kitchen' }, { kind: 'carry', what: null }, { kind: 'do', mode: 'fix', ms: 1200, facing: 'l' }],
+  },
+  {
+    id: 'can', label: 'getting a drink', cooldownMs: 900_000,
+    weight: (ctx) => (ctx.quiet ? 1.2 : 0.6),
+    build: () => [{ kind: 'goto', spot: 'vending' }, { kind: 'do', mode: 'look', ms: 2000, facing: 'l' }, { kind: 'do', mode: 'fix', ms: 1500, facing: 'l' }, { kind: 'goto', spot: 'door' }, { kind: 'do', mode: 'idle', ms: 6000, facing: 'l' }],
+  },
+];
+
+export function idleTask(job: IdleJob, ctx: JobCtx): Task {
+  return { id: job.id, key: `idle:${job.id}`, label: job.label, priority: 0, interruptible: true, steps: job.build(ctx) };
+}

@@ -1,0 +1,119 @@
+// The people who come by: how often, how many bowls, how well he knows them.
+// One JSON file; written a moment after each change.
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { dayKey, newRegular, tierOf, type RapportThresholds, type Regular, type Tier } from '../shared/rapport.js';
+import type { ChatUser } from './ingest.js';
+
+interface File {
+  version: 1;
+  regulars: Regular[];
+}
+
+export class Regulars {
+  private readonly byId = new Map<string, Regular>();
+  private timer: NodeJS.Timeout | null = null;
+
+  constructor(
+    private readonly file: string,
+    private readonly thresholds: RapportThresholds,
+    private readonly messageCreditMs: number,
+    private readonly now: () => number = Date.now,
+  ) {
+    if (existsSync(file)) {
+      try {
+        const parsed = JSON.parse(readFileSync(file, 'utf8')) as File;
+        for (const r of parsed.regulars ?? []) this.byId.set(r.id, r);
+      } catch {
+        /* start fresh */
+      }
+    }
+  }
+
+  get(id: string): Regular | undefined {
+    return this.byId.get(id);
+  }
+
+  tier(id: string): Tier {
+    return tierOf(this.byId.get(id), this.thresholds);
+  }
+
+  /** Someone said something: count it, and a point if they have not earned one lately. Returns true on their first ever message. */
+  seen(user: ChatUser): { first: boolean; regular: Regular; awayMs: number } {
+    const now = this.now();
+    let r = this.byId.get(user.id);
+    const first = !r;
+    const awayMs = r ? now - r.lastSeen : 0;
+    if (!r) {
+      r = newRegular(user.id, user.name, now);
+      this.byId.set(user.id, r);
+    }
+    r.name = user.name;
+    r.lastSeen = now;
+    r.messages++;
+    const day = dayKey(now);
+    if (r.lastDay !== day) {
+      r.lastDay = day;
+      r.days++;
+      r.rapport += 2;
+    }
+    if (now - r.lastCreditAt >= this.messageCreditMs) {
+      r.lastCreditAt = now;
+      r.rapport++;
+    }
+    this.saveSoon();
+    return { first, regular: r, awayMs };
+  }
+
+  credit(id: string, points: number, what: 'bowl' | 'greeting' | 'help' | 'other' = 'other'): void {
+    const r = this.byId.get(id);
+    if (!r) return;
+    r.rapport += points;
+    if (what === 'bowl') r.bowls++;
+    if (what === 'greeting') r.greetings++;
+    this.saveSoon();
+  }
+
+  /** A line the brain can read about someone. */
+  summary(id: string): string | undefined {
+    const r = this.byId.get(id);
+    if (!r) return undefined;
+    const tier = tierOf(r, this.thresholds);
+    const parts = [`${r.name}: ${tier}`];
+    if (r.bowls) parts.push(`${r.bowls} bowl${r.bowls === 1 ? '' : 's'} eaten here`);
+    if (r.days > 1) parts.push(`seen on ${r.days} nights`);
+    else parts.push('first night here');
+    return parts.join(', ');
+  }
+
+  top(n: number): Regular[] {
+    return [...this.byId.values()].sort((a, b) => b.rapport - a.rapport).slice(0, n);
+  }
+
+  get size(): number {
+    return this.byId.size;
+  }
+
+  private saveSoon(): void {
+    if (this.timer) return;
+    this.timer = setTimeout(() => {
+      this.timer = null;
+      this.save();
+    }, 2000);
+  }
+
+  save(): void {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    try {
+      mkdirSync(dirname(this.file), { recursive: true });
+      const tmp = this.file + '.tmp';
+      writeFileSync(tmp, JSON.stringify({ version: 1, regulars: [...this.byId.values()] } satisfies File));
+      renameSync(tmp, this.file);
+    } catch {
+      /* best effort */
+    }
+  }
+}

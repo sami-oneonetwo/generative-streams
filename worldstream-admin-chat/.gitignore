@@ -1,0 +1,10 @@
+node_modules/
+dist/
+public/
+data/
+.env
+*.log
+.DS_Store
+.preview/*
+!.preview/references/
+.claude/preview-tools/browsers/

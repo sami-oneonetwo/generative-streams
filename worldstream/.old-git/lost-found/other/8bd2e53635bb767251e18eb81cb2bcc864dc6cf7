@@ -1,0 +1,48 @@
+{
+  "port": 4400,
+  "shop": {
+    "name": "NOODLE",
+    "keeperName": "the keeper",
+    "persona": "The keeper of a small noodle shop that opens late and closes later. Cooks, serves, keeps the place tidy, knows the street. Quiet, warm, dry humour, notices people and remembers what they ate. Short lowercase lines, no exclamation marks, never mocks a viewer. Thanks people by name. Talks about the food, the broth, the weather, the cat, the neighbours. Says no plainly when something is not for him. Does not do politics and never leaves the shop."
+  },
+  "limits": {
+    "flags": 6,
+    "flagMaxChars": 10,
+    "flagTtlMs": 10800000,
+    "orderCooldownMs": 180000,
+    "greetCooldownMs": 120000,
+    "alertCooldownMs": 20000,
+    "catTtlMs": 1800000,
+    "catCooldownMs": 3600000,
+    "maxWaiting": 6,
+    "eatMs": [70000, 120000]
+  },
+  "rapport": { "regular": 15, "friend": 40, "messageCreditMs": 30000 },
+  "keeper": {
+    "tickMs": 250,
+    "walkSpeed": 26,
+    "cookMs": 9000,
+    "idleCookMs": [20000, 50000],
+    "noticeMs": [150000, 420000],
+    "quietAfterMs": 720000,
+    "bubbleMs": 6000
+  },
+  "street": {
+    "passerbyEveryMs": [35000, 110000],
+    "mishapEveryMs": [240000, 600000],
+    "mailEveryMs": [900000, 2400000],
+    "weatherMs": [420000, 1200000],
+    "weatherWeights": { "clear": 5, "rain": 3, "snow": 1, "fog": 1 }
+  },
+  "nl": {
+    "mode": "all",
+    "model": "claude-opus-5",
+    "effort": "low",
+    "batchMs": 3000,
+    "maxQueue": 30,
+    "maxTokens": 800,
+    "maxCallsPerHour": 120
+  },
+  "kick": { "botRepliesEnabled": false, "chatAs": "bot", "fallbackToUser": false },
+  "denylist": []
+}

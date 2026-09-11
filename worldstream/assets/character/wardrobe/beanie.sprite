@@ -1,0 +1,12 @@
+name: beanie
+slot: head
+dx: 2
+dy: -2
+tint: red
+aliases: wool hat, woolly hat, bobble hat, toque, winter hat
+tags: hat, warm
+---
+....Y....
+..XXXXX..
+.XXXXXXX.
+XXXXXXXXX

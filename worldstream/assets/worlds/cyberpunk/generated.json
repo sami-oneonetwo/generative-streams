@@ -1,0 +1,26 @@
+[
+  {
+    "name": "banana_tree",
+    "layers": [
+      "stage"
+    ],
+    "w": 24,
+    "h": 26,
+    "colour": "#7cff4f",
+    "tags": [
+      "plant",
+      "tree",
+      "tropical",
+      "nature",
+      "generated"
+    ],
+    "aliases": [
+      "banana tree",
+      "banana palm",
+      "plantain tree",
+      "tropical tree",
+      "banana plant"
+    ],
+    "generated": true
+  }
+]

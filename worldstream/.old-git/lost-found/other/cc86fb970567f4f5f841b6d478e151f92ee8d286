@@ -1,0 +1,60 @@
+// The keeper on screen: which frame of which set, facing which way, where.
+import type { Anim, Atlas } from '../shared/atlas.js';
+import { KEEPER, zoneGround } from '../shared/scene.js';
+import { motionX, type KeeperMode, type KeeperState } from '../shared/state.js';
+import { flipH, rasterise, type Canvas } from './canvas.js';
+
+/** Which set stands in when a mode has no frames of its own. */
+const FALLBACK: Record<KeeperMode, KeeperMode> = {
+  idle: 'idle', walk: 'walk', walk_bowl: 'walk', talk: 'idle', look: 'idle', cook: 'idle', serve: 'idle', wave: 'talk',
+  fix: 'idle', kick: 'fix', sweep: 'fix', carry: 'walk', read: 'idle', sit: 'idle', nap: 'sit', wipe: 'fix',
+};
+
+interface Set {
+  r: Canvas[];
+  l: Canvas[];
+  fps: number;
+  loop: boolean;
+}
+
+export class KeeperView {
+  private sets: Partial<Record<KeeperMode, Set>> = {};
+
+  setAtlas(atlas: Atlas): void {
+    this.sets = {};
+    for (const [mode, anim] of Object.entries(atlas.keeper) as Array<[KeeperMode, Anim | undefined]>) {
+      if (!anim) continue;
+      const r = anim.frames.map((f) => rasterise(f, atlas.keys));
+      this.sets[mode] = { r, l: r.map(flipH), fps: anim.fps, loop: anim.loop };
+    }
+  }
+
+  private set(mode: KeeperMode): Set | undefined {
+    let m = mode;
+    for (let i = 0; i < 4; i++) {
+      const s = this.sets[m];
+      if (s) return s;
+      m = FALLBACK[m];
+    }
+    return this.sets.idle;
+  }
+
+  /** Screen x of his left edge right now. */
+  x(k: KeeperState, now: number): number {
+    return Math.round(motionX(k.x, k.motion, now));
+  }
+
+  draw(g: CanvasRenderingContext2D, k: KeeperState, now: number): { x: number; top: number } | null {
+    if (k.zone === 'hidden') return null;
+    const set = this.set(k.mode);
+    if (!set) return null;
+    const frames = k.facing === 'l' ? set.l : set.r;
+    const elapsed = Math.max(0, now - k.modeSince) / 1000;
+    const idx = set.loop ? Math.floor(elapsed * set.fps) % frames.length : Math.min(frames.length - 1, Math.floor(elapsed * set.fps));
+    const frame = frames[idx];
+    const x = this.x(k, now);
+    const top = zoneGround(k.zone) - frame.height;
+    g.drawImage(frame, x, top);
+    return { x: x + KEEPER.w / 2, top };
+  }
+}

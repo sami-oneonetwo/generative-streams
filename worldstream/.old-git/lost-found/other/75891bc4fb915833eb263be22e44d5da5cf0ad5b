@@ -1,0 +1,445 @@
+// Paints the noodle shop: the building and its street, as two full-width
+// sprites. `shop_back` is everything behind the keeper when he is behind the
+// counter or on the balcony; `shop_front` is the little that stands in front
+// of him there (the counter, the stools, the awning posts, the balcony rail).
+// Run with `npx tsx scripts/rig/shop.ts`, then `npm run assets`, and look at
+// dist/shop/preview.png.
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parsePalette } from '../sprite-io.js';
+import { BALCONY_Y, COUNTER, DOOR, GROUND, KITCHEN, LANTERNS, NEON, STOOLS, STOOL_W, STOVE, TOP_SIGN, VIEW } from '../../src/shared/scene.js';
+import { Grid, writePreview, writeSprite } from './grid.js';
+
+const ROOT = process.cwd();
+const keys = parsePalette(readFileSync(join(ROOT, 'assets/shop/palette.txt'), 'utf8'));
+const H = STREET_TOP();
+function STREET_TOP(): number {
+  return 240;
+}
+
+const back = new Grid(VIEW.w, H);
+const front = new Grid(VIEW.w, H);
+
+// -- painters -----------------------------------------------------------------
+
+/** A tiled pagoda roof: ridge at (x..x+w, y), the eave `h` rows down and `flare` wider each side, its ends curling up. */
+function roof(g: Grid, x: number, y: number, w: number, h: number, flare: number): void {
+  for (let r = 0; r < h; r++) {
+    const grow = Math.round((flare * r) / (h - 1));
+    const x0 = x - grow, x1 = x + w - 1 + grow;
+    const k = r % 3 === 2 ? '5' : 'b';
+    g.hline(x0, x1, y + r, k);
+    if (k === 'b') for (let px = x0 + ((r * 2) % 4); px <= x1; px += 4) g.px(px, y + r, 'c');
+  }
+  // ridge beam and the curled ends
+  g.hline(x, x + w - 1, y, '8');
+  g.hline(x + 1, x + w - 2, y - 1, '8');
+  for (let i = 0; i < 3; i++) {
+    g.px(x - flare - i, y + h - 1 - i, '8');
+    g.px(x + w - 1 + flare + i, y + h - 1 - i, '8');
+    g.px(x - flare - i + 1, y + h - 1 - i, 'c');
+    g.px(x + w - 2 + flare + i, y + h - 1 - i, 'c');
+  }
+  // shadow under the eave
+  g.hline(x - flare, x + w - 1 + flare, y + h, '5');
+}
+
+/** Dark planked wall with a beam along the top and posts at the ends. */
+function wall(g: Grid, x: number, y: number, w: number, h: number, seam = 6): void {
+  g.rect(x, y, w, h, '6');
+  for (let px = x + seam; px < x + w - 1; px += seam) g.vline(px, y, y + h - 1, '5');
+  g.hline(x, x + w - 1, y, '8');
+  g.rect(x, y, 2, h, '9');
+  g.rect(x + w - 2, y, 2, h, '9');
+  g.vline(x + w - 1, y, y + h - 1, '5');
+}
+
+/** A shoji lattice window: `bg` panes behind `bar` bars, in a warm frame. */
+function lattice(g: Grid, x: number, y: number, w: number, h: number, bg: string, bar: string, sx = 4, sy = 5): void {
+  g.rect(x, y, w, h, bg);
+  for (let px = x + sx; px < x + w - 1; px += sx) g.vline(px, y, y + h - 1, bar);
+  for (let py = y + sy; py < y + h - 1; py += sy) g.hline(x, x + w - 1, py, bar);
+  g.rect(x, y, w, 1, '9');
+  g.rect(x, y + h - 1, w, 1, '9');
+  g.rect(x, y, 1, h, '9');
+  g.rect(x + w - 1, y, 1, h, '5');
+}
+
+/** A red paper lantern, 8 wide 12 tall, hanging from (x, y). */
+function lantern(g: Grid, x: number, y: number): void {
+  g.rect(x + 3, y, 2, 1, '9');
+  g.rect(x + 2, y + 1, 4, 1, 'e');
+  g.rect(x + 1, y + 2, 6, 7, 'f');
+  g.rect(x, y + 3, 8, 5, 'f');
+  g.rect(x + 2, y + 3, 3, 5, 'g');
+  g.rect(x + 3, y + 4, 1, 3, 'h');
+  g.vline(x + 6, y + 3, y + 7, 'e');
+  g.hline(x + 1, x + 6, y + 5, 'e');
+  g.rect(x + 2, y + 9, 4, 1, 'e');
+  g.rect(x + 3, y + 10, 2, 2, '9');
+}
+
+/** A bowl of noodles: rim at (cx, top), `w` wide, steam above, chopsticks leaning in. */
+function bowlGlyph(g: Grid, cx: number, top: number, w: number, k: string, steam: string): void {
+  const half = Math.floor(w / 2);
+  g.hline(cx - half, cx + half, top, k);
+  g.hline(cx - half, cx + half, top + 1, k);
+  const depth = Math.max(4, Math.round(w / 2.4));
+  for (let r = 2; r <= depth; r++) {
+    const shrink = Math.round(((half - Math.round(w / 4)) * (r - 1)) / depth);
+    g.px(cx - half + shrink, top + r, k);
+    g.px(cx + half - shrink, top + r, k);
+  }
+  const foot = Math.round(w / 4);
+  g.hline(cx - foot, cx + foot, top + depth + 1, k);
+  g.hline(cx - foot + 1, cx + foot - 1, top + depth + 2, k);
+  // chopsticks
+  g.line(cx + 2, top - Math.round(w / 2), cx + Math.round(w / 3), top - 1, k);
+  g.line(cx + 4, top - Math.round(w / 2) + 1, cx + Math.round(w / 3) + 2, top - 1, k);
+  // steam
+  for (const dx of [-Math.round(w / 4), 0, Math.round(w / 4) - 1]) {
+    for (let r = 0; r < Math.round(w / 3); r++) g.px(cx + dx + ((r >> 1) & 1), top - 3 - r, steam);
+  }
+}
+
+/** The tower sign: a white bowl with yellow noodles lifted on chopsticks, steam above. */
+function noodleGlyph(g: Grid, cx: number, cy: number): void {
+  g.hline(cx - 7, cx + 7, cy + 3, 'm');
+  g.hline(cx - 6, cx + 6, cy + 4, 'm');
+  g.px(cx - 6, cy + 5, 'm');
+  g.px(cx + 6, cy + 5, 'm');
+  g.hline(cx - 5, cx + 5, cy + 6, 'm');
+  g.hline(cx - 4, cx + 4, cy + 7, 'm');
+  g.hline(cx - 3, cx + 3, cy + 8, 'm');
+  g.hline(cx - 2, cx + 2, cy + 9, 'm');
+  for (let i = 0; i < 4; i++) {
+    const x = cx - 5 + i * 3;
+    g.vline(x, cy - 4 + (i & 1), cy + 2, 'l');
+    g.px(x + 1, cy - 3 + (i & 1), 'l');
+    g.px(x + 1, cy, 'l');
+  }
+  g.line(cx + 3, cy - 10, cx + 7, cy - 4, 'z');
+  g.line(cx + 5, cy - 10, cx + 8, cy - 5, 'z');
+  for (const dx of [-4, 0, 4]) for (let r = 0; r < 4; r++) g.px(cx + dx + (r & 1), cy - 6 - r, 'm');
+}
+
+// -- sky furniture: the telegraph pole ------------------------------------------
+
+function pole(g: Grid): void {
+  g.rect(48, 76, 4, GROUND - 76, '5');
+  g.vline(48, 76, GROUND - 1, '8');
+  g.rect(40, 88, 20, 2, '5');
+  g.rect(42, 96, 16, 2, '5');
+  for (const px of [41, 47, 53, 59]) g.rect(px, 86, 2, 2, 'x');
+  for (const px of [43, 49, 55]) g.rect(px, 94, 2, 2, 'x');
+  g.curve(40, 88, 0, 82, 5, '5');
+  g.curve(42, 96, 0, 92, 4, '5');
+  g.rect(47, 74, 6, 2, '8');
+}
+
+// -- the building ----------------------------------------------------------------
+
+function building(g: Grid, f: Grid): void {
+  // ground floor wall and its right-hand side
+  wall(g, 132, 176, 220, GROUND - 176, 7);
+  // first floor
+  wall(g, 140, 126, 204, 50, 6);
+  // tower room
+  wall(g, 200, 66, 80, BALCONY_Y - 66, 5);
+  // roofs, painted after walls so the eaves overhang
+  roof(g, 140, 112, 204, 14, 8);
+  roof(g, 200, 56, 80, 10, 8);
+  roof(g, 224, 14, 32, 8, 5);
+
+  // -- top lantern box: a red paper screen with the round sign in it --
+  g.rect(218, 22, 44, 34, 'e');
+  for (let px = 222; px < 260; px += 4) g.vline(px, 23, 54, 'd');
+  g.rect(216, 22, 3, 34, '5');
+  g.rect(261, 22, 3, 34, '5');
+  g.vline(216, 22, 55, '8');
+  g.hline(216, 263, 22, '9');
+  g.hline(216, 263, 55, '9');
+  g.disc(TOP_SIGN.cx, TOP_SIGN.cy, TOP_SIGN.r, 'f');
+  for (let y = TOP_SIGN.cy - TOP_SIGN.r; y <= TOP_SIGN.cy + TOP_SIGN.r; y += 2) g.hline(TOP_SIGN.cx - TOP_SIGN.r, TOP_SIGN.cx + TOP_SIGN.r, y, 'g');
+  g.ring(TOP_SIGN.cx, TOP_SIGN.cy, TOP_SIGN.r, 'h');
+  g.disc(TOP_SIGN.cx, TOP_SIGN.cy, TOP_SIGN.r - 1, 'f');
+  noodleGlyph(g, TOP_SIGN.cx, TOP_SIGN.cy);
+
+  // -- tower room: two lattice windows, two lanterns, the balcony --
+  lattice(g, 208, 74, 20, 22, 'd', '9');
+  lattice(g, 252, 74, 20, 22, 'd', '9');
+  lantern(g, LANTERNS[2].x, LANTERNS[2].y);
+  lantern(g, LANTERNS[3].x, LANTERNS[3].y);
+  g.hline(196, 284, BALCONY_Y, '8');
+  g.hline(196, 284, BALCONY_Y + 1, '5');
+  // rail in front of him
+  f.hline(196, 284, BALCONY_Y - 12, '8');
+  f.hline(196, 284, BALCONY_Y - 11, '9');
+  f.hline(197, 283, BALCONY_Y - 6, '9');
+  for (let px = 197; px <= 283; px += 6) f.vline(px, BALCONY_Y - 10, BALCONY_Y - 1, '9');
+  f.rect(196, BALCONY_Y - 10, 1, 10, '9');
+  f.rect(284, BALCONY_Y - 10, 1, 10, '5');
+
+  // -- antenna on the roof --
+  g.vline(150, 92, 111, 'w');
+  g.hline(146, 154, 96, 'w');
+  g.hline(147, 153, 100, 'w');
+  g.px(150, 91, 'x');
+
+  // -- first floor: neon disc, mounting board for the text, slat window, AC, pipes --
+  g.rect(224, 134, 78, 22, '5');
+  g.rect(224, 134, 78, 1, '8');
+  g.disc(NEON.cx, NEON.cy, NEON.r, 'f');
+  g.ring(NEON.cx, NEON.cy, NEON.r, 'h', 2);
+  g.ring(NEON.cx, NEON.cy, NEON.r - 2, 'g');
+  bowlGlyph(g, NEON.cx, NEON.cy + 2, 24, 'm', 'm');
+  // slatted yellow window, upstairs
+  g.rect(306, 132, 28, 18, 'l');
+  for (let y = 133; y < 150; y += 2) g.hline(306, 333, y, 'j');
+  g.rect(305, 131, 30, 1, '9');
+  g.rect(305, 150, 30, 1, '9');
+  g.vline(305, 131, 150, '9');
+  g.vline(334, 131, 150, '5');
+  // a row of small menu plaques under the neon text
+  for (let px = 226; px < 300; px += 9) {
+    g.rect(px, 160, 7, 8, 'z');
+    g.rect(px + 6, 160, 1, 8, 'v');
+    g.rect(px + 1, 162, 4, 1, '5');
+    g.rect(px + 2, 164, 3, 1, '5');
+    g.rect(px + 1, 166, 2, 1, '5');
+    g.px(px + 3, 159, '9');
+  }
+  // small lattice window over the AC
+  lattice(g, 146, 130, 20, 16, 'd', '9', 5, 5);
+  // kitchen exhaust stack on the roof
+  g.rect(318, 100, 6, 13, 'y');
+  g.rect(317, 99, 8, 2, 'w');
+  g.rect(318, 100, 1, 13, 'x');
+  // AC unit
+  g.rect(146, 150, 16, 12, 'y');
+  g.rect(146, 150, 16, 1, 'x');
+  for (let y = 153; y < 161; y += 2) g.hline(148, 159, y, 'w');
+  g.rect(146, 161, 16, 1, '5');
+  g.rect(161, 150, 1, 12, '5');
+  // drainpipe down the first and ground floors
+  g.vline(338, 128, 175, 'w');
+  g.vline(339, 128, 175, 'y');
+  g.hline(334, 339, 128, 'w');
+
+  // -- string lights off the corners --
+  const bulb = (x: number, y: number, i: number) => {
+    if (i % 9 === 4) {
+      g.px(x, y + 1, 'e');
+      g.px(x, y + 2, 'h');
+      g.px(x, y + 3, 'h');
+      g.px(x, y + 4, 'g');
+    }
+  };
+  g.curve(140, 128, 52, 90, 16, '5', bulb);
+  g.curve(344, 128, VIEW.w - 1, 92, 18, '5', bulb);
+
+  // -- the red banner hanging off the right eave --
+  g.hline(336, 352, 118, '9');
+  g.rect(338, 119, 12, 58, 'f');
+  g.vline(338, 119, 176, 'g');
+  g.vline(349, 119, 176, 'e');
+  g.rect(340, 122, 8, 8, 'm');
+  g.rect(341, 123, 6, 6, 'f');
+  bowlGlyph(g, 344, 126, 4, 'm', 'm');
+  for (let y = 136; y < 172; y += 6) {
+    g.rect(341, y, 6, 1, 'd');
+    g.rect(341, y + 2, 4, 1, 'd');
+    g.rect(343, y + 4, 4, 1, 'd');
+  }
+  for (let px = 338; px < 350; px += 2) g.px(px, 177, 'e');
+
+  // -- ground floor --
+  // door eave on the right
+  for (let r = 0; r < 6; r++) {
+    const k = r === 5 ? '5' : r % 3 === 2 ? '5' : 'b';
+    g.hline(276 - Math.round(r / 2), 352, 176 + r, k);
+    if (k === 'b') for (let px = 278 + ((r * 2) % 4); px <= 351; px += 4) g.px(px, 176 + r, 'c');
+  }
+  g.hline(276, 352, 176, '8');
+  // awning on the left: olive and slate stripes with a scalloped edge
+  g.hline(134, 274, 178, '8');
+  for (let px = 134; px < 274; px += 7) {
+    const k = ((px - 134) / 7) % 2 === 0 ? 'a' : 'b';
+    g.rect(px, 179, 7, 9, k);
+    if (k === 'a') g.rect(px + 1, 179, 2, 9, 'z');
+    if (k === 'b') g.rect(px, 179, 1, 9, 'c');
+    g.rect(px + 1, 188, 5, 1, k);
+    g.rect(px + 2, 189, 3, 1, k === 'a' ? 'a' : 'b');
+  }
+  g.hline(134, 273, 190, '5');
+  // awning posts, in front of him
+  f.rect(134, 190, 2, GROUND - 190, '9');
+  f.vline(135, 190, GROUND - 1, '5');
+  f.rect(272, 190, 2, GROUND - 190, '9');
+  f.vline(273, 190, GROUND - 1, '5');
+
+  // kitchen opening: warm interior
+  g.rect(KITCHEN.x, KITCHEN.top, KITCHEN.right - KITCHEN.x, KITCHEN.bottom - KITCHEN.top, 'k');
+  g.rect(186, KITCHEN.top, 50, 8, 'l');
+  g.rect(204, KITCHEN.top, 12, 3, '9'); // lamp shade
+  g.rect(206, KITCHEN.top + 3, 8, 1, 'm');
+  // shelf with bowls and jars, dark against the light
+  g.hline(KITCHEN.x + 4, KITCHEN.right - 4, 200, '7');
+  for (let px = KITCHEN.x + 8; px < KITCHEN.right - 8; px += 9) {
+    g.rect(px, 197, 5, 3, '7');
+    g.rect(px + 1, 196, 3, 1, '9');
+  }
+  g.rect(KITCHEN.x + 4, 193, 4, 7, '9'); // a jar
+  g.rect(KITCHEN.x + 5, 192, 2, 1, '9');
+  // hanging ladles, a cloth, a paper menu strip
+  g.vline(228, KITCHEN.top, 195, '7');
+  g.rect(227, 195, 3, 2, '7');
+  g.vline(234, KITCHEN.top, 194, '7');
+  g.rect(233, 194, 3, 2, '7');
+  g.rect(240, KITCHEN.top, 6, 8, 'z');
+  g.rect(241, KITCHEN.top + 2, 4, 1, '9');
+  g.rect(241, KITCHEN.top + 4, 3, 1, '9');
+  g.rect(241, KITCHEN.top + 6, 4, 1, '9');
+  // steamer baskets stacked on the right of the bench
+  g.rect(236, 206, 10, 8, '9');
+  g.rect(236, 206, 10, 1, 'v');
+  g.rect(236, 210, 10, 1, 'v');
+  g.rect(226, 209, 8, 5, '7'); // a chopping block
+  g.rect(226, 209, 8, 1, 'z');
+  // stove and the big pot
+  g.rect(STOVE.x - 2, 205, 18, KITCHEN.bottom - 205, 'y');
+  g.rect(STOVE.x - 2, 205, 18, 1, 'w');
+  g.rect(STOVE.x, STOVE.y + 1, 14, 5, 'w');
+  g.rect(STOVE.x, STOVE.y, 14, 1, 'x');
+  g.rect(STOVE.x + 12, STOVE.y + 1, 2, 5, 'y');
+  g.rect(STOVE.x + 5, STOVE.y - 1, 4, 1, 'x');
+  g.rect(STOVE.x + 3, 208, 3, 2, 'g'); // the flame window
+  // frame around the opening
+  g.rect(KITCHEN.x - 1, KITCHEN.top - 1, KITCHEN.right - KITCHEN.x + 2, 1, '9');
+  g.vline(KITCHEN.x - 1, KITCHEN.top, KITCHEN.bottom, '9');
+  g.vline(KITCHEN.right, KITCHEN.top, KITCHEN.bottom, '5');
+  // side panes: dim shoji either side of the opening
+  lattice(g, 138, 190, 11, 24, 'j', '6', 5, 6);
+  lattice(g, 252, 190, 18, 24, 'j', '6', 6, 6);
+
+  // counter and stools, in front of him
+  f.rect(COUNTER.x, COUNTER.top, COUNTER.right - COUNTER.x, COUNTER.bottom - COUNTER.top, '7');
+  f.hline(COUNTER.x, COUNTER.right - 1, COUNTER.top, 'z');
+  f.hline(COUNTER.x, COUNTER.right - 1, COUNTER.top + 1, '9');
+  f.hline(COUNTER.x, COUNTER.right - 1, COUNTER.bottom - 1, '5');
+  f.vline(COUNTER.right - 1, COUNTER.top, COUNTER.bottom - 1, '5');
+  f.rect(COUNTER.x, COUNTER.bottom, 2, GROUND - COUNTER.bottom, '6');
+  f.rect(COUNTER.right - 2, COUNTER.bottom, 2, GROUND - COUNTER.bottom, '6');
+  for (const sx of STOOLS) {
+    f.rect(sx, COUNTER.bottom, STOOL_W, 1, 'z');
+    f.rect(sx, COUNTER.bottom + 1, STOOL_W, 2, '9');
+    f.rect(sx + 1, COUNTER.bottom + 3, 1, GROUND - COUNTER.bottom - 3, '7');
+    f.rect(sx + STOOL_W - 2, COUNTER.bottom + 3, 1, GROUND - COUNTER.bottom - 3, '7');
+    f.hline(sx + 1, sx + STOOL_W - 2, COUNTER.bottom + 7, '7');
+  }
+
+  // door: the way in, painted here as its dark frame; the door itself is a fixture
+  g.rect(DOOR.x - 2, DOOR.top - 2, DOOR.right - DOOR.x + 4, 2, '9');
+  g.rect(DOOR.x - 2, DOOR.top, 2, GROUND - DOOR.top, '9');
+  g.rect(DOOR.right, DOOR.top, 2, GROUND - DOOR.top, '9');
+  g.vline(DOOR.right + 1, DOOR.top, GROUND - 1, '5');
+  g.rect(DOOR.x, DOOR.top, DOOR.right - DOOR.x, GROUND - DOOR.top, 'n');
+  g.rect(DOOR.x - 2, GROUND - 2, DOOR.right - DOOR.x + 4, 2, 'c');
+  g.rect(DOOR.x - 2, GROUND - 1, DOOR.right - DOOR.x + 4, 1, 'b');
+  lantern(g, LANTERNS[0].x, LANTERNS[0].y);
+  lantern(g, LANTERNS[1].x, LANTERNS[1].y);
+
+  // right of the door: a barred window, posters, the drainpipe
+  g.rect(328, 184, 18, 12, '5');
+  for (let px = 331; px < 346; px += 4) g.vline(px, 184, 195, '9');
+  g.rect(327, 183, 20, 1, '9');
+  g.rect(327, 196, 20, 1, '9');
+  g.rect(314, 214, 6, 8, 'z');
+  g.rect(315, 216, 4, 1, 'y');
+  g.rect(315, 218, 3, 1, 'y');
+  g.rect(334, 204, 7, 9, 'e');
+  g.rect(335, 206, 5, 1, 'm');
+  g.rect(335, 209, 4, 1, 'm');
+  g.vline(348, 178, GROUND - 1, 'w');
+  g.vline(349, 178, GROUND - 1, 'y');
+  // delivery boxes stacked by the door
+  g.rect(314, 224, 10, 9, '9');
+  g.rect(314, 224, 10, 1, 'z');
+  g.rect(323, 224, 1, 9, '5');
+  g.rect(316, 227, 6, 1, '7');
+  g.rect(316, 217, 7, 7, '7');
+  g.rect(316, 217, 7, 1, '9');
+  g.rect(322, 217, 1, 7, '5');
+  // a small hanging cloth sign under the door eave
+  g.rect(330, 200, 1, 3, '9');
+  g.rect(326, 203, 9, 11, 'o');
+  g.rect(327, 203, 7, 1, 'p');
+  g.rect(334, 203, 1, 11, 'n');
+  g.rect(328, 206, 5, 1, 'm');
+  g.rect(328, 209, 5, 1, 'm');
+  g.rect(329, 212, 3, 1, 'm');
+
+  // left corner post
+  g.rect(132, 176, 3, GROUND - 176, '9');
+  g.vline(134, 176, GROUND - 1, '5');
+}
+
+// -- the street either side -------------------------------------------------------
+
+function surroundings(g: Grid): void {
+  // shrubs behind the fence on the right
+  for (const [cx, cy, r] of [[400, 206, 9], [416, 202, 11], [436, 208, 8], [456, 204, 10], [472, 210, 7]] as const) {
+    g.disc(cx, cy, r, 'r');
+    g.disc(cx - 2, cy - 2, r - 3, 's');
+  }
+  // fence
+  g.hline(390, 470, 210, '8');
+  for (let px = 390; px <= 470; px += 4) {
+    g.rect(px, 211, 2, GROUND - 211, '6');
+    g.px(px, 211, '7');
+    g.vline(px + 1, 211, GROUND - 1, '5');
+  }
+  g.hline(390, 471, 226, '7');
+  // crates by the fence
+  g.rect(396, 221, 12, 12, '9');
+  g.rect(396, 221, 12, 1, 'z');
+  g.rect(407, 221, 1, 12, '5');
+  g.rect(398, 224, 8, 1, '7');
+  g.rect(398, 229, 8, 1, '7');
+  g.rect(410, 225, 10, 8, '7');
+  g.rect(410, 225, 10, 1, '9');
+  g.rect(419, 225, 1, 8, '5');
+  // a bicycle leaning on the fence
+  g.ring(438, 228, 4, 'w');
+  g.ring(450, 228, 4, 'w');
+  g.line(438, 228, 444, 220, 'x');
+  g.line(444, 220, 450, 228, 'x');
+  g.line(444, 220, 449, 221, 'x');
+  g.hline(441, 447, 219, 'x');
+  // pavement and kerb
+  g.rect(0, GROUND, VIEW.w, 4, '4');
+  g.hline(0, VIEW.w - 1, GROUND + 4, 'c');
+  g.rect(0, GROUND + 5, VIEW.w, 2, 'b');
+  for (let px = 3; px < VIEW.w; px += 11) g.px(px, GROUND + 2, '5');
+}
+
+pole(back);
+building(back, front);
+surroundings(back);
+
+const OUT = join(ROOT, 'assets/shop/sprites');
+writeSprite(join(OUT, 'shop_back.sprite'), 'shop_back', [back], { anchor: 'top' });
+writeSprite(join(OUT, 'shop_front.sprite'), 'shop_front', [front], { anchor: 'top' });
+
+const preview = new Grid(VIEW.w, VIEW.h, '1');
+preview.rect(0, 0, VIEW.w, 240, '1');
+for (let y = 120; y < 240; y++) if ((y & 1) === 0 || y > 180) preview.hline(0, VIEW.w - 1, y, '2');
+for (let x = 0; x < VIEW.w; x++) {
+  const m = 200 - Math.round(18 * Math.abs(Math.sin(x / 70)) + 14 * Math.abs(Math.sin(x / 31 + 2)));
+  preview.vline(x, m, 240, '3');
+}
+preview.rect(0, 240, VIEW.w, 30, '0');
+preview.blit(back, 0, 0);
+preview.blit(front, 0, 0);
+writePreview(join(ROOT, 'dist/shop/preview.png'), preview, keys, 3);
+console.log('preview -> dist/shop/preview.png');

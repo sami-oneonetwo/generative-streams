@@ -1,0 +1,8 @@
+Pin per-branch state dir; keep kick tokens shared
+
+The dev/start scripts set WORLDSTREAM_STATE_DIR=state/build-the-rocket so
+the mission save no longer sits in the state/ root shared by every
+branch-project. Kick tokens move to the shared state/ root: refresh
+tokens rotate, so per-branch copies would invalidate each other.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>

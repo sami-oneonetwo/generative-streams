@@ -1,0 +1,57 @@
+// Owns the world state: applies mutations through the pure reducer, tells
+// listeners, and saves to one JSON file a moment after each change.
+import { EventEmitter } from 'node:events';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { apply, reviveState, type Mutation, type WorldState } from '../shared/state.js';
+
+export class Store extends EventEmitter {
+  state: WorldState;
+  private timer: NodeJS.Timeout | null = null;
+
+  constructor(private readonly file: string, private readonly now: () => number = Date.now) {
+    super();
+    let raw: unknown = null;
+    if (existsSync(file)) {
+      try {
+        raw = JSON.parse(readFileSync(file, 'utf8'));
+      } catch {
+        raw = null;
+      }
+    }
+    this.state = reviveState(raw, now());
+  }
+
+  /** Apply a mutation. Returns false when it changed nothing. */
+  dispatch(m: Mutation): boolean {
+    const next = apply(this.state, m);
+    if (next === this.state) return false;
+    this.state = next;
+    this.emit('change', m);
+    this.saveSoon();
+    return true;
+  }
+
+  private saveSoon(): void {
+    if (this.timer) return;
+    this.timer = setTimeout(() => {
+      this.timer = null;
+      this.save();
+    }, 1500);
+  }
+
+  save(): void {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    try {
+      mkdirSync(dirname(this.file), { recursive: true });
+      const tmp = this.file + '.tmp';
+      writeFileSync(tmp, JSON.stringify(this.state));
+      renameSync(tmp, this.file);
+    } catch {
+      /* best effort */
+    }
+  }
+}

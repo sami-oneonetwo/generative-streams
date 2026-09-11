@@ -1,0 +1,176 @@
+// Renderer: 480x270 internal canvas, nearest-neighbour scaled to the screen.
+// Draws the shop from the packed atlas over a procedural sky, with the keeper
+// behind or in front of the counter depending on where he is, lit by what the
+// shop gives off.
+import type { Atlas, AtlasSprite } from '../shared/atlas.js';
+import { COUNTER, FIXTURES, FIXTURE_IDS, GROUND, VIEW, type FixtureId } from '../shared/scene.js';
+import { motionX, type Entity, type WorldState } from '../shared/state.js';
+import { flipH, hashStr, makeCanvas, rasterise, type Canvas } from './canvas.js';
+import { PixelFont } from './font.js';
+import { KeeperView } from './keeper.js';
+import { drawGlowHalos, drawLightPools, drawWetReflections, pickLights } from './lights.js';
+import { SceneView } from './scene.js';
+import { drawBubble, drawFlag, drawHud, drawTag, drawToasts, type Toast } from './ui.js';
+import { drawWeather } from './weather.js';
+
+interface Sprite {
+  def: AtlasSprite;
+  r: Canvas[];
+  l: Canvas[];
+}
+
+export interface RendererOptions {
+  hud?: boolean;
+}
+
+export class Renderer {
+  private readonly off: Canvas;
+  private readonly g: CanvasRenderingContext2D;
+  private readonly screen: CanvasRenderingContext2D;
+  private atlas: Atlas | null = null;
+  private readonly sprites = new Map<string, Sprite>();
+  private font: PixelFont | null = null;
+  private readonly keeper = new KeeperView();
+  private readonly scene = new SceneView();
+  private toasts: Toast[] = [];
+  private shopName = 'NOODLE';
+  private presence: number | null = null;
+  private renderMs = 0;
+
+  constructor(private readonly canvas: HTMLCanvasElement, private readonly opts: RendererOptions = {}) {
+    this.off = makeCanvas(VIEW.w, VIEW.h);
+    this.g = this.off.getContext('2d')!;
+    this.screen = canvas.getContext('2d')!;
+    this.g.imageSmoothingEnabled = false;
+    this.screen.imageSmoothingEnabled = false;
+  }
+
+  setAtlas(atlas: Atlas, shopName: string): void {
+    this.atlas = atlas;
+    this.shopName = shopName;
+    this.sprites.clear();
+    for (const def of atlas.sprites) {
+      const r = def.frames.map((f) => rasterise(f, atlas.keys));
+      this.sprites.set(def.name, { def, r, l: def.kind === 'scenery' ? r : r.map(flipH) });
+    }
+    this.font = new PixelFont(atlas.font);
+    this.keeper.setAtlas(atlas);
+  }
+
+  toast(text: string, at: number): void {
+    this.toasts.push({ text, at, until: at + 7000 });
+    if (this.toasts.length > 6) this.toasts.splice(0, this.toasts.length - 6);
+  }
+
+  setPresence(n: number | null): void {
+    this.presence = n;
+  }
+
+  private sprite(name: string, now: number, facing: 'l' | 'r' = 'r', seed = 0): Canvas | null {
+    const s = this.sprites.get(name);
+    if (!s) return null;
+    const frames = facing === 'l' && s.def.faces ? s.l : s.r;
+    if (frames.length === 1) return frames[0];
+    const fps = s.def.fps ?? 4;
+    const idx = s.def.loop === false ? Math.min(frames.length - 1, Math.floor((now / 1000) * fps)) : Math.floor((now / 1000) * fps + seed) % frames.length;
+    return frames[idx];
+  }
+
+  /** Draw a sprite with its bottom row on `bottom`. Returns its top. */
+  private stand(name: string, x: number, bottom: number, now: number, facing: 'l' | 'r' = 'r', seed = 0): number | null {
+    const c = this.sprite(name, now, facing, seed);
+    if (!c) return null;
+    const top = bottom - c.height;
+    this.g.drawImage(c, Math.round(x), top);
+    return top;
+  }
+
+  private fixtureSprite(id: FixtureId, state: WorldState, now: number): string {
+    let st = state.fixtures[id].state;
+    if (id === 'vending' && st === 'flicker') st = (Math.floor(now / 110) + Math.floor(now / 370)) % 3 === 0 ? 'off' : 'on';
+    return `${id}_${st}`;
+  }
+
+  draw(state: WorldState | null, now: number, connected: boolean): void {
+    const t0 = performance.now();
+    const g = this.g;
+    g.clearRect(0, 0, VIEW.w, VIEW.h);
+    this.scene.drawBackdrop(g, now);
+
+    if (!state || !this.atlas) {
+      this.scene.drawForeground(g);
+      if (this.font) {
+        const strip = this.font.strip(connected ? 'OPENING UP...' : 'CONNECTING...', '#9a9aa8', 'rgba(2,2,14,0.8)', 4);
+        g.drawImage(strip, Math.round((VIEW.w - strip.width) / 2), 120);
+      }
+      this.blit();
+      return;
+    }
+
+    const back = this.sprites.get('shop_back');
+    if (back) g.drawImage(back.r[0], 0, 0);
+    this.scene.drawBuildingOverlays(g, state, this.font, this.shopName, now);
+    // things on the wall
+    this.stand(this.fixtureSprite('door', state, now), FIXTURES.door.x, FIXTURES.door.y, now);
+    this.stand(this.fixtureSprite('mailbox', state, now), FIXTURES.mailbox.x, FIXTURES.mailbox.y, now);
+
+    const k = state.keeper;
+    let head: { x: number; top: number } | null = null;
+    if (k.zone === 'inside' || k.zone === 'upstairs') head = this.keeper.draw(g, k, now);
+
+    const front = this.sprites.get('shop_front');
+    if (front) g.drawImage(front.r[0], 0, 0);
+    this.scene.drawSteam(g, state, now);
+
+    for (const id of ['vending', 'plant', 'board', 'bin'] as FixtureId[]) this.stand(this.fixtureSprite(id, state, now), FIXTURES[id].x, FIXTURES[id].y, now);
+
+    const byKind = (kind: Entity['kind']) => state.entities.filter((e) => e.kind === kind);
+    for (const e of byKind('flag')) drawFlag(g, this.font, e, now);
+    for (const e of byKind('bowl')) this.stand(e.sprite, e.x, e.y, now, 'r', hashStr(e.id) % 4);
+    const tags: Array<{ text: string; cx: number; y: number }> = [];
+    for (const e of byKind('customer')) {
+      const x = motionX(e.x, e.motion, now);
+      const top = this.stand(e.sprite, x, e.y, now, e.facing, hashStr(e.id) % 6);
+      if (top !== null && !e.motion && e.addedByName) tags.push({ text: e.addedByName, cx: x + 7, y: Math.max(2, COUNTER.top - 24 - ((e.stool ?? 0) % 2) * 10) });
+    }
+    for (const e of byKind('cat')) this.stand(e.sprite, motionX(e.x, e.motion, now), e.y, now, e.facing, hashStr(e.id) % 4);
+    if (k.zone === 'outside') head = this.keeper.draw(g, k, now);
+    for (const e of byKind('passerby')) this.stand(e.sprite, motionX(e.x, e.motion, now), e.y, now, e.facing, hashStr(e.id) % 6);
+
+    this.scene.drawForeground(g);
+
+    const lights = pickLights(this.scene.lights(state, now));
+    drawLightPools(g, lights, now);
+    if (state.weather === 'rain') drawWetReflections(g, lights, now, 240);
+    drawGlowHalos(g, lights, now);
+    drawWeather(g, state.weather, now);
+
+    for (const tag of tags) drawTag(g, this.font, tag.text, tag.cx, tag.y);
+    for (const e of state.entities) if (e.say && e.say.until > now) drawBubble(g, this.font, e.say.text, motionX(e.x, e.motion, now) + 7, e.y - 30);
+    if (k.bubble && k.bubble.until > now && head) drawBubble(g, this.font, k.bubble.text, head.x, head.top);
+    else if (k.bubble && k.bubble.until > now && k.zone === 'hidden') drawBubble(g, this.font, k.bubble.text, FIXTURES.door.x + 13, GROUND - 40);
+    drawToasts(g, this.font, this.toasts, now);
+    this.toasts = this.toasts.filter((t) => t.until > now);
+
+    if (this.opts.hud) {
+      const line = `${this.renderMs.toFixed(1)}MS ${state.weather} ${k.mode}@${k.zone} ${k.job?.label ?? ''}${this.presence !== null ? ` ${this.presence} WATCHING` : ''}`.toUpperCase();
+      drawHud(g, this.font, line, connected);
+    } else if (!connected && this.font) {
+      drawHud(g, this.font, 'RECONNECTING', false);
+    }
+    this.blit();
+    this.renderMs = performance.now() - t0;
+  }
+
+  private blit(): void {
+    const s = this.screen;
+    s.imageSmoothingEnabled = false;
+    s.fillStyle = '#07163c';
+    s.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    const scale = Math.max(1, Math.floor(Math.min(this.canvas.width / VIEW.w, this.canvas.height / VIEW.h)));
+    const w = VIEW.w * scale, h = VIEW.h * scale;
+    s.drawImage(this.off, Math.floor((this.canvas.width - w) / 2), Math.floor((this.canvas.height - h) / 2), w, h);
+  }
+}
+
+export { FIXTURE_IDS };

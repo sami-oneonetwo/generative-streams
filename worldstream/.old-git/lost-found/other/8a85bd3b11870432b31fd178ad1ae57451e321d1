@@ -1,0 +1,54 @@
+import { describe, expect, it } from 'vitest';
+import { apply, initialState, motionX, reviveState, type Entity } from '../src/shared/state.js';
+
+const now = 1_000_000;
+const ent = (id: string, kind: Entity['kind'], expiresAt: number): Entity => ({ id, kind, sprite: 'x', x: 0, y: 0, facing: 'r', addedBy: 'world', addedAt: now, expiresAt });
+
+describe('state reducer', () => {
+  it('only accepts fixture states the scene knows', () => {
+    const s = initialState(now);
+    expect(apply(s, { type: 'fixture', id: 'bin', state: 'sideways', at: now })).toBe(s);
+    const next = apply(s, { type: 'fixture', id: 'bin', state: 'fallen', at: now + 1 });
+    expect(next.fixtures.bin).toEqual({ state: 'fallen', since: now + 1 });
+    expect(apply(next, { type: 'fixture_noticed', id: 'bin' }).fixtures.bin.noticed).toBe(true);
+  });
+
+  it('expires entities and bubbles, and returns the same object when nothing changed', () => {
+    let s = initialState(now);
+    s = apply(s, { type: 'add_entity', entity: ent('a', 'flag', now + 10) });
+    s = apply(s, { type: 'add_entity', entity: ent('b', 'cat', now + 1000) });
+    s = apply(s, { type: 'keeper', patch: { bubble: { text: 'hi', until: now + 5 } } });
+    const later = apply(s, { type: 'expire', now: now + 100 });
+    expect(later.entities.map((e) => e.id)).toEqual(['b']);
+    expect(later.keeper.bubble).toBeUndefined();
+    expect(apply(later, { type: 'expire', now: now + 101 })).toBe(later);
+  });
+
+  it('patches with undefined remove keys', () => {
+    let s = initialState(now);
+    s = apply(s, { type: 'keeper', patch: { motion: { fromX: 0, toX: 10, startAt: now, endAt: now + 1000 } } });
+    expect(s.keeper.motion).toBeDefined();
+    s = apply(s, { type: 'keeper', patch: { motion: undefined } });
+    expect('motion' in s.keeper).toBe(false);
+  });
+
+  it('revives flags and the cat from disk but not customers, and shuts the door', () => {
+    let s = initialState(now);
+    s = apply(s, { type: 'add_entity', entity: ent('f', 'flag', now + 99999) });
+    s = apply(s, { type: 'add_entity', entity: ent('c', 'customer', now + 99999) });
+    s = apply(s, { type: 'fixture', id: 'door', state: 'open', at: now });
+    s = apply(s, { type: 'served' });
+    const back = reviveState(JSON.parse(JSON.stringify(s)), now + 5);
+    expect(back.entities.map((e) => e.id)).toEqual(['f']);
+    expect(back.fixtures.door.state).toBe('closed');
+    expect(back.served).toBe(1);
+    expect(reviveState({ version: 1 }, now).version).toBe(2);
+  });
+
+  it('interpolates motion', () => {
+    const m = { fromX: 0, toX: 100, startAt: 0, endAt: 1000 };
+    expect(motionX(5, m, 500)).toBe(50);
+    expect(motionX(5, m, 2000)).toBe(100);
+    expect(motionX(5, undefined, 2000)).toBe(5);
+  });
+});

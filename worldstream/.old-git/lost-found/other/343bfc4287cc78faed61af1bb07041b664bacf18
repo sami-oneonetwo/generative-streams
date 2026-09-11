@@ -1,0 +1,258 @@
+import 'dotenv/config';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { extname, join, normalize, resolve } from 'node:path';
+import { WebSocket, WebSocketServer } from 'ws';
+import type { Atlas } from '../shared/atlas.js';
+import { fill, pick } from '../shared/catalogue.js';
+import { parseCommand } from '../shared/commands.js';
+import { ConfigSchema } from '../shared/config.js';
+import type { ServerMessage } from '../shared/protocol.js';
+import { ChatLog, handleAdmin } from './admin.js';
+import { Brain } from './brain.js';
+import type { IncomingChat } from './ingest.js';
+import { Interpreter, type Outcome } from './interpreter.js';
+import { Keeper } from './keeper.js';
+import { Kick } from './kick/index.js';
+import { log } from './log.js';
+import { Orders } from './orders.js';
+import { Regulars } from './regulars.js';
+import { Store } from './store.js';
+import { Street } from './street.js';
+
+const ROOT = process.cwd();
+const CONFIG_PATH = process.env.WORLDSTREAM_CONFIG ?? join(ROOT, 'config/world.config.json');
+const STATE_DIR = process.env.WORLDSTREAM_STATE_DIR ?? join(ROOT, 'state');
+const cfg = ConfigSchema.parse(JSON.parse(readFileSync(CONFIG_PATH, 'utf8')));
+
+const atlasPath = join(ROOT, 'dist/shop/atlas.json');
+if (!existsSync(atlasPath)) {
+  console.error('dist/shop/atlas.json is missing: run `npm run assets` first');
+  process.exit(1);
+}
+const atlas = JSON.parse(readFileSync(atlasPath, 'utf8')) as Atlas;
+
+const store = new Store(join(STATE_DIR, 'shop.json'));
+const regulars = new Regulars(join(STATE_DIR, 'regulars.json'), cfg.rapport, cfg.rapport.messageCreditMs);
+const chatLog = new ChatLog();
+
+// -- the keeper speaks -------------------------------------------------------------------
+
+let kick: Kick | null = null;
+
+function say(text: string): void {
+  const t = text.trim();
+  if (!t) return;
+  const now = Date.now();
+  store.dispatch({ type: 'keeper', patch: { bubble: { text: t, until: now + cfg.keeper.bubbleMs + Math.min(6000, t.length * 45) } } });
+  log('keeper', `"${t}"`);
+  if (kick) void kick.sayInChat(t);
+}
+
+function toast(text: string): void {
+  broadcast({ type: 'toast', text, at: Date.now() });
+}
+
+const keeper = new Keeper({ store, cfg, cat: atlas, say });
+const orders = new Orders({
+  store, cfg, cat: atlas, keeper,
+  onServed: (o) => {
+    regulars.credit(o.user.id, 5, 'bowl');
+    toast(`${o.user.name}: ${o.dish}`);
+  },
+});
+const street = new Street({ store, cfg, cat: atlas, keeper, say });
+const interpreter = new Interpreter({ store, cfg, cat: atlas, keeper, orders, street, regulars, say });
+const brain = new Brain({
+  cfg, cat: atlas, store, keeper, regulars, interpreter, say,
+  onOutcome: (msg, outcome) => chatLog.push(msg, outcome),
+});
+
+// -- chat in ---------------------------------------------------------------------------------
+
+const greetedThisRun = new Set<string>();
+
+function ingest(msg: IncomingChat): Outcome & { queued?: boolean } {
+  const { first } = regulars.seen(msg.user);
+  store.dispatch({ type: 'chat_seen', at: msg.at });
+  const cmd = parseCommand(msg.content);
+  if (cmd) {
+    const outcome = interpreter.run(cmd, msg);
+    chatLog.push(msg, outcome);
+    if (outcome.reply && !outcome.spoken && kick) void kick.sayInChat(outcome.reply, true);
+    greetedThisRun.add(msg.user.id);
+    return outcome;
+  }
+  if (brain.enqueue(msg)) {
+    chatLog.push(msg, { applied: false, queued: true });
+    greetedThisRun.add(msg.user.id);
+    return { applied: false, queued: true };
+  }
+  // no brain: he still notices a new face
+  const outcome: Outcome = { applied: false };
+  if (!greetedThisRun.has(msg.user.id) && msg.content.trim()) {
+    greetedThisRun.add(msg.user.id);
+    const bank = first ? atlas.lines.greet : atlas.lines.greetBack;
+    const line = pick(bank);
+    if (line) setTimeout(() => say(fill(line, { user: msg.user.name })), 1200);
+    outcome.reply = 'noticed';
+  }
+  chatLog.push(msg, outcome);
+  return outcome;
+}
+
+// -- ticking ---------------------------------------------------------------------------------
+
+setInterval(() => {
+  try {
+    const now = Date.now();
+    street.tick(now);
+    orders.tick(now);
+    keeper.tick(now);
+  } catch (err) {
+    log('tick', 'failed', String(err));
+  }
+}, cfg.keeper.tickMs);
+
+// -- web ---------------------------------------------------------------------------------------
+
+const clients = new Set<WebSocket>();
+let viewers: number | null = null;
+
+function send(ws: WebSocket, m: ServerMessage): void {
+  if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(m));
+}
+
+function broadcast(m: ServerMessage): void {
+  const s = JSON.stringify(m);
+  for (const ws of clients) if (ws.readyState === WebSocket.OPEN) ws.send(s);
+}
+
+let broadcastTimer: NodeJS.Timeout | null = null;
+store.on('change', () => {
+  if (broadcastTimer) return;
+  broadcastTimer = setTimeout(() => {
+    broadcastTimer = null;
+    broadcast({ type: 'state', state: store.state, now: Date.now() });
+  }, 40);
+});
+
+const MIME: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.map': 'application/json' };
+
+function serveFile(res: ServerResponse, file: string): boolean {
+  if (!existsSync(file) || !statSync(file).isFile()) return false;
+  res.writeHead(200, { 'content-type': MIME[extname(file)] ?? 'application/octet-stream', 'cache-control': 'no-cache' });
+  res.end(readFileSync(file));
+  return true;
+}
+
+function isLocal(req: IncomingMessage): boolean {
+  const a = req.socket.remoteAddress ?? '';
+  return a === '127.0.0.1' || a === '::1' || a === '::ffff:127.0.0.1';
+}
+
+async function readJson(req: IncomingMessage): Promise<Record<string, unknown>> {
+  const chunks: Buffer[] = [];
+  for await (const c of req) chunks.push(c as Buffer);
+  const text = Buffer.concat(chunks).toString('utf8');
+  return text ? (JSON.parse(text) as Record<string, unknown>) : {};
+}
+
+const WEB = join(ROOT, 'dist/web');
+const server = createServer(async (req, res) => {
+  const url = new URL(req.url ?? '/', 'http://localhost');
+  try {
+    if (kick && (await kick.route(req, res, url))) return;
+    if (url.pathname === '/dev/chat' && req.method === 'POST') {
+      if (!isLocal(req)) {
+        res.writeHead(403).end();
+        return;
+      }
+      const body = await readJson(req);
+      const name = String(body.username ?? 'viewer').slice(0, 32);
+      const msg: IncomingChat = {
+        id: `mock_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        user: { id: `mock:${name.toLowerCase()}`, name, badges: Array.isArray(body.badges) ? (body.badges as string[]) : [] },
+        content: String(body.content ?? ''),
+        at: Date.now(),
+        source: 'mock',
+      };
+      const outcome = ingest(msg);
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify(outcome));
+      return;
+    }
+    if (url.pathname.startsWith('/admin')) {
+      if (!isLocal(req)) {
+        res.writeHead(403).end();
+        return;
+      }
+      const handled = await handleAdmin(req, res, url, {
+        store, htmlPath: join(ROOT, 'assets/admin.html'), chatLog, keeper, street, regulars, interpreter, ingest, say,
+        kickStatus: () => kick?.getStatus() ?? null,
+        setKickChat: (on) => kick?.setBotReplies(on) ?? null,
+        brain: () => ({ pending: brain.pending, callsThisHour: brain.callsThisHour, enabled: brain.enabled }),
+        shopName: cfg.shop.name,
+      });
+      if (handled) return;
+    }
+    if (url.pathname.startsWith('/shop/')) {
+      const file = resolve(join(ROOT, 'dist/shop', normalize(url.pathname.slice('/shop/'.length))));
+      if (file.startsWith(join(ROOT, 'dist/shop')) && serveFile(res, file)) return;
+    }
+    const rel = url.pathname === '/' ? '/index.html' : url.pathname;
+    const file = resolve(join(WEB, normalize(rel)));
+    if (file.startsWith(WEB) && serveFile(res, file)) return;
+    if (url.pathname === '/' || url.pathname === '/index.html') {
+      res.writeHead(503, { 'content-type': 'text/plain' });
+      res.end('renderer not built yet: run `npm run dev` (or `npm run build`)');
+      return;
+    }
+    res.writeHead(404).end('not found');
+  } catch (err) {
+    log('http', `${req.method} ${url.pathname} failed`, String(err));
+    if (!res.headersSent) res.writeHead(500);
+    res.end();
+  }
+});
+
+const wss = new WebSocketServer({ server, path: '/ws' });
+wss.on('connection', (ws) => {
+  clients.add(ws);
+  send(ws, { type: 'hello', atlas, shopName: cfg.shop.name, keeperName: cfg.shop.keeperName });
+  send(ws, { type: 'state', state: store.state, now: Date.now() });
+  send(ws, { type: 'presence', viewers });
+  ws.on('close', () => clients.delete(ws));
+  ws.on('error', () => clients.delete(ws));
+});
+
+// -- kick ---------------------------------------------------------------------------------------
+
+kick = new Kick({
+  cfg,
+  env: process.env,
+  stateDir: STATE_DIR,
+  ingest: (msg) => void ingest(msg),
+  onLiveStatus: (live) => log('kick', live ? 'stream is live' : 'stream ended'),
+  onFollow: (name) => {
+    if (keeper.free) say(`thanks for the follow, ${name}.`);
+  },
+  onViewersJoined: (_delta, total) => {
+    viewers = total;
+    broadcast({ type: 'presence', viewers });
+  },
+});
+
+server.listen(cfg.port, () => {
+  log('server', `${cfg.shop.name.toLowerCase()} is open at http://localhost:${cfg.port}/  (admin: /admin, mock chat: npm run chat)`);
+  log('server', `brain: ${brain.enabled ? `${cfg.nl.model} (${cfg.nl.mode})` : 'off (no ANTHROPIC_API_KEY or nl.mode off)'}; state in ${STATE_DIR}`);
+  void kick?.bootstrap();
+});
+
+function shutdown(): void {
+  store.save();
+  regulars.save();
+  process.exit(0);
+}
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

@@ -1,0 +1,12 @@
+name: torch
+slot: hand
+dx: 10
+dy: 9
+aliases: fire, flame, flaming torch
+tags: hand, light
+---
+.Y.
+OYO
+.S.
+.S.
+.S.

@@ -1,0 +1,41 @@
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { Regulars } from '../src/server/regulars.js';
+import { meets, shortBy, tierOf } from '../src/shared/rapport.js';
+
+describe('regulars', () => {
+  it('credits a message only every so often, and counts nights', () => {
+    let t = 1_700_000_000_000;
+    const r = new Regulars(join(mkdtempSync(join(tmpdir(), 'reg-')), 'r.json'), { regular: 15, friend: 40 }, 30_000, () => t);
+    const u = { id: 'k:1', name: 'mika', badges: [] };
+    expect(r.seen(u).first).toBe(true);
+    expect(r.seen(u).first).toBe(false);
+    expect(r.get(u.id)!.rapport).toBe(1);
+    t += 30_000;
+    r.seen(u);
+    expect(r.get(u.id)!.rapport).toBe(2);
+    t += 86_400_000;
+    r.seen(u);
+    expect(r.get(u.id)!.days).toBe(2);
+    expect(r.get(u.id)!.rapport).toBe(5);
+    r.credit(u.id, 5, 'bowl');
+    expect(r.get(u.id)!.bowls).toBe(1);
+    expect(r.summary(u.id)).toContain('1 bowl');
+    expect(r.tier(u.id)).toBe('stranger');
+    r.credit(u.id, 30);
+    expect(r.tier(u.id)).toBe('friend');
+  });
+
+  it('tiers and shortfalls', () => {
+    const t = { regular: 15, friend: 40 };
+    expect(tierOf(undefined, t)).toBe('stranger');
+    expect(shortBy(undefined, 'regular', t)).toBe(15);
+    const r = { rapport: 20 } as Parameters<typeof tierOf>[0];
+    expect(tierOf(r, t)).toBe('regular');
+    expect(meets(r, 'regular', t)).toBe(true);
+    expect(meets(r, 'friend', t)).toBe(false);
+    expect(shortBy(r, 'friend', t)).toBe(20);
+  });
+});

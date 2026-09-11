@@ -1,0 +1,14 @@
+name: top_hat
+slot: head
+dx: 2
+dy: -5
+tint: black
+aliases: tophat, fancy hat, gentleman hat, magician hat
+tags: hat, fancy
+---
+..XXXXX..
+..XXXXX..
+..XXXXX..
+..XXXXX..
+..XRRRX..
+XXXXXXXXX

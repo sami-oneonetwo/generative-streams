@@ -1,0 +1,198 @@
+// Turns a Command into what happens in the shop: the checks (cooldowns, the
+// menu, how well he knows you), the state change, and what he says about it.
+// The fast path and the brain both come through here, so the rules are the same.
+import { randomUUID } from 'node:crypto';
+import { fill, findDish, pick, type Catalogue } from '../shared/catalogue.js';
+import { cleanFlagText, HELP_TEXT, type Command } from '../shared/commands.js';
+import type { Config } from '../shared/config.js';
+import { meets, shortBy, type Tier } from '../shared/rapport.js';
+import { FIXTURES, FIXTURE_IDS, FLAG_SLOTS, GROUND, type FixtureId } from '../shared/scene.js';
+import type { Entity } from '../shared/state.js';
+import { isPrivileged, type IncomingChat } from './ingest.js';
+import { waveTask } from './jobs.js';
+import type { Keeper } from './keeper.js';
+import { orderLine, type Orders } from './orders.js';
+import type { Regulars } from './regulars.js';
+import type { Store } from './store.js';
+import type { Street } from './street.js';
+
+export interface InterpreterDeps {
+  store: Store;
+  cfg: Config;
+  cat: Catalogue;
+  keeper: Keeper;
+  orders: Orders;
+  street: Street;
+  regulars: Regulars;
+  /** The keeper speaks: bubble on screen and, when enabled, a line in chat. */
+  say: (text: string) => void;
+  now?: () => number;
+  rnd?: () => number;
+}
+
+export interface Outcome {
+  applied: boolean;
+  /** What to tell the viewer. Spoken lines were already said by the keeper; the rest is for the reply channel. */
+  reply?: string;
+  spoken?: boolean;
+}
+
+const FLAG_KEYS: Record<string, string> = { red: 'f', white: 'm', blue: 'o', yellow: 'k' };
+
+export class Interpreter {
+  private readonly now: () => number;
+  private readonly rnd: () => number;
+  private readonly lastOrder = new Map<string, number>();
+  private readonly lastDish = new Map<string, string>();
+  private readonly lastGreet = new Map<string, number>();
+  private lastAlert = 0;
+  private lastCat = 0;
+
+  constructor(private readonly deps: InterpreterDeps) {
+    this.now = deps.now ?? Date.now;
+    this.rnd = deps.rnd ?? Math.random;
+  }
+
+  private line(key: 'greetBack' | 'full' | 'alerted' | 'alertNothing' | 'notYet' | 'flag' | 'catArrives', vars: Record<string, string>): string {
+    const t = pick(this.deps.cat.lines[key], this.rnd) ?? '';
+    return fill(t, vars);
+  }
+
+  private spoken(text: string): Outcome {
+    this.deps.say(text);
+    return { applied: true, reply: text, spoken: true };
+  }
+
+  private refuse(text: string, spoken = true): Outcome {
+    if (spoken) this.deps.say(text);
+    return { applied: false, reply: text, spoken };
+  }
+
+  private allowed(msg: IncomingChat, need: Tier): boolean {
+    return isPrivileged(msg.user) || meets(this.deps.regulars.get(msg.user.id), need, this.deps.cfg.rapport);
+  }
+
+  run(cmd: Command, msg: IncomingChat): Outcome {
+    const now = this.now();
+    const user = msg.user;
+    const { cfg, cat } = this.deps;
+    switch (cmd.kind) {
+      case 'order': {
+        const open = this.deps.orders.openFor(user.id);
+        if (open) return this.refuse(`${user.name}, yours is coming. ${open.phase === 'eating' ? 'finish that one first.' : 'sit tight.'}`);
+        const last = this.lastOrder.get(user.id) ?? 0;
+        if (!isPrivileged(user) && now - last < cfg.limits.orderCooldownMs) return this.refuse(`${user.name}, you only just ate. give it ${Math.ceil((cfg.limits.orderCooldownMs - (now - last)) / 60_000)} minutes.`);
+        if (this.deps.orders.waiting >= cfg.limits.maxWaiting) return this.refuse(this.line('full', { user: user.name }));
+        let dish = findDish(cat, cmd.dish);
+        if (!dish && cmd.dish && /usual/.test(cmd.dish)) dish = cat.menu.find((d) => d.name === this.lastDish.get(user.id));
+        if (!dish && cmd.dish) return this.refuse(`${user.name}, we don't do ${cmd.dish}. !menu has what we have.`);
+        if (!dish) dish = pick(cat.menu.filter((d) => d.name !== 'tea'), this.rnd) ?? cat.menu[0];
+        this.lastOrder.set(user.id, now);
+        this.lastDish.set(user.id, dish.name);
+        this.deps.orders.place({ id: user.id, name: user.name }, dish.name);
+        const seatsFree = this.deps.orders.freeStools().length > 0;
+        return this.spoken(seatsFree ? orderLine(cat, user.name, dish.name, this.rnd) : this.line('full', { user: user.name }));
+      }
+      case 'menu':
+        return { applied: true, reply: `tonight: ${cat.menu.map((d) => d.name).join(', ')}. !order <dish>` };
+      case 'greet': {
+        const last = this.lastGreet.get(user.id) ?? 0;
+        if (now - last < cfg.limits.greetCooldownMs) return { applied: false };
+        this.lastGreet.set(user.id, now);
+        this.deps.regulars.credit(user.id, 2, 'greeting');
+        const k = this.deps.store.state.keeper;
+        if (this.deps.keeper.free && k.zone !== 'hidden') this.deps.keeper.request(waveTask(this.deps.keeper.ctx(now), `greet:${user.id}`, k.zone === 'inside' ? 'r' : 'l'));
+        return this.spoken(this.line('greetBack', { user: user.name }));
+      }
+      case 'alert': {
+        const id = resolveFixture(cmd.target);
+        if (!id) return this.refuse(`${user.name}, which thing? the bin, the board, the vending machine, the mail, the plants, the lantern or the sign.`, false);
+        if (!isPrivileged(user) && now - this.lastAlert < cfg.limits.alertCooldownMs) return { applied: false };
+        this.lastAlert = now;
+        const s = this.deps.store.state;
+        if (s.fixtures[id].noticed) return this.spoken(`on it, ${user.name}.`);
+        if (!this.deps.street.attend(id, now, true)) return this.refuse(this.line('alertNothing', { user: user.name, thing: FIXTURES[id].label }));
+        this.deps.regulars.credit(user.id, 3, 'help');
+        return this.spoken(this.line('alerted', { user: user.name, thing: FIXTURES[id].label }));
+      }
+      case 'flag': {
+        if (!this.allowed(msg, 'regular')) {
+          const short = shortBy(this.deps.regulars.get(user.id), 'regular', cfg.rapport);
+          return this.refuse(`${this.line('notYet', { user: user.name })} (${short} more to go)`);
+        }
+        const text = cleanFlagText(cmd.text, cfg.limits.flagMaxChars);
+        if (!text) return this.refuse(`${user.name}, letters and numbers only on the flags.`, false);
+        if (cfg.denylist.some((w) => w && text.toLowerCase().includes(w.toLowerCase()))) return this.refuse(`not putting that on my street, ${user.name}.`);
+        const flags = this.deps.store.state.entities.filter((e) => e.kind === 'flag');
+        const mine = flags.find((e) => e.addedBy === user.id);
+        const used = new Set(flags.filter((e) => e !== mine).map((e) => e.x));
+        const slot = mine?.x ?? FLAG_SLOTS.find((x) => !used.has(x));
+        if (slot === undefined || flags.filter((e) => e !== mine).length >= cfg.limits.flags) return this.refuse(`no room by the kerb tonight, ${user.name}.`);
+        const colour = FLAG_KEYS[cmd.colour ?? 'red'] ?? 'f';
+        if (mine) this.deps.store.dispatch({ type: 'remove_entity', id: mine.id });
+        const e: Entity = { id: `flag_${randomUUID().slice(0, 6)}`, kind: 'flag', sprite: 'flag', x: slot, y: GROUND, facing: 'r', addedBy: user.id, addedByName: user.name, addedAt: now, expiresAt: now + cfg.limits.flagTtlMs, text, colour };
+        this.deps.store.dispatch({ type: 'add_entity', entity: e });
+        this.deps.regulars.credit(user.id, 1);
+        return this.spoken(this.line('flag', { user: user.name, text }));
+      }
+      case 'unflag': {
+        const mine = this.deps.store.state.entities.find((e) => e.kind === 'flag' && e.addedBy === user.id);
+        if (!mine) return { applied: false, reply: `${user.name}, you have no flag up.` };
+        this.deps.store.dispatch({ type: 'remove_entity', id: mine.id });
+        return { applied: true, reply: `${user.name}'s flag is down.` };
+      }
+      case 'cat': {
+        if (!this.allowed(msg, 'friend')) {
+          const short = shortBy(this.deps.regulars.get(user.id), 'friend', cfg.rapport);
+          return this.refuse(`${this.line('notYet', { user: user.name })} (${short} more to go)`);
+        }
+        if (this.deps.store.state.entities.some((e) => e.kind === 'cat')) return this.refuse(`there's already a cat about, ${user.name}.`);
+        if (!isPrivileged(user) && now - this.lastCat < cfg.limits.catCooldownMs) return this.refuse(`the cat's had enough visitors for one night, ${user.name}.`);
+        this.lastCat = now;
+        this.deps.street.spawnCat({ id: user.id, name: user.name }, cfg.limits.catTtlMs, now);
+        return this.spoken(this.line('catArrives', { user: user.name }));
+      }
+      case 'shoo': {
+        const cat = this.deps.store.state.entities.find((e) => e.kind === 'cat');
+        if (!cat) return { applied: false, reply: 'no cat here.' };
+        if (cat.addedBy !== user.id && !isPrivileged(user)) return { applied: false, reply: `${user.name}, that's not your cat.` };
+        this.deps.store.dispatch({ type: 'remove_entity', id: cat.id });
+        return this.spoken('off you go.');
+      }
+      case 'tab': {
+        const r = this.deps.regulars.get(user.id);
+        const tier = this.deps.regulars.tier(user.id);
+        const t = cfg.rapport;
+        return { applied: true, reply: `${user.name}: ${tier}. ${r?.bowls ?? 0} bowls, ${r?.days ?? 1} night${(r?.days ?? 1) === 1 ? '' : 's'}, ${r?.rapport ?? 0} points (regular at ${t.regular}, friend at ${t.friend}).` };
+      }
+      case 'help':
+        return { applied: true, reply: HELP_TEXT };
+      case 'weather':
+        if (!isPrivileged(user)) return { applied: false, reply: 'the weather is not up to us.' };
+        this.deps.street.setWeather(cmd.weather, now);
+        return { applied: true, reply: `weather: ${cmd.weather}` };
+      case 'say':
+        if (!isPrivileged(user)) return { applied: false };
+        this.deps.say(cmd.text);
+        return { applied: true, spoken: true, reply: cmd.text };
+      case 'mishap': {
+        if (!isPrivileged(user)) return { applied: false };
+        const id = resolveFixture(cmd.target);
+        if (!id) return { applied: false, reply: `no such thing: ${cmd.target}` };
+        return this.deps.street.mishap(id, now, user.name) ? { applied: true, reply: `${FIXTURES[id].label}: knocked` } : { applied: false, reply: `${FIXTURES[id].label} is already like that` };
+      }
+    }
+  }
+}
+
+/** "the bins", "trash", "vending machine" -> a fixture id. */
+export function resolveFixture(text: string): FixtureId | undefined {
+  const q = text.toLowerCase().replace(/^the\s+/, '').trim();
+  if (!q) return undefined;
+  for (const id of FIXTURE_IDS) {
+    if (id === q) return id;
+    if (FIXTURES[id].aliases.some((a) => a === q)) return id;
+  }
+  for (const id of FIXTURE_IDS) if (FIXTURES[id].aliases.some((a) => q.includes(a))) return id;
+  return undefined;
+}
