@@ -1,0 +1,4 @@
+{"ts":1789617498934,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789617498921,"level":"info","text":"starting with fresh state"}
+{"ts":1789617498944,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789617498943,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}

@@ -1,0 +1,359 @@
+// Rook's muttering: what he says while walking, hammering, waiting and reacting.
+//
+// Two registers, by Sami's call (2026-09-18). Lines viewers have to parse — a request
+// queued, a build finished, a failure, "Wave 3 incoming — 6 walkers" — stay plain,
+// sentence-case status and live in index.ts. Everything here is the lowercase
+// muttering in his own voice, and the voice comes from how Sami actually types
+// (.claude/rook-voice-corpus.md, 343 of his own lines): open on the verb or the
+// want; verdict first, fix in the same breath with "let's" as the hinge; short lines
+// drop the full stop; two-word beats before the substance ("cool cool.", "sorry
+// sorry."); praise by understatement ("ok not bad", "i don't mind this", "boom.");
+// "ok" never "okay"; softeners are "a bit" / "just", hedges are rare and lowercase
+// (tbh, idk, i guess); swearing is shit/fuck only, about three lines in a hundred,
+// always on a verdict or on stakes and never at a person; a stretched word once in a
+// blue moon (juuuust); "man" or "brother" as address, rarely — never mate, my guy,
+// reckon or bloody, none of which he writes; Australian by understatement and
+// spelling, not by slang; no emoji, no lol; an exclamation mark only when something
+// actually worked. Survivor fiction with a real person's mood (tired, brain going in
+// circles, back after a break, it's late) and nothing about the job behind the stream.
+//
+// Zero AI calls: a hand-written pool per moment, drawn with the world rng and never
+// repeating a line still fresh in memory. Templates take {name}, {user}, {wave},
+// {down}; a template whose variable is missing is skipped for that draw.
+import { HOUSE_ID } from '../../shared/safehouseLayout';
+
+export type Moment =
+  | 'walk:build' // heading to a viewer's new build
+  | 'walk:edit' // heading to repaint / resize / redesign something
+  | 'walk:move' // heading to move or turn something
+  | 'walk:repair' // his own round: a scuffed piece
+  | 'walk:rebuild' // his own round: a knocked-down piece
+  | 'walk:preempt' // a viewer request just interrupted his repair
+  | 'work:build'
+  | 'work:repair'
+  | 'wait' // pacing the yard while a design is drawn up
+  | 'idle' // nothing on: nudge chat for ideas
+  | 'idle:empty' // ...and nothing has been built yet
+  | 'idle:paused' // ...and the AI is off: paints and moves only
+  | 'idle:prep' // ...and a wave is under a minute out
+  | 'idle:wave' // ...mid-wave, watching the defenses work
+  | 'idle:late' // ...and it's late where he is
+  | 'wave:minute'
+  | 'wave:ten'
+  | 'wave:cleared'
+  | 'wave:over' // stragglers wandered off
+  | 'wave:fell' // the house went down
+  | 'house:hit' // first damage to the house this wave
+  | 'house:half' // the house under half
+  | 'creature:loose' // a living build just came alive
+  | 'creature:airborne' // ...and it flies
+  | 'creature:rampage' // a rampaging creature is breaking something
+  | 'creature:down' // a creature has been knocked down
+  | 'busy' // someone spoke to him while he was already answering
+  | 'offline' // someone spoke to him and the dialogue model is off
+  | 'missed'; // the model gave him nothing to say
+
+export interface LineVars {
+  name?: string; // a piece, already phrased the way he says it (see speakName)
+  user?: string;
+  wave?: number;
+  down?: number;
+}
+
+export const LINES: Record<Moment, string[]> = {
+  'walk:build': [
+    "right. {user} wants {name}. let's go",
+    "ok. {name}. where's this going",
+    '{name} for {user}. on it',
+    'yeah alright. {name} it is',
+    "let's see if {user}'s idea's any good",
+    'grabbing the good hammer for this one',
+    '{name}. sure. why not',
+    "coming {user}. don't rush me",
+    'ok cool. {name} for {user}. stick with me',
+    "{name}? fuck it let's try",
+    "yep. {name}. i don't mind that",
+  ],
+  'walk:edit': [
+    '{user} wants {name} different. fair',
+    'ok. touching up {name}',
+    'a bit of a makeover for {name}',
+    "{name} again. what've you done to it {user}",
+    "on my way. {name} won't know what hit it",
+    "yeah i don't mind that. {name}, coming up",
+    'ok so {name} needs a bit of a tidy. sure',
+  ],
+  'walk:move': [
+    "moving {name}. hope it's not heavy",
+    "{name}'s going for a walk",
+    'ok {user}. shifting {name}. stand back',
+    'who put {name} there anyway',
+    'right. {name}. over there. got it',
+    'lift with the legs. lift with the legs',
+    "yep. {name} a bit to the left. or wherever {user} said",
+  ],
+  'walk:repair': [
+    'who keeps eating {name} man',
+    "{name}'s broken again. on it",
+    'right. {name}. again.',
+    'ugh. {name} needs doing. grabbing the hammer',
+    'the zombies really hate {name} huh',
+    'nobody asked but {name} is falling apart so',
+    "quick fix on {name}. don't go anywhere",
+    "{name}. juuuust about holding. let's get it sorted",
+    'ok so {name} is a bit chewed. not the end of the world',
+  ],
+  'walk:rebuild': [
+    '{name} is gone. fine. building it again',
+    'ok {name} got flattened. not having that',
+    'rebuilding {name} from the notes. again',
+    'they knocked {name} down. cool cool. building it again',
+    '{name}. back from the dead in a minute',
+    "{name}'s gone. it's not the end of the world. we start again",
+  ],
+  'walk:preempt': [
+    'hang on. someone wants something',
+    'ok pausing that. {user} needs me',
+    'yep yep. coming {user}',
+    'one sec. chat first, fixing later',
+    "alright. {user} what've you got",
+    "sorry sorry. {user} first. i'll come back to this",
+  ],
+  'work:build': [
+    "this bit's fiddly",
+    'hold on. nearly',
+    'juuuust about',
+    'looks alright so far tbh',
+    "measure once. cut twice. that's the saying right",
+    "if this falls over it's on you {user}",
+    "hmm. that's not straight. eh. it's fine",
+    'a bit of tape. a bit of hope',
+    'ok not bad. this is coming together',
+    'hammer. nail. hammer. nail. living the dream',
+    "brain's a bit tired. going in circles on this bit. stick with me",
+    'where are we at. oh right. this',
+  ],
+  'work:repair': [
+    'who designed this. oh. me',
+    'hold still',
+    "this'll do. it won't. but it'll do",
+    'good as new. ish',
+    "if they'd just stop hitting it",
+    'there. no. there. ok',
+    'a bit more. a bit more. yep',
+    'zombie teeth marks. lovely',
+    'why do they always go for the same bit',
+    "tape's holding. don't ask me how",
+    "it's not perfect but let's move on with it",
+  ],
+  wait: [
+    "drawing up {user}'s thing. having a wander",
+    "no rush. it's cooking",
+    'pacing helps. allegedly',
+    "ok while that's being drawn up. stretch the legs",
+    'thinking. sort of. mostly walking',
+    'what did {user} ask for again. right. yep',
+    "designing takes a minute. don't go anywhere",
+  ],
+  idle: [
+    'cool cool. nothing on fire. what are we building?',
+    "quiet. don't trust it.",
+    'so. ideas? anyone?',
+    'someone say something. what do we want out here',
+    "chat i'm standing around here. give me a job",
+    'we need more turrets tbh. or a duck. either',
+    "ok what's the dumbest thing we could build right now",
+    "nothing's broken. that's suspicious",
+    "i'd kill for a coffee",
+    'yeah so this is me. standing on a porch. waiting for you lot',
+    'what do we think. shed? tower? big weird animal?',
+    "where are we at chat. what's next",
+    'thoughts? anyone? no? cool',
+    "let's build something. anything. i'm not fussy",
+  ],
+  'idle:empty': [
+    'nothing out here yet. anyone got an idea',
+    'blank yard. be a shame to waste it',
+    "first one to say something gets it built. that's the rule",
+    'empty lot. big hammer. go on',
+    "let's go. someone name a thing and i'll build it",
+  ],
+  'idle:paused': [
+    'no new builds right now. can still paint stuff. move stuff. say the word',
+    "ai's having a lie down. moving and painting still works",
+    "can't design anything new for a bit. want anything moved?",
+    'quiet on the building front. paint jobs are free though',
+  ],
+  'idle:prep': [
+    "wave's coming. not starting anything big now",
+    'ok. deep breath. nearly time',
+    'get your turrets sorted chat',
+    "right where's my hammer. wave soon",
+  ],
+  'idle:wave': [
+    'come on then',
+    "turret's earning its keep",
+    "that's a lot of teeth",
+    'not today',
+    'hold. hold. hoooold',
+    'fence better hold',
+    'go on. go on. GOGOGO',
+  ],
+  'idle:late': [
+    "it's late. why am i still up. why are you",
+    "brain's tired atm. going in circles",
+    'yawn. sorry. long day',
+    'bedtime after this wave i think',
+  ],
+  'wave:minute': [
+    'one minute. get something up',
+    'minute out. anyone got a turret in them',
+    'ok one minute. deep breath',
+    'sixty seconds. finishing what i can',
+  ],
+  'wave:ten': [
+    'here we go. wave {wave}.',
+    'ten seconds. right.',
+    'ok ok. wave {wave}. here we go',
+    'brace. here they come',
+    'oh here we go',
+  ],
+  'wave:cleared': [
+    "boom. that's wave {wave}",
+    '{down} down. love to see it',
+    'done. wave {wave}. nice one chat',
+    "that's the lot. not bad",
+    'ok not bad. that went alright',
+    "phew. {down} of them. that's enough of that",
+    'wave {wave}. {down} down. working so well',
+    'looking good chat. wave {wave} done',
+  ],
+  'wave:over': [
+    "and they've wandered off. cool. bye then",
+    'stragglers got bored. same',
+    "ok that's over. sort of",
+  ],
+  'wave:fell': [
+    "well that's shit",
+    'the house. they got the house. right. house first',
+    "ok. not great. rebuilding. don't say anything",
+    'yeah. that happened. back to wave 1. fine.',
+    "it's not the end of the world. it's just the house. ok it's a bit the end of the world",
+  ],
+  'house:hit': [
+    'hey. not the house',
+    "they're on the house. don't love that",
+    'hey. HEY. off the house',
+    'house is taking hits. someone shoot something',
+  ],
+  'house:half': [
+    'house is really hurt now. this is bad',
+    'ok the house is not ok',
+    'shit. house is half gone. hold on',
+  ],
+  'creature:loose': [
+    "and it's off. good luck everyone",
+    'it moves. why does it move',
+    'ok {name} is loose. this was your idea chat',
+    "{name}'s alive. cool cool. not my problem",
+    "there it goes. don't say i didn't warn you",
+  ],
+  'creature:airborne': [
+    'it flies. of course it flies',
+    "ok {name} is airborne. can't fix that with a hammer",
+    "look up. no don't. too late",
+    "{name}'s up. nothing i can do about it now",
+    'and it just. goes up. cool cool',
+  ],
+  'creature:rampage': [
+    "{name}'s breaking stuff again",
+    'who let {name} in',
+    'hey. {name}. no.',
+    '{name} is having a day',
+    "yep that's {name} on the fence. cool",
+    'can someone deal with {name} please',
+  ],
+  'creature:down': [
+    "and {name}'s had it",
+    "{name} is down. that's a shame. is it though",
+    'rip {name}. back to the notes',
+    'ok {name} is out. quiet at last',
+  ],
+  busy: ['hang on {user}. one at a time', 'yep {user}. one sec', 'sorry sorry {user}. one at a time'],
+  offline: [
+    "can't chat right now {user}. ai's off. can still paint and move stuff",
+    "not now {user}. brain's off. paint and move stuff still works",
+    "{user} i'd love to chat but the talky bit's switched off. hammer still works",
+  ],
+  missed: ["didn't catch that {user}. go again", 'sorry {user}. what?', 'hm? say again {user}', '{user} try again. lost that one'],
+};
+
+/** Mirrors engine.say's bubble lifetime so the world knows when a line has cleared. */
+export const ttlFor = (text: string): number => Math.max(4000, Math.min(12_000, 2500 + text.length * 60));
+
+/**
+ * A piece the way he'd say it mid-sentence: "the house", "the fence", "the scrap
+ * turret", "Rook's car". Possessive names keep their capital and take no article.
+ */
+export function speakName(o: { id: string; blueprint: { name: string } } | undefined): string {
+  if (!o) return 'that';
+  if (o.id === HOUSE_ID) return 'the house';
+  if (/^fence-/.test(o.id)) return 'the fence';
+  const name = o.blueprint.name.trim().replace(/[.!]+$/, '');
+  if (!name) return 'that';
+  if (/^\w+'s\b/.test(name)) return name; // "Rook's car"
+  if (/^(the|a|an)\s/i.test(name)) return `${name[0].toLowerCase()}${name.slice(1)}`; // "The Order Table" → "the Order Table"
+  if (/^[A-Z]{2,}\b/.test(name)) return `the ${name}`; // "RC car" keeps its capitals
+  return `the ${name[0].toLowerCase()}${name.slice(1)}`;
+}
+
+const VARS = ['name', 'user', 'wave', 'down'] as const;
+const usable = (template: string, vars: LineVars) =>
+  VARS.every((v) => !template.includes(`{${v}}`) || vars[v] !== undefined);
+
+export function render(template: string, vars: LineVars): string {
+  return template.replace(/\{(name|user|wave|down)\}/g, (_, key: keyof LineVars) => String(vars[key] ?? ''));
+}
+
+/** Every line a moment could produce with these variables; tests check membership against it. */
+export function renderedPool(moment: Moment, vars: LineVars): string[] {
+  return LINES[moment].filter((t) => usable(t, vars)).map((t) => render(t, vars));
+}
+
+/** Draw a line for the moment, skipping anything he said recently while the pool allows. */
+export function pickLine(moment: Moment, vars: LineVars, rng: () => number, recent: readonly string[]): string {
+  const pool = LINES[moment].filter((t) => usable(t, vars));
+  const all = pool.length ? pool : LINES[moment];
+  const rendered = all.map((t) => render(t, vars));
+  let fresh = rendered.filter((l) => !recent.includes(l));
+  if (!fresh.length) fresh = rendered.filter((l) => l !== recent.at(-1));
+  if (!fresh.length) fresh = rendered;
+  return fresh[Math.min(fresh.length - 1, Math.floor(rng() * fresh.length))];
+}
+
+/** Talking to him by name, as opposed to a request the parser or the designer should get. */
+export const addressesRook = (text: string): boolean => /\brook\b/i.test(text);
+export const looksLikeRequest = (text: string): boolean =>
+  /\b(build|make|paint|move|turn|rotate|repair|rebuild|fix|equip|add|place|put|create|colou?r|recolou?r|resize|bigger|smaller|taller|shorter|undo|redesign|spawn|shift|scale)\b/i.test(
+    text,
+  );
+
+export interface IdleContext {
+  canDesign: boolean; // AI available, not paused, allowance left
+  creations: number; // community pieces standing
+  combatPaused: boolean;
+  phase: 'prep' | 'wave';
+  prepLeftMs: number;
+  zombies: number;
+  hour: number; // local hour where the server runs
+  rng: () => number;
+}
+/** What a quiet moment is about, most pressing first. */
+export function idleMoment(c: IdleContext): Moment {
+  if (!c.combatPaused && c.phase === 'wave' && c.zombies > 0) return 'idle:wave';
+  if (!c.combatPaused && c.phase === 'prep' && c.prepLeftMs < 60_000) return 'idle:prep';
+  if (!c.canDesign) return 'idle:paused';
+  if (c.creations === 0) return 'idle:empty';
+  if ((c.hour >= 22 || c.hour < 5) && c.rng() < 0.4) return 'idle:late';
+  return 'idle';
+}

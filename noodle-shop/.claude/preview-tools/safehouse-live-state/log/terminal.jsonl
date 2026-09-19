@@ -1,0 +1,69 @@
+{"ts":1789521093790,"level":"info","text":"starting with fresh state"}
+{"ts":1789521093795,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789521093801,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789521093801,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789521110343,"level":"info","text":"[rook] Got your idea, live-smoke. It's in the queue."}
+{"ts":1789521158435,"level":"info","text":"[rook] Rolling up a stilted duck-shaped lookout: chunky wooden legs, ladder up the tail end, a railed deck on its back and a big yellow duck head keeping watch."}
+{"ts":1789521182466,"level":"info","text":"[rook] Finished Quackpost Duck Watchtower, suggested by live-smoke."}
+{"ts":1789521265274,"level":"info","text":"[rook] Got your idea, live-smoke. It's in the queue."}
+{"ts":1789521296709,"level":"info","text":"[rook] Repainting the duck in rosy pinks while all the timber legs, beams and decks stay weathered brown. Shape untouched."}
+{"ts":1789521308725,"level":"info","text":"[rook] Finished Quackpost Duck Watchtower, suggested by live-smoke."}
+{"ts":1789521347523,"level":"info","text":"[rook] Got your idea, live-smoke. It's in the queue."}
+{"ts":1789521438995,"level":"info","text":"[rook] Design failed: This operation was aborted"}
+{"ts":1789521749274,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789521749279,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789521749284,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789521749284,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789521810890,"level":"info","text":"[rook] Got your idea, live-smoke. It's in the queue."}
+{"ts":1789521879565,"level":"info","text":"[rook] Here's the plan: a domed green-framed shell with pale blue scute panels, stubby flipper legs, a peeking head and a back door for the gardener."}
+{"ts":1789521891583,"level":"info","text":"[rook] Finished Tortoise Shell Greenhouse, suggested by live-smoke."}
+{"ts":1789521979579,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789521979586,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789521979591,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789521979591,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789522015345,"level":"info","text":"[rook] Got your idea, dave. It's in the queue."}
+{"ts":1789522078803,"level":"info","text":"[rook] Laid out a sandbagged twin-barrel defense turret with armored housing, optic and side ammo crate — static sculpture, no moving parts."}
+{"ts":1789522092009,"level":"info","text":"[rook] Finished Sandbag Twin-Barrel Defense Turret, suggested by dave."}
+{"ts":1789524492519,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789524492524,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789524492529,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789524492529,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789524735176,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789524735183,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789524735189,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789524735189,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789534541156,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789534541164,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789534541170,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789534541170,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789607329641,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789607329647,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789607329653,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789607329653,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789607430845,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789607430855,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789607430860,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789607430860,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789608127098,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789608127107,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789608127112,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789608127112,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789609210666,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789609210674,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789609210680,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789609210680,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789609654308,"level":"info","text":"[rook] Got your idea, sami-test. It's in the queue."}
+{"ts":1789609701323,"level":"warn","text":"safehouse generation failed: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"regex\",\n    \"pattern\": \"/^#[0-9a-fA-F]{6}$/\",\n    \"path\": [\n      \"blueprint\",\n      \"parts\",\n      19,\n      \"color\"\n    ],\n    \"message\": \"Invalid string: must match pattern /^#[0-9a-fA-F]{6}$/\"\n  }\n]"}
+{"ts":1789609701660,"level":"info","text":"[rook] I could not generate a valid design. Try rephrasing or simplifying the request."}
+{"ts":1789609913860,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789609913871,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789609913877,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789609913877,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789617159445,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789617159454,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789617159462,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789617159463,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789623845255,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789623845271,"level":"info","text":"listening on http://localhost:4411 (renderer: /, admin: /admin)"}
+{"ts":1789623845265,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789623845271,"level":"info","text":"kick configured but not connected — connect from /admin"}

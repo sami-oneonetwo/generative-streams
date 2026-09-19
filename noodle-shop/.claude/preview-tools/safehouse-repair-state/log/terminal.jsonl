@@ -1,0 +1,47 @@
+{"ts":1789616494458,"level":"info","text":"starting with fresh state"}
+{"ts":1789616494469,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789616494478,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789616494478,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789616508374,"level":"info","text":"[rook] Got your idea, mover. It's in the queue."}
+{"ts":1789616509018,"level":"info","text":"[rook] Moving it—no AI call needed."}
+{"ts":1789616530053,"level":"info","text":"[rook] Finished Barricade, suggested by mover."}
+{"ts":1789616530115,"level":"info","text":"[rook] Got your idea, driver. It's in the queue."}
+{"ts":1789616531060,"level":"info","text":"[rook] Turning it—no AI call needed."}
+{"ts":1789616559611,"level":"info","text":"[rook] Finished Rook's car, suggested by driver."}
+{"ts":1789616559688,"level":"info","text":"[rook] Got your idea, painter. It's in the queue."}
+{"ts":1789616560614,"level":"info","text":"[rook] A quick edit—no AI call needed."}
+{"ts":1789616569129,"level":"info","text":"[rook] Finished Rook's house, suggested by painter."}
+{"ts":1789616569198,"level":"info","text":"[rook] Got your idea, builder. It's in the queue."}
+{"ts":1789616570132,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789616591170,"level":"info","text":"[rook] Finished Street barricade, suggested by builder."}
+{"ts":1789616591221,"level":"info","text":"[rook] Ground-level builds only for now. Choose a free ground spot in the neighborhood."}
+{"ts":1789616629746,"level":"info","text":"[rook] Heading over to patch up Fence section 29."}
+{"ts":1789616636757,"level":"info","text":"[rook] Patched up Fence section 29."}
+{"ts":1789616642273,"level":"info","text":"[rook] Heading over to patch up Fence section 28."}
+{"ts":1789616648785,"level":"info","text":"[rook] Patched up Fence section 28."}
+{"ts":1789616673654,"level":"info","text":"[rook] Got your idea, mover. It's in the queue."}
+{"ts":1789616674350,"level":"info","text":"[rook] Moving it—no AI call needed."}
+{"ts":1789616698878,"level":"info","text":"[rook] Finished Barricade, suggested by mover."}
+{"ts":1789616698948,"level":"info","text":"[rook] Got your idea, driver. It's in the queue."}
+{"ts":1789616699883,"level":"info","text":"[rook] Turning it—no AI call needed."}
+{"ts":1789616727936,"level":"info","text":"[rook] Finished Rook's car, suggested by driver."}
+{"ts":1789616728016,"level":"info","text":"[rook] Got your idea, painter. It's in the queue."}
+{"ts":1789616728939,"level":"info","text":"[rook] A quick edit—no AI call needed."}
+{"ts":1789616737454,"level":"info","text":"[rook] Finished Rook's house, suggested by painter."}
+{"ts":1789616737529,"level":"info","text":"[rook] Got your idea, builder. It's in the queue."}
+{"ts":1789616738460,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789616766512,"level":"info","text":"[rook] Finished Street barricade, suggested by builder."}
+{"ts":1789616766526,"level":"info","text":"[rook] Ground-level builds only for now. Choose a free ground spot in the neighborhood."}
+{"ts":1789616803332,"level":"info","text":"[rook] Got your idea, mover. It's in the queue."}
+{"ts":1789616804085,"level":"info","text":"[rook] Moving it—no AI call needed."}
+{"ts":1789616824123,"level":"info","text":"[rook] Finished Barricade, suggested by mover."}
+{"ts":1789616824172,"level":"info","text":"[rook] Got your idea, driver. It's in the queue."}
+{"ts":1789616825126,"level":"info","text":"[rook] Turning it—no AI call needed."}
+{"ts":1789616853179,"level":"info","text":"[rook] Finished Rook's car, suggested by driver."}
+{"ts":1789616853194,"level":"info","text":"[rook] Got your idea, painter. It's in the queue."}
+{"ts":1789616854183,"level":"info","text":"[rook] A quick edit—no AI call needed."}
+{"ts":1789616862697,"level":"info","text":"[rook] Finished Rook's house, suggested by painter."}
+{"ts":1789616862713,"level":"info","text":"[rook] Got your idea, builder. It's in the queue."}
+{"ts":1789616863698,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789616885243,"level":"info","text":"[rook] Finished Street barricade, suggested by builder."}
+{"ts":1789616885255,"level":"info","text":"[rook] Ground-level builds only for now. Choose a free ground spot in the neighborhood."}

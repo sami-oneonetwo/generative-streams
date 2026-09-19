@@ -1,0 +1,8 @@
+{"ts":1789687212339,"level":"info","text":"starting with fresh state"}
+{"ts":1789687212358,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789687212387,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789687212386,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789687291841,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789687291834,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789687291847,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789687291847,"level":"info","text":"kick configured but not connected — connect from /admin"}

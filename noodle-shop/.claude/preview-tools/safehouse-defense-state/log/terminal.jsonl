@@ -1,0 +1,16 @@
+{"ts":1789529063205,"level":"info","text":"starting with fresh state"}
+{"ts":1789529063211,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789529063220,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789529063220,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789529096650,"level":"info","text":"[rook] Got your idea, defender-one. It's in the queue."}
+{"ts":1789529097296,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789529124847,"level":"info","text":"[rook] Finished Street barricade, suggested by defender-one."}
+{"ts":1789529124986,"level":"info","text":"[rook] Got your idea, defender-two. It's in the queue."}
+{"ts":1789529125850,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789529141384,"level":"info","text":"[rook] Finished Scrap turret, suggested by defender-two."}
+{"ts":1789529276726,"level":"info","text":"[rook] Got your idea, wreck-test. It's in the queue."}
+{"ts":1789529277697,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789529321267,"level":"info","text":"[rook] Finished Street barricade, suggested by wreck-test."}
+{"ts":1789529375416,"level":"info","text":"[rook] Got your idea, rebuild-test. It's in the queue."}
+{"ts":1789529376377,"level":"info","text":"[rook] A quick edit—no AI call needed."}
+{"ts":1789529419459,"level":"info","text":"[rook] Finished Street barricade, suggested by rebuild-test."}

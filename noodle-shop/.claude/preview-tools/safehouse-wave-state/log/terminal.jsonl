@@ -1,0 +1,27 @@
+{"ts":1789623545792,"level":"info","text":"starting with fresh state"}
+{"ts":1789623545814,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789623545815,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789623545806,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789623559658,"level":"info","text":"[rook] Got your idea, gunner. It's in the queue."}
+{"ts":1789623560358,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789623590412,"level":"info","text":"[rook] Finished Scrap turret, suggested by gunner."}
+{"ts":1789623590497,"level":"info","text":"[rook] Got your idea, gunner2. It's in the queue."}
+{"ts":1789623591415,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789623608440,"level":"info","text":"[rook] Finished Scrap turret, suggested by gunner2."}
+{"ts":1789623608950,"level":"info","text":"wave: Wave 1 incoming — 4 walkers."}
+{"ts":1789623608950,"level":"info","text":"[rook] Wave 1 incoming — 4 walkers."}
+{"ts":1789623648030,"level":"info","text":"[rook] Heading over to patch up Fence section 20."}
+{"ts":1789623692624,"level":"info","text":"repair set aside (Fence section 20): That creation changed before this edit could finish. Please try again."}
+{"ts":1789623698639,"level":"info","text":"[rook] Heading over to patch up Fence section 19."}
+{"ts":1789623710652,"level":"info","text":"repair set aside (Fence section 19): That creation changed before this edit could finish. Please try again."}
+{"ts":1789623764755,"level":"info","text":"wave: The stragglers shambled off. Wave 1 is over."}
+{"ts":1789623764755,"level":"info","text":"[rook] The stragglers shambled off. Wave 1 is over."}
+{"ts":1789623802466,"level":"info","text":"state loaded from world-safehouse.json"}
+{"ts":1789623802478,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789623802479,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789623802473,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789623803513,"level":"info","text":"[rook] Fence section 20 is down. Rebuilding it from my notes."}
+{"ts":1789623824536,"level":"info","text":"wave: Wave 5 incoming — 8 walkers, 2 runners, 1 brute."}
+{"ts":1789623824537,"level":"info","text":"[rook] Wave 5 incoming — 8 walkers, 2 runners, 1 brute."}
+{"ts":1789623854103,"level":"info","text":"[rook] Rebuilt Fence section 20."}
+{"ts":1789623860133,"level":"info","text":"[rook] Fence section 19 is down. Rebuilding it from my notes."}

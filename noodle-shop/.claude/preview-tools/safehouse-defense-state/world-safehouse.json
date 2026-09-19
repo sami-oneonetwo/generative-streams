@@ -1,0 +1,962 @@
+{
+  "version": 3,
+  "combat": {
+    "paused": true,
+    "time": 55613,
+    "nextSpawn": 90092,
+    "sequence": 34,
+    "kills": 8,
+    "zombies": [
+      {
+        "id": "z9",
+        "position": {
+          "x": -17.9993,
+          "z": 7
+        },
+        "health": 60,
+        "facing": 1.5707963267948966,
+        "attackAt": 44540,
+        "path": [
+          {
+            "x": -17.5,
+            "z": 7
+          },
+          {
+            "x": -17,
+            "z": 7
+          },
+          {
+            "x": -16.5,
+            "z": 7
+          },
+          {
+            "x": -16,
+            "z": 7
+          },
+          {
+            "x": -15.5,
+            "z": 7
+          },
+          {
+            "x": -15,
+            "z": 7
+          },
+          {
+            "x": -14.5,
+            "z": 7
+          },
+          {
+            "x": -14,
+            "z": 7
+          },
+          {
+            "x": -13.5,
+            "z": 7
+          },
+          {
+            "x": -13,
+            "z": 7
+          },
+          {
+            "x": -12.5,
+            "z": 7
+          },
+          {
+            "x": -12,
+            "z": 7
+          },
+          {
+            "x": -11.5,
+            "z": 7
+          },
+          {
+            "x": -11,
+            "z": 7
+          },
+          {
+            "x": -10.5,
+            "z": 7
+          },
+          {
+            "x": -10,
+            "z": 7
+          },
+          {
+            "x": -9.5,
+            "z": 7
+          },
+          {
+            "x": -9,
+            "z": 7
+          },
+          {
+            "x": -8.5,
+            "z": 7
+          },
+          {
+            "x": -8,
+            "z": 7
+          },
+          {
+            "x": -7.5,
+            "z": 7
+          },
+          {
+            "x": -7,
+            "z": 7
+          },
+          {
+            "x": -6.5,
+            "z": 7
+          },
+          {
+            "x": -6,
+            "z": 7
+          },
+          {
+            "x": -5.5,
+            "z": 7
+          },
+          {
+            "x": -5,
+            "z": 7
+          },
+          {
+            "x": -4.5,
+            "z": 7
+          },
+          {
+            "x": -4,
+            "z": 7
+          },
+          {
+            "x": -3.5,
+            "z": 7
+          },
+          {
+            "x": -3,
+            "z": 7
+          },
+          {
+            "x": -2.5,
+            "z": 7
+          },
+          {
+            "x": -2,
+            "z": 7
+          },
+          {
+            "x": -1.5,
+            "z": 7
+          },
+          {
+            "x": -1,
+            "z": 7
+          },
+          {
+            "x": -0.5,
+            "z": 7
+          },
+          {
+            "x": 0,
+            "z": 7
+          },
+          {
+            "x": 0.5,
+            "z": 7
+          },
+          {
+            "x": 1,
+            "z": 7
+          },
+          {
+            "x": 1.5,
+            "z": 7
+          },
+          {
+            "x": 2,
+            "z": 7
+          },
+          {
+            "x": 2.5,
+            "z": 7
+          },
+          {
+            "x": 3,
+            "z": 7
+          },
+          {
+            "x": 3.5,
+            "z": 7
+          },
+          {
+            "x": 4,
+            "z": 7
+          },
+          {
+            "x": 4.5,
+            "z": 7
+          },
+          {
+            "x": 4.5,
+            "z": 7.5
+          },
+          {
+            "x": 4.5,
+            "z": 8
+          },
+          {
+            "x": 4.5,
+            "z": 8.5
+          },
+          {
+            "x": 4.5,
+            "z": 9
+          },
+          {
+            "x": 4.5,
+            "z": 9.5
+          },
+          {
+            "x": 4.5,
+            "z": 10
+          },
+          {
+            "x": 4.5,
+            "z": 10.5
+          },
+          {
+            "x": 4.5,
+            "z": 11
+          }
+        ],
+        "replanAt": 59612,
+        "targetId": "7b04422d-2a51-428b-ba16-79dc7e2069f1"
+      },
+      {
+        "id": "z34",
+        "position": {
+          "x": -19.3243,
+          "z": 5
+        },
+        "health": 60,
+        "facing": 1.5707963267948966,
+        "attackAt": 46092,
+        "path": [
+          {
+            "x": -19,
+            "z": 5
+          },
+          {
+            "x": -18.5,
+            "z": 5
+          },
+          {
+            "x": -18,
+            "z": 5
+          },
+          {
+            "x": -17.5,
+            "z": 5
+          },
+          {
+            "x": -17,
+            "z": 5
+          },
+          {
+            "x": -16.5,
+            "z": 5
+          },
+          {
+            "x": -16,
+            "z": 5
+          },
+          {
+            "x": -15.5,
+            "z": 5
+          },
+          {
+            "x": -15,
+            "z": 5
+          },
+          {
+            "x": -14.5,
+            "z": 5
+          },
+          {
+            "x": -14,
+            "z": 5
+          },
+          {
+            "x": -13.5,
+            "z": 5
+          },
+          {
+            "x": -13,
+            "z": 5
+          },
+          {
+            "x": -12.5,
+            "z": 5
+          },
+          {
+            "x": -12,
+            "z": 5
+          },
+          {
+            "x": -11.5,
+            "z": 5
+          },
+          {
+            "x": -11,
+            "z": 5
+          },
+          {
+            "x": -10.5,
+            "z": 5
+          },
+          {
+            "x": -10,
+            "z": 5
+          },
+          {
+            "x": -9.5,
+            "z": 5
+          },
+          {
+            "x": -9,
+            "z": 5
+          },
+          {
+            "x": -8.5,
+            "z": 5
+          },
+          {
+            "x": -8,
+            "z": 5
+          },
+          {
+            "x": -7.5,
+            "z": 5
+          },
+          {
+            "x": -7,
+            "z": 5
+          },
+          {
+            "x": -6.5,
+            "z": 5
+          },
+          {
+            "x": -6,
+            "z": 5
+          },
+          {
+            "x": -5.5,
+            "z": 5
+          },
+          {
+            "x": -5,
+            "z": 5
+          },
+          {
+            "x": -4.5,
+            "z": 5
+          },
+          {
+            "x": -4,
+            "z": 5
+          },
+          {
+            "x": -3.5,
+            "z": 5
+          },
+          {
+            "x": -3,
+            "z": 5
+          },
+          {
+            "x": -2.5,
+            "z": 5
+          },
+          {
+            "x": -2,
+            "z": 5
+          },
+          {
+            "x": -1.5,
+            "z": 5
+          },
+          {
+            "x": -1,
+            "z": 5
+          },
+          {
+            "x": -0.5,
+            "z": 5
+          },
+          {
+            "x": 0,
+            "z": 5
+          },
+          {
+            "x": 0.5,
+            "z": 5
+          },
+          {
+            "x": 1,
+            "z": 5
+          },
+          {
+            "x": 1.5,
+            "z": 5
+          },
+          {
+            "x": 2,
+            "z": 5
+          },
+          {
+            "x": 2.5,
+            "z": 5
+          },
+          {
+            "x": 3,
+            "z": 5
+          },
+          {
+            "x": 3.5,
+            "z": 5
+          },
+          {
+            "x": 4,
+            "z": 5
+          },
+          {
+            "x": 4.5,
+            "z": 5
+          },
+          {
+            "x": 4.5,
+            "z": 5.5
+          },
+          {
+            "x": 4.5,
+            "z": 6
+          },
+          {
+            "x": 4.5,
+            "z": 6.5
+          },
+          {
+            "x": 4.5,
+            "z": 7
+          },
+          {
+            "x": 4.5,
+            "z": 7.5
+          },
+          {
+            "x": 4.5,
+            "z": 8
+          },
+          {
+            "x": 4.5,
+            "z": 8.5
+          },
+          {
+            "x": 4.5,
+            "z": 9
+          },
+          {
+            "x": 4.5,
+            "z": 9.5
+          },
+          {
+            "x": 4.5,
+            "z": 10
+          },
+          {
+            "x": 4.5,
+            "z": 10.5
+          },
+          {
+            "x": 4.5,
+            "z": 11
+          }
+        ],
+        "replanAt": 57106,
+        "targetId": "7b04422d-2a51-428b-ba16-79dc7e2069f1"
+      }
+    ],
+    "shots": [],
+    "archive": [
+      {
+        "id": "ddbce2ff-91fd-4293-aca5-d8e7d846be1c",
+        "revision": 1,
+        "blueprint": {
+          "name": "Street barricade",
+          "description": "Explicit defense test fixture",
+          "parts": [
+            {
+              "shape": "box",
+              "position": [
+                0,
+                0.9,
+                0
+              ],
+              "size": [
+                3.5,
+                1.8,
+                0.35
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "color": "#94815e"
+            },
+            {
+              "shape": "box",
+              "position": [
+                -1.5,
+                0.85,
+                0.2
+              ],
+              "size": [
+                0.2,
+                1.7,
+                0.6
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "color": "#6f684e"
+            },
+            {
+              "shape": "box",
+              "position": [
+                1.5,
+                0.85,
+                0.2
+              ],
+              "size": [
+                0.2,
+                1.7,
+                0.6
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "color": "#6f684e"
+            }
+          ]
+        },
+        "position": {
+          "x": 3,
+          "z": 13
+        },
+        "footprint": {
+          "width": 3.5,
+          "depth": 1
+        },
+        "createdBy": "defender-one",
+        "editedBy": "defender-one",
+        "createdAt": 1789529097292,
+        "role": "barrier",
+        "health": 0,
+        "maxHealth": 240,
+        "damageRevision": 30,
+        "lifecycle": 2,
+        "nextShotAt": 1000,
+        "destroyedAt": 16787
+      }
+    ]
+  },
+  "targets": [
+    {
+      "userId": "dev:defender-one",
+      "objectId": "ddbce2ff-91fd-4293-aca5-d8e7d846be1c"
+    },
+    {
+      "userId": "dev:defender-two",
+      "objectId": "7b04422d-2a51-428b-ba16-79dc7e2069f1"
+    },
+    {
+      "userId": "dev:wreck-test",
+      "objectId": "62e35936-57a7-4597-96e1-3e58ab9f6496"
+    },
+    {
+      "userId": "dev:rebuild-test",
+      "objectId": "62e35936-57a7-4597-96e1-3e58ab9f6496"
+    }
+  ],
+  "idlePath": [],
+  "generationPaused": false,
+  "callsRemaining": 20,
+  "objects": [
+    {
+      "id": "7b04422d-2a51-428b-ba16-79dc7e2069f1",
+      "revision": 1,
+      "blueprint": {
+        "name": "Scrap turret",
+        "description": "Explicit defense test fixture",
+        "parts": [
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.3,
+              0
+            ],
+            "size": [
+              1.4,
+              0.6,
+              1.4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#626d5b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              1,
+              0
+            ],
+            "size": [
+              0.65,
+              0.8,
+              0.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#788574"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              1.25,
+              0.8
+            ],
+            "size": [
+              0.25,
+              0.25,
+              1.6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#424d42"
+          }
+        ]
+      },
+      "position": {
+        "x": 6,
+        "z": 11
+      },
+      "footprint": {
+        "width": 1.4,
+        "depth": 3.2
+      },
+      "createdBy": "defender-two",
+      "editedBy": "defender-two",
+      "createdAt": 1789529125843,
+      "role": "turret",
+      "health": 56,
+      "maxHealth": 120,
+      "damageRevision": 8,
+      "lifecycle": 1,
+      "nextShotAt": 33067
+    },
+    {
+      "id": "62e35936-57a7-4597-96e1-3e58ab9f6496",
+      "revision": 2,
+      "blueprint": {
+        "name": "Street barricade",
+        "description": "Explicit defense test fixture",
+        "parts": [
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.9,
+              0
+            ],
+            "size": [
+              3.5,
+              1.8,
+              0.35
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#94815e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.5,
+              0.85,
+              0.2
+            ],
+            "size": [
+              0.2,
+              1.7,
+              0.6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#6f684e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.5,
+              0.85,
+              0.2
+            ],
+            "size": [
+              0.2,
+              1.7,
+              0.6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#6f684e"
+          }
+        ]
+      },
+      "position": {
+        "x": -23,
+        "z": 8
+      },
+      "footprint": {
+        "width": 3.5,
+        "depth": 1
+      },
+      "createdBy": "wreck-test",
+      "editedBy": "rebuild-test",
+      "createdAt": 1789529277692,
+      "role": "barrier",
+      "health": 240,
+      "maxHealth": 240,
+      "damageRevision": 30,
+      "lifecycle": 3,
+      "nextShotAt": 56613
+    }
+  ],
+  "jobs": [
+    {
+      "id": "dev:ff5ee899-e822-4a3b-bb03-22f3c3ae1cfd",
+      "text": "Build a barricade at 3,13",
+      "username": "defender-one",
+      "userId": "dev:defender-one",
+      "status": "complete",
+      "createdAt": 1789529096645,
+      "attempts": 1,
+      "label": "Street barricade",
+      "path": [],
+      "workedMs": 12000,
+      "workMs": 12000,
+      "requestedPosition": {
+        "x": 3,
+        "z": 13
+      }
+    },
+    {
+      "id": "dev:daf6ccdd-c595-473f-9aae-de6a777c7d42",
+      "text": "Build a turret at 6,11",
+      "username": "defender-two",
+      "userId": "dev:defender-two",
+      "status": "complete",
+      "createdAt": 1789529124980,
+      "attempts": 1,
+      "label": "Scrap turret",
+      "path": [],
+      "workedMs": 12000,
+      "workMs": 12000,
+      "requestedPosition": {
+        "x": 6,
+        "z": 11
+      }
+    },
+    {
+      "id": "dev:3a1571d3-b13d-49a9-97c2-1cd6c659f5f0",
+      "text": "Build a barricade at -23,8",
+      "username": "wreck-test",
+      "userId": "dev:wreck-test",
+      "status": "complete",
+      "createdAt": 1789529276722,
+      "attempts": 1,
+      "label": "Street barricade",
+      "path": [],
+      "workedMs": 12000,
+      "workMs": 12000,
+      "requestedPosition": {
+        "x": -23,
+        "z": 8
+      }
+    },
+    {
+      "id": "dev:1c3ad10b-cd90-41fc-8e01-85e831f9758d",
+      "text": "Rebuild #62e35936",
+      "username": "rebuild-test",
+      "userId": "dev:rebuild-test",
+      "status": "complete",
+      "createdAt": 1789529375409,
+      "attempts": 0,
+      "label": "Street barricade",
+      "path": [],
+      "workedMs": 12000,
+      "workMs": 12000,
+      "resolvedTarget": "62e35936-57a7-4597-96e1-3e58ab9f6496",
+      "operation": "rebuild",
+      "baseLifecycle": 2,
+      "targetId": "62e35936-57a7-4597-96e1-3e58ab9f6496",
+      "baseRevision": 1
+    }
+  ],
+  "survivor": {
+    "position": {
+      "x": 1.5,
+      "z": 2.5
+    },
+    "activity": "idle",
+    "facing": 3.141592653589793
+  },
+  "lighting": "day",
+  "worldRevision": 47,
+  "notice": "Finished Street barricade, suggested by rebuild-test.",
+  "seen": [
+    "dev:ff5ee899-e822-4a3b-bb03-22f3c3ae1cfd",
+    "dev:daf6ccdd-c595-473f-9aae-de6a777c7d42",
+    "dev:3a1571d3-b13d-49a9-97c2-1cd6c659f5f0",
+    "dev:1c3ad10b-cd90-41fc-8e01-85e831f9758d"
+  ],
+  "edits": [
+    {
+      "objectId": "ddbce2ff-91fd-4293-aca5-d8e7d846be1c",
+      "revision": 1
+    },
+    {
+      "objectId": "7b04422d-2a51-428b-ba16-79dc7e2069f1",
+      "revision": 1
+    },
+    {
+      "objectId": "62e35936-57a7-4597-96e1-3e58ab9f6496",
+      "revision": 1
+    },
+    {
+      "objectId": "62e35936-57a7-4597-96e1-3e58ab9f6496",
+      "previous": {
+        "id": "62e35936-57a7-4597-96e1-3e58ab9f6496",
+        "revision": 1,
+        "blueprint": {
+          "name": "Street barricade",
+          "description": "Explicit defense test fixture",
+          "parts": [
+            {
+              "shape": "box",
+              "position": [
+                0,
+                0.9,
+                0
+              ],
+              "size": [
+                3.5,
+                1.8,
+                0.35
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "color": "#94815e"
+            },
+            {
+              "shape": "box",
+              "position": [
+                -1.5,
+                0.85,
+                0.2
+              ],
+              "size": [
+                0.2,
+                1.7,
+                0.6
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "color": "#6f684e"
+            },
+            {
+              "shape": "box",
+              "position": [
+                1.5,
+                0.85,
+                0.2
+              ],
+              "size": [
+                0.2,
+                1.7,
+                0.6
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "color": "#6f684e"
+            }
+          ]
+        },
+        "position": {
+          "x": -23,
+          "z": 8
+        },
+        "footprint": {
+          "width": 3.5,
+          "depth": 1
+        },
+        "createdBy": "wreck-test",
+        "editedBy": "wreck-test",
+        "createdAt": 1789529277692,
+        "role": "barrier",
+        "health": 0,
+        "maxHealth": 240,
+        "damageRevision": 30,
+        "lifecycle": 2,
+        "nextShotAt": 4012,
+        "destroyedAt": 43340
+      },
+      "revision": 2
+    }
+  ]
+}

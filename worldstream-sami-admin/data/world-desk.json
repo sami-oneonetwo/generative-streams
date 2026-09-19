@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "session": {
+    "startedAt": 1789264636673
+  },
+  "focus": {
+    "id": "reliability-doc",
+    "startedAt": 1789264636673,
+    "untilMs": 909465.9969320451
+  },
+  "chatters": {
+    "kick:28683256": {
+      "name": "Sami",
+      "firstSeen": 1789110749568,
+      "lastSeen": 1789113465363
+    }
+  },
+  "lastLiveAt": 1789264726898
+}

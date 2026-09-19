@@ -1,0 +1,11 @@
+{"ts":1789607996960,"level":"info","text":"starting with fresh state"}
+{"ts":1789607996975,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789607996975,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789607996969,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789608130228,"level":"info","text":"[rook] Got your idea, reset-test. It's in the queue."}
+{"ts":1789608130775,"level":"info","text":"[rook] Moving it—no AI call needed."}
+{"ts":1789608139282,"level":"info","text":"[rook] Finished Couch, suggested by reset-test."}
+{"ts":1789608139979,"level":"info","text":"[rook] Got your idea, reset-test. It's in the queue."}
+{"ts":1789608140798,"level":"info","text":"[rook] Building your defense at the marked ground spot."}
+{"ts":1789608175360,"level":"info","text":"[rook] Finished Street barricade, suggested by reset-test."}
+{"ts":1789608176268,"level":"alert","text":"world reset by operator (backup: .claude/preview-tools/safehouse-everything-state/world-safehouse.before-reset-2026-09-17T01-22-56-253Z.json)"}

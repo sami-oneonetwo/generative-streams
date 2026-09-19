@@ -1,0 +1,15 @@
+{"ts":1789523920152,"level":"info","text":"starting with fresh state"}
+{"ts":1789523920164,"level":"info","text":"kick configured but not connected — connect from /admin"}
+{"ts":1789523920164,"level":"info","text":"listening on http://localhost:4410 (renderer: /, admin: /admin)"}
+{"ts":1789523920158,"level":"info","text":"world 'safehouse' up (Corner House)"}
+{"ts":1789523935713,"level":"info","text":"[rook] Got your idea, smoke-builder. It's in the queue."}
+{"ts":1789523936708,"level":"info","text":"[rook] I will build that in the rear yard."}
+{"ts":1789523975273,"level":"info","text":"[rook] Finished Duck-shaped watchtower, suggested by smoke-builder."}
+{"ts":1789523975422,"level":"info","text":"[rook] Got your idea, smoke-editor. It's in the queue."}
+{"ts":1789523976275,"level":"info","text":"[rook] A quick edit—no AI call needed."}
+{"ts":1789523978778,"level":"info","text":"[rook] Finished Duck-shaped watchtower, suggested by smoke-editor."}
+{"ts":1789523979415,"level":"info","text":"[rook] Undid the last change to Duck-shaped watchtower."}
+{"ts":1789523979833,"level":"info","text":"state saved (admin)"}
+{"ts":1789524010402,"level":"info","text":"[rook] Got your idea, inspect-smoke. It's in the queue."}
+{"ts":1789524011341,"level":"info","text":"[rook] A quick edit—no AI call needed."}
+{"ts":1789524039895,"level":"info","text":"[rook] Finished Duck-shaped watchtower, suggested by inspect-smoke."}
