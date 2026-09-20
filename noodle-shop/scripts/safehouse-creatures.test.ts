@@ -73,7 +73,7 @@ test('profiles: the app owns the numbers; only a rampager is hostile', () => {
   assert.equal(gorilla.health, 300, 'a creature starts with its profile health, not the decoration 80');
   assert.ok(isHostile(gorilla));
   assert.ok(!isHostile(piece('d', { x: 0, z: -12 }, 'fight')));
-  assert.equal(MAX_CREATURES, 12);
+  assert.equal(MAX_CREATURES, 15);
 });
 
 test('a rampager runs to things and breaks them, moves on, and never touches the house', () => {

@@ -42,7 +42,10 @@ export async function chatCompletion(opts: ChatOpts): Promise<string> {
     if (attempt > 0) await sleep(1500);
     opts.signal?.throwIfAborted();
     const ac = new AbortController();
-    const timer = setTimeout(() => ac.abort(), opts.timeoutMs ?? 15_000);
+    // A non-finite (or non-positive) timeout means no client-side limit; Node's own
+    // five-minute wait for response headers is then the only ceiling.
+    const ms = opts.timeoutMs ?? 15_000;
+    const timer = Number.isFinite(ms) && ms > 0 ? setTimeout(() => ac.abort(), ms) : undefined;
     try {
       const res = await fetch(ENDPOINT, {
         method: 'POST',

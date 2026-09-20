@@ -49,6 +49,12 @@ export type Moment =
   | 'creature:airborne' // ...and it flies
   | 'creature:rampage' // a rampaging creature is breaking something
   | 'creature:down' // a creature has been knocked down
+  | 'neighbour:alarm' // a neighbour has noticed chat's creature near their place
+  | 'neighbour:defense' // ...and put up a barricade or a turret
+  | 'neighbour:hunter' // ...and built something to go after it
+  | 'neighbour:project' // a neighbour finished a bit of upkeep of their own
+  | 'neighbour:visit' // a neighbour has come over to look at something chat built
+  | 'neighbour:care' // a neighbour left supplies by his porch after the house fell
   | 'busy' // someone spoke to him while he was already answering
   | 'offline' // someone spoke to him and the dialogue model is off
   | 'missed'; // the model gave him nothing to say
@@ -58,6 +64,8 @@ export interface LineVars {
   user?: string;
   wave?: number;
   down?: number;
+  who?: string; // a neighbour, lowercase like the rest of his muttering ("marge")
+  threat?: string; // the creature a neighbour is dealing with ("yard gorilla")
 }
 
 export const LINES: Record<Moment, string[]> = {
@@ -279,6 +287,50 @@ export const LINES: Record<Moment, string[]> = {
     'rip {name}. back to the notes',
     'ok {name} is out. quiet at last',
   ],
+  'neighbour:alarm': [
+    "{who}'s seen {threat}. this is going to be a thing",
+    'uh oh. {who} has noticed {threat}',
+    'the neighbours are onto {threat}. good luck chat',
+    "{who}'s not happy about {threat}. can't blame them",
+    "and now the neighbours are involved. cool cool",
+  ],
+  'neighbour:defense': [
+    "{who} put up the {name}. it's spreading",
+    "ok so {who}'s fortifying now. fair",
+    "the neighbours are building fences. that's on you chat",
+    "{who}'s got the {name} up. didn't ask me. fine",
+    'look at that. {who} means business',
+  ],
+  'neighbour:hunter': [
+    '{who} built the {name}. this escalated',
+    "so {who}'s got the {name} now. love that for {threat}",
+    'the {name}. {who} made that. not my problem. sort of my problem',
+    'the neighbours built a monster to fight a monster. cool cool',
+  ],
+  'neighbour:project': [
+    "{who}'s out the front with a hammer. more people fixing stuff. good",
+    'look at {who} go. the {name}. not bad',
+    '{who} finished the {name}. show-off',
+    "nice {name} {who}. i'm still on the fence. literally",
+    "{who}'s keeping busy. the {name} this time",
+    'the neighbours are doing better than us tbh',
+    '{who} built the {name}. no idea what it is. love it',
+    'the {name}. sure {who}. why not',
+    "{who}'s yard is getting weird. good weird",
+  ],
+  'neighbour:visit': [
+    "{who}'s come over to look at the {name}. tough crowd",
+    "{who} is inspecting the {name}. don't touch it {who}",
+    'ok {who} has opinions about the {name}. can tell',
+    'the {name} has a visitor. hi {who}',
+    "{who}'s having a look at the {name}. be nice chat",
+  ],
+  'neighbour:care': [
+    "{who} left a crate by the porch. ok. that's nice actually",
+    "{who} brought supplies. didn't have to. did anyway",
+    "there's a crate from {who} out front. neighbours man",
+    "{who} dropped something off. i'm fine. i'm fine. thanks {who}",
+  ],
   busy: ['hang on {user}. one at a time', 'yep {user}. one sec', 'sorry sorry {user}. one at a time'],
   offline: [
     "can't chat right now {user}. ai's off. can still paint and move stuff",
@@ -307,12 +359,12 @@ export function speakName(o: { id: string; blueprint: { name: string } } | undef
   return `the ${name[0].toLowerCase()}${name.slice(1)}`;
 }
 
-const VARS = ['name', 'user', 'wave', 'down'] as const;
+const VARS = ['name', 'user', 'wave', 'down', 'who', 'threat'] as const;
 const usable = (template: string, vars: LineVars) =>
   VARS.every((v) => !template.includes(`{${v}}`) || vars[v] !== undefined);
 
 export function render(template: string, vars: LineVars): string {
-  return template.replace(/\{(name|user|wave|down)\}/g, (_, key: keyof LineVars) => String(vars[key] ?? ''));
+  return template.replace(/\{(name|user|wave|down|who|threat)\}/g, (_, key: keyof LineVars) => String(vars[key] ?? ''));
 }
 
 /** Every line a moment could produce with these variables; tests check membership against it. */

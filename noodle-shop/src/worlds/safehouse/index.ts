@@ -45,9 +45,9 @@ import {
   MAX_CREATURES,
 } from './combat';
 import { tickCreatures, freshCreature } from './creatures';
-import { parseRequest, applyQuickEdit, rotateBlueprint, relativeCandidates } from './edits';
+import { parseRequest, resolveTarget, applyQuickEdit, rotateBlueprint, relativeCandidates } from './edits';
 import { sceneryObjects } from './scenery';
-import { migrateState, defaultAllowance } from './state';
+import { migrateState, defaultAllowance, defaultSurveyAllowance } from './state';
 import { pickRepairTarget, repairMs } from './repair';
 import {
   pickLine,
@@ -60,9 +60,34 @@ import {
   type LineVars,
 } from './voice';
 import { persona as rookPersona, replyInstruction } from './persona';
+import {
+  tickNeighbours,
+  neighbourGhosts,
+  neighbourViews,
+  ownedByNeighbours,
+  resetNeighbourMemory,
+  takeWish,
+  fulfilWish,
+  takeSurvey,
+  adoptTheme,
+  specOf,
+  DEFAULT_PACE,
+  FIXTURE_PACE,
+  NEIGHBOUR_HOUSE_IDS,
+  adoptNames,
+  type NeighbourEvent,
+  type Pace,
+  type ReadyDesign,
+} from './neighbours';
+import { fixtureSurveyor, surveyBlock, type Surveyor, type ThemeSurvey } from './survey';
 class CheckpointError extends Error {}
 /** userId of the jobs Rook gives himself; never a chat user. */
 const ROOK = 'rook';
+/** A chatter the operator has trusted (admin: "Trust a chatter"): no design time limit, and `!delete <name>`. */
+const isPrivileged = (state: SafehouseState, username: string) =>
+  (state.privileged ?? []).includes(username.trim().toLowerCase());
+/** The houses stay whoever asks: Rook's is what the waves are about, the neighbours' are where they live. */
+const PROTECTED_IDS = new Set([HOUSE_ID, ...NEIGHBOUR_HOUSE_IDS]);
 /**
  * Rook's pace in m/s: brisk on a job, easier when pacing or heading home. Routes are
  * straightened into runs (placement.ts), so a run is covered in one go and only a
@@ -78,6 +103,11 @@ export interface SafehouseOptions {
   workMs?: number;
   seedScenery?: boolean; // tests opt out to keep worlds tiny; the app always seeds
   converse?: boolean; // answer viewers who speak to Rook by name with a dialogue call; default: not in fixture mode
+  neighbours?: boolean; // the people next door go about their business; tests about chat's own creatures turn them off
+  neighbourPace?: Partial<Pace>; // how often they start something (tests shorten it)
+  neighbourAi?: boolean; // may their ideas go to the design model; default: yes outside fixture mode when a model is configured
+  surveyor?: Surveyor; // reads the block and names a theme; tests inject a stub
+  survey?: boolean; // may they read the block at all; default: yes outside fixture mode when a model is configured
 }
 export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModule<SafehouseState> {
   const fixture = options.fixture ?? process.env.SAFEHOUSE_FIXTURES === '1';
@@ -91,6 +121,54 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
   let nextRepairAt = 0; // idle grace before Rook picks the hammer up on his own
   const repairSkips = new Map<string, number>(); // pieces a repair just failed on → retry time
   const converse = options.converse ?? !fixture;
+  // The neighbours (neighbours.ts) run on their own clock: jobs take `workMs` when a test sets one, and
+  // fixture mode keeps the gaps between their projects short so a smoke sees them at work.
+  const neighboursOn = options.neighbours ?? true;
+  // Their ideas may go to the design model outside fixture mode, at most one design per neighbour
+  // every SAFEHOUSE_NEIGHBOUR_AI_MINUTES (default 10), under the same pause and allowance as chat.
+  const neighbourAi = options.neighbourAi ?? (!fixture && available);
+  const aiMinutes = Number(process.env.SAFEHOUSE_NEIGHBOUR_AI_MINUTES ?? 10);
+  // Reading the block is a separate, much cheaper call with its own switch and its own budget.
+  // Off in plain fixture mode so the existing suites keep their old behaviour; on when a test
+  // injects a surveyor, and in the demo world when SAFEHOUSE_NEIGHBOUR_THEMES=1 asks for it.
+  const surveyor = options.surveyor ?? (fixture ? fixtureSurveyor : surveyBlock);
+  const surveyOn =
+    options.survey ??
+    (!!options.surveyor || (fixture ? process.env.SAFEHOUSE_NEIGHBOUR_THEMES === '1' : available));
+  const surveyMinutes = Number(process.env.SAFEHOUSE_SURVEY_MINUTES ?? 8);
+  const pace: Pace = {
+    ...(fixture ? FIXTURE_PACE : DEFAULT_PACE),
+    ai: neighbourAi,
+    aiGapMs: (Number.isFinite(aiMinutes) && aiMinutes >= 0 ? aiMinutes : 10) * 60_000,
+    survey: surveyOn,
+    surveyGapMs: (Number.isFinite(surveyMinutes) && surveyMinutes >= 0 ? surveyMinutes : 8) * 60_000,
+    ...(options.workMs !== undefined ? { workMs: options.workMs } : {}),
+    ...options.neighbourPace,
+  };
+  let nextNeighbourLineAt = 0; // Rook remarks on the neighbours now and then, not on every hammer blow
+  // One neighbour design in flight at a time, never alongside a chat design; asked wishes are remembered
+  // so a wish that somehow survives its answer is not paid for twice.
+  let neighbourDesign: { id: string; controller: AbortController; deadline: number } | undefined;
+  let neighbourInbox: { id: string; result?: DesignResponse; error?: string } | undefined;
+  const askedWishes = new Set<string>();
+  // The block reading sits third in line, behind a chat design and a neighbour design, so a
+  // viewer's request is never waiting on one. Same one-at-a-time, same double-charge guard.
+  let blockSurvey: { id: string; controller: AbortController; deadline: number } | undefined;
+  let surveyInbox: { id: string; result?: ThemeSurvey; error?: string } | undefined;
+  const askedSurveys = new Set<string>();
+  /** What the model drew up, as the neighbours take it: decoration or a wall, a roaming pet at most, never a turret. */
+  function neighbourDesignOf(result: DesignResponse): ReadyDesign | undefined {
+    if (!('blueprint' in result)) return undefined;
+    const creature = result.creature;
+    return {
+      blueprint: result.blueprint,
+      name: result.blueprint.name,
+      role: result.action === 'build' && result.role === 'barrier' ? 'barrier' : 'decoration',
+      pet: !!creature,
+      flying: !!creature?.flying,
+      reply: result.reply,
+    };
+  }
   /** Whether a model call may start: fixture mode is free, the operator may ignore the allowance, else it must have calls left. */
   const allowanceOpen = (state: SafehouseState) =>
     fixture || state.allowanceEnforced === false || state.callsRemaining > 0;
@@ -99,6 +177,21 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     if (fixture) return;
     state.callsUsed = (state.callsUsed ?? 0) + 1;
     if (state.allowanceEnforced !== false) state.callsRemaining = Math.max(0, state.callsRemaining - 1);
+  }
+  /** Whether a block reading may start: its own allowance, so it never draws on chat's. */
+  const surveyAllowanceOpen = (state: SafehouseState) =>
+    fixture || state.allowanceEnforced === false || (state.surveyCallsRemaining ?? defaultSurveyAllowance()) > 0;
+  /**
+   * Book a block reading. It comes off the survey allowance rather than chat's — the neighbours
+   * can never eat calls a viewer wanted — but it still adds to `callsUsed`, because that total is
+   * what the operator reads to know what the world has spent altogether.
+   */
+  function bookSurveyCall(state: SafehouseState) {
+    if (fixture) return;
+    state.callsUsed = (state.callsUsed ?? 0) + 1;
+    state.surveyCallsUsed = (state.surveyCallsUsed ?? 0) + 1;
+    if (state.allowanceEnforced !== false)
+      state.surveyCallsRemaining = Math.max(0, (state.surveyCallsRemaining ?? defaultSurveyAllowance()) - 1);
   }
   // Rook's voice (voice.ts): what is showing, what he said lately, and when he next mutters.
   // Status lines go through speak(); muttering goes through mutter() and waits its turn.
@@ -256,6 +349,134 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     }
     lastHouseHealth = hp;
   }
+  /** Something happened next door. Logged always; Rook remarks on the alarming bits and, now and then, on the rest. */
+  function neighbourEvent(ctx: Ctx, e: NeighbourEvent) {
+    ctx.log(`neighbours: ${e.who} — ${e.kind}${e.reason ? ` (${e.reason})` : ''}${e.name ? ` — ${e.name}` : ''}${e.threat ? ` (${e.threat})` : ''}`);
+    const who = e.who.toLowerCase();
+    // "Marge's vegetable patch" → "vegetable patch": his lines put their own article in front.
+    const name = e.name?.replace(/^[\w.]+['’]s\s+/, '').toLowerCase();
+    const threat = e.threat ? `the ${e.threat}` : undefined; // "love that for the yard gorilla"
+    if (e.kind === 'alarm' && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'neighbour:alarm', { who, threat });
+      nextNeighbourLineAt = ctx.now + 45_000;
+    } else if (e.kind === 'defense' || e.kind === 'hunter') {
+      react(ctx, e.kind === 'hunter' ? 'neighbour:hunter' : 'neighbour:defense', { who, name, threat });
+      nextNeighbourLineAt = ctx.now + 45_000;
+    } else if (e.kind === 'care') {
+      react(ctx, 'neighbour:care', { who });
+      nextNeighbourLineAt = ctx.now + 45_000;
+    } else if (e.kind === 'visit' && e.reason === 'visit' && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'neighbour:visit', { who, name });
+      nextNeighbourLineAt = ctx.now + 90_000;
+    } else if (e.kind === 'project' && ctx.now >= nextNeighbourLineAt && ctx.rng() < 0.5) {
+      react(ctx, 'neighbour:project', { who, name });
+      nextNeighbourLineAt = ctx.now + 150_000;
+    }
+  }
+  /** The neighbours' ideas and the model: bring an answer back, time a slow one out, ask the next one. */
+  function neighbourDesigns(ctx: Ctx) {
+    if (neighbourInbox) {
+      const r = neighbourInbox;
+      neighbourInbox = undefined;
+      try {
+        fulfilWish(ctx.state, r.id, r.result ? neighbourDesignOf(r.result) : undefined, ctx.now);
+      } catch (error) {
+        ctx.log(`could not take a neighbour design: ${(error as Error).message}`, 'warn');
+      }
+    }
+    if (neighbourDesign && ctx.now > neighbourDesign.deadline) {
+      const d = neighbourDesign;
+      neighbourDesign = undefined;
+      d.controller.abort();
+      neighbourInbox = { id: d.id, error: 'timed out' };
+    }
+    if (neighbourDesign || pending || !neighbourAi || !available || ctx.state.generationPaused || !allowanceOpen(ctx.state)) return;
+    const ask = takeWish(ctx.state, ctx.now);
+    if (!ask || askedWishes.has(`${ask.id}:${ask.wish.at}`)) return;
+    askedWishes.add(`${ask.id}:${ask.wish.at}`);
+    const name = specOf(ask.id)?.name ?? ask.id;
+    try {
+      transaction(ctx, () => bookCall(ctx.state));
+    } catch (error) {
+      ctx.log(`could not book a neighbour design call: ${(error as Error).message}`, 'warn');
+      return;
+    }
+    ctx.log(`neighbours: ${name} asks the model for ${ask.wish.idea}`);
+    const controller = new AbortController();
+    neighbourDesign = { id: ask.id, controller, deadline: ctx.now + 95_000 };
+    void generator({ text: ask.prompt, username: name, objects: [] }, controller.signal).then(
+      (result) => {
+        if (!stopped && neighbourDesign?.id === ask.id) {
+          neighbourInbox = { id: ask.id, result };
+          neighbourDesign = undefined;
+        }
+      },
+      (error) => {
+        if (!stopped && neighbourDesign?.id === ask.id) {
+          ctx.log(`neighbour design failed (${name}): ${(error as Error).message}`, 'warn');
+          neighbourInbox = { id: ask.id, error: (error as Error).message };
+          neighbourDesign = undefined;
+        }
+      },
+    );
+  }
+  /**
+   * The neighbours reading the block: bring a theme back, time a slow one out, ask for the next.
+   * Third in line behind a chat design and a neighbour design, on its own allowance, so a viewer
+   * request is never queued behind one and the neighbours can never spend chat's calls.
+   */
+  function neighbourSurveys(ctx: Ctx) {
+    if (surveyInbox) {
+      const r = surveyInbox;
+      surveyInbox = undefined;
+      try {
+        if (adoptTheme(ctx.state, r.id, r.result, ctx.now)) {
+          const n = ctx.state.neighbours.find((x) => x.id === r.id);
+          ctx.log(`neighbours: ${specOf(r.id)?.name ?? r.id} is redoing the yard — ${n?.theme?.name}`);
+          ctx.state.worldRevision++;
+        }
+      } catch (error) {
+        ctx.log(`could not take a block reading: ${(error as Error).message}`, 'warn');
+      }
+    }
+    if (blockSurvey && ctx.now > blockSurvey.deadline) {
+      const s = blockSurvey;
+      blockSurvey = undefined;
+      s.controller.abort();
+      surveyInbox = { id: s.id, error: 'timed out' };
+    }
+    // Chat first, always: anything a viewer is waiting on holds the survey back a tick.
+    if (blockSurvey || pending || neighbourDesign) return;
+    if (!surveyOn || !available || ctx.state.generationPaused || ctx.state.surveyPaused || !surveyAllowanceOpen(ctx.state)) return;
+    const ask = takeSurvey(ctx.state, ctx.now);
+    if (!ask || askedSurveys.has(`${ask.id}:${ask.at}`)) return;
+    askedSurveys.add(`${ask.id}:${ask.at}`);
+    const name = specOf(ask.id)?.name ?? ask.id;
+    try {
+      transaction(ctx, () => bookSurveyCall(ctx.state));
+    } catch (error) {
+      ctx.log(`could not book a block reading: ${(error as Error).message}`, 'warn');
+      return;
+    }
+    ctx.log(`neighbours: ${name} is having a look at what the street has built`);
+    const controller = new AbortController();
+    blockSurvey = { id: ask.id, controller, deadline: ctx.now + 45_000 };
+    void surveyor(ask.input, controller.signal).then(
+      (result) => {
+        if (!stopped && blockSurvey?.id === ask.id) {
+          surveyInbox = { id: ask.id, result };
+          blockSurvey = undefined;
+        }
+      },
+      (error) => {
+        if (!stopped && blockSurvey?.id === ask.id) {
+          ctx.log(`block reading failed (${name}): ${(error as Error).message}`, 'warn');
+          surveyInbox = { id: ask.id, error: (error as Error).message };
+          blockSurvey = undefined;
+        }
+      },
+    );
+  }
   /** A viewer spoke to Rook by name and did not ask for work: one dialogue call, under the allowance. */
   async function talk(ctx: Ctx, msg: ChatMessage) {
     const user = msg.username;
@@ -339,12 +560,68 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     state.seen = state.seen.slice(-1000);
     state.edits = state.edits.slice(-20);
   }
+  /**
+   * `!delete <name>` from a trusted chatter: the piece goes, standing or rubble, and the operator's
+   * undo puts it back whole. Anything in flight on it is set aside. The houses are never deleted.
+   */
+  function deleteObject(ctx: Ctx, msg: ChatMessage, phrase: string) {
+    if (!isPrivileged(ctx.state, msg.username)) {
+      notice(ctx, `${msg.username}, !delete is for chatters the operator has trusted. The operator can undo a change.`);
+      return;
+    }
+    if (!phrase) {
+      notice(ctx, 'Say “!delete <name>”, like “!delete the duck watchtower”.');
+      return;
+    }
+    const catalog = [...ctx.state.objects, ...ctx.state.combat.archive];
+    const found = resolveTarget(
+      phrase,
+      catalog,
+      ctx.state.targets.find((t) => t.userId === msg.userId)?.objectId,
+      { username: msg.username },
+    );
+    const target = found.target;
+    if (!target) {
+      notice(ctx, found.clarification ?? `I can't find ${phrase} here.`);
+      return;
+    }
+    if (PROTECTED_IDS.has(target.id)) {
+      notice(ctx, `${target.blueprint.name} stays. Houses are not for deleting.`);
+      return;
+    }
+    for (const job of ctx.state.jobs.filter(
+      (j) => active(j) && (j.resolvedTarget === target.id || j.targetId === target.id),
+    )) {
+      if (pending?.id === job.id) {
+        pending.controller.abort();
+        pending = undefined;
+      }
+      fail(ctx, job, `${target.blueprint.name} was deleted before this could finish.`, false);
+    }
+    transaction(ctx, () => {
+      ctx.state.seen.push(msg.id);
+      ctx.state.objects = ctx.state.objects.filter((o) => o.id !== target.id);
+      ctx.state.combat.archive = ctx.state.combat.archive.filter((o) => o.id !== target.id);
+      ctx.state.targets = ctx.state.targets.filter((t) => t.objectId !== target.id);
+      ctx.state.edits = [
+        ...ctx.state.edits,
+        { objectId: target.id, previous: structuredClone(target), revision: target.revision, removed: true },
+      ].slice(-20);
+      ctx.state.worldRevision++;
+      ctx.state.notice = `Removed ${target.blueprint.name} for ${msg.username}.`;
+      trim(ctx.state);
+    });
+    speak(ctx, ctx.state.notice);
+  }
   function admit(ctx: Ctx, msg: ChatMessage) {
     if (ctx.state.seen.includes(msg.id)) return;
     if (msg.text.length > 1000 || msg.username.length > 40) {
       notice(ctx, 'Keep requests under 1,000 characters and names under 40.');
       return;
     }
+    // A trusted chatter's command: neither a request nor a conversation.
+    const command = msg.text.match(/^!delete\b\s*(.*)$/is);
+    if (command) return deleteObject(ctx, msg, command[1].trim());
     // Someone talking to him rather than asking for work: answer, don't design.
     if (converse && addressesRook(msg.text) && !looksLikeRequest(msg.text)) return talk(ctx, msg);
     const catalog = [...ctx.state.objects, ...ctx.state.combat.archive];
@@ -490,9 +767,10 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         if (!anchor) throw new Error('The thing to place it beside is gone. Pick another spot.');
         requested = relativeCandidates(anchor, job.relativeTo.side, size);
       }
+      // A neighbour walking to a build site has claimed that ground; nothing goes there meanwhile.
       const placement = choosePlacement(
         size,
-        ctx.state.objects,
+        [...ctx.state.objects, ...neighbourGhosts(ctx.state)],
         ctx.state.survivor.position,
         target,
         requested,
@@ -513,6 +791,7 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
               : (target?.role ?? (result.action === 'build' ? result.role : undefined) ?? 'decoration'),
           fixed: target?.fixed,
           passable: target?.passable,
+          owner: target?.owner,
           creature: living
             ? freshCreature(living.behaviour, !!living.flying)
             : target?.creature
@@ -602,24 +881,27 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       fail(ctx, job, 'This request was interrupted twice. Please submit it again.');
       return;
     }
+    // A trusted chatter's design is never cut off: no deadline here, no timer on the call.
+    const trusted = isPrivileged(ctx.state, job.username);
     transaction(ctx, () => {
       job.status = 'designing';
       job.attempts++;
       bookCall(ctx.state);
       ctx.state.idlePath = [];
       ctx.state.survivor.activity = 'idle';
-      ctx.state.notice = `Designing ${job.username}'s idea…`;
+      ctx.state.notice = `Designing ${job.username}'s idea${trusted ? ' (no time limit)' : ''}…`;
     });
     nextLegAt = 0;
     nextWorkLineAt = ctx.now + 6000 + ctx.rng() * 4000; // a line or two while he paces
     const controller = new AbortController(),
       catalog = new Map(ctx.state.objects.map((o) => [o.id, o.revision]));
-    pending = { id: job.id, controller, deadline: ctx.now + 95000, catalog };
+    pending = { id: job.id, controller, deadline: trusted ? Infinity : ctx.now + 95000, catalog };
     const input = {
       text: job.text,
       username: job.username,
       objects: structuredClone(ctx.state.objects),
       targetId: job.resolvedTarget,
+      ...(trusted ? { noTimeout: true } : {}),
     };
     void generator(input, controller.signal).then(
       (result) => {
@@ -655,11 +937,17 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
   /** Rook's own initiative: with nothing asked of him, fix the worst zombie damage. Zero AI calls. */
   function autoRepair(ctx: Ctx): boolean {
     if (ctx.state.repairsPaused || ctx.now < nextRepairAt || ctx.state.jobs.some(active)) return false;
+    // The neighbours' houses and whatever they built are theirs to fix — unless the operator has stood them down.
+    const theirs = new Set(
+      neighboursOn && !ctx.state.neighboursPaused
+        ? [...ctx.state.objects, ...ctx.state.combat.archive].filter(ownedByNeighbours).map((o) => o.id)
+        : [],
+    );
     const pick = pickRepairTarget(
       ctx.state.objects,
       ctx.state.combat.archive,
       ctx.state.survivor.position,
-      (id) => (repairSkips.get(id) ?? 0) > ctx.now,
+      (id) => (repairSkips.get(id) ?? 0) > ctx.now || theirs.has(id),
     );
     if (!pick) return false;
     const name = pick.object.blueprint.name;
@@ -751,6 +1039,26 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       if (e.kind === 'down') {
         const fallen = [...ctx.state.objects, ...ctx.state.combat.archive].find((o) => o.id === e.targetId);
         if (fallen?.creature) react(ctx, 'creature:down', { name: speakName(fallen) });
+      }
+    }
+    // The neighbours go about their business on their own clock. A fault in their code must never
+    // stop Rook's tick, so it is fenced off; their builds and repairs save like any other change.
+    if (neighboursOn) {
+      try {
+        const revisionBefore = ctx.state.worldRevision;
+        const next = tickNeighbours(ctx.state, dt, ctx.now, ctx.rng, pace, !!ctx.state.neighboursPaused);
+        if (next.changed || ctx.state.worldRevision !== revisionBefore) {
+          try {
+            ctx.checkpoint?.();
+          } catch (error) {
+            ctx.log(`could not save the neighbours' work: ${(error as Error).message}`, 'warn');
+          }
+        }
+        for (const e of next.events) neighbourEvent(ctx, e);
+        neighbourDesigns(ctx);
+        neighbourSurveys(ctx);
+      } catch (error) {
+        ctx.log(`neighbours tick failed: ${(error as Error).message}`, 'warn');
       }
     }
     reactionsDue(ctx);
@@ -951,10 +1259,35 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         react(ctx, preview.creature.flying ? 'creature:airborne' : 'creature:loose', { name: speakName(preview) });
     }
   }
+  /** Undo of a `!delete`: the piece comes back exactly as it was, unless something now stands under its id. */
+  function restoreDeleted(ctx: Ctx, edit: SafehouseState['edits'][number]) {
+    const previous = edit.previous;
+    if (!previous || [...ctx.state.objects, ...ctx.state.combat.archive].some((o) => o.id === edit.objectId)) {
+      notice(ctx, 'That deletion cannot be undone safely.');
+      return;
+    }
+    if (ctx.state.jobs.some((j) => active(j) && j.userId !== ROOK)) {
+      notice(ctx, 'Wait for current requests to finish before undoing.');
+      return;
+    }
+    const round = ctx.state.jobs.find((j) => active(j) && j.userId === ROOK);
+    if (round) fail(ctx, round, 'Set aside for the operator.', false);
+    transaction(ctx, () => {
+      ctx.state.edits.pop();
+      ctx.state.objects.push({ ...structuredClone(previous), revision: previous.revision + 1 });
+      ctx.state.worldRevision++;
+      ctx.state.notice = `Put ${previous.blueprint.name} back.`;
+    });
+    speak(ctx, ctx.state.notice);
+  }
   function undo(ctx: Ctx) {
     const edit = ctx.state.edits.at(-1);
     if (!edit) {
       notice(ctx, 'Nothing to undo yet.');
+      return;
+    }
+    if (edit.removed) {
+      restoreDeleted(ctx, edit);
       return;
     }
     const current = ctx.state.objects.find((o) => o.id === edit.objectId);
@@ -1016,6 +1349,11 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       fresh.callsUsed = previous.callsUsed;
       fresh.generationPaused = previous.generationPaused;
       fresh.repairsPaused = previous.repairsPaused;
+      fresh.neighboursPaused = previous.neighboursPaused;
+      fresh.surveyPaused = previous.surveyPaused;
+      fresh.surveyCallsRemaining = previous.surveyCallsRemaining;
+      fresh.surveyCallsUsed = previous.surveyCallsUsed;
+      fresh.privileged = previous.privileged;
       fresh.lighting = previous.lighting;
       fresh.notice = 'Fresh start. The neighborhood is back the way it was — build something.';
       return fresh;
@@ -1038,8 +1376,18 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       lastHouseHealth = undefined;
       nextLegAt = 0;
       nextCreatureLineAt = 0;
+      nextNeighbourLineAt = 0;
+      resetNeighbourMemory();
+      neighbourDesign = undefined;
+      neighbourInbox = undefined;
+      askedWishes.clear();
+      blockSurvey = undefined;
+      surveyInbox = undefined;
+      askedSurveys.clear();
       recent.length = 0;
       transaction(ctx, () => {
+        // Pieces an older save built under a neighbour's former name take the current one.
+        if (adoptNames(ctx.state)) ctx.state.worldRevision++;
         for (const job of ctx.state.jobs) {
           if (job.status === 'designing') job.status = 'queued';
         }
@@ -1058,6 +1406,12 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         pending?.controller.abort();
         pending = undefined;
         inbox = undefined;
+        neighbourDesign?.controller.abort();
+        neighbourDesign = undefined;
+        neighbourInbox = undefined;
+        blockSurvey?.controller.abort();
+        blockSurvey = undefined;
+        surveyInbox = undefined;
       };
     },
     chatThrottleMs: 0,
@@ -1194,6 +1548,58 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         },
       },
       {
+        id: 'safehouse-neighbours-pause',
+        label: 'Stand the neighbours down',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.neighboursPaused = true;
+            ctx.state.notice = 'The neighbours are staying indoors. Rook covers their repairs meanwhile.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-neighbours-resume',
+        label: 'Let the neighbours out',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.neighboursPaused = false;
+            ctx.state.notice = 'The neighbours are back out and about.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-survey-pause',
+        label: 'Stop the neighbours reading the block',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.surveyPaused = true;
+            ctx.state.notice = 'The neighbours will keep the theme they have and stop reading the block.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-survey-resume',
+        label: 'Let the neighbours read the block',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.surveyPaused = false;
+            ctx.state.notice = 'The neighbours are watching what the street builds again.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-survey-allowance',
+        label: 'Set block-reading allowance',
+        input: { label: 'calls', min: 0, max: 1_000_000, step: 1, placeholder: '40' },
+        run(ctx, value) {
+          transaction(ctx, () => {
+            const next = Math.round(typeof value === 'number' ? value : (ctx.state.surveyCallsRemaining ?? defaultSurveyAllowance()));
+            ctx.state.surveyCallsRemaining = Math.max(0, next);
+            ctx.state.notice = `Block readings: ${ctx.state.surveyCallsRemaining} calls left.`;
+          });
+        },
+      },
+      {
         id: 'safehouse-allowance',
         label: 'Reset AI call allowance',
         run(ctx) {
@@ -1209,7 +1615,7 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         input: { label: 'calls', min: 0, max: 1_000_000, step: 1, placeholder: '200' },
         run(ctx, value) {
           transaction(ctx, () => {
-            ctx.state.callsRemaining = Math.round(value ?? ctx.state.callsRemaining);
+            ctx.state.callsRemaining = Math.round(typeof value === 'number' ? value : ctx.state.callsRemaining);
             ctx.state.notice = `AI allowance set to ${ctx.state.callsRemaining} calls${ctx.state.allowanceEnforced === false ? ' (not enforced right now)' : ''}.`;
           });
         },
@@ -1231,6 +1637,33 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
           transaction(ctx, () => {
             ctx.state.allowanceEnforced = true;
             ctx.state.notice = `AI call limit enforced: ${ctx.state.callsRemaining} calls left.`;
+          });
+        },
+      },
+      {
+        id: 'safehouse-trust',
+        label: 'Trust a chatter',
+        input: { kind: 'text', label: 'username', placeholder: 'kick username', maxLength: 40 },
+        run(ctx, value) {
+          const name = String(value ?? '').trim().toLowerCase();
+          if (!name) return;
+          transaction(ctx, () => {
+            const list = ctx.state.privileged ?? [];
+            ctx.state.privileged = list.includes(name) ? list : [...list, name].slice(-100);
+            ctx.state.notice = `${name} is trusted: no time limit on their designs, and !delete <name> works for them.`;
+          });
+        },
+      },
+      {
+        id: 'safehouse-untrust',
+        label: 'Untrust a chatter',
+        input: { kind: 'text', label: 'username', placeholder: 'kick username', maxLength: 40 },
+        run(ctx, value) {
+          const name = String(value ?? '').trim().toLowerCase();
+          if (!name) return;
+          transaction(ctx, () => {
+            ctx.state.privileged = (ctx.state.privileged ?? []).filter((n) => n !== name);
+            ctx.state.notice = `${name} is back on the usual rules.`;
           });
         },
       },
@@ -1281,6 +1714,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         worldRevision: state.worldRevision,
         repairsPaused: state.repairsPaused ?? false,
         upcomingWave: describeRoster(waveRoster(state.combat.wave.number)),
+        neighbours: neighboursOn ? neighbourViews(state) : [],
+        neighboursPaused: state.neighboursPaused ?? false,
       };
       return {
         width: 1920,

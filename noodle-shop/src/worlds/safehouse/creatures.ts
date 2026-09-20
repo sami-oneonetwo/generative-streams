@@ -40,6 +40,8 @@ interface World {
   objects: SafehouseObject[];
   combat: CombatState;
   survivor: { position: GroundPoint };
+  /** The neighbours: a fighter they built sticks with its owner rather than with Rook. */
+  neighbours?: { id: string; position: GroundPoint }[];
 }
 
 /** Flight profile: cruise height by behaviour, the dip for a strike, and the floor speed (nothing flaps at 1 m/s). */
@@ -225,14 +227,21 @@ function fight(
   let enemy = w.objects.find((o) => o.id === st.targetId && isHostile(o) && intact(o));
   let zombie = w.combat.zombies.find((z) => z.id === st.targetId && z.health > 0);
   const lost = st.targetId !== undefined && !enemy && !zombie;
+  // Built to hunt one particular creature (a neighbour's answer to the yard gorilla): that one
+  // first, wherever it is on the block; forgotten once it is down.
+  if (st.nemesis && !w.objects.some((o) => o.id === st.nemesis && intact(o))) st.nemesis = undefined;
+  const nemesis = st.nemesis ? w.objects.find((o) => o.id === st.nemesis && isHostile(o) && intact(o) && canReach(c, o)) : undefined;
   if (lost || st.replanMs === 0) {
     st.path = [];
-    const rampager = w.objects
-      .filter((o) => isHostile(o) && intact(o) && canReach(c, o))
-      .map((o) => ({ o, d: objectDistance(c.position, o) }))
-      .filter((x) => x.d <= (st.flying ? 30 : 18))
-      .sort((a, b) => a.d - b.d)
-      .find((x) => inReach(c, x.o, 1.2) || routeTo(c, st, x.o, solid));
+    const hunted = nemesis && (inReach(c, nemesis, 1.2) || routeTo(c, st, nemesis, solid)) ? { o: nemesis, d: 0 } : undefined;
+    const rampager =
+      hunted ??
+      w.objects
+        .filter((o) => isHostile(o) && intact(o) && canReach(c, o))
+        .map((o) => ({ o, d: objectDistance(c.position, o) }))
+        .filter((x) => x.d <= (st.flying ? 30 : 18))
+        .sort((a, b) => a.d - b.d)
+        .find((x) => inReach(c, x.o, 1.2) || routeTo(c, st, x.o, solid));
     if (rampager) {
       st.targetId = rampager.o.id;
       st.replanMs = 2500;
@@ -249,19 +258,19 @@ function fight(
         st.replanMs = 1500; // zombies move: re-aim often
         zombie = prey.z;
       } else {
-        // Nobody to fight: stay close to Rook.
+        // Nobody to fight: stay close to whoever it belongs to — a neighbour for their hunter, else Rook.
         st.targetId = undefined;
         st.replanMs = 2000;
-        const rook = w.survivor.position;
-        if (distance(c.position, rook) > 4) {
+        const keeper = (c.owner && w.neighbours?.find((n) => n.id === c.owner)?.position) || w.survivor.position;
+        if (distance(c.position, keeper) > 4) {
           const spots = [
-            { x: rook.x + 1.5, z: rook.z },
-            { x: rook.x - 1.5, z: rook.z },
-            { x: rook.x, z: rook.z + 1.5 },
-            { x: rook.x, z: rook.z - 1.5 },
+            { x: keeper.x + 1.5, z: keeper.z },
+            { x: keeper.x - 1.5, z: keeper.z },
+            { x: keeper.x, z: keeper.z + 1.5 },
+            { x: keeper.x, z: keeper.z - 1.5 },
           ].sort((a, b) => distance(a, c.position) - distance(b, c.position));
           for (const p of spots) if (routeToPoint(c, st, p, solid)) break;
-        } else head(c, st, rook);
+        } else head(c, st, keeper);
       }
     }
   }

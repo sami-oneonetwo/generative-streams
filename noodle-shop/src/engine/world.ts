@@ -103,9 +103,17 @@ export interface Persona<S> {
 export interface AdminAction<S> {
   id: string;
   label: string;
-  /** An action that takes a number from the operator (rendered as a field beside the button). */
-  input?: { label: string; min?: number; max?: number; step?: number; placeholder?: string };
-  run(ctx: WorldCtx<S>, value?: number): void;
+  /** An action that takes a value from the operator (rendered as a field beside the button): a number unless `kind` is text. */
+  input?: {
+    kind?: 'number' | 'text';
+    label: string;
+    min?: number;
+    max?: number;
+    step?: number;
+    placeholder?: string;
+    maxLength?: number;
+  };
+  run(ctx: WorldCtx<S>, value?: number | string): void;
 }
 
 // Engine-owned data the world needs to build the scene.

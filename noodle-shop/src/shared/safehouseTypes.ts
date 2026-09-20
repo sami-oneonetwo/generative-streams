@@ -33,6 +33,8 @@ export interface CreatureState {
   /** Airborne: flies straight over everything at roof height; only turrets and other flyers can reach it. */
   flying?: boolean;
   altitude?: number; // metres off the ground right now (flyers climb after they are built, fall when downed)
+  /** A fighter built to go after one particular creature: it hunts that id first, wherever it is on the block. */
+  nemesis?: string;
 }
 export interface SafehouseObject {
   id: string;
@@ -53,6 +55,8 @@ export interface SafehouseObject {
   fixed?: boolean; // seeded neighborhood piece; still editable, movable and destructible
   passable?: boolean; // ground surface: never blocks, never targeted
   creature?: CreatureState; // a living build: moves on its own, never blocks anything
+  /** Built and kept up by a neighbour (their id): fixed like the rest of the neighborhood, theirs to repair, never a zombie's target. */
+  owner?: string;
 }
 /** Server-owned zombie profiles (stats live in combat.ts); older saves have no kind and are walkers. */
 export type ZombieKind = 'walker' | 'runner' | 'brute';
@@ -138,6 +142,28 @@ export function viewOf(o: SafehouseObject): SafehouseObjectView {
 }
 /** The key the page caches geometry under. */
 export const partsKey = (id: string, revision: number): string => `${id}:${revision}`;
+export type NeighbourActivity = 'idle' | 'walking' | 'building' | 'repairing' | 'tending' | 'painting' | 'looking';
+/** A neighbour as the page draws them: where they are, what they are doing, the piece in flight, what they just said. */
+export interface NeighbourView {
+  id: string;
+  name: string;
+  position: GroundPoint;
+  facing: number;
+  activity: NeighbourActivity;
+  alert: boolean; // responding to a creature right now
+  tint: string; // shirt colour
+  hat: 'sun' | 'cap';
+  job?: {
+    label: string;
+    status: 'walking' | 'working';
+    progress: number;
+    purpose: 'defense' | 'upkeep' | 'project';
+    preview?: SafehouseObject; // a new build's ghost, full geometry inline like Rook's
+  };
+  say?: { text: string; until: number };
+  /** The look they are currently redoing their yard in, read off the block; shown on their tag. */
+  theme?: string;
+}
 export interface SafehouseScene {
   schema: 1;
   fixture: boolean;
@@ -159,4 +185,7 @@ export interface SafehouseScene {
   repairsPaused?: boolean;
   /** Human roster of the wave being prepared for, e.g. "6 walkers, 1 runner". */
   upcomingWave?: string;
+  /** The people next door and what they are up to (state v8). */
+  neighbours?: NeighbourView[];
+  neighboursPaused?: boolean;
 }

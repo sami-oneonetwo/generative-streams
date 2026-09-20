@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createSafehouseWorld } from '../src/worlds/safehouse';
-import { createInitialState, migrateState, type SafehouseState } from '../src/worlds/safehouse/state';
+import { createInitialState, migrateState, STATE_VERSION, type SafehouseState } from '../src/worlds/safehouse/state';
 import { resolveRequest, applyQuickEdit } from '../src/worlds/safehouse/edits';
 import { fixtureGenerator, type DesignGenerator } from '../src/llm/blueprint';
 import type { WorldCtx } from '../src/engine/world';
@@ -152,7 +152,7 @@ test('v1 migration preserves objects/jobs and adds bounded defaults without rese
   const migrated = migrateState(old, 1);
   assert.deepEqual(migrated.objects.filter(o=>!o.fixed), h.state.objects);
   assert.deepEqual(migrated.jobs, h.state.jobs);
-  assert.equal(migrated.version, 7);
+  assert.equal(migrated.version, STATE_VERSION);
   assert.deepEqual(migrated.targets, []);
   h.stop();
 });

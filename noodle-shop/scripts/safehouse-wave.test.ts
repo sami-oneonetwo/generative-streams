@@ -14,7 +14,7 @@ import {
   WAVE_CAP_MS,
   SPAWN_EVERY_MS,
 } from '../src/worlds/safehouse/combat';
-import { migrateState } from '../src/worlds/safehouse/state';
+import { migrateState, STATE_VERSION } from '../src/worlds/safehouse/state';
 import { createSafehouseWorld } from '../src/worlds/safehouse';
 import { HOUSE_ID } from '../src/shared/safehouseLayout';
 import type { SafehouseObject } from '../src/shared/safehouseTypes';
@@ -208,7 +208,7 @@ test('v5 saves gain the wave clock and their zombies become walkers; the world s
     },
   };
   const migrated = migrateState(v5, 5);
-  assert.equal(migrated.version, 7);
+  assert.equal(migrated.version, STATE_VERSION);
   assert.equal(migrated.combat.wave.number, 1);
   assert.equal(migrated.combat.wave.phase, 'prep');
   assert.equal(migrated.combat.wave.phaseEndsAt, 9000 + PREP_MS);

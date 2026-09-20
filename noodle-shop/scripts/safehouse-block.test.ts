@@ -66,8 +66,8 @@ test('"in the park" and "outside the shop" place there', () => {
 test('budgets grew with the block', () => {
   assert.equal(BUDGETS.creations, 100);
   assert.equal(BUDGETS.parts, 4000);
-  assert.equal(MAX_CREATURES, 12);
-  assert.equal(STATE_VERSION, 7);
+  assert.equal(MAX_CREATURES, 15);
+  assert.equal(STATE_VERSION, 9);
   assert.equal(createSafehouseWorld().meta.stateVersion, STATE_VERSION, 'the world and the schema agree on the version');
 });
 
@@ -93,7 +93,7 @@ test('a v6 world grows the lots on load; nothing standing moves; taken or archiv
   } as unknown as Record<string, unknown>;
   const before = structuredClone(v6.objects) as SafehouseObject[];
   const migrated: SafehouseState = migrateState(v6, 6);
-  assert.equal(migrated.version, 7);
+  assert.equal(migrated.version, STATE_VERSION);
   const ids = new Set(migrated.objects.map((o) => o.id));
   for (const id of BLOCK_SCENERY_IDS) {
     if (id === 'scenery-shop') assert.ok(!ids.has(id), 'an archived shop is not re-seeded standing');

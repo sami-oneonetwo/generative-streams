@@ -4,6 +4,7 @@ import { SURVIVOR_START, HOUSE_ID, footprint, inflate, overlaps } from '../../sh
 import { freshCombat, freshWave, fenceObjects, initializeObject, intact, MAX_ZOMBIES } from './combat';
 import { sceneryObjects, RETIRED_SCENERY_IDS, RELAID_SCENERY_IDS, BLOCK_SCENERY_IDS } from './scenery';
 import { choosePlacement } from './placement';
+import { freshNeighbours, NEIGHBOURS, OWNED_SLOTS, yardPiece, type NeighbourState } from './neighbours';
 import type {
   CombatState,
   SafehouseObject,
@@ -13,7 +14,7 @@ import type {
 } from '../../shared/safehouseTypes';
 const point = z.object({ x: z.number().finite(), z: z.number().finite() });
 /** Bumped together with the schema and migration below; index.ts reads it so the two can never disagree. */
-export const STATE_VERSION = 7;
+export const STATE_VERSION = 9;
 /**
  * What chat may add before Rook says the block is full. Geometry travels by reference
  * (see SafehouseObjectView), so these are bounded by rendering and routing, not by the wire.
@@ -38,6 +39,7 @@ export const objectSchema = z
     nextShotAt: z.number().nonnegative().optional(),
     fixed: z.boolean().optional(),
     passable: z.boolean().optional(),
+    owner: z.string().max(20).optional(),
     creature: z
       .object({
         behaviour: z.enum(['rampage', 'fight', 'zoom', 'roam']),
@@ -50,6 +52,7 @@ export const objectSchema = z
         hits: z.number().int().nonnegative().optional(),
         flying: z.boolean().optional(),
         altitude: z.number().finite().nonnegative().optional(),
+        nemesis: z.string().optional(),
       })
       .optional(),
   })
@@ -128,8 +131,100 @@ const jobSchema = z.object({
     })
     .optional(),
 });
+// The neighbours' own job machinery (neighbours.ts): a build or an edit in flight, with its ghost.
+const neighbourJobSchema = z.object({
+  kind: z.enum(['build', 'edit', 'repair', 'rebuild', 'tend', 'look']),
+  purpose: z.enum(['defense', 'upkeep', 'project']),
+  label: z.string().max(80),
+  status: z.enum(['walking', 'working']),
+  path: z.array(point).max(2000),
+  spot: point,
+  workedMs: z.number().nonnegative(),
+  workMs: z.number().positive(),
+  preview: objectSchema.optional(),
+  targetId: z.string().optional(),
+  baseRevision: z.number().optional(),
+  baseLifecycle: z.number().optional(),
+  project: z.string().max(20).optional(),
+  reason: z.string().max(20).optional(),
+});
+const impulseKind = z.enum(['whim', 'rival', 'fortify', 'light', 'pet', 'care', 'visit', 'rearrange', 'social', 'retheme']);
+// An idea a neighbour has had and not yet acted on; a design the model drew up for it rides along.
+const impulseSchema = z.object({
+  kind: impulseKind,
+  idea: z.string().max(300),
+  name: z.string().max(80).optional(),
+  targetId: z.string().optional(),
+  at: z.number(),
+  noAi: z.boolean().optional(),
+  brief: z.string().max(200).optional(),
+  design: z
+    .object({
+      blueprint: blueprintSchema,
+      name: z.string().max(70),
+      role: z.enum(['decoration', 'barrier']).optional(),
+      pet: z.boolean().optional(),
+      flying: z.boolean().optional(),
+      reply: z.string().max(240).optional(),
+    })
+    .optional(),
+});
+const neighbourSchema: z.ZodType<NeighbourState> = z.object({
+  id: z.string().max(20),
+  position: point,
+  facing: z.number().finite(),
+  activity: z.enum(['idle', 'walking', 'building', 'repairing', 'tending', 'painting', 'looking']),
+  path: z.array(point).max(2000),
+  job: neighbourJobSchema.optional(),
+  restMs: z.number().finite(),
+  stages: z.record(z.string(), z.number().int().nonnegative()),
+  paint: z.string().max(12).optional(),
+  threat: z
+    .object({
+      id: z.string(),
+      level: z.number().int().nonnegative(),
+      quietMs: z.number().finite(),
+      waitMs: z.number().finite(),
+      sinceMs: z.number().finite().optional(),
+    })
+    .optional(),
+  wear: z.number().finite(),
+  say: z.object({ text: z.string().max(200), until: z.number() }).optional(),
+  // What they have already noticed, so news is news once (added after v8; older saves start fresh).
+  seen: z
+    .object({
+      creationAt: z.number(),
+      otherAt: z.number(),
+      wave: z.number().int().nonnegative(),
+      fell: z.number().int().optional(),
+      lighting: z.enum(['day', 'night']),
+      pet: z.boolean().optional(),
+      hunkered: z.number().int().optional(),
+    })
+    .optional(),
+  impulses: z.array(impulseSchema).max(6).optional(),
+  wish: z
+    .object({
+      kind: impulseKind,
+      idea: z.string().max(300),
+      name: z.string().max(80).optional(),
+      targetId: z.string().optional(),
+      at: z.number(),
+      brief: z.string().max(200).optional(),
+    })
+    .optional(),
+  aiAt: z.number().optional(),
+  whimSeq: z.number().int().nonnegative().optional(),
+  // The look they are redoing the yard in, read off the block (state v9), and how far along they are.
+  theme: z.object({ name: z.string().max(40), brief: z.string().max(200), adoptedAt: z.number() }).optional(),
+  plan: z.array(z.string().max(120)).max(8).optional(),
+  themed: z.record(z.string(), z.string().max(40)).optional(),
+  survey: z.object({ sig: z.string().max(40), at: z.number() }).optional(),
+  surveyAt: z.number().optional(),
+  surveySig: z.string().max(40).optional(),
+});
 export interface SafehouseState {
-  version: 7;
+  version: 9;
   combat: CombatState;
   targets: { userId: string; objectId: string }[];
   idlePath: GroundPoint[];
@@ -141,14 +236,27 @@ export interface SafehouseState {
   callsUsed?: number;
   /** Operator switch for Rook's own repair rounds; undefined means running. */
   repairsPaused?: boolean;
+  /** Operator switch for the neighbours; undefined means they are about. */
+  neighboursPaused?: boolean;
+  /** Operator switch for the neighbours reading the block (state v9); undefined means they read it. */
+  surveyPaused?: boolean;
+  /** The block readings' own allowance, kept apart from chat's so the two never compete. */
+  surveyCallsRemaining?: number;
+  /** Block readings made, also counted into `callsUsed` so the world's total stays honest. */
+  surveyCallsUsed?: number;
+  /** Chatters the operator trusts, as lowercased usernames: no design time limit, and `!delete <name>`. */
+  privileged?: string[];
   objects: SafehouseObject[];
   jobs: Job[];
+  /** The people next door (state v8). */
+  neighbours: NeighbourState[];
   survivor: { position: GroundPoint; activity: SurvivorActivity; facing: number };
   lighting: 'day' | 'night';
   worldRevision: number;
   notice: string;
   seen: string[];
-  edits: { objectId: string; previous?: SafehouseObject; revision: number }[];
+  /** Undo history. `removed` marks a `!delete`: `previous` is the whole object, put back as it was. */
+  edits: { objectId: string; previous?: SafehouseObject; revision: number; removed?: boolean }[];
 }
 const zombieKind = z.enum(['walker', 'runner', 'brute']);
 const combatSchema = z.object({
@@ -191,7 +299,7 @@ const combatSchema = z.object({
   }),
 });
 export const stateSchema: z.ZodType<SafehouseState> = z.object({
-  version: z.literal(7),
+  version: z.literal(9),
   combat: combatSchema,
   targets: z.array(z.object({ userId: z.string(), objectId: z.string() })).max(200),
   idlePath: z.array(point).max(2000),
@@ -200,8 +308,14 @@ export const stateSchema: z.ZodType<SafehouseState> = z.object({
   allowanceEnforced: z.boolean().optional(),
   callsUsed: z.number().int().nonnegative().optional(),
   repairsPaused: z.boolean().optional(),
+  neighboursPaused: z.boolean().optional(),
+  surveyPaused: z.boolean().optional(),
+  surveyCallsRemaining: z.number().int().min(0).max(1_000_000).optional(),
+  surveyCallsUsed: z.number().int().nonnegative().optional(),
+  privileged: z.array(z.string().min(1).max(40)).max(100).optional(),
   objects: z.array(objectSchema).max(600),
   jobs: z.array(jobSchema).max(40),
+  neighbours: z.array(neighbourSchema).max(8),
   survivor: z.object({
     position: point,
     activity: z.enum(['idle', 'walking', 'building', 'repairing']),
@@ -212,12 +326,28 @@ export const stateSchema: z.ZodType<SafehouseState> = z.object({
   notice: z.string(),
   seen: z.array(z.string()).max(1000),
   edits: z
-    .array(z.object({ objectId: z.string(), previous: objectSchema.optional(), revision: z.number() }))
+    .array(
+      z.object({
+        objectId: z.string(),
+        previous: objectSchema.optional(),
+        revision: z.number(),
+        removed: z.boolean().optional(),
+      }),
+    )
     .max(20),
 });
 export function defaultAllowance(): number {
   const n = Number(process.env.SAFEHOUSE_CALL_ALLOWANCE ?? 20);
   return Number.isInteger(n) && n >= 0 && n <= 10000 ? n : 20;
+}
+/**
+ * The block readings' own allowance. Generous next to chat's twenty because each one is a short
+ * text call on the fast model rather than a design, and because it is only spent when the street
+ * has actually changed.
+ */
+export function defaultSurveyAllowance(): number {
+  const n = Number(process.env.SAFEHOUSE_SURVEY_ALLOWANCE ?? 40);
+  return Number.isInteger(n) && n >= 0 && n <= 10000 ? n : 40;
 }
 /**
  * v5: the cutaway house becomes Rook's closed house in the middle of the yard.
@@ -308,8 +438,72 @@ function addBlock(s: Record<string, unknown>): Record<string, unknown> {
   );
   return { ...s, objects: [...objects, ...additions] };
 }
+/**
+ * v8: the neighbours move in. Two people at their porches, nothing built yet; the houses next
+ * door stop being "empty" in their description when nobody has changed it. Nothing else moves.
+ */
+function addNeighbours(s: Record<string, unknown>): Record<string, unknown> {
+  const lived = new Map(NEIGHBOURS.map((n) => [n.houseId, n.name]));
+  const describe = (o: SafehouseObject) =>
+    lived.has(o.id) && o.blueprint.description === 'Empty house next door'
+      ? { ...o, blueprint: { ...o.blueprint, description: `${lived.get(o.id)} lives here` } }
+      : o;
+  const combat = s.combat as CombatState;
+  return {
+    ...s,
+    objects: (s.objects as SafehouseObject[]).map(describe),
+    combat: { ...combat, archive: combat.archive.map(describe) },
+    neighbours: freshNeighbours(),
+  };
+}
+/**
+ * v9: the neighbours stop hoarding. They kept up to 22 pieces each and rotated whims forever,
+ * which made them the largest thing in the scene; from here they keep OWNED_SLOTS yard pieces
+ * and redo those instead of adding more.
+ *
+ * Each neighbour keeps their newest few yard pieces and the surplus is **dropped outright**,
+ * not archived: `planRepair` searches the archive and would rebuild them straight back, which
+ * would undo the cull on the first quiet afternoon. So designs are lost here — take a backup
+ * before deploying this (`data/world-safehouse.pre-v9-themes-<stamp>.json`). Defenses, pets,
+ * lights, kennels, Rook's crate and both houses are untouched: they sit outside the cap.
+ * Anything in flight is let go, since the piece it pointed at may be one of the dropped ones.
+ * The wave clock and combat are left exactly as they were — removing scenery starts nothing.
+ */
+function capYards(s: Record<string, unknown>): Record<string, unknown> {
+  const combat = s.combat as CombatState;
+  let objects = s.objects as SafehouseObject[];
+  let archive = combat.archive;
+  const dropped = new Set<string>();
+  for (const spec of NEIGHBOURS) {
+    const mine = [...objects, ...archive].filter((o) => o.owner === spec.id && yardPiece(o));
+    // Newest first, standing ahead of rubble: those are the ones worth keeping.
+    const ranked = [...mine].sort((a, b) => {
+      const standing = (o: SafehouseObject) => (objects.includes(o) && intact(o) ? 1 : 0);
+      return standing(b) - standing(a) || b.createdAt - a.createdAt;
+    });
+    for (const o of ranked.slice(OWNED_SLOTS)) dropped.add(o.id);
+  }
+  objects = objects.filter((o) => !dropped.has(o.id));
+  archive = archive.filter((o) => !dropped.has(o.id));
+  const neighbours = (s.neighbours as NeighbourState[]).map((n) => ({
+    ...n,
+    job: undefined,
+    path: [],
+    activity: 'idle' as const,
+    impulses: [],
+    wish: undefined,
+  }));
+  return {
+    ...s,
+    objects,
+    neighbours,
+    combat: { ...combat, archive },
+    edits: (s.edits as SafehouseState['edits']).filter((e) => !dropped.has(e.objectId)),
+    targets: (s.targets as SafehouseState['targets']).filter((t) => !dropped.has(t.objectId)),
+  };
+}
 export function migrateState(raw: unknown, version: number): SafehouseState {
-  if (![1, 2, 3, 4, 5, 6].includes(version) || !raw || typeof raw !== 'object')
+  if (![1, 2, 3, 4, 5, 6, 7, 8].includes(version) || !raw || typeof raw !== 'object')
     throw new Error('Unsupported safehouse save version');
   // Step through each version so a v1 world gets every later addition exactly once.
   let s = { ...(raw as Record<string, unknown>) };
@@ -333,6 +527,8 @@ export function migrateState(raw: unknown, version: number): SafehouseState {
   if (version < 5) s = relayHouse(s);
   if (version < 6) s = addWaves(s);
   if (version < 7) s = addBlock(s);
+  if (version < 8) s = addNeighbours(s);
+  if (version < 9) s = capYards(s);
   return stateSchema.parse({ ...s, version: STATE_VERSION });
 }
 export function createInitialState(): SafehouseState {
@@ -345,6 +541,7 @@ export function createInitialState(): SafehouseState {
     callsRemaining: defaultAllowance(),
     objects: [],
     jobs: [],
+    neighbours: freshNeighbours(),
     survivor: { position: { ...SURVIVOR_START }, activity: 'idle', facing: Math.PI },
     lighting: 'day',
     worldRevision: 0,

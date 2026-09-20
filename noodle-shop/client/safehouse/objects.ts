@@ -15,7 +15,7 @@
 import * as THREE from 'three';
 import { buildPrimitiveMesh, disposeObject3D, newMaterialCache } from './primitives';
 import { Track } from './motion';
-import { partsKey, type Primitive, type SafehouseJobView, type SafehouseObject, type SafehouseObjectView } from './types';
+import { partsKey, type Primitive, type SafehouseObject, type SafehouseObjectView } from './types';
 
 interface Entry {
   revision: number;
@@ -26,14 +26,21 @@ interface Entry {
   creature?: { behaviour: string; destroyed: boolean; flying: boolean };
 }
 
+/** A build in flight: Rook's current job, or a neighbour's. Keyed by whose it is. */
+export interface PreviewSpec {
+  key: string;
+  preview: SafehouseObject;
+  status: 'walking' | 'building' | 'other';
+  progress: number;
+}
 export interface ObjectsHandles {
   root: THREE.Group;
   /** A snapshot just landed: note where every living build is at that server time. */
   sample(objects: SafehouseObjectView[], serverTime: number): void;
   /** Reconcile committed objects against the scene snapshot the drawn world has reached. */
   syncCommitted(objects: SafehouseObjectView[]): void;
-  /** Reconcile the ghost preview for the currently active job, if any. */
-  syncPreview(current: SafehouseJobView | undefined): void;
+  /** Reconcile the ghost previews for every job in flight (Rook's and the neighbours'). */
+  syncPreviews(list: PreviewSpec[]): void;
   /** Per frame: place living builds where they are at `renderTime` (server time) and give them a gait. */
   update(now: number, reducedMotion: boolean, renderTime: number): void;
   dispose(): void;
@@ -136,8 +143,7 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
   const committed = new Map<string, Entry>();
   const tracks = new Map<string, Track>();
   let latestIds = new Set<string>(); // living builds in the newest snapshot, applied or not
-  let previewGroup: THREE.Group | null = null;
-  let previewId: string | null = null;
+  const previews = new Map<string, { id: string; group: THREE.Group }>();
   const geometry = createGeometryStore((key, parts) => {
     const at = key.lastIndexOf(':');
     const entry = committed.get(key.slice(0, at));
@@ -220,40 +226,40 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     }
   }
 
-  function syncPreview(current: SafehouseJobView | undefined): void {
-    const preview: SafehouseObject | undefined = current ? current.preview : undefined;
-    if (!preview) {
-      if (previewGroup) {
-        disposeObject3D(previewGroup);
-        previewGroup = null;
-        previewId = null;
+  function syncPreviews(list: PreviewSpec[]): void {
+    const seen = new Set<string>();
+    for (const spec of list) {
+      seen.add(spec.key);
+      const { preview } = spec;
+      const id = preview.id + ':' + preview.revision;
+      let entry = previews.get(spec.key);
+      if (!entry || entry.id !== id) {
+        if (entry) disposeObject3D(entry.group);
+        const group = new THREE.Group();
+        group.position.set(preview.position.x, 0, preview.position.z);
+        fillGroup(group, preview.blueprint.parts, undefined, true);
+        root.add(group);
+        entry = { id, group };
+        previews.set(spec.key, entry);
       }
-      return;
-    }
-    const key = preview.id + ':' + preview.revision;
-    if (previewId !== key) {
-      if (previewGroup) disposeObject3D(previewGroup);
-      previewGroup = new THREE.Group();
-      previewGroup.position.set(preview.position.x, 0, preview.position.z);
-      fillGroup(previewGroup, preview.blueprint.parts, undefined, true);
-      root.add(previewGroup);
-      previewId = key;
-    }
-    const progress = current ? current.progress : 0;
-    if (previewGroup) {
-      if (current?.status === 'walking')
-        previewGroup.children.forEach((child) => {
+      const { group } = entry;
+      if (spec.status === 'walking')
+        group.children.forEach((child) => {
           child.visible = true;
         });
-      else applyProgress(previewGroup, progress);
-      previewGroup.traverse((child) => {
+      else applyProgress(group, spec.progress);
+      const building = spec.status === 'building';
+      group.traverse((child) => {
         if (!(child instanceof THREE.Mesh)) return;
-        const material = child.material as THREE.MeshStandardMaterial;
-        const building = current?.status === 'building';
-        material.opacity = building ? 0.9 : GHOST_OPACITY;
+        (child.material as THREE.MeshStandardMaterial).opacity = building ? 0.9 : GHOST_OPACITY;
         child.castShadow = building;
       });
     }
+    for (const [key, entry] of previews)
+      if (!seen.has(key)) {
+        disposeObject3D(entry.group);
+        previews.delete(key);
+      }
   }
 
   function update(now: number, reducedMotion: boolean, renderTime: number): void {
@@ -287,11 +293,10 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
   function dispose(): void {
     for (const entry of committed.values()) disposeObject3D(entry.group);
     committed.clear();
-    if (previewGroup) disposeObject3D(previewGroup);
-    previewGroup = null;
-    previewId = null;
+    for (const entry of previews.values()) disposeObject3D(entry.group);
+    previews.clear();
     parent.remove(root);
   }
 
-  return { root, sample, syncCommitted, syncPreview, update, dispose };
+  return { root, sample, syncCommitted, syncPreviews, update, dispose };
 }

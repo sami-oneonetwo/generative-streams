@@ -40,7 +40,15 @@ export interface AdminStatus {
   adminActions: {
     id: string;
     label: string;
-    input?: { label: string; min?: number; max?: number; step?: number; placeholder?: string };
+    input?: {
+      kind?: 'number' | 'text';
+      label: string;
+      min?: number;
+      max?: number;
+      step?: number;
+      placeholder?: string;
+      maxLength?: number;
+    };
   }[];
   events: string[];
   stateSummary: string;
@@ -54,6 +62,14 @@ export interface AdminStatus {
     callsRemaining: number;
     allowanceEnforced: boolean;
     callsUsed: number;
+    /** The neighbours reading the block: its own switch and its own allowance, apart from chat's. */
+    surveyPaused: boolean;
+    surveyCallsRemaining: number;
+    surveyCallsUsed: number;
+    /** What each neighbour is currently redoing their yard in, and how many pieces are left to go. */
+    themes: { name: string; theme?: string; left: number }[];
+    /** Chatters the operator trusts: no design time limit, and `!delete` works for them. */
+    privileged: string[];
     wave?: { number: number; phase: 'prep' | 'wave'; secondsLeft: number; zombies: number; best: number; fell?: number };
     objects: {
       id: string;

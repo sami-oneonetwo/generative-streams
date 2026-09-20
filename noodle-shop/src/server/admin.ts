@@ -77,6 +77,16 @@ export function makeAdminRouter(deps: AdminDeps): Router {
               callsRemaining: safehouse.callsRemaining,
               allowanceEnforced: safehouse.allowanceEnforced,
               callsUsed: safehouse.callsUsed,
+              // Operator-only: who may !delete and design without a time limit. Kept off the public scene.
+              privileged: (engine.state as { privileged?: string[] }).privileged ?? [],
+              // Also operator-only, and read off state rather than the scene: the snapshot goes to
+              // every viewer twice a second and its size is guarded (safehouse-payload.test.ts).
+              surveyPaused: !!(engine.state as { surveyPaused?: boolean }).surveyPaused,
+              surveyCallsRemaining: (engine.state as { surveyCallsRemaining?: number }).surveyCallsRemaining ?? 0,
+              surveyCallsUsed: (engine.state as { surveyCallsUsed?: number }).surveyCallsUsed ?? 0,
+              themes: ((engine.state as { neighbours?: { id: string; theme?: { name: string }; plan?: string[] }[] }).neighbours ?? []).map(
+                (n) => ({ name: n.id, theme: n.theme?.name, left: n.plan?.length ?? 0 }),
+              ),
               wave: safehouse.combat && {
                 number: safehouse.combat.wave.number,
                 phase: safehouse.combat.wave.phase,
@@ -155,15 +165,25 @@ export function makeAdminRouter(deps: AdminDeps): Router {
       res.status(404).json({ error: `no admin action '${id}'` });
       return;
     }
-    // An action with an input takes a number, checked against the bounds the action declares.
-    let value: number | undefined;
-    if (action.input) {
-      value = Number(req.body?.value);
+    // An action with an input takes what it declares: text (non-empty, within maxLength) or a
+    // number within its bounds.
+    let value: number | string | undefined;
+    if (action.input?.kind === 'text') {
+      const text = String(req.body?.value ?? '').trim();
+      const max = action.input.maxLength ?? 200;
+      if (!text || text.length > max) {
+        res.status(400).json({ error: `'${action.label}' needs text of 1–${max} characters` });
+        return;
+      }
+      value = text;
+    } else if (action.input) {
+      const n = Number(req.body?.value);
       const { min = -Infinity, max = Infinity } = action.input;
-      if (!Number.isFinite(value) || value < min || value > max) {
+      if (!Number.isFinite(n) || n < min || n > max) {
         res.status(400).json({ error: `'${action.label}' needs a number between ${min} and ${max}` });
         return;
       }
+      value = n;
     }
     try {
       action.run(engine.ctx, value);

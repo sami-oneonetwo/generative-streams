@@ -156,6 +156,11 @@ async function refresh(): Promise<void> {
         `AI generation: ${s.generationPaused ? 'PAUSED' : 'enabled'} · ${
           s.allowanceEnforced ? `${s.callsRemaining} model calls remaining` : `call limit IGNORED (${s.callsRemaining} on the counter)`
         } · ${s.callsUsed} calls made so far (a call count, not a dollar cap)`,
+        `Trusted chatters (no design time limit, may !delete <name>): ${s.privileged.length ? s.privileged.join(', ') : 'none'}`,
+        `Block readings: ${s.surveyPaused ? 'PAUSED' : 'enabled'} · ${s.surveyCallsRemaining} left on their own allowance · ${s.surveyCallsUsed} made` +
+          (s.themes.length
+            ? ` · ${s.themes.map((t) => `${t.name}: ${t.theme ?? 'no theme yet'}${t.left ? ` (${t.left} to go)` : ''}`).join(' · ')}`
+            : ''),
         s.wave
           ? `Wave ${s.wave.number} · ${s.wave.phase === 'prep' ? `next wave in ${s.wave.secondsLeft} s` : `in progress, straggler cut-off in ${s.wave.secondsLeft} s`} · ${s.wave.zombies} zombies · record wave ${s.wave.best}${s.wave.fell ? ` · house last fell on wave ${s.wave.fell}` : ''}`
           : '',
@@ -212,20 +217,36 @@ async function refresh(): Promise<void> {
           actionsEl.appendChild(b);
           continue;
         }
-        // An action that takes a number: a small field beside its button.
+        // An action that takes a value: a small field beside its button — text, or a number by default.
+        const input = a.input;
+        const text = input.kind === 'text';
         const wrap = document.createElement('span');
         wrap.style.display = 'inline-flex';
         wrap.style.gap = '4px';
         wrap.style.alignItems = 'center';
         const field = document.createElement('input');
-        field.type = 'number';
-        field.style.width = '6em';
-        if (a.input.min !== undefined) field.min = String(a.input.min);
-        if (a.input.max !== undefined) field.max = String(a.input.max);
-        if (a.input.step !== undefined) field.step = String(a.input.step);
-        field.placeholder = a.input.placeholder ?? a.input.label;
-        field.title = a.input.label;
+        field.type = text ? 'text' : 'number';
+        field.style.width = text ? '10em' : '6em';
+        if (text && input.maxLength !== undefined) field.maxLength = input.maxLength;
+        if (!text && input.min !== undefined) field.min = String(input.min);
+        if (!text && input.max !== undefined) field.max = String(input.max);
+        if (!text && input.step !== undefined) field.step = String(input.step);
+        field.placeholder = input.placeholder ?? input.label;
+        field.title = input.label;
         b.onclick = () => {
+          if (text) {
+            const value = field.value.trim();
+            if (!value) {
+              alert(`Enter a ${input.label} for "${a.label}" first.`);
+              return;
+            }
+            api('/action', { id: a.id, value })
+              .then(() => {
+                field.value = '';
+              })
+              .catch((e) => alert(String(e)));
+            return;
+          }
           const value = Number(field.value);
           if (field.value === '' || !Number.isFinite(value)) {
             alert(`Enter a number for "${a.label}" first.`);
@@ -233,6 +254,9 @@ async function refresh(): Promise<void> {
           }
           api('/action', { id: a.id, value }).catch((e) => alert(String(e)));
         };
+        field.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') b.click();
+        });
         wrap.append(b, field);
         actionsEl.appendChild(wrap);
       }

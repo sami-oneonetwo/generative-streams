@@ -7,6 +7,8 @@ export interface DesignInput {
   username: string;
   objects: SafehouseObject[];
   targetId?: string;
+  /** No client-side time limit on the model call (a chatter the operator trusts). */
+  noTimeout?: boolean;
 }
 export type DesignGenerator = (input: DesignInput, signal: AbortSignal) => Promise<DesignResponse>;
 const SYSTEM = `You are the builder in Corner House, an original low-poly post-apocalyptic community world. Interpret viewer requests and return ONLY JSON.
@@ -43,7 +45,7 @@ export const generateBlueprint: DesignGenerator = async (input, signal) => {
     json: true,
     attempts: 1,
     maxTokens: 10000,
-    timeoutMs: 90000,
+    timeoutMs: input.noTimeout ? Infinity : 90000,
     signal,
   });
   if (raw.length > 120000) throw new Error('Generated design exceeded the response size limit');

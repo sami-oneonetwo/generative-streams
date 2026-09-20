@@ -39,8 +39,12 @@ export const CREATURES: Record<
   zoom: { health: 60, speed: 6, damage: 0, cooldownMs: 0, hostile: false }, // tears around the neighborhood, harmless
   roam: { health: 60, speed: 1, damage: 0, cooldownMs: 0, hostile: false }, // ambles about, harmless
 };
-/** Living things standing at once across the block; a neighborhood, not a zoo. */
-export const MAX_CREATURES = 12;
+/**
+ * Living things standing at once across the block; a neighborhood, not a zoo. Raised from 12 with
+ * the neighbours' own budget (NEIGHBOUR_CREATURE_BUDGET, 5) so their menagerie never comes out of
+ * chat's share: viewers keep the ten they always had.
+ */
+export const MAX_CREATURES = 15;
 export const isHostile = (o: SafehouseObject) => !!o.creature && CREATURES[o.creature.behaviour].hostile;
 export const healthFor = (role: SafehouseObject['role']) =>
   role === 'barrier' ? 240 : role === 'turret' ? 120 : 80;
@@ -51,8 +55,10 @@ const attackable = (o: SafehouseObject) => intact(o) && !o.passable;
  *  abandoned cars) still blocks movement and shots but is never a target: a horde that wanders off to
  *  chew a tree two lots over never meets the defenses, and the wave drags on until the cut-off. */
 const FENCED_YARD = { minX: -11.5, maxX: 13.5, minZ: -18.5, maxZ: 5 };
+// What the neighbours build (`owner`) is theirs to defend against chat's creatures; the horde
+// walks past it the way it walks past their houses.
 const worthAttacking = (o: SafehouseObject) =>
-  !o.fixed || o.role !== 'decoration' || contains(FENCED_YARD, o.position);
+  !o.owner && (!o.fixed || o.role !== 'decoration' || contains(FENCED_YARD, o.position));
 const stats = (z: Zombie) => ZOMBIE_KINDS[z.kind ?? 'walker'];
 
 /** Wave n: 3+n walkers, runners from wave 3, brutes from wave 5, capped at MAX_ZOMBIES by trimming walkers. */

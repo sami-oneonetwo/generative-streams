@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { sceneryObjects, RETIRED_SCENERY_IDS } from '../src/worlds/safehouse/scenery';
 import { createSafehouseWorld } from '../src/worlds/safehouse';
-import { migrateState, stateSchema, type SafehouseState } from '../src/worlds/safehouse/state';
+import { migrateState, stateSchema, STATE_VERSION, type SafehouseState } from '../src/worlds/safehouse/state';
 import { parseRequest, rotateBlueprint } from '../src/worlds/safehouse/edits';
 import { measureBlueprint } from '../src/worlds/safehouse/blueprint';
 import { route } from '../src/worlds/safehouse/placement';
@@ -239,7 +239,7 @@ test('a v1 world gains fences and the neighborhood without touching creations, c
     edits: [],
   };
   const migrated = migrateState(v1, 1);
-  assert.equal(migrated.version, 7);
+  assert.equal(migrated.version, STATE_VERSION);
   const mine = migrated.objects.find((o) => o.id === 'mine')!;
   assert.deepEqual(mine.blueprint, creation.blueprint);
   assert.equal(mine.editedBy, 'b');
@@ -299,7 +299,7 @@ test('v4 → v5 swaps the cutaway house for Rook\'s house and keeps every creati
     targets: [{ userId: 'a', objectId: 'scenery-couch' }],
   };
   const migrated = migrateState(v4, 4);
-  assert.equal(migrated.version, 7);
+  assert.equal(migrated.version, STATE_VERSION);
   assert.ok(!migrated.objects.some((o) => o.id === 'scenery-couch'));
   assert.ok(!migrated.combat.archive.some((o) => o.id === 'scenery-back-2'), 'retired pieces leave the archive too');
   assert.ok(migrated.objects.some((o) => o.id === HOUSE_ID));

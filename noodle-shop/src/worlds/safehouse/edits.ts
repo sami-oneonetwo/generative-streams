@@ -147,7 +147,7 @@ function where(o: SafehouseObject): string {
 const placeHint = (area: string) =>
   area === 'the yard' ? 'by the house' : /^(?:by|across|in front|behind|beside|outside)\b/.test(area) ? area : `in the ${area}`;
 const describe = (o: SafehouseObject) =>
-  `${o.blueprint.name} ${objectReference(o)} (${where(o)}${o.fixed ? '' : `, by ${o.createdBy}`})`;
+  `${o.blueprint.name} ${objectReference(o)} (${where(o)}${o.fixed && !o.owner ? '' : `, by ${o.createdBy}`})`;
 const baseName = (o: SafehouseObject) =>
   o.blueprint.name.replace(/\s*\(.*\)\s*$/, '').replace(/\s+\d+$/, '').toLowerCase();
 const hurt = (o: SafehouseObject) => o.destroyedAt !== undefined || (o.health ?? 80) < (o.maxHealth ?? 80);
@@ -244,12 +244,13 @@ export function resolveTarget(
       ? { target, found: true }
       : { clarification: 'Which one? Name it, like “the truck”. “It” means your own last creation.' };
   }
-  // "my statue", "dave's statue": that person's own builds. Rook's things keep his name.
+  // "my statue", "dave's statue", "marge's veg patch": that person's own builds (a neighbour's
+  // are fixed like the rest of the block but still theirs). Rook's things keep his name.
   const owned = wanted.match(/^(?:my|([\w.]+)['’]s)\s+(.+)$/);
   if (owned && !/^(rook|rooks|his)$/.test(owned[1] ?? '')) {
     const owner = (owned[1] ?? asking.username ?? '').toLowerCase();
     if (owner) {
-      const theirs = objects.filter((o) => !o.fixed && o.createdBy.toLowerCase() === owner);
+      const theirs = objects.filter((o) => (!o.fixed || o.owner) && o.createdBy.toLowerCase() === owner);
       if (!theirs.length) return { clarification: `Nothing here was built by ${owned[1] ?? 'you'} yet.`, found: true };
       const r = resolveTarget(owned[2], theirs, lastId, { ...asking, username: undefined });
       if (r.target || r.found) return r;

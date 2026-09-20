@@ -4,7 +4,8 @@ import { shortRef, type SafehouseScene, type GroundPoint } from '../../src/share
 import { SURVIVOR_START } from '../../src/shared/safehouseLayout';
 import { createCombatView } from './combat';
 import { buildEnvironment } from './environment';
-import { createObjectsLayer } from './objects';
+import { createObjectsLayer, type PreviewSpec } from './objects';
+import { createNeighboursLayer } from './neighbours';
 import { buildPersonGroup, newMaterialCache } from './primitives';
 import { Timeline, Track } from './motion';
 const el = (id: string) => document.getElementById(id)!;
@@ -36,6 +37,28 @@ function start() {
     objects = createObjectsLayer(environment.world),
     person = buildPersonGroup(environment.world, newMaterialCache(), false);
   const combatView = createCombatView(environment.world);
+  // The neighbours: figures in the scene, tags and small bubbles in the overlay.
+  const people = createNeighboursLayer(environment.world, el('people'));
+  /** Every build in flight: Rook's current job and any neighbour walking to or working on a new piece. */
+  function previewsOf(s: SafehouseScene): PreviewSpec[] {
+    const list: PreviewSpec[] = [];
+    if (s.current?.preview)
+      list.push({
+        key: 'rook',
+        preview: s.current.preview,
+        status: s.current.status === 'walking' ? 'walking' : s.current.status === 'building' ? 'building' : 'other',
+        progress: s.current.progress,
+      });
+    for (const n of s.neighbours ?? [])
+      if (n.job?.preview)
+        list.push({
+          key: `neighbour:${n.id}`,
+          preview: n.job.preview,
+          status: n.job.status === 'walking' ? 'walking' : 'building',
+          progress: n.job.progress,
+        });
+    return list;
+  }
   // Read-only handle for the browser smokes (counting dust motes, checking the camera).
   (window as unknown as { __safehouseScene?: THREE.Scene }).__safehouseScene = scene;
   const workLight = new THREE.PointLight(0xffd9a0, 0, 13, 2);
@@ -127,7 +150,7 @@ function start() {
       ruined = object.destroyedAt !== undefined,
       hurt = (object.health ?? 80) < (object.maxHealth ?? 80);
     el('inspect-detail').textContent =
-      `${ref} · ${object.passable ? 'ground' : object.creature ? `living · ${object.creature.behaviour}${object.creature.flying ? ' · flying' : ''}` : (object.role ?? 'decoration')} · ${ruined ? 'Destroyed' : `${Math.round(object.health ?? 80)}/${object.maxHealth ?? 80} health`} · ${object.fixed ? 'Part of the neighborhood' : `Created by ${object.createdBy}`} · Last edited by ${object.editedBy}`;
+      `${ref} · ${object.passable ? 'ground' : object.creature ? `living · ${object.creature.behaviour}${object.creature.flying ? ' · flying' : ''}` : (object.role ?? 'decoration')} · ${ruined ? 'Destroyed' : `${Math.round(object.health ?? 80)}/${object.maxHealth ?? 80} health`} · ${object.owner ? `Built by ${object.createdBy} next door` : object.fixed ? 'Part of the neighborhood' : `Created by ${object.createdBy}`} · Last edited by ${object.editedBy}`;
     // Chat says names, not hashes: any part of the name works ("the truck"); the #reference is the fallback.
     const name = /^rook'?s\b/i.test(object.blueprint.name)
       ? object.blueprint.name
@@ -212,8 +235,9 @@ function start() {
       select.replaceChildren(option);
       const groups: [string, typeof s.objects][] = [
         ['Community creations', s.objects.filter((o) => !o.fixed)],
+        ['Built next door', s.objects.filter((o) => o.owner)],
         ['Ruins (rebuildable)', s.combat?.archive ?? []],
-        ['Neighborhood', s.objects.filter((o) => o.fixed)],
+        ['Neighborhood', s.objects.filter((o) => o.fixed && !o.owner)],
       ];
       for (const [label, list] of groups) {
         if (!list.length) continue;
@@ -243,11 +267,12 @@ function start() {
       ? s.current.requestedBy === 'Rook'
         ? 'Rook, fixing zombie damage on his own'
         : `Suggested by ${s.current.requestedBy}`
-      : `${s.objects.filter((o) => !o.fixed).length} community creations · ${s.objects.filter((o) => o.fixed).length} neighborhood pieces, all movable`;
+      : `${s.objects.filter((o) => !o.fixed).length} community creations · ${s.objects.filter((o) => o.owner).length} built next door · ${s.objects.filter((o) => o.fixed && !o.owner).length} neighborhood pieces, all movable`;
+    // Everything here is chat-driven: the panel only ever suggests things to type.
     el('next').textContent = s.pending.length
       ? `NEXT: ${s.pending[0].label} · ${s.pending.length} waiting`
       : s.current
-        ? 'Click empty ground to mark a build location.'
+        ? 'Try: “Paint the house green” or “Repair the fence.”'
         : 'Try: “Build a turret in the front yard” or “Move the barricade next to the house.”';
     el('progress').hidden = s.current?.status !== 'building';
     el('bar').style.width = `${Math.max(0, Math.min(1, s.current?.progress ?? 0)) * 100}%`;
@@ -301,14 +326,15 @@ function start() {
     state = next;
     objects.syncCommitted(next.objects);
     combatView.sync(next.combat, next.objects);
-    objects.syncPreview(next.current);
+    objects.syncPreviews(previewsOf(next));
+    people.sync(next.neighbours ?? []);
     if (lastLighting !== next.lighting) {
       environment.setLighting(next.lighting === 'night');
       lastLighting = next.lighting;
     }
     hud(next);
     el('connection').textContent =
-      `Connected · ${next.combat?.paused ? 'zombies paused' : `${next.combat?.zombies.length ?? 0} zombies`} · ${next.combat?.kills ?? 0} defeated${next.repairsPaused ? ' · repairs paused' : ''}`;
+      `Connected · ${next.combat?.paused ? 'zombies paused' : `${next.combat?.zombies.length ?? 0} zombies`} · ${next.combat?.kills ?? 0} defeated${next.repairsPaused ? ' · repairs paused' : ''}${next.neighboursPaused ? ' · neighbours indoors' : ''}`;
     const speech = msg.scene.speech;
     speechUntil = speech?.until ?? 0;
     if (speech) showSpeech(speech.text);
@@ -367,6 +393,7 @@ function start() {
         });
         objects.sample(next.objects, msg.serverTime);
         combatView.sample(next.combat, msg.serverTime);
+        people.sample(next.neighbours ?? [], msg.serverTime);
         // The first snapshot shows at once; with reduced motion the newest snapshot is drawn, so nothing waits.
         if (!state || reduced) apply(msg);
         else inbox.push({ at: timeline.applyAt(msg.serverTime), msg });
@@ -398,8 +425,9 @@ function start() {
       person.group.position.z = pose.z;
       person.group.rotation.y = pose.facing;
     }
+    const live = connected && Date.now() - receivedAt < 6000;
+    people.pose(now, reduced, renderTime, live);
     if (state) {
-      const live = connected && Date.now() - receivedAt < 6000;
       // What he is doing comes with the stretch being drawn, so the hammer starts when he is seen to arrive.
       const activity = pose?.tag ?? state.survivor.activity;
       const walking = live && !!pose?.moving;
@@ -417,7 +445,9 @@ function start() {
     workLight.position.set(person.group.position.x, 3.5, person.group.position.z);
     workLight.intensity = state?.lighting === 'night' ? 18 : 0;
     if (autoCamera) {
-      const target = state?.current?.preview?.position ?? (now < revealUntil ? revealTarget : undefined);
+      // Rook's work first; with nothing of his on, a neighbour putting up a defense is the thing to watch.
+      const defense = state?.neighbours?.find((n) => n.job?.preview && n.job.purpose === 'defense')?.job?.preview?.position;
+      const target = state?.current?.preview?.position ?? defense ?? (now < revealUntil ? revealTarget : undefined);
       // Work near the house keeps the yard half in frame; work out on the far lots is framed outright.
       const frameX = (x: number) => (Math.abs(x) <= 14 ? x * 0.5 : x - Math.sign(x) * 7);
       const desired = target
@@ -440,7 +470,11 @@ function start() {
     // park and back. Nearly still while work is being framed; off once the viewer takes the camera
     // and for reduced motion.
     const ambient = autoCamera && !reduced;
-    const framing = !!(state?.current?.preview || now < revealUntil);
+    const framing = !!(
+      state?.current?.preview ||
+      now < revealUntil ||
+      state?.neighbours?.some((n) => n.job?.preview && n.job.purpose === 'defense')
+    );
     const drift = ambient ? Math.sin(now * 0.00017) * 0.13 : 0;
     const sway = ambient ? Math.sin(now * 0.00011) * (framing ? 1.6 : 14) : 0;
     const look = new THREE.Vector3(focus.x + sway, focus.y, focus.z);
@@ -451,6 +485,7 @@ function start() {
     objects.update(now, reduced, renderTime);
     renderer.render(scene, camera);
     if (!bubble.hidden) placeBubble(); // after render: the camera matrices are fresh
+    people.overlay(camera, Date.now() + offset - timeline.lag);
     if (now - lastDetailAt > 250) {
       lastDetailAt = now;
       waveDetail();
@@ -468,6 +503,7 @@ function start() {
       socket?.close();
       cancelAnimationFrame(frame);
       objects.dispose();
+      people.dispose();
       renderer.dispose();
     },
     { once: true },
