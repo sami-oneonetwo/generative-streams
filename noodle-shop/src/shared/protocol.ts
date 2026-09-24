@@ -70,6 +70,12 @@ export interface AdminStatus {
     themes: { name: string; theme?: string; left: number }[];
     /** Chatters the operator trusts: no design time limit, and `!delete` works for them. */
     privileged: string[];
+    /** Grudges and favourites: what each neighbour holds against (or for) which chatter. */
+    regard?: { name: string; user: string; score: number; phrase: string }[];
+    /** Rook's own small grudges. */
+    grudges?: { user: string; score: number; since: number; reason?: string }[];
+    /** The hoops scoreboard (`!shoot`), best first. */
+    scores?: { user: string; hits: number; shots: number; best: number }[];
     wave?: { number: number; phase: 'prep' | 'wave'; secondsLeft: number; zombies: number; best: number; fell?: number };
     objects: {
       id: string;

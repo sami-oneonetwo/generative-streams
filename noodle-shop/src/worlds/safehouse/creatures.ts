@@ -18,34 +18,42 @@
 // anything, dipping to strike a ground target; turrets shoot hostile flyers like
 // anything else.
 //
+// A creature may also carry `rules` (rules.ts): behaviour as data, run ahead of the
+// preset every tick — the block's birds perch and scatter this way. When a rule has
+// the tick the preset is skipped; when nothing resolves the preset takes over.
+//
 // Creatures never block placement or anyone's path (placement.ts, combat.ts), so a
 // dog under a build site is simply a dog standing in the way for a moment.
-import type {
-  CombatState,
-  CreatureBehaviour,
-  CreatureState,
-  GroundPoint,
-  SafehouseObject,
-} from '../../shared/safehouseTypes';
-import { contains, footprint, HOUSE_ID, YARD_BOUNDS } from '../../shared/safehouseLayout';
-import { route, straighten, walkableSegment } from './placement';
+import type { CreatureBehaviour, CreatureState, SafehouseObject } from '../../shared/safehouseTypes';
+import { contains, HOUSE_ID, YARD_BOUNDS } from '../../shared/safehouseLayout';
+import { route, straighten } from './placement';
 import { CREATURES, damageObject, intact, isHostile } from './combat';
+import {
+  FLIGHT,
+  advance,
+  canReach,
+  distance,
+  flies,
+  head,
+  heldStep,
+  inReach,
+  objectDistance,
+  routeTo,
+  routeToPoint,
+  solidFor,
+  trapsIn,
+  type World,
+} from './locomotion';
+import { stepRules } from './rules';
+
+export { FLIGHT, flies, canReach } from './locomotion';
+export type { World } from './locomotion';
 
 export interface CreatureEvent {
   kind: 'hit' | 'down' | 'kill'; // a hit landed; an object fell; a zombie was killed
   id: string; // the creature
   targetId: string; // what it hit / felled / killed
 }
-interface World {
-  objects: SafehouseObject[];
-  combat: CombatState;
-  survivor: { position: GroundPoint };
-  /** The neighbours: a fighter they built sticks with its owner rather than with Rook. */
-  neighbours?: { id: string; position: GroundPoint }[];
-}
-
-/** Flight profile: cruise height by behaviour, the dip for a strike, and the floor speed (nothing flaps at 1 m/s). */
-export const FLIGHT = { cruise: 6.5, cruiseZoom: 8, swoop: 2.5, minSpeed: 3 };
 
 export function freshCreature(behaviour: CreatureBehaviour, flying = false): CreatureState {
   return {
@@ -59,96 +67,12 @@ export function freshCreature(behaviour: CreatureBehaviour, flying = false): Cre
   };
 }
 
-const objectDistance = (p: GroundPoint, o: SafehouseObject) => {
-  const r = footprint(o.position, o.footprint.width, o.footprint.depth);
-  return Math.hypot(Math.max(r.minX - p.x, 0, p.x - r.maxX), Math.max(r.minZ - p.z, 0, p.z - r.maxZ));
-};
-const distance = (a: GroundPoint, b: GroundPoint) => Math.hypot(a.x - b.x, a.z - b.z);
-export const flies = (o: SafehouseObject) => !!o.creature?.flying;
-/** Can `a` get at `b`? Anything reaches the ground; only a flyer reaches a flyer. */
-export const canReach = (a: SafehouseObject, b: SafehouseObject) => flies(a) || !flies(b);
-const speedOf = (st: CreatureState) =>
-  st.flying ? Math.max(FLIGHT.minSpeed, CREATURES[st.behaviour].speed) : CREATURES[st.behaviour].speed;
-/** What a creature has to walk around: standing solid pieces, never other creatures or itself. */
-const solidFor = (objects: SafehouseObject[], self: string) =>
-  objects.filter((o) => intact(o) && !o.passable && !o.creature && o.id !== self);
-/** Standing spots beside a piece, nearest first. */
-function approaches(o: SafehouseObject, from: GroundPoint): GroundPoint[] {
-  const r = footprint(o.position, o.footprint.width, o.footprint.depth);
-  return [
-    { x: o.position.x, z: r.maxZ + 0.75 },
-    { x: o.position.x, z: r.minZ - 0.75 },
-    { x: r.minX - 0.75, z: o.position.z },
-    { x: r.maxX + 0.75, z: o.position.z },
-  ].sort((a, b) => distance(a, from) - distance(b, from));
-}
-function head(c: SafehouseObject, st: CreatureState, to: GroundPoint) {
-  const dx = to.x - c.position.x,
-    dz = to.z - c.position.z;
-  if (Math.hypot(dx, dz) > 0.001) st.facing = Math.atan2(dx, dz);
-}
-/** Plan a way to `target`: a flyer goes straight for the spot above it; a walker routes to a side. */
-function routeTo(c: SafehouseObject, st: CreatureState, target: SafehouseObject, solid: SafehouseObject[]): boolean {
-  if (st.flying) {
-    st.path = [{ ...target.position }];
-    return true;
-  }
-  for (const p of approaches(target, c.position)) {
-    const path = route(c.position, p, solid);
-    if (path) {
-      st.path = straighten(path);
-      return true;
-    }
-  }
-  return false;
-}
-function routeToPoint(c: SafehouseObject, st: CreatureState, p: GroundPoint, solid: SafehouseObject[]): boolean {
-  if (st.flying) {
-    if (!contains(YARD_BOUNDS, p)) return false;
-    st.path = [{ ...p }];
-    return true;
-  }
-  const path = route(c.position, p, solid);
-  if (!path) return false;
-  st.path = straighten(path);
-  return true;
-}
-/** Spend the step's travel along the path; the whole budget, across waypoints. Flyers never check the ground. */
-function advance(c: SafehouseObject, st: CreatureState, solid: SafehouseObject[], dt: number) {
-  let budget = (dt / 1000) * speedOf(st);
-  st.moving = false;
-  while (budget > 0 && st.path[0]) {
-    const next = st.path[0];
-    if (!st.flying && !walkableSegment(c.position, next, solid)) {
-      st.path = [];
-      st.replanMs = 0;
-      break;
-    }
-    const dx = next.x - c.position.x,
-      dz = next.z - c.position.z,
-      d = Math.hypot(dx, dz);
-    if (d > 0.001) st.facing = Math.atan2(dx, dz);
-    st.moving = true;
-    if (d <= budget) {
-      c.position = { ...next };
-      st.path.shift();
-      budget -= d;
-    } else {
-      c.position.x += (dx / d) * budget;
-      c.position.z += (dz / d) * budget;
-      budget = 0;
-    }
-  }
-}
-/** Within striking distance: beside it on the ground, or right over it from the air. */
-const inReach = (c: SafehouseObject, target: SafehouseObject, reach: number) =>
-  flies(c) ? distance(c.position, target.position) <= Math.max(reach, target.footprint.width / 2) : objectDistance(c.position, target) <= reach;
-
 function rampage(
   c: SafehouseObject,
   st: CreatureState,
   w: World,
   solid: SafehouseObject[],
+  traps: SafehouseObject[],
   dt: number,
   rng: () => number,
   events: CreatureEvent[],
@@ -211,7 +135,7 @@ function rampage(
     }
     return true;
   }
-  advance(c, st, solid, dt);
+  advance(c, st, solid, dt, traps);
   return false;
 }
 
@@ -220,11 +144,21 @@ function fight(
   st: CreatureState,
   w: World,
   solid: SafehouseObject[],
+  traps: SafehouseObject[],
   dt: number,
   events: CreatureEvent[],
 ): boolean {
   const profile = CREATURES.fight;
-  let enemy = w.objects.find((o) => o.id === st.targetId && isHostile(o) && intact(o));
+  // A vendetta (grudges): anything a particular chatter built that moves, hostile or not, is fair
+  // game — never the block's own birds, never something belonging to the fighter's own owner.
+  const vendetta = (o: SafehouseObject) =>
+    !!st.nemesisOwner &&
+    !!o.creature &&
+    !o.wild &&
+    o.id !== c.id &&
+    !(c.owner && o.owner === c.owner) &&
+    (o.createdBy ?? '').trim().toLowerCase() === st.nemesisOwner;
+  let enemy = w.objects.find((o) => o.id === st.targetId && intact(o) && (isHostile(o) || vendetta(o)));
   let zombie = w.combat.zombies.find((z) => z.id === st.targetId && z.health > 0);
   const lost = st.targetId !== undefined && !enemy && !zombie;
   // Built to hunt one particular creature (a neighbour's answer to the yard gorilla): that one
@@ -233,7 +167,15 @@ function fight(
   const nemesis = st.nemesis ? w.objects.find((o) => o.id === st.nemesis && isHostile(o) && intact(o) && canReach(c, o)) : undefined;
   if (lost || st.replanMs === 0) {
     st.path = [];
-    const hunted = nemesis && (inReach(c, nemesis, 1.2) || routeTo(c, st, nemesis, solid)) ? { o: nemesis, d: 0 } : undefined;
+    // The chatter's things first, nearest first; then the creature it was built against.
+    const marked = st.nemesisOwner
+      ? w.objects
+          .filter((o) => vendetta(o) && intact(o) && canReach(c, o))
+          .map((o) => ({ o, d: objectDistance(c.position, o) }))
+          .sort((a, b) => a.d - b.d)
+          .find((x) => inReach(c, x.o, 1.2) || routeTo(c, st, x.o, solid))
+      : undefined;
+    const hunted = marked ?? (nemesis && (inReach(c, nemesis, 1.2) || routeTo(c, st, nemesis, solid)) ? { o: nemesis, d: 0 } : undefined);
     const rampager =
       hunted ??
       w.objects
@@ -289,7 +231,7 @@ function fight(
       }
       return true;
     }
-    advance(c, st, solid, dt);
+    advance(c, st, solid, dt, traps);
     return false;
   }
   if (zombie) {
@@ -310,11 +252,11 @@ function fight(
       }
       return true;
     }
-    advance(c, st, solid, dt);
+    advance(c, st, solid, dt, traps);
     return false;
   }
   // Nobody to fight: on the way to Rook, or standing by him.
-  advance(c, st, solid, dt);
+  advance(c, st, solid, dt, traps);
   return false;
 }
 
@@ -323,6 +265,7 @@ function cruise(
   c: SafehouseObject,
   st: CreatureState,
   solid: SafehouseObject[],
+  traps: SafehouseObject[],
   dt: number,
   rng: () => number,
   far: boolean,
@@ -355,19 +298,25 @@ function cruise(
     st.replanMs = far ? 300 : 2000 + rng() * 4000;
     if (!st.path.length) return;
   }
-  advance(c, st, solid, dt);
+  advance(c, st, solid, dt, traps);
 }
 
-/** Climb to cruise, dip over a ground target, fall when downed. */
+/** Climb to cruise, dip over a ground target, settle onto a perch, fall when downed. */
 function settleAltitude(c: SafehouseObject, st: CreatureState, w: World, step: number) {
   const current = st.altitude ?? 0;
   if (!intact(c)) {
     st.altitude = Math.max(0, current - (step / 1000) * 8);
     return;
   }
-  const target = w.objects.find((o) => o.id === st.targetId) ?? w.combat.zombies.find((z) => z.id === st.targetId);
-  const striking = !!target && distance(c.position, target.position) <= 2.5 && !(target as SafehouseObject).creature?.flying;
-  const wanted = striking ? FLIGHT.swoop : st.behaviour === 'zoom' ? FLIGHT.cruiseZoom : FLIGHT.cruise;
+  const cruise = st.behaviour === 'zoom' ? FLIGHT.cruiseZoom : FLIGHT.cruise;
+  let wanted: number;
+  if (st.goal?.perched && st.goal.altitude !== undefined) wanted = st.goal.altitude;
+  else if (c.rules?.length) wanted = cruise; // a ruled creature never strikes; its targetId is just where it last sat
+  else {
+    const target = w.objects.find((o) => o.id === st.targetId) ?? w.combat.zombies.find((z) => z.id === st.targetId);
+    const striking = !!target && distance(c.position, target.position) <= 2.5 && !(target as SafehouseObject).creature?.flying;
+    wanted = striking ? FLIGHT.swoop : cruise;
+  }
   st.altitude = current + (wanted - current) * (1 - Math.exp(-(step / 1000) * 1.2));
 }
 
@@ -383,6 +332,8 @@ export function tickCreatures(
   const events: CreatureEvent[] = [];
   let changed = false;
   const step = Math.min(Math.max(dt, 0), 2000);
+  // Holes (TACTICS.trap): anything on the ground that walks into one is stuck a while.
+  const traps = trapsIn(w.objects);
   for (const c of w.objects) {
     const st = c.creature;
     if (!st) continue;
@@ -392,19 +343,34 @@ export function tickCreatures(
     }
     st.replanMs = Math.max(0, st.replanMs - step);
     st.cooldownMs = Math.max(0, st.cooldownMs - step);
+    // Stuck in a hole: nothing else this tick, not even a bite at the fence beside it.
+    if (heldStep(c, st, traps, step)) continue;
+    // In a scrap with a viewer's figure (`!fight`, crowd.ts): stands its ground until the bout is decided.
+    if (st.busyMs) {
+      st.busyMs = Math.max(0, st.busyMs - step);
+      st.moving = false;
+      st.path = [];
+      if (st.flying) settleAltitude(c, st, w, step);
+      continue;
+    }
     const solid = solidFor(w.objects, c.id);
+    // Behaviour as data first; the preset only when no rule has the tick.
+    if (c.rules?.length && stepRules(c, st, w, solid, step, rng)) {
+      if (st.flying) settleAltitude(c, st, w, step);
+      continue;
+    }
     switch (st.behaviour) {
       case 'rampage':
-        if (rampage(c, st, w, solid, step, rng, events)) changed = true;
+        if (rampage(c, st, w, solid, traps, step, rng, events)) changed = true;
         break;
       case 'fight':
-        if (fight(c, st, w, solid, step, events)) changed = true;
+        if (fight(c, st, w, solid, traps, step, events)) changed = true;
         break;
       case 'zoom':
-        cruise(c, st, solid, step, rng, true);
+        cruise(c, st, solid, traps, step, rng, true);
         break;
       case 'roam':
-        cruise(c, st, solid, step, rng, false);
+        cruise(c, st, solid, traps, step, rng, false);
         break;
     }
     if (st.flying) settleAltitude(c, st, w, step);

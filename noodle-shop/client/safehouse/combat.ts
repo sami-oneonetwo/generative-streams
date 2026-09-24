@@ -11,7 +11,20 @@ interface Actor {
   punchArm: 0 | 1;
   kind: ZombieKind;
   scale: number;
+  /** Combat-time marks from the last synced snapshot: in a hole until, dancing until (0 = neither). */
+  heldUntil: number;
+  dancingUntil: number;
+  /** How far into the hole it is drawn (0 on the ground … 1 sunk), eased over ~0.3 s. */
+  sunk: number;
 }
+/** In a hole: sunk this far, reaching for the edge with both arms. */
+const HOLE_DEPTH = 0.75,
+  REACH_ARM = -2.9;
+/** Dancing: arms alternate about this centre by this much at ~2 Hz; a small bounce and a slow yaw wobble. */
+const DANCE_ARM = -1.5,
+  DANCE_SWING = 0.9,
+  DANCE_BOB = 0.06,
+  DANCE_WOBBLE = 0.15;
 // Runners are lean and pale, brutes big and dark; walkers are the original silhouette.
 const LOOKS: Record<ZombieKind, { tint?: number; scale: number; sway: number }> = {
   walker: { scale: 1, sway: 0.004 },
@@ -45,6 +58,9 @@ export function createCombatView(parent: THREE.Group) {
   let lastShot: number | undefined;
   let primed = false; // the first snapshot only records existing wear; old damage does not puff
   let reducedMotion = false;
+  // Combat time as of the last synced snapshot: what heldUntil / dancingUntil are measured against.
+  // It stands still while combat is paused, so a held zombie stays in its hole on a paused world.
+  let combatTime = 0;
 
   function puff(at: THREE.Vector3, outward: THREE.Vector3, tint: THREE.Color, count: number, now: number) {
     if (reducedMotion || motes.length >= MAX_MOTES) return;
@@ -81,6 +97,7 @@ export function createCombatView(parent: THREE.Group) {
     sync(state: CombatView | undefined, objects: SafehouseObjectView[] = []) {
       if (!state) return;
       const now = performance.now();
+      combatTime = state.time;
       const ids = new Set(state.zombies.map((z) => z.id));
       for (const [id, actor] of actors)
         if (!ids.has(id)) {
@@ -89,12 +106,18 @@ export function createCombatView(parent: THREE.Group) {
           if (!latestIds.has(id)) tracks.delete(id);
         }
       for (const z of state.zombies) {
-        if (actors.has(z.id)) continue;
+        const existing = actors.get(z.id);
+        if (existing) {
+          existing.heldUntil = z.heldUntil ?? 0;
+          existing.dancingUntil = z.dancingUntil ?? 0;
+          continue;
+        }
         const kind = z.kind ?? 'walker',
           look = LOOKS[kind];
         const p = buildPersonGroup(parent, newMaterialCache(), true, look.tint, look.scale);
         p.group.position.set(z.position.x, 0.13, z.position.z);
         p.group.rotation.y = z.facing;
+        const held = (z.heldUntil ?? 0) > combatTime;
         actors.set(z.id, {
           group: p.group,
           leftArm: p.leftArm,
@@ -103,6 +126,9 @@ export function createCombatView(parent: THREE.Group) {
           punchArm: 1,
           kind,
           scale: look.scale,
+          heldUntil: z.heldUntil ?? 0,
+          dancingUntil: z.dancingUntil ?? 0,
+          sunk: held ? 1 : 0, // one first seen in a hole is drawn there, not dropping into it
         });
       }
       // Hits since the last snapshot: dust flies off the struck face and the attacker throws a punch.
@@ -174,16 +200,38 @@ export function createCombatView(parent: THREE.Group) {
         if (pose) {
           a.group.position.x = pose.x;
           a.group.position.z = pose.z;
-          a.group.rotation.y = pose.facing;
         }
-        const idle = !reduced && !paused ? Math.sin(now * LOOKS[a.kind].sway) * 0.12 : 0;
+        // In a hole (a `trap` piece): sunk and reaching for the edge, no sway. Beside speakers (a
+        // `music` piece): dancing before it chews. Both are read off the last synced snapshot against
+        // combat time, which stands still while the world is paused.
+        const held = a.heldUntil > combatTime;
+        const dancing = !held && a.dancingUntil > combatTime;
+        const wantSunk = held ? 1 : 0;
+        a.sunk = reduced ? wantSunk : a.sunk + (wantSunk - a.sunk) * (1 - Math.exp(-dt * 10));
+        const idle = !reduced && !paused && !held && !dancing ? Math.sin(now * LOOKS[a.kind].sway) * 0.12 : 0;
+        let right = -1.1 + idle,
+          left = -1.1 + idle,
+          bob = 0,
+          wobble = 0;
+        if (held) right = left = REACH_ARM;
+        else if (dancing) {
+          if (reduced) right = left = DANCE_ARM - DANCE_SWING;
+          else {
+            const swing = Math.sin(now * 0.01257) * DANCE_SWING; // ~2 Hz, the arms out of phase
+            right = DANCE_ARM + swing;
+            left = DANCE_ARM - swing;
+            bob = Math.abs(Math.sin(now * 0.00628)) * DANCE_BOB; // a bounce twice a second
+            wobble = Math.sin(now * 0.0025) * DANCE_WOBBLE;
+          }
+        }
+        if (pose) a.group.rotation.y = pose.facing + wobble;
         // A punch: the striking arm swings forward and back over PUNCH_MS with a small lunge.
         const t = !reduced && now < a.punchUntil ? 1 - (a.punchUntil - now) / PUNCH_MS : 0;
         const jab = t ? Math.sin(t * Math.PI) * 0.75 : 0;
-        a.rightArm.rotation.x = -1.1 + idle - (a.punchArm === 1 ? jab : 0);
-        a.leftArm.rotation.x = -1.1 + idle - (a.punchArm === 0 ? jab : 0);
+        a.rightArm.rotation.x = right - (a.punchArm === 1 ? jab : 0);
+        a.leftArm.rotation.x = left - (a.punchArm === 0 ? jab : 0);
         // Scaled models keep their boots on the ground (the boots sit 0.085 m up inside the group).
-        a.group.position.y = 0.13 - (a.scale - 1) * 0.085 + (jab ? jab * 0.06 : 0);
+        a.group.position.y = 0.13 - (a.scale - 1) * 0.085 + (jab ? jab * 0.06 : 0) + bob - HOLE_DEPTH * a.sunk;
       }
       for (let i = beams.length - 1; i >= 0; i--)
         if (now > beams[i].until) {

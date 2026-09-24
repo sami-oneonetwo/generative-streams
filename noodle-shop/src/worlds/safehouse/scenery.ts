@@ -2,7 +2,7 @@
 // painted, redesigned, moved, damaged and rebuilt like a chat creation. Rook's
 // house is one closed, roofed piece in the middle of the yard so chat builds
 // around it; there is no interior to see or furnish.
-import type { Blueprint, GroundPoint, Primitive, SafehouseObject } from '../../shared/safehouseTypes';
+import type { Blueprint, GroundPoint, PartAnimation, PieceVerb, Primitive, SafehouseObject, Use } from '../../shared/safehouseTypes';
 import { HOUSE_ID } from '../../shared/safehouseLayout';
 import { SCENERY_LIMITS, measureBlueprint } from './blueprint';
 import { initializeObject } from './combat';
@@ -53,6 +53,12 @@ interface Options {
   health: number;
   passable?: boolean;
   description?: string;
+  /** What the piece is for, in the closed vocabulary: birds perch on it, the cat sits by it, birds avoid it. */
+  uses?: Use[];
+  /** Part motion the page applies every frame (canopies in the wind, swings swaying). */
+  animations?: PartAnimation[];
+  /** The one thing a viewer can do here by typing `!word` (the pond: `!swim`). */
+  verb?: PieceVerb;
 }
 function piece(
   id: string,
@@ -61,7 +67,12 @@ function piece(
   parts: Primitive[],
   opts: Options,
 ): SafehouseObject {
-  const blueprint: Blueprint = { name, description: opts.description ?? 'Part of the neighborhood', parts };
+  const blueprint: Blueprint = {
+    name,
+    description: opts.description ?? 'Part of the neighborhood',
+    parts,
+    ...(opts.animations?.length ? { animations: opts.animations } : {}),
+  };
   return initializeObject({
     id: `scenery-${id}`,
     revision: 1,
@@ -76,8 +87,35 @@ function piece(
     maxHealth: opts.health,
     fixed: true,
     passable: opts.passable,
+    ...(opts.uses?.length ? { uses: opts.uses } : {}),
+    ...(opts.verb ? { verb: opts.verb } : {}),
   });
 }
+/** The park's own verbs: the pond to swim in, seats to sit on, the swings, the slide, the picnic table. */
+const SWIM: PieceVerb = { word: 'swim', pose: 'swim', spot: 'on', seconds: 8, pop: 'SPLASH' };
+const SIT: PieceVerb = { word: 'sit', pose: 'sit', spot: 'on', seconds: 10 };
+const SWING: PieceVerb = { word: 'swing', pose: 'sit', spot: 'on', seconds: 8, pop: 'WHEE' };
+const SLIDE: PieceVerb = { word: 'slide', pose: 'cheer', spot: 'beside', seconds: 5, pop: 'WHEEE' };
+const EAT: PieceVerb = { word: 'eat', pose: 'sit', spot: 'on', seconds: 10, pop: 'YUM' };
+/** The street's cars: `!drive` takes one up the road and back (crowd.ts RUN); a boxed-in one is refused. */
+const DRIVE: PieceVerb = { word: 'drive', pose: 'sit', spot: 'on', seconds: 12, pop: 'VROOM' };
+/** Birds land on it. */
+const PERCH: Use[] = ['perch'];
+const SEAT: Use[] = ['seat'];
+const CAR: Use[] = ['vehicle', 'perch'];
+const TREE: Use[] = ['tree', 'perch'];
+/** The three canopy balls drift a few centimetres in the wind, out of step with each other. */
+const treeAnimations = (s: number): PartAnimation[] =>
+  [1, 2, 3].map((part, j) => ({ part, kind: 'drift' as const, axis: 'x' as const, speed: 0.22 + j * 0.03, amplitude: 0.07 * s, phase: j * 1.3 }));
+/** The two seats and their chains sway a little (parts 5–7 and 8–10 of swings(), see below). */
+const SWING_ANIMATIONS: PartAnimation[] = [5, 6, 7, 8, 9, 10].map((part) => ({
+  part,
+  kind: 'sway' as const,
+  axis: 'x' as const,
+  speed: 0.45,
+  amplitude: 0.09,
+  phase: part >= 8 ? 1.1 : 0,
+}));
 
 /** Pieces of the old cutaway house (walls, floor, furniture). Saves that still have them lose them in the v5 migration. */
 export const RETIRED_SCENERY_IDS = [
@@ -344,23 +382,30 @@ function blockObjects(): SafehouseObject[] {
       role: 'barrier',
       health: 1500,
       description: 'Boarded-up corner shop on the west lot',
+      uses: PERCH,
     }),
-    piece('bus-shelter', 'Bus shelter', { x: -38, z: 6.3 }, busShelter(), { health: 300 }),
-    piece('skip', 'Skip bin', { x: -48, z: -13.5 }, skip(), { health: 200 }),
-    piece('hoarding', 'Hoarding', { x: -46, z: 16.5 }, hoarding(), { health: 300 }),
-    piece('car-far-west', 'Abandoned car (far west)', { x: -41, z: 10.6 }, rotatedCar(0x6f7a83, 1.5), { health: 300 }),
-    piece('car-far-west-2', 'Abandoned van', { x: -50, z: 11.4 }, rotatedCar(0x8a8570, 1.7), { health: 300 }),
-    piece('pole-far-west', 'Utility pole (far west)', { x: -45, z: 5.8 }, pole(), { health: 500 }),
-    piece('slide', 'Slide', { x: 38, z: -9 }, slide(), { health: 300, description: 'Playground slide in the park' }),
-    piece('swings', 'Swings', { x: 44, z: -9 }, swings(), { health: 300, description: 'Playground swings in the park' }),
+    piece('bus-shelter', 'Bus shelter', { x: -38, z: 6.3 }, busShelter(), { health: 300, uses: ['seat', 'perch'], verb: SIT }),
+    piece('skip', 'Skip bin', { x: -48, z: -13.5 }, skip(), { health: 200, uses: PERCH }),
+    piece('hoarding', 'Hoarding', { x: -46, z: 16.5 }, hoarding(), { health: 300, uses: PERCH }),
+    piece('car-far-west', 'Abandoned car (far west)', { x: -41, z: 10.6 }, rotatedCar(0x6f7a83, 1.5), { health: 300, uses: CAR, verb: DRIVE }),
+    piece('car-far-west-2', 'Abandoned van', { x: -50, z: 11.4 }, rotatedCar(0x8a8570, 1.7), { health: 300, uses: CAR, verb: DRIVE }),
+    piece('pole-far-west', 'Utility pole (far west)', { x: -45, z: 5.8 }, pole(), { health: 500, uses: PERCH }),
+    piece('slide', 'Slide', { x: 38, z: -9 }, slide(), { health: 300, description: 'Playground slide in the park', uses: PERCH, verb: SLIDE }),
+    piece('swings', 'Swings', { x: 44, z: -9 }, swings(), {
+      health: 300,
+      description: 'Playground swings in the park',
+      uses: ['seat', 'perch'],
+      animations: SWING_ANIMATIONS,
+      verb: SWING,
+    }),
     piece('sandpit', 'Sandpit', { x: 41, z: -4 }, sandpit(), { health: 100, passable: true }),
-    piece('pond', 'Pond', { x: 40, z: -14.5 }, pond(), { health: 100, passable: true, description: 'A shallow pond in the park' }),
-    piece('bench-west', 'Park bench (west)', { x: 34, z: -2 }, bench(), { health: 150 }),
-    piece('bench-east', 'Park bench (east)', { x: 48, z: -2 }, bench(), { health: 150 }),
-    piece('picnic', 'Picnic table', { x: 48, z: -13 }, picnicTable(), { health: 200 }),
-    piece('park-shed', 'Park shed', { x: 52, z: -16.5 }, parkShed(), { role: 'barrier', health: 600 }),
-    piece('car-far-east', 'Abandoned car (far east)', { x: 45, z: 10.6 }, rotatedCar(0x7a6a5e, 1.55), { health: 300 }),
-    piece('pole-far-east', 'Utility pole (far east)', { x: 45, z: 5.8 }, pole(), { health: 500 }),
+    piece('pond', 'Pond', { x: 40, z: -14.5 }, pond(), { health: 100, passable: true, description: 'A shallow pond in the park', verb: SWIM }),
+    piece('bench-west', 'Park bench (west)', { x: 34, z: -2 }, bench(), { health: 150, uses: SEAT, verb: SIT }),
+    piece('bench-east', 'Park bench (east)', { x: 48, z: -2 }, bench(), { health: 150, uses: SEAT, verb: SIT }),
+    piece('picnic', 'Picnic table', { x: 48, z: -13 }, picnicTable(), { health: 200, uses: SEAT, verb: EAT }),
+    piece('park-shed', 'Park shed', { x: 52, z: -16.5 }, parkShed(), { role: 'barrier', health: 600, uses: PERCH }),
+    piece('car-far-east', 'Abandoned car (far east)', { x: 45, z: 10.6 }, rotatedCar(0x7a6a5e, 1.55), { health: 300, uses: CAR, verb: DRIVE }),
+    piece('pole-far-east', 'Utility pole (far east)', { x: 45, z: 5.8 }, pole(), { health: 500, uses: PERCH }),
   ];
   (
     [
@@ -372,7 +417,9 @@ function blockObjects(): SafehouseObject[] {
       [52, 15, 1.2],
       [36, 17, 1.1],
     ] as [number, number, number][]
-  ).forEach(([x, z, s], i) => objects.push(piece(`tree-${8 + i}`, `Tree ${8 + i}`, { x, z }, tree(s), { health: 400 })));
+  ).forEach(([x, z, s], i) =>
+    objects.push(piece(`tree-${8 + i}`, `Tree ${8 + i}`, { x, z }, tree(s), { health: 400, uses: TREE, animations: treeAnimations(s) })),
+  );
   return objects;
 }
 
@@ -417,6 +464,7 @@ export function sceneryObjects(): SafehouseObject[] {
       role: 'barrier',
       health: 4000,
       description: "Rook's boarded-up house. He lives here and keeps it standing.",
+      uses: PERCH,
     }),
     // Yard clutter flanks the porch and leaves the ground straight in front of the steps free to build on.
     piece('barricade', 'Barricade', { x: -4.6, z: 0.4 }, barricade, {
@@ -440,6 +488,7 @@ export function sceneryObjects(): SafehouseObject[] {
     piece('garden-3', 'Garden bed 3', { x: -8.8, z: -2.9 }, gardenBed(2), { health: 150 }),
     piece('barrels', 'Rain barrels', { x: -8.9, z: -0.6 }, [...barrel(0.5, 0), ...barrel(-0.5, 0)], {
       health: 150,
+      uses: PERCH,
     }),
     piece('crates', 'Storage crates', { x: -9.4, z: 2.65 }, [...crate(0.4, -0.15), ...crate(-0.4, 0.15)], {
       health: 150,
@@ -451,48 +500,52 @@ export function sceneryObjects(): SafehouseObject[] {
       role: 'barrier',
       health: 1200,
       description: 'Garage with solar panels and a roll-up door',
+      uses: PERCH,
     }),
-    piece('car', "Rook's car", { x: 9, z: 0.15 }, carParts(0x8a6a53), { health: 300 }),
+    piece('car', "Rook's car", { x: 9, z: 0.15 }, carParts(0x8a6a53), { health: 300, uses: CAR, verb: DRIVE }),
     piece(
       'car-west',
       'Abandoned car (west)',
       { x: -7, z: 10.4 },
       rotateBlueprint({ name: '', description: '', parts: carParts(0x727d72) }, 1.4).parts,
-      { health: 300 },
+      { health: 300, uses: CAR, verb: DRIVE },
     ),
     piece(
       'car-east',
       'Abandoned car (east)',
       { x: 15, z: 11.3 },
       rotateBlueprint({ name: '', description: '', parts: carParts(0x786451) }, 1.9).parts,
-      { health: 300 },
+      { health: 300, uses: CAR, verb: DRIVE },
     ),
     piece('house-west', 'Neighbor house (west)', { x: -20, z: -4 }, house(), {
       health: 1500,
       description: 'Empty house next door',
+      uses: PERCH,
     }),
     piece('house-east', 'Neighbor house (east)', { x: 23, z: -5 }, house(), {
       health: 1500,
       description: 'Empty house next door',
+      uses: PERCH,
     }),
-    piece('pole-west', 'Utility pole (west)', { x: -15, z: 5.8 }, pole(), { health: 500 }),
-    piece('pole-east', 'Utility pole (east)', { x: 15, z: 5.8 }, pole(), { health: 500 }),
+    piece('pole-west', 'Utility pole (west)', { x: -15, z: 5.8 }, pole(), { health: 500, uses: PERCH }),
+    piece('pole-east', 'Utility pole (east)', { x: 15, z: 5.8 }, pole(), { health: 500, uses: PERCH }),
     piece(
       'bin',
       'Rubbish bin',
       { x: -10.2, z: 5.5 },
       [box(0.8, 1, 0.8, 0x586658, 0, 0.5, 0), box(0.9, 0.12, 0.9, 0x6b7769, 0, 1.05, 0)],
-      { health: 120 },
+      { health: 120, uses: PERCH },
     ),
     piece('gate-west', 'Gate post (west)', { x: 4.2, z: 4.6 }, [box(0.22, 2, 0.22, 0x746a53, 0, 1, 0)], {
       health: 200,
+      uses: PERCH,
     }),
     piece(
       'gate-east',
       'Gate post (east)',
       { x: 9.5, z: 4.6 },
       [box(0.22, 2, 0.22, 0x746a53, 0, 1, 0), box(2.4, 0.5, 0.03, 0xb8af85, 0, 2.3, 0.08)],
-      { health: 200 },
+      { health: 200, uses: PERCH },
     ),
   ];
   (
@@ -506,7 +559,7 @@ export function sceneryObjects(): SafehouseObject[] {
       [-23, 7, 1.5],
     ] as [number, number, number][]
   ).forEach(([x, z, s], i) =>
-    objects.push(piece(`tree-${i + 1}`, `Tree ${i + 1}`, { x, z }, tree(s), { health: 400 })),
+    objects.push(piece(`tree-${i + 1}`, `Tree ${i + 1}`, { x, z }, tree(s), { health: 400, uses: TREE, animations: treeAnimations(s) })),
   );
   return [...objects, ...blockObjects()];
 }

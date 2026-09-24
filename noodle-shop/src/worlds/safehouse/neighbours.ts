@@ -35,10 +35,10 @@
 // same revision/lifecycle checks so an edit chat made in the meantime wins.
 import crypto from 'node:crypto';
 import type { Blueprint, CombatState, GroundPoint, Primitive, SafehouseObject } from '../../shared/safehouseTypes';
-import type { NeighbourActivity, NeighbourView } from '../../shared/safehouseTypes';
-import { contains, footprint, inflate, overlaps, HOUSE_ID, LANDMARKS, type Rect } from '../../shared/safehouseLayout';
+import type { NeighbourActivity, NeighbourView, Regard } from '../../shared/safehouseTypes';
+import { contains, footprint, inflate, overlaps, HOUSE_ID, LANDMARKS, YARD_BOUNDS, type Rect } from '../../shared/safehouseLayout';
 import { SCENERY_LIMITS, fitBlueprint, measureBlueprint, type Limits } from './blueprint';
-import { MAX_CREATURES, initializeObject, intact, isHostile } from './combat';
+import { MAX_CREATURES, TACTICS, initializeObject, intact, isHostile } from './combat';
 import { freshCreature, flies } from './creatures';
 import { choosePlacement, route, straighten, walkableSegment } from './placement';
 import { rotateBlueprint } from './edits';
@@ -65,6 +65,22 @@ export interface NeighbourSpec {
   ideas: string[]; // things they might ask the model to draw up
   paints: string[]; // house colours they cycle through
   lines: Record<Beat, string[]>;
+  /** What they do with a quiet moment when a piece on their lot allows it, in order of preference (slice 2 `use` jobs). */
+  pastimes: ('hoop' | 'seat' | 'music')[];
+  /** Walks to the front of the lot and waves when the pavement fills up; the other just has a word about it. */
+  greetsCrowd: boolean;
+  /**
+   * How they regard chatters (grudges). `grudges`: keeps score against whoever's creatures wreck their
+   * place or who messes with their things, and acts on it in tiers. `favourites`: warms to chatters
+   * whose builds they admire and never holds anything against anyone.
+   */
+  temper: 'grudges' | 'favourites';
+  /**
+   * Counters chat's tactics: fills in a hole (`trap`) near their place once it has caught something
+   * or simply sat there, and pulls the plug on speakers (`music`) in earshot once they have gone on
+   * long enough. The other just thinks the hole is sick and dances to the speakers.
+   */
+  tidy: boolean;
 }
 export type Beat =
   | 'alarm' // a hostile creature is near
@@ -88,7 +104,35 @@ export type Beat =
   | 'social' // over at the other neighbour's
   | 'idea' // waiting on the model
   | 'whim' // something odd going up
-  | 'retheme'; // redoing a piece to match what the block has become
+  | 'retheme' // redoing a piece to match what the block has become
+  | 'play' // shooting at the hoop
+  | 'sit' // a sit-down on a seat
+  | 'crowd' // the pavement has filled up with viewers
+  | 'grudge' // a look at the build of someone they hold something against
+  | 'kerb' // moving that chatter's piece to the kerb
+  | 'beige' // repainting it beige
+  | 'vendetta' // the hunter gets their name
+  | 'gift' // a chatter built them something
+  | 'favourite' // a chatter became one of theirs
+  | 'hole' // a hole has appeared: Marge sets off to fill it, Jake has a word
+  | 'fill' // the hole is filled
+  | 'unplug' // the speakers go off
+  | 'dance' // a tune is on
+  | 'cheer' // a chatter's `!shoot` went in at a hoop near them
+  | 'miss' // ...or did not
+  | 'lawn' // somebody is playing ball on Marge's lot
+  | 'horn' // a chatter honked a car nearby
+  | 'mine' // a chatter used one of Marge's things (a piece's own verb: `!swim` in her pool, `!sit` on her bench)
+  | 'splash' // somebody swimming within earshot of Marge's house
+  | 'fun' // Jake on a chatter doing a piece's verb near his place
+  | 'scrap' // a chatter squaring up to a living build (`!fight`) near Jake
+  | 'scrapWon' // ...and winning
+  | 'scrapLost' // ...or getting flattened
+  | 'wheels' // a chatter driving something (`!drive`) near Jake
+  | 'yeehaw' // a chatter riding something (`!ride`) near Jake
+  | 'brawl' // a scrap outside Marge's house
+  | 'myDog' // a scrap with a creature of Marge's own
+  | 'racers'; // somebody driving past Marge's house
 
 export const NEIGHBOURS: readonly NeighbourSpec[] = [
   {
@@ -153,7 +197,39 @@ export const NEIGHBOURS: readonly NeighbourSpec[] = [
         'One cannot be seen to be behind.',
         'Mine will suit it better than theirs does.',
       ],
+      play: ['Basketball. At my age.', 'One throw. For the exercise.', 'This is undignified. Watch.'],
+      sit: ['Sitting down. Five minutes.', 'My feet.', 'A moment. Then back to it.'],
+      crowd: ["Don't they have homes to go to.", 'Pfft. An audience. Wonderful.', 'Gawkers. Mind the roses.'],
+      grudge: ['Oh. You again.', 'I remember the gorilla, {user}.', "Is this an apology? It doesn't look like one.", 'Hm. {user}. Of course.'],
+      kerb: ['This is going on the kerb, {user}.', 'Not on my street. Out it goes.', 'The kerb. Where it belongs.'],
+      beige: ['Beige. Much better.', "There. Now it's tasteful.", 'A sensible colour for once.'],
+      vendetta: ['Right. That does it, {user}.', 'I have had quite enough of {user}.', 'The hunter knows your name now, {user}.'],
+      gift: ['For me? Hm. It will do.', 'Well. That is… something. Thank you, I suppose.', "I didn't ask for it. But fine."],
+      favourite: ['Favourites are for children.', "I don't do favourites."],
+      hole: ['Someone dug a hole in my street.', 'A hole. In the street. Honestly.', 'Who digs a hole and just leaves it.'],
+      fill: ['There. Filled.', 'Filled in. As if it never happened.', 'That is what a spade is for.'],
+      unplug: ['Off. Some of us have gardens.', 'Enough of that racket.', 'The plug. Where it belongs. Out.'],
+      dance: ['Absolutely not.', 'Turn that off.'],
+      cheer: ['Adequate.', 'Hm. Lucky.'],
+      miss: ['Pfft.', 'As expected.'],
+      lawn: ['Not on my lawn.', 'Take your ball game elsewhere.', 'Mind the roses, {user}.'],
+      horn: ['Must you.', 'Some of us have nerves.', 'That horn. Honestly.'],
+      mine: ['That is not for the public.', 'Off. It is not a playground.', 'Pfft. Tourists.', '{user}. That is mine.'],
+      splash: ['Splashing. Wonderful.', 'Must they splash.', 'Some of us are trying to garden.'],
+      fun: ['Hm.', 'If you must.'],
+      scrap: ['Fighting. In the street.', 'Oh, grow up.'],
+      scrapWon: ['Hm. Lucky.', 'Pfft.'],
+      scrapLost: ['Serves you right.', 'As expected.'],
+      wheels: ['Slow down.', 'This is not a racetrack.'],
+      yeehaw: ['Undignified.', 'Get down from there.'],
+      brawl: ['Take that elsewhere.', 'Not outside my house.', 'Brawling. In my street. Honestly.'],
+      myDog: ['Leave my dog alone.', "That one's mine. Hands off.", 'Pick on your own dog, {user}.'],
+      racers: ['Boy racers now. Wonderful.', 'Slow down.', 'This is a residential street.'],
     },
+    pastimes: ['seat'],
+    greetsCrowd: false,
+    temper: 'grudges',
+    tidy: true,
   },
   {
     id: 'east',
@@ -217,7 +293,42 @@ export const NEIGHBOURS: readonly NeighbourSpec[] = [
         'The street did a thing, so I am doing the thing.',
         'Out with this, in with the good stuff.',
       ],
+      play: ["Quick game. Don't watch.", 'Swish. Nothing but net.', 'Ok. Three pointer. Watch this.'],
+      sit: ['Five minutes. Legs are cooked.', 'Sit down. Enjoy the view.', 'Break time. Earned it.'],
+      crowd: ['Sup chat! Big crowd today.', 'Hey! You lot watching this? Sick.', 'Yo! Welcome to the street!'],
+      // Jake holds nothing against anyone; these never play, but every beat has lines.
+      grudge: ['No hard feelings, {user}. Ever.', "Ah it's all good, {user}."],
+      kerb: ["Nah, I'd never.", 'Not my style.'],
+      beige: ['Beige? Never.', 'Colour is life.'],
+      vendetta: ["Can't imagine holding a grudge.", 'Life is too short.'],
+      gift: ['For me?! Legend!', '{user}! You absolute legend!', 'No way. Thank you!'],
+      favourite: ['{user}! Legend.', '{user} is my favourite. Sorry everyone else.', 'Whatever {user} builds, I am there.'],
+      hole: ['Yo. That hole is sick.', 'A hole! Zombies are gonna hate that.'],
+      // Jake fills nothing in and unplugs nothing; these never play, but every beat has lines.
+      fill: ['Nah, leave it.', 'It is a feature.'],
+      unplug: ['Never. Turn it up.', 'Nope. Louder.'],
+      dance: ['Tune! Get in here Marge.', 'Yesss. Turn it up.', 'Oh this is the one. Dance break.'],
+      cheer: ['Buckets!', 'Oh! Nothing but net!', '{user}! Swish!'],
+      miss: ['Unlucky. Go again.', 'Close! Again.', 'Rim. So close, {user}.'],
+      lawn: ['Play on, play on.', 'Ball is life.'],
+      horn: ['Beep beep!', 'Ha! Nice horn.', 'Yo, was that you {user}?'],
+      mine: ['Go for it!', 'Use it, that is what it is for.'],
+      splash: ['Cannonball!', 'Ha! Water is freezing, {user}.'],
+      fun: ['Yes! Go on!', 'Ha! Love it.', '{user} living their best life.', 'This street, honestly. Love it.'],
+      scrap: ['Fight! Fight!', 'Oh here we go.', 'Square up, {user}!'],
+      scrapWon: ['{user} won! Legend.', 'Get in!', 'Flawless victory!'],
+      scrapLost: ['Oof. Get up, {user}.', 'Ha! Flattened.', 'Walk it off, {user}.'],
+      wheels: ['Nice wheels, {user}!', 'Floor it!', 'Yo, take it round the block!'],
+      yeehaw: ['Yeehaw!', 'Giddy up, {user}!', "Ride 'em, {user}!"],
+      // Jake minds no scrap and no driving; these never play, but every beat has lines.
+      brawl: ['Let them fight.', 'Bit of biff. Love it.'],
+      myDog: ['Go easy on him.', 'He bites, you know.'],
+      racers: ['Vroom vroom!', 'Go on, floor it!'],
     },
+    pastimes: ['music', 'hoop', 'seat'],
+    greetsCrowd: true,
+    temper: 'favourites',
+    tidy: false,
   },
 ];
 export const specOf = (id: string): NeighbourSpec | undefined => NEIGHBOURS.find((n) => n.id === id);
@@ -226,7 +337,7 @@ export const NEIGHBOUR_HOUSE_IDS = NEIGHBOURS.map((n) => n.houseId);
 // ---- State --------------------------------------------------------------------------------
 
 export type NeighbourPurpose = 'defense' | 'upkeep' | 'project';
-export type ImpulseKind = 'whim' | 'rival' | 'fortify' | 'light' | 'pet' | 'care' | 'visit' | 'rearrange' | 'social' | 'retheme';
+export type ImpulseKind = 'whim' | 'rival' | 'fortify' | 'light' | 'pet' | 'care' | 'visit' | 'rearrange' | 'social' | 'retheme' | 'crowd' | 'grudge' | 'gift';
 /** A design ready to build: from the catalogue, the oddity generator or the model. */
 export interface ReadyDesign {
   blueprint: Blueprint;
@@ -265,9 +376,12 @@ export interface Seen {
   lighting: 'day' | 'night';
   pet?: boolean;
   hunkered?: number;
+  /** The crowd size they last remarked on, and when (a wave to the pavement once it fills up). */
+  crowd?: number;
+  crowdAt?: number;
 }
 export interface NeighbourJob {
-  kind: 'build' | 'edit' | 'repair' | 'rebuild' | 'tend' | 'look';
+  kind: 'build' | 'edit' | 'repair' | 'rebuild' | 'tend' | 'look' | 'use';
   purpose: NeighbourPurpose;
   label: string;
   status: 'walking' | 'working';
@@ -320,6 +434,8 @@ export interface NeighbourState {
   survey?: { sig: string; at: number };
   surveyAt?: number; // when the block was last surveyed (asked, not answered)
   surveySig?: string; // the block as it looked then: no point asking again until it changes
+  /** Grudges (Marge) or favourites (Jake), by lowercased chatter; see Regard. */
+  regard?: Record<string, Regard>;
 }
 interface World {
   objects: SafehouseObject[];
@@ -328,14 +444,38 @@ interface World {
   worldRevision: number;
   survivor: { position: GroundPoint };
   lighting?: 'day' | 'night';
+  /** Viewers on the far pavement (crowd.ts); a full pavement gets a wave from Jake and a word from Marge. */
+  crowd?: { position: GroundPoint }[];
 }
 export interface NeighbourEvent {
-  kind: 'alarm' | 'defense' | 'hunter' | 'project' | 'repair' | 'standdown' | 'visit' | 'care';
+  /**
+   * `use`: shooting hoops or sitting down (`reason` says which); `crowd`: waving at the pavement;
+   * `grudge`: a grudge act against a chatter (`user`, `act` = remark | kerb | beige | vendetta, `name` the piece);
+   * `favourite`: a chatter became one of Jake's (`user`); `gift`: a chatter built them something (`user`, `name`).
+   */
+  kind:
+    | 'alarm'
+    | 'defense'
+    | 'hunter'
+    | 'project'
+    | 'repair'
+    | 'standdown'
+    | 'visit'
+    | 'care'
+    | 'use'
+    | 'crowd'
+    | 'grudge'
+    | 'favourite'
+    | 'gift'
+    | 'fill' // Marge filled a hole in (`name` the hole, `user` who dug it)
+    | 'unplug'; // Marge unplugged a `music` piece (`name`, `user`)
   who: string; // the neighbour's name
   id: string;
   name?: string; // the piece
   threat?: string; // the creature, named
   reason?: string; // the impulse behind a project
+  user?: string; // the chatter concerned, lowercased
+  act?: 'remark' | 'kerb' | 'beige' | 'vendetta';
 }
 export interface Pace {
   workMs?: number; // every job takes this long (tests)
@@ -794,20 +934,22 @@ interface Project {
   role?: SafehouseObject['role'];
   stages?: number; // grows through this many stages on later visits
   beat: Beat;
+  /** What the piece is for, to the block's animals (rules.ts): birds perch on the bird bath and keep off the scarecrow. */
+  uses?: SafehouseObject['uses'];
 }
 export const CATALOGUE: Record<string, Project> = {
   veg: { name: (s) => `${s.name}'s vegetable patch`, parts: vegPatch, where: 'back', offset: { x: 0, z: 1 }, health: 150, stages: 4, beat: 'tend' },
   flowers: { name: (s) => `${s.name}'s flower bed`, parts: flowerBed, where: 'front', offset: { x: -3.2, z: 0.3 }, health: 120, beat: 'start' },
   washing: { name: (s) => `${s.name}'s washing line`, parts: washingLine, where: 'back', offset: { x: -3.5, z: -2 }, health: 120, beat: 'start' },
-  birdbath: { name: (s) => `${s.name}'s bird bath`, parts: birdBath, where: 'front', offset: { x: 3.2, z: 0.5 }, health: 120, beat: 'start' },
+  birdbath: { name: (s) => `${s.name}'s bird bath`, parts: birdBath, where: 'front', offset: { x: 3.2, z: 0.5 }, health: 120, beat: 'start', uses: ['perch'] },
   letterbox: { name: (s) => `${s.name}'s letterbox`, parts: letterbox, where: 'front', offset: { x: 2.2, z: 1.7 }, health: 80, beat: 'start' },
-  scarecrow: { name: (s) => `${s.name}'s scarecrow`, parts: scarecrow, where: 'back', offset: { x: 3.4, z: -1.2 }, health: 100, beat: 'start' },
-  bench: { name: (s) => `${s.name}'s bench`, parts: bench, where: 'front', offset: { x: -1.5, z: 1.4 }, health: 150, beat: 'start' },
+  scarecrow: { name: (s) => `${s.name}'s scarecrow`, parts: scarecrow, where: 'back', offset: { x: 3.4, z: -1.2 }, health: 100, beat: 'start', uses: ['scare'] },
+  bench: { name: (s) => `${s.name}'s bench`, parts: bench, where: 'front', offset: { x: -1.5, z: 1.4 }, health: 150, beat: 'start', uses: ['seat'] },
   car: { name: (s) => `${s.name}'s project car`, parts: carProject, where: 'front', offset: { x: 2.6, z: 0.4 }, health: 300, stages: 4, beat: 'tend' },
   tyres: { name: (s) => `${s.name}'s tyre pile`, parts: tyres, where: 'front', offset: { x: -3.6, z: -0.2 }, health: 120, beat: 'start' },
   workbench: { name: (s) => `${s.name}'s workbench`, parts: workbench, where: 'back', offset: { x: -2.5, z: 1.5 }, health: 150, beat: 'start' },
   bbq: { name: (s) => `${s.name}'s barbecue`, parts: bbq, where: 'back', offset: { x: 1.5, z: 1.5 }, health: 120, beat: 'start' },
-  hoop: { name: (s) => `${s.name}'s basketball hoop`, parts: hoop, where: 'front', offset: { x: -1.2, z: 1.6 }, health: 200, beat: 'start' },
+  hoop: { name: (s) => `${s.name}'s basketball hoop`, parts: hoop, where: 'front', offset: { x: -1.2, z: 1.6 }, health: 200, beat: 'start', uses: ['hoop'] },
   shed: { name: (s) => `${s.name}'s shed`, parts: shed, where: 'back', offset: { x: 3.4, z: -1.8 }, health: 400, role: 'barrier', beat: 'start' },
   junk: { name: (s) => `${s.name}'s scrap sculpture`, parts: junkSculpture, where: 'back', offset: { x: -2, z: -2.4 }, health: 120, beat: 'start' },
 };
@@ -937,13 +1079,146 @@ const pick = <T>(list: T[], rng: () => number): T => list[Math.min(list.length -
 const lower = (name: string) => name.replace(/^[\w.]+['’]s\s+/, '').replace(/^(the|a|an)\s+/i, '').toLowerCase();
 // A piece they could not build or fix waits a while before they try again (chat may have built on the spot).
 const skips = new Map<string, number>();
+/** A threat episode's bookkeeping for the grudge table: which of their pieces still stood, whether the house has been hit. Keyed `${neighbour}:${creature}`. */
+const episodes = new Map<string, { standing: Set<string>; houseHit: boolean }>();
+/** Chat's holes: when first seen, whether one has caught anything, who has had their word about it. By piece id. */
+const holes = new Map<string, { seenAt: number; held: boolean; remarked: Set<string> }>();
+/** Chat's speakers in the world: standing since when, and how many quarter-hour charges have gone on the grudge. By piece id. */
+const noise = new Map<string, { since: number; charged: number }>();
+let lastFillAt = -Infinity; // at most one hole filled in every HOLE_FILL_GAP_MS
+// Chat verbs (verbs.ts → noteVerb below): the odds of a word are drawn with the world's rng, which
+// `noteVerb` has no argument for, so the tick leaves its rng here; a line that is gated (Marge on
+// her lawn, on a horn) remembers when it may next be said; a `!dance` asks Jake to join in on his
+// next tick, when the pace is to hand.
+let verbRng: () => number = Math.random;
+const verbGates = new Map<string, number>(); // `${neighbour}:${beat}` → not before
+const danceRequests = new Set<string>(); // neighbour ids asked to dance along
+const funWarmedAt = new Map<string, number>(); // `${neighbour}:${chatter}` → when a piece's verb last warmed them; once per FUN_WARM_GAP_MS
+let tacticsPrimed = false; // the first look after a start finds what already stands: old news, nobody remarks
 export function resetNeighbourMemory(): void {
   skips.clear();
+  episodes.clear();
+  pendingFavourites.clear();
+  holes.clear();
+  noise.clear();
+  lastFillAt = -Infinity;
+  tacticsPrimed = false;
+  verbRng = Math.random;
+  verbGates.clear();
+  danceRequests.clear();
+  funWarmedAt.clear();
 }
 
-function say(n: NeighbourState, spec: NeighbourSpec, beat: Beat, now: number, rng: () => number, vars: { threat?: string } = {}) {
+// ---- Regard: grudges and favourites ---------------------------------------------------------
+//
+// Marge keeps score against whoever's creatures come for her place and whoever messes with her
+// things through chat, and acts on it in tiers: a cold word when their next build lands, then
+// their latest piece on the kerb or painted beige, then her hunter with their name on it. Jake
+// only ever warms: to whoever's builds he wanders over to admire, and to anyone who fixes his
+// things or builds him something. A gift ("build marge a bench") is the way back into her good
+// books. Every number here is the app's; a score decays a point every quarter hour and the
+// whole thing lives in the save, so a chatter who wrecked the garden on Tuesday finds Marge still
+// cold on Friday.
+
+export const REGARD_CAP = 20;
+export const REGARD_DECAY_MS = 15 * 60_000;
+export const REGARD_FORGET_MS = 60 * 60_000; // at zero this long and the entry goes
+/** Mirrors MAX_REGARD in state.ts (not imported: state.ts imports this module). */
+const REGARD_MEMORY = 60;
+export const GRUDGE_TIERS: readonly [number, number, number] = [3, 6, 10];
+export const GRUDGE_ACT_GAP_MS = 4 * 60_000;
+export const FAVOURITE_AT = -3;
+export const BEIGE = '#c9bfa6';
+/** Names that are never a chatter: the neighborhood, Rook, the neighbours themselves. */
+const NOBODY = new Set(['neighborhood', 'neighbourhood', 'rook', ...NEIGHBOURS.map((s) => s.name.toLowerCase())]);
+/** The table key for whoever made a piece, or nothing when it was not a chatter. */
+export function chatter(name: string | undefined): string | undefined {
+  const key = name?.trim().toLowerCase().slice(0, 40);
+  if (!key || NOBODY.has(key)) return undefined;
+  return key;
+}
+/**
+ * Move a chatter's standing with a neighbour. A `grudges` temper never goes below zero, a
+ * `favourites` temper never above; scores clamp at ±REGARD_CAP; nothing is recorded for a change
+ * that leaves nothing behind. Returns the entry and the score before, or nothing.
+ */
+function adjust(n: NeighbourState, spec: NeighbourSpec, user: string | undefined, delta: number, reason: string, now: number): { entry: Regard; before: number } | undefined {
+  if (!user || !Number.isFinite(delta) || delta === 0) return undefined;
+  const table = (n.regard ??= {});
+  const existing = table[user];
+  const before = existing?.score ?? 0;
+  let score = before + delta;
+  score = spec.temper === 'grudges' ? Math.max(0, score) : Math.min(0, score);
+  score = Math.max(-REGARD_CAP, Math.min(REGARD_CAP, score));
+  if (score === before && !existing) return undefined;
+  const entry: Regard = existing ?? { score: 0, since: now, lastAt: now };
+  if (before === 0 && score !== 0) entry.since = now; // it starts (again) here
+  entry.score = score;
+  entry.lastAt = now;
+  entry.reason = reason.slice(0, 120);
+  table[user] = entry;
+  // Only so many people remembered: the coldest go first.
+  const keys = Object.keys(table);
+  if (keys.length > REGARD_MEMORY) {
+    keys.sort((a, b) => Math.abs(table[a].score) - Math.abs(table[b].score) || table[a].lastAt - table[b].lastAt);
+    for (const k of keys.slice(0, keys.length - REGARD_MEMORY)) if (k !== user) delete table[k];
+  }
+  return { entry, before };
+}
+/** A point toward zero every quarter hour since the last change; an hour at zero and they are forgotten. */
+function decayRegard(n: NeighbourState, now: number): boolean {
+  if (!n.regard) return false;
+  let changed = false;
+  for (const [user, r] of Object.entries(n.regard)) {
+    while (r.score !== 0 && now - r.lastAt >= REGARD_DECAY_MS) {
+      r.score -= Math.sign(r.score);
+      r.lastAt += REGARD_DECAY_MS;
+      changed = true;
+    }
+    if (r.score === 0 && now - r.lastAt >= REGARD_FORGET_MS) {
+      delete n.regard[user];
+      changed = true;
+    }
+  }
+  if (!Object.keys(n.regard).length) delete n.regard;
+  return changed;
+}
+const scoreOf = (n: NeighbourState, user: string | undefined) => (user ? n.regard?.[user]?.score ?? 0 : 0);
+/** 0 (nothing), 1 (a cold word), 2 (the kerb, beige), 3 (the hunter). */
+export function grudgeTier(score: number): 0 | 1 | 2 | 3 {
+  return score >= GRUDGE_TIERS[2] ? 3 : score >= GRUDGE_TIERS[1] ? 2 : score >= GRUDGE_TIERS[0] ? 1 : 0;
+}
+/** How the tag and the admin page put it. */
+export function regardPhrase(spec: NeighbourSpec, user: string, score: number): string {
+  if (spec.temper === 'favourites') return score <= FAVOURITE_AT ? `big fan of ${user}` : `warming to ${user}`;
+  switch (grudgeTier(score)) {
+    case 3:
+      return `at war with ${user}`;
+    case 2:
+      return `not speaking to ${user}`;
+    case 1:
+      return `cross with ${user}`;
+    default:
+      return `wary of ${user}`;
+  }
+}
+/** The entry that matters most right now, past the first tier either way. */
+function strongest(n: NeighbourState): [string, Regard] | undefined {
+  const entries = Object.entries(n.regard ?? {}).filter(([, r]) => Math.abs(r.score) >= GRUDGE_TIERS[0]);
+  return entries.sort((a, b) => Math.abs(b[1].score) - Math.abs(a[1].score) || a[1].lastAt - b[1].lastAt)[0];
+}
+/** A chatter's latest standing creation Marge could take it out on: not a creature, not a floor, not a gift. */
+function latestCreationBy(w: World, user: string): SafehouseObject | undefined {
+  return w.objects
+    .filter((o) => !o.fixed && !o.owner && intact(o) && !o.creature && !o.passable && !o.giftTo && chatter(o.createdBy) === user)
+    .sort((a, b) => b.createdAt - a.createdAt)[0];
+}
+
+function say(n: NeighbourState, spec: NeighbourSpec, beat: Beat, now: number, rng: () => number, vars: { threat?: string; user?: string } = {}) {
   if (n.say && n.say.until > now) return;
-  const text = pick(spec.lines[beat], rng).replace('{threat}', vars.threat ?? 'you');
+  const text = pick(spec.lines[beat], rng)
+    .replace('{threat}', vars.threat ?? 'you')
+    .replace(/\{user\}/g, vars.user ?? 'you');
   n.say = { text, until: now + Math.min(7000, ttlFor(text)) };
 }
 function impulse(n: NeighbourState, imp: Omit<Impulse, 'at'>, now: number) {
@@ -953,7 +1228,7 @@ function impulse(n: NeighbourState, imp: Omit<Impulse, 'at'>, now: number) {
   if (n.impulses.length > 6) n.impulses.shift();
 }
 
-function ownObject(spec: NeighbourSpec, id: string, name: string, parts: Primitive[], position: GroundPoint, size: { width: number; depth: number }, opts: { health: number; role?: SafehouseObject['role']; creature?: SafehouseObject['creature']; description?: string }, now: number): SafehouseObject {
+function ownObject(spec: NeighbourSpec, id: string, name: string, parts: Primitive[], position: GroundPoint, size: { width: number; depth: number }, opts: { health: number; role?: SafehouseObject['role']; creature?: SafehouseObject['creature']; description?: string; uses?: SafehouseObject['uses'] }, now: number): SafehouseObject {
   return initializeObject({
     id,
     revision: 1,
@@ -969,6 +1244,7 @@ function ownObject(spec: NeighbourSpec, id: string, name: string, parts: Primiti
     fixed: true,
     owner: spec.id,
     creature: opts.creature,
+    ...(opts.uses?.length ? { uses: opts.uses } : {}),
   });
 }
 
@@ -1030,7 +1306,7 @@ function planDefense(n: NeighbourState, spec: NeighbourSpec, w: World, threat: S
   const hasHunter = mine.some((o) => o.id === ownId(spec, 'hunter'));
   const airborne = flies(threat);
   const home = house(w, spec);
-  const creatures = w.objects.filter((o) => o.creature && intact(o)).length;
+  const creatures = w.objects.filter((o) => o.creature && intact(o) && !o.wild).length;
   // Defenses are outside the yard-slot cap: each rung is already limited on its own (two
   // barricades, one hunter, one turret) and a full yard must never stop them answering a threat.
   const room = w.objects.length < 560;
@@ -1113,7 +1389,7 @@ function planRepair(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pace
     if (!standing && !intact(target) && w.objects.length >= 560) continue;
     if (
       target.creature &&
-      (neighbourCreatures(w) >= NEIGHBOUR_CREATURE_BUDGET || w.objects.filter((o) => o.creature && intact(o)).length >= MAX_CREATURES)
+      (neighbourCreatures(w) >= NEIGHBOUR_CREATURE_BUDGET || w.objects.filter((o) => o.creature && intact(o) && !o.wild).length >= MAX_CREATURES)
     )
       continue;
     const placed = placeInPlace(w, n.position, target, standing && intact(target));
@@ -1215,7 +1491,7 @@ function build(
   let creature: SafehouseObject['creature'];
   if (design.pet) {
     if (neighbourCreatures(w) >= NEIGHBOUR_CREATURE_BUDGET) return false;
-    if (w.objects.filter((o) => o.creature && intact(o)).length >= MAX_CREATURES) return false;
+    if (w.objects.filter((o) => o.creature && intact(o) && !o.wild).length >= MAX_CREATURES) return false;
     creature = freshCreature('roam', !!design.flying);
   }
   let size: { width: number; depth: number };
@@ -1391,6 +1667,58 @@ function act(n: NeighbourState, spec: NeighbourSpec, w: World, imp: Impulse, pac
     return true; // nothing in hand yet; the design comes back through fulfilWish
   }
   switch (imp.kind) {
+    case 'grudge':
+    case 'gift': {
+      // A look at the piece — a cold one, or a grateful one — with the line said on arrival (commit).
+      const target = w.objects.find((o) => o.id === imp.targetId && intact(o));
+      if (!target) return false;
+      const user = chatter(target.createdBy);
+      const r = rectOf(target);
+      const sides = [
+        { x: target.position.x, z: r.maxZ + 1.0 },
+        { x: target.position.x, z: r.minZ - 1.0 },
+        { x: r.minX - 1.0, z: target.position.z },
+        { x: r.maxX + 1.0, z: target.position.z },
+      ].sort((a, b) => distance(a, n.position) - distance(b, n.position));
+      for (const p of sides) {
+        const path = route(n.position, p, w.objects);
+        if (!path || path.length > 200) continue;
+        startJob(n, {
+          kind: 'look',
+          purpose: 'project',
+          label: imp.kind === 'gift' ? `Having a look at the present` : `Having a look at ${lower(target.blueprint.name)}`,
+          status: 'walking',
+          path: straighten(path),
+          spot: target.position,
+          workedMs: 0,
+          workMs: pace.workMs ?? 6000 + rng() * 4000,
+          targetId: target.id,
+          reason: imp.kind,
+        });
+        // A remark is not an act: `acts` counts the kerb and the beige, whose turn it is next.
+        if (imp.kind === 'gift') events.push({ kind: 'gift', who: spec.name, id: spec.id, name: target.blueprint.name, user });
+        else events.push({ kind: 'grudge', who: spec.name, id: spec.id, name: target.blueprint.name, user, act: 'remark' });
+        return true;
+      }
+      return false;
+    }
+    case 'crowd': {
+      // The pavement has filled up. Jake goes to the front of his lot and waves at them; Marge has a word from where she stands.
+      say(n, spec, 'crowd', now, rng);
+      if (!spec.greetsCrowd) return false;
+      const front = { x: spec.home.x, z: spec.front.maxZ - 0.3 };
+      for (const dx of [0, 2, -2, 4, -4]) {
+        const p = { x: front.x + dx, z: front.z };
+        if (!contains(spec.lot, p)) continue;
+        const path = route(n.position, p, w.objects);
+        if (!path || path.length > 200) continue;
+        // `spot` is what they face on arrival: the pavement across the road, where the crowd stands.
+        startJob(n, { kind: 'use', purpose: 'upkeep', label: 'Waving at the crowd', status: 'walking', path: straighten(path), spot: { x: p.x, z: 14.6 }, workedMs: 0, workMs: pace.workMs ?? 6000 + rng() * 4000, reason: 'crowd' });
+        events.push({ kind: 'crowd', who: spec.name, id: spec.id });
+        return true;
+      }
+      return false;
+    }
     case 'visit': {
       const target = w.objects.find((o) => o.id === imp.targetId && intact(o));
       if (!target) return false;
@@ -1553,7 +1881,7 @@ function planProject(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pac
       skips.set(ownId(spec, key), now + 180_000);
       return false;
     }
-    const preview = ownObject(spec, ownId(spec, key), name, parts, placed.position, size, { health: p.health, role: p.role }, now);
+    const preview = ownObject(spec, ownId(spec, key), name, parts, placed.position, size, { health: p.health, role: p.role, uses: p.uses }, now);
     n.stages[key] = stage;
     startJob(n, { kind: 'build', purpose: 'project', label: name, status: 'walking', path: placed.path, spot: placed.position, workedMs: 0, workMs: workFor(pace, parts.length), preview, project: key });
     say(n, spec, 'start', now, rng);
@@ -1663,6 +1991,396 @@ function tend(n: NeighbourState, spec: NeighbourSpec, w: World, piece: Safehouse
   return false;
 }
 
+// ---- Using what stands on the lot -----------------------------------------------------------
+
+/** Standing pieces on their lot with a use they have a pastime for, in their order of preference. */
+export type Pastime = NeighbourSpec['pastimes'][number];
+function usablePieces(spec: NeighbourSpec, w: World): { piece: SafehouseObject; use: Pastime }[] {
+  const out: { piece: SafehouseObject; use: Pastime }[] = [];
+  for (const use of spec.pastimes)
+    for (const o of w.objects) {
+      if (!intact(o) || o.creature || o.passable || !o.uses?.includes(use)) continue;
+      // A hoop or a seat has to be on their own lot; a tune carries, so speakers within earshot of home will do, whoever's they are.
+      const near = use === 'music' ? distanceTo(spec.home, o) <= DANCE_RANGE : contains(spec.lot, o.position);
+      if (near) out.push({ piece: o, use });
+    }
+  return out;
+}
+/**
+ * A quiet moment with something on the lot to enjoy: Jake shoots at his hoop, either of them sits
+ * on a seat. Nothing in the world changes; a `use` job walks them over, holds the pose for a
+ * while and lets go. Threats drop it like any peacetime job.
+ */
+function planUse(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pace, now: number, rng: () => number, events: NeighbourEvent[]): boolean {
+  const options = usablePieces(spec, w);
+  if (!options.length) return false;
+  // Nearest of the preferred kind first: the hoop for Jake, whichever seat is closest for Marge.
+  const preferred = options.filter((o) => o.use === options[0].use).sort((a, b) => distanceTo(n.position, a.piece) - distanceTo(n.position, b.piece));
+  for (const { piece, use } of preferred) {
+    const r = rectOf(piece);
+    // The yard the piece stands in: a throw at the hoop crosses that yard rather than the house wall.
+    const yard = contains(spec.front, piece.position) ? spec.front : contains(spec.back, piece.position) ? spec.back : spec.lot;
+    // Back from a hoop to throw, a couple of metres off the speakers to dance, right beside a seat.
+    const off = use === 'hoop' ? 2.75 : use === 'music' ? 2 : 0.75;
+    const around = [
+      { x: piece.position.x, z: r.maxZ + off },
+      { x: piece.position.x, z: r.minZ - off },
+      { x: r.minX - off, z: piece.position.z },
+      { x: r.maxX + off, z: piece.position.z },
+    ];
+    const spots =
+      use === 'hoop'
+        ? around.sort((a, b) => distance(a, middle(yard)) - distance(b, middle(yard))) // the side facing the middle of its yard
+        : around.sort((a, b) => distance(a, n.position) - distance(b, n.position));
+    for (const p of spots) {
+      if (!contains(YARD_BOUNDS, p)) continue;
+      const path = route(n.position, p, w.objects);
+      if (!path || path.length > 200) continue;
+      startJob(n, {
+        kind: 'use',
+        purpose: 'upkeep',
+        label: use === 'hoop' ? 'Shooting hoops' : use === 'music' ? 'Dancing' : 'Sitting down',
+        status: 'walking',
+        path: straighten(path),
+        spot: piece.position,
+        workedMs: 0,
+        workMs: pace.workMs ?? 20_000 + rng() * 25_000,
+        targetId: piece.id,
+        reason: use,
+      });
+      if (rng() < 0.6) say(n, spec, use === 'hoop' ? 'play' : use === 'music' ? 'dance' : 'sit', now, rng);
+      events.push({ kind: 'use', who: spec.name, id: spec.id, name: piece.blueprint.name, reason: use });
+      return true;
+    }
+  }
+  return false;
+}
+
+// ---- Tidying up after chat's tactics --------------------------------------------------------
+//
+// Chat's holes (`trap`) and speakers (`music`) are meant to be countered, and Marge is the
+// counter: a hole near her place is filled in once it has caught something or simply sat there,
+// and speakers in earshot wear on her by the quarter hour until she pulls the plug. Both are
+// edits of the chatter's own piece — the hole becomes a mound of turned earth, the speakers lose
+// their `music` — with her name on them and a point or three on the chatter's grudge. Jake
+// counters nothing: he thinks the hole is sick and dances to the speakers.
+
+const HOLE_RANGE = 22; // metres from her house for a hole to be her business
+const HOLE_REMARK_RANGE = 25; // metres from Jake's home for him to have a word about one
+const HOLE_FILL_AFTER_MS = 3 * 60_000; // a hole that has caught nothing is left this long first
+const HOLE_FILL_GAP_MS = 3 * 60_000; // at most one fill this often
+const NOISE_TICK_MS = 4 * 60_000; // every so long in earshot: a point against whoever put the speakers there
+const NOISE_LIMIT_MS = 12 * 60_000; // and after this long she pulls the plug whatever the score
+const DANCE_RANGE = 15; // metres from Jake's home for a stack to be worth a dance, on his lot or not
+const isTrap = (o: SafehouseObject) => intact(o) && !!o.passable && !!o.uses?.includes('trap');
+const isSpeakers = (o: SafehouseObject) => intact(o) && !o.passable && !o.creature && !!o.uses?.includes('music');
+
+/** Once a tick: which of chat's holes and speakers stand, since when, and whether a hole has caught anything. */
+function watchTactics(w: World, now: number) {
+  const traps = new Set<string>(),
+    stacks = new Set<string>();
+  for (const o of w.objects) {
+    if (o.owner) continue;
+    if (isTrap(o)) {
+      traps.add(o.id);
+      let h = holes.get(o.id);
+      if (!h) holes.set(o.id, (h = { seenAt: now, held: false, remarked: new Set(tacticsPrimed ? [] : NEIGHBOURS.map((s) => s.id)) }));
+      if (!h.held && w.combat.zombies.some((z) => z.heldIn === o.id)) h.held = true;
+    } else if (isSpeakers(o)) {
+      stacks.add(o.id);
+      if (!noise.has(o.id)) noise.set(o.id, { since: now, charged: 0 });
+    }
+  }
+  for (const id of [...holes.keys()]) if (!traps.has(id)) holes.delete(id);
+  for (const id of [...noise.keys()]) if (!stacks.has(id)) noise.delete(id);
+  tacticsPrimed = true;
+}
+/** Jake's word about a new hole near his place, once per hole. Marge has hers when she sets off to fill it. */
+function noticeTactics(n: NeighbourState, spec: NeighbourSpec, w: World, now: number, rng: () => number) {
+  if (spec.tidy) return;
+  for (const [id, h] of holes) {
+    if (h.remarked.has(spec.id)) continue;
+    const o = w.objects.find((x) => x.id === id);
+    if (!o) continue;
+    h.remarked.add(spec.id);
+    if (distanceTo(spec.home, o) <= HOLE_REMARK_RANGE) say(n, spec, 'hole', now, rng);
+  }
+}
+/** Speakers in earshot of her house: a point against whoever put them there for every quarter hour they have played. */
+function chargeNoise(n: NeighbourState, spec: NeighbourSpec, w: World, now: number): boolean {
+  if (!spec.tidy) return false;
+  const home = house(w, spec) ?? archivedHouse(w, spec);
+  if (!home) return false;
+  let changed = false;
+  for (const stack of w.objects) {
+    if (stack.owner || !isSpeakers(stack) || distanceTo(stack.position, home) > TACTICS.music.earshot) continue;
+    const e = noise.get(stack.id);
+    if (!e) continue;
+    const charges = Math.floor((now - e.since) / NOISE_TICK_MS);
+    while (e.charged < charges) {
+      e.charged++;
+      if (adjust(n, spec, chatter(stack.createdBy), 1, 'that noise', now)) changed = true;
+    }
+  }
+  return changed;
+}
+/** What a filled-in hole looks like: a low disc of turned earth with a few clods on it, sized to the hole. */
+function moundParts(fp: { width: number; depth: number }): Primitive[] {
+  const r = Math.max(0.4, Math.min(fp.width, fp.depth) / 2 - 0.05);
+  const parts: Primitive[] = [cyl(r, 0.12, 0x6b563f, 0, 0.06, 0)];
+  const clods: [number, number, number][] = [
+    [0.35, 0.2, 0.12],
+    [-0.3, -0.15, 0.15],
+    [0.1, -0.45, 0.11],
+    [-0.45, 0.35, 0.13],
+  ];
+  for (const [fx, fz, radius] of clods) parts.push(ball(radius, 0x7a6448, fx * r, radius, fz * r, 0.7));
+  return parts;
+}
+/** Stand beside a piece: the nearest of its four sides with a route to it, or nothing. */
+function besidePath(n: NeighbourState, w: World, piece: SafehouseObject, off: number): GroundPoint[] | undefined {
+  const r = rectOf(piece);
+  const sides = [
+    { x: piece.position.x, z: r.maxZ + off },
+    { x: piece.position.x, z: r.minZ - off },
+    { x: r.minX - off, z: piece.position.z },
+    { x: r.maxX + off, z: piece.position.z },
+  ]
+    .filter((p) => contains(YARD_BOUNDS, p))
+    .sort((a, b) => distance(a, n.position) - distance(b, n.position));
+  for (const p of sides) {
+    const path = route(n.position, p, w.objects);
+    if (path && path.length <= 200) return straighten(path);
+  }
+  return undefined;
+}
+/**
+ * A hole near her place — within HOLE_RANGE of the house, or anywhere on the street in front of
+ * her lot — that has caught something or has stood HOLE_FILL_AFTER_MS: she walks over and fills
+ * it. The piece stays the chatter's (their creation, their `#reference`) but becomes a mound with
+ * no `trap` on it, edited by her; the chatter gets three on the grudge for the digging. At most
+ * one fill every HOLE_FILL_GAP_MS; nothing while a threat is about or a repair is due (the caller).
+ */
+function planFill(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pace, now: number, rng: () => number): boolean {
+  if (!spec.tidy || now - lastFillAt < HOLE_FILL_GAP_MS) return false;
+  const home = house(w, spec) ?? archivedHouse(w, spec);
+  if (!home) return false;
+  const street = LANDMARKS.street;
+  const myStreet: Rect = { minX: spec.lot.minX, maxX: spec.lot.maxX, minZ: street.minZ, maxZ: street.maxZ };
+  const due = w.objects
+    .filter((o) => !o.owner && isTrap(o) && (skips.get(o.id) ?? 0) <= now)
+    .filter((o) => distanceTo(o.position, home) <= HOLE_RANGE || contains(myStreet, o.position))
+    .filter((o) => {
+      const h = holes.get(o.id);
+      return !!h && (h.held || now - h.seenAt >= HOLE_FILL_AFTER_MS);
+    })
+    .sort((a, b) => distanceTo(n.position, a) - distanceTo(n.position, b));
+  for (const hole of due) {
+    const path = besidePath(n, w, hole, 0.75);
+    if (!path) {
+      skips.set(hole.id, now + 120_000);
+      continue;
+    }
+    const preview: SafehouseObject = {
+      ...structuredClone(hole),
+      revision: hole.revision + 1,
+      editedBy: spec.name,
+      passable: true,
+      blueprint: { name: 'Filled-in hole', description: `Filled in by ${spec.name}`, parts: moundParts(hole.footprint) },
+    };
+    delete preview.uses;
+    delete preview.rules;
+    startJob(n, {
+      kind: 'edit',
+      purpose: 'upkeep',
+      label: 'Filling in the hole',
+      status: 'walking',
+      path,
+      spot: hole.position,
+      workedMs: 0,
+      workMs: pace.workMs ?? 15_000 + rng() * 10_000,
+      preview,
+      targetId: hole.id,
+      baseRevision: hole.revision,
+      baseLifecycle: hole.lifecycle,
+      reason: 'fill',
+    });
+    lastFillAt = now;
+    adjust(n, spec, chatter(hole.createdBy), 3, 'dug a hole in the street', now);
+    say(n, spec, 'hole', now, rng);
+    return true;
+  }
+  return false;
+}
+/**
+ * Speakers in earshot of her house: once her grudge against whoever put them there has reached the
+ * first tier (the noise itself gets it there in three quarters of an hour), or after NOISE_LIMIT_MS
+ * of it regardless, she walks over and pulls the plug — the piece loses its `music`, keeps its
+ * looks, and says so in its description. Chat can turn it back on with a redesign that names music.
+ */
+function planUnplug(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pace, now: number, rng: () => number): boolean {
+  if (!spec.tidy) return false;
+  const home = house(w, spec) ?? archivedHouse(w, spec);
+  if (!home) return false;
+  const due = w.objects
+    .filter((o) => !o.owner && isSpeakers(o) && (skips.get(o.id) ?? 0) <= now && distanceTo(o.position, home) <= TACTICS.music.earshot)
+    .filter((o) => {
+      const e = noise.get(o.id);
+      return !!e && (grudgeTier(scoreOf(n, chatter(o.createdBy))) >= 1 || now - e.since >= NOISE_LIMIT_MS);
+    })
+    .sort((a, b) => distanceTo(n.position, a) - distanceTo(n.position, b));
+  for (const stack of due) {
+    let placed;
+    try {
+      placed = choosePlacement(stack.footprint, w.objects, n.position, stack, stack.position);
+    } catch {
+      skips.set(stack.id, now + 120_000);
+      continue;
+    }
+    const uses = (stack.uses ?? []).filter((u) => u !== 'music');
+    const description = stack.blueprint.description.endsWith('(unplugged)') ? stack.blueprint.description : `${stack.blueprint.description} (unplugged)`.trim().slice(0, 240);
+    const preview: SafehouseObject = { ...structuredClone(stack), revision: stack.revision + 1, editedBy: spec.name, blueprint: { ...stack.blueprint, description } };
+    if (uses.length) preview.uses = uses;
+    else delete preview.uses;
+    startJob(n, {
+      kind: 'edit',
+      purpose: 'upkeep',
+      label: 'Unplugging the speakers',
+      status: 'walking',
+      path: placed.path,
+      spot: stack.position,
+      workedMs: 0,
+      workMs: pace.workMs ?? 6000 + rng() * 4000,
+      preview,
+      targetId: stack.id,
+      baseRevision: stack.revision,
+      baseLifecycle: stack.lifecycle,
+      reason: 'unplug',
+    });
+    say(n, spec, 'unplug', now, rng);
+    return true;
+  }
+  return false;
+}
+/** Her counters to chat's tactics, in turn: the hole first, then the noise. */
+function planTidy(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pace, now: number, rng: () => number): boolean {
+  return planFill(n, spec, w, pace, now, rng) || planUnplug(n, spec, w, pace, now, rng);
+}
+
+// ---- Settling scores --------------------------------------------------------------------------
+
+/** Someone just became one of Jake's favourites: said and remarked on at the next tick, once. */
+const pendingFavourites = new Map<string, Set<string>>();
+function pendingFavourite(n: NeighbourState, user: string) {
+  let set = pendingFavourites.get(n.id);
+  if (!set) pendingFavourites.set(n.id, (set = new Set()));
+  set.add(user);
+}
+function drainFavourites(n: NeighbourState, spec: NeighbourSpec, now: number, rng: () => number, events: NeighbourEvent[]) {
+  const set = pendingFavourites.get(n.id);
+  if (!set?.size) return;
+  for (const user of set) {
+    events.push({ kind: 'favourite', who: spec.name, id: spec.id, user });
+    n.say = undefined; // this beats whatever he was saying about the build itself
+    say(n, spec, 'favourite', now, rng, { user });
+  }
+  set.clear();
+}
+/** Their fighters with a name on them: the name comes off the tick the score drops below the top tier. */
+function settleVendettas(n: NeighbourState, spec: NeighbourSpec, w: World): boolean {
+  let changed = false;
+  for (const o of w.objects) {
+    if (o.owner !== spec.id || !o.creature?.nemesisOwner) continue;
+    if (grudgeTier(scoreOf(n, o.creature.nemesisOwner)) < 3) {
+      delete o.creature.nemesisOwner;
+      changed = true;
+    }
+  }
+  return changed;
+}
+/** Her fighter, standing: the one the vendetta goes on. */
+const hunterOf = (w: World, spec: NeighbourSpec) => owned(w, spec).find((o) => intact(o) && o.creature?.behaviour === 'fight');
+/**
+ * A grudge past the second tier gets acted on — one act per chatter every GRUDGE_ACT_GAP_MS, and only
+ * with nothing threatening and nothing to fix, because a grudge is an afternoon thing. At the top
+ * tier the hunter gets their name first (built for the purpose if she has none); below that, their
+ * latest standing creation goes on the kerb across the street or gets painted beige, in turn.
+ * Nobody eligible, or nothing of theirs standing, and the grudge just sits.
+ */
+function planGrudge(n: NeighbourState, spec: NeighbourSpec, w: World, pace: Pace, now: number, rng: () => number, events: NeighbourEvent[]): boolean {
+  if (spec.temper !== 'grudges' || !n.regard) return false;
+  const due = Object.entries(n.regard)
+    .filter(([, r]) => grudgeTier(r.score) >= 2 && now - (r.lastActAt ?? -Infinity) >= GRUDGE_ACT_GAP_MS)
+    .sort((a, b) => b[1].score - a[1].score);
+  for (const [user, r] of due) {
+    const took = (act: NonNullable<NeighbourEvent['act']>, name?: string) => {
+      r.acts = (r.acts ?? 0) + 1;
+      r.lastActAt = now;
+      events.push({ kind: 'grudge', who: spec.name, id: spec.id, user, act, name });
+      return true;
+    };
+    // 3. The hunter learns their name.
+    if (grudgeTier(r.score) >= 3) {
+      const hunter = hunterOf(w, spec);
+      const building = n.job?.preview?.creature?.behaviour === 'fight';
+      if (hunter && hunter.creature!.nemesisOwner !== user) {
+        hunter.creature!.nemesisOwner = user;
+        say(n, spec, 'vendetta', now, rng, { user });
+        return took('vendetta', hunter.blueprint.name);
+      }
+      if (!hunter && !building && buildVendettaHunter(n, spec, w, user, pace, now, rng)) return took('vendetta', n.job!.preview!.blueprint.name);
+    }
+    // 2. Their latest piece: the kerb and beige, in turn.
+    const piece = latestCreationBy(w, user);
+    if (!piece) continue;
+    const kerb = (r.acts ?? 0) % 2 === 0;
+    if (kerb) {
+      const street = LANDMARKS['across the street'];
+      const placed = place(piece.footprint, w, n.position, spotsAround(street, { x: piece.position.x, z: middle(street).z }), YARD_BOUNDS, piece);
+      if (placed && distance(placed.position, piece.position) >= 1.5) {
+        const preview: SafehouseObject = { ...structuredClone(piece), revision: piece.revision + 1, position: placed.position, editedBy: spec.name };
+        startJob(n, { kind: 'edit', purpose: 'project', label: `Moving ${lower(piece.blueprint.name)} to the kerb`, status: 'walking', path: placed.path, spot: placed.position, workedMs: 0, workMs: pace.workMs ?? 8000, preview, targetId: piece.id, baseRevision: piece.revision, baseLifecycle: piece.lifecycle, reason: 'grudge' });
+        say(n, spec, 'kerb', now, rng, { user });
+        return took('kerb', piece.blueprint.name);
+      }
+      // Nowhere on the kerb for it: beige will do.
+    }
+    let placed;
+    try {
+      placed = choosePlacement(piece.footprint, w.objects, n.position, piece, piece.position);
+    } catch {
+      continue;
+    }
+    const blueprint: Blueprint = { ...piece.blueprint, parts: piece.blueprint.parts.map((p) => ({ ...p, color: BEIGE })) };
+    const preview: SafehouseObject = { ...structuredClone(piece), revision: piece.revision + 1, blueprint, editedBy: spec.name };
+    startJob(n, { kind: 'edit', purpose: 'project', label: `Repainting ${lower(piece.blueprint.name)}`, status: 'walking', path: placed.path, spot: piece.position, workedMs: 0, workMs: pace.workMs ?? 9000, preview, targetId: piece.id, baseRevision: piece.revision, baseLifecycle: piece.lifecycle, reason: 'grudge' });
+    say(n, spec, 'beige', now, rng, { user });
+    return took('beige', piece.blueprint.name);
+  }
+  return false;
+}
+/** A hunter built for a grudge rather than a threat: the same beast, with a chatter's name on it instead of a creature's. */
+function buildVendettaHunter(n: NeighbourState, spec: NeighbourSpec, w: World, user: string, pace: Pace, now: number, rng: () => number): boolean {
+  if (w.objects.length >= 560) return false;
+  if (neighbourCreatures(w) >= NEIGHBOUR_CREATURE_BUDGET) return false;
+  if (w.objects.filter((o) => o.creature && intact(o) && !o.wild).length >= MAX_CREATURES) return false;
+  const parts = hunter(spec.id === 'west' ? 0x4a4038 : 0x3b3f44);
+  const name = `${spec.name}'s ${user} hunter`.slice(0, 70);
+  const size = measureBlueprint({ name, description: '', parts }, SCENERY_LIMITS);
+  const placed = place(size, w, n.position, spotsAround(spec.front, { x: spec.home.x + (spec.id === 'west' ? -2.5 : 2.5), z: spec.home.z + 1.2 }), spec.lot);
+  if (!placed) return false;
+  const creature = { ...freshCreature('fight'), nemesisOwner: user };
+  const preview = ownObject(spec, ownId(spec, 'hunter'), name, parts, placed.position, size, { health: HUNTER_HEALTH, creature, description: `${spec.name} built it with ${user}'s name on it` }, now);
+  const existing = [...w.objects, ...w.combat.archive].find((o) => o.id === preview.id);
+  if (existing) {
+    preview.revision = existing.revision + 1;
+    preview.lifecycle = existing.lifecycle ?? 1;
+  }
+  startJob(n, { kind: 'build', purpose: 'defense', label: name, status: 'walking', path: placed.path, spot: placed.position, workedMs: 0, workMs: workFor(pace, parts.length, 10_000), preview, targetId: existing?.id, baseRevision: existing?.revision, baseLifecycle: existing?.lifecycle, reason: 'grudge' });
+  say(n, spec, 'vendetta', now, rng, { user });
+  return true;
+}
+
 // ---- Noticing -------------------------------------------------------------------------------
 
 /** What has changed on the block since they last looked, turned into impulses. */
@@ -1681,7 +2399,21 @@ function notice(n: NeighbourState, spec: NeighbourSpec, w: World, now: number, r
   if (fresh.length) {
     const newest = fresh[fresh.length - 1];
     seen.creationAt = newest.createdAt;
-    if (!newest.creature && rng() < 0.75) impulse(n, { kind: 'visit', idea: `chat's ${newest.blueprint.name}`, name: newest.blueprint.name, targetId: newest.id }, now);
+    // Something built for them: the way back into Marge's good books, and straight into Jake's.
+    for (const gift of fresh.filter((o) => o.giftTo === spec.id)) {
+      const user = chatter(gift.createdBy);
+      const moved = adjust(n, spec, user, spec.temper === 'grudges' ? -6 : -3, 'built them something', now);
+      impulse(n, { kind: 'gift', idea: `a present from ${user ?? 'chat'}`, name: gift.blueprint.name, targetId: gift.id }, now);
+      if (moved && spec.temper === 'favourites' && moved.before > FAVOURITE_AT && moved.entry.score <= FAVOURITE_AT) pendingFavourite(n, user!);
+    }
+    if (newest.giftTo !== spec.id && !newest.creature) {
+      const user = chatter(newest.createdBy);
+      if (spec.temper === 'grudges' && grudgeTier(scoreOf(n, user)) >= 1) {
+        // A cold look rather than a curious one: her remark, and no answering it with something bigger.
+        impulse(n, { kind: 'grudge', idea: 'remark', name: newest.blueprint.name, targetId: newest.id }, now);
+      } else if ((spec.temper === 'favourites' && scoreOf(n, user) <= FAVOURITE_AT) || rng() < 0.75)
+        impulse(n, { kind: 'visit', idea: `chat's ${newest.blueprint.name}`, name: newest.blueprint.name, targetId: newest.id }, now);
+    }
   }
   // The other neighbour built something. Marge answers a creation of Jake's with a bigger one of
   // the same, every time; Jake goes over to admire whatever Marge put up.
@@ -1717,15 +2449,25 @@ function notice(n: NeighbourState, spec: NeighbourSpec, w: World, now: number, r
     if (lighting === 'night') impulse(n, { kind: 'light', idea: 'something with a light in it' }, now);
   }
   // A harmless creature about the block (not theirs, not a fighter): somewhere for it.
-  const pet = w.objects.find((o) => o.creature && intact(o) && !isHostile(o) && o.creature.behaviour !== 'fight' && o.owner !== spec.id);
+  const pet = w.objects.find((o) => o.creature && intact(o) && !o.wild && !isHostile(o) && o.creature.behaviour !== 'fight' && o.owner !== spec.id);
   if (pet && !seen.pet) {
     seen.pet = true;
     impulse(n, { kind: 'pet', idea: `somewhere for ${lower(pet.blueprint.name)}`, name: pet.blueprint.name, targetId: pet.id }, now);
   } else if (!pet) seen.pet = false;
+  // The pavement fills up (three or more viewers): a wave from Jake, a word from Marge — once per
+  // fill-up, and not again within ten minutes. A crowd that simply stays is old news.
+  const crowd = w.crowd?.length ?? 0;
+  if (crowd >= 3 && (seen.crowd ?? 0) < 3) {
+    if (seen.crowdAt === undefined || now - seen.crowdAt >= 600_000) {
+      seen.crowdAt = now;
+      impulse(n, { kind: 'crowd', idea: 'the crowd on the pavement' }, now);
+    }
+    seen.crowd = crowd;
+  } else if (crowd < 3) seen.crowd = crowd;
   // A wave about to land: whatever they were pottering at can wait.
   if (!w.combat.paused && wave.phase === 'prep' && wave.phaseEndsAt - w.combat.time < 45_000 && seen.hunkered !== wave.number) {
     seen.hunkered = wave.number;
-    if (n.job && n.job.purpose === 'project') drop(n);
+    if (n.job && (n.job.purpose === 'project' || n.job.kind === 'use')) drop(n);
     say(n, spec, 'hunker', now, rng);
   }
 }
@@ -1794,7 +2536,7 @@ export function census(w: World): WorldCensus {
     .slice(0, 24)
     .map((o) => ({ name: o.blueprint.name, description: o.blueprint.description }));
   const creatures = w.objects
-    .filter((o) => o.creature && intact(o) && !o.owner)
+    .filter((o) => o.creature && intact(o) && !o.owner && !o.wild) // the block's own birds are not news
     .slice(0, 12)
     .map((o) => ({ name: o.blueprint.name, behaviour: o.creature!.behaviour }));
   return { builds, creatures, wave: w.combat.wave.number, lighting: w.lighting ?? 'day' };
@@ -1883,9 +2625,17 @@ const activityFor = (job: NeighbourJob): NeighbourActivity =>
       ? 'tending'
       : job.kind === 'look'
         ? 'looking'
-        : job.project === 'paint'
-          ? 'painting'
-          : 'building';
+        : job.kind === 'use'
+          ? job.reason === 'hoop'
+            ? 'playing'
+            : job.reason === 'crowd'
+              ? 'waving'
+              : job.reason === 'music'
+                ? 'dancing'
+                : 'sitting'
+          : job.project === 'paint'
+            ? 'painting'
+            : 'building';
 
 function drop(n: NeighbourState) {
   n.job = undefined;
@@ -1895,12 +2645,27 @@ function drop(n: NeighbourState) {
 /** The work is done: put the piece in, with the same checks Rook makes so a change chat made meanwhile wins. */
 function commit(n: NeighbourState, spec: NeighbourSpec, w: World, now: number, rng: () => number, events: NeighbourEvent[]): boolean {
   const job = n.job!;
-  if (job.kind === 'tend' || job.kind === 'look') {
-    const looked = job.kind === 'look' && (job.reason === 'visit' || job.reason === 'admire') ? w.objects.find((o) => o.id === job.targetId) : undefined;
+  if (job.kind === 'tend' || job.kind === 'look' || job.kind === 'use') {
+    const looked =
+      job.kind === 'look' && (job.reason === 'visit' || job.reason === 'admire' || job.reason === 'grudge' || job.reason === 'gift')
+        ? w.objects.find((o) => o.id === job.targetId)
+        : undefined;
     drop(n);
     if (job.kind === 'tend') n.restMs = 0.6 * DEFAULT_PACE.restMs;
+    if (job.kind === 'use') return false; // a game or a sit-down leaves nothing behind
     if (looked) {
+      const user = chatter(looked.createdBy);
+      if (job.reason === 'grudge' || job.reason === 'gift') {
+        // The cold word, or the grudging thanks; neither turns into showing them how it is done.
+        say(n, spec, job.reason, now, rng, { user });
+        return false;
+      }
       say(n, spec, job.reason === 'admire' ? 'admire' : 'visit', now, rng);
+      // Jake warms to whoever built the thing he came over to admire.
+      if (job.reason === 'visit' && spec.temper === 'favourites') {
+        const moved = adjust(n, spec, user, -1, 'liked something they built', now);
+        if (moved && moved.before > FAVOURITE_AT && moved.entry.score <= FAVOURITE_AT) pendingFavourite(n, user!);
+      }
       // Marge's sniff at chat's build sometimes turns into showing them how it is done; Jake just enjoys it.
       if (spec.rival && job.reason === 'visit' && rng() < 0.4)
         impulse(n, { kind: 'rival', idea: `a bigger and better version of chat's "${looked.blueprint.name}" (${looked.blueprint.description || 'no description'})`, name: looked.blueprint.name, targetId: looked.id }, now);
@@ -1944,11 +2709,17 @@ function commit(n: NeighbourState, spec: NeighbourSpec, w: World, now: number, r
     for (const k of Object.keys(n.stages ?? {})) if (ownId(spec, k) === job.targetId) delete n.stages[k];
   }
   drop(n);
-  if (purpose === 'defense') {
+  if (reason === 'fill' || reason === 'unplug') {
+    // The hole is a mound, the speakers are off: her word on it, and Rook's; the chatter's grudge moved when she set off.
+    say(n, spec, reason, now, rng);
+    events.push({ kind: reason, who: spec.name, id: spec.id, name: target?.blueprint.name ?? preview.blueprint.name, user: chatter(target?.createdBy) });
+  } else if (purpose === 'defense') {
     events.push({ kind: preview.creature ? 'hunter' : 'defense', who: spec.name, id: spec.id, name: preview.blueprint.name, threat: n.threat ? speakThreat(w.objects.find((o) => o.id === n.threat!.id)) : undefined });
     if (n.threat) n.threat.waitMs = 12_000 + rng() * 8000;
   } else if (purpose === 'upkeep') events.push({ kind: 'repair', who: spec.name, id: spec.id, name: preview.blueprint.name });
-  else {
+  else if (reason === 'grudge') {
+    // The kerb or the beige: Rook heard about it when she set off; nothing more to say here.
+  } else {
     // A coat of paint is "the paint job" in Rook's mouth, not "the neighbor house (west)".
     events.push({ kind: 'project', who: spec.name, id: spec.id, name: job.project === 'paint' ? `${spec.name}'s paint job` : preview.blueprint.name, reason });
     if (kind === 'build' && reason !== 'care') say(n, spec, 'done', now, rng);
@@ -1971,6 +2742,8 @@ export function tickNeighbours(
   const events: NeighbourEvent[] = [];
   let changed = false;
   const step = Math.min(Math.max(dt, 0), 10_000);
+  verbRng = rng; // for noteVerb's odds between ticks
+  watchTactics(w, now);
   for (const spec of NEIGHBOURS) {
     let n = w.neighbours.find((x) => x.id === spec.id);
     if (!n) {
@@ -1979,6 +2752,8 @@ export function tickNeighbours(
       changed = true;
     }
     if (n.say && n.say.until <= now) n.say = undefined;
+    if (decayRegard(n, now)) changed = true;
+    if (chargeNoise(n, spec, w, now)) changed = true;
     const home = house(w, spec);
     const homeGone = !home && !archivedHouse(w, spec);
     if (homeGone) {
@@ -2002,15 +2777,38 @@ export function tickNeighbours(
         events.push({ kind: 'alarm', who: spec.name, id: spec.id, threat: speakThreat(sensed) });
         say(n, spec, 'alarm', now, rng);
         if (n.job && n.job.purpose !== 'defense') drop(n); // the afternoon's project can wait
+        // The grudge starts here: whoever built the thing is the one she remembers.
+        adjust(n, spec, chatter(sensed.createdBy), 3, `the ${speakThreat(sensed)} came for the house`, now);
+        episodes.set(`${spec.id}:${sensed.id}`, {
+          standing: new Set(mine.filter((o) => o.id !== spec.houseId && intact(o) && w.objects.includes(o)).map((o) => o.id)),
+          houseHit: !!home && intact(home) ? (home.health ?? home.maxHealth ?? 1) < (home.maxHealth ?? 1) * 0.8 : true,
+        });
         changed = true;
       } else {
         n.threat.sinceMs = (n.threat.sinceMs ?? 0) + step;
         if (near.some((x) => x.o.id === sensed.id) || felt) n.threat.quietMs = 0;
         else n.threat.quietMs += step;
       }
+      // While it is about: each of their pieces that goes down, and the house dropping under 80 %, count against its maker.
+      const episode = episodes.get(`${spec.id}:${sensed.id}`);
+      if (episode) {
+        const culprit = chatter(sensed.createdBy);
+        for (const id of [...episode.standing]) {
+          const o = w.objects.find((x) => x.id === id);
+          if (o && intact(o)) continue;
+          episode.standing.delete(id);
+          if (adjust(n, spec, culprit, 3, `the ${speakThreat(sensed)} knocked something of theirs down`, now)) changed = true;
+        }
+        const houseHurt = !home || !intact(home) || (home.health ?? home.maxHealth ?? 1) < (home.maxHealth ?? 1) * 0.8;
+        if (!episode.houseHit && houseHurt) {
+          episode.houseHit = true;
+          if (adjust(n, spec, culprit, 2, `the ${speakThreat(sensed)} got at the house`, now)) changed = true;
+        }
+      }
     } else if (n.threat) {
       n.threat.quietMs += step;
       if (!current || n.threat.quietMs > STAND_DOWN_MS) {
+        episodes.delete(`${spec.id}:${n.threat.id}`);
         n.threat = undefined;
         events.push({ kind: 'standdown', who: spec.name, id: spec.id });
         say(n, spec, 'calm', now, rng);
@@ -2018,8 +2816,12 @@ export function tickNeighbours(
         changed = true;
       }
     }
+    // A vendetta outlives its cause only as long as the score does.
+    if (settleVendettas(n, spec, w)) changed = true;
     // 2. Noticing the rest of the block, and an idea the model never answered.
     notice(n, spec, w, now, rng);
+    noticeTactics(n, spec, w, now, rng);
+    drainFavourites(n, spec, now, rng, events);
     if (n.wish && now - n.wish.at > WISH_TIMEOUT_MS) {
       const wish = n.wish;
       n.wish = undefined;
@@ -2060,9 +2862,11 @@ export function tickNeighbours(
         n.activity = activityFor(job);
         job.workedMs = Math.min(job.workMs, job.workedMs + step);
         if (job.workedMs >= job.workMs) {
-          const purpose = job.purpose;
+          const purpose = job.purpose,
+            kind = job.kind;
           commit(n, spec, w, now, rng, events);
-          if (purpose === 'project') n.restMs = pace.restMs * (0.7 + rng() * 0.7);
+          // A game or a sit-down counts as the afternoon's rest too, or they would go straight from the bench to a build.
+          if (purpose === 'project' || kind === 'use') n.restMs = pace.restMs * (0.7 + rng() * 0.7);
           changed = true;
         }
       }
@@ -2094,6 +2898,16 @@ export function tickNeighbours(
       if (!n.path.length) n.facing = Math.atan2(threat!.position.x - n.position.x, threat!.position.z - n.position.z);
       continue;
     }
+    // Chat's tactics on her street: a hole to fill, speakers to unplug — with nothing threatening and nothing of hers to fix.
+    if (!threat && planTidy(n, spec, w, pace, now, rng)) {
+      changed = true;
+      continue;
+    }
+    // Scores to settle: nothing threatening, nothing of theirs to fix, so a grudge gets its turn.
+    if (!threat && planGrudge(n, spec, w, pace, now, rng, events)) {
+      changed = true;
+      continue;
+    }
     if (n.wish) {
       // Waiting on the model: potter at home.
       strollHome(n, spec, w, step);
@@ -2107,8 +2921,20 @@ export function tickNeighbours(
         continue;
       }
     }
+    // Somebody in chat is dancing (`!dance`): Jake joins in if he is free and a tune carries to his place.
+    if (danceRequests.delete(n.id) && !n.job && !threat && usablePieces(spec, w).some((o) => o.use === 'music') && planUse(n, spec, w, pace, now, rng, events)) {
+      changed = true;
+      continue;
+    }
     n.restMs -= step;
     if (n.restMs <= 0) {
+      // About one quiet moment in three goes on what already stands there — a game at the hoop, a
+      // sit-down — when there is such a thing on the lot (the rng is only drawn when there is, so
+      // a yard with nothing to enjoy plays out exactly as before).
+      if (usablePieces(spec, w).length && rng() < 0.34 && planUse(n, spec, w, pace, now, rng, events)) {
+        changed = true;
+        continue;
+      }
       if (planProject(n, spec, w, pace, now, rng)) {
         changed = true;
         continue;
@@ -2137,10 +2963,12 @@ function strollHome(n: NeighbourState, spec: NeighbourSpec, w: World, step: numb
 
 // ---- Views ----------------------------------------------------------------------------------
 
-export function neighbourViews(w: { neighbours?: NeighbourState[] }): NeighbourView[] {
+export function neighbourViews(w: { neighbours?: NeighbourState[]; objects?: SafehouseObject[] }): NeighbourView[] {
   return (w.neighbours ?? []).flatMap((n) => {
     const spec = specOf(n.id);
     if (!spec) return [];
+    // The piece being used (a hoop, a seat): the page aims the ball at it or seats the figure by it.
+    const at = n.job?.kind === 'use' && n.job.targetId ? w.objects?.find((o) => o.id === n.job!.targetId)?.position : undefined;
     return [
       {
         id: n.id,
@@ -2158,15 +2986,220 @@ export function neighbourViews(w: { neighbours?: NeighbourState[] }): NeighbourV
               progress: n.job.workedMs / n.job.workMs,
               purpose: n.job.purpose,
               preview: n.job.kind === 'build' || n.job.kind === 'rebuild' ? n.job.preview : undefined,
+              ...(at ? { at: { ...at } } : {}),
             }
           : undefined,
         say: n.say,
         theme: n.theme?.name,
+        ...(() => {
+          const top = strongest(n);
+          return top ? { regard: { user: top[0], score: top[1].score, phrase: regardPhrase(spec, top[0], top[1].score) } } : {};
+        })(),
       },
     ];
   });
 }
 /** A line for Rook's state summary: what each neighbour is up to. */
+// ---- Grudges: the contract other modules call --------------------------------------------------
+/** Something a chatter did to a neighbour's piece or house through chat (a repaint, a move, a redesign, a repair). */
+export type ChatEditKind = 'paint' | 'resize' | 'move' | 'turn' | 'redesign' | 'repair' | 'rebuild' | 'delete';
+/** What each kind of meddling costs with Marge (positive) — repairs are amends. Jake only notices the amends. */
+const MEDDLING: Record<ChatEditKind, number> = { paint: 2, resize: 2, turn: 2, move: 3, redesign: 3, delete: 5, repair: -3, rebuild: -3 };
+const MEDDLED: Record<ChatEditKind, string> = { paint: 'painted', resize: 'resized', turn: 'turned', move: 'moved', redesign: 'redesigned', delete: 'deleted', repair: 'fixed', rebuild: 'rebuilt' };
+/** index.ts calls this when a chat job lands on a piece with an `owner` (never for Rook's own rounds). */
+export function noteChatEdit(w: { neighbours?: NeighbourState[] }, o: SafehouseObject, username: string, kind: ChatEditKind, now: number): void {
+  const spec = NEIGHBOURS.find((s) => o.owner === s.id || o.id === s.houseId);
+  const n = spec ? w.neighbours?.find((x) => x.id === spec.id) : undefined;
+  if (!spec || !n) return;
+  const user = chatter(username);
+  const what = o.id === spec.houseId ? 'the house' : 'something of theirs';
+  const delta = spec.temper === 'grudges' ? MEDDLING[kind] : MEDDLING[kind] < 0 ? -1 : 0;
+  const moved = adjust(n, spec, user, delta, `${MEDDLED[kind]} ${what}`, now);
+  if (moved && spec.temper === 'favourites' && moved.before > FAVOURITE_AT && moved.entry.score <= FAVOURITE_AT) pendingFavourite(n, user!);
+}
+/** Operator: forgive one chatter (lowercased) everywhere, or everyone. Returns whether anything changed. */
+export function forgive(w: { neighbours?: NeighbourState[]; objects: SafehouseObject[] }, user?: string): boolean {
+  const key = user ? chatter(user) ?? user.trim().toLowerCase() : undefined;
+  let changed = false;
+  for (const n of w.neighbours ?? []) {
+    if (!n.regard) continue;
+    if (key) {
+      if (key in n.regard) {
+        delete n.regard[key];
+        changed = true;
+      }
+      if (!Object.keys(n.regard).length) delete n.regard;
+    } else {
+      delete n.regard;
+      changed = true;
+    }
+  }
+  for (const o of w.objects) {
+    const owner = o.creature?.nemesisOwner;
+    if (owner && (!key || owner === key)) {
+      delete o.creature!.nemesisOwner;
+      changed = true;
+    }
+  }
+  return changed;
+}
+/**
+ * A chat verb happened (verbs.ts): `shoot` at a hoop (`detail.hit`), `honk` a vehicle, `dance` on the
+ * pavement. The neighbours may react (Jake cheers a basket; Marge minds the noise). Implemented in the
+ * verbs slice; index.ts calls it.
+ */
+const LAWN_GATE_MS = 3 * 60_000; // Marge on ball games in her garden: a word this often at most
+const HORN_GATE_MS = 2 * 60_000; // ...and on horns
+const CHEER_ODDS = 1 / 3, // Jake on a basket
+  MISS_ODDS = 1 / 4, // ...and on a miss
+  HORN_ODDS = 1 / 3, // ...and on a horn near his place
+  FUN_ODDS = 1 / 3; // ...and on somebody doing a piece's own verb near his place
+// A piece's own verb (`!swim`, `!bounce`, `!sit` …): Marge minds her things being used and the
+// splashing within earshot; Jake enjoys it, and warms to a chatter for it at most once in ten
+// minutes so a `!bounce` spam does not make a favourite inside a minute.
+const MINE_GATE_MS = 3 * 60_000,
+  SPLASH_GATE_MS = 3 * 60_000,
+  FUN_WARM_GAP_MS = 10 * 60_000;
+// The verbs that move things (`!drive`, `!ride`) and the scrap (`!fight`, a living build; the arrival
+// is one call, the result another): Marge minds a brawl or a drive outside her house and anyone
+// picking on a creature of hers; Jake calls the fight, cheers the winner and the wheels.
+const BRAWL_GATE_MS = 3 * 60_000, // Marge on a scrap outside her house or with her hunter: a word this often at most
+  RACERS_GATE_MS = 4 * 60_000, // ...and on somebody driving past
+  STREET_M = 12, // how far from her house a scrap or a drive is her business
+  SCRAP_ODDS = 1 / 2, // Jake on a scrap starting near his place
+  WHEELS_ODDS = 1 / 3; // ...and on somebody driving near his place (a ride shares FUN_ODDS)
+/** Jake warms to a chatter by one for a reason, at most once per chatter per reason in ten minutes; a favourite is told to Rook. */
+function warmOnce(n: NeighbourState, spec: NeighbourSpec, key: string | undefined, reason: string, now: number): void {
+  if (!key) return;
+  const gate = `${spec.id}:${key}:${reason}`;
+  if ((funWarmedAt.get(gate) ?? -Infinity) > now - FUN_WARM_GAP_MS) return;
+  funWarmedAt.set(gate, now);
+  const moved = adjust(n, spec, key, -1, reason, now);
+  if (moved && moved.before > FAVOURITE_AT && moved.entry.score <= FAVOURITE_AT) pendingFavourite(n, key);
+}
+/** A gated word: said only when the gate for that neighbour and beat has passed, then shut again. */
+function sayGated(n: NeighbourState, spec: NeighbourSpec, beat: Beat, gapMs: number, now: number, vars: { user?: string } = {}) {
+  const key = `${spec.id}:${beat}`;
+  if ((verbGates.get(key) ?? -Infinity) > now) return;
+  verbGates.set(key, now + gapMs);
+  say(n, spec, beat, now, verbRng, vars);
+}
+/** Something chat did with a verb: `shoot`/`honk`/`dance` are the built-ins; any other word is a piece's own verb (PieceVerb). */
+export type VerbDone = 'shoot' | 'honk' | 'dance' | (string & {});
+export function noteVerb(
+  w: { neighbours?: NeighbourState[]; objects: SafehouseObject[] },
+  verb: VerbDone,
+  user: string,
+  objectId: string | undefined,
+  detail: { hit?: boolean; result?: 'won' | 'lost' },
+  now: number,
+): void {
+  const key = chatter(user);
+  const piece = objectId ? w.objects.find((o) => o.id === objectId && intact(o)) : undefined;
+  for (const n of w.neighbours ?? []) {
+    const spec = specOf(n.id);
+    if (!spec) continue;
+    const nearHome = (o: SafehouseObject) => distanceTo(spec.home, o) <= DANCE_RANGE;
+    const face = (o: SafehouseObject) => {
+      if (!n.job) n.facing = Math.atan2(o.position.x - n.position.x, o.position.z - n.position.z);
+    };
+    /** How far a piece stands from this neighbour's house (the seeded spot if the house is gone). */
+    const fromHouse = (o: SafehouseObject) => {
+      const home = w.objects.find((h) => h.id === spec.houseId && intact(h));
+      return distanceTo(home?.position ?? spec.home, o);
+    };
+    if (verb === 'fight' && piece) {
+      // A scrap with a living build: the arrival is one call, the result (detail.result) another.
+      if (spec.temper === 'grudges') {
+        if (detail.result) continue; // only the arrival moves Marge
+        if (piece.owner === spec.id) {
+          adjust(n, spec, key, 3, 'picking on her hunter', now);
+          sayGated(n, spec, 'myDog', BRAWL_GATE_MS, now, { user: key });
+        } else if (contains(spec.lot, piece.position) || fromHouse(piece) <= STREET_M) {
+          adjust(n, spec, key, 2, 'brawling outside her house', now);
+          sayGated(n, spec, 'brawl', BRAWL_GATE_MS, now, { user: key });
+        }
+      } else if (piece.owner === spec.id || nearHome(piece)) {
+        face(piece);
+        if (!detail.result) {
+          if (verbRng() < SCRAP_ODDS) say(n, spec, 'scrap', now, verbRng, { user: key });
+        } else if (detail.result === 'won') {
+          warmOnce(n, spec, key, 'winning a scrap', now);
+          say(n, spec, 'scrapWon', now, verbRng, { user: key });
+        } else say(n, spec, 'scrapLost', now, verbRng, { user: key });
+      }
+    } else if (verb === 'drive' && piece) {
+      if (detail.result) continue;
+      if (spec.temper === 'grudges') {
+        // Marge: a car going up and down outside her house.
+        if (fromHouse(piece) > STREET_M) continue;
+        adjust(n, spec, key, 1, 'boy racers', now);
+        sayGated(n, spec, 'racers', RACERS_GATE_MS, now, { user: key });
+      } else if (piece.owner === spec.id || nearHome(piece)) {
+        face(piece);
+        if (verbRng() < WHEELS_ODDS) say(n, spec, 'wheels', now, verbRng, { user: key });
+      }
+    } else if (verb === 'shoot' && piece) {
+      if (spec.temper === 'favourites') {
+        // Jake: a basket at his hoop, or any hoop near his place, warms him to the shooter and may get a cheer.
+        if (piece.owner !== spec.id && !nearHome(piece)) continue;
+        face(piece);
+        if (detail.hit) {
+          const moved = adjust(n, spec, key, -1, 'buckets', now);
+          if (moved && moved.before > FAVOURITE_AT && moved.entry.score <= FAVOURITE_AT) pendingFavourite(n, key!);
+          if (verbRng() < CHEER_ODDS) say(n, spec, 'cheer', now, verbRng, { user: key });
+        } else if (verbRng() < MISS_ODDS) say(n, spec, 'miss', now, verbRng, { user: key });
+      } else if (detail.hit && contains(spec.lot, piece.position)) {
+        // Marge: a ball game in her garden is a point against whoever is playing.
+        adjust(n, spec, key, 1, 'playing ball in my garden', now);
+        sayGated(n, spec, 'lawn', LAWN_GATE_MS, now, { user: key });
+      }
+    } else if (verb === 'honk' && piece) {
+      if (spec.temper === 'grudges') {
+        const home = w.objects.find((o) => o.id === spec.houseId && intact(o));
+        if (distanceTo(home?.position ?? spec.home, piece) > TACTICS.music.earshot) continue;
+        adjust(n, spec, key, 1, 'that horn', now);
+        sayGated(n, spec, 'horn', HORN_GATE_MS, now, { user: key });
+      } else if (nearHome(piece) && verbRng() < HORN_ODDS) {
+        face(piece);
+        say(n, spec, 'horn', now, verbRng, { user: key });
+      }
+    } else if (verb === 'dance' && spec.pastimes.includes('music')) {
+      // Jake joins in on his next tick if he is free and a tune carries to his place (tickNeighbours).
+      danceRequests.add(spec.id);
+    } else if (verb !== 'shoot' && verb !== 'honk' && verb !== 'dance' && piece) {
+      // A piece's own verb (PieceVerb): somebody swimming in a pool, bouncing on a trampoline, sitting on a bench.
+      if (detail.result) continue; // a result is a fight's; nothing else has one
+      if (spec.temper === 'grudges') {
+        if (verb === 'ride') continue; // somebody on a horse is not her business
+        if (piece.owner === spec.id || contains(spec.lot, piece.position)) {
+          // Her things, or anything on her lot, are not for the public.
+          adjust(n, spec, key, 1, 'using my things', now);
+          sayGated(n, spec, 'mine', MINE_GATE_MS, now, { user: key });
+        } else if (verb === 'swim') {
+          const home = w.objects.find((o) => o.id === spec.houseId && intact(o));
+          if (distanceTo(home?.position ?? spec.home, piece) <= TACTICS.music.earshot) sayGated(n, spec, 'splash', SPLASH_GATE_MS, now, { user: key });
+        }
+      } else if (piece.owner === spec.id || nearHome(piece)) {
+        // Jake: good fun near his place. A word one time in three (a rider gets his cowboy one); warmer by one, but not for the same chatter twice in ten minutes.
+        face(piece);
+        warmOnce(n, spec, key, 'having fun', now);
+        if (verbRng() < FUN_ODDS) say(n, spec, verb === 'ride' ? 'yeehaw' : 'fun', now, verbRng, { user: key });
+      }
+    }
+  }
+}
+/** For the admin page: every regard entry across the neighbours, strongest first. */
+export function regardSummary(w: { neighbours?: NeighbourState[] }): { name: string; user: string; score: number; phrase: string }[] {
+  const out: { name: string; user: string; score: number; phrase: string }[] = [];
+  for (const n of w.neighbours ?? []) {
+    const spec = specOf(n.id);
+    if (!spec || !n.regard) continue;
+    for (const [user, r] of Object.entries(n.regard)) if (r.score !== 0) out.push({ name: spec.name, user, score: r.score, phrase: regardPhrase(spec, user, r.score) });
+  }
+  return out.sort((a, b) => Math.abs(b.score) - Math.abs(a.score) || a.user.localeCompare(b.user));
+}
+
 export function describeNeighbours(w: { neighbours?: NeighbourState[]; objects: SafehouseObject[] }): string {
   const parts = (w.neighbours ?? []).map((n) => {
     const spec = specOf(n.id);
@@ -2182,7 +3215,14 @@ export function describeNeighbours(w: { neighbours?: NeighbourState[]; objects: 
     const built = w.objects.filter((o) => o.owner === n.id && intact(o)).length;
     // The theme matters to Rook: it is why their yard keeps changing, and viewers ask him about it.
     const look = n.theme ? `; redoing the yard ${n.theme.name}${n.plan?.length ? ` (${n.plan.length} piece${n.plan.length === 1 ? '' : 's'} to go)` : ''}` : '';
-    return `${spec.name} (${n.id === 'west' ? 'next door west' : 'next door east'}) is ${doing}${built ? `; has built ${built} thing${built === 1 ? '' : 's'}` : ''}${look}`;
+    // Who they are cold with, or warm to: "cross with dave (7): the gorilla came for the house".
+    const feelings = Object.entries(n.regard ?? {})
+      .filter(([, r]) => Math.abs(r.score) >= GRUDGE_TIERS[0])
+      .sort((a, b) => Math.abs(b[1].score) - Math.abs(a[1].score))
+      .slice(0, 3)
+      .map(([user, r]) => `${regardPhrase(spec, user, r.score)} (${Math.abs(r.score)})${r.reason && r.score > 0 ? `: ${r.reason}` : ''}`);
+    const regard = feelings.length ? `; ${feelings.join('; ')}` : '';
+    return `${spec.name} (${n.id === 'west' ? 'next door west' : 'next door east'}) is ${doing}${built ? `; has built ${built} thing${built === 1 ? '' : 's'}` : ''}${look}${regard}`;
   });
   return parts.filter(Boolean).join('. ');
 }

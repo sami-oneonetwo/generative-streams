@@ -161,6 +161,23 @@ async function refresh(): Promise<void> {
           (s.themes.length
             ? ` · ${s.themes.map((t) => `${t.name}: ${t.theme ?? 'no theme yet'}${t.left ? ` (${t.left} to go)` : ''}`).join(' · ')}`
             : ''),
+        // Grudges and favourites: what each neighbour holds against (or for) which chatter, and Rook's own.
+        `Grudges: ${
+          s.regard?.length
+            ? s.regard.map((r) => `${r.name} · ${r.phrase} (${r.score < 0 ? '−' : ''}${Math.abs(Math.round(r.score))})`).join(' · ')
+            : 'none'
+        }`,
+        `Rook: ${
+          s.grudges?.length
+            ? s.grudges.map((g) => `${g.user} (${Math.round(g.score)})${g.reason ? ` — ${g.reason}` : ''}`).join(' · ')
+            : 'no grudges'
+        }`,
+        // The hoops scoreboard (`!shoot` while a hoop stands), best shooters first.
+        `Hoops: ${
+          s.scores?.length
+            ? s.scores.map((r) => `${r.user} ${r.hits}/${r.shots}${r.best >= 2 ? ` (best ${r.best})` : ''}`).join(' · ')
+            : 'nobody has shot yet'
+        }`,
         s.wave
           ? `Wave ${s.wave.number} · ${s.wave.phase === 'prep' ? `next wave in ${s.wave.secondsLeft} s` : `in progress, straggler cut-off in ${s.wave.secondsLeft} s`} · ${s.wave.zombies} zombies · record wave ${s.wave.best}${s.wave.fell ? ` · house last fell on wave ${s.wave.fell}` : ''}`
           : '',

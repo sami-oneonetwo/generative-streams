@@ -1,5 +1,21 @@
 import { z } from 'zod';
-import type { Blueprint, CreatureBehaviour, Primitive } from '../../shared/safehouseTypes';
+import type {
+  Blueprint,
+  CreatureBehaviour,
+  PartAnimation,
+  PieceVerb,
+  Primitive,
+  Rule,
+  RuleAction,
+  RuleTarget,
+  RuleTrigger,
+  Use,
+  VerbPose,
+  VerbWord,
+} from '../../shared/safehouseTypes';
+import { VERB_WORDS, VERB_POSES } from '../../shared/safehouseTypes';
+// rules.ts imports the bounds below and we import its clamps: both only at call time, so the cycle is harmless.
+import { clampAnimations, clampRules } from './rules';
 const finite = z.number().finite();
 const triple = (s: z.ZodNumber) => z.tuple([s, s, s]);
 // Unknown keys are stripped, not rejected: every strict-schema failure here
@@ -14,22 +30,67 @@ export const primitiveSchema = z.object({
   rotation: triple(finite.min(-Math.PI * 2).max(Math.PI * 2)),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
 });
+/** Part motion as data (PartAnimation). Bounds here are the outer wall; rules.ts clamps to taste. */
+export const MAX_ANIMATIONS = 16;
+export const animationSchema = z.object({
+  part: z.number().int().min(0).max(99),
+  kind: z.enum(['sway', 'drift', 'spin', 'bob']),
+  axis: z.enum(['x', 'y', 'z']).optional(),
+  speed: finite.min(0).max(4).optional(),
+  amplitude: finite.min(0).max(1).optional(),
+  phase: finite.min(-Math.PI * 2).max(Math.PI * 2).optional(),
+});
+/** The closed vocabulary of what a piece is for (Use). */
+export const useSchema = z.enum(['perch', 'seat', 'scare', 'tree', 'vehicle', 'hoop', 'trap', 'music']);
+export const MAX_USES = 6;
+/** A piece's verb (PieceVerb): a word from the dictionary, a pose from the menu, the rest clamped. */
+export const pieceVerbSchema = z.object({
+  word: z.enum(VERB_WORDS),
+  pose: z.enum(VERB_POSES),
+  spot: z.enum(['on', 'beside']),
+  seconds: finite.min(3).max(20),
+  pop: z.string().max(12).optional(),
+});
+/** The rule grammar (Rule): a handful per object, every number bounded. */
+export const MAX_RULES = 4;
+export const ruleSchema = z.object({
+  when: z.enum(['tick', 'near', 'night', 'day']),
+  target: z
+    .object({
+      tag: useSchema.optional(),
+      kind: z.enum(['zombie', 'creature', 'rook', 'neighbour', 'viewer']).optional(),
+      pick: z.enum(['nearest', 'random']).optional(),
+      within: finite.min(0).max(60).optional(),
+    })
+    .optional(),
+  do: z.enum(['visit', 'perch', 'flee']),
+  dwell: z.tuple([finite.min(0).max(600), finite.min(0).max(600)]).optional(),
+});
 export const blueprintSchema = z.object({
   name: z.string().trim().min(1).max(70),
   description: z.string().max(240),
   parts: z.array(primitiveSchema).min(1).max(100),
+  animations: z.array(animationSchema).max(MAX_ANIMATIONS).optional(),
 });
 const roleSchema = z.enum(['decoration', 'barrier', 'turret']).optional();
 // A living build: the model names one fixed behaviour (and whether it flies); the app owns every number behind it.
 const creatureSchema = z
   .object({ behaviour: z.enum(['rampage', 'fight', 'zoom', 'roam']), flying: z.boolean().optional() })
   .optional();
+// What a piece is for and how a living build behaves, as data (state v9 "small life"). The
+// normaliser maps synonyms and drops anything outside the closed vocabulary before this runs,
+// so a paid design never fails over an unknown word here; rules.ts clamps the numbers.
+const usesSchema = z.array(useSchema).max(MAX_USES).optional();
+const rulesSchema = z.array(ruleSchema).max(MAX_RULES).optional();
 export const responseSchema = z.discriminatedUnion('action', [
   z.object({
     action: z.literal('build'),
     blueprint: blueprintSchema,
     role: roleSchema,
     creature: creatureSchema,
+    uses: usesSchema,
+    rules: rulesSchema, // applied only to a living build
+    verb: pieceVerbSchema.optional(), // the one thing a viewer can do at it (`!swim`)
     reply: z.string().max(240),
   }),
   z.object({
@@ -38,6 +99,9 @@ export const responseSchema = z.discriminatedUnion('action', [
     blueprint: blueprintSchema,
     role: roleSchema, // ignored on edits: the existing object keeps its role
     creature: creatureSchema, // on edits: present = wake / calm / change it; absent = keep what it has
+    uses: usesSchema, // on edits: present = replace; absent = keep
+    rules: rulesSchema, // on edits: present = replace; absent = keep
+    verb: pieceVerbSchema.optional(), // on edits: present = replace; absent = keep
     reply: z.string().max(240),
   }),
   z.object({ action: z.enum(['reply', 'clarify', 'decline']), reply: z.string().min(1).max(240) }),
@@ -156,11 +220,260 @@ export function normalizeCreature(value: unknown): { behaviour: CreatureBehaviou
   const flying = truthy(o?.flying ?? o?.flies ?? o?.fly ?? o?.airborne) || FLIGHT_WORDS.test(key);
   return flying ? { behaviour: hit[1], flying: true } : { behaviour: hit[1] };
 }
+// ---- what a piece is for, how a living build behaves, and part motion, as the model phrases them ----
+// Closed vocabularies with tolerant spellings: anything that does not map is dropped, never a
+// failure, because a paid design must not be lost over a word the app does not know.
+const USE_WORDS: [RegExp, Use][] = [
+  [/^(perch(es|ing|able)?|roost(ing)?|landing( spot)?)$/, 'perch'],
+  [/^(seat(s|ing)?|bench|chair|sit(ting|table)?|stool|hammock|swing|sofa|couch|lounger)$/, 'seat'],
+  [/^(scare|scarecrow|deterrent|bird scarer|scary)$/, 'scare'],
+  [/^(tree|trees)$/, 'tree'],
+  [/^(vehicle|car|van|truck|bike|bicycle|motorbike|kart|go-kart|driv(e|able|eable)|ride(able)?)$/, 'vehicle'],
+  [/^(hoop|basketball( hoop)?|net|basket)$/, 'hoop'],
+  [/^(trap|hole|pit|pitfall|ditch|trench|pothole|sinkhole)$/, 'trap'],
+  [/^(music|speakers?|boombox|jukebox|radio|stereo|sound( system)?|pa|amp(lifier)?|subwoofer|loudspeakers?)$/, 'music'],
+];
+const useOf = (word: string): Use | undefined => USE_WORDS.find(([re]) => re.test(word))?.[1];
+function useWord(raw: unknown): Use | undefined {
+  if (typeof raw !== 'string') return undefined;
+  const s = raw.trim().toLowerCase().replace(/[_-]+/g, ' ');
+  return useOf(s) ?? s.split(/\s+/).map(useOf).find(Boolean);
+}
+/** `"uses":["seat"]`, `"uses":"perch, seat"`, `"tags":["bench"]` → the closed vocabulary, deduped and capped. */
+export function normalizeUses(value: unknown): Use[] | undefined {
+  const raw = Array.isArray(value) ? value : typeof value === 'string' ? value.split(/[,;/|]+/) : [];
+  const out: Use[] = [];
+  for (const entry of raw) {
+    const u = useWord(entry);
+    if (u && !out.includes(u)) out.push(u);
+    if (out.length >= MAX_USES) break;
+  }
+  return out.length ? out : undefined;
+}
+const WHEN_WORDS: [RegExp, RuleTrigger][] = [
+  [/\b(near(by)?|close( by)?|proximity|approach(es|ing)?|within|comes? (near|close)|if .* near|when .* near)\b/, 'near'],
+  [/\b(night|nightfall|dark|after dark|dusk|evening|nocturnal)\b/, 'night'],
+  [/\b(day(time|light)?|morning|dawn|diurnal)\b/, 'day'],
+  [/\b(always|idle|tick|loop|each tick|every tick|default|constantly|otherwise|usually)\b/, 'tick'],
+];
+const DO_WORDS: [RegExp, RuleAction][] = [
+  [/\b(perch|land(s|ing)? on|land|roost|sit(s)? on top|settle(s)? on|alight)\b/, 'perch'],
+  [/\b(flee|run(s)? (from|away)|run|avoid|escape|hide|scatter|fly (away|off)|keep away|stay away|retreat|dodge|scared of|afraid of)\b/, 'flee'],
+  [/\b(visit|go(es)? to|walk(s)? to|approach|follow(s)?|stand(s)? (by|near|next to)|sit(s)?( by| on| near| beside)?|rest|sleep|lie|nap|hang (around|out)|stay (near|close|by|with)|guard|watch|wait (by|near))\b/, 'visit'],
+];
+const KIND_WORDS: [RegExp, NonNullable<RuleTarget['kind']>][] = [
+  [/^(zombies?|walkers?|runners?|brutes?|horde|undead)$/, 'zombie'],
+  [/^(creatures?|animals?|pets?|monsters?|beasts?|living things?|other creatures?)$/, 'creature'],
+  [/^(rook|survivor|builder|him|the builder)$/, 'rook'],
+  [/^(neighbou?rs?|marge|jake|people next door|the neighbou?rs?)$/, 'neighbour'],
+  [/^(viewers?|chat|crowd|audience|people|watchers?|the crowd)$/, 'viewer'],
+];
+const kindWord = (raw: unknown): RuleTarget['kind'] | undefined => {
+  if (typeof raw !== 'string') return undefined;
+  const s = raw.trim().toLowerCase();
+  return KIND_WORDS.find(([re]) => re.test(s))?.[1];
+};
+const phrase = (raw: unknown): string | undefined =>
+  typeof raw === 'string' ? raw.trim().toLowerCase().replace(/[_-]+/g, ' ') : undefined;
+const firstOf = <T>(table: [RegExp, T][], s: string | undefined): T | undefined =>
+  s === undefined ? undefined : table.find(([re]) => re.test(s))?.[1];
+function normalizeTarget(value: unknown): RuleTarget | undefined {
+  if (typeof value === 'string') {
+    const tag = useWord(value);
+    if (tag) return { tag };
+    const kind = kindWord(value);
+    return kind ? { kind } : undefined;
+  }
+  if (!value || typeof value !== 'object') return undefined;
+  const t = value as Record<string, unknown>;
+  const tag = useWord(t.tag ?? t.use ?? t.uses ?? t.piece ?? t.thing);
+  const kind = kindWord(t.kind ?? t.what ?? t.who ?? t.type ?? t.mover) ?? (tag ? undefined : kindWord(t.tag ?? t.use));
+  if (!tag && !kind) return undefined;
+  const pickRaw = phrase(t.pick ?? t.choose ?? t.select ?? t.which);
+  const within = num(t.within ?? t.radius ?? t.distance ?? t.range ?? t.metres ?? t.meters);
+  return {
+    ...(tag ? { tag } : {}),
+    ...(kind && !tag ? { kind } : {}),
+    pick: pickRaw && /random|any/.test(pickRaw) ? 'random' : 'nearest',
+    ...(Number.isFinite(within) ? { within } : {}),
+  };
+}
+function normalizeDwell(value: unknown): [number, number] | undefined {
+  if (Array.isArray(value) && value.length >= 2) {
+    const a = num(value[0]),
+      b = num(value[1]);
+    return Number.isFinite(a) && Number.isFinite(b) ? [a, b] : undefined;
+  }
+  if (Array.isArray(value) && value.length === 1) return normalizeDwell(value[0]);
+  const n = num(value);
+  if (Number.isFinite(n)) return [n, n];
+  if (value && typeof value === 'object') {
+    const o = value as Record<string, unknown>;
+    const lo = num(o.min ?? o.from ?? o.low ?? o.least),
+      hi = num(o.max ?? o.to ?? o.high ?? o.most);
+    if (Number.isFinite(lo) && Number.isFinite(hi)) return [lo, hi];
+    if (Number.isFinite(lo)) return [lo, lo];
+    if (Number.isFinite(hi)) return [hi, hi];
+  }
+  return undefined;
+}
+/**
+ * `"rules":[{"when":"when near","target":"zombie","do":"run from","dwell":10}]` → the grammar
+ * (RuleTrigger / RuleTarget / RuleAction), then rules.ts clamps every number. A rule whose trigger,
+ * action or target does not map is dropped on its own; the design stands.
+ */
+export function normalizeRules(value: unknown): Rule[] | undefined {
+  const raw = Array.isArray(value) ? value : value && typeof value === 'object' ? [value] : [];
+  const out: Rule[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const r = entry as Record<string, unknown>;
+    const whenText = phrase(r.when ?? r.trigger ?? r.on ?? r.if ?? r.condition ?? 'tick');
+    const doText = phrase(r.do ?? r.action ?? r.then ?? r.verb ?? r.behaviour ?? r.behavior);
+    const when = firstOf(WHEN_WORDS, whenText);
+    const act = firstOf(DO_WORDS, doText);
+    const target = normalizeTarget(r.target ?? r.of ?? r.to ?? r.from ?? r.at ?? r.what);
+    if (!when || !act || !target) continue;
+    const dwell = normalizeDwell(r.dwell ?? r.stay ?? r.linger ?? r.for ?? r.seconds ?? r.duration);
+    out.push({ when, do: act, target, ...(dwell ? { dwell } : {}) });
+  }
+  const clamped = clampRules(out);
+  return clamped.length ? clamped : undefined;
+}
+const KIND_ANIMATION: [RegExp, PartAnimation['kind']][] = [
+  [/^(sway|swing|wave|flap|wag|rock|pendulum|tilt|wobble)$/, 'sway'],
+  [/^(drift|slide|shift|wind|rustle|sweep)$/, 'drift'],
+  [/^(spin|rotate|rotation|turn|revolve|whirl|roll)$/, 'spin'],
+  [/^(bob|float|hover|bounce|up and down|rise and fall|pulse)$/, 'bob'],
+];
+/** `"animations":[{"partIndex":3,"kind":"rotate","axis":"Z","speed":"0.5"}]` → PartAnimation[], clamped to the part count. */
+export function normalizeAnimations(value: unknown, partCount: number): PartAnimation[] | undefined {
+  const raw = Array.isArray(value) ? value : value && typeof value === 'object' ? [value] : [];
+  const out: PartAnimation[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const a = entry as Record<string, unknown>;
+    const part = num(a.part ?? a.partIndex ?? a.index ?? a.piece);
+    const kind = firstOf(KIND_ANIMATION, phrase(a.kind ?? a.type ?? a.motion ?? a.animation));
+    if (!Number.isInteger(part) || !kind) continue;
+    const axisRaw = phrase(a.axis ?? a.around ?? a.along);
+    const speed = num(a.speed ?? a.rate ?? a.hz ?? a.frequency),
+      amplitude = num(a.amplitude ?? a.amount ?? a.angle ?? a.distance ?? a.range),
+      phaseValue = num(a.phase ?? a.offset);
+    out.push({
+      part,
+      kind,
+      ...(axisRaw === 'x' || axisRaw === 'y' || axisRaw === 'z' ? { axis: axisRaw } : {}),
+      ...(Number.isFinite(speed) ? { speed } : {}),
+      ...(Number.isFinite(amplitude) ? { amplitude } : {}),
+      ...(Number.isFinite(phaseValue) ? { phase: phaseValue } : {}),
+    });
+  }
+  const clamped = clampAnimations(out, partCount);
+  return clamped.length ? clamped : undefined;
+}
 /**
  * Reshape a model response into what the schema expects without changing its
  * meaning: hoist a nested role, accept synonyms and alternate spellings, default
  * a missing rotation, trim over-long text. Anything still wrong fails validation.
  */
+// ---- a piece's own verb (PieceVerb) -----------------------------------------------------------
+// The model names a word and a pose; both must land in the closed lists or the verb is dropped on
+// its own (never the design). Stems and a few synonyms are forgiven, as everywhere else here.
+const isVerbWord = (s: string): s is VerbWord => (VERB_WORDS as readonly string[]).includes(s);
+const isPose = (s: string): s is VerbPose => (VERB_POSES as readonly string[]).includes(s);
+const VERB_SYNONYMS: [RegExp, VerbWord][] = [
+  [/^(float|paddle|dive|bathe|swimming)$/, 'swim'],
+  [/^(trampoline|boing|bouncing)$/, 'bounce'],
+  [/^(leap|leaping|hopping)$/, 'jump'],
+  [/^(seat|seated|sitting)$/, 'sit'],
+  [/^(lay|laying|lying|lounge|recline)$/, 'lie'],
+  [/^(doze|snooze|sleeping)$/, 'sleep'],
+  [/^(chill|relax|relaxing|resting)$/, 'rest'],
+  [/^(chime|toll|bell|ringing)$/, 'ring'],
+  [/^(box|boxing|hit|strike|punching)$/, 'punch'],
+  [/^(sip|beer|drinking)$/, 'drink'],
+  [/^(cheers|toasting)$/, 'toast'],
+  [/^(snack|dine|dining|feast|eating)$/, 'eat'],
+  [/^(grill|barbecue|bbq|cooking)$/, 'cook'],
+  [/^(angle|angling|fishing)$/, 'fish'],
+  [/^(worship|kneel|praying)$/, 'pray'],
+  [/^(zen|om|meditating)$/, 'meditate'],
+  [/^(crouch|hiding)$/, 'hide'],
+  [/^(study|reading)$/, 'read'],
+  [/^(greet|hello|hi|waving)$/, 'wave'],
+  [/^(celebrate|clap|applaud|cheering)$/, 'cheer'],
+  [/^(selfie|photo|posing)$/, 'pose'],
+  [/^(twirl|spinning)$/, 'spin'],
+  [/^(cuddle|hugging)$/, 'hug'],
+  [/^(pet|stroke|patting)$/, 'pat'],
+  [/^(sprint|jog|running)$/, 'run'],
+  [/^(yoga|stretching)$/, 'stretch'],
+  [/^(steer|cruise|race|racing|driving|joyride)$/, 'drive'],
+  [/^(mount|gallop|saddle|horseback|riding)$/, 'ride'],
+  [/^(brawl|scrap|spar|wrestle|battle|attack|duel|fighting|combat)$/, 'fight'],
+];
+export function normalizeVerbWord(value: unknown): VerbWord | undefined {
+  if (typeof value !== 'string') return undefined;
+  const w = value.trim().toLowerCase().replace(/^!+/, '').replace(/[^a-z]/g, '');
+  if (!w) return undefined;
+  const stems = [w, w.replace(/ing$/, ''), w.replace(/ing$/, 'e'), w.replace(/(.)\1ing$/, '$1'), w.replace(/es$/, ''), w.replace(/s$/, '')];
+  for (const s of stems) if (isVerbWord(s)) return s;
+  return VERB_SYNONYMS.find(([re]) => re.test(w))?.[1];
+}
+const POSE_SYNONYMS: [RegExp, VerbPose][] = [
+  [/^(float|floating|breaststroke|swimming)$/, 'swim'],
+  [/^(hop|hopping|bounce|bouncing|jumping)$/, 'jump'],
+  [/^(sitting|seated|crouch|kneel)$/, 'sit'],
+  [/^(lying|lay|laying|flat|prone|sleep|sleeping)$/, 'lie'],
+  [/^(waving|salute|greet)$/, 'wave'],
+  [/^(clap|applaud|celebrate|cheering|arms up)$/, 'cheer'],
+  [/^(hit|box|strike|punching|kick)$/, 'punch'],
+  [/^(still|idle|standing)$/, 'stand'],
+];
+export function normalizePose(value: unknown): VerbPose | undefined {
+  if (typeof value !== 'string') return undefined;
+  const p = value.trim().toLowerCase();
+  if (isPose(p)) return p;
+  return POSE_SYNONYMS.find(([re]) => re.test(p))?.[1];
+}
+/** The pose a word implies when the model gave none. */
+export const DEFAULT_POSE: Record<VerbWord, VerbPose> = {
+  swim: 'swim', bounce: 'jump', jump: 'jump', hop: 'jump', run: 'jump',
+  sit: 'sit', rest: 'sit', read: 'sit', eat: 'sit', drink: 'sit', fish: 'sit', meditate: 'sit', pray: 'sit', hide: 'sit', cook: 'stand',
+  lie: 'lie', sleep: 'lie', nap: 'lie',
+  wave: 'wave', salute: 'wave', bow: 'wave', hug: 'wave', pat: 'wave', feed: 'wave', water: 'wave', ring: 'wave', pull: 'wave',
+  cheer: 'cheer', toast: 'cheer', pose: 'cheer', stretch: 'cheer', spin: 'cheer', swing: 'sit', slide: 'cheer', climb: 'cheer',
+  kick: 'punch', punch: 'punch', knock: 'punch', push: 'punch', sweep: 'punch',
+  drive: 'sit', ride: 'sit', fight: 'punch',
+};
+/** Words with a length of their own: a drive and a ride are a trip, a fight a few rounds. Everything else eight seconds. */
+export const DEFAULT_SECONDS: Partial<Record<VerbWord, number>> = { drive: 12, ride: 12, fight: 5 };
+/** Words whose spot does not follow from the design's height: you get in a car and square up to a gorilla. */
+const DEFAULT_SPOT: Partial<Record<VerbWord, PieceVerb['spot']>> = { drive: 'on', ride: 'on', fight: 'beside' };
+/**
+ * `"verb":{"word":"swim","pose":"swim","spot":"on","seconds":8,"pop":"SPLASH"}`, or just `"verb":"swim"`
+ * → a PieceVerb, or undefined when the word is not in the dictionary. `maxY` (the design's height)
+ * decides the spot when the model gave none: low things are stood on, tall things beside.
+ */
+export function normalizeVerb(value: unknown, maxY = 0): PieceVerb | undefined {
+  const o = typeof value === 'string' ? { word: value } : value && typeof value === 'object' ? (value as Record<string, unknown>) : undefined;
+  if (!o) return undefined;
+  const word = normalizeVerbWord(o.word ?? o.verb ?? o.command ?? o.name);
+  if (!word) return undefined;
+  const pose = normalizePose(o.pose ?? o.animation ?? o.stance) ?? DEFAULT_POSE[word];
+  const spotRaw = typeof o.spot === 'string' ? o.spot : typeof o.where === 'string' ? o.where : typeof o.stand === 'string' ? o.stand : '';
+  const spot = /^\s*(on|in|inside|onto|top|into)\b/i.test(spotRaw)
+    ? 'on'
+    : /^\s*(beside|next|by|near|at|front|off)\b/i.test(spotRaw)
+      ? 'beside'
+      : (DEFAULT_SPOT[word] ?? (maxY <= 1 ? 'on' : 'beside'));
+  const secondsRaw = Number(o.seconds ?? o.duration ?? o.time ?? o.for);
+  const seconds = Number.isFinite(secondsRaw) ? Math.min(20, Math.max(3, secondsRaw)) : (DEFAULT_SECONDS[word] ?? 8);
+  const pop = typeof o.pop === 'string' ? o.pop.toUpperCase().replace(/[^A-Z!]/g, '').slice(0, 12) : '';
+  return { word, pose, spot, seconds, ...(pop ? { pop } : {}) };
+}
+
 export function normalizeResponse(value: unknown): unknown {
   if (!value || typeof value !== 'object') return value;
   const r = value as Record<string, unknown>;
@@ -170,22 +483,48 @@ export function normalizeResponse(value: unknown): unknown {
   const out: Record<string, unknown> = { action, reply: clip(r.reply ?? r.message ?? '', 240) };
   if (r.targetId !== undefined) out.targetId = r.targetId;
   if (r.role !== undefined) out.role = typeof r.role === 'string' ? r.role.trim().toLowerCase() : r.role;
-  const creature = normalizeCreature(r.creature ?? r.behaviour ?? r.behavior);
+  const rawCreature = r.creature ?? r.behaviour ?? r.behavior;
+  const creature = normalizeCreature(rawCreature);
   if (creature) out.creature = creature;
-  if (rawBlueprint && typeof rawBlueprint === 'object') {
-    const b = rawBlueprint as Record<string, unknown>;
+  const b = rawBlueprint && typeof rawBlueprint === 'object' ? (rawBlueprint as Record<string, unknown>) : undefined;
+  if (b) {
     if (out.role === undefined && typeof b.role === 'string') out.role = b.role.trim().toLowerCase();
     if (out.creature === undefined) {
       const nested = normalizeCreature(b.creature ?? b.behaviour ?? b.behavior);
       if (nested) out.creature = nested;
     }
     const parts = b.parts ?? b.primitives ?? b.shapes ?? b.pieces ?? b.components;
+    const partList = Array.isArray(parts) ? parts.map(normalizePart) : parts;
+    const animations = normalizeAnimations(
+      b.animations ?? b.motion ?? b.animation ?? r.animations ?? r.motion,
+      Array.isArray(partList) ? partList.length : 0,
+    );
     out.blueprint = {
       name: clip(b.name ?? b.title, 70),
       description: clip(b.description ?? b.summary ?? '', 240),
-      parts: Array.isArray(parts) ? parts.map(normalizePart) : parts,
+      parts: partList,
+      ...(animations ? { animations } : {}),
     };
   }
+  // What the piece is for, and how a living build behaves: top level, inside the blueprint, or
+  // (rules) tucked inside the creature — wherever the model put them.
+  const uses = normalizeUses(r.uses ?? r.use ?? r.tags ?? b?.uses ?? b?.use ?? b?.tags);
+  if (uses) out.uses = uses;
+  const nestedRules = rawCreature && typeof rawCreature === 'object' ? (rawCreature as Record<string, unknown>).rules : undefined;
+  const rules = normalizeRules(r.rules ?? r.behaviours ?? r.behaviors ?? b?.rules ?? nestedRules);
+  if (rules) out.rules = rules;
+  // The piece's own verb: the design's height (a rough top from the raw parts) picks on/beside when the model gave neither.
+  const rawParts = b ? (b.parts ?? b.primitives ?? b.shapes ?? b.pieces ?? b.components) : undefined;
+  const maxY = Array.isArray(rawParts)
+    ? rawParts.reduce((top: number, p: unknown) => {
+        const q = normalizePart(p) as { position?: unknown; size?: unknown } | undefined;
+        const pos = Array.isArray(q?.position) ? Number(q!.position[1]) : NaN;
+        const size = Array.isArray(q?.size) ? Number(q!.size[1]) : NaN;
+        return Number.isFinite(pos) && Number.isFinite(size) ? Math.max(top, pos + size / 2) : top;
+      }, 0)
+    : 0;
+  const verb = normalizeVerb(r.verb ?? r.chatVerb ?? b?.verb, maxY);
+  if (verb) out.verb = verb;
   return out;
 }
 

@@ -28,7 +28,10 @@ import {
   yardPiece,
   oneUp,
   adoptNames,
+  neighbourViews,
 } from '../src/worlds/safehouse/neighbours';
+import { renderedPool } from '../src/worlds/safehouse/voice';
+import { adoptLife } from '../src/worlds/safehouse/wildlife';
 import { fixtureSurveyor, parseSurveyJson, validateSurvey, type Surveyor } from '../src/worlds/safehouse/survey';
 import { createSafehouseWorld } from '../src/worlds/safehouse';
 import type { DesignGenerator } from '../src/llm/blueprint';
@@ -144,6 +147,7 @@ function harness(
     seedScenery: true,
     fixture: true,
     workMs: 500,
+    wildlife: false, // the neighbours are the subject; the birds would also eat the seeded rng's draws
     neighbours: opts.neighbours,
     neighbourAi: opts.ai,
     generator: opts.generator,
@@ -865,4 +869,110 @@ test('an older save built under the name Dev: at start-up the pieces, the house 
   assert.equal(fresh.worldRevision, before + 1, 'a snapshot goes out with the new names');
   assert.equal(parseRequest("paint jake's project car red", fresh.objects).targetId, 'neighbour-east-car');
   stop?.();
+});
+
+// ---- Slice 2: using what stands on the lot, and noticing the crowd ---------------------------
+
+test('a quiet moment goes on what is already there: Jake shoots hoops, Marge sits on her bench, nothing in the world changes, Rook remarks', async () => {
+  // A steady rng keeps the "one rest in three" roll on and the say() picks predictable; no peacetime
+  // projects (restMs huge) so the only thing on their afternoon is the hoop and the bench.
+  const h = harness({ restMs: 600_000, rng: () => 0.1 });
+  assert.deepEqual(CATALOGUE.hoop.uses, ['hoop'], "Jake's catalogue hoop is a hoop to the interpreter");
+  const hoop = piece('neighbour-east-hoop', { x: 20.5, z: 1.8 }, undefined, { owner: 'east', fixed: true, createdBy: 'Jake', editedBy: 'Jake', uses: ['hoop'] });
+  hoop.blueprint = { ...hoop.blueprint, name: "Jake's basketball hoop" };
+  const bench = piece('neighbour-west-bench', { x: -22, z: 2.2 }, undefined, { owner: 'west', fixed: true, createdBy: 'Marge', editedBy: 'Marge', uses: ['seat'] });
+  bench.blueprint = { ...bench.blueprint, name: "Marge's bench" };
+  h.state.objects.push(hoop, bench);
+  for (let i = 0; i < 4; i++) await h.step();
+  const jake = h.neighbour('east'),
+    marge = h.neighbour('west');
+  jake.restMs = 1000; // Marge waits her turn below: Rook remarks on one such moment every few minutes, and the test wants his line on the game
+  const eastCount = () => h.state.objects.filter((o) => o.owner === 'east').length;
+  const owned = eastCount();
+  await h.until(() => jake.job?.kind === 'use' && jake.job.reason === 'hoop', 60, 'Jake heads for the hoop');
+  assert.equal(jake.job!.label, 'Shooting hoops');
+  assert.equal(jake.job!.targetId, 'neighbour-east-hoop');
+  assert.equal(jake.job!.purpose, 'upkeep');
+  assert.ok(Math.hypot(jake.job!.path.at(-1)!.x - hoop.position.x, jake.job!.path.at(-1)!.z - hoop.position.z) >= 2.5, 'he stands back from it to throw');
+  await h.until(() => jake.activity === 'playing', 200, 'and plays');
+  const view = neighbourViews(h.state).find((v) => v.id === 'east')!;
+  assert.deepEqual(view.job?.at, hoop.position, 'the page is told where the hoop is');
+  assert.equal(view.activity, 'playing');
+  assert.ok(h.logged.some((l) => /neighbours: Jake — use \(hoop\) — Jake's basketball hoop/.test(l)), h.logged.filter((l) => /neighbours/.test(l)).join('\n'));
+  await h.until(() => !jake.job, 60, 'then he stops');
+  assert.equal(eastCount(), owned, 'a game leaves nothing behind');
+  assert.equal(h.state.objects.find((o) => o.id === 'neighbour-east-hoop')!.revision, 1, 'and changes nothing');
+  assert.ok(jake.restMs > 1000, 'a game counts as the rest');
+  // Rook's remark: the reaction waits behind whatever is showing, so give it a few ticks.
+  const pool = renderedPool('neighbour:play', { who: 'jake', name: 'basketball hoop' });
+  await h.until(() => h.spoken.some((l) => pool.includes(l)), 60, `Rook remarked on the game: ${JSON.stringify(h.spoken.slice(-5))}`);
+  // Marge sits down on her bench.
+  marge.restMs = 1000;
+  await h.until(() => marge.job?.kind === 'use' && marge.job.reason === 'seat', 60, 'Marge heads for the bench');
+  assert.equal(marge.job!.label, 'Sitting down');
+  await h.until(() => marge.activity === 'sitting', 200, 'and sits');
+  assert.deepEqual(neighbourViews(h.state).find((v) => v.id === 'west')!.job?.at, bench.position);
+  // A rampager turning up next door gets her off the bench at once.
+  const gorilla = piece('gorilla', { x: -27, z: -3 }, 'rampage');
+  h.state.objects.push(gorilla);
+  await h.until(() => marge.job?.kind !== 'use', 10, 'the sit-down is dropped for the threat');
+  assert.equal(marge.threat?.id, 'gorilla');
+  h.world.stateSchema.parse(JSON.parse(JSON.stringify(h.state)));
+  h.stop();
+});
+
+test('the pavement fills up: Jake goes to the front and waves, Marge has a word; once per fill-up, ten minutes apart, never for a crowd that just stays', async () => {
+  const h = harness({ restMs: 600_000, rng: () => 0.1 });
+  for (let i = 0; i < 4; i++) await h.step(); // first look: what is here is old news
+  const member = (i: number) => ({ id: `kick:${i}`, name: `viewer${i}`, since: h.ctx.now, lastAt: h.ctx.now, slot: i, position: { x: i * 1.3, z: 14.6 }, facing: Math.PI });
+  const crowdEvents = () => h.logged.filter((l) => /neighbours: Jake — crowd/.test(l)).length;
+  h.state.crowd = [member(0), member(1)];
+  for (let i = 0; i < 12; i++) await h.step();
+  assert.equal(crowdEvents(), 0, 'two people is not a crowd');
+  h.state.crowd = [member(0), member(1), member(2)];
+  const jake = h.neighbour('east'),
+    marge = h.neighbour('west');
+  await h.until(() => jake.job?.kind === 'use' && jake.job.reason === 'crowd', 30, 'Jake heads to the front of the lot');
+  assert.equal(jake.job!.label, 'Waving at the crowd');
+  assert.ok(contains(NEIGHBOURS[1].lot, jake.job!.path.at(-1)!), 'he stays on his own lot');
+  assert.ok(jake.job!.path.at(-1)!.z > 3, `at the street edge: ${JSON.stringify(jake.job!.path.at(-1))}`);
+  assert.equal(crowdEvents(), 1);
+  await h.until(() => jake.activity === 'waving', 200, 'and waves');
+  assert.ok(Math.abs(jake.facing) < 0.6, `facing the pavement across the road (${jake.facing.toFixed(2)})`);
+  assert.ok(NEIGHBOURS[0].lines.crowd.includes(marge.say?.text ?? ''), `Marge had a word: ${marge.say?.text}`);
+  assert.equal(marge.job, undefined, 'and did not move');
+  const pool = renderedPool('neighbour:crowd', { who: 'jake' });
+  await h.until(() => h.spoken.some((l) => pool.includes(l)), 80, `Rook remarked: ${JSON.stringify(h.spoken.slice(-5))}`);
+  // The same crowd stays for a quarter of an hour: nothing more.
+  for (let i = 0; i < 15; i++) await h.step(60_000);
+  assert.equal(crowdEvents(), 1, 'a steady crowd is old news');
+  // It thins out and fills again: another wave.
+  h.state.crowd = [member(0)];
+  for (let i = 0; i < 4; i++) await h.step();
+  h.state.crowd = [member(0), member(1), member(2), member(3)];
+  await h.until(() => crowdEvents() === 2, 40, 'a second fill-up gets a second wave');
+  // ...but a fill-up straight after that one does not: ten minutes between remarks.
+  // He may be over at Marge's by now (the quarter of an hour above ran his rest timer down): the walk back can take a while.
+  await h.until(() => !jake.job, 240, `he stops waving (job ${JSON.stringify(jake.job && { ...jake.job, path: jake.job.path.length })}, at ${JSON.stringify(jake.position)}, ${jake.activity})`);
+  h.state.crowd = [member(0)];
+  for (let i = 0; i < 4; i++) await h.step();
+  h.state.crowd = [member(0), member(1), member(2)];
+  for (let i = 0; i < 30; i++) await h.step();
+  assert.equal(crowdEvents(), 2, 'not twice within ten minutes');
+  h.world.stateSchema.parse(JSON.parse(JSON.stringify(h.state)));
+  h.stop();
+});
+
+test('adoptLife tags an older save\'s hoop for the interpreter, and a hoop never leaves its owner\'s lot', () => {
+  const state = createInitialState();
+  const hoop = piece('neighbour-east-hoop', { x: 22, z: 2 }, undefined, { owner: 'east', fixed: true });
+  hoop.blueprint.name = "Jake's basketball hoop"; // recognised by its catalogue name, not its id
+  state.objects = [...sceneryObjects(), ...fenceObjects(), hoop];
+  assert.equal(hoop.uses, undefined);
+  assert.equal(adoptLife(state), true);
+  assert.deepEqual(hoop.uses, ['hoop']);
+  assert.equal(adoptLife(state), false, 'idempotent');
+  for (const spec of NEIGHBOURS) assert.ok(spec.pastimes.length >= 1 && spec.lines.play.length >= 2 && spec.lines.sit.length >= 2 && spec.lines.crowd.length >= 2);
+  assert.ok(NEIGHBOURS[1].pastimes.includes('hoop') && !NEIGHBOURS[0].pastimes.includes('hoop'), 'the hoop is Jake\'s thing');
+  assert.ok(NEIGHBOURS[1].greetsCrowd && !NEIGHBOURS[0].greetsCrowd);
 });

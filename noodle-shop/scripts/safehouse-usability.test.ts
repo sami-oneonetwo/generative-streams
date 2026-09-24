@@ -167,7 +167,8 @@ test('idle return reaches home and a new request interrupts from actual position
       h.state.survivor.position.z - SURVIVOR_START.z,
     ) < 0.2,
   );
-  assert.equal(h.state.survivor.activity, 'idle');
+  // Home and resting: standing, or sat down on the steps after a while with nothing on (slice 2).
+  assert.ok(['idle', 'sitting'].includes(h.state.survivor.activity), h.state.survivor.activity);
   await h.send('Paint it blue');
   await h.finish();
   assert.equal(h.calls, 1);

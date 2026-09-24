@@ -9,7 +9,7 @@ import type {
   ZombieKind,
 } from '../../shared/safehouseTypes';
 import { footprint, contains, HOUSE_ID } from '../../shared/safehouseLayout';
-import { route, walkableSegment } from './placement';
+import { crossesTrap, insideTrap, isTrap, route, walkableSegment } from './placement';
 export const MAX_ZOMBIES = 24,
   ARCHIVE_CAP = 100;
 /** Wave pacing. Prep is long enough for a couple of chat builds and Rook's repair round. */
@@ -45,6 +45,16 @@ export const CREATURES: Record<
  * chat's share: viewers keep the ten they always had.
  */
 export const MAX_CREATURES = 15;
+/**
+ * The wave loop's tactics (the `trap` and `music` uses); the app's numbers, never the model's.
+ * A hole holds a walker 20 s and a brute 8 s (runners jump it), six at a time, with a grace after
+ * climbing out; a creature that falls in is stuck 12 s. Speakers pull the horde from 18 m and it
+ * dances 4 s before it chews. Chat may have three of each standing.
+ */
+export const TACTICS = {
+  trap: { holdMs: 20_000, bruteHoldMs: 8_000, creatureHoldMs: 12_000, graceMs: 6_000, capacity: 6, max: 3 },
+  music: { earshot: 18, lure: 10, danceMs: 4_000, max: 3 },
+} as const;
 export const isHostile = (o: SafehouseObject) => !!o.creature && CREATURES[o.creature.behaviour].hostile;
 export const healthFor = (role: SafehouseObject['role']) =>
   role === 'barrier' ? 240 : role === 'turret' ? 120 : 80;
@@ -57,9 +67,15 @@ const attackable = (o: SafehouseObject) => intact(o) && !o.passable;
 const FENCED_YARD = { minX: -11.5, maxX: 13.5, minZ: -18.5, maxZ: 5 };
 // What the neighbours build (`owner`) is theirs to defend against chat's creatures; the horde
 // walks past it the way it walks past their houses.
+/** Speakers: the horde comes for the sound wherever chat put them. A neighbour's own set is theirs. */
+export const isMusic = (o: SafehouseObject) => intact(o) && !o.passable && !!o.uses?.includes('music');
 const worthAttacking = (o: SafehouseObject) =>
-  !o.owner && (!o.fixed || o.role !== 'decoration' || contains(FENCED_YARD, o.position));
+  (!o.owner && (!o.fixed || o.role !== 'decoration' || contains(FENCED_YARD, o.position))) || (isMusic(o) && !o.owner);
 const stats = (z: Zombie) => ZOMBIE_KINDS[z.kind ?? 'walker'];
+/** A zombie in a hole right now. */
+export const isHeld = (z: Zombie, time: number) => z.heldUntil !== undefined && z.heldUntil > time;
+/** A zombie beside a speaker, dancing before it chews. */
+export const isDancing = (z: Zombie, time: number) => z.dancingUntil !== undefined && z.dancingUntil > time;
 
 /** Wave n: 3+n walkers, runners from wave 3, brutes from wave 5, capped at MAX_ZOMBIES by trimming walkers. */
 export function waveRoster(n: number): ZombieKind[] {
@@ -166,6 +182,7 @@ export function fenceObjects(): SafehouseObject[] {
           createdAt: 0,
           role: 'barrier',
           fixed: true,
+          uses: ['perch'], // birds sit on the fence
         }),
       );
     }
@@ -333,9 +350,15 @@ export function tickCombat(
     // Creatures neither block zombies nor draw them: the horde is after the structures.
     const living = objects.filter((o) => attackable(o) && !o.creature);
     const hostiles = objects.filter((o) => isHostile(o) && intact(o));
-    // Defenses and chat creations draw zombies first; parked cars and furniture only when nothing better is near.
-    const lure = (z: GroundPoint, o: SafehouseObject) =>
-      objectDistance(z, o) + (o.fixed && o.role === 'decoration' ? 6 : 0);
+    // Holes: ground the horde walks straight into (TACTICS.trap).
+    const traps = objects.filter(isTrap);
+    const heldIn = (trap: SafehouseObject) => combat.zombies.filter((z) => z.heldIn === trap.id && isHeld(z, combat.time)).length;
+    // Defenses and chat creations draw zombies first; parked cars and furniture only when nothing
+    // better is near; speakers within earshot pull harder than anything (TACTICS.music).
+    const lure = (z: GroundPoint, o: SafehouseObject) => {
+      const d = objectDistance(z, o);
+      return d + (o.fixed && o.role === 'decoration' ? 6 : 0) - (isMusic(o) && d <= TACTICS.music.earshot ? TACTICS.music.lure : 0);
+    };
     for (const turret of living.filter((o) => o.role === 'turret')) {
       if ((turret.nextShotAt ?? 0) > combat.time) continue;
       const range = (p: GroundPoint) => Math.hypot(p.x - turret.position.x, p.z - turret.position.z);
@@ -372,6 +395,17 @@ export function tickCombat(
     combat.zombies = combat.zombies.filter((z) => z.health > 0);
     for (const zombie of combat.zombies) {
       const profile = stats(zombie);
+      // In a hole: held still (an easy shot) until the time is up, or the hole is filled or gone.
+      if (zombie.heldUntil !== undefined) {
+        if (combat.time < zombie.heldUntil && traps.some((t) => t.id === zombie.heldIn)) continue;
+        // Out: a grace before any hole takes it, and the one it is climbing out of (`heldIn` stays
+        // as the last hole) leaves it alone until it has actually left the footprint — a brute is
+        // slower than the grace is long.
+        zombie.heldUntil = undefined;
+        zombie.freeUntil = combat.time + TACTICS.trap.graceMs;
+        zombie.path = [];
+        zombie.replanAt = 0;
+      }
       let target = living.find((o) => o.id === zombie.targetId && intact(o));
       if (combat.time >= zombie.replanAt || (zombie.targetId && !target)) {
         zombie.replanAt = combat.time + 4000;
@@ -394,7 +428,8 @@ export function tickCombat(
               Math.hypot(b.x - zombie.position.x, b.z - zombie.position.z),
           );
           for (const p of approach) {
-            const path = route(zombie.position, p, living);
+            // The horde does not look where it is going: a hole on the way is not an obstacle to it.
+            const path = route(zombie.position, p, living, { ignoreTraps: true });
             if (path) {
               target = candidate;
               zombie.path = path;
@@ -403,6 +438,7 @@ export function tickCombat(
           }
           if (target) break;
         }
+        if (zombie.targetId !== target?.id) zombie.dancingUntil = undefined; // a new set of speakers is a new dance
         zombie.targetId = target?.id;
       }
       if (target && intact(target) && objectDistance(zombie.position, target) <= 1.05) {
@@ -410,6 +446,11 @@ export function tickCombat(
           target.position.x - zombie.position.x,
           target.position.z - zombie.position.z,
         );
+        // Speakers: a dance first, then the chewing.
+        if (isMusic(target)) {
+          if (zombie.dancingUntil === undefined) zombie.dancingUntil = combat.time + TACTICS.music.danceMs;
+          if (combat.time < zombie.dancingUntil) continue;
+        }
         if (combat.time >= zombie.attackAt) {
           damageObject(target, profile.damage, combat.time);
           zombie.attackAt = combat.time + profile.cooldown;
@@ -418,10 +459,12 @@ export function tickCombat(
         continue;
       }
       // Spend the whole step's travel across waypoints; stopping at each one made fast kinds crawl.
+      // Anyone but a runner who walks into a hole with room in it is held there.
+      const canFall = zombie.kind !== 'runner' && (zombie.freeUntil ?? 0) <= combat.time;
       let budget = (step / 1000) * profile.speed;
       while (budget > 0 && zombie.path[0]) {
         const next = zombie.path[0];
-        if (!walkableSegment(zombie.position, next, living)) {
+        if (!walkableSegment(zombie.position, next, living, { ignoreTraps: true })) {
           zombie.path = [];
           zombie.replanAt = 0;
           break;
@@ -430,15 +473,22 @@ export function tickCombat(
           dz = next.z - zombie.position.z,
           d = Math.hypot(dx, dz);
         if (d > 0.001) zombie.facing = Math.atan2(dx, dz);
-        if (d <= budget) {
-          zombie.position = { ...next };
-          zombie.path.shift();
-          budget -= d;
-        } else {
-          zombie.position.x += (dx / d) * budget;
-          zombie.position.z += (dz / d) * budget;
-          budget = 0;
+        const to = d <= budget ? { ...next } : { x: zombie.position.x + (dx / d) * budget, z: zombie.position.z + (dz / d) * budget };
+        if (canFall) {
+          const at = crossesTrap(zombie.position, to, traps);
+          const hole = at && insideTrap(at, traps);
+          const climbingOut = !!hole && hole.id === zombie.heldIn && !!insideTrap(zombie.position, [hole]);
+          if (at && hole && !climbingOut && heldIn(hole) < TACTICS.trap.capacity) {
+            zombie.position = at;
+            zombie.heldIn = hole.id;
+            zombie.heldUntil = combat.time + (zombie.kind === 'brute' ? TACTICS.trap.bruteHoldMs : TACTICS.trap.holdMs);
+            zombie.path = [];
+            break;
+          }
         }
+        zombie.position = to;
+        if (d <= budget) zombie.path.shift();
+        budget -= Math.min(d, budget);
       }
     }
   }

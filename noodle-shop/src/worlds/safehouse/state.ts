@@ -1,5 +1,14 @@
 import { z } from 'zod';
-import { blueprintSchema, measureBlueprint, SCENERY_LIMITS, CHAT_LIMITS } from './blueprint';
+import {
+  blueprintSchema,
+  measureBlueprint,
+  SCENERY_LIMITS,
+  CHAT_LIMITS,
+  ruleSchema,
+  useSchema,
+  MAX_RULES,
+  pieceVerbSchema,
+} from './blueprint';
 import { SURVIVOR_START, HOUSE_ID, footprint, inflate, overlaps } from '../../shared/safehouseLayout';
 import { freshCombat, freshWave, fenceObjects, initializeObject, intact, MAX_ZOMBIES } from './combat';
 import { sceneryObjects, RETIRED_SCENERY_IDS, RELAID_SCENERY_IDS, BLOCK_SCENERY_IDS } from './scenery';
@@ -11,7 +20,13 @@ import type {
   JobStatus,
   GroundPoint,
   SurvivorActivity,
+  Regard,
+  ErrandPhase,
+  WorldEffect,
+  VerbWord,
+  VerbPose,
 } from '../../shared/safehouseTypes';
+import { VERB_WORDS, VERB_POSES } from '../../shared/safehouseTypes';
 const point = z.object({ x: z.number().finite(), z: z.number().finite() });
 /** Bumped together with the schema and migration below; index.ts reads it so the two can never disagree. */
 export const STATE_VERSION = 9;
@@ -40,6 +55,13 @@ export const objectSchema = z
     fixed: z.boolean().optional(),
     passable: z.boolean().optional(),
     owner: z.string().max(20).optional(),
+    // Small life (no version bump; all optional): what a piece is for, behaviour as data, the block's own animals.
+    uses: z.array(useSchema).max(6).optional(),
+    rules: z.array(ruleSchema).max(MAX_RULES).optional(),
+    wild: z.boolean().optional(),
+    giftTo: z.string().max(20).optional(),
+    verb: pieceVerbSchema.optional(),
+    driven: z.object({ at: point, turn: z.number().finite(), by: z.string().max(40), until: z.number() }).optional(),
     creature: z
       .object({
         behaviour: z.enum(['rampage', 'fight', 'zoom', 'roam']),
@@ -53,6 +75,22 @@ export const objectSchema = z
         flying: z.boolean().optional(),
         altitude: z.number().finite().nonnegative().optional(),
         nemesis: z.string().optional(),
+        nemesisOwner: z.string().max(40).optional(),
+        goal: z
+          .object({
+            rule: z.number().int().nonnegative(),
+            targetId: z.string().optional(),
+            point: point.optional(),
+            dwellMs: z.number().finite(),
+            arrived: z.boolean().optional(),
+            perched: z.boolean().optional(),
+            altitude: z.number().finite().nonnegative().optional(),
+          })
+          .optional(),
+        scaredMs: z.number().finite().nonnegative().optional(),
+        heldMs: z.number().finite().nonnegative().optional(),
+        freeMs: z.number().finite().nonnegative().optional(),
+        busyMs: z.number().finite().nonnegative().optional(),
       })
       .optional(),
   })
@@ -93,6 +131,8 @@ export interface Job {
   operation?: 'repair' | 'rebuild' | 'turret' | 'barrier' | 'move' | 'rotate';
   baseLifecycle?: number;
   quick?: { kind: 'recolor' | 'scale'; color?: string; factor?: number; axis?: 'all' | 'height' };
+  /** "build marge a bench": the piece is for that neighbour (their id) and goes on their lot. */
+  giftTo?: string;
 }
 const jobSchema = z.object({
   id: z.string(),
@@ -130,10 +170,23 @@ const jobSchema = z.object({
       axis: z.enum(['all', 'height']).optional(),
     })
     .optional(),
+  giftTo: z.string().max(20).optional(),
 });
+/** Grudges and favours (Regard in safehouseTypes.ts): a small table per neighbour, and one for Rook. */
+const regardSchema = z.object({
+  score: z.number().finite(),
+  since: z.number(),
+  lastAt: z.number(),
+  reason: z.string().max(120).optional(),
+  acts: z.number().int().nonnegative().optional(),
+  lastActAt: z.number().optional(),
+});
+const regardTable = z.record(z.string().max(40), regardSchema);
+export const MAX_REGARD = 60; // chatters remembered per table; the coldest entries are dropped past this
 // The neighbours' own job machinery (neighbours.ts): a build or an edit in flight, with its ghost.
 const neighbourJobSchema = z.object({
-  kind: z.enum(['build', 'edit', 'repair', 'rebuild', 'tend', 'look']),
+  // `use`: shooting at a hoop or sitting on a seat (targetId is the piece).
+  kind: z.enum(['build', 'edit', 'repair', 'rebuild', 'tend', 'look', 'use']),
   purpose: z.enum(['defense', 'upkeep', 'project']),
   label: z.string().max(80),
   status: z.enum(['walking', 'working']),
@@ -148,7 +201,7 @@ const neighbourJobSchema = z.object({
   project: z.string().max(20).optional(),
   reason: z.string().max(20).optional(),
 });
-const impulseKind = z.enum(['whim', 'rival', 'fortify', 'light', 'pet', 'care', 'visit', 'rearrange', 'social', 'retheme']);
+const impulseKind = z.enum(['whim', 'rival', 'fortify', 'light', 'pet', 'care', 'visit', 'rearrange', 'social', 'retheme', 'crowd', 'grudge', 'gift']);
 // An idea a neighbour has had and not yet acted on; a design the model drew up for it rides along.
 const impulseSchema = z.object({
   kind: impulseKind,
@@ -173,7 +226,7 @@ const neighbourSchema: z.ZodType<NeighbourState> = z.object({
   id: z.string().max(20),
   position: point,
   facing: z.number().finite(),
-  activity: z.enum(['idle', 'walking', 'building', 'repairing', 'tending', 'painting', 'looking']),
+  activity: z.enum(['idle', 'walking', 'building', 'repairing', 'tending', 'painting', 'looking', 'playing', 'sitting', 'waving', 'dancing']),
   path: z.array(point).max(2000),
   job: neighbourJobSchema.optional(),
   restMs: z.number().finite(),
@@ -200,6 +253,9 @@ const neighbourSchema: z.ZodType<NeighbourState> = z.object({
       lighting: z.enum(['day', 'night']),
       pet: z.boolean().optional(),
       hunkered: z.number().int().optional(),
+      /** The crowd size they last remarked on (a wave to the pavement once it fills up). */
+      crowd: z.number().int().nonnegative().optional(),
+      crowdAt: z.number().optional(),
     })
     .optional(),
   impulses: z.array(impulseSchema).max(6).optional(),
@@ -222,6 +278,102 @@ const neighbourSchema: z.ZodType<NeighbourState> = z.object({
   survey: z.object({ sig: z.string().max(40), at: z.number() }).optional(),
   surveyAt: z.number().optional(),
   surveySig: z.string().max(40).optional(),
+  // Grudges (Marge) and favourites (Jake), by lowercased chatter.
+  regard: regardTable.optional(),
+});
+/** One viewer on the pavement. Positions are transient (autosave picks them up; nothing checkpoints on a step). */
+export interface CrowdMember {
+  id: string; // the chatter's userId
+  name: string; // as last typed; the tag over the head
+  since: number; // when they first spoke this visit
+  lastAt: number; // when they last spoke; ten quiet minutes and they wander off
+  slot: number; // their spot along the pavement, handed out outward from the middle
+  position: GroundPoint;
+  facing: number;
+  watching?: string; // a piece of theirs going up: they drift along the pavement to line up with it
+  watchingUntil?: number; // and stay a while after it lands
+  /**
+   * A chat verb sent them off the pavement (verbs.ts): the route there, the phase, when the phase ends.
+   * A `verb` errand carries the piece's word and pose, the spot to stand at (`at`, on or beside the
+   * piece) and the height to stand at (`y`).
+   */
+  errand?: {
+    kind: 'shoot' | 'verb';
+    targetId: string;
+    phase: ErrandPhase;
+    path: GroundPoint[];
+    until: number;
+    word?: VerbWord;
+    pose?: VerbPose;
+    at?: GroundPoint;
+    y?: number;
+    /** A run (`!drive`): the piece's remaining waypoints; the figure rides along and the piece's `driven.at` follows. */
+    run?: GroundPoint[];
+    /** Chasing a living build (`!ride`, `!fight`): how many times the route has been replanned because it moved. */
+    tries?: number;
+    /** A `fight` decided: celebrating or flat out for a moment before heading home. */
+    result?: 'won' | 'lost';
+  };
+  /** The last shot they took, for the page's SWISH/MISS pop. */
+  shot?: { hit: boolean; at: number };
+  /** A verb's pop word and when it went up. */
+  pop?: { text: string; at: number };
+  /** `!dance`: bouncing until this time. */
+  dancingUntil?: number;
+}
+const crowdMemberSchema: z.ZodType<CrowdMember> = z.object({
+  id: z.string().max(80),
+  name: z.string().max(40),
+  since: z.number(),
+  lastAt: z.number(),
+  slot: z.number().int().nonnegative().max(200),
+  position: point,
+  facing: z.number().finite(),
+  watching: z.string().optional(),
+  watchingUntil: z.number().optional(),
+  errand: z
+    .object({
+      kind: z.enum(['shoot', 'verb']),
+      targetId: z.string(),
+      phase: z.enum(['going', 'doing', 'returning']),
+      path: z.array(point).max(2000),
+      until: z.number(),
+      word: z.enum(VERB_WORDS).optional(),
+      pose: z.enum(VERB_POSES).optional(),
+      at: point.optional(),
+      y: z.number().finite().nonnegative().optional(),
+      run: z.array(point).max(16).optional(),
+      tries: z.number().int().nonnegative().max(9).optional(),
+      result: z.enum(['won', 'lost']).optional(),
+    })
+    .optional(),
+  shot: z.object({ hit: z.boolean(), at: z.number() }).optional(),
+  pop: z.object({ text: z.string().max(12), at: z.number() }).optional(),
+  dancingUntil: z.number().optional(),
+});
+export const MAX_CROWD = 40;
+/** A chatter's hoops record (verbs.ts `!shoot`), by lowercased username. */
+export interface Score {
+  shots: number;
+  hits: number;
+  streak: number; // current run of hits
+  best: number; // longest run
+  lastAt: number;
+}
+const scoreSchema: z.ZodType<Score> = z.object({
+  shots: z.number().int().nonnegative(),
+  hits: z.number().int().nonnegative(),
+  streak: z.number().int().nonnegative(),
+  best: z.number().int().nonnegative(),
+  lastAt: z.number(),
+});
+export const MAX_SCORES = 200;
+const effectSchema: z.ZodType<WorldEffect> = z.object({
+  id: z.number().int().nonnegative(),
+  kind: z.literal('honk'),
+  objectId: z.string(),
+  user: z.string().max(40),
+  at: z.number(),
 });
 export interface SafehouseState {
   version: 9;
@@ -246,6 +398,18 @@ export interface SafehouseState {
   surveyCallsUsed?: number;
   /** Chatters the operator trusts, as lowercased usernames: no design time limit, and `!delete <name>`. */
   privileged?: string[];
+  /** Viewers on the pavement (crowd.ts): whoever spoke lately, where they stand, when they last spoke. */
+  crowd?: CrowdMember[];
+  /** Operator switch: the crowd stays off the page (and out of the snapshot) while true. */
+  crowdHidden?: boolean;
+  /** Operator switch: the block's birds, cat and rats are sent away while true (wildlife.ts). */
+  wildlifePaused?: boolean;
+  /** Rook's own grudges, by lowercased chatter: whose creatures keep knocking his yard down. */
+  grudges?: Record<string, Regard>;
+  /** The hoops scoreboard (`!shoot`), by lowercased chatter. */
+  scores?: Record<string, Score>;
+  /** Brief happenings for the page (a horn): the last few, trimmed every tick. */
+  effects?: WorldEffect[];
   objects: SafehouseObject[];
   jobs: Job[];
   /** The people next door (state v8). */
@@ -277,6 +441,10 @@ const combatSchema = z.object({
         attackAt: z.number(),
         path: z.array(point).max(10000),
         replanAt: z.number(),
+        heldUntil: z.number().optional(),
+        heldIn: z.string().optional(),
+        freeUntil: z.number().optional(),
+        dancingUntil: z.number().optional(),
       }),
     )
     .max(MAX_ZOMBIES),
@@ -313,12 +481,18 @@ export const stateSchema: z.ZodType<SafehouseState> = z.object({
   surveyCallsRemaining: z.number().int().min(0).max(1_000_000).optional(),
   surveyCallsUsed: z.number().int().nonnegative().optional(),
   privileged: z.array(z.string().min(1).max(40)).max(100).optional(),
+  crowd: z.array(crowdMemberSchema).max(MAX_CROWD).optional(),
+  crowdHidden: z.boolean().optional(),
+  wildlifePaused: z.boolean().optional(),
+  grudges: regardTable.optional(),
+  scores: z.record(z.string().max(40), scoreSchema).optional(),
+  effects: z.array(effectSchema).max(20).optional(),
   objects: z.array(objectSchema).max(600),
   jobs: z.array(jobSchema).max(40),
   neighbours: z.array(neighbourSchema).max(8),
   survivor: z.object({
     position: point,
-    activity: z.enum(['idle', 'walking', 'building', 'repairing']),
+    activity: z.enum(['idle', 'walking', 'building', 'repairing', 'sitting', 'dancing']),
     facing: z.number().finite(),
   }),
   lighting: z.enum(['day', 'night']),

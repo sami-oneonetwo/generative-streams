@@ -1,6 +1,7 @@
 // Fixture-only: the neighbours in the real app. Marge and Jake show up on the page with name tags,
 // start building on their own lots (a ghost first, then the piece), say a line, and when chat's
-// gorilla turns up next door one of them puts up a barricade and builds a hunter. Then chat fills
+// gorilla turns up next door one of them puts up a barricade and builds a hunter — and holds it
+// against dave afterwards (the grudge shows on their tag and in the admin status). Then chat fills
 // the street with animals and one of them reads the block, adopts the look and redoes a piece of
 // their own yard in it. Screenshots land in .claude/preview-tools/safehouse-smoke/neighbours-*.png.
 import assert from 'node:assert/strict';
@@ -111,6 +112,35 @@ try {
   await page.screenshot({ path: `${shots}/neighbours-hunter.png` });
   assert.ok(said.some((l) => /marge|dev|neighbours/.test(l)), `Rook remarked on them: ${JSON.stringify(said.slice(-10))}`);
 
+  // 3b. The grudge: whoever sensed dave's gorilla keeps score against dave. Past the first tier the
+  //     view carries a regard phrase; the tag shows it once they are idle (the job label wins while
+  //     they work, so this waits for a quiet moment), coloured `cross`; the admin status lists it.
+  await wait(() => state.neighbours.some((n) => n.regard?.user === 'dave' && n.regard.score >= 3), 'a neighbour holds it against dave', 120000);
+  const grudged = state.neighbours.find((n) => n.regard?.user === 'dave' && n.regard.score >= 3);
+  assert.match(grudged.regard.phrase, /cross with dave|not speaking to dave|at war with dave/, `a grudge phrase: ${grudged.regard.phrase}`);
+  // The score may climb a tier while we wait, so read the phrase fresh on every poll.
+  let grudgeTag;
+  const tagEnd = Date.now() + 180000;
+  while (!grudgeTag) {
+    if (Date.now() > tagEnd) throw new Error(`Timeout ${grudged.name}'s tag shows the grudge; view: ${JSON.stringify(neighbour(grudged.id))}`);
+    const now = neighbour(grudged.id);
+    const phrase = now?.regard?.user === 'dave' ? now.regard.phrase : undefined;
+    if (phrase && !now.job) {
+      grudgeTag = await page.evaluate(
+        ({ name, phrase }) => [...document.querySelectorAll('#people .tag.cross')].map((el) => el.textContent).find((t) => t.startsWith(name) && t.includes(phrase)),
+        { name: grudged.name, phrase },
+      );
+    }
+    if (!grudgeTag) await delay(300);
+  }
+  await page.screenshot({ path: `${shots}/neighbours-grudge.png` });
+  const statusRes = await fetch(base + '/admin/api/status');
+  assert.ok(statusRes.ok, `status: ${statusRes.status}`);
+  const status = await statusRes.json();
+  const listed = (status.safehouse?.regard ?? []).find((r) => r.user === 'dave' && r.name === grudged.name);
+  assert.ok(listed, `the admin status lists the grudge: ${JSON.stringify(status.safehouse?.regard)}`);
+  assert.ok(listed.score >= 3 && /dave/.test(listed.phrase), JSON.stringify(listed));
+
   // 4. Chat fills the street with animals: somebody reads the block, adopts a look, and redoes a
   //    piece of their own yard in it — same id, new geometry, and the theme on their name tag.
   //    One live job per chatter and a three-second gap between theirs, so these go out spaced and
@@ -158,6 +188,9 @@ try {
       owned: [...owned('west'), ...owned('east')].map((o) => o.blueprint.name),
       hunter: `${hunter.blueprint.name} ${Math.round(hunter.health)}/${hunter.maxHealth}`,
       gorilla: state.objects.find((o) => o.id === gorilla.id)?.health,
+      grudge: `${grudged.name} · ${neighbour(grudged.id)?.regard?.phrase ?? grudged.regard.phrase} (${Math.round(neighbour(grudged.id)?.regard?.score ?? grudged.regard.score)})`,
+      grudgeTag,
+      adminRegard: status.safehouse?.regard,
       bubbles,
       alertTags,
       said,

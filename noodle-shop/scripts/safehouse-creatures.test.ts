@@ -312,7 +312,8 @@ function harness() {
   let now = 10_000;
   const spoken: string[] = [];
   const rng = lcg(5);
-  const world = createSafehouseWorld({ seedScenery: true, fixture: true, generator: fixtureGenerator, workMs: 500 });
+  // Chat's own creatures are the subject: the block's birds and cat (wildlife.ts) stay out of it.
+  const world = createSafehouseWorld({ seedScenery: true, fixture: true, generator: fixtureGenerator, workMs: 500, wildlife: false });
   const state = world.createInitialState(now);
   const ctx: WorldCtx<SafehouseState> = {
     state,

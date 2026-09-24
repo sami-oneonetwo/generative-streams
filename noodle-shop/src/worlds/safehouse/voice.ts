@@ -55,6 +55,36 @@ export type Moment =
   | 'neighbour:project' // a neighbour finished a bit of upkeep of their own
   | 'neighbour:visit' // a neighbour has come over to look at something chat built
   | 'neighbour:care' // a neighbour left supplies by his porch after the house fell
+  | 'neighbour:play' // Jake shooting at his hoop
+  | 'neighbour:rest' // a neighbour sitting down on a seat
+  | 'neighbour:crowd' // a neighbour has noticed the viewers on the pavement
+  | 'crowd:first' // someone is on the pavement after nobody was
+  | 'crowd:many' // the pavement has filled up
+  | 'grudge:ack' // a request from someone whose creature keeps knocking his yard down (after the plain ack)
+  | 'walk:grudge' // ...and heading off to build it anyway
+  | 'neighbour:remark' // a neighbour sniffing at a chatter they have not forgiven
+  | 'neighbour:kerb' // a neighbour has moved a chatter's piece out to the kerb
+  | 'neighbour:beige' // a neighbour has painted a chatter's piece beige
+  | 'neighbour:vendetta' // a neighbour's hunter now goes for everything one chatter builds
+  | 'neighbour:favourite' // Jake has taken to a chatter
+  | 'neighbour:gift' // a chatter built a neighbour something
+  | 'neighbour:dance' // Jake dancing to somebody's speakers
+  | 'hole:dug' // a chat hole (a `trap` piece) has appeared
+  | 'hole:held' // a zombie is stuck in one
+  | 'hole:filled' // Marge filled it in
+  | 'music:on' // chat put speakers out
+  | 'music:dance' // the horde is dancing to them
+  | 'music:unplugged' // Marge pulled the plug
+  | 'hoops:first' // the first !shoot the world has seen
+  | 'hoops:streak' // a chatter has hit three in a row
+  | 'hoops:brick' // a chatter has missed four straight
+  | 'honk' // someone found the horn
+  | 'dance:crowd' // someone is dancing on the pavement
+  | 'verb:new' // a piece with a verb of its own has appeared: a new !word is on
+  | 'verb:first' // the first time anyone used a given !word
+  | 'drive:go' // someone has taken a car up the street
+  | 'fight:won' // a chatter's figure won a scrap with a living build
+  | 'fight:lost' // and got flattened
   | 'busy' // someone spoke to him while he was already answering
   | 'offline' // someone spoke to him and the dialogue model is off
   | 'missed'; // the model gave him nothing to say
@@ -66,6 +96,7 @@ export interface LineVars {
   down?: number;
   who?: string; // a neighbour, lowercase like the rest of his muttering ("marge")
   threat?: string; // the creature a neighbour is dealing with ("yard gorilla")
+  word?: string; // a chat verb without its bang ("swim")
 }
 
 export const LINES: Record<Moment, string[]> = {
@@ -331,6 +362,185 @@ export const LINES: Record<Moment, string[]> = {
     "there's a crate from {who} out front. neighbours man",
     "{who} dropped something off. i'm fine. i'm fine. thanks {who}",
   ],
+  'neighbour:play': [
+    "{who}'s shooting hoops. of course he is",
+    'look at {who} go. swish. or not',
+    'hoops. in a zombie apocalypse. love it',
+    "{who}'s at the hoop again. the fence can wait apparently",
+  ],
+  'neighbour:rest': [
+    "{who}'s sitting down. fair enough",
+    '{who} is having a sit. good for them',
+    'even {who} takes a break. noted',
+    "{who}'s on the bench. i want a bench",
+  ],
+  'neighbour:crowd': [
+    "{who}'s waving at the pavement. of course he is",
+    '{who} has noticed you lot. wave back',
+    'the neighbours have seen the crowd. cool cool',
+    "{who}'s out front saying hi to chat. more sociable than me",
+  ],
+  'grudge:ack': [
+    'another one from {user}. great.',
+    '{user}. right. what is it this time',
+    "ok {user}. i haven't forgotten the gorilla but ok",
+    '{user} again. cool cool.',
+    "sure {user}. it's in the queue. the fence remembers",
+    "yep. {user}. noted. i'll get to it",
+  ],
+  'walk:grudge': [
+    '{name} for {user}. after all that. fine',
+    "building {user}'s {name}. not thrilled about it",
+    'ok. {name}. {user} owes me a fence',
+    "{name}. for {user}. of all people. let's go",
+    "right. {user}'s {name}. i'm doing it. i'm not happy about it",
+  ],
+  'neighbour:remark': [
+    "{who} hasn't forgiven {user}. can tell",
+    "{user}'s built something. {who}'s face says it all",
+    '{who} has a long memory {user}. just saying',
+    "ooh. {who}'s still cross with {user}. good luck",
+  ],
+  'neighbour:kerb': [
+    "{who} just put {user}'s {name} on the kerb. ok then",
+    "{name}'s on the pavement now. {who}'s doing. {user} you upset her",
+    "{who} moved {user}'s {name} out to the street. cold",
+    'the {name} is on the kerb. {who} is not messing about {user}',
+  ],
+  'neighbour:beige': [
+    "{who} painted {user}'s {name} beige. brutal",
+    "beige. {who} went beige on {user}. that's cold",
+    "{user}'s {name} is beige now. {who} did that. wow",
+    '{who} has beiged the {name}. a statement',
+  ],
+  'neighbour:vendetta': [
+    "{who}'s hunter has {user}'s name on it now. yikes",
+    "ok {who} has declared war on {user}. don't build anything alive {user}",
+    "{user}. {who}'s hunter is after everything you make. i'd apologise",
+    "this is a vendetta now. {who} versus {user}. i'm staying out of it",
+  ],
+  'neighbour:favourite': [
+    '{who} is a fan of {user} now. good for {user}',
+    "{user}'s {who}'s favourite. i'm right here {who}",
+    "{who} has a favourite chatter. it's {user}. fine.",
+    'look at {who}. loves {user}. big fan',
+  ],
+  'neighbour:gift': [
+    '{user} built {who} a {name}. bold move',
+    'a {name} for {who}. from {user}. huh. nice',
+    "{user}'s made {who} a {name}. making friends. good",
+    "a gift for {who}. the {name}. {user} you're alright",
+  ],
+  'neighbour:dance': [
+    "{who}'s dancing. of course he is",
+    'look at {who} go. no rhythm. full commitment',
+    "{who}'s having a dance. the zombies can wait apparently",
+    "{who} found the speakers. that's his afternoon sorted",
+  ],
+  'hole:dug': [
+    'someone dug a hole. in the street. cool cool',
+    'a hole. great. mind your step everyone',
+    'ok who dug that',
+    "there's a hole now. i'm not falling in it. probably",
+  ],
+  'hole:held': [
+    "zombie's in the hole. love that",
+    'look at him. stuck. good',
+    'the hole works. huh',
+    "one in the hole. that's one less at the fence",
+  ],
+  'hole:filled': [
+    '{who} filled the hole in. of course she did',
+    "and the hole's gone. thanks {who}. i think",
+    "{who}'s got a spade out. bye hole",
+  ],
+  'music:on': [
+    'speakers. in a zombie apocalypse. sure',
+    'who put speakers out here',
+    "ok that's a lot of bass for a wednesday",
+    'music. right. the zombies are going to love that. literally',
+  ],
+  'music:dance': [
+    "the zombies are dancing. i can't",
+    "they're dancing. the zombies are dancing",
+    "nobody tell them the song's over",
+    'ok the horde has moves. did not see that coming',
+  ],
+  'music:unplugged': [
+    "{who} pulled the plug. party's over",
+    "and that's the speakers off. {who}'s call",
+    '{who} killed the music. fair. it was late',
+  ],
+  'hoops:first': [
+    "chat's shooting hoops now. cool cool",
+    'ok {user} has found the hoop',
+    "{user}'s having a go at the hoop. this is what we do now",
+    'someone said !shoot. and now there are hoops. sure',
+  ],
+  'hoops:streak': [
+    "{user}'s on fire. three in a row",
+    "{user}. three straight. i couldn't do that",
+    'three for three. ok {user}. ok',
+    "{user}'s not missing. someone check the hoop",
+  ],
+  'hoops:brick': [
+    "{user}. brother. it's a hoop not a wall",
+    'four bricks {user}. the hoop is right there',
+    "{user}'s form is a bit tragic tbh. love the commitment",
+  ],
+  honk: [
+    "who's honking. it's a zombie apocalypse",
+    '{user} found the horn. of course',
+    'yep. that was a car horn. thanks {user}',
+    'the birds hated that. so did i',
+  ],
+  'dance:crowd': [
+    "{user}'s dancing on the pavement. love that",
+    "look at {user} go. no rhythm. full commitment",
+    "{user}'s having a dance out there. good for them",
+  ],
+  'crowd:first': [
+    'oh hey. someone\'s here. hi {user}',
+    "{user}'s on the pavement. cool. hi",
+    "we've got an audience. one person. hi {user}",
+    'hey {user}. pull up a bit of kerb',
+    'ok {user} is watching. no pressure',
+    "{user}'s out front. don't stand in the road {user}",
+  ],
+  'crowd:many': [
+    "that's a lot of people on the pavement. cool cool",
+    "ok the whole street's watching now. no pressure",
+    "look at that crowd. don't stand in the road",
+    'proper crowd out there. ok. ok. what are we building',
+    "the pavement's full. someone's going to get bitten. not my problem",
+  ],
+  'verb:new': [
+    "there's a !{word} now. because of course",
+    "ok chat. !{word}. don't all go at once",
+    'so that unlocks !{word}. sure. why not',
+    "!{word}. that's a thing you can type now. cool cool",
+  ],
+  'verb:first': [
+    '{user} typed !{word} and actually did it. love that',
+    "and {user}'s off. !{word}. this street man",
+    '{user}. !{word}. first one to try it. respect',
+  ],
+  'drive:go': [
+    "{user}'s driving {name}. that's not theirs",
+    'ok {user} has {name}. up the road and back. fine',
+    "there goes {name}. {user}'s at the wheel. don't hit anything",
+    "{user}. in {name}. sure. it's not like it's anyone's",
+  ],
+  'fight:won': [
+    '{user} actually won. against {name}. ok then',
+    "{user} just decked {name}. didn't see that coming",
+    "{name} bottled it. {user} wins. this street man",
+  ],
+  'fight:lost': [
+    '{user} got flattened by {name}. told you',
+    "and {user}'s down. {name} 1, chat 0",
+    "{user} picked a fight with {name}. went about how you'd think",
+  ],
   busy: ['hang on {user}. one at a time', 'yep {user}. one sec', 'sorry sorry {user}. one at a time'],
   offline: [
     "can't chat right now {user}. ai's off. can still paint and move stuff",
@@ -359,12 +569,12 @@ export function speakName(o: { id: string; blueprint: { name: string } } | undef
   return `the ${name[0].toLowerCase()}${name.slice(1)}`;
 }
 
-const VARS = ['name', 'user', 'wave', 'down', 'who', 'threat'] as const;
+const VARS = ['name', 'user', 'wave', 'down', 'who', 'threat', 'word'] as const;
 const usable = (template: string, vars: LineVars) =>
   VARS.every((v) => !template.includes(`{${v}}`) || vars[v] !== undefined);
 
 export function render(template: string, vars: LineVars): string {
-  return template.replace(/\{(name|user|wave|down|who|threat)\}/g, (_, key: keyof LineVars) => String(vars[key] ?? ''));
+  return template.replace(/\{(name|user|wave|down|who|threat|word)\}/g, (_, key: keyof LineVars) => String(vars[key] ?? ''));
 }
 
 /** Every line a moment could produce with these variables; tests check membership against it. */
@@ -386,7 +596,7 @@ export function pickLine(moment: Moment, vars: LineVars, rng: () => number, rece
 /** Talking to him by name, as opposed to a request the parser or the designer should get. */
 export const addressesRook = (text: string): boolean => /\brook\b/i.test(text);
 export const looksLikeRequest = (text: string): boolean =>
-  /\b(build|make|paint|move|turn|rotate|repair|rebuild|fix|equip|add|place|put|create|colou?r|recolou?r|resize|bigger|smaller|taller|shorter|undo|redesign|spawn|shift|scale)\b/i.test(
+  /\b(build|make|paint|move|turn|rotate|repair|rebuild|fix|equip|add|place|put|create|dig|colou?r|recolou?r|resize|bigger|smaller|taller|shorter|undo|redesign|spawn|shift|scale)\b/i.test(
     text,
   );
 

@@ -10,14 +10,43 @@ import {
 import type { GroundPoint, SafehouseObject } from '../../shared/safehouseTypes';
 const STEP = 0.5,
   margin = 0.25;
+/** A standing hole (`trap` use): ground to stand on, but nobody with sense walks into it, and nothing is built on it. */
+export const isTrap = (o: SafehouseObject): boolean => o.destroyedAt === undefined && !!o.uses?.includes('trap');
+/** The hole `p` stands in, if any. */
+export const insideTrap = (p: GroundPoint, traps: SafehouseObject[]): SafehouseObject | undefined =>
+  traps.find((t) => contains(footprint(t.position, t.footprint.width, t.footprint.depth), p));
+/**
+ * The first point along `a`→`b` that lies in a hole, sampled every quarter metre so a fast thing
+ * cannot clear a hole inside one step. Undefined when the way is clear.
+ */
+export function crossesTrap(a: GroundPoint, b: GroundPoint, traps: SafehouseObject[]): GroundPoint | undefined {
+  if (!traps.length) return undefined;
+  const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.z - a.z) / 0.25));
+  for (let i = 1; i <= n; i++) {
+    const p = { x: a.x + ((b.x - a.x) * i) / n, z: a.z + ((b.z - a.z) * i) / n };
+    if (insideTrap(p, traps)) return p;
+  }
+  return undefined;
+}
+export interface RouteOptions {
+  /** The horde does not look where it is going: holes are not obstacles to it. Everyone else walks round. */
+  ignoreTraps?: boolean;
+}
 // Every collider is a world object now; rubble, passable floors and living creatures never block.
-function obstacles(objects: SafehouseObject[], exclude?: string): Rect[] {
+// A hole is passable ground but counts as an obstacle for anyone who knows better (the default).
+function obstacles(objects: SafehouseObject[], exclude?: string, ignoreTraps = false): Rect[] {
   return objects
-    .filter((o) => o.id !== exclude && o.destroyedAt === undefined && !o.passable && !o.creature)
+    .filter(
+      (o) =>
+        o.id !== exclude &&
+        o.destroyedAt === undefined &&
+        !o.creature &&
+        (!o.passable || (!ignoreTraps && isTrap(o))),
+    )
     .map((o) => footprint(o.position, o.footprint.width, o.footprint.depth));
 }
-export function walkableSegment(a: GroundPoint, b: GroundPoint, objects: SafehouseObject[]): boolean {
-  const blocked = obstacles(objects).map((r) => inflate(r, margin));
+export function walkableSegment(a: GroundPoint, b: GroundPoint, objects: SafehouseObject[], opts: RouteOptions = {}): boolean {
+  const blocked = obstacles(objects, undefined, opts.ignoreTraps).map((r) => inflate(r, margin));
   const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.z - a.z) / 0.1));
   for (let i = 0; i <= n; i++) {
     const p = { x: a.x + ((b.x - a.x) * i) / n, z: a.z + ((b.z - a.z) * i) / n };
@@ -25,8 +54,8 @@ export function walkableSegment(a: GroundPoint, b: GroundPoint, objects: Safehou
   }
   return true;
 }
-export function route(from: GroundPoint, to: GroundPoint, objects: SafehouseObject[]): GroundPoint[] | null {
-  const blocked = obstacles(objects).map((r) => inflate(r, margin));
+export function route(from: GroundPoint, to: GroundPoint, objects: SafehouseObject[], opts: RouteOptions = {}): GroundPoint[] | null {
+  const blocked = obstacles(objects, undefined, opts.ignoreTraps).map((r) => inflate(r, margin));
   const walk = (p: GroundPoint) => contains(YARD_BOUNDS, p) && !blocked.some((r) => contains(r, p));
   const snap = (p: GroundPoint) => ({ x: Math.round(p.x / STEP) * STEP, z: Math.round(p.z / STEP) * STEP });
   const start = snap(from),

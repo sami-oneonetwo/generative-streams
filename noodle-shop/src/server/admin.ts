@@ -5,6 +5,9 @@ import type { Engine } from '../engine/engine';
 import type { AdminStatus } from '../shared/protocol';
 import type { KickAuth } from '../kick/oauth';
 import { resubscribe } from '../kick/subscriptions';
+import { regardSummary } from '../worlds/safehouse/neighbours';
+import { grudgeSummary } from '../worlds/safehouse/grudges';
+import { scoreSummary } from '../worlds/safehouse/scores';
 
 export interface AdminDeps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,6 +90,10 @@ export function makeAdminRouter(deps: AdminDeps): Router {
               themes: ((engine.state as { neighbours?: { id: string; theme?: { name: string }; plan?: string[] }[] }).neighbours ?? []).map(
                 (n) => ({ name: n.id, theme: n.theme?.name, left: n.plan?.length ?? 0 }),
               ),
+              // Grudges and favourites, operator-only: the neighbours' tables and Rook's own.
+              regard: regardSummary(engine.state as Parameters<typeof regardSummary>[0]),
+              grudges: grudgeSummary(engine.state as Parameters<typeof grudgeSummary>[0]),
+              scores: scoreSummary(engine.state as Parameters<typeof scoreSummary>[0]),
               wave: safehouse.combat && {
                 number: safehouse.combat.wave.number,
                 phase: safehouse.combat.wave.phase,

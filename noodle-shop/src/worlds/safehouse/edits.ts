@@ -38,6 +38,8 @@ export interface ParsedRequest extends ResolvedRequest {
   requestedArea?: string;
   relativeTo?: { objectId: string; side: Side };
   rejection?: string; // unsupported request, explained rather than approximated
+  /** "build marge a bench" / "build a bench for jake": the neighbour's id; placed on their lot unless a spot was given. */
+  giftTo?: string;
 }
 /** What the resolver may use besides the words: whose "my", and what the pick is for. */
 interface Asking {
@@ -303,6 +305,9 @@ function settle(phrase: string, candidates: SafehouseObject[], asking: Asking): 
  * only when it is attached to the new thing with to/on/onto/for, so a description of the new
  * thing is never mistaken for an edit of an old one.
  */
+/** Verbs that put a living build somewhere rather than putting a part on something. */
+const BEHAVIOUR_VERB =
+  /^(?:sits?|sat|sitting|perch(?:es|ed|ing)?|lands?|landing|lives?|living|sleeps?|sleeping|roosts?|roosting|rests?|resting|naps?|napping|stands?|standing|hangs?|hanging|lies?|lying|waits?|waiting|nests?|nesting|climbs?|climbing|jumps?|jumping|plays?|playing)$/;
 function mentioned(input: string, objects: SafehouseObject[]): SafehouseObject[] {
   const exact = objects.filter(
     (o) =>
@@ -311,15 +316,21 @@ function mentioned(input: string, objects: SafehouseObject[]): SafehouseObject[]
       (o.id === HOUSE_ID && /\b(?:the|his|rook'?s) house\b/.test(input)),
   );
   if (exact.length) return exact;
-  const building = /^(?:build|make|create|add|place|put|spawn|construct|design)\s+(?:a|an|some|another|\d+)\b/.test(input);
+  const building = /^(?:build|make|create|add|place|put|spawn|construct|design|dig)\s+(?:a|an|some|another|\d+)\b/.test(input);
   const out = new Set<SafehouseObject>();
   // Up to three words after each "the", looked at without being consumed, so "the roof of the
-  // truck" still reaches "the truck".
-  const chunk = /(?:^|\b([\w'’-]+)\s+)the\s+(?=([\w'’-]+)(?:\s+([\w'’-]+))?(?:\s+([\w'’-]+))?)/g;
+  // truck" still reaches "the truck". The two words before it decide whether it is attached.
+  const chunk = /(?:^|\b(?:([\w'’-]+)\s+)?([\w'’-]+)\s+)the\s+(?=([\w'’-]+)(?:\s+([\w'’-]+))?(?:\s+([\w'’-]+))?)/g;
   for (const m of input.matchAll(chunk)) {
-    if (building && !/^(?:to|on|onto|for)$/.test(m[1] ?? '')) continue;
+    if (building) {
+      const prep = m[2] ?? '';
+      if (!/^(?:to|on|onto|for)$/.test(prep)) continue;
+      // "a bird that sits on the fence", "a cat that sleeps on the bench": where the new thing will
+      // spend its time (a rule), not a piece to redesign. "Add a chimney on the house" still is.
+      if (/^(?:on|onto)$/.test(prep) && BEHAVIOUR_VERB.test(m[1] ?? '')) continue;
+    }
     for (let k = 1; k <= 3; k++) {
-      const words = [m[2], m[3], m[4]].slice(0, k);
+      const words = [m[3], m[4], m[5]].slice(0, k);
       if (words.some((w) => w === undefined)) break;
       const wanted = tokens(words.join(' '));
       for (const o of objects) if (fitsWords(wanted, tokens(o.blueprint.name))) out.add(o);
@@ -361,7 +372,7 @@ export function resolveRequest(
   // "Build a gorilla that runs around and breaks things": here "that" opens a description
   // of the new thing, not a reference to the last one. "it" and "this" still do.
   const describing =
-    /^(?:build|make|create|add|place|put|spawn|construct|design)\b.*\b(?:a|an|some|another)\s+[\w\s-]*?\bthat\s+\w+/.test(
+    /^(?:build|make|create|add|place|put|spawn|construct|design|dig)\b.*\b(?:a|an|some|another)\s+[\w\s-]*?\bthat\s+\w+/.test(
       input,
     );
   const pronoun = targetText
@@ -477,6 +488,12 @@ export function parseRequest(
       return { text, rejection: 'That mark is outside the playable neighborhood.' };
     text = text.slice(0, coordinate.index).trim();
   }
+  // A gift: "build marge a bench", "build a bench for jake". The neighbour comes off the sentence
+  // before anything else reads it, so "for marge" is never taken for a mention of her bench, and
+  // the piece goes on their lot unless a spot was given.
+  const gift = parseGift(text);
+  const giftTo = gift?.to;
+  if (gift) text = gift.text;
   const input = normalize(text);
 
   const around = input.match(/^(?:rotate|turn|spin)\s+(.+?)\s+around$/);
@@ -535,7 +552,34 @@ export function parseRequest(
   };
   if (base.clarification || base.quick) return base;
   if (area && !requestedPosition && !relativeTo) base.requestedArea = area;
+  // Only a new build can be a gift; an edit dressed as one ("paint the bench for marge") is just an edit.
+  if (giftTo && !base.targetId && !base.operation) {
+    base.giftTo = giftTo;
+    if (!requestedPosition && !relativeTo && !base.requestedArea) base.requestedArea = GIFT_LOTS[giftTo];
+  }
   return base;
+}
+
+/** Who can be given something, by the name chat uses, and where their things go. */
+const GIFT_RECIPIENTS: Record<string, string> = { marge: 'west', jake: 'east' };
+const GIFT_LOTS: Record<string, string> = { west: 'west lot', east: 'east lot' };
+const BUILD_VERB = 'build|make|create|construct|design|give|get';
+/**
+ * "build marge a bench" / "make jake a hoop" / "build a bench for marge" / "a gnome for jake" →
+ * the neighbour's id and the sentence with them taken out ("build a bench"). A possessive
+ * ("marge's bench") is ownership, not a gift, and "next to marge's house" is placement.
+ */
+export function parseGift(text: string): { to: string; text: string } | undefined {
+  const who = Object.keys(GIFT_RECIPIENTS).join('|');
+  const indirect = text.match(new RegExp(`^(${BUILD_VERB})\\s+(${who})\\s+(a|an|some|another|the|\\d+)\\s+(.+)$`, 'i'));
+  if (indirect) {
+    const [, verb, name, article, rest] = indirect;
+    return { to: GIFT_RECIPIENTS[name.toLowerCase()], text: `${verb} ${article} ${rest}`.trim() };
+  }
+  const trailing = text.match(new RegExp(`^(.+?)\\s+(?:for|to)\\s+(${who})\\s*[.!]?$`, 'i'));
+  if (trailing && new RegExp(`^(?:${BUILD_VERB}|add|place|put|spawn)\\b`, 'i').test(trailing[1]))
+    return { to: GIFT_RECIPIENTS[trailing[2].toLowerCase()], text: trailing[1].trim() };
+  return undefined;
 }
 
 /** Spots around an anchor for a footprint of this size, the asked-for side first. */
@@ -629,6 +673,17 @@ export function rotateBlueprint(source: Blueprint, radians: number): Blueprint {
     const m = mul(R, mul(rotX(part.rotation[0]), mul(rotY(part.rotation[1]), rotZ(part.rotation[2]))));
     part.rotation = eulerXYZ(m);
     for (let i = 0; i < 3; i++) if (Math.abs(part.position[i]) < 1e-9) part.position[i] = 0;
+  }
+  // Part animations are authored in the design's own frame: a quarter turn swaps the horizontal
+  // axes (a swing's chains still rock across the top bar, a wheel still turns on its axle). The
+  // vertical axis is unchanged by a yaw; other angles are left as authored.
+  if (result.animations?.length) {
+    const turn = ((radians % Math.PI) + Math.PI) % Math.PI; // 0..π
+    if (Math.abs(turn - Math.PI / 2) <= (10 * Math.PI) / 180)
+      for (const a of result.animations) {
+        if (a.axis === 'x') a.axis = 'z';
+        else if (a.axis === 'z') a.axis = 'x';
+      }
   }
   return result;
 }

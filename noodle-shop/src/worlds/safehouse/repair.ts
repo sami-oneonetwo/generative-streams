@@ -22,10 +22,12 @@ export const missingHealth = (o: SafehouseObject): number =>
 /**
  * Scratches are left alone; his own house gets attention sooner than anything else.
  * A rampaging creature is the one thing he will not patch up or bring back, and he
- * does not chase flyers with a hammer: a downed one can be rebuilt on request.
+ * does not chase flyers with a hammer: a downed one can be rebuilt on request. The
+ * block's own animals (wildlife.ts) are nobody's to fix: a hurt cat is a hurt cat.
  */
 export const needsRepair = (o: SafehouseObject): boolean =>
   !o.passable &&
+  !o.wild &&
   !isHostile(o) &&
   !o.creature?.flying &&
   (!intact(o) || (o.health ?? maxHealth(o)) < maxHealth(o) * (o.id === HOUSE_ID ? 0.9 : 0.7));
@@ -41,21 +43,28 @@ const tier = (o: SafehouseObject): number =>
           ? 3
           : 4;
 
+/**
+ * `later` marks pieces he is in no hurry over (grudges.ts: the creations of a chatter whose
+ * creatures keep knocking his yard down). They still get fixed, just after everything else in
+ * their tier.
+ */
 export function pickRepairTarget(
   objects: SafehouseObject[],
   archive: SafehouseObject[],
   from: GroundPoint,
   skip: (id: string) => boolean = () => false,
+  later: (o: SafehouseObject) => boolean = () => false,
 ): RepairPick | undefined {
   const canRebuild = objects.length < MAX_REBUILD_OBJECTS;
   const candidates = [
     ...objects.filter(needsRepair),
-    ...(canRebuild ? archive.filter((o) => !o.passable && !isHostile(o) && !o.creature?.flying) : []),
+    ...(canRebuild ? archive.filter((o) => !o.passable && !o.wild && !isHostile(o) && !o.creature?.flying) : []),
   ].filter((o) => !skip(o.id));
   const distance = (o: SafehouseObject) => Math.hypot(o.position.x - from.x, o.position.z - from.z);
   candidates.sort(
     (a, b) =>
       tier(a) - tier(b) ||
+      Number(later(a)) - Number(later(b)) || // a sulk: their things last in the tier
       Number(intact(a)) - Number(intact(b)) || // knocked-down pieces before scuffed ones
       distance(a) - distance(b),
   );

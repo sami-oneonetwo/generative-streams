@@ -6,6 +6,7 @@ import { createCombatView } from './combat';
 import { buildEnvironment } from './environment';
 import { createObjectsLayer, type PreviewSpec } from './objects';
 import { createNeighboursLayer } from './neighbours';
+import { createCrowdLayer } from './crowd';
 import { buildPersonGroup, newMaterialCache } from './primitives';
 import { Timeline, Track } from './motion';
 const el = (id: string) => document.getElementById(id)!;
@@ -39,6 +40,8 @@ function start() {
   const combatView = createCombatView(environment.world);
   // The neighbours: figures in the scene, tags and small bubbles in the overlay.
   const people = createNeighboursLayer(environment.world, el('people'));
+  // The audience: viewers who have spoken lately, as figures on the pavement across the street.
+  const crowd = createCrowdLayer(environment.world, el('people'));
   /** Every build in flight: Rook's current job and any neighbour walking to or working on a new piece. */
   function previewsOf(s: SafehouseScene): PreviewSpec[] {
     const list: PreviewSpec[] = [];
@@ -59,8 +62,19 @@ function start() {
         });
     return list;
   }
-  // Read-only handle for the browser smokes (counting dust motes, checking the camera).
+  // Read-only handles for the browser smokes (counting dust motes, checking the camera, Rook's pose).
   (window as unknown as { __safehouseScene?: THREE.Scene }).__safehouseScene = scene;
+  (window as unknown as { __safehouseRook?: THREE.Group }).__safehouseRook = person.group;
+  // ...and the crowd: a figure's instance index and torso matrix, so the smoke can see one lying in the pond.
+  (window as unknown as { __safehouseCrowd?: unknown }).__safehouseCrowd = {
+    indexOf: (name: string) => crowd.probe(name)?.index,
+    matrixOf: (name: string) => crowd.probe(name)?.torso,
+    probe: (name: string) => crowd.probe(name),
+  };
+  // ...and the objects: where a committed piece is drawn now, so the smoke can see a car on a run.
+  (window as unknown as { __safehouseObjects?: unknown }).__safehouseObjects = {
+    positionOf: (id: string) => objects.positionOf(id),
+  };
   const workLight = new THREE.PointLight(0xffd9a0, 0, 13, 2);
   scene.add(workLight);
   const camera = new THREE.OrthographicCamera(-25, 25, 20, -20, 0.1, 150);
@@ -79,6 +93,43 @@ function start() {
     rook = new Track(),
     inbox: { at: number; msg: StateMsg }[] = [];
   let lastMessageAt = 0;
+  // How far into the seated pose he is drawn (0 standing … 1 sitting); see the draw loop.
+  let seated = 0;
+  const SEATED_DROP = 0.42,
+    SEATED_ARM = -1.0;
+  // Brief happenings (`scene.effects`): a horn rattles the piece and pops HONK over it. The newest
+  // id seen is remembered so a reconnect never replays old horns; the first snapshot only primes it.
+  let lastEffectId: number | undefined;
+  const pops: { el: HTMLElement; objectId: string; until: number }[] = [];
+  const HONK_MS = 1500;
+  function honk(objectId: string, now: number) {
+    objects.shake(objectId, now);
+    const el = document.createElement('div');
+    el.className = 'tag pop honk';
+    el.textContent = 'HONK';
+    el.hidden = true;
+    document.getElementById('people')!.append(el);
+    pops.push({ el, objectId, until: now + HONK_MS });
+  }
+  /** After the render: pin each pop over its piece; drop the ones whose moment has passed. */
+  function placePops(now: number) {
+    for (let i = pops.length - 1; i >= 0; i--) {
+      const p = pops[i];
+      const at = objects.positionOf(p.objectId);
+      if (now > p.until || !at) {
+        p.el.remove();
+        pops.splice(i, 1);
+        continue;
+      }
+      headPoint.set(at.x, at.y + 2.2, at.z).project(camera);
+      const onScreen = headPoint.z < 1 && Math.abs(headPoint.x) < 0.98 && Math.abs(headPoint.y) < 0.98;
+      p.el.hidden = !onScreen;
+      p.el.style.left = `${((headPoint.x + 1) / 2) * innerWidth}px`;
+      p.el.style.top = `${((1 - headPoint.y) / 2) * innerHeight}px`;
+    }
+  }
+  // The idle hint alternates every 20 s between build suggestions and the chat verbs that stand unlocked.
+  const VERB_HINTS: Record<string, string> = { '!shoot': 'at the hoop', '!honk': 'the car', '!dance': 'to the speakers' };
   person.group.position.set(SURVIVOR_START.x, 0.13, SURVIVOR_START.z);
   function resize() {
     const a = innerWidth / innerHeight,
@@ -150,7 +201,7 @@ function start() {
       ruined = object.destroyedAt !== undefined,
       hurt = (object.health ?? 80) < (object.maxHealth ?? 80);
     el('inspect-detail').textContent =
-      `${ref} · ${object.passable ? 'ground' : object.creature ? `living · ${object.creature.behaviour}${object.creature.flying ? ' · flying' : ''}` : (object.role ?? 'decoration')} · ${ruined ? 'Destroyed' : `${Math.round(object.health ?? 80)}/${object.maxHealth ?? 80} health`} · ${object.owner ? `Built by ${object.createdBy} next door` : object.fixed ? 'Part of the neighborhood' : `Created by ${object.createdBy}`} · Last edited by ${object.editedBy}`;
+      `${ref} · ${object.passable ? 'ground' : object.creature ? `${object.wild ? 'wild' : 'living'} · ${object.creature.behaviour}${object.creature.flying ? ' · flying' : ''}` : (object.role ?? 'decoration')}${object.verb ? ` · !${object.verb.word}` : ''} · ${ruined ? 'Destroyed' : `${Math.round(object.health ?? 80)}/${object.maxHealth ?? 80} health`} · ${object.owner ? `Built by ${object.createdBy} next door` : object.fixed ? 'Part of the neighborhood' : `Created by ${object.createdBy}`} · Last edited by ${object.editedBy}`;
     // Chat says names, not hashes: any part of the name works ("the truck"); the #reference is the fallback.
     const name = /^rook'?s\b/i.test(object.blueprint.name)
       ? object.blueprint.name
@@ -237,7 +288,8 @@ function start() {
         ['Community creations', s.objects.filter((o) => !o.fixed)],
         ['Built next door', s.objects.filter((o) => o.owner)],
         ['Ruins (rebuildable)', s.combat?.archive ?? []],
-        ['Neighborhood', s.objects.filter((o) => o.fixed && !o.owner)],
+        ['Wildlife', s.objects.filter((o) => o.wild)],
+        ['Neighborhood', s.objects.filter((o) => o.fixed && !o.owner && !o.wild)],
       ];
       for (const [label, list] of groups) {
         if (!list.length) continue;
@@ -268,12 +320,32 @@ function start() {
         ? 'Rook, fixing zombie damage on his own'
         : `Suggested by ${s.current.requestedBy}`
       : `${s.objects.filter((o) => !o.fixed).length} community creations · ${s.objects.filter((o) => o.owner).length} built next door · ${s.objects.filter((o) => o.fixed && !o.owner).length} neighborhood pieces, all movable`;
-    // Everything here is chat-driven: the panel only ever suggests things to type.
+    // Everything here is chat-driven: the panel only ever suggests things to type. With nothing on,
+    // the hint alternates between builds and whichever chat verbs a standing piece unlocks.
+    const unlocked = (s.verbs ?? []).filter((v) => v.unlocked).slice(0, 3);
+    const verbTurn = unlocked.length > 0 && Math.floor(Date.now() / 20000) % 2 === 1;
     el('next').textContent = s.pending.length
       ? `NEXT: ${s.pending[0].label} · ${s.pending.length} waiting`
       : s.current
         ? 'Try: “Paint the house green” or “Repair the fence.”'
-        : 'Try: “Build a turret in the front yard” or “Move the barricade next to the house.”';
+        : verbTurn
+          ? `Try: ${unlocked.map((v) => `${v.verb} ${VERB_HINTS[v.verb] ?? `(${v.needs})`}`).join(' · ')}`
+          : 'Try: “Build a turret in the front yard” or “Move the barricade next to the house.”';
+    // The hoops scoreboard: the best shooters, hidden until somebody has shot.
+    const rows = (s.hoops ?? []).slice(0, 3);
+    el('hoops').hidden = rows.length === 0;
+    if (rows.length) {
+      const lines = rows.map((r, i) => `${r.user} ${r.hits}/${r.shots}${i === 0 && r.streak >= 2 ? ` ·· streak ${r.streak}` : ''}`);
+      const box = el('hoops-rows');
+      if (box.textContent !== lines.join('\n')) {
+        box.replaceChildren();
+        for (const line of lines) {
+          const span = document.createElement('span');
+          span.textContent = line;
+          box.append(span);
+        }
+      }
+    }
     el('progress').hidden = s.current?.status !== 'building';
     el('bar').style.width = `${Math.max(0, Math.min(1, s.current?.progress ?? 0)) * 100}%`;
     const w = s.combat?.wave;
@@ -328,13 +400,23 @@ function start() {
     combatView.sync(next.combat, next.objects);
     objects.syncPreviews(previewsOf(next));
     people.sync(next.neighbours ?? []);
+    crowd.sync(next.crowd ?? [], (id) => next.objects.find((o) => o.id === id)?.position);
+    // Horns and the like: new since the last snapshot only; the first snapshot just primes the mark.
+    const effects = next.effects ?? [];
+    const newest = effects.reduce((m, e) => Math.max(m, e.id), -1);
+    if (lastEffectId === undefined) lastEffectId = newest;
+    else if (newest > lastEffectId) {
+      const now = performance.now();
+      for (const e of effects) if (e.id > lastEffectId && e.kind === 'honk') honk(e.objectId, now);
+      lastEffectId = newest;
+    }
     if (lastLighting !== next.lighting) {
       environment.setLighting(next.lighting === 'night');
       lastLighting = next.lighting;
     }
     hud(next);
     el('connection').textContent =
-      `Connected · ${next.combat?.paused ? 'zombies paused' : `${next.combat?.zombies.length ?? 0} zombies`} · ${next.combat?.kills ?? 0} defeated${next.repairsPaused ? ' · repairs paused' : ''}${next.neighboursPaused ? ' · neighbours indoors' : ''}`;
+      `Connected · ${next.combat?.paused ? 'zombies paused' : `${next.combat?.zombies.length ?? 0} zombies`} · ${next.combat?.kills ?? 0} defeated${next.repairsPaused ? ' · repairs paused' : ''}${next.neighboursPaused ? ' · neighbours indoors' : ''}${next.crowd?.length ? ` · ${next.crowd.length} watching` : ''}${next.wildlifePaused ? ' · wildlife away' : ''}`;
     const speech = msg.scene.speech;
     speechUntil = speech?.until ?? 0;
     if (speech) showSpeech(speech.text);
@@ -394,6 +476,7 @@ function start() {
         objects.sample(next.objects, msg.serverTime);
         combatView.sample(next.combat, msg.serverTime);
         people.sample(next.neighbours ?? [], msg.serverTime);
+        crowd.sample(next.crowd ?? [], msg.serverTime);
         // The first snapshot shows at once; with reduced motion the newest snapshot is drawn, so nothing waits.
         if (!state || reduced) apply(msg);
         else inbox.push({ at: timeline.applyAt(msg.serverTime), msg });
@@ -426,21 +509,44 @@ function start() {
       person.group.rotation.y = pose.facing;
     }
     const live = connected && Date.now() - receivedAt < 6000;
+    // Server time as drawn: what bubbles, waves and tags are measured against.
+    const serverNow = Date.now() + offset - timeline.lag;
     people.pose(now, reduced, renderTime, live);
+    crowd.pose(now, reduced, renderTime, live, serverNow);
     if (state) {
       // What he is doing comes with the stretch being drawn, so the hammer starts when he is seen to arrive.
       const activity = pose?.tag ?? state.survivor.activity;
       const walking = live && !!pose?.moving;
       const repairing = live && !walking && activity === 'repairing';
       const working = repairing || (live && !walking && activity === 'building');
+      // Sitting (nothing on for a while): he eases down over ~0.4 s and back up, rather than popping.
+      const sitting = live && !walking && activity === 'sitting';
+      seated = reduced ? (sitting ? 1 : 0) : seated + ((sitting ? 1 : 0) - seated) * (1 - Math.exp(-dt * 8));
+      // Dancing (speakers in earshot with nothing on): arms alternating at ~2 Hz, a bounce, a slow wobble.
+      const dancing = live && !walking && activity === 'dancing';
       // Building is a steady tap; repairs are quicker, harder hammer blows.
-      person.rightArm.rotation.x = !working || reduced
+      let rightArm = !working || reduced
         ? -0.2
         : repairing
           ? -0.4 + Math.sin(now * 0.011) * 0.7
           : -0.6 + Math.sin(now * 0.007) * 0.55;
-      person.leftArm.rotation.x = walking && !reduced ? Math.sin(now * 0.007) * 0.25 : -0.2;
-      person.group.position.y = 0.13 + (walking && !reduced ? Math.sin(now * 0.012) * 0.025 : 0);
+      let leftArm = walking && !reduced ? Math.sin(now * 0.007) * 0.25 : -0.2;
+      let bob = walking && !reduced ? Math.sin(now * 0.012) * 0.025 : 0,
+        wobble = 0;
+      if (dancing) {
+        if (reduced) rightArm = leftArm = -2.4;
+        else {
+          const swing = Math.sin(now * 0.01257) * 0.9;
+          rightArm = -1.5 + swing;
+          leftArm = -1.5 - swing;
+          bob = Math.abs(Math.sin(now * 0.00628)) * 0.06;
+          wobble = Math.sin(now * 0.0025) * 0.15;
+        }
+      }
+      if (pose) person.group.rotation.y = pose.facing + wobble;
+      person.rightArm.rotation.x = rightArm + (SEATED_ARM - rightArm) * seated;
+      person.leftArm.rotation.x = leftArm + (SEATED_ARM - leftArm) * seated;
+      person.group.position.y = 0.13 - SEATED_DROP * seated + bob;
     }
     workLight.position.set(person.group.position.x, 3.5, person.group.position.z);
     workLight.intensity = state?.lighting === 'night' ? 18 : 0;
@@ -485,7 +591,9 @@ function start() {
     objects.update(now, reduced, renderTime);
     renderer.render(scene, camera);
     if (!bubble.hidden) placeBubble(); // after render: the camera matrices are fresh
-    people.overlay(camera, Date.now() + offset - timeline.lag);
+    people.overlay(camera, serverNow);
+    crowd.overlay(camera, serverNow);
+    placePops(now);
     if (now - lastDetailAt > 250) {
       lastDetailAt = now;
       waveDetail();
@@ -504,6 +612,7 @@ function start() {
       cancelAnimationFrame(frame);
       objects.dispose();
       people.dispose();
+      crowd.dispose();
       renderer.dispose();
     },
     { once: true },

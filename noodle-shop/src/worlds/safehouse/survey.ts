@@ -78,10 +78,13 @@ export function validateSurvey(value: unknown): ThemeSurvey {
     })
     .map(clean)
     .filter(Boolean);
+  // Over-long text is trimmed to the schema's caps rather than failing the reading: a paid call
+  // died on the live world because the brief ran to 210 characters (2026-09-21).
+  const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s);
   return surveySchema.parse({
-    theme: clean(String(v.theme ?? v.name ?? '')),
-    brief: clean(String(v.brief ?? v.description ?? v.summary ?? '')),
-    ideas,
+    theme: clip(clean(String(v.theme ?? v.name ?? '')), 40),
+    brief: clip(clean(String(v.brief ?? v.description ?? v.summary ?? '')), 200),
+    ideas: ideas.map((i) => clip(i, 120)).slice(0, 8),
   });
 }
 

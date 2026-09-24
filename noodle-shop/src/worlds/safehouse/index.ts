@@ -6,16 +6,22 @@ import {
   type SafehouseScene,
   type SafehouseObject,
   type GroundPoint,
+  type SurvivorActivity,
+  type VerbWord,
+  type PieceVerb,
+  isCreatureVerb,
 } from '../../shared/safehouseTypes';
 import { config } from '../../config';
 import { generateBlueprint, fixtureGenerator, type DesignGenerator } from '../../llm/blueprint';
 import {
   CHAT_LIMITS,
   SCENERY_LIMITS,
+  MAX_USES,
   measureBlueprint,
   validateResponse,
   type DesignResponse,
 } from './blueprint';
+import { clampAnimations, clampRules } from './rules';
 import {
   createInitialState,
   stateSchema,
@@ -31,7 +37,10 @@ import {
   LANDMARKS,
   HOUSE_ID,
   WANDER_AREA,
+  YARD_BOUNDS,
   areaCandidates,
+  contains,
+  footprint,
 } from '../../shared/safehouseLayout';
 import {
   tickCombat,
@@ -43,10 +52,12 @@ import {
   waveRoster,
   describeRoster,
   MAX_CREATURES,
+  TACTICS,
 } from './combat';
 import { tickCreatures, freshCreature } from './creatures';
 import { parseRequest, resolveTarget, applyQuickEdit, rotateBlueprint, relativeCandidates } from './edits';
 import { sceneryObjects } from './scenery';
+import { tickWildlife, adoptLife, resetWildlifeMemory } from './wildlife';
 import { migrateState, defaultAllowance, defaultSurveyAllowance } from './state';
 import { pickRepairTarget, repairMs } from './repair';
 import {
@@ -60,8 +71,16 @@ import {
   type LineVars,
 } from './voice';
 import { persona as rookPersona, replyInstruction } from './persona';
+import { noteChatter, tickCrowd, crowdViews, resetCrowdMemory, type CrowdEvent } from './crowd';
+import { parseVerb, runVerb, verbViews, hoopsBoard, resetVerbMemory, standingVerbs, type VerbResult } from './verbs';
+import { noteVerb } from './neighbours';
+import { GRUDGE, bump, chatterKey, decayTable, sulking } from './grudges';
 import {
   tickNeighbours,
+  noteChatEdit,
+  forgive,
+  NEIGHBOURS,
+  type ChatEditKind,
   neighbourGhosts,
   neighbourViews,
   ownedByNeighbours,
@@ -88,6 +107,24 @@ const isPrivileged = (state: SafehouseState, username: string) =>
   (state.privileged ?? []).includes(username.trim().toLowerCase());
 /** The houses stay whoever asks: Rook's is what the waves are about, the neighbours' are where they live. */
 const PROTECTED_IDS = new Set([HOUSE_ID, ...NEIGHBOUR_HOUSE_IDS]);
+/** Names on `createdBy` that are nobody in chat: Rook's grudges (grudges.ts) are only ever with chatters. */
+const NOT_CHATTERS = ['Rook', 'Neighborhood', ...NEIGHBOURS.map((n) => n.name)];
+/** What a chat job did to the piece it landed on, for the neighbour whose piece it was (neighbours.ts `noteChatEdit`). */
+export function chatEditKindOf(job: Pick<Job, 'quick' | 'operation'>): ChatEditKind {
+  if (job.quick) return job.quick.kind === 'recolor' ? 'paint' : 'resize';
+  switch (job.operation) {
+    case 'move':
+      return 'move';
+    case 'rotate':
+      return 'turn';
+    case 'repair':
+      return 'repair';
+    case 'rebuild':
+      return 'rebuild';
+    default:
+      return 'redesign';
+  }
+}
 /**
  * Rook's pace in m/s: brisk on a job, easier when pacing or heading home. Routes are
  * straightened into runs (placement.ts), so a run is covered in one go and only a
@@ -108,6 +145,7 @@ export interface SafehouseOptions {
   neighbourAi?: boolean; // may their ideas go to the design model; default: yes outside fixture mode when a model is configured
   surveyor?: Surveyor; // reads the block and names a theme; tests inject a stub
   survey?: boolean; // may they read the block at all; default: yes outside fixture mode when a model is configured
+  wildlife?: boolean; // the block's birds, cat and rats (wildlife.ts); default: whenever the neighborhood is seeded — tests about chat's own creatures turn them off
 }
 export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModule<SafehouseState> {
   const fixture = options.fixture ?? process.env.SAFEHOUSE_FIXTURES === '1';
@@ -124,6 +162,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
   // The neighbours (neighbours.ts) run on their own clock: jobs take `workMs` when a test sets one, and
   // fixture mode keeps the gaps between their projects short so a smoke sees them at work.
   const neighboursOn = options.neighbours ?? true;
+  // The block's own small life needs the block: no trees or skip, no birds or rats.
+  const wildlifeOn = options.wildlife ?? options.seedScenery ?? true;
   // Their ideas may go to the design model outside fixture mode, at most one design per neighbour
   // every SAFEHOUSE_NEIGHBOUR_AI_MINUTES (default 10), under the same pause and allowance as chat.
   const neighbourAi = options.neighbourAi ?? (!fixture && available);
@@ -146,6 +186,7 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     ...options.neighbourPace,
   };
   let nextNeighbourLineAt = 0; // Rook remarks on the neighbours now and then, not on every hammer blow
+  let nextGrudgeRemarkAt = 0; // a neighbour sniffing at a chatter they have not forgiven: at most one remark in three minutes
   // One neighbour design in flight at a time, never alongside a chat design; asked wishes are remembered
   // so a wish that somehow survives its answer is not paid for twice.
   let neighbourDesign: { id: string; controller: AbortController; deadline: number } | undefined;
@@ -208,6 +249,141 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     lastHouseHealth: number | undefined;
   let nextLegAt = 0; // pacing: when the next wander leg may start (0 = walking one now)
   let nextCreatureLineAt = 0; // a rampaging creature gets a comment now and then, not every hit
+  // Nothing on: he heads for a seat near the porch if chat has built one, else the steps, and
+  // after a while sits down (SurvivorActivity 'sitting'). Anything to do stands him up.
+  let idleSince = 0;
+  let restSpot: { at: GroundPoint; facing: number; seat?: string; dance?: boolean } | undefined;
+  const SIT_AFTER_MS = 20_000,
+    SEAT_REACH = 8,
+    MUSIC_REACH = 12; // speakers this close to the porch beat a seat: nothing on and a beat going, he dances
+  // Chat's tactics on the block (`trap` holes and `music` speakers): a word when one appears, when a
+  // hole first catches something, when the horde starts dancing. Primed on the first tick so a
+  // restart with holes already dug says nothing.
+  let tacticsPrimed = false;
+  const seenTraps = new Set<string>(),
+    seenMusic = new Set<string>();
+  let nextHeldLineAt = 0,
+    nextDanceLineAt = 0;
+  // Pieces' own verbs (`!swim` while a pool stands): a word when a new one comes on, and the first time
+  // anyone does each. Primed on the first tick so a restart with the park's pond says nothing.
+  let verbsPrimed = false;
+  const seenVerbWords = new Set<VerbWord>(),
+    firstVerbDone = new Set<VerbWord>();
+  let nextFightLineAt = 0, // a scrap decided
+    nextDriveLineAt = 0; // someone took a car out
+  /** The verb a piece may keep: a living build only `ride` or `fight`; the block's own animals none. */
+  const pieceVerbFor = (verb: PieceVerb | undefined, creature: boolean, wild: boolean): PieceVerb | undefined =>
+    !verb || wild ? undefined : creature && !isCreatureVerb(verb.word) ? undefined : verb;
+  let nextVerbLineAt = 0, // a new word coming on
+    nextFirstVerbLineAt = 0; // the first go at a word
+  function verbWatch(ctx: Ctx) {
+    const words = new Set(standingVerbs(ctx.state).map((v) => v.word));
+    for (const word of words)
+      if (!seenVerbWords.has(word)) {
+        seenVerbWords.add(word);
+        if (verbsPrimed && ctx.now >= nextVerbLineAt) {
+          nextVerbLineAt = ctx.now + 90_000;
+          react(ctx, 'verb:new', { word });
+        }
+      }
+    // A word whose last piece fell is news again when one stands.
+    for (const word of [...seenVerbWords]) if (!words.has(word)) seenVerbWords.delete(word);
+    verbsPrimed = true;
+  }
+  /**
+   * Where Rook works on a living build without moving it: the nearest clear, reachable spot within
+   * a few metres of the creature (a ring of candidates, nearest first). A flyer over the middle of
+   * a roof may leave nothing reachable; then he works from where he stands, as he does for flyers.
+   */
+  function creatureWorkSpot(state: SafehouseState, target: SafehouseObject, from: GroundPoint): { position: GroundPoint; path: GroundPoint[] } {
+    const snap = (v: number) => Math.round(v * 2) / 2;
+    const ring: GroundPoint[] = [];
+    for (const r of [1.5, 2.5, 3.5])
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        ring.push({ x: snap(target.position.x + Math.sin(a) * r), z: snap(target.position.z + Math.cos(a) * r) });
+      }
+    const spots = ring
+      .filter((p) => contains(YARD_BOUNDS, p) && walkableSegment(p, p, state.objects))
+      .sort((a, b) => Math.hypot(a.x - from.x, a.z - from.z) - Math.hypot(b.x - from.x, b.z - from.z));
+    for (const p of spots) {
+      if (Math.hypot(p.x - from.x, p.z - from.z) < 0.3) return { position: { ...target.position }, path: [] };
+      const path = route(from, p, state.objects);
+      if (path) return { position: { ...target.position }, path: straighten(path) };
+    }
+    return { position: { ...target.position }, path: [] };
+  }
+  /** A clear, reachable spot `off` metres off one side of a piece, nearest the porch first. */
+  function besideSpot(state: SafehouseState, o: SafehouseObject, off: number): GroundPoint | undefined {
+    const r = footprint(o.position, o.footprint.width, o.footprint.depth);
+    return [
+      { x: o.position.x, z: r.maxZ + off },
+      { x: o.position.x, z: r.minZ - off },
+      { x: r.minX - off, z: o.position.z },
+      { x: r.maxX + off, z: o.position.z },
+    ]
+      .filter((p) => contains(YARD_BOUNDS, p) && walkableSegment(p, p, state.objects))
+      .sort((a, b) => Math.hypot(a.x - SURVIVOR_START.x, a.z - SURVIVOR_START.z) - Math.hypot(b.x - SURVIVOR_START.x, b.z - SURVIVOR_START.z))[0];
+  }
+  /**
+   * Where he rests with nothing on: speakers within earshot of the porch first (he dances, two metres
+   * off them, facing them), else the nearest standing seat within reach (stood beside, facing the
+   * street), else the steps.
+   */
+  function pickRestSpot(state: SafehouseState): { at: GroundPoint; facing: number; seat?: string; dance?: boolean } {
+    const near = (use: 'music' | 'seat', reach: number) =>
+      state.objects
+        .filter((o) => intact(o) && !o.passable && !o.creature && o.uses?.includes(use))
+        .map((o) => ({ o, d: Math.hypot(o.position.x - SURVIVOR_START.x, o.position.z - SURVIVOR_START.z) }))
+        .filter((x) => x.d <= reach)
+        .sort((a, b) => a.d - b.d)
+        .map((x) => x.o);
+    for (const o of near('music', MUSIC_REACH)) {
+      const at = besideSpot(state, o, 2);
+      if (at) return { at, facing: Math.atan2(o.position.x - at.x, o.position.z - at.z), seat: o.id, dance: true };
+    }
+    for (const o of near('seat', SEAT_REACH)) {
+      const at = besideSpot(state, o, 0.75);
+      if (at) return { at, facing: 0, seat: o.id };
+    }
+    return { at: { ...SURVIVOR_START }, facing: 0 };
+  }
+  /**
+   * Chat's tactics, noticed: a new hole or a new set of speakers standing (once per piece), the
+   * first zombie stuck in a hole and the first one dancing (with a breather between remarks).
+   */
+  function tacticsWatch(ctx: Ctx) {
+    const traps = ctx.state.objects.filter((o) => intact(o) && !o.owner && !!o.passable && !!o.uses?.includes('trap'));
+    const stacks = ctx.state.objects.filter((o) => intact(o) && !o.owner && !o.passable && !!o.uses?.includes('music'));
+    for (const o of traps)
+      if (!seenTraps.has(o.id)) {
+        seenTraps.add(o.id);
+        if (tacticsPrimed) react(ctx, 'hole:dug');
+      }
+    for (const o of stacks)
+      if (!seenMusic.has(o.id)) {
+        seenMusic.add(o.id);
+        if (tacticsPrimed) react(ctx, 'music:on');
+      }
+    // A hole filled in or speakers unplugged stop being one; dug or plugged in again, they are news again.
+    for (const id of [...seenTraps]) if (!traps.some((o) => o.id === id)) seenTraps.delete(id);
+    for (const id of [...seenMusic]) if (!stacks.some((o) => o.id === id)) seenMusic.delete(id);
+    tacticsPrimed = true;
+    const c = ctx.state.combat;
+    if (ctx.now >= nextHeldLineAt && c.zombies.some((z) => (z.heldUntil ?? 0) > c.time)) {
+      react(ctx, 'hole:held');
+      nextHeldLineAt = ctx.now + 90_000;
+    }
+    if (ctx.now >= nextDanceLineAt && c.zombies.some((z) => (z.dancingUntil ?? 0) > c.time)) {
+      react(ctx, 'music:dance');
+      nextDanceLineAt = ctx.now + 90_000;
+    }
+  }
+  let lastBigCrowdAt = 0; // he remarks on a full pavement at most every ten minutes
+  // Chat verbs (verbs.ts): his remarks on horns, dancing and bricked shots are gated so a busy chat cannot keep him narrating.
+  let nextHonkLineAt = 0,
+    nextDanceCrowdLineAt = 0,
+    nextBrickLineAt = 0;
   const recent: string[] = [];
   /** One tick along idlePath at walking pace; true while there is somewhere to go. One straight segment per snapshot. */
   function stroll(ctx: Ctx, dt: number): boolean {
@@ -371,6 +547,38 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     } else if (e.kind === 'project' && ctx.now >= nextNeighbourLineAt && ctx.rng() < 0.5) {
       react(ctx, 'neighbour:project', { who, name });
       nextNeighbourLineAt = ctx.now + 150_000;
+    } else if (e.kind === 'use' && ctx.now >= nextNeighbourLineAt) {
+      // A game at the hoop, a dance, a sit-down: a remark now and then, never every time.
+      react(ctx, e.reason === 'hoop' ? 'neighbour:play' : e.reason === 'music' ? 'neighbour:dance' : 'neighbour:rest', { who, name });
+      nextNeighbourLineAt = ctx.now + 180_000;
+    } else if (e.kind === 'fill' && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'hole:filled', { who });
+      nextNeighbourLineAt = ctx.now + 90_000;
+    } else if (e.kind === 'unplug' && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'music:unplugged', { who });
+      nextNeighbourLineAt = ctx.now + 90_000;
+    } else if (e.kind === 'crowd' && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'neighbour:crowd', { who });
+      nextNeighbourLineAt = ctx.now + 180_000;
+    } else if (e.kind === 'grudge' && e.user) {
+      // A grudge acted on: the sniff now and then, the kerb, the beige and the vendetta every time.
+      const user = e.user.toLowerCase();
+      if (e.act === 'remark') {
+        if (ctx.now >= nextGrudgeRemarkAt && ctx.now >= nextNeighbourLineAt) {
+          react(ctx, 'neighbour:remark', { who, user });
+          nextGrudgeRemarkAt = ctx.now + 180_000;
+          nextNeighbourLineAt = ctx.now + 90_000;
+        }
+      } else if (e.act && ctx.now >= nextNeighbourLineAt) {
+        react(ctx, e.act === 'kerb' ? 'neighbour:kerb' : e.act === 'beige' ? 'neighbour:beige' : 'neighbour:vendetta', { who, user, name });
+        nextNeighbourLineAt = ctx.now + 90_000;
+      }
+    } else if (e.kind === 'favourite' && e.user && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'neighbour:favourite', { who, user: e.user.toLowerCase() });
+      nextNeighbourLineAt = ctx.now + 90_000;
+    } else if (e.kind === 'gift' && e.user && ctx.now >= nextNeighbourLineAt) {
+      react(ctx, 'neighbour:gift', { who, user: e.user.toLowerCase(), name });
+      nextNeighbourLineAt = ctx.now + 90_000;
     }
   }
   /** The neighbours' ideas and the model: bring an answer back, time a slow one out, ask the next one. */
@@ -600,6 +808,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     }
     transaction(ctx, () => {
       ctx.state.seen.push(msg.id);
+      // A neighbour's piece deleted from chat: they take note (neighbours.ts keeps the score).
+      if (target.owner) noteChatEdit(ctx.state, target, msg.username, 'delete', ctx.now);
       ctx.state.objects = ctx.state.objects.filter((o) => o.id !== target.id);
       ctx.state.combat.archive = ctx.state.combat.archive.filter((o) => o.id !== target.id);
       ctx.state.targets = ctx.state.targets.filter((t) => t.objectId !== target.id);
@@ -613,12 +823,89 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     });
     speak(ctx, ctx.state.notice);
   }
+  /**
+   * A chat verb (`!shoot`, `!honk`, `!dance`, `!verbs`): the chatter's own figure does the thing; no
+   * job, no model call. Refusals and the acceptance are plain lines; his remarks are voiced follow-ups.
+   */
+  function runChatVerb(ctx: Ctx, msg: ChatMessage) {
+    let result: VerbResult = {};
+    try {
+      transaction(ctx, () => {
+        ctx.state.seen.push(msg.id);
+        result = runVerb(ctx.state, msg, ctx.now, ctx.rng);
+        trim(ctx.state);
+      });
+    } catch (error) {
+      ctx.log(`chat verb failed (${msg.text.slice(0, 20)}): ${(error as Error).message}`, 'warn');
+      return;
+    }
+    if (result.reply) notice(ctx, result.reply);
+    const user = msg.username;
+    if (result.event === 'first-shot') react(ctx, 'hoops:first', { user });
+    else if (result.event === 'honk' && ctx.now >= nextHonkLineAt) {
+      nextHonkLineAt = ctx.now + 120_000;
+      react(ctx, 'honk', { user });
+    } else if (result.event === 'dance' && ctx.now >= nextDanceCrowdLineAt) {
+      nextDanceCrowdLineAt = ctx.now + 180_000;
+      react(ctx, 'dance:crowd', { user });
+    }
+  }
+  /**
+   * A shot landed on the pavement's errand: the neighbours hear about it, and Rook has a word on a
+   * streak or a drought. A figure doing a piece's own verb (`!swim` at the pool): the neighbours
+   * hear about that too, and Rook remarks the first time anyone tries each word.
+   */
+  function crowdEvent(ctx: Ctx, e: CrowdEvent) {
+    if (e.kind === 'verb') {
+      try {
+        noteVerb(ctx.state, e.word, e.user, e.targetId, e.result ? { result: e.result } : {}, ctx.now);
+      } catch (error) {
+        ctx.log(`neighbours could not take !${e.word}: ${(error as Error).message}`, 'warn');
+      }
+      const piece = ctx.state.objects.find((o) => o.id === e.targetId);
+      if (e.result) {
+        // A scrap decided: a word on the result, gated so a busy street does not have him commentating.
+        ctx.log(`fight: ${e.name} ${e.result} against ${piece?.blueprint.name ?? e.targetId}`);
+        if (ctx.now >= nextFightLineAt) {
+          nextFightLineAt = ctx.now + 120_000;
+          react(ctx, e.result === 'won' ? 'fight:won' : 'fight:lost', { user: e.name, name: speakName(piece) });
+        }
+        return;
+      }
+      if (e.word === 'drive' && ctx.now >= nextDriveLineAt) {
+        nextDriveLineAt = ctx.now + 180_000;
+        react(ctx, 'drive:go', { user: e.name, name: speakName(piece) });
+      }
+      if (!firstVerbDone.has(e.word)) {
+        firstVerbDone.add(e.word);
+        if (ctx.now >= nextFirstVerbLineAt) {
+          nextFirstVerbLineAt = ctx.now + 90_000;
+          react(ctx, 'verb:first', { user: e.name, word: e.word });
+        }
+      }
+      return;
+    }
+    if (e.kind !== 'shot') return;
+    ctx.log(`hoops: ${e.name} ${e.hit ? 'hit' : 'missed'} — ${e.streak} in a row`);
+    try {
+      noteVerb(ctx.state, 'shoot', e.user, e.targetId, { hit: e.hit }, ctx.now);
+    } catch (error) {
+      ctx.log(`neighbours could not take the shot: ${(error as Error).message}`, 'warn');
+    }
+    if (e.hit && e.streak === 3) react(ctx, 'hoops:streak', { user: e.name });
+    else if (!e.hit && e.misses === 4 && ctx.now >= nextBrickLineAt) {
+      nextBrickLineAt = ctx.now + 300_000;
+      react(ctx, 'hoops:brick', { user: e.name });
+    }
+  }
   function admit(ctx: Ctx, msg: ChatMessage) {
     if (ctx.state.seen.includes(msg.id)) return;
     if (msg.text.length > 1000 || msg.username.length > 40) {
       notice(ctx, 'Keep requests under 1,000 characters and names under 40.');
       return;
     }
+    // A chat verb: the figure on the pavement does it (verbs.ts). Only these words and !delete are commands.
+    if (parseVerb(msg.text)) return runChatVerb(ctx, msg);
     // A trusted chatter's command: neither a request nor a conversation.
     const command = msg.text.match(/^!delete\b\s*(.*)$/is);
     if (command) return deleteObject(ctx, msg, command[1].trim());
@@ -695,11 +982,14 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
           requestedArea: resolved.requestedArea,
           relativeTo: resolved.relativeTo,
           angle: resolved.angle,
+          giftTo: resolved.giftTo,
         });
         trim(ctx.state);
         ctx.state.notice = `Queued ${msg.username}'s request.`;
       });
       speak(ctx, `Got your idea, ${msg.username}. It's in the queue.`);
+      // The plain acknowledgement stays plain; the sulk is a voiced follow-up once it has cleared.
+      if (sulking(ctx.state.grudges, msg.username)) react(ctx, 'grudge:ack', { user: msg.username });
     } catch (error) {
       ctx.log(`admission save failed: ${(error as Error).message}`, 'alert');
       speak(ctx, 'I could not save that request. Please try again once storage is available.');
@@ -745,7 +1035,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       // A living build: the model named a behaviour; the app runs it. Edits keep what a piece has
       // unless the design says otherwise (calm the gorilla, wake the statue).
       const living = 'creature' in result ? result.creature : undefined;
-      if (living && !target?.creature && ctx.state.objects.filter((o) => o.creature && intact(o)).length >= MAX_CREATURES)
+      // The block's own birds and cat (wild) are nobody's and count against nobody.
+      if (living && !target?.creature && ctx.state.objects.filter((o) => o.creature && intact(o) && !o.wild).length >= MAX_CREATURES)
         throw new Error(
           `The yard has ${MAX_CREATURES} living things already. Ask to change one instead of adding another.`,
         );
@@ -768,35 +1059,68 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         requested = relativeCandidates(anchor, job.relativeTo.side, size);
       }
       // A neighbour walking to a build site has claimed that ground; nothing goes there meanwhile.
-      const placement = choosePlacement(
-        size,
-        [...ctx.state.objects, ...neighbourGhosts(ctx.state)],
-        ctx.state.survivor.position,
-        target,
-        requested,
-      );
+      // A living build redesigned where it stands is not placed on the ground at all: Rook walks
+      // to wherever near it he can get (a perched bird has the fence under it).
+      const placement =
+        target?.creature && intact(target) && job.operation !== 'move'
+          ? creatureWorkSpot(ctx.state, target, ctx.state.survivor.position)
+          : choosePlacement(
+              size,
+              [...ctx.state.objects, ...neighbourGhosts(ctx.state)],
+              ctx.state.survivor.position,
+              target,
+              requested,
+            );
+      // What the piece is for, how it behaves and how it moves — from the design when it says, else
+      // kept from the piece being edited. Rules only ever ride on a living build; every number is
+      // the app's (rules.ts clamps), and a repaint or a move keeps all three.
+      const nextCreature = living
+        ? freshCreature(living.behaviour, !!living.flying)
+        : target?.creature
+          ? structuredClone(target.creature)
+          : undefined;
+      const usesChosen = result.uses ?? (result.action === 'edit' ? target?.uses : undefined) ?? [];
+      const uses = [...new Set(usesChosen)].slice(0, MAX_USES);
+      // The wave loop's tactics (TACTICS in combat.ts): chat may have three holes and three sets of
+      // speakers standing at once; a hole is ground, never a wall, whatever the model called it.
+      const addsUse = (use: 'trap' | 'music') => uses.includes(use) && !target?.uses?.includes(use);
+      const standingWith = (use: 'trap' | 'music') =>
+        ctx.state.objects.filter((o) => o.id !== target?.id && !o.fixed && intact(o) && o.uses?.includes(use)).length;
+      if (addsUse('trap') && standingWith('trap') >= TACTICS.trap.max) throw new Error('Three holes is plenty. Fill one in first.');
+      if (addsUse('music') && standingWith('music') >= TACTICS.music.max)
+        throw new Error('Three sets of speakers is plenty for one street.');
+      const hole = uses.includes('trap');
+      const rules = nextCreature ? clampRules(result.rules ?? (result.action === 'edit' ? target?.rules : undefined)) : [];
+      const animations = clampAnimations(result.blueprint.animations, result.blueprint.parts.length);
+      const { animations: _drawn, ...bare } = result.blueprint;
+      const blueprint = animations.length ? { ...bare, animations } : bare;
       transaction(ctx, () => {
         job.preview = {
           id: target?.id ?? crypto.randomUUID(),
           revision: (target?.revision ?? 0) + 1,
-          blueprint: result.blueprint,
+          blueprint,
           position: placement.position,
           footprint: size,
           createdBy: target?.createdBy ?? job.username,
           editedBy: job.username,
           createdAt: target?.createdAt ?? ctx.now,
-          role:
-            job.operation === 'turret' || job.operation === 'barrier'
+          role: hole
+            ? 'decoration'
+            : job.operation === 'turret' || job.operation === 'barrier'
               ? job.operation
               : (target?.role ?? (result.action === 'build' ? result.role : undefined) ?? 'decoration'),
           fixed: target?.fixed,
-          passable: target?.passable,
+          passable: hole || target?.passable ? true : undefined,
           owner: target?.owner,
-          creature: living
-            ? freshCreature(living.behaviour, !!living.flying)
-            : target?.creature
-              ? structuredClone(target.creature)
-              : undefined,
+          uses: uses.length ? uses : undefined,
+          rules: rules.length ? rules : undefined,
+          // The piece's own verb (`!swim` at a pool): a build names one or none; an edit replaces or keeps. Never on a creature.
+          // A living build may carry only `ride` or `fight`; the block's own animals carry none.
+          verb: pieceVerbFor(result.verb ?? (result.action === 'edit' ? target?.verb : undefined), !!nextCreature, !!target?.wild),
+          wild: target?.wild,
+          // A gift is a new build for a neighbour; an edit keeps what the piece was and never makes it one.
+          giftTo: target ? target.giftTo : job.giftTo,
+          creature: nextCreature,
           maxHealth:
             job.operation === 'turret' || job.operation === 'barrier' || reborn ? undefined : target?.maxHealth,
         };
@@ -948,6 +1272,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       ctx.state.combat.archive,
       ctx.state.survivor.position,
       (id) => (repairSkips.get(id) ?? 0) > ctx.now || theirs.has(id),
+      // The sulk: a chatter whose creatures keep knocking his yard down gets their things fixed last in the tier.
+      (o) => !o.fixed && sulking(ctx.state.grudges, o.createdBy),
     );
     if (!pick) return false;
     const name = pick.object.blueprint.name;
@@ -1020,6 +1346,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       }
     }
     houseWatch(ctx);
+    tacticsWatch(ctx);
+    verbWatch(ctx);
     // Living builds run on their own clock, zombies paused or not. Damage is durable, so it saves;
     // a fallen piece changes the inspect list, so that bumps the world revision.
     const life = tickCreatures(ctx.state, dt, ctx.rng);
@@ -1031,6 +1359,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         ctx.log(`could not save creature damage: ${(error as Error).message}`, 'warn');
       }
     }
+    // Time heals: his grudges (grudges.ts) lose a point a quarter hour and are forgotten at zero.
+    decayTable(ctx.state.grudges, ctx.now);
     for (const e of life.events) {
       const by = ctx.state.objects.find((o) => o.id === e.id);
       if (e.kind === 'hit' && by && isHostile(by) && ctx.now >= nextCreatureLineAt) {
@@ -1039,6 +1369,31 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       if (e.kind === 'down') {
         const fallen = [...ctx.state.objects, ...ctx.state.combat.archive].find((o) => o.id === e.targetId);
         if (fallen?.creature) react(ctx, 'creature:down', { name: speakName(fallen) });
+        // A chatter's creature knocking something of his down (the fence, the house, the yard's own
+        // clutter, or someone else's creation): he remembers whose creature it was. A neighbour's
+        // hunter is nobody in chat, and a chatter wrecking their own thing is their business.
+        const culprit = by ? chatterKey(by.createdBy, NOT_CHATTERS) : undefined;
+        if (
+          culprit &&
+          fallen &&
+          (fallen.id.startsWith('fence-') ||
+            fallen.id === HOUSE_ID ||
+            (fallen.fixed && !fallen.owner && !fallen.wild) ||
+            (!fallen.fixed && fallen.createdBy.toLowerCase() !== culprit))
+        ) {
+          ctx.state.grudges ??= {};
+          bump(ctx.state.grudges, culprit, GRUDGE.knockedDown, ctx.now, `${speakName(by)} knocked ${speakName(fallen)} down`);
+        }
+      }
+    }
+    // The block's own small life (wildlife.ts): a downed bird goes, the pool refills, the operator's
+    // switch clears them. Only a change to the object list is worth a save.
+    if (wildlifeOn && tickWildlife(ctx.state, ctx.now, ctx.rng)) {
+      ctx.state.worldRevision++;
+      try {
+        ctx.checkpoint?.();
+      } catch (error) {
+        ctx.log(`could not save the wildlife: ${(error as Error).message}`, 'warn');
       }
     }
     // The neighbours go about their business on their own clock. A fault in their code must never
@@ -1061,6 +1416,7 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         ctx.log(`neighbours tick failed: ${(error as Error).message}`, 'warn');
       }
     }
+    for (const e of tickCrowd(ctx.state, ctx.now, dt, ctx.rng)) crowdEvent(ctx, e);
     reactionsDue(ctx);
     if (ctx.state.combat.archive.length >= 100)
       ctx.state.notice = 'Combat paused: blueprint archive is full.';
@@ -1084,18 +1440,34 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       nextWorkLineAt = 0;
       nextLegAt = 0;
       const pos = ctx.state.survivor.position;
-      if (
-        !ctx.state.idlePath.length &&
-        Math.hypot(pos.x - SURVIVOR_START.x, pos.z - SURVIVOR_START.z) > 0.2
-      ) {
-        ctx.state.idlePath = straighten(route(pos, SURVIVOR_START, ctx.state.objects) ?? []);
+      // Just became idle: pick where to rest — a seat chat built near the porch, else the steps.
+      if (!idleSince) {
+        idleSince = ctx.now;
+        restSpot = pickRestSpot(ctx.state);
+      }
+      const rest = restSpot ?? { at: SURVIVOR_START, facing: 0 };
+      if (!ctx.state.idlePath.length && Math.hypot(pos.x - rest.at.x, pos.z - rest.at.z) > 0.2) {
+        const path = route(pos, rest.at, ctx.state.objects);
+        // A seat he cannot get to (something went up in the way) is dropped for the steps.
+        if (!path && rest.seat) restSpot = { at: { ...SURVIVOR_START }, facing: 0 };
+        ctx.state.idlePath = straighten(path ?? []);
       }
       if (!stroll(ctx, dt)) {
-        ctx.state.survivor.activity = 'idle';
+        const there = Math.hypot(pos.x - rest.at.x, pos.z - rest.at.z) <= 0.2;
+        if (there && ctx.now - idleSince >= SIT_AFTER_MS) {
+          // Speakers in earshot and he dances; otherwise he sits — on the seat, or the steps.
+          const resting: SurvivorActivity = rest.dance ? 'dancing' : 'sitting';
+          if (ctx.state.survivor.activity !== resting) {
+            ctx.state.survivor.activity = resting;
+            ctx.state.survivor.facing = rest.facing;
+          }
+        } else ctx.state.survivor.activity = 'idle';
         idleLine(ctx);
       }
       return;
     }
+    idleSince = 0;
+    restSpot = undefined;
     nextIdleLineAt = 0;
     if (job.userId === ROOK && ctx.state.jobs.filter(active).length > 1) {
       // A viewer's request always comes first; Rook picks the repair up again when he is free.
@@ -1133,9 +1505,11 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
               : 'walk:repair'
             : job.operation === 'move' || job.operation === 'rotate'
               ? 'walk:move'
-              : job.targetId
-                ? 'walk:edit'
-                : 'walk:build';
+              : sulking(ctx.state.grudges, job.username)
+                ? 'walk:grudge' // building it anyway, and saying so
+                : job.targetId
+                  ? 'walk:edit'
+                  : 'walk:build';
         if (mutter(ctx, moment, { name: speakName(job.preview), user: job.username })) {
           preempted = false;
           nextWorkLineAt = ctx.now + 9000 + ctx.rng() * 6000;
@@ -1204,17 +1578,33 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         fail(ctx, job, 'That creation changed before this edit could finish. Please try again.');
         return;
       }
-      try {
-        choosePlacement(
-          preview.footprint,
-          ctx.state.objects,
-          ctx.state.survivor.position,
-          target,
-          preview.position,
-        );
-      } catch (error) {
-        fail(ctx, job, (error as Error).message);
-        return;
+      // A living build being redesigned in place (not moved) is met where it is: it may be perched
+      // over the fence or standing in a doorway, so ground placement does not apply, and its live
+      // state carries on — the same body in a new coat keeps its goal; a new behaviour starts fresh.
+      const inFlight = !!target?.creature && intact(target) && job.operation !== 'move' && !!preview.creature;
+      if (inFlight) {
+        const live = structuredClone(target!.creature!);
+        const reborn = preview.creature!.behaviour !== live.behaviour || !!preview.creature!.flying !== !!live.flying;
+        const sameRules = JSON.stringify(preview.rules ?? null) === JSON.stringify(target!.rules ?? null);
+        preview.position = { ...target!.position };
+        preview.creature = reborn
+          ? { ...preview.creature!, facing: live.facing, ...(preview.creature!.flying && live.flying ? { altitude: live.altitude } : {}) }
+          : sameRules
+            ? live
+            : { ...live, goal: undefined, path: [], targetId: undefined, moving: false, replanMs: 0 };
+      } else {
+        try {
+          choosePlacement(
+            preview.footprint,
+            ctx.state.objects,
+            ctx.state.survivor.position,
+            target,
+            preview.position,
+          );
+        } catch (error) {
+          fail(ctx, job, (error as Error).message);
+          return;
+        }
       }
       transaction(ctx, () => {
         if (target && (job.operation === 'repair' || job.operation === 'rebuild')) {
@@ -1242,14 +1632,28 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
           ...ctx.state.targets.filter((t) => t.userId !== job!.userId),
           { userId: job!.userId, objectId: preview.id },
         ].slice(-200);
+        if (job!.userId !== ROOK) {
+          // A chat job on a neighbour's piece: they take note of who did what (neighbours.ts).
+          if (target?.owner) noteChatEdit(ctx.state, target, job!.username, chatEditKindOf(job!), ctx.now);
+          // Amends with Rook: a repair they asked for, a defense, a gift to a neighbour.
+          const key = chatterKey(job!.username, NOT_CHATTERS);
+          if (key && ctx.state.grudges?.[key]) {
+            if (job!.operation === 'repair' || job!.operation === 'rebuild') bump(ctx.state.grudges, key, GRUDGE.repaired, ctx.now);
+            else if (!target && (preview.role === 'turret' || preview.role === 'barrier')) bump(ctx.state.grudges, key, GRUDGE.defended, ctx.now);
+            if (preview.giftTo && !target) bump(ctx.state.grudges, key, GRUDGE.gifted, ctx.now);
+          }
+        }
         job!.status = 'complete';
         delete job!.preview;
         job!.path = [];
         ctx.state.survivor.activity = 'idle';
+        const recipient = !target && preview.giftTo ? specOf(preview.giftTo)?.name : undefined;
         ctx.state.notice =
           job!.userId === ROOK
             ? `${job!.operation === 'rebuild' ? 'Rebuilt' : 'Patched up'} ${preview.blueprint.name}.`
-            : `Finished ${preview.blueprint.name}, suggested by ${job!.username}.`;
+            : recipient
+              ? `Finished ${preview.blueprint.name}, from ${job!.username} for ${recipient}.`
+              : `Finished ${preview.blueprint.name}, suggested by ${job!.username}.`;
         trim(ctx.state);
       });
       nextRepairAt = ctx.now + 5000;
@@ -1354,6 +1758,8 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       fresh.surveyCallsRemaining = previous.surveyCallsRemaining;
       fresh.surveyCallsUsed = previous.surveyCallsUsed;
       fresh.privileged = previous.privileged;
+      fresh.crowdHidden = previous.crowdHidden;
+      fresh.wildlifePaused = previous.wildlifePaused;
       fresh.lighting = previous.lighting;
       fresh.notice = 'Fresh start. The neighborhood is back the way it was — build something.';
       return fresh;
@@ -1364,6 +1770,14 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       inbox = undefined;
       nextRepairAt = 0;
       repairSkips.clear();
+      tacticsPrimed = false;
+      seenTraps.clear();
+      seenMusic.clear();
+      nextHeldLineAt = nextDanceLineAt = 0;
+      verbsPrimed = false;
+      seenVerbWords.clear();
+      firstVerbDone.clear();
+      nextVerbLineAt = nextFirstVerbLineAt = nextFightLineAt = nextDriveLineAt = 0;
       speechUntil = 0;
       nextIdleLineAt = 0;
       nextWorkLineAt = 0;
@@ -1376,7 +1790,10 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       lastHouseHealth = undefined;
       nextLegAt = 0;
       nextCreatureLineAt = 0;
+      idleSince = 0;
+      restSpot = undefined;
       nextNeighbourLineAt = 0;
+      lastBigCrowdAt = 0;
       resetNeighbourMemory();
       neighbourDesign = undefined;
       neighbourInbox = undefined;
@@ -1385,9 +1802,20 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
       surveyInbox = undefined;
       askedSurveys.clear();
       recent.length = 0;
+      resetWildlifeMemory();
+      resetCrowdMemory();
+      resetVerbMemory();
+      nextHonkLineAt = nextDanceCrowdLineAt = nextBrickLineAt = 0;
       transaction(ctx, () => {
         // Pieces an older save built under a neighbour's former name take the current one.
         if (adoptNames(ctx.state)) ctx.state.worldRevision++;
+        // Saves from before uses and animations: the trees learn to sway, the fence becomes a perch.
+        if (adoptLife(ctx.state)) ctx.state.worldRevision++;
+        // A run or a scrap does not survive a restart: the car is drawn where it is parked, the creature gets on with it.
+        for (const o of ctx.state.objects) {
+          if (o.driven) delete o.driven;
+          if (o.creature?.busyMs) o.creature.busyMs = 0;
+        }
         for (const job of ctx.state.jobs) {
           if (job.status === 'designing') job.status = 'queued';
         }
@@ -1413,6 +1841,19 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         blockSurvey = undefined;
         surveyInbox = undefined;
       };
+    },
+    /**
+     * Every arriving message, before classification: whoever speaks gets (or keeps) a figure on the
+     * pavement across the street (crowd.ts). Nothing is held; this is the audience, not admission.
+     */
+    receiveMessage(ctx, msg) {
+      if (msg.username.length > 40) return;
+      const { first, count } = noteChatter(ctx.state, msg, ctx.now);
+      if (first) react(ctx, 'crowd:first', { user: msg.username });
+      else if (count >= 10 && (!lastBigCrowdAt || ctx.now - lastBigCrowdAt >= 600_000)) {
+        lastBigCrowdAt = ctx.now;
+        react(ctx, 'crowd:many');
+      }
     },
     chatThrottleMs: 0,
     quickClassify: () => ({ intent: 'request' }),
@@ -1600,6 +2041,46 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         },
       },
       {
+        id: 'safehouse-wildlife-pause',
+        label: 'Send the wildlife away',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.wildlifePaused = true;
+            ctx.state.notice = 'The birds, the cat and the rats have made themselves scarce.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-wildlife-resume',
+        label: 'Let the wildlife back',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.wildlifePaused = false;
+            ctx.state.notice = 'The block has its birds back.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-crowd-hide',
+        label: 'Hide the crowd',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.crowdHidden = true;
+            ctx.state.notice = 'The pavement is clear: viewers are not drawn on the stream.';
+          });
+        },
+      },
+      {
+        id: 'safehouse-crowd-show',
+        label: 'Show the crowd',
+        run(ctx) {
+          transaction(ctx, () => {
+            ctx.state.crowdHidden = false;
+            ctx.state.notice = 'Viewers who speak in chat stand on the pavement across the street again.';
+          });
+        },
+      },
+      {
         id: 'safehouse-allowance',
         label: 'Reset AI call allowance',
         run(ctx) {
@@ -1668,6 +2149,32 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         },
       },
       {
+        id: 'safehouse-forgive',
+        label: 'Forgive a chatter',
+        input: { kind: 'text', label: 'username', placeholder: 'kick username', maxLength: 40 },
+        run(ctx, value) {
+          const name = String(value ?? '').trim().toLowerCase();
+          if (!name) return;
+          transaction(ctx, () => {
+            // Everyone lets it go at once: the neighbours' tables (neighbours.ts) and Rook's own.
+            forgive(ctx.state, name);
+            if (ctx.state.grudges) delete ctx.state.grudges[name];
+            ctx.state.notice = `${name} is forgiven, by everyone.`;
+          });
+        },
+      },
+      {
+        id: 'safehouse-forgive-all',
+        label: 'Forgive everyone',
+        run(ctx) {
+          transaction(ctx, () => {
+            forgive(ctx.state);
+            ctx.state.grudges = undefined;
+            ctx.state.notice = 'Clean slate. Nobody on the block holds anything against anyone.';
+          });
+        },
+      },
+      {
         id: 'safehouse-retry',
         label: 'Retry last failed request',
         run(ctx) {
@@ -1714,8 +2221,14 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         worldRevision: state.worldRevision,
         repairsPaused: state.repairsPaused ?? false,
         upcomingWave: describeRoster(waveRoster(state.combat.wave.number)),
+        crowd: crowdViews(state, engine.now),
+        crowdHidden: state.crowdHidden ?? false,
+        verbs: verbViews(state),
+        hoops: hoopsBoard(state, engine.now),
+        ...(state.effects?.length ? { effects: state.effects } : {}),
         neighbours: neighboursOn ? neighbourViews(state) : [],
         neighboursPaused: state.neighboursPaused ?? false,
+        wildlifePaused: state.wildlifePaused ?? false,
       };
       return {
         width: 1920,

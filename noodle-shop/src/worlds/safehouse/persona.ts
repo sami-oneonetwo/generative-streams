@@ -9,6 +9,9 @@ import { HOUSE_ID } from '../../shared/safehouseLayout';
 import { intact } from './combat';
 import { active, type SafehouseState } from './state';
 import { describeNeighbours } from './neighbours';
+import { describeCrowd } from './crowd';
+import { describeGrudges } from './grudges';
+import { describeHoops } from './scores';
 
 export const persona: Persona<SafehouseState> = {
   name: 'Rook',
@@ -25,13 +28,13 @@ WHAT IS TRUE. Only what the world state below says. Never claim a build is finis
 
 Answer the person who spoke to you, in their direction, and let the rest of chat overhear.`,
 
-  summarizeState(state: SafehouseState): string {
+  summarizeState(state: SafehouseState, now = Date.now()): string {
     const lines: string[] = [];
     const current = state.jobs.find(active);
     lines.push(
       current
         ? `you right now: ${describeActivity(state)} — "${current.label}"${current.userId === 'rook' ? ' (your own repair round)' : ` for ${current.username}`}, ${current.status}.`
-        : 'you right now: standing at the porch steps with nothing on.',
+        : `you right now: ${state.survivor.activity === 'sitting' ? 'sitting on the porch steps' : state.survivor.activity === 'dancing' ? 'dancing by the speakers' : 'standing at the porch steps'} with nothing on.`,
     );
     const pending = state.jobs.filter((j) => active(j) && j !== current);
     if (pending.length) lines.push(`waiting after that: ${pending.map((j) => `${j.label} (${j.username})`).join('; ')}.`);
@@ -66,6 +69,13 @@ Answer the person who spoke to you, in their direction, and let the rest of chat
     );
     const neighbours = describeNeighbours(state);
     if (neighbours) lines.push(`the neighbours: ${neighbours}. they look after their own places; you look after yours.`);
+    const crowd = describeCrowd(state, now);
+    if (crowd) lines.push(`${crowd}. they are the chatters, standing across the street; nobody else is out there.`);
+    // Whose creatures keep knocking his yard down: he builds their things all the same, just without the warmth.
+    const grudges = describeGrudges(state);
+    if (grudges) lines.push(`${grudges}. you still build whatever they ask; you are just short with them about it.`);
+    const hoops = describeHoops(state, now);
+    if (hoops) lines.push(`hoops (chat shooting at the basketball hoop with "!shoot", baskets/shots): ${hoops}.`);
     lines.push(
       `new designs: ${
         state.generationPaused
@@ -88,6 +98,10 @@ function describeActivity(state: SafehouseState): string {
       return 'hammering on a build';
     case 'repairing':
       return 'fixing zombie damage';
+    case 'sitting':
+      return 'sitting on the porch steps';
+    case 'dancing':
+      return 'dancing by the speakers';
     default:
       return 'standing about';
   }
