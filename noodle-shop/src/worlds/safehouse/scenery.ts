@@ -98,7 +98,7 @@ const SWING: PieceVerb = { word: 'swing', pose: 'sit', spot: 'on', seconds: 8, p
 const SLIDE: PieceVerb = { word: 'slide', pose: 'cheer', spot: 'beside', seconds: 5, pop: 'WHEEE' };
 const EAT: PieceVerb = { word: 'eat', pose: 'sit', spot: 'on', seconds: 10, pop: 'YUM' };
 /** The street's cars: `!drive` takes one up the road and back (crowd.ts RUN); a boxed-in one is refused. */
-const DRIVE: PieceVerb = { word: 'drive', pose: 'sit', spot: 'on', seconds: 12, pop: 'VROOM' };
+const DRIVE: PieceVerb = { word: 'drive', pose: 'sit', spot: 'on', seconds: 15, pop: 'VROOM' };
 /** Birds land on it. */
 const PERCH: Use[] = ['perch'];
 const SEAT: Use[] = ['seat'];

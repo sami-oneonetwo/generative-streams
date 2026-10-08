@@ -448,7 +448,7 @@ export const DEFAULT_POSE: Record<VerbWord, VerbPose> = {
   drive: 'sit', ride: 'sit', fight: 'punch',
 };
 /** Words with a length of their own: a drive and a ride are a trip, a fight a few rounds. Everything else eight seconds. */
-export const DEFAULT_SECONDS: Partial<Record<VerbWord, number>> = { drive: 12, ride: 12, fight: 5 };
+export const DEFAULT_SECONDS: Partial<Record<VerbWord, number>> = { drive: 15, ride: 12, fight: 5 };
 /** Words whose spot does not follow from the design's height: you get in a car and square up to a gorilla. */
 const DEFAULT_SPOT: Partial<Record<VerbWord, PieceVerb['spot']>> = { drive: 'on', ride: 'on', fight: 'beside' };
 /**

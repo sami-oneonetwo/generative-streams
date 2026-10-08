@@ -125,7 +125,7 @@ test('the three words: in the dictionary, their kinds, their defaults, their syn
   assert.deepEqual([...CREATURE_VERB_WORDS], ['ride', 'fight']);
   assert.ok(isCreatureVerb('fight') && isCreatureVerb('ride') && !isCreatureVerb('drive') && !isCreatureVerb('swim'));
   assert.ok(isRunVerb('drive') && isRunVerb('ride') && !isRunVerb('fight'));
-  assert.deepEqual(normalizeVerb({ word: 'drive' }, 1.8), { word: 'drive', pose: 'sit', spot: 'on', seconds: 12 }, 'a car is got into however tall it is');
+  assert.deepEqual(normalizeVerb({ word: 'drive' }, 1.8), { word: 'drive', pose: 'sit', spot: 'on', seconds: 15 }, 'a car is got into however tall it is');
   assert.deepEqual(normalizeVerb('ride', 1.6), { word: 'ride', pose: 'sit', spot: 'on', seconds: 12 });
   assert.deepEqual(normalizeVerb({ word: 'fight', pop: 'pow!' }, 0.5), { word: 'fight', pose: 'punch', spot: 'beside', seconds: 5, pop: 'POW!' }, 'a fight is squared up to, never stood on');
   assert.equal(DEFAULT_SECONDS.fight, 5);
@@ -167,7 +167,7 @@ test('fixtures: a car carries drive, a horse ride, a robot and a gorilla fight, 
   const car = await design('Build a car at -7,10');
   assert.equal(car.creature, undefined, 'a plain car stands still');
   assert.deepEqual(car.uses, ['vehicle']);
-  assert.deepEqual(car.verb, { word: 'drive', pose: 'sit', spot: 'on', seconds: 12, pop: 'VROOM' });
+  assert.deepEqual(car.verb, { word: 'drive', pose: 'sit', spot: 'on', seconds: 15, pop: 'VROOM' });
   const horse = await design('Build a horse');
   assert.equal(horse.creature?.behaviour, 'roam');
   assert.equal(horse.verb?.word, 'ride');
@@ -217,6 +217,42 @@ test('planRun: out to the lane, as far as the road is clear each way, back home;
   assert.equal(planRun(h.state, drive, 12), undefined);
 });
 
+test('a cramped road: the run laps the one clear leg, four times at most, and the driver sits in the parked car until the fifteen seconds are up', async () => {
+  const h = harness();
+  const car = piece('car', { x: -7, z: 10 }, { verb: { word: 'drive', pose: 'sit', spot: 'on', seconds: 15 }, size: [1.8, 1.8, 3.9] });
+  // A wall 6 m east leaves no east leg; one 9 m west leaves exactly the 6 m minimum: a 12 m lap, when 15 s wants 75 m.
+  h.state.objects.push(car, piece('wall-e', { x: -1, z: 10 }, { size: [1, 2, 6] }), piece('wall-w', { x: -16, z: 10 }, { size: [1, 2, 6] }));
+  const run = planRun(h.state, car, 15)!;
+  assert.ok(run, 'still a run');
+  assert.equal(run.length, 2 * RUN.lapsMax, `four laps of out-and-back: ${JSON.stringify(run)}`);
+  assert.ok(run.every((p) => p.x >= -13 && p.x <= -7), `never past either wall: ${JSON.stringify(run)}`);
+  await h.speak('dave', '!drive');
+  const dave = h.member('dave')!;
+  h.until(() => dave.errand?.phase === 'doing', 60);
+  assert.equal(dave.errand?.phase, 'doing');
+  const parked = { ...car.position };
+  let farthest = 0,
+    ticks = 0,
+    backAt: number | undefined;
+  while (car.driven && ticks < 80) {
+    h.tick();
+    ticks++;
+    if (!car.driven) break;
+    farthest = Math.max(farthest, dist(car.driven.at, parked));
+    if (!dave.errand?.run?.length) {
+      // Laps done with time on the verb: back on the spot, still aboard.
+      backAt ??= ticks;
+      assert.deepEqual(car.driven.at, parked, `drawn home while they sit it out (tick ${ticks})`);
+      assert.deepEqual(dave.position, parked, 'still in the seat');
+    }
+  }
+  assert.ok(Math.abs(farthest - 6) < 0.01, `six metres up the road and no more: ${farthest.toFixed(2)} m`);
+  assert.ok(backAt !== undefined && backAt >= 20 && backAt <= 27, `four short laps take about twelve seconds: back after ${backAt} ticks`);
+  assert.ok(ticks >= 29 && ticks <= 32, `out of the car once the fifteen seconds are up: ${ticks} ticks`);
+  assert.equal(car.driven, undefined);
+  assert.equal(dave.errand?.phase, 'returning');
+});
+
 test('!drive: the figure boards, the car goes up the street and back under them (drawn at driven.at, never moved), then they walk home', async () => {
   const h = harness();
   const job = await h.request('Build a car at -7,10', 'ana');
@@ -254,9 +290,9 @@ test('!drive: the figure boards, the car goes up the street and back under them 
   assert.equal(v.errand?.pose, 'sit');
   assert.equal(v.errand?.y, seatHeight(car));
   h.world.stateSchema.parse(JSON.parse(JSON.stringify(h.state)));
-  // The whole trip is about twelve seconds; then it is parked back where it was and dave walks home.
+  // The whole trip is about fifteen seconds; then it is parked back where it was and dave walks home.
   const drove = h.until(() => !car.driven, 60);
-  assert.ok(drove >= 12 && drove <= 30, `parked after ${drove} more ticks`);
+  assert.ok(drove >= 20 && drove <= 32, `parked after ${drove} more ticks`);
   assert.equal(car.driven, undefined);
   assert.deepEqual(car.position, parked);
   assert.equal(dave.errand?.phase, 'returning');

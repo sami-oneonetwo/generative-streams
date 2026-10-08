@@ -240,8 +240,13 @@ export function adoptLife(w: { objects: SafehouseObject[]; combat: CombatState }
         o.blueprint = { ...o.blueprint, animations: structuredClone(seed.blueprint.animations) };
         changed = true;
       }
-      // The park's own verbs (the pond to swim in): a piece chat has not redesigned takes the seed's.
-      if (!o.verb && seed.verb && o.revision === 1) {
+      // The park's own verbs (the pond to swim in): a piece chat has not redesigned takes the seed's, and
+      // while it still carries the seed's word it follows the seed's tuning too (how long a drive lasts).
+      if (
+        seed.verb &&
+        o.revision === 1 &&
+        (!o.verb || (o.verb.word === seed.verb.word && JSON.stringify(o.verb) !== JSON.stringify(seed.verb)))
+      ) {
         o.verb = structuredClone(seed.verb);
         changed = true;
       }

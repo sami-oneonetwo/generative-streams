@@ -69,6 +69,7 @@ export const RUN = {
   legMax: 22,
   clearance: 0.4, // metres round the piece's footprint that must be clear of anything solid
   seatY: { factor: 0.6, max: 1 }, // where the figure sits: part way up the piece
+  lapsMax: 4, // a short clear stretch is driven up and back this many times at most; seconds left over are sat out in the parked piece
   graceMs: 6_000, // a run may overrun its verb's seconds by this much before it is parked where it is
 };
 /** Chasing a living build (`!ride`, `!fight`): close enough counts; it may wander off a few times. */
@@ -288,10 +289,14 @@ export function planRun(w: World, piece: SafehouseObject, seconds: number): Grou
     west = Math.min(leg, extent(-1));
   if (Math.max(east, west) < RUN.legMin) return undefined;
   const legs = (east >= west ? [east, -west] : [-west, east]).filter((l) => Math.abs(l) >= RUN.legMin);
+  // The clear road may be far shorter than the seconds call for (cars parked either side): go up and
+  // back again until the trip is about the verb's length, a few laps at most. Any remainder is sat out parked.
+  const lap = legs.reduce((sum, l) => sum + 2 * Math.abs(l), 0);
+  const laps = Math.max(1, Math.min(RUN.lapsMax, Math.ceil((RUN.speed * seconds - 2 * out) / lap)));
   const path: GroundPoint[] = [];
   const onLane = out <= 0.01;
   if (!onLane) path.push(lane);
-  for (const l of legs) path.push({ x: lane.x + l, z: lane.z }, lane);
+  for (let i = 0; i < laps; i++) for (const l of legs) path.push({ x: lane.x + l, z: lane.z }, lane);
   if (!onLane) path.push(home);
   return path;
 }
@@ -643,14 +648,19 @@ function tickVerbErrand(w: World, m: CrowdMember, now: number, dt: number, rng: 
   if (e.phase === 'doing') {
     const p = piece!;
     if (kind === 'run') {
-      if (p.driven && e.run?.length && now <= e.until + RUN.graceMs) {
-        const heading = drive(p, e.run, dt);
-        if (heading !== undefined) {
-          p.driven.turn = turnFor(p, heading);
-          m.facing = heading;
+      if (p.driven && now <= e.until + RUN.graceMs) {
+        if (e.run?.length) {
+          const heading = drive(p, e.run, dt);
+          if (heading !== undefined) {
+            p.driven.turn = turnFor(p, heading);
+            m.facing = heading;
+          }
+          m.position = { ...p.driven.at };
+          if (e.run.length) return;
         }
+        // Back on the spot with seconds still on the verb: they stay in it till it is up.
         m.position = { ...p.driven.at };
-        if (e.run.length) return;
+        if (now < e.until) return;
       }
       // Parked (back where it started, or where it got to): out, and walk back.
       p.driven = undefined;

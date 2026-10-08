@@ -216,7 +216,7 @@ function usefulFixture(text: string): DesignResponse | undefined {
     return {
       action: 'build',
       uses: ['vehicle'],
-      verb: { word: 'drive', pose: 'sit', spot: 'on', seconds: 12, pop: 'VROOM' },
+      verb: { word: 'drive', pose: 'sit', spot: 'on', seconds: 15, pop: 'VROOM' },
       reply: 'A car. Type !drive.',
       blueprint: {
         name: 'Old car',
