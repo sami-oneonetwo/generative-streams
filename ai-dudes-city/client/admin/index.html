@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ai dudes admin</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0; padding: 24px; background: #0b0f14; color: #e8edf5;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px;
+    }
+    h1 { font-size: 18px; margin: 0 0 20px; color: #ffd25e; }
+    h2 { font-size: 13px; margin: 0 0 10px; color: #8a93a5; text-transform: uppercase; letter-spacing: 1px; }
+    h3 { font-size: 12px; margin: 14px 0 6px; color: #8a93a5; text-transform: uppercase; letter-spacing: 1px; }
+    main { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 1200px; }
+    section { background: #11151c; border: 1px solid #2a3340; border-radius: 8px; padding: 16px; }
+    section.wide { grid-column: 1 / -1; }
+    input[type="text"], input[type="number"], textarea {
+      background: #0d1117; color: #e8edf5; border: 1px solid #2a3340; border-radius: 4px;
+      padding: 7px 9px; font: inherit;
+    }
+    textarea { width: 100%; min-height: 120px; resize: vertical; font-size: 12px; }
+    button, a.btn {
+      background: #1a2233; color: #bcd8ff; border: 1px solid #3fa9f5; border-radius: 4px;
+      padding: 7px 12px; font: inherit; cursor: pointer; text-decoration: none; display: inline-block;
+    }
+    button:hover, a.btn:hover { background: #223049; }
+    button.small { padding: 4px 9px; font-size: 12px; }
+    label { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+    pre { background: #0d1117; border: 1px solid #2a3340; border-radius: 4px; padding: 10px; overflow: auto; margin: 0; font-size: 12px; white-space: pre-wrap; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    td, th { text-align: left; padding: 3px 8px 3px 0; border-bottom: 1px solid #1c222c; color: #8a93a5; vertical-align: top; }
+    th { color: #5a6472; }
+    td.intent { color: #37d67a; }
+    td.fallback { color: #ffb020; }
+    td.name { color: #e8edf5; white-space: nowrap; }
+    td.num { text-align: right; padding-right: 14px; }
+    details summary { cursor: pointer; color: #bcd8ff; }
+    details ul { margin: 6px 0 2px; padding-left: 18px; }
+    .err { color: #ff4d4f; }
+    .muted { color: #5a6472; }
+    .scroll { overflow-x: auto; }
+    .ok { color: #37d67a; } .bad { color: #ff4d4f; } .warn { color: #ffb020; }
+    * { box-sizing: border-box; }
+    a { color: #bcd8ff; }
+    input[type="password"] { background:#0d1117; color:#e8edf5; border:1px solid #2a3340; padding:7px; }
+    section { min-width:0; }
+    @media(max-width:700px) { body { padding:16px; } main { grid-template-columns:1fr; } label { flex-wrap:wrap; } }
+  </style>
+</head>
+<body>
+  <h1>ai dudes admin · <a href="/" target="_blank" rel="noopener">Open stream view ↗</a></h1>
+  <div class="row"><label for="operator-token">Operator token (if configured)</label><input id="operator-token" type="password" autocomplete="off" placeholder="Kept only in this page" /><button id="operator-connect">Connect</button></div>
+  <main>
+    <section class="wide">
+      <h2>Inject chat</h2>
+      <div class="row">
+        <input type="text" id="inj-user" placeholder="username" value="dave" style="width:130px" />
+        <input type="text" id="inj-text" placeholder="message" maxlength="1000" aria-label="Chat message" style="flex:1; min-width: 160px; max-width:100%" />
+        <button id="inj-send">send</button>
+      </div>
+      <div class="row" id="canned"></div>
+    </section>
+
+    <section class="wide">
+      <h2>Simulate chat</h2>
+      <p class="muted" style="margin:0 0 8px">One <b>username: message</b> per line. Send all posts every line at once, no delay — for testing many agents in parallel.</p>
+      <textarea id="sim-lines" spellcheck="false">alex: hi! I'm a grumpy pirate who loves boats
+bea: build me a tiny lighthouse
+cam: go hang out with alex and dance
+dina: make me look like a wizard
+eli: what's everyone up to?</textarea>
+      <div class="row" style="margin-top:8px"><button id="sim-send">Send all</button><span id="sim-result" class="muted"></span></div>
+    </section>
+
+    <section class="wide" id="dudes-section" hidden>
+      <h2>Characters</h2>
+      <pre id="dudes-ai"></pre>
+      <h3>Characters (<span id="dudes-count">0</span>)</h3>
+      <div class="scroll">
+        <table id="dudes-table"><thead><tr><th>name</th><th>title</th><th>turns</th><th>builds</th><th>inbox</th><th>muted</th><th>heard</th><th>persona</th></tr></thead><tbody></tbody></table>
+      </div>
+      <h3>Jobs</h3>
+      <pre id="dudes-jobs"></pre>
+      <h3>Objects</h3>
+      <pre id="dudes-objects"></pre>
+    </section>
+
+    <section class="wide" id="listener-section" hidden>
+      <h2>Listener</h2>
+      <pre id="listener-info"></pre>
+      <h3>Tips</h3>
+      <pre id="listener-tips"></pre>
+      <h3>Wishlist (<span id="listener-count">0</span>)</h3>
+      <div class="scroll">
+        <table id="listener-wishes"><thead><tr><th>count</th><th>status</th><th>wish</th><th>askers</th><th>examples</th><th>how</th></tr></thead><tbody></tbody></table>
+      </div>
+      <h3>Builder proposals</h3>
+      <pre id="builder-proposals"></pre>
+    </section>
+
+    <section>
+      <h2>Flags</h2>
+      <label><input type="checkbox" id="flag-kick-replies" /> Kick replies (posts replies to chat)</label>
+      <label>Time scale ×<input type="number" id="flag-timescale" min="1" max="10000" value="1" style="width:90px" />
+        <button class="small" id="flag-timescale-set">set</button>
+        <button class="small" data-ts="1">×1</button>
+        <button class="small" data-ts="60">×60</button>
+        <button class="small" data-ts="600">×600</button>
+      </label>
+    </section>
+
+    <section>
+      <h2>Kick</h2>
+      <div id="kick-info" class="row">loading…</div>
+      <div class="row">
+        <a class="btn" href="/kick/login">Connect Kick</a>
+        <button id="kick-resub">Resubscribe</button>
+      </div>
+    </section>
+
+    <section class="wide">
+      <h2>Engine</h2>
+      <div class="row">
+        <button id="btn-save">Force save</button>
+        <button id="btn-reset" title="Backs up the current world, then starts it over from an empty field">Reset world…</button>
+      </div>
+      <div class="row" id="actions"></div>
+      <div id="engine-info"></div>
+    </section>
+
+    <section class="wide">
+      <h2>Force event</h2>
+      <div class="row" id="events">loading…</div>
+    </section>
+
+    <section class="wide">
+      <h2>World state</h2>
+      <pre id="state-summary">loading…</pre>
+    </section>
+
+    <section class="wide" id="classifications-section">
+      <h2>Last classifications</h2>
+      <table id="classifications"><thead><tr><th>time</th><th>user</th><th>message</th><th>intent</th><th>conf</th><th>via</th></tr></thead><tbody></tbody></table>
+    </section>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>

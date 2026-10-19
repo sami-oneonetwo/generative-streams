@@ -14,7 +14,7 @@ try{
  const admin=await browser.newPage();await admin.goto(base+'/admin');await admin.getByRole('button',{name:'Pause AI generation',exact:true}).click();
  await page.waitForFunction(()=>document.getElementById('phase').textContent.includes('PAUSED'));
  await admin.locator('#inj-user').fill('inspect-smoke');await admin.locator('#inj-text').fill(`Paint #${id.slice(0,8)} blue`);await admin.locator('#inj-send').click();
- await page.waitForFunction(()=>document.getElementById('label').textContent.startsWith('Finished'),{},{timeout:90000});
+ await page.waitForFunction(()=>document.getElementById('speech').textContent.startsWith('Finished'),{},{timeout:90000});
  await page.reload();await page.waitForFunction(()=>document.getElementById('phase').textContent.includes('PAUSED'));
  const mobile=await browser.newPage({viewport:{width:400,height:800},reducedMotion:'reduce'});await mobile.goto(base);await mobile.waitForFunction(()=>document.querySelectorAll('#creations option').length>1);await mobile.selectOption('#creations',id);await mobile.locator('#inspect').waitFor({state:'visible'});await mobile.screenshot({path:'.claude/preview-tools/safehouse-smoke/inspection-mobile.png'});assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await admin.getByRole('button',{name:'Resume AI generation',exact:true}).click();assert.deepEqual(errors,[]);console.log(JSON.stringify({ok:true,inspection:true,manualOverride:true,pausedQuickEdit:true,mobile:true,errors}));

@@ -314,23 +314,27 @@ function start() {
           : s.generationAvailable
             ? 'READY FOR YOUR NEXT IDEA'
             : 'AI OFFLINE';
-    el('label').textContent = s.current?.label ?? s.notice;
+    // Kept short: Rook already says every notice in his bubble, so the panel shows only the job,
+    // the queue and, when idle, one thing to type.
+    el('label').textContent = s.current?.label ?? '';
+    el('label').hidden = !s.current;
     el('author').textContent = s.current
       ? s.current.requestedBy === 'Rook'
-        ? 'Rook, fixing zombie damage on his own'
-        : `Suggested by ${s.current.requestedBy}`
-      : `${s.objects.filter((o) => !o.fixed).length} community creations · ${s.objects.filter((o) => o.owner).length} built next door · ${s.objects.filter((o) => o.fixed && !o.owner).length} neighborhood pieces, all movable`;
-    // Everything here is chat-driven: the panel only ever suggests things to type. With nothing on,
-    // the hint alternates between builds and whichever chat verbs a standing piece unlocks.
+        ? 'Rook, fixing damage'
+        : `for ${s.current.requestedBy}`
+      : '';
+    el('author').hidden = !s.current;
+    // With nothing on, the hint alternates between builds and whichever chat verbs a standing piece unlocks.
     const unlocked = (s.verbs ?? []).filter((v) => v.unlocked).slice(0, 3);
     const verbTurn = unlocked.length > 0 && Math.floor(Date.now() / 20000) % 2 === 1;
     el('next').textContent = s.pending.length
-      ? `NEXT: ${s.pending[0].label} · ${s.pending.length} waiting`
+      ? `NEXT: ${s.pending[0].label}${s.pending.length > 1 ? ` · ${s.pending.length} waiting` : ''}`
       : s.current
-        ? 'Try: “Paint the house green” or “Repair the fence.”'
+        ? ''
         : verbTurn
           ? `Try: ${unlocked.map((v) => `${v.verb} ${VERB_HINTS[v.verb] ?? `(${v.needs})`}`).join(' · ')}`
-          : 'Try: “Build a turret in the front yard” or “Move the barricade next to the house.”';
+          : 'Try: “Build a turret” · “Paint the house green”';
+    el('next').hidden = !el('next').textContent;
     // The hoops scoreboard: the best shooters, hidden until somebody has shot.
     const rows = (s.hoops ?? []).slice(0, 3);
     el('hoops').hidden = rows.length === 0;

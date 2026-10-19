@@ -38,10 +38,11 @@ import type { Blueprint, CombatState, GroundPoint, Primitive, SafehouseObject } 
 import type { NeighbourActivity, NeighbourView, Regard } from '../../shared/safehouseTypes';
 import { contains, footprint, inflate, overlaps, HOUSE_ID, LANDMARKS, YARD_BOUNDS, type Rect } from '../../shared/safehouseLayout';
 import { SCENERY_LIMITS, fitBlueprint, measureBlueprint, type Limits } from './blueprint';
-import { MAX_CREATURES, TACTICS, initializeObject, intact, isHostile } from './combat';
+import { MAX_CREATURES, TACTICS, fenceRun, initializeObject, intact, isHostile } from './combat';
 import { freshCreature, flies } from './creatures';
 import { choosePlacement, route, straighten, walkableSegment } from './placement';
 import { rotateBlueprint } from './edits';
+import { NEIGHBOUR_HOUSE_SPOTS, rookHouse, sceneryObjects } from './scenery';
 import type { SurveyInput, ThemeSurvey, WorldCensus } from './survey';
 import { ttlFor } from './voice';
 
@@ -144,7 +145,7 @@ export const NEIGHBOURS: readonly NeighbourSpec[] = [
     home: { x: -20, z: 0.9 },
     lot: { minX: -30, maxX: -12.5, minZ: -17.5, maxZ: 4.6 },
     front: { minX: -26, maxX: -14.2, minZ: 0.6, maxZ: 4.3 },
-    back: { minX: -26, maxX: -14, minZ: -17, maxZ: -8.8 },
+    back: { minX: -26, maxX: -14, minZ: -17, maxZ: -11 },
     tint: 0x8d6b7c,
     hat: 'sun',
     rival: true,
@@ -240,7 +241,7 @@ export const NEIGHBOURS: readonly NeighbourSpec[] = [
     home: { x: 23, z: -0.1 },
     lot: { minX: 14.5, maxX: 30, minZ: -17.5, maxZ: 4.6 },
     front: { minX: 18, maxX: 28.5, minZ: -0.3, maxZ: 4.3 },
-    back: { minX: 18, maxX: 28.5, minZ: -17, maxZ: -9.8 },
+    back: { minX: 18, maxX: 28.5, minZ: -17, maxZ: -11 },
     tint: 0x5f7f9a,
     hat: 'cap',
     rival: false,
@@ -410,7 +411,8 @@ export interface NeighbourState {
   position: GroundPoint;
   facing: number;
   activity: NeighbourActivity;
-  path: GroundPoint[]; // the stroll home
+  path: GroundPoint[]; // the stroll home, or the current amble about the lot
+  ambleAt?: number; // when they set off on the next amble (see amble)
   job?: NeighbourJob;
   restMs: number; // countdown to the next peacetime project
   stages: Record<string, number>; // staged projects: veg growth, the car
@@ -877,8 +879,8 @@ function lantern(): Primitive[] {
 function kennel(): Primitive[] {
   return [
     box(1.2, 0.9, 1.3, 0x8a6f52, 0, 0.45, 0),
-    box(1.35, 0.1, 0.8, 0x5b4a3a, 0, 1.0, -0.35, [0.7, 0, 0]),
-    box(1.35, 0.1, 0.8, 0x5b4a3a, 0, 1.0, 0.35, [-0.7, 0, 0]),
+    box(1.35, 0.1, 0.8, 0x5b4a3a, 0, 1.12, -0.35, [-0.7, 0, 0]), // roof: both slabs rise to the ridge
+    box(1.35, 0.1, 0.8, 0x5b4a3a, 0, 1.12, 0.35, [0.7, 0, 0]),
     box(0.45, 0.55, 0.05, 0x2a2724, 0, 0.3, 0.66),
     cyl(0.16, 0.06, 0x8b8f86, 0.8, 0.03, 0.4),
   ];
@@ -1647,6 +1649,135 @@ export function adoptNames(w: { objects: SafehouseObject[]; combat: CombatState;
         changed = true;
       }
     }
+  }
+  return changed;
+}
+
+// ---- Their lots ----------------------------------------------------------------------------------
+
+/** The gap in a front fence, straight out from the porch steps. */
+const GATE = 4;
+/**
+ * Each lot next door is fenced like Rook's and joined to his: the back and front lines run on from
+ * the ends of his (z −18 and z 4.6) to the far side of the lot, and the side in between is his
+ * fence (x −11, x 13). The front has a gate in line with the porch. Theirs to keep up: owned, so
+ * the horde walks past it the way it walks past their houses, and a chat creature can still break it.
+ */
+export function neighbourFenceObjects(): SafehouseObject[] {
+  return NEIGHBOURS.flatMap((spec) => {
+    const west = spec.id === 'west';
+    const near = west ? -11 : 13,
+      far = west ? spec.lot.minX - 0.5 : spec.lot.maxX + 0.5,
+      [from, to] = west ? [far, near] : [near, far],
+      door = NEIGHBOUR_HOUSE_SPOTS[spec.houseId].x;
+    const objects: SafehouseObject[] = [];
+    const run = (x: number, z: number, length: number, axis: 'x' | 'z') =>
+      objects.push(
+        ...fenceRun(
+          x,
+          z,
+          length,
+          axis,
+          (i) => ({
+            id: ownId(spec, `fence-${i}`),
+            name: `${spec.name}'s fence section ${i + 1}`,
+            description: `The fence round ${spec.name}'s lot`,
+            createdBy: spec.name,
+            owner: spec.id,
+          }),
+          objects.length,
+        ),
+      );
+    run(from, -18, to - from, 'x');
+    run(far, -18, 22.6, 'z');
+    run(from, 4.6, door - GATE / 2 - from, 'x');
+    run(door + GATE / 2, 4.6, to - door - GATE / 2, 'x');
+    return objects;
+  });
+}
+/** The houses next door as they were before they took Rook's design: one box under two roof slabs. */
+const oldHouse = (b: Blueprint) =>
+  b.parts.length === 6 && b.parts[0].size.join() === '9,3.6,7' && b.parts[1].size.join() === '10,0.28,4.8';
+/** Where those old houses stood. A house still exactly there has not been moved by anyone since. */
+const OLD_HOUSE_SPOTS: Record<string, GroundPoint> = { 'scenery-house-west': { x: -20, z: -4 }, 'scenery-house-east': { x: 23, z: -5 } };
+/**
+ * Saves from before 2026-10-08 have the old houses next door and no fences round their lots. Run at
+ * start-up (index.ts); no version bump. A house still in the old design takes Rook's, in the colour
+ * it was last painted. A house still on its old spot moves back in line with his: the neighbour's
+ * own pieces in the way step back into their yard, and if one of chat's builds is there it waits
+ * for a later start. A house chat has redesigned or moved is left alone. Fence sections go up where
+ * none exists yet; the neighbour's pieces on the line step aside, chat's keep their spot and the
+ * section waits. A neighbour mid-job on a changed house drops the job (its preview is the old
+ * house). Every change bumps the revision. Returns whether anything changed.
+ */
+export function adoptNeighbourYards(w: { objects: SafehouseObject[]; combat: CombatState; neighbours: NeighbourState[] }): boolean {
+  let changed = false;
+  const seeds = new Map(sceneryObjects().filter((o) => NEIGHBOUR_HOUSE_IDS.includes(o.id)).map((o) => [o.id, o]));
+  const rect = (o: SafehouseObject) => footprint(o.position, o.footprint.width, o.footprint.depth);
+  // Builds, chat's (`theirs` false) or the neighbour's: what a house or a fence must not land on.
+  // Trees and the rest of the fixed neighbourhood may brush a fence line.
+  const builds = (except: string | undefined, owner?: string) =>
+    w.objects.filter(
+      (o) => o.id !== except && intact(o) && !o.passable && !o.creature && (!o.fixed || !!o.owner) && (owner === undefined || (o.owner ?? '') === owner),
+    );
+  /** The neighbour's own pieces standing on `ground` step back into their yard, where they can. */
+  const stepAside = (spec: NeighbourSpec, ground: Rect[]) => {
+    for (const o of builds(undefined, spec.id)) {
+      if (!ground.some((g) => overlaps(g, rect(o)))) continue;
+      const fits = (p: GroundPoint) => {
+        const r = footprint(p, o.footprint.width, o.footprint.depth);
+        return contains(spec.lot, { x: r.minX, z: r.minZ }) && contains(spec.lot, { x: r.maxX, z: r.maxZ }) && !ground.some((g) => overlaps(inflate(g, 0.35), r));
+      };
+      try {
+        const spots = [...spotsAround(spec.front, o.position), ...spotsAround(spec.back, middle(spec.back))].filter(fits);
+        o.position = choosePlacement(o.footprint, w.objects, o.position, o, spots).position;
+        o.revision++;
+        changed = true;
+      } catch {
+        // Nowhere free on their lot: it stays, and whatever needed the ground waits.
+      }
+    }
+  };
+  for (const list of [w.objects, w.combat.archive])
+    list.forEach((o, i) => {
+      const seed = seeds.get(o.id);
+      if (!seed) return;
+      const spec = NEIGHBOURS.find((s) => s.houseId === o.id)!;
+      const stranded = o.position.x === OLD_HOUSE_SPOTS[o.id].x && o.position.z === OLD_HOUSE_SPOTS[o.id].z;
+      const old = oldHouse(o.blueprint);
+      if (!old && !stranded) return;
+      let position = o.position;
+      if (stranded) {
+        const spot = inflate(rect(seed), 0.35);
+        const standing = list === w.objects;
+        if (standing && !builds(o.id, '').some((b) => overlaps(rect(b), spot))) stepAside(spec, [spot]);
+        if (!standing || !builds(o.id).some((b) => overlaps(rect(b), spot))) position = { ...seed.position };
+      }
+      if (!old && position === o.position) return;
+      list[i] = {
+        ...o,
+        revision: o.revision + 1,
+        blueprint: old ? { ...o.blueprint, parts: rookHouse(parseInt(dominantColor(o.blueprint).slice(1), 16)) } : o.blueprint,
+        position,
+        footprint: old ? { ...seed.footprint } : o.footprint,
+      };
+      for (const n of w.neighbours)
+        if (n.job?.targetId === o.id) {
+          n.job = undefined;
+          n.path = [];
+          n.activity = 'idle';
+        }
+      changed = true;
+    });
+  const present = new Set([...w.objects, ...w.combat.archive].map((o) => o.id));
+  // A lot gets its fence only where its house is (a world seeded without the neighbourhood gets none).
+  const fences = neighbourFenceObjects().filter((f) => !present.has(f.id) && present.has(specOf(f.owner!)!.houseId));
+  for (const spec of NEIGHBOURS) stepAside(spec, fences.filter((f) => f.owner === spec.id).map(rect));
+  const taken = builds(undefined).map(rect);
+  for (const f of fences) {
+    if (taken.some((t) => overlaps(t, rect(f)))) continue;
+    w.objects.push(f);
+    changed = true;
   }
   return changed;
 }
@@ -2909,8 +3040,8 @@ export function tickNeighbours(
       continue;
     }
     if (n.wish) {
-      // Waiting on the model: potter at home.
-      strollHome(n, spec, w, step);
+      // Waiting on the model: potter about the lot.
+      amble(n, spec, w, step, now, rng);
       continue;
     }
     const due = (n.impulses ?? []).find((i) => now - i.at >= IMPULSE_DELAY_MS);
@@ -2941,9 +3072,39 @@ export function tickNeighbours(
       }
       n.restMs = pace.restMs * (0.5 + rng() * 0.5); // nothing to do; try again later
     }
-    strollHome(n, spec, w, step);
+    amble(n, spec, w, step, now, rng);
   }
   return { changed, events };
+}
+/** Nothing on: a few metres somewhere else on their own lot, a breather, a few metres more — never standing still for long. */
+function amble(n: NeighbourState, spec: NeighbourSpec, w: World, step: number, now: number, rng: () => number) {
+  const breather = () => now + 2500 + rng() * 5500;
+  if (n.path.length) {
+    const r = advance(n, w, step, WALK_SPEED * 0.6);
+    if (r === 'blocked') n.path = [];
+    n.activity = r === 'walking' ? 'walking' : 'idle';
+    if (r !== 'walking') n.ambleAt = breather();
+    return;
+  }
+  n.activity = 'idle';
+  if (n.ambleAt === undefined) n.ambleAt = breather();
+  if (now < n.ambleAt) return;
+  const area = inflate(spec.lot, -1.2),
+    snap = (v: number) => Math.round(v * 2) / 2;
+  for (let i = 0; i < 8; i++) {
+    const target = {
+      x: snap(area.minX + rng() * (area.maxX - area.minX)),
+      z: snap(area.minZ + rng() * (area.maxZ - area.minZ)),
+    };
+    if (distance(target, n.position) < 2.5) continue;
+    const path = route(n.position, target, w.objects);
+    if (path && path.length <= 40) {
+      n.path = straighten(path);
+      n.ambleAt = undefined;
+      return;
+    }
+  }
+  n.ambleAt = now + 3000; // nowhere reachable just now; try again shortly
 }
 function strollHome(n: NeighbourState, spec: NeighbourSpec, w: World, step: number) {
   if (!n.path.length && distance(n.position, spec.home) > 0.3) {
@@ -3065,7 +3226,7 @@ const MINE_GATE_MS = 3 * 60_000,
 // picking on a creature of hers; Jake calls the fight, cheers the winner and the wheels.
 const BRAWL_GATE_MS = 3 * 60_000, // Marge on a scrap outside her house or with her hunter: a word this often at most
   RACERS_GATE_MS = 4 * 60_000, // ...and on somebody driving past
-  STREET_M = 12, // how far from her house a scrap or a drive is her business
+  STREET_M = 14, // how far from her house a scrap or a drive is her business: the street out front (it sits 5.7 m back, like Rook's)
   SCRAP_ODDS = 1 / 2, // Jake on a scrap starting near his place
   WHEELS_ODDS = 1 / 3; // ...and on somebody driving near his place (a ride shares FUN_ODDS)
 /** Jake warms to a chatter by one for a reason, at most once per chatter per reason in ten minutes; a favourite is told to Rook. */

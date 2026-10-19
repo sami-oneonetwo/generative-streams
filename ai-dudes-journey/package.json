@@ -1,0 +1,37 @@
+{
+  "name": "ai-dudes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,client \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "tsx watch src/index.ts",
+    "dev:client": "node scripts/build-client.mjs --watch",
+    "start": "node scripts/build-client.mjs && tsx src/index.ts",
+    "demo": "DUDES_FIXTURES=1 KICK_DISABLED=true KICK_REPLIES_ENABLED=false DATA_DIR=data/demo PORT=4510 npm start",
+    "build": "npm run typecheck && node scripts/build-client.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test scripts/*.test.ts",
+    "inject": "node scripts/inject.mjs",
+    "builder": "node scripts/wish-builder.mjs"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "three": "^0.160.1",
+    "ws": "^8.18.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/three": "^0.160.0",
+    "@types/ws": "^8.5.0",
+    "concurrently": "^9.0.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -140,53 +140,73 @@ export function initializeObject(o: SafehouseObject): SafehouseObject {
     nextShotAt: o.nextShotAt ?? 0,
   };
 }
+/**
+ * A straight fence line from (x, z) along `axis`, cut into 3 m sections: pickets and two
+ * rails each. `section(i)` names and owns section i; Rook's and the neighbours' share this.
+ */
+export function fenceRun(
+  x: number,
+  z: number,
+  length: number,
+  axis: 'x' | 'z',
+  section: (i: number) => Pick<SafehouseObject, 'id' | 'createdBy' | 'owner'> & { name: string; description: string },
+  first = 0,
+): SafehouseObject[] {
+  const objects: SafehouseObject[] = [];
+  for (let i = 0; i < length; i += 3) {
+    const len = Math.min(3, length - i);
+    const p = { x: x + (axis === 'x' ? i + len / 2 : 0), z: z + (axis === 'z' ? i + len / 2 : 0) };
+    const parts: Primitive[] = [];
+    for (let k = -len / 2 + 0.15; k + 0.12 <= Math.max(0.5, len) / 2 + 1e-9; k += 0.3) // pickets, all inside the footprint
+      parts.push({
+        shape: 'box',
+        position: [axis === 'x' ? k : 0, 0.9, axis === 'z' ? k : 0],
+        size: axis === 'x' ? [0.24, 1.8, 0.12] : [0.12, 1.8, 0.24],
+        rotation: [0, 0, 0],
+        color: '#8c8164',
+      });
+    for (const y of [0.5, 1.3])
+      parts.push({
+        shape: 'box',
+        position: [0, y, 0],
+        size: axis === 'x' ? [len, 0.12, 0.16] : [0.16, 0.12, len],
+        rotation: [0, 0, 0],
+        color: '#746b55',
+      });
+    const { name, description, ...who } = section(first + objects.length);
+    objects.push(
+      initializeObject({
+        ...who,
+        revision: 1,
+        blueprint: { name, description, parts },
+        position: p,
+        footprint: {
+          width: axis === 'x' ? Math.max(0.5, len) : 0.5,
+          depth: axis === 'z' ? Math.max(0.5, len) : 0.5,
+        },
+        editedBy: who.createdBy,
+        createdAt: 0,
+        role: 'barrier',
+        fixed: true,
+        uses: ['perch'], // birds sit on the fence
+      }),
+    );
+  }
+  return objects;
+}
 export function fenceObjects(): SafehouseObject[] {
   const objects: SafehouseObject[] = [];
-  function run(x: number, z: number, length: number, axis: 'x' | 'z') {
-    for (let i = 0; i < length; i += 3) {
-      const len = Math.min(3, length - i);
-      const p = { x: x + (axis === 'x' ? i + len / 2 : 0), z: z + (axis === 'z' ? i + len / 2 : 0) };
-      const parts: Primitive[] = [];
-      for (let k = -len / 2 + 0.15; k < len / 2; k += 0.3)
-        parts.push({
-          shape: 'box',
-          position: [axis === 'x' ? k : 0, 0.9, axis === 'z' ? k : 0],
-          size: axis === 'x' ? [0.24, 1.8, 0.12] : [0.12, 1.8, 0.24],
-          rotation: [0, 0, 0],
-          color: '#8c8164',
-        });
-      for (const y of [0.5, 1.3])
-        parts.push({
-          shape: 'box',
-          position: [0, y, 0],
-          size: axis === 'x' ? [len, 0.12, 0.16] : [0.16, 0.12, len],
-          rotation: [0, 0, 0],
-          color: '#746b55',
-        });
-      objects.push(
-        initializeObject({
-          id: `fence-${objects.length}`,
-          revision: 1,
-          blueprint: {
-            name: `Fence section ${objects.length + 1}`,
-            description: 'Salvaged perimeter fence',
-            parts,
-          },
-          position: p,
-          footprint: {
-            width: axis === 'x' ? Math.max(0.5, len) : 0.5,
-            depth: axis === 'z' ? Math.max(0.5, len) : 0.5,
-          },
-          createdBy: 'Neighborhood',
-          editedBy: 'Neighborhood',
-          createdAt: 0,
-          role: 'barrier',
-          fixed: true,
-          uses: ['perch'], // birds sit on the fence
-        }),
-      );
-    }
-  }
+  const run = (x: number, z: number, length: number, axis: 'x' | 'z') =>
+    objects.push(
+      ...fenceRun(
+        x,
+        z,
+        length,
+        axis,
+        (i) => ({ id: `fence-${i}`, name: `Fence section ${i + 1}`, description: 'Salvaged perimeter fence', createdBy: 'Neighborhood' }),
+        objects.length,
+      ),
+    );
   run(-11, -18, 24, 'x');
   run(-11, -18, 22.6, 'z');
   run(13, -18, 22.6, 'z');

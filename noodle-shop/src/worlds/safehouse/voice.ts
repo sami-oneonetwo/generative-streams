@@ -561,6 +561,7 @@ export function speakName(o: { id: string; blueprint: { name: string } } | undef
   if (!o) return 'that';
   if (o.id === HOUSE_ID) return 'the house';
   if (/^fence-/.test(o.id)) return 'the fence';
+  if (/^neighbour-\w+-fence-/.test(o.id)) return o.blueprint.name.trim().replace(/ section \d+$/, ''); // "Marge's fence"
   const name = o.blueprint.name.trim().replace(/[.!]+$/, '');
   if (!name) return 'that';
   if (/^\w+'s\b/.test(name)) return name; // "Rook's car"

@@ -89,10 +89,11 @@ export function buildEnvironment(scene: THREE.Scene): EnvironmentHandles {
 
   function distantHouse(x: number, z: number): void {
     box(9, 3.6, 7, 0x8c8b78, x, 1.8, z, world, cache);
-    const roofA = box(10, 0.28, 4.8, 0x656d63, x, 4.05, z - 1.75, world, cache);
-    roofA.rotation.x = 0.4;
-    const roofB = box(10, 0.28, 4.8, 0x656d63, x, 4.05, z + 1.75, world, cache);
-    roofB.rotation.x = -0.4;
+    // +X tips a slab's +Z end down: the back slab takes −X to rise to the ridge, the front one +X.
+    const roofA = box(10, 0.28, 4.8, 0x656d63, x, 4.2, z - 1.75, world, cache);
+    roofA.rotation.x = -0.4;
+    const roofB = box(10, 0.28, 4.8, 0x656d63, x, 4.2, z + 1.75, world, cache);
+    roofB.rotation.x = 0.4;
     for (const xx of [-2.8, 2.8]) box(1.4, 1.35, 0.04, 0x47554e, x + xx, 1.9, z + 3.53, world, cache);
     box(1.15, 2.1, 0.04, 0x655f4c, x, 1.05, z + 3.54, world, cache);
   }

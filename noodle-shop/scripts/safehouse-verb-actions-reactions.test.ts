@@ -45,7 +45,7 @@ const drive: PieceVerb = { word: 'drive', pose: 'sit', spot: 'on', seconds: 12, 
 const jakesGorilla = () => piece('gorilla', { x: 26, z: 4 }, { createdBy: 'Erin', editedBy: 'Erin', creature: freshCreature('roam'), verb: fight });
 /** A chat horse in the same spot. */
 const jakesHorse = () => piece('horse', { x: 26, z: 4 }, { createdBy: 'Erin', editedBy: 'Erin', creature: freshCreature('roam'), verb: ride });
-/** A chat gorilla on the street in front of Marge's, off her lot, ten and a half metres from her house (at −20,−4). */
+/** A chat gorilla on the street in front of Marge's, off her lot, twelve metres from her house (at −20,−5.7). */
 const streetGorilla = () => piece('street-gorilla', { x: -20, z: 7 }, { createdBy: 'Erin', editedBy: 'Erin', creature: freshCreature('roam'), verb: fight });
 /** A gorilla on the street in the middle of the block: twenty-seven metres from Marge's house, nineteen from Jake's home — nobody's business. */
 const farGorilla = () => piece('far-gorilla', { x: 5, z: 7 }, { createdBy: 'Erin', editedBy: 'Erin', creature: freshCreature('roam'), verb: fight });
@@ -53,7 +53,7 @@ const farGorilla = () => piece('far-gorilla', { x: 5, z: 7 }, { createdBy: 'Erin
 const margesHunter = () => piece('neighbour-west-hunter', { x: -16, z: 2 }, { owner: 'west', fixed: true, createdBy: 'Marge', editedBy: 'Marge', creature: freshCreature('fight'), verb: fight });
 /** A horse on Marge's lot. */
 const lawnHorse = () => piece('lawn-horse', { x: -16, z: 2 }, { createdBy: 'Erin', editedBy: 'Erin', creature: freshCreature('roam'), verb: ride });
-/** A car eleven metres from Marge's house, on the road. */
+/** A car under thirteen metres from Marge's house, on the road. */
 const streetCar = () => piece('street-car', { x: -20, z: 9 }, { createdBy: 'Erin', editedBy: 'Erin', footprint: { width: 2, depth: 4 }, verb: drive });
 /** A car thirty metres from Marge's house, eight from Jake's home. */
 const jakesCar = () => piece('jakes-car', { x: 24, z: 8 }, { createdBy: 'Erin', editedBy: 'Erin', footprint: { width: 2, depth: 4 }, verb: drive });

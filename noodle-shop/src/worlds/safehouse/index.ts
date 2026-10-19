@@ -56,7 +56,7 @@ import {
 } from './combat';
 import { tickCreatures, freshCreature } from './creatures';
 import { parseRequest, resolveTarget, applyQuickEdit, rotateBlueprint, relativeCandidates } from './edits';
-import { sceneryObjects } from './scenery';
+import { adoptTilts, sceneryObjects } from './scenery';
 import { tickWildlife, adoptLife, resetWildlifeMemory } from './wildlife';
 import { migrateState, defaultAllowance, defaultSurveyAllowance } from './state';
 import { pickRepairTarget, repairMs } from './repair';
@@ -94,6 +94,8 @@ import {
   FIXTURE_PACE,
   NEIGHBOUR_HOUSE_IDS,
   adoptNames,
+  adoptNeighbourYards,
+  neighbourFenceObjects,
   type NeighbourEvent,
   type Pace,
   type ReadyDesign,
@@ -1740,14 +1742,14 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
     stateSchema,
     createInitialState: () => {
       const state = createInitialState();
-      if (options.seedScenery ?? true) state.objects = [...sceneryObjects(), ...fenceObjects()];
+      if (options.seedScenery ?? true) state.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
       return state;
     },
     migrate: migrateState,
     reset(previous) {
       // Cost controls are the operator's, not the world's: a reset keeps them.
       const fresh = createInitialState();
-      if (options.seedScenery ?? true) fresh.objects = [...sceneryObjects(), ...fenceObjects()];
+      if (options.seedScenery ?? true) fresh.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
       fresh.callsRemaining = previous.callsRemaining;
       fresh.allowanceEnforced = previous.allowanceEnforced;
       fresh.callsUsed = previous.callsUsed;
@@ -1811,6 +1813,9 @@ export function createSafehouseWorld(options: SafehouseOptions = {}): WorldModul
         if (adoptNames(ctx.state)) ctx.state.worldRevision++;
         // Saves from before uses and animations: the trees learn to sway, the fence becomes a perch.
         if (adoptLife(ctx.state)) ctx.state.worldRevision++;
+        // Saves from before 2026-10-08: roofs and the slide tilted the right way, the houses next door in Rook's design, fenced.
+        if (adoptNeighbourYards(ctx.state)) ctx.state.worldRevision++;
+        if (adoptTilts(ctx.state)) ctx.state.worldRevision++;
         // A run or a scrap does not survive a restart: the car is drawn where it is parked, the creature gets on with it.
         for (const o of ctx.state.objects) {
           if (o.driven) delete o.driven;

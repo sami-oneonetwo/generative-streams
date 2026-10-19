@@ -29,6 +29,7 @@ import {
   oneUp,
   adoptNames,
   neighbourViews,
+  neighbourFenceObjects,
 } from '../src/worlds/safehouse/neighbours';
 import { renderedPool } from '../src/worlds/safehouse/voice';
 import { adoptLife } from '../src/worlds/safehouse/wildlife';
@@ -80,7 +81,7 @@ const piece = (
 
 test('the roster: two neighbours with houses in the scenery, lots inside the block, homes they can walk from', () => {
   assert.equal(NEIGHBOURS.length, 2);
-  const scenery = [...sceneryObjects(), ...fenceObjects()];
+  const scenery = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
   for (const spec of NEIGHBOURS) {
     const home = scenery.find((o) => o.id === spec.houseId)!;
     assert.ok(home, `${spec.name}'s house is seeded`);
@@ -191,7 +192,8 @@ function harness(
     for (let i = 0; i < steps && !done(); i++) await step();
     assert.ok(done(), `${label} (within ${steps / 2} s)`);
   }
-  const owned = (id: string) => state.objects.filter((o) => o.owner === id && intact(o));
+  // What they built: the fence round each lot is theirs too, but seeded rather than built.
+  const owned = (id: string) => state.objects.filter((o) => o.owner === id && intact(o) && !/^neighbour-\w+-fence-/.test(o.id));
   const neighbour = (id: string) => state.neighbours.find((n) => n.id === id)!;
   return { world, state, ctx, spoken, logged, step, until, owned, neighbour, stop: () => stop?.() };
 }
@@ -517,7 +519,7 @@ test('state v8: a v7 world gains the neighbours and nothing else moves; the worl
   assert.equal(STATE_VERSION, 9);
   assert.equal(createSafehouseWorld().meta.stateVersion, STATE_VERSION);
   const fresh = createInitialState();
-  fresh.objects = [...sceneryObjects(), ...fenceObjects()];
+  fresh.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
   const { neighbours: _gone, ...rest } = structuredClone(fresh);
   const v7 = { ...rest, version: 7 } as unknown as Record<string, unknown>;
   const migrated = migrateState(v7, 7);
@@ -539,7 +541,7 @@ test('state v8: a v7 world gains the neighbours and nothing else moves; the worl
 
 test('state v9: the yards are capped to five, the surplus is dropped, and defenses are left alone', () => {
   const fresh = createInitialState();
-  fresh.objects = [...sceneryObjects(), ...fenceObjects()];
+  fresh.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
   // A v8 world where Marge has hoarded: eighteen yard pieces, plus a barricade and a turret.
   const hoard = Array.from({ length: 18 }, (_, i) =>
     piece(`neighbour-west-whim-${i}`, { x: -20 + (i % 5) * 0.2, z: -10 + i * 0.2 }, undefined, {
@@ -579,7 +581,7 @@ test('state v9: the yards are capped to five, the surplus is dropped, and defens
   assert.equal(migrated.neighbours[0].job, undefined);
   assert.equal(migrated.neighbours[0].activity, 'idle');
   // Scenery and the wave clock are not this migration's business.
-  const sceneryBefore = [...sceneryObjects(), ...fenceObjects()];
+  const sceneryBefore = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
   for (const o of sceneryBefore) {
     const now = migrated.objects.find((x) => x.id === o.id)!;
     assert.deepEqual(now.position, o.position, `${o.id} did not move`);
@@ -818,7 +820,7 @@ test('the dynamic: Marge answers a thing Jake built with a bigger one of the sam
 
 test('an older save built under the name Dev: at start-up the pieces, the house and the builder take the name Jake', () => {
   const state = createInitialState();
-  state.objects = [...sceneryObjects(), ...fenceObjects()];
+  state.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects()];
   const house = state.objects.find((o) => o.id === 'scenery-house-east')!;
   house.blueprint = { ...house.blueprint, description: 'Dev lives here' };
   house.editedBy = 'Dev';
@@ -846,7 +848,7 @@ test('an older save built under the name Dev: at start-up the pieces, the house 
   stateSchema.parse(state);
   // Through the world: start() does it, and the ownership grammar follows the new name.
   const fresh = createInitialState();
-  fresh.objects = [...sceneryObjects(), ...fenceObjects(), structuredClone({ ...car, blueprint: { ...car.blueprint, name: "Dev's project car" }, createdBy: 'Dev', editedBy: 'Dev' })];
+  fresh.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects(), structuredClone({ ...car, blueprint: { ...car.blueprint, name: "Dev's project car" }, createdBy: 'Dev', editedBy: 'Dev' })];
   const world = createSafehouseWorld({ seedScenery: true, fixture: true });
   const ctx: WorldCtx<SafehouseState> = {
     state: fresh,
@@ -967,7 +969,7 @@ test('adoptLife tags an older save\'s hoop for the interpreter, and a hoop never
   const state = createInitialState();
   const hoop = piece('neighbour-east-hoop', { x: 22, z: 2 }, undefined, { owner: 'east', fixed: true });
   hoop.blueprint.name = "Jake's basketball hoop"; // recognised by its catalogue name, not its id
-  state.objects = [...sceneryObjects(), ...fenceObjects(), hoop];
+  state.objects = [...sceneryObjects(), ...fenceObjects(), ...neighbourFenceObjects(), hoop];
   assert.equal(hoop.uses, undefined);
   assert.equal(adoptLife(state), true);
   assert.deepEqual(hoop.uses, ['hoop']);

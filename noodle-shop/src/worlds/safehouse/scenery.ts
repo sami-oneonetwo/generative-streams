@@ -2,7 +2,7 @@
 // painted, redesigned, moved, damaged and rebuilt like a chat creation. Rook's
 // house is one closed, roofed piece in the middle of the yard so chat builds
 // around it; there is no interior to see or furnish.
-import type { Blueprint, GroundPoint, PartAnimation, PieceVerb, Primitive, SafehouseObject, Use } from '../../shared/safehouseTypes';
+import type { Blueprint, CombatState, GroundPoint, PartAnimation, PieceVerb, Primitive, SafehouseObject, Use } from '../../shared/safehouseTypes';
 import { HOUSE_ID } from '../../shared/safehouseLayout';
 import { SCENERY_LIMITS, measureBlueprint } from './blueprint';
 import { initializeObject } from './combat';
@@ -141,6 +141,11 @@ export const RETIRED_SCENERY_IDS = [
   'scenery-couch',
   'scenery-coffee-table',
 ];
+/** Where the houses next door stand: in line with Rook's, which is at (0, -5.7). */
+export const NEIGHBOUR_HOUSE_SPOTS: Record<string, GroundPoint> = {
+  'scenery-house-west': { x: -20, z: -5.7 },
+  'scenery-house-east': { x: 23, z: -5.7 },
+};
 /** Yard clutter that moved with the house; untouched copies follow it, edited ones stay put. */
 export const RELAID_SCENERY_IDS = ['scenery-barricade', 'scenery-crate', 'scenery-planks', 'scenery-board'];
 
@@ -174,40 +179,33 @@ function barrel(x: number, z: number): Primitive[] {
     cyl(0.34, 0.02, 0x344849, x, 1.175, z),
   ];
 }
-function house(): Primitive[] {
-  return [
-    box(9, 3.6, 7, 0x8c8b78, 0, 1.8, 0),
-    box(10, 0.28, 4.8, 0x656d63, 0, 4.05, -1.75, [0.4, 0, 0]),
-    box(10, 0.28, 4.8, 0x656d63, 0, 4.05, 1.75, [-0.4, 0, 0]),
-    box(1.4, 1.35, 0.04, 0x47554e, -2.8, 1.9, 3.53),
-    box(1.4, 1.35, 0.04, 0x47554e, 2.8, 1.9, 3.53),
-    box(1.15, 2.1, 0.04, 0x655f4c, 0, 1.05, 3.54),
-  ];
-}
 /**
  * Rook's place: a boarded-up bungalow with a porch facing the street. The body
  * sits at local z -1 so the porch steps and the roof overhang balance around
  * the origin (footprints are measured symmetrically). Parts are ordered so a
- * rebuild rises foundation → walls → roof → porch → boards.
+ * rebuild rises foundation → walls → roof → porch → boards. The houses next door
+ * are the same design in their own wall colour.
+ *
+ * Tilts are three.js's right-handed radians: +X tips a part's +Z end down, +Z lifts
+ * its +X end. So the rear (−Z) roof slab takes −X to rise to the ridge.
  */
-function rookHouse(): Primitive[] {
-  const wall = 0x9c9682,
-    roof = 0x5b635a,
+export function rookHouse(wall = 0x9c9682): Primitive[] {
+  const roof = 0x5b635a,
     plank = 0x8d7856,
     boarded = 0x3e4a44,
     porch = 0x7d6e52;
   const parts: Primitive[] = [
     box(8.8, 0.4, 6.8, 0x6d685a, 0, 0.2, -1), // foundation
     box(8.6, 3.4, 6.6, wall, 0, 1.7, -1), // walls
-    box(9.6, 0.26, 4, roof, 0, 4, -2.55, [0.42, 0, 0]), // rear roof slab
-    box(9.6, 0.26, 4, roof, 0, 4, 0.55, [-0.42, 0, 0]), // front roof slab
+    box(9.6, 0.26, 4, roof, 0, 4.1, -2.55, [-0.42, 0, 0]), // rear roof slab
+    box(9.6, 0.26, 4, roof, 0, 4.1, 0.55, [0.42, 0, 0]), // front roof slab
     box(9.7, 0.22, 0.4, 0x4c534b, 0, 4.85, -1), // ridge beam
     box(0.7, 1.7, 0.7, 0x6a5a50, 2.7, 4.6, -1.9), // chimney
-    box(1.2, 0.06, 0.9, 0x746d5f, -2.4, 4.38, -3.09, [0.42, 0, 0]), // roof patch
+    box(1.2, 0.06, 0.9, 0x746d5f, -2.4, 4.01, -3.12, [-0.42, 0, 0]), // roof patch
     box(3.6, 0.3, 1.6, porch, 0, 0.3, 3.1), // porch deck
     box(2.2, 0.16, 0.5, porch, 0, 0.2, 4.15), // upper step
     box(2.2, 0.16, 0.5, 0x75664c, 0, 0.08, 4.65), // lower step
-    box(3.9, 0.14, 1.9, roof, 0, 2.6, 3.15, [-0.12, 0, 0]), // porch roof
+    box(3.9, 0.14, 1.9, roof, 0, 2.6, 3.15, [0.12, 0, 0]), // porch roof, falling away from the wall
     cyl(0.08, 2.3, 0x6b5b45, -1.7, 1.45, 3.75), // porch posts
     cyl(0.08, 2.3, 0x6b5b45, 1.7, 1.45, 3.75),
     box(1.1, 2.1, 0.06, 0x5a5346, 0, 1.5, 2.33), // front door
@@ -301,9 +299,10 @@ function slide(): Primitive[] {
   for (let i = 0; i < 5; i++) parts.push(box(1, 0.05, 0.05, 0x8b8f86, 0, 0.5 + i * 0.4, -1.2)); // rungs
   parts.push(
     box(1.1, 0.1, 1.1, 0x8a9a8e, 0, 2.2, -0.9), // platform
-    box(0.9, 0.08, 3.4, 0xc4552f, 0, 1.25, 0.6, [-0.55, 0, 0]), // chute
-    box(0.08, 0.3, 3.4, 0xa8452a, -0.45, 1.4, 0.6, [-0.55, 0, 0]), // rails
-    box(0.08, 0.3, 3.4, 0xa8452a, 0.45, 1.4, 0.6, [-0.55, 0, 0]),
+    // The chute leaves the platform's front edge (z -0.35, y 2.2) and runs down and out along +Z.
+    box(0.9, 0.08, 3.4, 0xc4552f, 0, 1.24, 1.05, [0.6, 0, 0]), // chute
+    box(0.08, 0.3, 3.4, 0xa8452a, -0.45, 1.39, 1.05, [0.6, 0, 0]), // rails
+    box(0.08, 0.3, 3.4, 0xa8452a, 0.45, 1.39, 1.05, [0.6, 0, 0]),
   );
   return parts;
 }
@@ -342,8 +341,8 @@ function picnicTable(): Primitive[] {
     box(1.8, 0.08, 0.8, 0x9d8860, 0, 0.75, 0),
     box(1.8, 0.06, 0.35, 0x9d8860, 0, 0.45, -0.7),
     box(1.8, 0.06, 0.35, 0x9d8860, 0, 0.45, 0.7),
-    box(0.1, 0.7, 1.7, 0x6f6249, -0.6, 0.38, 0, [0, 0, 0.35]),
-    box(0.1, 0.7, 1.7, 0x6f6249, 0.6, 0.38, 0, [0, 0, -0.35]),
+    box(0.1, 0.7, 1.7, 0x6f6249, -0.6, 0.38, 0, [0, 0, -0.35]), // legs splay out at the foot
+    box(0.1, 0.7, 1.7, 0x6f6249, 0.6, 0.38, 0, [0, 0, 0.35]),
   ];
 }
 function parkShed(): Primitive[] {
@@ -517,12 +516,13 @@ export function sceneryObjects(): SafehouseObject[] {
       rotateBlueprint({ name: '', description: '', parts: carParts(0x786451) }, 1.9).parts,
       { health: 300, uses: CAR, verb: DRIVE },
     ),
-    piece('house-west', 'Neighbor house (west)', { x: -20, z: -4 }, house(), {
+    // The houses next door are Rook's design, set as far back on their lots as his is on his.
+    piece('house-west', 'Neighbor house (west)', NEIGHBOUR_HOUSE_SPOTS['scenery-house-west'], rookHouse(0xcfc4a1), {
       health: 1500,
       description: 'Empty house next door',
       uses: PERCH,
     }),
-    piece('house-east', 'Neighbor house (east)', { x: 23, z: -5 }, house(), {
+    piece('house-east', 'Neighbor house (east)', NEIGHBOUR_HOUSE_SPOTS['scenery-house-east'], rookHouse(0x8c8b78), {
       health: 1500,
       description: 'Empty house next door',
       uses: PERCH,
@@ -562,4 +562,64 @@ export function sceneryObjects(): SafehouseObject[] {
     objects.push(piece(`tree-${i + 1}`, `Tree ${i + 1}`, { x, z }, tree(s), { health: 400, uses: TREE, animations: treeAnimations(s) })),
   );
   return [...objects, ...blockObjects()];
+}
+
+/**
+ * Two matching roof slabs tipped into a V instead of up to a ridge: the rear one (lower Z) has a
+ * positive X tilt. Returns the parts with both turned the right way, or undefined when there is no
+ * such pair. Upright pairs (an A-frame's legs) are not slabs and are left alone.
+ */
+function rightRoof(parts: Primitive[]): Primitive[] | undefined {
+  const near = (a: number, b: number) => Math.abs(a - b) < 1e-6;
+  const slab = (p: Primitive) => p.shape === 'box' && p.rotation[0] !== 0 && p.rotation[1] === 0 && p.rotation[2] === 0 && p.size[2] > p.size[1];
+  let out: Primitive[] | undefined;
+  parts.forEach((a, i) =>
+    parts.forEach((b, j) => {
+      if (!slab(a) || !slab(b) || a.rotation[0] <= 0 || !near(a.rotation[0], -b.rotation[0]) || a.position[2] >= b.position[2]) return;
+      if (!near(a.position[0], b.position[0]) || !near(a.position[1], b.position[1]) || a.size.some((v, k) => !near(v, b.size[k]))) return;
+      out ??= [...parts];
+      out[i] = { ...a, rotation: [-a.rotation[0], 0, 0] };
+      out[j] = { ...b, rotation: [-b.rotation[0], 0, 0] };
+    }),
+  );
+  return out;
+}
+const HOUSES = [HOUSE_ID, ...Object.keys(NEIGHBOUR_HOUSE_SPOTS)];
+/**
+ * Saves seeded before 2026-10-08 carry the house's roof slabs and porch roof, the slide's chute and
+ * the picnic table's legs tilted the wrong way round: a butterfly roof, a chute climbing away from its
+ * ladder. Run at start-up (index.ts); no version bump. A seeded piece's part that still has the
+ * seed's shape and size but tilts the opposite way takes the seed's tilt and position, keeping its
+ * own colour, so a repaint survives. A piece chat has turned, resized or redesigned no longer lines
+ * up with its seed and is left as it is — except the houses' roofs: a redesign started from the old
+ * parts kept their V, so a house in any design gets its roof slabs turned up to the ridge.
+ * Returns whether anything changed.
+ */
+export function adoptTilts(w: { objects: SafehouseObject[]; combat: CombatState }): boolean {
+  let changed = false;
+  const seeds = new Map(sceneryObjects().map((o) => [o.id, o]));
+  for (const list of [w.objects, w.combat.archive])
+    list.forEach((o, i) => {
+      const seed = seeds.get(o.id);
+      let flipped = false;
+      let parts = o.blueprint.parts;
+      if (seed && seed.blueprint.parts.length === parts.length)
+        parts = parts.map((p, j) => {
+          const s = seed.blueprint.parts[j];
+          const opposite =
+            p.shape === s.shape &&
+            p.size.every((v, k) => v === s.size[k]) &&
+            s.rotation.some((v) => v !== 0) &&
+            p.rotation.every((v, k) => Math.sign(v) === -Math.sign(s.rotation[k]));
+          if (!opposite) return p;
+          flipped = true;
+          return { ...p, position: [...s.position] as Primitive['position'], rotation: [...s.rotation] as Primitive['rotation'] };
+        });
+      const roof = HOUSES.includes(o.id) ? rightRoof(parts) : undefined;
+      if (!flipped && !roof) return;
+      const blueprint = { ...o.blueprint, parts: roof ?? parts };
+      list[i] = { ...o, revision: o.revision + 1, blueprint, footprint: seed && flipped ? { ...seed.footprint } : o.footprint };
+      changed = true;
+    });
+  return changed;
 }
