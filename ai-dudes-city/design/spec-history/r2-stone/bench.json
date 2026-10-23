@@ -1,0 +1,102 @@
+{
+  "name": "Broad Fallen-Log Seat",
+  "description": "A broad, weather-rounded log offers a pale flattened sitting face for two, with projecting stone chocks and a conspicuous split end.",
+  "notes": "Bulging unpeeled bark, an uneven exposed heartwood face and loose river-stone chocks identify a gathered Stone Age seat rather than a constructed timber bench.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -1.08,
+        0.15,
+        0.19
+      ],
+      "size": [
+        0.64,
+        0.3,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0.28,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.02,
+        0.17,
+        -0.16
+      ],
+      "size": [
+        0.71,
+        0.34,
+        0.79
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#969387"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        0.225,
+        0
+      ],
+      "size": [
+        2.72,
+        0.43,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.09,
+        0.39,
+        0.015
+      ],
+      "size": [
+        2.02,
+        0.12,
+        0.46
+      ],
+      "rotation": [
+        0,
+        -0.075,
+        0
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.17,
+        0.25,
+        0.045
+      ],
+      "size": [
+        0.32,
+        0.27,
+        0.48
+      ],
+      "rotation": [
+        0.16,
+        -0.12,
+        -0.21
+      ],
+      "color": "#e1d3ae"
+    }
+  ]
+}

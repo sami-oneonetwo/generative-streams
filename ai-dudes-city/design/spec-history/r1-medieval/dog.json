@@ -1,0 +1,520 @@
+{
+  "name": "Cobbles the Market Mastiff",
+  "description": "A chunky tawny mastiff with floppy ears, a blue guild saddle and a wagging tail roams the medieval market streets.",
+  "notes": "via the game's design prompt: \"a dog that roams the streets\"",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.66,
+        -0.1
+      ],
+      "size": [
+        0.54,
+        0.49,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ad763f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.69,
+        0.34
+      ],
+      "size": [
+        0.59,
+        0.57,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bd8a50"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.3,
+        0.33
+      ],
+      "size": [
+        0.17,
+        0.48,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bd8a50"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.3,
+        0.33
+      ],
+      "size": [
+        0.17,
+        0.48,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bd8a50"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.3,
+        -0.45
+      ],
+      "size": [
+        0.19,
+        0.48,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ad763f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.3,
+        -0.45
+      ],
+      "size": [
+        0.19,
+        0.48,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ad763f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.08,
+        0.39
+      ],
+      "size": [
+        0.21,
+        0.16,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e3c69a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.08,
+        0.39
+      ],
+      "size": [
+        0.21,
+        0.16,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e3c69a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.08,
+        -0.4
+      ],
+      "size": [
+        0.23,
+        0.16,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d6b380"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.08,
+        -0.4
+      ],
+      "size": [
+        0.23,
+        0.16,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d6b380"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.96,
+        0.5
+      ],
+      "size": [
+        0.46,
+        0.48,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bd8a50"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.89,
+        0.76
+      ],
+      "size": [
+        0.36,
+        0.24,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#634631"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.95,
+        0.914
+      ],
+      "size": [
+        0.23,
+        0.12,
+        0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#292820"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.79,
+        0.78
+      ],
+      "size": [
+        0.28,
+        0.07,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ddbc89"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.145,
+        1.055,
+        0.704
+      ],
+      "size": [
+        0.075,
+        0.085,
+        0.035
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#211f1b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.145,
+        1.055,
+        0.704
+      ],
+      "size": [
+        0.075,
+        0.085,
+        0.035
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#211f1b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.265,
+        1.005,
+        0.47
+      ],
+      "size": [
+        0.13,
+        0.38,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "color": "#68462e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.265,
+        1.005,
+        0.47
+      ],
+      "size": [
+        0.13,
+        0.38,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0.12
+      ],
+      "color": "#68462e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.86,
+        -0.71
+      ],
+      "size": [
+        0.13,
+        0.59,
+        0.13
+      ],
+      "rotation": [
+        -0.65,
+        0,
+        0
+      ],
+      "color": "#ad763f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.89,
+        -0.15
+      ],
+      "size": [
+        0.59,
+        0.09,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#285a85"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.286,
+        0.72,
+        -0.15
+      ],
+      "size": [
+        0.045,
+        0.33,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#285a85"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.286,
+        0.72,
+        -0.15
+      ],
+      "size": [
+        0.045,
+        0.33,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#285a85"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.965,
+        -0.15
+      ],
+      "size": [
+        0.35,
+        0.09,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#68462e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.025,
+        -0.35
+      ],
+      "size": [
+        0.37,
+        0.17,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#503827"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.015,
+        0.055
+      ],
+      "size": [
+        0.35,
+        0.14,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#503827"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.313,
+        0.73,
+        -0.15
+      ],
+      "size": [
+        0.015,
+        0.15,
+        0.15
+      ],
+      "rotation": [
+        0.7854,
+        0,
+        0
+      ],
+      "color": "#e8bc55"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.313,
+        0.73,
+        -0.15
+      ],
+      "size": [
+        0.015,
+        0.15,
+        0.15
+      ],
+      "rotation": [
+        0.7854,
+        0,
+        0
+      ],
+      "color": "#e8bc55"
+    }
+  ]
+}

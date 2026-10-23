@@ -1,7 +1,7 @@
 import http from 'node:http';
 import path from 'node:path';
 import { config } from '../config';
-import { operatorGuard } from './operatorGuard';
+import { localOnlyGuard, operatorGuard } from './operatorGuard';
 import express from 'express';
 import type { Engine } from '../engine/engine';
 import type { EchoGuard } from '../kick/echo';
@@ -9,6 +9,7 @@ import type { KickAuth } from '../kick/oauth';
 import { makeWebhookHandler } from '../kick/webhook';
 import { ensureChatSubscription } from '../kick/subscriptions';
 import { makeAdminRouter, type AdminDeps } from './admin';
+import { playTokenOf, signPlayToken, verifyPlayToken, type PlaySeats } from './play';
 
 export interface HttpDeps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,6 +19,7 @@ export interface HttpDeps {
   dataDir: string;
   wsClientCount: () => number;
   kickSubscription: { value?: string };
+  play: PlaySeats;
 }
 
 export function createHttpServer(deps: HttpDeps): http.Server {
@@ -43,7 +45,8 @@ export function createHttpServer(deps: HttpDeps): http.Server {
     }),
   );
 
-  app.get('/kick/login', (_req, res) => {
+  // Swapping the Kick account is this machine's business only: both ends refuse the public tunnel.
+  app.get('/kick/login', localOnlyGuard(), (_req, res) => {
     if (!auth.configured) {
       res.status(400).send('Kick app not configured — set KICK_CLIENT_ID / KICK_CLIENT_SECRET / KICK_REDIRECT_URI in .env');
       return;
@@ -51,7 +54,7 @@ export function createHttpServer(deps: HttpDeps): http.Server {
     res.redirect(auth.authorizeUrl());
   });
 
-  app.get('/kick/callback', (req, res) => {
+  app.get('/kick/callback', localOnlyGuard(), (req, res) => {
     const code = String(req.query.code ?? '');
     const state = String(req.query.state ?? '');
     if (!code) {
@@ -76,6 +79,7 @@ export function createHttpServer(deps: HttpDeps): http.Server {
     auth,
     wsClientCount: deps.wsClientCount,
     kickSubscription: () => deps.kickSubscription.value,
+    play: deps.play,
   };
   app.use('/admin/api', operatorGuard(config.ADMIN_TOKEN), express.json({ limit: '16kb' }), makeAdminRouter(adminDeps));
   app.get('/admin', (_req, res) => res.redirect('/admin.html'));
@@ -103,6 +107,27 @@ export function createHttpServer(deps: HttpDeps): http.Server {
   // The operator page: the same view, with the Mayor to walk and the operator's panels.
   app.get('/mayor', (_req, res) => {
     res.sendFile(path.resolve('public', 'dudes.html'));
+  });
+  // The /play page: a chatter logged in with Kick walks their own character. Login happens on the
+  // Cloudflare Worker in front (play-worker/), which signs the `play` cookie; this side checks it.
+  app.get('/play', (_req, res) => {
+    res.sendFile(path.resolve('public', 'dudes.html'));
+  });
+  app.get('/api/play/me', (req, res) => {
+    const who = verifyPlayToken(playTokenOf(req), config.PLAY_SECRET);
+    const seated = who ? deps.play.seats.has(who.userId) : false;
+    res.set('Cache-Control', 'no-store').json({ user: who ? { id: who.userId, name: who.name } : null, seated, seats: deps.play.count(), configured: !!config.PLAY_SECRET });
+  });
+  // Trying it on this machine without Kick: /play/dev-login?name=alex (localhost or the operator token only).
+  app.get('/play/dev-login', operatorGuard(config.ADMIN_TOKEN), (req, res) => {
+    const name = String(req.query.name ?? '').replace(/[^\w.-]/g, '').slice(0, 40);
+    if (!config.PLAY_SECRET || !name) {
+      res.status(400).type('text/plain').send(config.PLAY_SECRET ? 'add ?name=someone' : 'set PLAY_SECRET in .env first');
+      return;
+    }
+    const token = signPlayToken(`dev:${name.toLowerCase()}`, name, config.PLAY_SECRET, 12 * 3600_000);
+    res.cookie('play', token, { httpOnly: true, sameSite: 'lax', maxAge: 12 * 3600_000, path: '/' });
+    res.redirect('/play');
   });
   app.use(express.static('public'));
 

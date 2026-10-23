@@ -1,0 +1,188 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The buildings, King and travelling court establish a convincing medieval toy town, but the assembled street is undermined by continuous slab-like frontages, lane-like strips and overly ornamental trees. Keep the strong architectural direction while rebuilding the shared street edges, making wattle and wild vegetation unmistakable, and improving the market cross and resident silhouettes.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Long pointed ground strips and a smooth conical mound read as exposed construction primitives rather than natural countryside dressing.",
+        "Nettles, meadow flowers, mossy stones and shallow puddles are not distinctly readable."
+      ],
+      "fix": "Reallocate the 14 dressing parts into uneven nettle clumps, a few broad flower accents, mossy stones, split deadwood and shallow irregular puddles. Keep most below 0.35 m and replace the parallel strips with broken, asymmetrical patches."
+    },
+    {
+      "id": "street",
+      "score": 4,
+      "ok": false,
+      "problems": [
+        "Continuous tan strips with straight edges and visible thickness read as raised sidewalks, particularly in the assembled scene.",
+        "Long straight grey bars through the roadway resemble lane dividers or rails rather than worn cart routes.",
+        "Uniform circular cobbles repeat in tidy rows with little muddy variation."
+      ],
+      "fix": "Rebuild the 8 m road with irregular rounded cobbles, varied spacing and muddy joints. Express wheel wear as shallow, interrupted surface variation, not bars; replace both frontage strips with flush, ragged packed earth at |z| 4–6, isolated threshold slabs and shallow walkable gutters. Redistribute the 20 low dressing parts without obstructing the centre."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the pegged timber marker, large pale ring and subordinate stone/offcut dressing; preserve the ring's readability in the assembled view."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The boundary reads as straight rail fencing rather than woven wattle.",
+        "Repeated smooth members lack the irregular oak construction required by the bible.",
+        "The owner shield's name and household emblem are difficult to distinguish at scene scale."
+      ],
+      "fix": "Within the 30-part budget, introduce broad, visibly interwoven wattle bands between uneven oak posts, with occasional rough-stone footings. Keep the existing open frontage and 0.7–1.0 m boundary height; simplify the small shield to a broad #d9534f field, one filled emblem and a pale strip carrying the exact name Ivy."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both crowns are tidy bunches of rounded foliage balls despite their different heights.",
+        "The lime's uneven pollard regrowth and the pear's roadward lean are too weak to establish distinct silhouettes."
+      ],
+      "fix": "Keep the two planting positions but rebuild the lime around an offset pollard head with unequal shoots and irregular foliage masses. Give the smaller pear a clear roadward lean, an off-centre crown and differently sized clusters, using the existing 28-part allowance."
+    },
+    {
+      "id": "wild-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The crooked oak trunk is effective, but repeated flat foliage pucks make its canopy feel assembled.",
+        "The hawthorn has a centred bead-like crown, while the holly reads as a miniature Christmas tree."
+      ],
+      "fix": "Preserve the oak's crooked trunk and vary canopy depth, cluster size and branch reach. Spread the hawthorn into a low, irregular branching mass and replace the holly's conical outline with an uneven dense shrub, retaining three clearly different silhouettes within 36 parts."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stout oak support, restrained iron bracket and sheltered lantern. Keep these as sparse corner fixtures and confine emission to the flame."
+    },
+    {
+      "id": "centrepiece",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The heraldic panels dominate the small cross, making the landmark read primarily as a banner post.",
+        "Straight, pristine step edges and neatly lined-up baskets weaken the worn communal-market character."
+      ],
+      "fix": "Make the simple stone cross the dominant upper silhouette and reduce the heraldic panels. Keep the total height near 2.5 m and the stepped base about 4.5 m across, with a clearly faceted short shaft, broad worn steps and baskets clustered asymmetrically beside the notice tablet."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the thick backless oak seat, visible pegs and trestle construction; preserve the approximately 0.45 m seat height and slightly uneven brace."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad madder-red and cream stripes, chunky timber counter and unpackaged goods. Keep bread, cheese, fruit and wool grouped into distinct readable masses."
+    },
+    {
+      "id": "arrival",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact horse-cart silhouette and hanging wheel emblem. Place the hitching assembly directly on worn earth when correcting the street frontage, without adding a platform."
+    },
+    {
+      "id": "river",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact lifting frame, timber deck and low rails. Preserve a visibly distinct lowered lifting section and carry the bank continuations to z ±7, with uninterrupted water flow along x."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the four low fieldstone markers and shared-symbol tablet; keep the four dots and central rosette bold without introducing private heraldry."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the two purple heraldic pavilions, supply awning and clearly different knight/minstrel cameos. Preserve gaps around the baggage, packhorse and brazier so the camp remains readable from above."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The breadmaker's apron is not readable against the loaf and torso.",
+        "The coif reads mostly as a plain block cap, and the two outfits retain very similar straight-sided silhouettes."
+      ],
+      "fix": "Keep the base bodies but give the breadmaker a clear long skirt, a broad pale apron and a coif wrapping the sides of the head. Contrast this with visible hose, a belted tunic and a pushed-back hood on the carpenter; keep the loaf and mallet unobstructed within the 48-part total."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad crown, deep blue tunic, gold clasp and red fur-edged cape; this establishes royal rank immediately without turning the King into an armoured knight."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the drooping three-point cap, bells, motley and fool's baton. Keep the foreign court badge visually connected to the camp's heraldry."
+    },
+    {
+      "id": "home",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the bold timber frame, pale infill, irregular clay roof and grounded stone footing; use this material hierarchy as the architectural benchmark."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the open serving hatch, bread display, barrels and masonry cooking feature. Preserve the cookshop identity rather than adding modern café signage or equipment."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the narrow timber-and-stone lodging tower, readable storeys and slate roof. Keep the stepped or jettied floor transitions visible when adapting it to the permanent lot footprint."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the chunky muzzle, folded ears and clear four-legged silhouette; preserve its believable mastiff scale beside a 1.8 m resident."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the horse, exposed timber wagon and blue cloth cover. Keep wooden wheel centres prominent and iron rims restrained so the wheels cannot drift toward a rubber-tyre reading."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

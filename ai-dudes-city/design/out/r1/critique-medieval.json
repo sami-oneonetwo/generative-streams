@@ -1,0 +1,219 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The medieval transformations are convincing in concept, with readable residents, strong royal identity and no raised sidewalk network. The renders still need irregular cobbles, less spherical vegetation, genuine wattle boundaries and clearer period materials, while the assembled scene must lose its character display bases.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Dense, speckled meadow texture overwhelms the sparse low-poly dressing at stream distance.",
+        "Most vegetation reads as isolated green dots rather than nettles, meadow flowers or distinct groundcover."
+      ],
+      "fix": "Simplify the meadow into broader, quieter colour patches. Within the 14 dressing parts, distinguish serrated nettle clumps, a few flower clusters, moss-capped stones, visibly split deadwood and flush puddles; keep the distribution sparse and mostly below 0.35 m."
+    },
+    {
+      "id": "street",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Identical oval cobbles form a mechanically repeated dot pattern on a pale rectangular strip.",
+        "Cart wear forms exceptionally straight, uniform tracks.",
+        "The road edge remains ruler-straight rather than thinning into shared packed-earth frontage."
+      ],
+      "fix": "Replace the repeated oval grid with varied rounded cobbles, irregular spacing and darker muddy joints. Break up the wheel wear and thin the stones unevenly toward |z| 4–6, retaining the 8 m road width, clear centre and 20 low dressing parts without introducing kerbs."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the small pegged timber marker and large pale-ochre empty ring. Preserve the open parcel, rough board silhouette and restrained ground dressing."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The boundary reads as long horizontal rails, not woven wattle panels.",
+        "Posts and rails are conspicuously machine-matched, with little visible rough-stone footing.",
+        "The owner shield resolves as a red fleck rather than a clear household emblem and pale name strip."
+      ],
+      "fix": "Rework the 30-part boundary into low panels with broad, visibly interlaced wattle between irregular oak posts and occasional fieldstone feet. Keep the frontage open and the fence 0.7–1.0 m high; give the subordinate red shield a bold filled emblem and a contrasting strip carrying the exact owner name."
+    },
+    {
+      "id": "street-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Both crowns are assembled from similar spherical blobs, despite their different heights.",
+        "The lime lacks a convincing pollarded branch structure, and the pear's lean does not sufficiently distinguish its silhouette."
+      ],
+      "fix": "Use the 28 parts for a knuckled lime trunk with unequal regrowth branches and offset, differently sized faceted foliage masses. Give the smaller pear a pronounced roadward lean and an irregular tapered crown, avoiding a centred cluster of balls."
+    },
+    {
+      "id": "wild-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The oak is essentially an upright pole topped with balls rather than a tall crooked tree.",
+        "Hawthorn and holly repeat the same rounded foliage language, weakening species distinction and wildness."
+      ],
+      "fix": "Redistribute the 36 parts into a visibly crooked, forked oak; a low, spreading hawthorn with uneven lateral branches; and a dense angular holly or young hazel. Vary canopy mass, branch direction and gaps instead of repeating spherical clusters."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the restrained oak-post and short iron-bracket silhouette. Preserve the sheltered pitched-cap lantern and ensure only its internal flame uses glow."
+    },
+    {
+      "id": "centrepiece",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The pale shaft and fragmented-looking finial merge with the pale paving in the assembled scene.",
+        "The steps read as pristine stacked plates rather than broad worn stone."
+      ],
+      "fix": "Within 44 parts and the existing approximately 4.5 m base, simplify the finial into one unmistakable cross silhouette and separate the short octagonal shaft with stronger stone-value contrast. Add restrained chips and uneven step edges while keeping the whole monument about 2.5 m high."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the thick backless oak seat and low trestle construction. Keep the eight-part build, visible pegs, slightly uneven brace and approximately 0.45 m seat height."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad madder-red and cream stripes and compact timber counter. Preserve distinct bread, cheese, apple, wool and basket groupings within the 30-part, 2.6 × 1.6 m stall."
+    },
+    {
+      "id": "arrival",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The cart cover resembles another flat market-stall awning rather than a curved passenger-cart cover.",
+        "The hitching rail's crisp rectangular pad reads as a platform instead of worn earth.",
+        "Harness connections and bundled luggage are too weak to establish the arrival function clearly."
+      ],
+      "fix": "Rebuild the cover over chunky curved hoops, expose a readable passenger compartment and group the luggage into two clear bundles. Replace the rail pad with irregular flush earth, clarify the horse-to-cart harness and retain the 62-part budget, approximately 5 m overall length and prescribed placement."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The fixed approaches read as large smooth timber slabs, unlike the visibly planked central section.",
+        "Squat stone piers and projecting pier noses are not clearly readable.",
+        "Straight capped bank strips and overlapping rail/chain diagonals make the crossing feel schematic."
+      ],
+      "fix": "Within 64 parts, articulate broad planks across both fixed approaches, expose squat masonry supports and add distinct upstream pier noses. Clarify the hinge, compact lifting frame and chain attachments around the lowered central leaf; soften the bank edges with irregular moss, rocks and reeds while preserving the specified crossing dimensions and river direction."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the four low fieldstone corners and shared-symbol timber tablet. Keep the central rosette distinct from its four surrounding dots and avoid adding a private heraldic shield."
+    },
+    {
+      "id": "camp",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The pavilions read as smooth round huts with coloured roofs; their heraldic cloth construction depends on tiny flags.",
+        "The knight's shield and minstrel's lute are difficult to distinguish at sheet distance."
+      ],
+      "fix": "Use broad heraldic cloth panels, visible entrance folds and restrained seams to establish two travelling pavilions. Strengthen the cameos with a wide shield silhouette and a clearly projecting lute body and neck; retain the supply awning, packhorse, wagon, chests and glowing brazier within 86 parts."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the distinct tunic-and-hose and dress-and-apron silhouettes, with the mallet and round loaf clearly separated from the bodies. Preserve the base figures and 48-part combined budget."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad gold crown, deep-blue clothing, red fur-edged cloak and short sceptre. Preserve the friendly blocky proportions and clear distinction from an armoured knight."
+    },
+    {
+      "id": "leader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The cap and motley identify a jester, but the boots read as ordinary square footwear rather than curled soft shoes.",
+        "The foreign court badge, travel patches and carved fool's-baton head do not read clearly."
+      ],
+      "fix": "Within 38 parts, add unmistakable upturned cloth shoe tips, one broad unfamiliar court badge and two contrasting travel patches. Give the baton a chunky carved fool's head while retaining the three-point bell cap and two-colour motley."
+    },
+    {
+      "id": "home",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Continuous pale ridge-to-eave roof lines suggest standing-seam roofing rather than clay tiles.",
+        "Thin, perfectly regular framing and a largely blank side wall weaken the late-medieval construction language."
+      ],
+      "fix": "Replace the roof lines with a few broad, staggered clay-tile courses. Strengthen selected oak posts and braces, recess the shuttered openings and introduce an uneven fieldstone footing with restrained irregularity in the lime-plaster infill, preserving the footprint."
+    },
+    {
+      "id": "cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The serving area reads primarily as a teal canopy over a bar; the open bread-and-ale hatch is not sufficiently legible.",
+        "The featureless roof and clean shell make this feel like a generic cottage conversion rather than a distinct medieval cookshop."
+      ],
+      "fix": "Create a deep, dark open serving hatch with a thick timber sill, prominent bread rounds and wooden drinking vessels. Add a simple carved loaf sign or ale barrel, articulate broad clay-tile courses and retain the existing low building footprint."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped timber-and-stone lodging-tower transformation and slate roof silhouette. Keep the projecting floor edges visibly timber-supported rather than allowing them to become concrete-like slabs."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad muzzle, readable ears and chunky working-dog silhouette. Keep the blue equipment clearly cloth and leather, and maintain its current subordinate scale beside residents."
+    },
+    {
+      "id": "car",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The blue cover reads as rigid sheet roofing rather than cloth over a wagon frame.",
+        "Featureless wheel discs and weak harness articulation leave the construction less readable than the overall horse-wagon silhouette."
+      ],
+      "fix": "Support a faceted cloth cover on visible oak hoops, adding a slight sag or loose edge instead of rigid sheet corners. Give the wooden wheels broad readable spokes and iron rims, and clarify the shafts and leather harness without introducing a modern chassis."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Residents, King and jester retain conspicuous display patches or polygonal bases on the road and square.",
+        "Repeated verge stones and patches create a regular edging rhythm despite the intended informal shared frontage.",
+        "Busy meadow texture competes with small characters, while the market cross loses contrast against the square."
+      ],
+      "fix": "Remove presentation bases from placed characters and ground their feet directly on the scene surfaces. Break up verge dressing into irregular clusters with open gaps, reduce meadow texture frequency and apply the cross's contrast revision; retain the flush square and avoid adding sidewalks or kerbs."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

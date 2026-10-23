@@ -1,0 +1,205 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The timber buildings, heraldic cloth and character ranks establish a convincing medieval town, and the assembled scene correctly avoids continuous raised sidewalks. Machine-regular cobbles, rail-only boundaries, generic vegetation and underdeveloped transport details still prevent approval.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The meadow reads predominantly as uniformly maintained lawn.",
+        "Vegetation dressing collapses into small coloured discs rather than distinguishable nettles, flowers and rough growth."
+      ],
+      "fix": "Reallocate the 14 dressing parts into a few asymmetric, readable clusters: broad pointed nettle leaves, contrasting meadow flowers, moss-edged stones and genuinely split deadwood. Keep most dressing below 0.35 m and leave substantial open meadow."
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Nearly identical oval stones repeat in an obvious staggered grid with pale, uniform joints.",
+        "Disconnected brown spots do not establish worn cart routes.",
+        "The straight green margins read as rectangular material strips rather than irregular packed-earth frontage."
+      ],
+      "fix": "Keep the 8 m carriageway, but vary cobble size, rotation, spacing and edge shape over dark muddy joints. Form two subdued longitudinal wheel-wear paths, thin the stones irregularly into earth at the margins, and use the 20 low dressing parts for flush gutters, repairs and damp patches without blocking the centre."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the large ochre availability ring, pegged timber construction and subordinate scale. Preserve the wordless reading when roughening the board edges."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The boundary is visibly paired horizontal rails, not woven wattle panels.",
+        "The owner marker reads as a tiny rectangular placard rather than a hanging household shield."
+      ],
+      "fix": "Within 30 parts, replace the rails with broad panels carrying chunky interwoven rods between irregular oak posts and occasional stone footings. Keep the boundary 0.7–1.0 m high and the frontage open; hang a small tapered wooden shield with a #d9534f field, one filled household emblem and the exact name 'Ivy' on a pale strip."
+    },
+    {
+      "id": "street-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The lime's similar-sized foliage balls and evenly fanned shoots create a candelabrum silhouette.",
+        "The pear is reduced to a pole and a couple of foliage lobes, with little readable branching."
+      ],
+      "fix": "Redistribute the existing 28 parts into a visibly knuckled pollard with unequal shoot lengths and offset foliage masses. Give the smaller leaning pear one substantial side branch and an asymmetric crown, retaining clearance over the shared frontage."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The oak has a crooked trunk but a compact crown of similarly sized rounded blobs.",
+        "The hawthorn reads as another low shrub, so the group lacks the required tall, broad and low hierarchy."
+      ],
+      "fix": "Use the 36 parts for three distinct silhouettes: a crooked oak with exposed lateral limbs and an off-centre broken crown, a medium-height spreading hawthorn with visible branching, and a low dense holly with angular foliage. Avoid repeated spherical clusters."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stout oak support, short iron bracket and sheltered horn-panel lantern. Keep emission restricted to the flame and placement limited to important corners."
+    },
+    {
+      "id": "centrepiece",
+      "score": 8,
+      "ok": true,
+      "problems": [
+        "The clustered finial blocks slightly weaken the simple cross silhouette at scene distance."
+      ],
+      "fix": "Preserve the low stepped monument, baskets and notice tablet. Simplify the finial to an exposed upright and clear crossbar while retaining the approximately 4.5 m base and 2.5 m overall height."
+    },
+    {
+      "id": "bench",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; retain the thick backless plank, trestles, visible pegs and slight construction irregularity."
+    },
+    {
+      "id": "market",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; preserve the broad madder-and-cream stripes, open timber frame and readable unpackaged produce within the compact footprint."
+    },
+    {
+      "id": "arrival",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The horse reads as a long plank body on thin sticks, with an underdeveloped neck and chest.",
+        "The harness and connection to the passenger cart are not clearly legible.",
+        "The hanging wheel emblem becomes an indistinct dark lump in the assembled scene."
+      ],
+      "fix": "Reallocate the 62 parts to give the horse a substantial chest, wedge-shaped neck, distinct muzzle and thicker planted legs. Add a readable collar, paired shafts and broad harness straps; open up the wheel emblem's centre and spokes, retaining the roughly 5 m overall vehicle length and ground-level hitching area."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The deck reads as broad smooth slabs, with weak separation between fixed approaches and the lifting leaf.",
+        "Stone supports merge visually with loose river rocks rather than clearly carrying the bridge.",
+        "The flat cyan water provides little indication of flow."
+      ],
+      "fix": "Within 64 parts, distinguish two fixed planked approaches from a short lowered central leaf with an obvious hinge seam and chains attached to its lifting end. Expose squat stone piers and upstream noses beneath the load path, and add restrained surface bands flowing along x while preserving the specified water extent and bank landings."
+    },
+    {
+      "id": "civic-lot",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; retain the four low fieldstone markers and shared rosette-and-four-dots tablet without introducing private heraldry."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the two heraldic pavilions, supply awning, baggage transport and distinct knight and minstrel cameos. Preserve the foreign court's cloth identity and restrict brazier emission to its coals."
+    },
+    {
+      "id": "resident",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; preserve the contrasting tunic and apron silhouettes, visible carpenter's mallet, round loaf and distinct head treatments."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; the crown, red fur-edged cloak, blue tunic and sceptre establish the King immediately without relying on armour."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the three-point bell cap, fool's baton, foreign badge and contrasting motley. Keep the curled shoe tips pronounced enough to survive the wider stream camera."
+    },
+    {
+      "id": "home",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; preserve the bold timber framing, pale infill, irregular clay roofing and low threshold dressing."
+    },
+    {
+      "id": "cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The large featureless ochre roof reads as a single sheet rather than the specified slate or clay roofing.",
+        "Its unresolved roof material is especially conspicuous beside the clearly tiled home."
+      ],
+      "fix": "Replace the plain roof planes with broad, slightly irregular clay-tile courses and a chunky ridge, using a muted terracotta distinct from the home. Retain the open serving hatch, bread display, masonry cooking feature and sturdy outdoor furniture."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the narrow timber-and-stone lodging-tower interpretation, masonry base and pitched roof. Keep the floor offsets and projecting beams legible rather than adding finer window subdivisions."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "No redesign required; preserve the chunky muzzle, dropped ears, simple collar and planted four-legged stance."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the horse-drawn wooden wagon, visible harness and arched blue cloth cover. Keep wheel rims visibly thin iron around wooden wheels rather than allowing them to read as rubber tyres."
+    },
+    {
+      "id": "street-corner",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Repeated edge patches and hard rectangular ground transitions expose the modular tile construction.",
+        "The dense, high-contrast cobble pattern competes with residents and small civic props at the actual viewing distance.",
+        "The assembled horse-cart's weak animal silhouette is more apparent than on its isolated asset sheet."
+      ],
+      "fix": "Blend adjoining frontage materials with irregular earth and thinning cobbles, vary dressing placement between tiles, and reduce ground-pattern contrast beneath focal assets. Recheck the revised horse-cart, trees, owner shield and market cross in this same camera without enlarging their prescribed footprints or adding raised sidewalks."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

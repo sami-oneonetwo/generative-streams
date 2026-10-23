@@ -1,0 +1,112 @@
+{
+  "verdict": "revise",
+  "score": 8,
+  "summary": "Strong, coherent progression rather than six recolours. The heads, caravan themes and most functional columns read correctly. Sami's principal corrections are present: primitive Stone Age markers, mud roads without sidewalks, a communal bonfire, irregular trees, and medieval cobbles without modern kerbs. Revisions should be targeted: improve Future readability, differentiate repeated civic paving, and demonstrate fixed footprints and gameplay-purpose continuity.",
+  "ages": [
+    {
+      "id": "stone",
+      "problems": []
+    },
+    {
+      "id": "bronze",
+      "problems": [
+        "The extensive, regularly laid pale square paving is visually too close to the medieval and industrial versions. The architecture distinguishes the age more successfully than this ground treatment."
+      ]
+    },
+    {
+      "id": "middle",
+      "problems": [
+        "The square's clean, regular paving weakens the otherwise convincing medieval street corner. Differentiate it with uneven flags, worn edges and visible earth joints; retain the successful absence of formal raised sidewalks."
+      ]
+    },
+    {
+      "id": "industrial",
+      "problems": [
+        "The civic square largely inherits the preceding ages' pale paving language. Give it a distinctly engineered industrial treatment rather than relying on the clock, tram and gas lamps to carry the entire transition."
+      ]
+    },
+    {
+      "id": "modern",
+      "problems": []
+    },
+    {
+      "id": "future",
+      "problems": [
+        "Road, pedestrian paving, lot borders and ivory objects converge in value. In the assembled corner, the circulation hierarchy and several small props become harder to read than in the Modern Age.",
+        "The crossing labelled solid-light reads primarily as an opaque white panel bridge. Its technological change is less convincing visually than the hover vehicles and floating interfaces."
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "id": "street",
+      "problems": [
+        "The Future street loses the strong road-versus-square separation established by the Modern street. Establish readable value boundaries and guide seams that survive stream downscaling without depending on bloom."
+      ]
+    },
+    {
+      "id": "square_centrepiece",
+      "problems": [
+        "The centrepiece sequence itself is excellent, but the surrounding paving changes too little between Bronze, Middle and Industrial. This repeated ground treatment also appears beneath seating and market stalls, multiplying the similarity across each row."
+      ]
+    },
+    {
+      "id": "free_lot_marker",
+      "problems": [
+        "The Future floating amber loop is distinctive in isolation but faint against the pale lot in the assembled scene. Strengthen its silhouette and contrast so the claim interaction remains obvious."
+      ]
+    },
+    {
+      "id": "river_crossing",
+      "problems": [
+        "Modern-to-Future currently reads more as a deck recolour and panel change than a solid-light transformation. Make the supports, emitters and projected span legible as a connected system while preserving the crossing's alignment."
+      ]
+    },
+    {
+      "id": "home",
+      "problems": [
+        "The independently framed example builds do not establish a shared measured footprint. Show the six home versions on the same 16 m lot template with inherited placement and access anchors; apply the same check to the café and tower."
+      ]
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "The captions move from clan lodging to a Bronze storehouse, then guild lodging and a merchants' building. These can share a tall-building silhouette, but the invariant gameplay purpose is not explicit. Confirm that the transformation preserves use and capacity rather than silently changing a residential build into storage."
+      ]
+    }
+  ],
+  "bibleChanges": [
+    {
+      "id": "stone",
+      "changes": [
+        "Define the inherited footprint, access anchors and gameplay purpose for each build family at its first-age version. Carry these through all six ages and verify them with aligned overlays rather than presentation plinths."
+      ]
+    },
+    {
+      "id": "bronze",
+      "changes": [
+        "Give civic paving an explicit Bronze specification: broad, irregular limestone slabs with dusty joints and earth transitions, distinct from later municipal paving.",
+        "Clarify the tall-building family's invariant use; if it is lodging, revise the storehouse designation and supporting props accordingly."
+      ]
+    },
+    {
+      "id": "middle",
+      "changes": [
+        "Specify mud-jointed road cobbles and worn, uneven square flags. Keep transitions flush and irregular; do not introduce continuous modern kerbs or sidewalk bands."
+      ]
+    },
+    {
+      "id": "industrial",
+      "changes": [
+        "Introduce surveyed paving bands, brick or granite borders, drainage details and restrained soot wear to distinguish the industrial square from its predecessors."
+      ]
+    },
+    {
+      "id": "future",
+      "changes": [
+        "Set a stream-scale contrast hierarchy separating vehicle routes, pedestrian areas, lots and interactive markers while retaining the ivory palette.",
+        "Define a consistent visual grammar for projected technology: substantial emitter anchors, a visibly projected span or surface, and restrained luminous edges. Apply it to the crossing rather than relying on its caption."
+      ]
+    }
+  ]
+}

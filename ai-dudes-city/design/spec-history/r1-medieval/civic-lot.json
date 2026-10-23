@@ -1,0 +1,311 @@
+{
+  "name": "Shared Market Ground",
+  "description": "Four low fieldstones reserve an empty community plot, with a front oak tablet showing four households gathered around a shared painted rosette.",
+  "notes": "Rough fieldstone and a timber tablet with a communal floral mark identify medieval town ground without private heraldry, modern signage or raised paving.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -5.35,
+        0.24,
+        -5.3
+      ],
+      "size": [
+        0.9,
+        0.48,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.3,
+        0.2,
+        -5.35
+      ],
+      "size": [
+        0.76,
+        0.4,
+        0.9
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#a4a18e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.3,
+        0.22,
+        5.3
+      ],
+      "size": [
+        0.86,
+        0.44,
+        0.74
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#807f70"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.35,
+        0.25,
+        5.3
+      ],
+      "size": [
+        0.78,
+        0.5,
+        0.88
+      ],
+      "rotation": [
+        0,
+        0.32,
+        0
+      ],
+      "color": "#a4a18e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.4,
+        0.63,
+        4.72
+      ],
+      "size": [
+        0.18,
+        1.26,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.6,
+        0.6,
+        4.72
+      ],
+      "size": [
+        0.2,
+        1.2,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4,
+        1.03,
+        4.82
+      ],
+      "size": [
+        1.8,
+        0.94,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.48,
+        1.28,
+        4.93
+      ],
+      "size": [
+        0.23,
+        0.06,
+        0.23
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.52,
+        1.28,
+        4.93
+      ],
+      "size": [
+        0.23,
+        0.06,
+        0.23
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.48,
+        0.78,
+        4.93
+      ],
+      "size": [
+        0.23,
+        0.06,
+        0.23
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.52,
+        0.78,
+        4.93
+      ],
+      "size": [
+        0.23,
+        0.06,
+        0.23
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4,
+        1.18,
+        4.94
+      ],
+      "size": [
+        0.2,
+        0.24,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4,
+        0.88,
+        4.94
+      ],
+      "size": [
+        0.2,
+        0.24,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.85,
+        1.03,
+        4.94
+      ],
+      "size": [
+        0.24,
+        0.2,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.15,
+        1.03,
+        4.94
+      ],
+      "size": [
+        0.24,
+        0.2,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4,
+        1.03,
+        4.97
+      ],
+      "size": [
+        0.19,
+        0.06,
+        0.19
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#d6af55"
+    }
+  ]
+}

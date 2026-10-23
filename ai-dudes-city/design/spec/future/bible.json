@@ -1,0 +1,135 @@
+{
+  "id": "future",
+  "name": "the Wasteland",
+  "summary": "Rust, scrap and dust surround the Overseer's fire barrel as armoured convoys bring supplies.",
+  "rules": {
+    "sidewalks": true,
+    "kerbs": true,
+    "roadMarkings": false,
+    "roads": "Use surviving cracked asphalt buried under a thin, uneven film of dust, running along x, 8 m wide within |z| <= 4. Street dressing: 22 parts, all below 1.2 m, comprising broad flush repair plates, shallow sand drifts, a few subdued cracks, worn tyre tracks, clogged gutter mouths and broken kerb sections near the margins. Keep the middle continuously clear and traversable. Road paint has disappeared beneath wear and dust; no fresh lane markings, luminous seams or road-spanning barricades. Cracks and patches stay close to the road's base value rather than forming a busy black web.",
+    "walkingEdge": "The strips at |z| 4–6 are remnants of concrete pavements, repaired with scavenged slabs and compacted grit. Retain intermittent worn kerbs about 0.08 m high, with flush sand-filled transitions wherever slabs are missing. These are maintained survivor footpaths through inherited ruins, not pristine municipal sidewalks. Keep a continuous usable walking route past fixtures at z 5; no open pits, exposed reinforcing spikes or obstructive rubble heaps.",
+    "lotMarkers": "Free lot: 12 parts on an unclaimed 16 m parcel. Near x 4.5, z 4.5, mount a large empty scrap-steel hoop on a crooked timber post with a bolted metal brace; a broad faded-ochre band makes the vacant centre readable without words. Add a low concrete fragment, two dry tufts, a timber offcut and shallow dust patches, leaving the parcel usable. Community lot: 18 parts, comprising four low corner markers made from concrete chunks and short scrap stakes, a front marker assembled from a salvaged hatch panel, and sparse flat ground repairs. Paint four ochre nodes around one shared central disc on the panel, with a simple building-hand pictogram below. This denotes a collective project, not private availability; keep the interior empty.",
+    "boundaries": "Claimed lot: 32 parts including the owner marker. Alternate low corrugated-metal panels, scrap-timber rails, tyre sections and short sandbag footings along z -6 and x -6. Use deliberate repairs and broad material changes rather than random rubbish. Boundaries are about 0.7–0.95 m high and always below 1.2 m, with gaps that preserve views of the build. Keep the +z frontage open, with a clear entrance gap between two mismatched reinforced posts; no full perimeter fortress, razor wire or sharpened stakes.",
+    "ownerMarker": "Bolt a flattened scrap-metal plate to the front entrance post. A broad owner-colour patch in #d9534f and a filled household disc distinguish occupancy from the free lot's empty hoop. Hand-paint the exact player name in large, simple sand-coloured lettering on a dark weathered field. Use a few chunky bolts and a timber backing; the plate is neither an electronic display nor a clean modern estate sign.",
+    "lighting": "Street light: 14 parts at x 0, z 5. A concrete-and-tyre footing supports a crooked salvaged pipe mast, a short crossarm, exposed cable loops and three dim warm bulbs under mismatched tin shades. Include a small unlit battery box at the base. Only bulb parts use glow=true; shades, cables, switches and battery fittings do not emit. Use short bulb strings only at gathering points, never a luminous street network. Overall lighting is warm, low-angle dusty daylight, slightly dimmer than the Modern Age, with enough soft fill to read faces and dark entrances; haze belongs mainly in the distance.",
+    "centrepiece": "Use 48 parts within a roughly 4.5 m diameter for a communal fire barrel, three low scrap seats and a working junk wind turbine. The central oil drum has a broad open top, small chunky flames and a protective low scrap-metal collar. Offset the turbine mast to the rear of the gathering circle; give it a stable salvaged-concrete footing, three broad mismatched sheet-metal blades and a simple tail vane, with the hub about 3 m high. Run a visible cable to an unlit battery box and a short string of three dim bulbs above one seating edge. Keep the mast slender, the rotor modest and the circle's front open so people remain visible. Only flames and bulbs use glow=true; there is no glowing rotor, fountain basin, water jet or smoke curtain.",
+    "seating": "Use 10 parts for a two-person salvaged vehicle bench seat bolted to a timber crossbeam on low tyre supports. Give the broad seat faded olive upholstery, one large stitched patch and an uneven but intact backrest. The sitting surface is about 0.45 m high. Keep it stable and welcoming, without sharp protrusions, exposed springs or the silhouette of a modern park bench.",
+    "market": "Use 32 parts within about 2.6 × 1.6 m for a barter stall under a sagging patched tarp. Two pipe uprights and two timber posts support a broad sand-and-olive canopy with visible corner ties. A reclaimed door laid across low oil drums forms the counter, backed by one corrugated-metal windbreak. Display water cans, unbranded food tins, bundled cloth, spare bolts, a seed tray and simple repair tools in shallow crates. Preserve a clear serving side and tangible counter; no glass-fronted kiosk, electronic till, glowing labels or decorative weapon rack.",
+    "trees": "Street pair: 28 parts total at x -3 and x 3, z 5. One is a taller leaning drought-stressed tree with a broken upper fork and two unequal masses of dusty olive leaves; the other is a shorter crooked fruit tree with a denser crown on one side and a single timber prop. Low tyre watering collars and patched irrigation cans show survivor care, not municipal landscaping. Wild group: 36 parts for a tall wind-bent snag with a little surviving foliage, a broad low thorn tree with an off-centre canopy, and a squat irregular sage-like bush. Keep trunks tilted, branch lengths unequal and crown heights distinct; not every plant is dead. Countryside dressing: 16 low, scattered parts of straw-coloured grass, pale stones, broken twigs, flattened dry scrub, two small concrete fragments and a half-buried tyre section, mostly below 0.35 m. Leave generous calm ground between features; no junk carpet, crystals or tall ruin walls.",
+    "arrival": "Use 68 parts for a survivor pickup stop and an armoured scrap bus. At z 5, make a narrow waiting shelter from two salvaged posts, a corrugated roof and a patched rear tarp, with a short tyre-supported seat and a hand-painted bus-wheel pictogram on scrap metal. At z 0, aligned along x, place a toy-compressed bus about 5 m long, rebuilt with a shortened passenger cabin, an external bracing frame, broad mismatched armour plates, chunky rubber tyres and a roof rack carrying secured water cans. Keep recognisable passenger windows, a front windscreen and a side boarding door facing +z, with a clear step and route to the shelter. This is a reconstructed transport machine, not an intact modern minibus with a rust texture. Headlamps are off; omit guns, spikes, smoke plumes and hovering.",
+    "crossing": "Use 64 parts for a survivor-repaired bridge running along z, about 4 m wide, resting on surviving concrete abutments and squat piers. Salvaged steel beams carry broad timber planks and flat metal repair plates, creating a continuous crossing with no holes or raised obstacles. Low mismatched pipe rails and tyre buffers protect the edges without hiding travellers. The deck meets the banks about 1 m above water. Water flows along x across |z| <= 7; the river tile displays its central 12 m, while bank landings continue to z ±7 in the adjoining bank sections. Dress the banks with dull reeds, silt, concrete chunks and a few sandbags. The water is opaque murky olive-grey, with broad subdued ripples and no luminous contamination, bright foam or rainbow oil sheen.",
+    "camp": "Use 88 parts for the scrap convoy's camp across the river beyond the east ring road. Include two grounded armoured rigs with large rubber tyres, reinforced cabs, external load frames and visibly secured cargo. One carries a shortened shipping-container sleeping pod; two patched tarp lean-tos beside the rigs complete the three shelters. Arrange water drums, spare tyres, timber crates, bundled metal stock and a small repair table around a low fire barrel, keeping a clear entrance and central meeting space. A short string of dim bulbs hangs under one tarp; only flames and bulbs use glow=true. Use compact sheltered arrangements rather than a threatening war camp. The separate caravan leader uses 42 parts including the base figure: a road boss in a long patched dust coat, padded scrap shoulder pieces, heavy boots, a cloth-wrapped cap with unlit goggles, and a cross-body travel satchel. Give them a rolled route chart and a cluster of faded unfamiliar convoy pennants on the satchel, suggesting distant roads without tiny text, modern tourist stickers or glowing navigation devices.",
+    "people": "Use 50 parts total for two residents at x -0.6 and x 0.6, retaining the supplied blocky base bodies and friendly readable faces. One wears patched ochre overalls over a faded shirt, reinforced work boots and a soft cap with dark hair visible beneath it, and carries a large repair spanner. The other wears an olive utility coat, a sand-coloured neck scarf, patched trousers and a floppy repaired sun hat over a side braid, and carries a watering can. Build clothes from broad fabric panels, one or two obvious repairs and useful pockets. Preserve distinct silhouettes and varied skin tones without ash-covered faces, horror mutations, all-over armour or tiny cluttered survival gear.",
+    "head": "The Overseer uses 46 parts including the base figure. Give them a broad asymmetric scrap-plate mantle over a long faded-ochre utility coat, substantial boots and a distinctive flat-topped patched work cap with visible grey hair beneath it. The mantle is a few large rust-and-olive plates with softened corners, not powered armour. A salvaged shoulder radio with a short antenna and an oversized ring of town keys held at the waist are the dominant symbols of office. Put the shared four-node town emblem on a broad chest plate so their authority reads as stewardship of the settlement. The radio display remains dark; no crown, mayoral sash, pristine uniform, glowing visor or weapon is needed."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "sand",
+      "base": "#a89a80",
+      "accent": "#b0a289",
+      "accent2": "#9d9079",
+      "scale": 2.2
+    },
+    "road": {
+      "pattern": "asphalt",
+      "base": "#767269",
+      "accent": "#817b70",
+      "accent2": "#6d6961",
+      "scale": 1.8
+    },
+    "pavement": {
+      "pattern": "concrete",
+      "base": "#9a9283",
+      "accent": "#a69d8d",
+      "accent2": "#8e877a",
+      "scale": 2
+    },
+    "lotRough": {
+      "pattern": "sand",
+      "base": "#aa9b80",
+      "accent": "#b3a58c",
+      "accent2": "#9f927b",
+      "scale": 2
+    },
+    "lotClaimed": {
+      "pattern": "dirt",
+      "base": "#948872",
+      "accent": "#9e927d",
+      "accent2": "#897e6a",
+      "scale": 1.8
+    },
+    "square": {
+      "pattern": "concrete",
+      "base": "#a19887",
+      "accent": "#aca390",
+      "accent2": "#958d7e",
+      "scale": 2.4
+    },
+    "bank": {
+      "pattern": "mud",
+      "base": "#827c66",
+      "accent": "#8d8670",
+      "accent2": "#75725f",
+      "scale": 1.6
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#626a58",
+      "accent": "#727866",
+      "accent2": "#575e4f",
+      "scale": 2.8
+    }
+  },
+  "light": {
+    "sky": "#bdb29e",
+    "fog": "#bfb29a",
+    "sun": "#ecd0a0",
+    "sunIntensity": 1.75,
+    "hemiSky": "#c8bcaa",
+    "hemiGround": "#8d7d64",
+    "hemiIntensity": 1.4
+  },
+  "palette": [
+    "#8e563e",
+    "#b08852",
+    "#b6a384",
+    "#74765a",
+    "#363733",
+    "#aaa393",
+    "#76614b",
+    "#8c8578",
+    "#66574b",
+    "#8c805f",
+    "#666e57",
+    "#d6ad6a",
+    "#c77d3f",
+    "#d9534f"
+  ],
+  "materials": [
+    "Rusty corrugated sheet metal with broad shallow ribs and a few large repair plates",
+    "Dented shipping-container panels with faded paint and visibly reinforced openings",
+    "Scrap timber with blunt split ends, chunky bolts and simple lashings",
+    "Dust-coated rubber tyres and patched vehicle upholstery",
+    "Bleached cracked concrete and worn asphalt with restrained low-contrast damage",
+    "Ochre sandbags, patched canvas tarps and faded olive utility cloth",
+    "Reused oil drums, pipe frames, salvaged steel beams and unlit battery boxes",
+    "Matte oily-black hardware and dark recessed openings, without wet reflective sheen",
+    "Dry straw tufts, dusty olive foliage and a few carefully tended surviving plants",
+    "Small chunky fire shapes and dim salvaged filament bulbs; no other emissive materials"
+  ],
+  "avoid": [
+    "The superseded optimistic high-tech future: pristine ivory shells, blue-grey and lavender futuristic masses, living-green lawns and luminous interfaces",
+    "Neon, holograms, emissive road seams, glow grids, glowing water and radioactive-green decoration",
+    "Hovering vehicles, floating architecture, antigravity parts and unsupported crossings",
+    "Intact present-day buildings, street furniture or vehicles merely recoloured rusty",
+    "Fresh lane paint, immaculate pavements, clean municipal signs and polished chrome",
+    "Dense crack networks, noisy rust textures, scattered micro-debris and high-contrast ground patterns",
+    "Jet-black roads, crushed shadows, night-time gloom and thick dust or smoke hiding the town",
+    "Gore, corpses, skull piles, horror mutations, threatening spikes and weapon-led silhouettes",
+    "Symmetrical lollipop trees, identical plantings, lush ornamental lawns and uniformly dead forests",
+    "Unstable junk piles, impassable rubble, sharp exposed reinforcement and barriers across circulation routes",
+    "Large bright fire effects, excessive bulb strings, bloom halos and glowing machinery",
+    "Brand logos, franchise insignia, tiny unreadable warnings and decorative hazard stripes on every object"
+  ],
+  "designDirection": "The modern world has fallen: rebuild every requested object as useful survivor-made infrastructure from salvaged structure, rusty corrugated metal, scrap timber, tyres and patched cloth, never as a contemporary asset with a distress filter or a shiny future object. Preserve the 5×5 town plan, 16 m parcels, four central community lots and caravan camp across the river beyond the east ring road, with every transformation retaining its footprint and purpose. Use chunky low-poly toy silhouettes for the roughly 40° overhead camera, broad muted material patches, calm low-contrast ground and warm dusty daylight slightly dimmer than the Modern Age; reserve glow exclusively for sparse fire and dim bulbs. A skyscraper becomes a braced remnant frame filled with stacked container homes and visible stairs, a car becomes a compact four-wheeled scrap buggy with a real cab and repaired suspension, and a café becomes a container cantina with a patched tarp, kettle and physical serving hatch. Keep the settlement cosy and resourceful through tended seedlings, repaired seats, clear entrances and communal gathering spaces, not through pristine surfaces, saturated colour or technological spectacle."
+}

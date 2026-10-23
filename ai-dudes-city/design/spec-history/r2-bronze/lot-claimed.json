@@ -1,0 +1,542 @@
+{
+  "name": "Ivy's Bronze Age Mudbrick-and-Wattle Boundary",
+  "description": "Uneven earthen courses and short dark woven screens mark two sides of Ivy's lot, while paired red-banded gate posts frame a large sealed clay name tablet at the open frontage.",
+  "notes": "Sun-dried brick, closely spaced wattle stakes and fibre-hung clay establish Bronze Age craft; render the exact gameplay label \"Ivy\" anchored at [-4.2,0.81,5.99] on the tablet, without imitation script, with all 28 parts contained within |x| and |z| ≤ 6.0.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.05,
+        0.17,
+        -5.62
+      ],
+      "size": [
+        5.6,
+        0.34,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.65,
+        0.185,
+        -5.59
+      ],
+      "size": [
+        5.7,
+        0.37,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.5,
+        0.48,
+        -5.59
+      ],
+      "size": [
+        4.58,
+        0.28,
+        0.59
+      ],
+      "rotation": [
+        0,
+        0.008,
+        0
+      ],
+      "color": "#d19b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.16,
+        0.495,
+        -5.63
+      ],
+      "size": [
+        6.55,
+        0.25,
+        0.57
+      ],
+      "rotation": [
+        0,
+        -0.006,
+        0
+      ],
+      "color": "#bd8854"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.62,
+        0.16,
+        -2.65
+      ],
+      "size": [
+        0.69,
+        0.32,
+        5.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c08b56"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.59,
+        0.18,
+        2.85
+      ],
+      "size": [
+        0.7,
+        0.36,
+        5.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.61,
+        0.455,
+        -3.12
+      ],
+      "size": [
+        0.58,
+        0.27,
+        4.45
+      ],
+      "rotation": [
+        0,
+        -0.007,
+        0
+      ],
+      "color": "#d1a36d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.58,
+        0.505,
+        2.32
+      ],
+      "size": [
+        0.6,
+        0.29,
+        6.25
+      ],
+      "rotation": [
+        0,
+        0.006,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.75,
+        0.735,
+        -5.58
+      ],
+      "size": [
+        1.54,
+        0.17,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0.035
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.75,
+        0.935,
+        -5.64
+      ],
+      "size": [
+        1.5,
+        0.17,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.035
+      ],
+      "color": "#a67c45"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.55,
+        0.76,
+        1.9
+      ],
+      "size": [
+        0.2,
+        0.17,
+        1.54
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.63,
+        0.96,
+        1.9
+      ],
+      "size": [
+        0.2,
+        0.17,
+        1.5
+      ],
+      "rotation": [
+        -0.03,
+        0,
+        0
+      ],
+      "color": "#a67c45"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.35,
+        0.69,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.7,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.75,
+        0.705,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.73,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.15,
+        0.685,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.69,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.71,
+        1.3
+      ],
+      "size": [
+        0.24,
+        0.7,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.725,
+        1.9
+      ],
+      "size": [
+        0.24,
+        0.73,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.7,
+        2.5
+      ],
+      "size": [
+        0.24,
+        0.68,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5,
+        0.59,
+        5.53
+      ],
+      "size": [
+        0.35,
+        1.18,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.4,
+        0.59,
+        5.53
+      ],
+      "size": [
+        0.35,
+        1.18,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5,
+        0.95,
+        5.53
+      ],
+      "size": [
+        0.39,
+        0.35,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.4,
+        0.95,
+        5.53
+      ],
+      "size": [
+        0.39,
+        0.35,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.75,
+        1,
+        5.73
+      ],
+      "size": [
+        0.08,
+        0.4,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.9
+      ],
+      "color": "#d5bd87"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.65,
+        1,
+        5.73
+      ],
+      "size": [
+        0.08,
+        0.4,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.9
+      ],
+      "color": "#d5bd87"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.2,
+        0.78,
+        5.76
+      ],
+      "size": [
+        1.16,
+        0.64,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.2,
+        0.79,
+        5.86
+      ],
+      "size": [
+        1.02,
+        0.5,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ead7aa"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.53,
+        0.77,
+        5.94
+      ],
+      "size": [
+        0.27,
+        0.08,
+        0.27
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#a54f35"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.57,
+        0.15,
+        5.43
+      ],
+      "size": [
+        0.74,
+        0.3,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.08,
+        0
+      ],
+      "color": "#d2bb87"
+    }
+  ],
+  "checks": [
+    "8 parts reach outside the 13 m room"
+  ]
+}

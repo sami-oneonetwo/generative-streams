@@ -1,0 +1,236 @@
+{
+  "name": "Recessed Ceramic Light Pillar",
+  "description": "A tapered ivory pillar lights the walking edge through a broad vertical cyan-white recess sheltered beneath a small rounded ceramic brow.",
+  "notes": "The integrated luminous recess, substantial tapered ceramic body and low docking plinth replace the conventional pole-and-lamp silhouette, with emission confined to the street-facing inset.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.08,
+        5
+      ],
+      "size": [
+        0.84,
+        0.16,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.22,
+        5
+      ],
+      "size": [
+        0.7,
+        0.16,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d7e1e8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.15,
+        5
+      ],
+      "size": [
+        0.28,
+        3.7,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.205,
+        2.15,
+        5
+      ],
+      "size": [
+        0.16,
+        3.7,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.035
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.205,
+        2.15,
+        5
+      ],
+      "size": [
+        0.16,
+        3.7,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0,
+        0.035
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.15,
+        5.245
+      ],
+      "size": [
+        0.32,
+        3.7,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.49,
+        4.75
+      ],
+      "size": [
+        0.32,
+        2.38,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.32,
+        4.775
+      ],
+      "size": [
+        0.3,
+        1.28,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a2b7b8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.32,
+        4.725
+      ],
+      "size": [
+        0.22,
+        1.14,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a8fff0",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.71,
+        4.725
+      ],
+      "size": [
+        0.32,
+        0.1,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.96,
+        4.735
+      ],
+      "size": [
+        0.32,
+        0.12,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        4.08,
+        4.95
+      ],
+      "size": [
+        0.58,
+        0.24,
+        0.82
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    }
+  ]
+}

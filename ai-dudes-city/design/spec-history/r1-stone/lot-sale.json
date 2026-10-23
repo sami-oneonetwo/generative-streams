@@ -1,0 +1,197 @@
+{
+  "name": "Unclaimed Ground with Ochre Twig Loop",
+  "description": "Two crooked sticks hold a large empty ochre-daubed twig loop near the front corner of an otherwise open lot, with a loose stone and grass tuft nearby.",
+  "notes": "The visibly vacant loop signals availability without lettering, using gathered branches and pale mud rather than a signboard.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        3.94,
+        0.74,
+        4.53
+      ],
+      "size": [
+        0.16,
+        1.44,
+        0.17
+      ],
+      "rotation": [
+        0.035,
+        0,
+        0.11
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.07,
+        0.77,
+        4.51
+      ],
+      "size": [
+        0.19,
+        1.48,
+        0.17
+      ],
+      "rotation": [
+        -0.045,
+        0,
+        -0.09
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.175,
+        2.4125,
+        4.5
+      ],
+      "size": [
+        0.21,
+        0.79,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.0472
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.825,
+        2.4125,
+        4.5
+      ],
+      "size": [
+        0.19,
+        0.79,
+        0.21
+      ],
+      "rotation": [
+        0,
+        0,
+        1.0472
+      ],
+      "color": "#d3ba83"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.15,
+        1.85,
+        4.5
+      ],
+      "size": [
+        0.22,
+        0.79,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.825,
+        1.2875,
+        4.5
+      ],
+      "size": [
+        0.2,
+        0.79,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.0472
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.175,
+        1.2875,
+        4.5
+      ],
+      "size": [
+        0.22,
+        0.79,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        1.0472
+      ],
+      "color": "#d3ba83"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.85,
+        1.85,
+        4.5
+      ],
+      "size": [
+        0.2,
+        0.79,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.44,
+        0.13,
+        4.84
+      ],
+      "size": [
+        0.56,
+        0.26,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.36,
+        0.17,
+        4.08
+      ],
+      "size": [
+        0.43,
+        0.34,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0.48,
+        0
+      ],
+      "color": "#7c9254"
+    }
+  ]
+}

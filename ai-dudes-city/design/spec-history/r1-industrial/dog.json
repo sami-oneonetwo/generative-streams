@@ -1,0 +1,558 @@
+{
+  "name": "Brass Collar Hound",
+  "description": "A chunky chestnut hound patrols the streets wearing a warm brass collar and a sturdy Victorian leather riding saddle.",
+  "notes": "via the game's design prompt: \"a dog that roams the streets\"",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.7,
+        -0.08
+      ],
+      "size": [
+        0.52,
+        0.5,
+        0.94
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#96552f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.73,
+        0.31
+      ],
+      "size": [
+        0.48,
+        0.57,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a96638"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.72,
+        0.49
+      ],
+      "size": [
+        0.27,
+        0.37,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#edcf94"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.34,
+        0.27
+      ],
+      "size": [
+        0.16,
+        0.5,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#96552f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.34,
+        0.27
+      ],
+      "size": [
+        0.16,
+        0.5,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#96552f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.34,
+        -0.4
+      ],
+      "size": [
+        0.18,
+        0.5,
+        0.21
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#824626"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.34,
+        -0.4
+      ],
+      "size": [
+        0.18,
+        0.5,
+        0.21
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#824626"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.09,
+        0.33
+      ],
+      "size": [
+        0.2,
+        0.18,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#edcf94"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.09,
+        0.33
+      ],
+      "size": [
+        0.2,
+        0.18,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#edcf94"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        0.09,
+        -0.35
+      ],
+      "size": [
+        0.21,
+        0.18,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#dcb77d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.09,
+        -0.35
+      ],
+      "size": [
+        0.21,
+        0.18,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#dcb77d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.96,
+        0.37
+      ],
+      "size": [
+        0.4,
+        0.13,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c89c42"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.96,
+        0.56
+      ],
+      "size": [
+        0.13,
+        0.11,
+        0.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f0cc6b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.14,
+        0.48
+      ],
+      "size": [
+        0.46,
+        0.4,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a96638"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.04,
+        0.76
+      ],
+      "size": [
+        0.33,
+        0.23,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#edcf94"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.09,
+        0.924
+      ],
+      "size": [
+        0.2,
+        0.13,
+        0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#292722"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.139,
+        1.23,
+        0.703
+      ],
+      "size": [
+        0.075,
+        0.075,
+        0.035
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#242522"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.139,
+        1.23,
+        0.703
+      ],
+      "size": [
+        0.075,
+        0.075,
+        0.035
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#242522"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.267,
+        1.08,
+        0.41
+      ],
+      "size": [
+        0.14,
+        0.46,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.15
+      ],
+      "color": "#623b28"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.267,
+        1.08,
+        0.41
+      ],
+      "size": [
+        0.14,
+        0.46,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0.15
+      ],
+      "color": "#623b28"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.93,
+        -0.68
+      ],
+      "size": [
+        0.14,
+        0.5,
+        0.14
+      ],
+      "rotation": [
+        -0.8,
+        0,
+        0
+      ],
+      "color": "#96552f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.1,
+        -0.855
+      ],
+      "size": [
+        0.145,
+        0.16,
+        0.145
+      ],
+      "rotation": [
+        -0.8,
+        0,
+        0
+      ],
+      "color": "#edcf94"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.951,
+        -0.15
+      ],
+      "size": [
+        0.57,
+        0.07,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#234d49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.008,
+        -0.15
+      ],
+      "size": [
+        0.38,
+        0.09,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#583c2b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.07,
+        -0.33
+      ],
+      "size": [
+        0.4,
+        0.12,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#704c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.065,
+        0.02
+      ],
+      "size": [
+        0.32,
+        0.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#704c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.273,
+        0.76,
+        -0.14
+      ],
+      "size": [
+        0.045,
+        0.38,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#583c2b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.273,
+        0.76,
+        -0.14
+      ],
+      "size": [
+        0.045,
+        0.38,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#583c2b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.301,
+        0.76,
+        -0.14
+      ],
+      "size": [
+        0.025,
+        0.12,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c89c42"
+    }
+  ]
+}

@@ -10,12 +10,14 @@ import { LIMITS, nextId, pushFeed, pushLine, type Dude, type DudesState, type Jo
 import type { Emote, FieldEffect, UseHow } from '../../shared/dudesTypes';
 import { claimHat, restore } from './events';
 import { knockedOut, recover, runAttack, runOver } from './combat';
+import { renewed } from './damage';
 import { listen } from './listener';
-import { autonomy, fitToLot, freeSpaceOn, leaveVisit, lotsOf, runLabour, runVisit, socialised } from './city';
+import { ageOf, autonomy, awayOuting, fitToLot, stampAge, freeSpaceOn, leaveVisit, lotsOf, runLabour, runVisit, socialised } from './city';
 import { fitBlueprint } from './blueprint';
-import { CITY_BOUNDS, plotById } from '../../shared/city';
+import { CITY, CITY_BOUNDS, plotById } from '../../shared/city';
 import { MOVERS, altitudeOf, flies, setAltitude, startMoving } from './movers';
 import { runBit } from './bits';
+import { isPiloted } from './players';
 
 export const WALK_SPEED = 2.4; // m/s
 export const WANDER_SPEED = 1.3;
@@ -87,9 +89,12 @@ export function placeJob(state: DudesState, job: Job): void {
 }
 
 export function walkTo(state: DudesState, dude: Dude, to: GroundPoint, why: Dude['walkingFor']): boolean {
-  const path = route(dude.position, to, state.objects);
+  // Off the town's ground (out on the path to the river bridge): straight back onto it first.
+  const off = !onGround(dude.position);
+  const from = off ? clampToGround(dude.position, 3) : dude.position;
+  const path = route(from, to, state.objects);
   if (!path) return false;
-  dude.path = path.slice(1);
+  dude.path = off ? [from, ...path.slice(1)] : path.slice(1);
   dude.walkingFor = why;
   return true;
 }
@@ -159,6 +164,7 @@ function commit(state: DudesState, dude: Dude, job: Job, now: number): void {
     target.revision++;
     target.blueprint = job.blueprint;
     target.footprint = job.footprint;
+    renewed(state, target);
     // Placement only moves an edit when the new shape no longer fits where it stood; a build driven
     // somewhere else while it was being redesigned stays where it is now.
     const relocated = job.position.x !== job.anchor.x || job.position.z !== job.anchor.z;
@@ -169,6 +175,7 @@ function commit(state: DudesState, dude: Dude, job: Job, now: number): void {
     // A parked build keeps its heading through a redesign; its footprint turns with it.
     if (target.driven) target.footprint = turnedFootprint(job.footprint, target.driven.turn);
     target.editedBy = dude.name;
+    stampAge(state, target); // redesigned, so made the way this age makes things (or in none, in the sandbox)
     state.worldRevision++;
     return finish(state, dude, job, now, true, `you finished changing ${target.blueprint.name}`, `${dude.name} redid ${target.blueprint.name}`);
   }
@@ -186,6 +193,7 @@ function commit(state: DudesState, dude: Dude, job: Job, now: number): void {
     ...(job.plot ? { plot: job.plot } : {}),
     ...(job.venue ? { venue: job.venue } : {}),
   };
+  stampAge(state, object);
   startMoving(object, `${job.request} ${job.asked ?? ''}`);
   state.objects.push(object);
   clearFootprint(state, object);
@@ -241,6 +249,21 @@ function runJobs(state: DudesState, dude: Dude, dt: number, now: number): void {
   if (job.workedMs >= (job.workMs ?? workMsFor(job))) commit(state, dude, job, now);
 }
 
+/** A player's jobs: no walk to the site, it goes up while they get on with things (like the Mayor's). */
+function pilotJobs(state: DudesState, dude: Dude, dt: number, now: number): void {
+  let job = state.jobs.find((j) => j.dudeId === dude.id && (j.status === 'walking' || j.status === 'building'));
+  if (!job) {
+    job = state.jobs.find((j) => j.dudeId === dude.id && j.status === 'ready');
+    if (!job) return;
+    job.status = 'building';
+    job.workMs = workMsFor(job);
+    job.workedMs = 0;
+  }
+  job.status = 'building';
+  job.workedMs = (job.workedMs ?? 0) + dt;
+  if (job.workedMs >= (job.workMs ?? workMsFor(job))) commit(state, dude, job, now);
+}
+
 /**
  * Something to do when nobody has asked for anything: first what they need (city.ts `autonomy`:
  * out to eat, home to rest, a party), then a stroll, a word with someone, a look at a build, a sit
@@ -268,10 +291,12 @@ function idle(state: DudesState, dude: Dude, now: number, rng: () => number): vo
     }
   };
   if (away) {
+    // Now and then out of the house: a shift where the travellers need one, or round to someone's place.
+    if (awayOuting(state, dude, now, rng)) return;
     // The household's routine: about the lot, a sit in the garden.
     const lot = lotsOf(state, dude)[0];
-    if (lot && Math.hypot(dude.position.x - lot.centre.x, dude.position.z - lot.centre.z) > 9) return void walkTo(state, dude, lot.centre, 'wander');
-    if (roll < 0.5) strollFrom(lot ? lot.centre : dude.position, 1, lot ? 5 : 3);
+    if (lot && Math.hypot(dude.position.x - lot.centre.x, dude.position.z - lot.centre.z) > CITY.plot * 0.6) return void walkTo(state, dude, lot.centre, 'wander');
+    if (roll < 0.5) strollFrom(lot ? lot.centre : dude.position, 1, lot ? Math.min(5, CITY.plot / 2 - 1.5) : 3);
     else if (roll < 0.7) dude.emote = { pose: 'sit', until: now + 20_000 };
     return;
   }
@@ -433,7 +458,7 @@ export function draftingSpot(job: Job): GroundPoint | undefined {
   // Just off the marked-out site's corner on the street side, looking across it.
   const off = (job.site ?? 7) / 2 + 0.4;
   const r = lot.rect;
-  return { x: Math.max(r.minX + 0.4, Math.min(r.maxX - 0.4, job.anchor.x + lot.sx * off)), z: Math.max(r.minZ + 0.4, Math.min(r.maxZ - 0.4, job.anchor.z + lot.sz * off)) };
+  return { x: Math.max(r.minX + 0.4, Math.min(r.maxX - 0.4, job.anchor.x + (lot.front.x || lot.sx) * off)), z: Math.max(r.minZ + 0.4, Math.min(r.maxZ - 0.4, job.anchor.z + (lot.front.z || lot.sz) * off)) };
 }
 
 /**
@@ -491,15 +516,30 @@ export function tickDudes(state: DudesState, dt: number, now: number, rng: () =>
     recover(dude, now);
     if (knockedOut(dude, now)) continue; // flat on its back: nothing moves until it gets up
     if (dude.emote && dude.emote.until <= now) dude.emote = undefined;
+    // Driven by a player (players.ts): they walk it themselves, and its builds rise without it.
+    if (isPiloted(dude.id)) {
+      dude.path = [];
+      // What they were driving was knocked down under them: they are on the ground beside the wreck.
+      if (dude.riding && !dude.use && !state.objects.some((o) => o.id === dude.riding && o.destroyedAt === undefined)) {
+        dude.riding = undefined;
+        dude.y = undefined;
+      }
+      pilotJobs(state, dude, dt, now);
+      continue;
+    }
     if (dude.path.length) {
-      step(dude, dt);
+      // Off to the stranded travellers at the bridge: at a run, it's a long way from town.
+      step(dude, dt, dude.labour?.site === 'bridge' && dude.labour.phase === 'going' ? WALK_SPEED * 1.8 : undefined);
       if (!dude.path.length && dude.walkingFor !== 'job') {
         if (dude.walkingFor === 'wander') arrive(state, dude, now, rng);
         dude.walkingFor = undefined;
       }
     }
-    if (dude.attack) runAttack(state, dude, now, rng);
-    else if (dude.use) runUse(state, dude, dt, now);
+    if (dude.attack) {
+      runAttack(state, dude, now, rng);
+      // Firing a tank's cannon: the tank still goes where the attack points it.
+      if (dude.use && dude.riding) runUse(state, dude, dt, now);
+    } else if (dude.use) runUse(state, dude, dt, now);
     else if (dude.bit) runBit(state, dude, now);
     else if (dude.visit) runVisit(state, dude, now);
     else if (dude.labour) runLabour(state, dude, dt, now);
@@ -567,7 +607,7 @@ function turnedFootprint(size: { width: number; depth: number }, turn: number) {
 
 /** Someone else is aboard or mid-run with it. */
 export function inUse(state: DudesState, objectId: string, except?: string): Dude | undefined {
-  return state.dudes.find((d) => d.id !== except && d.use?.objectId === objectId && d.use.phase === 'doing' && isRun(d.use.how));
+  return state.dudes.find((d) => d.id !== except && ((d.use?.objectId === objectId && d.use.phase === 'doing' && isRun(d.use.how)) || (!d.use && d.riding === objectId)));
 }
 
 /** Start using a build: walk to the side of it nearest us. Returns a reason when it cannot start. */
@@ -654,7 +694,9 @@ export function addEffect(state: DudesState, effect: Omit<FieldEffect, 'id'>): v
   state.effects ??= [];
   const id = (state.effects.at(-1)?.id ?? effect.at) + 1;
   state.effects.push({ id, ...effect });
-  while (state.effects.length > 60) state.effects.shift();
+  // Ten players firing at once make a lot of these: keep plenty (a snapshot only carries the last
+  // couple of seconds), and when there are too many, the oldest go first.
+  while (state.effects.length > 200) state.effects.shift();
 }
 
 function beginDoing(state: DudesState, dude: Dude, o: SafehouseObject, use: UseTask, now: number): void {
@@ -776,6 +818,8 @@ function runUse(state: DudesState, dude: Dude, dt: number, now: number): void {
     dude.facing = driven.turn;
     runOver(state, dude, driven.at, now, o);
   }
+  // Stopped to fire (a tank on an attack, combat.ts): it holds still where it is.
+  if (dude.attack && !route.length) return;
   // Got there with time to spare: pick another stretch of open field and keep going.
   if (!route.length && use.how !== 'push' && now < (use.until ?? now)) {
     const others = state.objects.filter((x) => x.id !== o.id);

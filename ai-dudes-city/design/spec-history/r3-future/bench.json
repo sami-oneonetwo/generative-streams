@@ -1,0 +1,198 @@
+{
+  "name": "Continuous-Shell Civic Hover Seat",
+  "description": "A warm two-person sitting shell with an integrated low back hovers above a small central docking puck, with ivory end caps and a clearly visible cyan underside status strip.",
+  "notes": "The continuous biocomposite shell replaces conventional bench slats and legs, keeping its sitting surface at 0.45 m with a stable 0.12 m levitation gap above the matte docking puck.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.05,
+        0
+      ],
+      "size": [
+        1.4,
+        0.1,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.11,
+        0
+      ],
+      "size": [
+        1.28,
+        0.06,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8c80b4"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.355,
+        0
+      ],
+      "size": [
+        2.04,
+        0.19,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.355,
+        0.28
+      ],
+      "size": [
+        0.19,
+        2.04,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.44,
+        -0.25
+      ],
+      "size": [
+        0.36,
+        2.04,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.615,
+        -0.345
+      ],
+      "size": [
+        2.04,
+        0.38,
+        0.16
+      ],
+      "rotation": [
+        -0.25,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.8,
+        -0.392
+      ],
+      "size": [
+        0.16,
+        2.04,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.02,
+        0.51,
+        -0.055
+      ],
+      "size": [
+        0.16,
+        0.5,
+        0.77
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.02,
+        0.51,
+        -0.055
+      ],
+      "size": [
+        0.16,
+        0.5,
+        0.77
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.29,
+        0.37
+      ],
+      "size": [
+        1.98,
+        0.06,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    }
+  ]
+}

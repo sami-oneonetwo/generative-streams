@@ -1,4 +1,4 @@
-// The town without a model: everyone who turns up gets a lot, builds on it, and what they build is
+// The town without a model: everyone who turns up gets a lot, builds on it (or on any lot but the square), and what they build is
 // for something other people use and pay for; needs send characters out on their own; community
 // projects get designed, paid for, built together and opened; residents keep places busy; and
 // whoever was away hears what happened when they come back.
@@ -6,8 +6,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { normalizeAgentReply, type AgentReply } from '../src/worlds/ai-dudes/agent';
 import { stateSchema } from '../src/worlds/ai-dudes/state';
-import { allPlots, homePlots, plotById, CITY_BOUNDS, BLOCK_HALF } from '../src/shared/city';
-import { cityOf, districtsOf, placesOf, wantsOf, TOWN } from '../src/worlds/ai-dudes/city';
+import { allPlots, homePlots, plotById, courtyards, CITY, CITY_BOUNDS, BLOCK_HALF, PITCH } from '../src/shared/city';
+import { cityOf, districtsOf, headName, placesOf, wantsOf, TOWN } from '../src/worlds/ai-dudes/city';
 import { AWAKE_MS, seatHeight } from '../src/worlds/ai-dudes/sim';
 import { altitudeOf, flies } from '../src/worlds/ai-dudes/movers';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
@@ -19,21 +19,24 @@ const inside = (p: { x: number; z: number }, r: { minX: number; maxX: number; mi
 
 test('the layout: lots never overlap the roads or each other, every address is distinct, and the square holds the community lots', () => {
   const lots = allPlots();
-  assert.equal(lots.length, 25 * 4);
+  assert.equal(lots.length, 4 * 8 + 4, 'four blocks of eight lots round their courtyards (the corners are parks), and the square\'s four');
   assert.equal(lots.filter((l) => l.civic).length, 4);
   assert.equal(new Set(lots.map((l) => l.address)).size, lots.length);
   for (const a of lots) {
     assert.ok(inside({ x: a.rect.minX, z: a.rect.minZ }, CITY_BOUNDS) && inside({ x: a.rect.maxX, z: a.rect.maxZ }, CITY_BOUNDS), 'inside({ x: a.rect.minX, z: a.rect.minZ }, CITY_BOUNDS) && i');
     // Within its block, inside the pavement.
-    const bx = a.bx * 44,
-      bz = a.bz * 44;
+    const bx = a.bx * PITCH,
+      bz = a.bz * PITCH;
     assert.ok(a.rect.minX >= bx - BLOCK_HALF && a.rect.maxX <= bx + BLOCK_HALF && a.rect.minZ >= bz - BLOCK_HALF && a.rect.maxZ <= bz + BLOCK_HALF, a.id);
     for (const b of lots) if (a !== b) assert.ok(a.rect.maxX <= b.rect.minX || b.rect.maxX <= a.rect.minX || a.rect.maxZ <= b.rect.minZ || b.rect.maxZ <= a.rect.minZ, `${a.id} overlaps ${b.id}`);
   }
   // Handed out nearest the square first.
   const home = homePlots();
   assert.equal(Math.max(Math.abs(home[0].bx), Math.abs(home[0].bz)), 1);
-  assert.equal(Math.max(Math.abs(home.at(-1)!.bx), Math.abs(home.at(-1)!.bz)), 2);
+  assert.equal(Math.max(Math.abs(home.at(-1)!.bx), Math.abs(home.at(-1)!.bz)), 1);
+  // No lot on a courtyard; every lot fronts a road.
+  for (const c of courtyards()) assert.ok(!lots.some((l) => inside(c, l.rect)), `courtyard ${c.x},${c.z} is no lot`);
+  for (const l of home) assert.ok(Math.abs(l.centre.x + l.front.x * (CITY.plot / 2 + CITY.sidewalk + CITY.road / 2) - (l.bx * PITCH + l.front.x * PITCH / 2)) < 0.01 || l.front.z !== 0, `${l.id} fronts its avenue`);
 });
 
 test('everyone who turns up gets their own lot, walks over to it, and starts with coins and needs', async () => {
@@ -47,7 +50,9 @@ test('everyone who turns up gets their own lot, walks over to it, and starts wit
   assert.ok(a.needs && a.needs.hunger > 0, 'a.needs && a.needs.hunger > 0');
   assert.ok(h.state.feed.some((f) => f.text.startsWith('alex moved into ')), "h.state.feed.some((f) => f.text.startsWith('alex moved into ");
   await tick(40_000);
-  assert.ok(inside(a.position, plotById(a.plot)!.rect), `alex is on their lot (${JSON.stringify(a.position)})`);
+  // On it, or just off it (lots are small; they may be chatting with the neighbour at the fence).
+  const r = plotById(a.plot)!.rect;
+  assert.ok(inside(a.position, { minX: r.minX - 2, maxX: r.maxX + 2, minZ: r.minZ - 2, maxZ: r.maxZ + 2 }), `alex is on their lot (${JSON.stringify(a.position)})`);
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success, 'stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).s');
 });
 
@@ -306,7 +311,7 @@ test('the Mayor walks where the operator page says, is drawn while it is open, a
   // Speaking: overheard nearby, and the named chatter is told directly.
   mayorInput(h.state, { t: 'say', text: 'kim, how is the cafe going?' }, h.now);
   assert.equal(h.state.mayor!.say?.text, 'kim, how is the cafe going?');
-  assert.ok(kim.overheard.some((o) => o.from === 'The Mayor'), 'overheard');
+  assert.ok(kim.overheard.some((o) => o.from === headName(h.state)), 'overheard (by what this age calls the Mayor)');
   assert.ok(kim.nudges?.some((n) => /The Mayor .* said to you/.test(n)), 'told');
   // Gone quiet: no longer drawn.
   h.now += 60_000;
@@ -339,7 +344,7 @@ const blockDesign = (size: (input: DesignInput) => number): DesignFn => async (i
 test('a build too big for the room left is shrunk into it, and the designer is told the space', async () => {
   const asked: (number | undefined)[] = [];
   let script: AgentReply['actions'] = [];
-  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }), design: blockDesign((i) => (asked.push(i.lot), i.request.includes('villa') ? 10 : 9)) });
+  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }), design: blockDesign((i) => (asked.push(i.lot), i.request.includes('villa') ? 7 : 6)) });
   script = [{ do: 'build', what: 'a grand villa', kind: 'home' }];
   await say('huseyin', 'Güzel ihtişamlı bir villa yap');
   await tick(80_000);
@@ -347,10 +352,10 @@ test('a build too big for the room left is shrunk into it, and the designer is t
   await say('huseyin', 'Bahçede küçük bir havuz ve yanında güzel bir köpek kulübesi');
   await tick(80_000);
   assert.equal(h.state.objects.length, 2, 'both went up');
-  assert.ok(asked[0]! >= 14, `an empty lot is offered whole (${asked[0]})`);
-  assert.ok(asked[1]! < 10, `the second design is asked for the room that is left (${asked[1]})`);
+  assert.ok(asked[0]! >= CITY.plot - 2, `an empty lot is offered whole (${asked[0]})`);
+  assert.ok(asked[1]! < CITY.plot - 2, `the second design is asked for the room that is left (${asked[1]})`);
   const pool = h.state.objects[1];
-  assert.ok(pool.footprint.width < 9, `shrunk to fit (${pool.footprint.width})`);
+  assert.ok(pool.footprint.width < 6, `shrunk to fit (${pool.footprint.width})`);
 });
 
 test('a build that cannot fit at all is said so, in the feed and by the character', async () => {
@@ -393,7 +398,7 @@ test('while a build is being designed, its builder is at the site on their lot w
   });
   script = [{ do: 'build', what: 'a cosy cafe', kind: 'cafe' }];
   await say('kim', 'build a cafe');
-  await tick(30_000);
+  await tick(45_000);
   const view = world.buildScene(h.state, { now: h.now } as never).dudes.find((d) => d.name === 'kim')!;
   assert.equal(view.job?.status, 'designing');
   assert.equal(view.activity, 'designing', 'drafting at the site');
@@ -500,8 +505,8 @@ test('the Mayor builds: a gift on a chatter\'s lot is theirs, a clicked street s
   assert.equal(gift!.createdBy, 'The Mayor');
   assert.equal(donkey!.owner, undefined, 'the street donkey is the town\'s');
   assert.equal(donkey!.blueprint.moves, 'roam', 'and it roams');
-  assert.ok(kim.history.some((l) => /The Mayor built you/.test(l.text)), 'kim is told');
-  assert.ok(h.state.feed.some((f) => /The Mayor built .* for kim/.test(f.text)), 'in the feed');
+  assert.ok(kim.history.some((l) => l.text.includes(`${headName(h.state)} built you`)), 'kim is told');
+  assert.ok(h.state.feed.some((f) => new RegExp(`${headName(h.state)} built .* for kim`).test(f.text)), 'in the feed');
 });
 
 test('a basketball court is for shooting hoops: chatters play there when asked, the Mayor has a go with T, shouts float up', async () => {
@@ -656,4 +661,61 @@ test('flying: a helicopter takes off when flown and lands when left; the Mayor s
   mayorInput(h.state, { t: 'ride' }, h.now);
   assert.equal(altitudeOf(heli), 0, 'down when he gets off');
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success, 'save validates');
+});
+
+test('a build is not made twice when the agent repeats an earlier message on its next turn (the double McDonald\'s)', async () => {
+  // Reproduces 2026-10-22: "Can I have a mcdonalds?", then while it was being designed "Also get rid
+  // of my cave"; the second turn asked for the restaurant again alongside the removal.
+  let script: AgentReply['actions'] = [];
+  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }) });
+  script = [{ do: 'build', what: 'a cosy stone cave home', kind: 'home' }];
+  await say('sami', 'build me a cave');
+  await tick(80_000);
+  const cave = h.state.objects.find((o) => o.venue === 'home')!;
+  assert.ok(cave, 'the cave went up');
+  script = [{ do: 'build', what: 'a modern fast-food restaurant with a red and yellow exterior', kind: 'restaurant' }];
+  await say('sami', 'Can I have a mcdonalds?');
+  await tick(1000);
+  script = [
+    { do: 'build', what: 'a bright modern fast-food restaurant with red and yellow exterior and golden arches', kind: 'restaurant' },
+    { do: 'remove', target: cave.blueprint.name },
+  ];
+  await say('sami', 'Also get rid of my cave');
+  await tick(80_000);
+  const restaurants = h.state.objects.filter((o) => o.venue === 'restaurant');
+  assert.equal(restaurants.length, 1, `one restaurant, not two (${restaurants.map((o) => o.blueprint.name).join(', ')})`);
+  assert.ok(!h.state.objects.some((o) => o.id === cave.id), 'and the cave came down: "get rid of" is asking');
+  const dude = h.state.dudes[0];
+  assert.ok(dude.history.some((l) => /did not build .* again/.test(l.text)), 'the agent is told why');
+  // Asking for another one still works.
+  script = [{ do: 'build', what: 'a bright modern fast-food restaurant with red and yellow exterior', kind: 'restaurant' }];
+  await say('sami', 'build another one of those');
+  await tick(80_000);
+  assert.equal(h.state.objects.filter((o) => o.venue === 'restaurant').length, 2, '"another" builds a second');
+});
+
+test('anyone can build on any lot but the square: a street, a friend’s lot, a free lot; their own when they say nowhere', async () => {
+  let script: AgentReply['actions'] = [];
+  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }) });
+  await say('ana', 'hi');
+  await say('ben', 'hi');
+  await tick(1000);
+  const ana = h.state.dudes.find((d) => d.name === 'ana')!,
+    ben = h.state.dudes.find((d) => d.name === 'ben')!;
+  /** Ana asks for a build; the lot its job went on (undefined when refused). */
+  const build = async (what: string, near?: string) => {
+    script = [{ do: 'build', what, kind: 'decor', ...(near ? { near } : {}) }];
+    await say('ana', what);
+    await tick(500);
+    return h.state.jobs.find((j) => j.request === what)?.plot;
+  };
+  assert.equal(await build('a shed'), ana.plot, 'said nowhere: their own lot');
+  assert.equal(await build('a fountain', 'the square'), undefined, 'never the square');
+  assert.ok(ana.history.some((l) => /square is kept for community projects/.test(l.text)), 'and they are told why');
+  assert.equal(await build('a birdhouse', "ben's lot"), ben.plot, "on ben's lot");
+  assert.ok(ben.history.some((l) => /ana is building a birdhouse on your lot/.test(l.text)), 'ben hears about it');
+  const street = homePlots().find((l) => l.id !== ana.plot && l.id !== ben.plot && !cityOf(h.state).plots[l.id])!.address.replace(/^\d+\s+/, '');
+  assert.ok(plotById(await build('a kiosk', street))!.address.endsWith(street), 'on the street named');
+  const windmill = (await build('a windmill', 'a free lot'))!;
+  assert.ok(!cityOf(h.state).plots[windmill] && !plotById(windmill)!.civic, 'on a free lot');
 });

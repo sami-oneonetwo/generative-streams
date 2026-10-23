@@ -1,0 +1,387 @@
+{
+  "name": "Unclaimed Lot with Mud-Daubed Twig Loop",
+  "description": "Two kinked branch uprights carry a large, uneven hollow twig loop with ochre-daubed mud joints, above muddy feet, a loose stone and wild grass.",
+  "notes": "Overlapping brown branches, bulky earthen lash points and a completely vacant centre signal available ground without a board, lettering or manufactured frame.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        3.82,
+        0.48,
+        4.53
+      ],
+      "size": [
+        0.23,
+        0.92,
+        0.25
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0.15
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.79,
+        1.27,
+        4.55
+      ],
+      "size": [
+        0.19,
+        0.87,
+        0.22
+      ],
+      "rotation": [
+        -0.08,
+        0,
+        -0.09
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.14,
+        0.45,
+        4.57
+      ],
+      "size": [
+        0.26,
+        0.86,
+        0.23
+      ],
+      "rotation": [
+        -0.06,
+        0,
+        -0.19
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.18,
+        1.31,
+        4.57
+      ],
+      "size": [
+        0.21,
+        1.04,
+        0.19
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0.08
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.62,
+        1.98,
+        4.53
+      ],
+      "size": [
+        0.25,
+        0.72,
+        0.23
+      ],
+      "rotation": [
+        0.03,
+        0,
+        -0.133
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.89,
+        2.49,
+        4.51
+      ],
+      "size": [
+        0.21,
+        0.79,
+        0.24
+      ],
+      "rotation": [
+        -0.04,
+        0,
+        -0.831
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.475,
+        2.72,
+        4.53
+      ],
+      "size": [
+        0.24,
+        0.87,
+        0.22
+      ],
+      "rotation": [
+        0.02,
+        0,
+        -1.5145
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.085,
+        2.555,
+        4.54
+      ],
+      "size": [
+        0.19,
+        0.75,
+        0.22
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0.9432
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.385,
+        2.07,
+        4.55
+      ],
+      "size": [
+        0.26,
+        0.73,
+        0.24
+      ],
+      "rotation": [
+        -0.03,
+        0,
+        0.149
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.21,
+        1.52,
+        4.54
+      ],
+      "size": [
+        0.22,
+        0.89,
+        0.25
+      ],
+      "rotation": [
+        0.02,
+        0,
+        -0.7217
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.6,
+        1.245,
+        4.52
+      ],
+      "size": [
+        0.25,
+        0.88,
+        0.22
+      ],
+      "rotation": [
+        -0.02,
+        0,
+        -1.5068
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.895,
+        1.45,
+        4.53
+      ],
+      "size": [
+        0.23,
+        0.9,
+        0.26
+      ],
+      "rotation": [
+        0.03,
+        0,
+        0.94
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.87,
+        0.175,
+        4.53
+      ],
+      "size": [
+        0.82,
+        0.35,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.06,
+        0.16,
+        4.59
+      ],
+      "size": [
+        0.76,
+        0.32,
+        0.71
+      ],
+      "rotation": [
+        0,
+        -0.32,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.63,
+        1.69,
+        4.54
+      ],
+      "size": [
+        0.4,
+        0.38,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.18,
+        -0.16
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.83,
+        2.73,
+        4.53
+      ],
+      "size": [
+        0.4,
+        0.35,
+        0.37
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0.15
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.63,
+        1.72,
+        4.7
+      ],
+      "size": [
+        0.3,
+        0.27,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.16
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.83,
+        2.77,
+        4.69
+      ],
+      "size": [
+        0.32,
+        0.24,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0.15
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.31,
+        0.18,
+        4.86
+      ],
+      "size": [
+        0.62,
+        0.36,
+        0.49
+      ],
+      "rotation": [
+        0,
+        0.38,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.57,
+        0.24,
+        4.04
+      ],
+      "size": [
+        0.46,
+        0.48,
+        0.41
+      ],
+      "rotation": [
+        0,
+        0.57,
+        0
+      ],
+      "color": "#a8ad68"
+    }
+  ]
+}

@@ -29,15 +29,35 @@ const envSchema = z.object({
   DUDES_AGENT_CONCURRENCY: z.coerce.number().int().min(1).max(32).default(6),
   DUDES_DESIGN_CONCURRENCY: z.coerce.number().int().min(1).max(16).default(3),
   DUDES_CALL_ALLOWANCE: z.coerce.number().int().min(0).max(1_000_000).default(500),
+  // The rolling AI budget (worlds/ai-dudes/budget.ts): calls per hour, agent turns (with the aide and
+  // the Listener) and designs counted apart; /admin can change both live. And what one call of each
+  // costs, roughly, in US dollars: only for the spend estimate on /admin.
+  DUDES_AGENT_CALLS_PER_HOUR: z.coerce.number().int().min(0).max(1_000_000).default(1200),
+  DUDES_DESIGN_CALLS_PER_HOUR: z.coerce.number().int().min(0).max(1_000_000).default(90),
+  DUDES_AGENT_CALL_USD: z.coerce.number().min(0).default(0.008),
+  DUDES_DESIGN_CALL_USD: z.coerce.number().min(0).default(0.1),
   DUDES_FIXTURES: z.string().optional(),
 
   KICK_REPLIES_ENABLED: z.string().default('false'),
+  CRIER_ENABLED: z.string().default('true'),
   DEV_TIME_SCALE: z.coerce.number().default(1),
 
   KICK_CLIENT_ID: z.string().optional(),
   KICK_CLIENT_SECRET: z.string().optional(),
   KICK_REDIRECT_URI: z.string().optional(),
   KICK_WEBHOOK_PUBLIC_URL: z.string().optional(),
+
+  // The /play page (logged-in chatters walking their own character): the secret shared with the
+  // Cloudflare Worker that signs their login (play-worker/), and how many may play at once.
+  PLAY_SECRET: z.string().min(32).optional(),
+  PLAY_SEATS: z.coerce.number().int().min(0).max(100).default(10),
+  // Where chatters go to walk their own character: shown on stream and in the crier's !play.
+  PLAY_URL: z.string().default('stream-play.kick-product.com'),
+  // Chat bots that never get a character (comma-separated usernames, any case), on top of the known ones.
+  KICK_IGNORE_BOTS: z.string().default(''),
+  // Pages allowed to open a player socket (/ws/player), comma-separated, besides the town's own
+  // origin (localhost, or the tunnel itself): the play site the Worker serves.
+  PLAY_ORIGINS: z.string().default('https://stream-play.kick-product.com'),
 });
 
 export const config = envSchema.parse(process.env);
@@ -45,5 +65,6 @@ export const config = envSchema.parse(process.env);
 // Runtime-mutable flags, adjustable from the admin page without a restart.
 export const flags = {
   kickRepliesEnabled: config.KICK_REPLIES_ENABLED === 'true',
+  crierEnabled: config.CRIER_ENABLED === 'true',
   devTimeScale: config.DEV_TIME_SCALE,
 };

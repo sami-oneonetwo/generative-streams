@@ -1,0 +1,697 @@
+{"at":"2026-10-19T22:19:50.956Z","label":"bibles","model":"openai/gpt-6-astra","ms":536564,"cost":1.1553523,"in":2573,"out":21156,"ok":true}
+{"at":"2026-10-19T22:31:22.527Z","label":"element stone/bench","model":"openai/gpt-6-astra","ms":12473,"cost":0.07276105,"in":2916,"out":644,"ok":true}
+{"at":"2026-10-19T22:31:27.556Z","label":"element stone/street-light","model":"openai/gpt-6-astra","ms":17502,"cost":0.0874818,"in":2951,"out":913,"ok":true}
+{"at":"2026-10-19T22:31:28.883Z","label":"element stone/lot-sale","model":"openai/gpt-6-astra","ms":18832,"cost":0.09700855,"in":2982,"out":1085,"ok":true}
+{"at":"2026-10-19T22:31:29.306Z","label":"element stone/ground","model":"openai/gpt-6-astra","ms":19268,"cost":0.09279505,"in":2924,"out":1020,"ok":true}
+{"at":"2026-10-19T22:31:31.332Z","label":"element stone/street","model":"openai/gpt-6-astra","ms":21282,"cost":0.10641605,"in":3032,"out":1250,"ok":true}
+{"at":"2026-10-19T22:31:34.876Z","label":"element stone/street-tree","model":"openai/gpt-6-astra","ms":24823,"cost":0.11844705,"in":2984,"out":1489,"ok":true}
+{"at":"2026-10-19T22:31:36.411Z","label":"build stone/dog","model":"openai/gpt-6-astra","ms":26363,"cost":0.0971543,"in":1597,"out":1434,"ok":true}
+{"at":"2026-10-19T22:31:39.240Z","label":"build stone/car","model":"openai/gpt-6-astra","ms":29188,"cost":0.0877945,"in":1597,"out":1584,"ok":true}
+{"at":"2026-10-19T22:31:40.777Z","label":"element stone/market","model":"openai/gpt-6-astra","ms":30720,"cost":0.12369405,"in":2920,"out":1604,"ok":true}
+{"at":"2026-10-19T22:31:43.067Z","label":"element stone/lot-claimed","model":"openai/gpt-6-astra","ms":33015,"cost":0.14020355,"in":2998,"out":1896,"ok":true}
+{"at":"2026-10-19T22:31:44.028Z","label":"element stone/wild-tree","model":"openai/gpt-6-astra","ms":33975,"cost":0.1531488,"in":2919,"out":2160,"ok":true}
+{"at":"2026-10-19T22:31:44.542Z","label":"build bronze/home","model":"openai/gpt-6-astra","ms":34489,"cost":0.1151955,"in":1665,"out":2084,"ok":true}
+{"at":"2026-10-19T22:31:46.142Z","label":"element stone/centrepiece","model":"openai/gpt-6-astra","ms":36087,"cost":0.1595353,"in":2953,"out":2272,"ok":true}
+{"at":"2026-10-19T22:31:50.812Z","label":"element stone/civic-lot","model":"openai/gpt-6-astra","ms":21927,"cost":0.10000305,"in":2936,"out":1153,"ok":true}
+{"at":"2026-10-19T22:31:52.481Z","label":"build stone/home","model":"openai/gpt-6-astra","ms":42443,"cost":0.11872,"in":1655,"out":2153,"ok":true}
+{"at":"2026-10-19T22:31:56.593Z","label":"element bronze/ground","model":"openai/gpt-6-astra","ms":13520,"cost":0.0840898,"in":2983,"out":841,"ok":true}
+{"at":"2026-10-19T22:32:00.235Z","label":"build stone/skyscraper","model":"openai/gpt-6-astra","ms":50184,"cost":0.17036055,"in":1646,"out":2803,"ok":true}
+{"at":"2026-10-19T22:32:03.465Z","label":"build stone/cafe","model":"openai/gpt-6-astra","ms":53415,"cost":0.18726755,"in":1658,"out":3119,"ok":true}
+{"at":"2026-10-19T22:32:05.240Z","label":"element bronze/street","model":"openai/gpt-6-astra","ms":21206,"cost":0.1049453,"in":3097,"out":1206,"ok":true}
+{"at":"2026-10-19T22:32:06.322Z","label":"element bronze/lot-sale","model":"openai/gpt-6-astra","ms":20176,"cost":0.1070388,"in":3055,"out":1256,"ok":true}
+{"at":"2026-10-19T22:32:10.760Z","label":"element stone/head","model":"openai/gpt-6-astra","ms":35882,"cost":0.1701883,"in":3141,"out":2426,"ok":true}
+{"at":"2026-10-19T22:32:12.475Z","label":"build bronze/dog","model":"openai/gpt-6-astra","ms":27920,"cost":0.08507825,"in":1604,"out":1531,"ok":true}
+{"at":"2026-10-19T22:32:13.632Z","label":"element stone/resident","model":"openai/gpt-6-astra","ms":42299,"cost":0.1904343,"in":3113,"out":2815,"ok":true}
+{"at":"2026-10-19T22:32:15.738Z","label":"element stone/river","model":"openai/gpt-6-astra","ms":48180,"cost":0.19810605,"in":2980,"out":2993,"ok":true}
+{"at":"2026-10-19T22:32:16.800Z","label":"element stone/leader","model":"openai/gpt-6-astra","ms":36019,"cost":0.16180105,"in":3116,"out":2274,"ok":true}
+{"at":"2026-10-19T22:32:17.405Z","label":"build bronze/skyscraper","model":"openai/gpt-6-astra","ms":38157,"cost":0.1272795,"in":1653,"out":2315,"ok":true}
+{"at":"2026-10-19T22:32:19.543Z","label":"build bronze/car","model":"openai/gpt-6-astra","ms":27050,"cost":0.08343525,"in":1604,"out":1500,"ok":true}
+{"at":"2026-10-19T22:32:23.985Z","label":"build bronze/cafe","model":"openai/gpt-6-astra","ms":47556,"cost":0.16492275,"in":1666,"out":3022,"ok":true}
+{"at":"2026-10-19T22:32:24.521Z","label":"element bronze/bench","model":"openai/gpt-6-astra","ms":10887,"cost":0.07246955,"in":2978,"out":623,"ok":true}
+{"at":"2026-10-19T22:32:25.429Z","label":"element bronze/street-tree","model":"openai/gpt-6-astra","ms":28834,"cost":0.13180305,"in":3052,"out":1724,"ok":true}
+{"at":"2026-10-19T22:32:26.088Z","label":"element bronze/lot-claimed","model":"openai/gpt-6-astra","ms":35271,"cost":0.14931955,"in":3066,"out":2051,"ok":true}
+{"at":"2026-10-19T22:32:27.661Z","label":"element bronze/street-light","model":"openai/gpt-6-astra","ms":21336,"cost":0.10384555,"in":3014,"out":1206,"ok":true}
+{"at":"2026-10-19T22:32:35.511Z","label":"element stone/arrival","model":"openai/gpt-6-astra","ms":72981,"cost":0.2740153,"in":2977,"out":4426,"ok":true}
+{"at":"2026-10-19T22:32:39.320Z","label":"element bronze/wild-tree","model":"openai/gpt-6-astra","ms":34076,"cost":0.15043255,"in":2986,"out":2092,"ok":true}
+{"at":"2026-10-19T22:32:43.916Z","label":"build medieval/dog","model":"openai/gpt-6-astra","ms":26504,"cost":0.08515775,"in":1606,"out":1532,"ok":true}
+{"at":"2026-10-19T22:32:45.614Z","label":"element bronze/civic-lot","model":"openai/gpt-6-astra","ms":20181,"cost":0.10403105,"in":2996,"out":1214,"ok":true}
+{"at":"2026-10-19T22:32:46.150Z","label":"element stone/camp","model":"openai/gpt-6-astra","ms":76843,"cost":0.29451305,"in":2952,"out":4819,"ok":true}
+{"at":"2026-10-19T22:32:48.964Z","label":"build medieval/home","model":"openai/gpt-6-astra","ms":48721,"cost":0.1593445,"in":1665,"out":2917,"ok":true}
+{"at":"2026-10-19T22:32:50.135Z","label":"element bronze/market","model":"openai/gpt-6-astra","ms":34394,"cost":0.14690805,"in":2992,"out":2024,"ok":true}
+{"at":"2026-10-19T22:32:53.220Z","label":"element bronze/centrepiece","model":"openai/gpt-6-astra","ms":42456,"cost":0.17356705,"in":3020,"out":2520,"ok":true}
+{"at":"2026-10-19T22:32:56.641Z","label":"build medieval/cafe","model":"openai/gpt-6-astra","ms":53167,"cost":0.159583,"in":1667,"out":2921,"ok":true}
+{"at":"2026-10-19T22:33:00.838Z","label":"build medieval/car","model":"openai/gpt-6-astra","ms":41286,"cost":0.13624975,"in":1606,"out":2496,"ok":true}
+{"at":"2026-10-19T22:33:01.346Z","label":"element medieval/ground","model":"openai/gpt-6-astra","ms":15728,"cost":0.09051605,"in":3052,"out":945,"ok":true}
+{"at":"2026-10-19T22:33:06.155Z","label":"build medieval/skyscraper","model":"openai/gpt-6-astra","ms":53674,"cost":0.178822,"in":1655,"out":3287,"ok":true}
+{"at":"2026-10-19T22:33:08.436Z","label":"element medieval/street","model":"openai/gpt-6-astra","ms":22278,"cost":0.11108005,"in":3176,"out":1302,"ok":true}
+{"at":"2026-10-19T22:33:12.733Z","label":"element bronze/resident","model":"openai/gpt-6-astra","ms":45068,"cost":0.2005308,"in":3175,"out":2990,"ok":true}
+{"at":"2026-10-19T22:33:13.818Z","label":"element medieval/lot-sale","model":"openai/gpt-6-astra","ms":23678,"cost":0.11309405,"in":3136,"out":1350,"ok":true}
+{"at":"2026-10-19T22:33:14.352Z","label":"element bronze/river","model":"openai/gpt-6-astra","ms":49822,"cost":0.2148938,"in":3043,"out":3294,"ok":true}
+{"at":"2026-10-19T22:33:16.029Z","label":"build industrial/home","model":"openai/gpt-6-astra","ms":52035,"cost":0.1539915,"in":1657,"out":2818,"ok":true}
+{"at":"2026-10-19T22:33:16.347Z","label":"element bronze/head","model":"openai/gpt-6-astra","ms":40828,"cost":0.1808678,"in":3211,"out":2610,"ok":true}
+{"at":"2026-10-19T22:33:16.369Z","label":"element bronze/arrival","model":"openai/gpt-6-astra","ms":59563,"cost":0.2478863,"in":2985,"out":3931,"ok":true}
+{"at":"2026-10-19T22:33:16.455Z","label":"element bronze/leader","model":"openai/gpt-6-astra","ms":37129,"cost":0.1689163,"in":3189,"out":2390,"ok":true}
+{"at":"2026-10-19T22:33:24.238Z","label":"build industrial/dog","model":"openai/gpt-6-astra","ms":27593,"cost":0.0874765,"in":1597,"out":1578,"ok":true}
+{"at":"2026-10-19T22:33:27.980Z","label":"element medieval/lot-claimed","model":"openai/gpt-6-astra","ms":34755,"cost":0.15358605,"in":3152,"out":2110,"ok":true}
+{"at":"2026-10-19T22:33:29.125Z","label":"element medieval/bench","model":"openai/gpt-6-astra","ms":14767,"cost":0.0864218,"in":3059,"out":866,"ok":true}
+{"at":"2026-10-19T22:33:30.334Z","label":"element medieval/street-tree","model":"openai/gpt-6-astra","ms":28982,"cost":0.1376198,"in":3123,"out":1816,"ok":true}
+{"at":"2026-10-19T22:33:31.594Z","label":"build industrial/cafe","model":"openai/gpt-6-astra","ms":47671,"cost":0.16084175,"in":1658,"out":2947,"ok":true}
+{"at":"2026-10-19T22:33:34.817Z","label":"element medieval/street-light","model":"openai/gpt-6-astra","ms":22082,"cost":0.1024013,"in":3089,"out":1160,"ok":true}
+{"at":"2026-10-19T22:33:40.507Z","label":"build industrial/skyscraper","model":"openai/gpt-6-astra","ms":51541,"cost":0.18082275,"in":1646,"out":3327,"ok":true}
+{"at":"2026-10-19T22:33:41.047Z","label":"build industrial/car","model":"openai/gpt-6-astra","ms":40203,"cost":0.1352295,"in":1597,"out":2479,"ok":true}
+{"at":"2026-10-19T22:33:42.304Z","label":"element medieval/wild-tree","model":"openai/gpt-6-astra","ms":33862,"cost":0.15777305,"in":3064,"out":2211,"ok":true}
+{"at":"2026-10-19T22:33:44.045Z","label":"element bronze/camp","model":"openai/gpt-6-astra","ms":77954,"cost":0.31253305,"in":2960,"out":5157,"ok":true}
+{"at":"2026-10-19T22:33:46.548Z","label":"build modern/home","model":"openai/gpt-6-astra","ms":40384,"cost":0.126723,"in":1655,"out":2304,"ok":true}
+{"at":"2026-10-19T22:33:47.653Z","label":"element medieval/civic-lot","model":"openai/gpt-6-astra","ms":19668,"cost":0.10360705,"in":3068,"out":1188,"ok":true}
+{"at":"2026-10-19T22:33:50.213Z","label":"element medieval/market","model":"openai/gpt-6-astra","ms":33860,"cost":0.15459305,"in":3064,"out":2151,"ok":true}
+{"at":"2026-10-19T22:33:52.970Z","label":"build modern/cafe","model":"openai/gpt-6-astra","ms":36934,"cost":0.11711675,"in":1658,"out":2122,"ok":true}
+{"at":"2026-10-19T22:33:55.037Z","label":"build modern/dog","model":"openai/gpt-6-astra","ms":23436,"cost":0.0761875,"in":1597,"out":1365,"ok":true}
+{"at":"2026-10-19T22:34:03.793Z","label":"element medieval/centrepiece","model":"openai/gpt-6-astra","ms":49971,"cost":0.20534055,"in":3094,"out":3101,"ok":true}
+{"at":"2026-10-19T22:34:04.444Z","label":"build modern/skyscraper","model":"openai/gpt-6-astra","ms":40199,"cost":0.13895275,"in":1646,"out":2537,"ok":true}
+{"at":"2026-10-19T22:34:05.066Z","label":"element industrial/ground","model":"openai/gpt-6-astra","ms":21016,"cost":0.10236155,"in":3074,"out":1163,"ok":true}
+{"at":"2026-10-19T22:34:11.863Z","label":"element industrial/lot-sale","model":"openai/gpt-6-astra","ms":21647,"cost":0.1130278,"in":3163,"out":1342,"ok":true}
+{"at":"2026-10-19T22:34:11.944Z","label":"element medieval/resident","model":"openai/gpt-6-astra","ms":41604,"cost":0.1972978,"in":3247,"out":2911,"ok":true}
+{"at":"2026-10-19T22:34:13.184Z","label":"element industrial/street","model":"openai/gpt-6-astra","ms":25523,"cost":0.12607905,"in":3204,"out":1578,"ok":true}
+{"at":"2026-10-19T22:34:14.130Z","label":"build modern/car","model":"openai/gpt-6-astra","ms":33615,"cost":0.1159905,"in":1597,"out":2116,"ok":true}
+{"at":"2026-10-19T22:34:15.997Z","label":"element medieval/head","model":"openai/gpt-6-astra","ms":41175,"cost":0.19076555,"in":3298,"out":2775,"ok":true}
+{"at":"2026-10-19T22:34:16.855Z","label":"element medieval/river","model":"openai/gpt-6-astra","ms":60396,"cost":0.2694573,"in":3121,"out":4304,"ok":true}
+{"at":"2026-10-19T22:34:19.194Z","label":"element medieval/leader","model":"openai/gpt-6-astra","ms":36885,"cost":0.17632305,"in":3260,"out":2512,"ok":true}
+{"at":"2026-10-19T22:34:20.667Z","label":"build future/home","model":"openai/gpt-6-astra","ms":39614,"cost":0.12819375,"in":1670,"out":2328,"ok":true}
+{"at":"2026-10-19T22:34:22.712Z","label":"build future/dog","model":"openai/gpt-6-astra","ms":27671,"cost":0.085065,"in":1611,"out":1529,"ok":true}
+{"at":"2026-10-19T22:34:26.147Z","label":"element medieval/arrival","model":"openai/gpt-6-astra","ms":69770,"cost":0.2839263,"in":3117,"out":4578,"ok":true}
+{"at":"2026-10-19T22:34:29.416Z","label":"build future/cafe","model":"openai/gpt-6-astra","ms":42861,"cost":0.13137375,"in":1674,"out":2387,"ok":true}
+{"at":"2026-10-19T22:34:30.064Z","label":"build future/skyscraper","model":"openai/gpt-6-astra","ms":37089,"cost":0.12710725,"in":1660,"out":2310,"ok":true}
+{"at":"2026-10-19T22:34:31.000Z","label":"element industrial/street-light","model":"openai/gpt-6-astra","ms":19053,"cost":0.10355405,"in":3112,"out":1176,"ok":true}
+{"at":"2026-10-19T22:34:37.554Z","label":"element industrial/bench","model":"openai/gpt-6-astra","ms":21552,"cost":0.1069593,"in":3089,"out":1246,"ok":true}
+{"at":"2026-10-19T22:34:37.582Z","label":"build future/car","model":"openai/gpt-6-astra","ms":33128,"cost":0.113367,"in":1611,"out":2063,"ok":true}
+{"at":"2026-10-19T22:34:38.372Z","label":"element industrial/street-tree","model":"openai/gpt-6-astra","ms":33301,"cost":0.1523273,"in":3153,"out":2086,"ok":true}
+{"at":"2026-10-19T22:34:46.904Z","label":"element industrial/wild-tree","model":"openai/gpt-6-astra","ms":35038,"cost":0.15843555,"in":3090,"out":2217,"ok":true}
+{"at":"2026-10-19T22:34:49.043Z","label":"element industrial/lot-claimed","model":"openai/gpt-6-astra","ms":45241,"cost":0.1842598,"in":3183,"out":2681,"ok":true}
+{"at":"2026-10-19T22:34:50.350Z","label":"element medieval/camp","model":"openai/gpt-6-astra","ms":81220,"cost":0.33065905,"in":3056,"out":5475,"ok":true}
+{"at":"2026-10-19T22:34:51.596Z","label":"element industrial/market","model":"openai/gpt-6-astra","ms":34736,"cost":0.1647558,"in":3095,"out":2335,"ok":true}
+{"at":"2026-10-19T22:34:51.752Z","label":"element industrial/civic-lot","model":"openai/gpt-6-astra","ms":20747,"cost":0.1080723,"in":3089,"out":1267,"ok":true}
+{"at":"2026-10-19T22:34:58.014Z","label":"element industrial/centrepiece","model":"openai/gpt-6-astra","ms":44823,"cost":0.21085255,"in":3114,"out":3200,"ok":true}
+{"at":"2026-10-19T22:35:06.287Z","label":"element modern/ground","model":"openai/gpt-6-astra","ms":15927,"cost":0.09030405,"in":3048,"out":942,"ok":true}
+{"at":"2026-10-19T22:35:14.676Z","label":"element modern/lot-sale","model":"openai/gpt-6-astra","ms":22919,"cost":0.1143263,"in":3145,"out":1371,"ok":true}
+{"at":"2026-10-19T22:35:18.905Z","label":"element modern/street","model":"openai/gpt-6-astra","ms":27304,"cost":0.13575155,"in":3178,"out":1767,"ok":true}
+{"at":"2026-10-19T22:35:19.499Z","label":"element industrial/arrival","model":"openai/gpt-6-astra","ms":60297,"cost":0.2608978,"in":3103,"out":4147,"ok":true}
+{"at":"2026-10-19T22:35:22.221Z","label":"element industrial/resident","model":"openai/gpt-6-astra","ms":43842,"cost":0.20022605,"in":3272,"out":2960,"ok":true}
+{"at":"2026-10-19T22:35:23.580Z","label":"element industrial/river","model":"openai/gpt-6-astra","ms":57427,"cost":0.2657208,"in":3147,"out":4227,"ok":true}
+{"at":"2026-10-19T22:35:24.921Z","label":"element modern/lot-claimed","model":"openai/gpt-6-astra","ms":26901,"cost":0.14099855,"in":3166,"out":1869,"ok":true}
+{"at":"2026-10-19T22:35:27.516Z","label":"element industrial/head","model":"openai/gpt-6-astra","ms":40606,"cost":0.18774455,"in":3330,"out":2710,"ok":true}
+{"at":"2026-10-19T22:35:29.119Z","label":"element industrial/leader","model":"openai/gpt-6-astra","ms":40072,"cost":0.1814773,"in":3293,"out":2601,"ok":true}
+{"at":"2026-10-19T22:35:36.274Z","label":"element modern/street-tree","model":"openai/gpt-6-astra","ms":29982,"cost":0.1457818,"in":3127,"out":1969,"ok":true}
+{"at":"2026-10-19T22:35:37.216Z","label":"element modern/street-light","model":"openai/gpt-6-astra","ms":18305,"cost":0.1005463,"in":3085,"out":1126,"ok":true}
+{"at":"2026-10-19T22:35:40.547Z","label":"element modern/bench","model":"openai/gpt-6-astra","ms":18320,"cost":0.0957498,"in":3067,"out":1040,"ok":true}
+{"at":"2026-10-19T22:35:49.733Z","label":"element modern/wild-tree","model":"openai/gpt-6-astra","ms":35052,"cost":0.16445105,"in":3064,"out":2337,"ok":true}
+{"at":"2026-10-19T22:35:50.150Z","label":"element modern/civic-lot","model":"openai/gpt-6-astra","ms":21026,"cost":0.1057933,"in":3061,"out":1231,"ok":true}
+{"at":"2026-10-19T22:35:58.715Z","label":"element modern/market","model":"openai/gpt-6-astra","ms":35131,"cost":0.1576538,"in":3067,"out":2208,"ok":true}
+{"at":"2026-10-19T22:36:03.945Z","label":"element modern/centrepiece","model":"openai/gpt-6-astra","ms":44439,"cost":0.2096733,"in":3085,"out":3185,"ok":true}
+{"at":"2026-10-19T22:36:11.311Z","label":"element industrial/camp","model":"openai/gpt-6-astra","ms":93754,"cost":0.3725953,"in":3089,"out":6258,"ok":true}
+{"at":"2026-10-19T22:36:11.660Z","label":"element future/ground","model":"openai/gpt-6-astra","ms":21504,"cost":0.10633655,"in":3306,"out":1180,"ok":true}
+{"at":"2026-10-19T22:36:18.037Z","label":"element modern/head","model":"openai/gpt-6-astra","ms":37481,"cost":0.17788655,"in":3310,"out":2529,"ok":true}
+{"at":"2026-10-19T22:36:21.569Z","label":"element modern/resident","model":"openai/gpt-6-astra","ms":44348,"cost":0.1967413,"in":3245,"out":2901,"ok":true}
+{"at":"2026-10-19T22:36:21.775Z","label":"element future/street","model":"openai/gpt-6-astra","ms":23056,"cost":0.12570805,"in":3436,"out":1513,"ok":true}
+{"at":"2026-10-19T22:36:22.618Z","label":"element modern/river","model":"openai/gpt-6-astra","ms":55092,"cost":0.2439378,"in":3127,"out":3821,"ok":true}
+{"at":"2026-10-19T22:36:25.448Z","label":"element future/lot-sale","model":"openai/gpt-6-astra","ms":21499,"cost":0.12321705,"in":3404,"out":1474,"ok":true}
+{"at":"2026-10-19T22:36:27.264Z","label":"element modern/leader","model":"openai/gpt-6-astra","ms":37525,"cost":0.1704003,"in":3265,"out":2399,"ok":true}
+{"at":"2026-10-19T22:36:30.683Z","label":"element modern/arrival","model":"openai/gpt-6-astra","ms":65757,"cost":0.2794213,"in":3113,"out":4494,"ok":true}
+{"at":"2026-10-19T22:36:40.772Z","label":"element future/street-light","model":"openai/gpt-6-astra","ms":19195,"cost":0.10238805,"in":3344,"out":1096,"ok":true}
+{"at":"2026-10-19T22:36:41.031Z","label":"element future/bench","model":"openai/gpt-6-astra","ms":18408,"cost":0.1034878,"in":3331,"out":1120,"ok":true}
+{"at":"2026-10-19T22:36:45.274Z","label":"element future/lot-claimed","model":"openai/gpt-6-astra","ms":33957,"cost":0.1594028,"in":3431,"out":2150,"ok":true}
+{"at":"2026-10-19T22:36:46.772Z","label":"element future/street-tree","model":"openai/gpt-6-astra","ms":35108,"cost":0.16288755,"in":3386,"out":2227,"ok":true}
+{"at":"2026-10-19T22:36:50.726Z","label":"element modern/camp","model":"openai/gpt-6-astra","ms":74447,"cost":0.3196483,"in":3069,"out":5264,"ok":true}
+{"at":"2026-10-19T22:36:59.229Z","label":"element future/wild-tree","model":"openai/gpt-6-astra","ms":41187,"cost":0.17942355,"in":3322,"out":2555,"ok":true}
+{"at":"2026-10-19T22:37:03.402Z","label":"element future/market","model":"openai/gpt-6-astra","ms":37945,"cost":0.1682538,"in":3323,"out":2344,"ok":true}
+{"at":"2026-10-19T22:37:03.875Z","label":"element future/civic-lot","model":"openai/gpt-6-astra","ms":23098,"cost":0.11786405,"in":3312,"out":1396,"ok":true}
+{"at":"2026-10-19T22:37:18.044Z","label":"element future/centrepiece","model":"openai/gpt-6-astra","ms":56260,"cost":0.2336293,"in":3337,"out":3574,"ok":true}
+{"at":"2026-10-19T22:37:21.138Z","label":"element future/river","model":"openai/gpt-6-astra","ms":50445,"cost":0.2393533,"in":3389,"out":3669,"ok":true}
+{"at":"2026-10-19T22:37:31.110Z","label":"element future/resident","model":"openai/gpt-6-astra","ms":45829,"cost":0.21180655,"in":3510,"out":3119,"ok":true}
+{"at":"2026-10-19T22:37:32.891Z","label":"element future/leader","model":"openai/gpt-6-astra","ms":42158,"cost":0.1928723,"in":3521,"out":2759,"ok":true}
+{"at":"2026-10-19T22:37:33.855Z","label":"element future/head","model":"openai/gpt-6-astra","ms":47074,"cost":0.2125088,"in":3575,"out":3116,"ok":true}
+{"at":"2026-10-19T22:37:49.293Z","label":"element future/arrival","model":"openai/gpt-6-astra","ms":82020,"cost":0.3265383,"in":3333,"out":5328,"ok":true}
+{"at":"2026-10-19T22:37:54.210Z","label":"element future/camp","model":"openai/gpt-6-astra","ms":73172,"cost":0.3246568,"in":3331,"out":5293,"ok":true}
+{"at":"2026-10-20T00:19:14.103Z","label":"critique industrial r1","model":"openai/gpt-6-astra","ms":191863,"cost":0.44074005,"in":9244,"out":6005,"ok":true}
+{"at":"2026-10-20T00:19:36.646Z","label":"critique medieval r1","model":"openai/gpt-6-astra","ms":215418,"cost":0.51348255,"in":9258,"out":7374,"ok":true}
+{"at":"2026-10-20T00:19:53.229Z","label":"critique stone r1","model":"openai/gpt-6-astra","ms":232499,"cost":0.53137005,"in":9216,"out":7722,"ok":true}
+{"at":"2026-10-20T00:20:09.532Z","label":"critique bronze r1","model":"openai/gpt-6-astra","ms":247908,"cost":0.57647305,"in":9224,"out":8571,"ok":true}
+{"at":"2026-10-20T00:23:05.706Z","label":"critique future r1","model":"openai/gpt-6-astra","ms":176500,"cost":0.45497055,"in":9398,"out":6235,"ok":true}
+{"at":"2026-10-20T00:23:08.398Z","label":"revise medieval/ground r1","model":"openai/gpt-6-astra","ms":29977,"cost":0.1390243,"in":4477,"out":1504,"ok":true}
+{"at":"2026-10-20T00:23:14.612Z","label":"revise medieval/street r1","model":"openai/gpt-6-astra","ms":36167,"cost":0.1707713,"in":5317,"out":1893,"ok":true}
+{"at":"2026-10-20T00:23:21.579Z","label":"revise medieval/street-tree r1","model":"openai/gpt-6-astra","ms":43122,"cost":0.19018255,"in":5606,"out":2187,"ok":true}
+{"at":"2026-10-20T00:23:25.668Z","label":"critique modern r1","model":"openai/gpt-6-astra","ms":217033,"cost":0.50987855,"in":9178,"out":7326,"ok":true}
+{"at":"2026-10-20T00:23:26.493Z","label":"revise medieval/wild-tree r1","model":"openai/gpt-6-astra","ms":48026,"cost":0.2147083,"in":5941,"out":2566,"ok":true}
+{"at":"2026-10-20T00:23:30.167Z","label":"revise medieval/centrepiece r1","model":"openai/gpt-6-astra","ms":51695,"cost":0.2346098,"in":6475,"out":2808,"ok":true}
+{"at":"2026-10-20T00:23:32.251Z","label":"revise medieval/lot-claimed r1","model":"openai/gpt-6-astra","ms":53800,"cost":0.2252553,"in":5805,"out":2799,"ok":true}
+{"at":"2026-10-20T00:23:57.548Z","label":"revise stone/bench r1","model":"openai/gpt-6-astra","ms":21339,"cost":0.0974458,"in":4039,"out":829,"ok":true}
+{"at":"2026-10-20T00:23:58.513Z","label":"revise medieval/river r1","model":"openai/gpt-6-astra","ms":80029,"cost":0.33317655,"in":6906,"out":4560,"ok":true}
+{"at":"2026-10-20T00:23:59.002Z","label":"revise medieval/lot-sale r1","model":"openai/gpt-6-astra","ms":26743,"cost":0.1325318,"in":4639,"out":1341,"ok":true}
+{"at":"2026-10-20T00:23:59.949Z","label":"revise medieval/leader r1","model":"openai/gpt-6-astra","ms":45333,"cost":0.21125005,"in":5788,"out":2539,"ok":true}
+{"at":"2026-10-20T00:24:11.578Z","label":"revise stone/street r1","model":"openai/gpt-6-astra","ms":35413,"cost":0.16302005,"in":4988,"out":1829,"ok":true}
+{"at":"2026-10-20T00:24:14.790Z","label":"revise stone/lot-claimed r1","model":"openai/gpt-6-astra","ms":38600,"cost":0.18570405,"in":5568,"out":2112,"ok":true}
+{"at":"2026-10-20T00:24:15.460Z","label":"revise stone/lot-sale r1","model":"openai/gpt-6-astra","ms":39276,"cost":0.1611253,"in":4777,"out":1846,"ok":true}
+{"at":"2026-10-20T00:24:15.789Z","label":"revise stone/street-tree r1","model":"openai/gpt-6-astra","ms":39589,"cost":0.17263955,"in":5230,"out":1950,"ok":true}
+{"at":"2026-10-20T00:24:19.788Z","label":"revise stone/wild-tree r1","model":"openai/gpt-6-astra","ms":43584,"cost":0.20012005,"in":5720,"out":2346,"ok":true}
+{"at":"2026-10-20T00:24:24.174Z","label":"revise medieval/civic-lot r1","model":"openai/gpt-6-astra","ms":25164,"cost":0.13861355,"in":4658,"out":1451,"ok":true}
+{"at":"2026-10-20T00:24:25.810Z","label":"revise medieval/arrival r1","model":"openai/gpt-6-astra","ms":107331,"cost":0.38959505,"in":7180,"out":5556,"ok":true}
+{"at":"2026-10-20T00:24:27.192Z","label":"revise medieval/street-light r1","model":"openai/gpt-6-astra","ms":28673,"cost":0.13800405,"in":4480,"out":1484,"ok":true}
+{"at":"2026-10-20T00:24:29.290Z","label":"revise stone/market r1","model":"openai/gpt-6-astra","ms":53074,"cost":0.21302555,"in":5054,"out":2756,"ok":true}
+{"at":"2026-10-20T00:24:43.396Z","label":"revise stone/civic-lot r1","model":"openai/gpt-6-astra","ms":31814,"cost":0.14126355,"in":4774,"out":1472,"ok":true}
+{"at":"2026-10-20T00:24:45.511Z","label":"revise medieval/camp r1","model":"openai/gpt-6-astra","ms":97076,"cost":0.4074693,"in":8409,"out":5586,"ok":true}
+{"at":"2026-10-20T00:24:51.224Z","label":"revise stone/arrival r1","model":"openai/gpt-6-astra","ms":75001,"cost":0.31801855,"in":7190,"out":4203,"ok":true}
+{"at":"2026-10-20T00:25:02.541Z","label":"revise medieval/dog r1","model":"openai/gpt-6-astra","ms":38360,"cost":0.17992705,"in":4760,"out":2205,"ok":true}
+{"at":"2026-10-20T00:25:02.975Z","label":"revise stone/river r1","model":"openai/gpt-6-astra","ms":65418,"cost":0.25884405,"in":6196,"out":3335,"ok":true}
+{"at":"2026-10-20T00:25:08.577Z","label":"revise medieval/head r1","model":"openai/gpt-6-astra","ms":42758,"cost":0.2216778,"in":5991,"out":2685,"ok":true}
+{"at":"2026-10-20T00:25:09.841Z","label":"revise medieval/home r1","model":"openai/gpt-6-astra","ms":108255,"cost":0.45907805,"in":6972,"out":6919,"ok":true}
+{"at":"2026-10-20T00:25:12.968Z","label":"revise stone/head r1","model":"openai/gpt-6-astra","ms":57172,"cost":0.2365443,"in":6073,"out":2945,"ok":true}
+{"at":"2026-10-20T00:25:13.864Z","label":"revise medieval/cafe r1","model":"openai/gpt-6-astra","ms":107367,"cost":0.45915755,"in":6682,"out":6993,"ok":true}
+{"at":"2026-10-20T00:25:16.200Z","label":"revise stone/leader r1","model":"openai/gpt-6-astra","ms":56405,"cost":0.2204058,"in":5795,"out":2710,"ok":true}
+{"at":"2026-10-20T00:25:21.372Z","label":"revise stone/resident r1","model":"openai/gpt-6-astra","ms":65908,"cost":0.2643163,"in":6273,"out":3419,"ok":true}
+{"at":"2026-10-20T00:25:27.478Z","label":"revise medieval/car r1","model":"openai/gpt-6-astra","ms":117305,"cost":0.50052405,"in":6140,"out":7909,"ok":true}
+{"at":"2026-10-20T00:25:40.183Z","label":"revise stone/camp r1","model":"openai/gpt-6-astra","ms":85382,"cost":0.36192905,"in":7812,"out":4876,"ok":true}
+{"at":"2026-10-20T00:25:47.902Z","label":"revise stone/ground r1","model":"openai/gpt-6-astra","ms":26520,"cost":0.1308358,"in":4263,"out":1403,"ok":true}
+{"at":"2026-10-20T00:25:52.044Z","label":"revise stone/dog r1","model":"openai/gpt-6-astra","ms":35839,"cost":0.17528955,"in":5042,"out":2047,"ok":true}
+{"at":"2026-10-20T00:25:55.923Z","label":"revise bronze/bench r1","model":"openai/gpt-6-astra","ms":22491,"cost":0.10175205,"in":4040,"out":910,"ok":true}
+{"at":"2026-10-20T00:25:56.178Z","label":"revise stone/car r1","model":"openai/gpt-6-astra","ms":53196,"cost":0.24199005,"in":5336,"out":3232,"ok":true}
+{"at":"2026-10-20T00:25:59.844Z","label":"revise bronze/street-light r1","model":"openai/gpt-6-astra","ms":26419,"cost":0.1233628,"in":4391,"out":1230,"ok":true}
+{"at":"2026-10-20T00:26:00.481Z","label":"revise medieval/skyscraper r1","model":"openai/gpt-6-astra","ms":120529,"cost":0.5033728,"in":6587,"out":7851,"ok":true}
+{"at":"2026-10-20T00:26:04.030Z","label":"revise bronze/street r1","model":"openai/gpt-6-astra","ms":30656,"cost":0.1459673,"in":4909,"out":1527,"ok":true}
+{"at":"2026-10-20T00:26:04.343Z","label":"revise stone/street-light r1","model":"openai/gpt-6-astra","ms":24155,"cost":0.1198913,"in":4133,"out":1229,"ok":true}
+{"at":"2026-10-20T00:26:05.361Z","label":"revise stone/centrepiece r1","model":"openai/gpt-6-astra","ms":52381,"cost":0.22762705,"in":5808,"out":2843,"ok":true}
+{"at":"2026-10-20T00:26:09.540Z","label":"revise bronze/lot-sale r1","model":"openai/gpt-6-astra","ms":36143,"cost":0.14963755,"in":4626,"out":1667,"ok":true}
+{"at":"2026-10-20T00:26:16.764Z","label":"revise modern/lot-sale r1","model":"openai/gpt-6-astra","ms":26532,"cost":0.1335388,"in":4843,"out":1309,"ok":true}
+{"at":"2026-10-20T00:26:19.786Z","label":"revise bronze/wild-tree r1","model":"openai/gpt-6-astra","ms":46370,"cost":0.2047443,"in":5833,"out":2405,"ok":true}
+{"at":"2026-10-20T00:26:22.126Z","label":"revise industrial/ground r1","model":"openai/gpt-6-astra","ms":32223,"cost":0.1466563,"in":4733,"out":1584,"ok":true}
+{"at":"2026-10-20T00:26:24.745Z","label":"revise bronze/street-tree r1","model":"openai/gpt-6-astra","ms":51337,"cost":0.19747005,"in":5400,"out":2376,"ok":true}
+{"at":"2026-10-20T00:26:25.269Z","label":"revise stone/home r1","model":"openai/gpt-6-astra","ms":115974,"cost":0.42799355,"in":5990,"out":6578,"ok":true}
+{"at":"2026-10-20T00:26:26.444Z","label":"revise bronze/centrepiece r1","model":"openai/gpt-6-astra","ms":53016,"cost":0.22656705,"in":5732,"out":2842,"ok":true}
+{"at":"2026-10-20T00:26:27.453Z","label":"revise modern/ground r1","model":"openai/gpt-6-astra","ms":37291,"cost":0.16211905,"in":4744,"out":1873,"ok":true}
+{"at":"2026-10-20T00:26:28.035Z","label":"revise modern/street r1","model":"openai/gpt-6-astra","ms":37851,"cost":0.16604105,"in":4812,"out":1930,"ok":true}
+{"at":"2026-10-20T00:26:30.268Z","label":"revise modern/street-tree r1","model":"openai/gpt-6-astra","ms":40078,"cost":0.1886588,"in":5571,"out":2167,"ok":true}
+{"at":"2026-10-20T00:26:31.728Z","label":"revise industrial/street-tree r1","model":"openai/gpt-6-astra","ms":41790,"cost":0.18620755,"in":5538,"out":2129,"ok":true}
+{"at":"2026-10-20T00:26:34.158Z","label":"revise bronze/market r1","model":"openai/gpt-6-astra","ms":38224,"cost":0.17603155,"in":5282,"out":2001,"ok":true}
+{"at":"2026-10-20T00:26:35.108Z","label":"revise bronze/lot-claimed r1","model":"openai/gpt-6-astra","ms":61706,"cost":0.23287405,"in":5612,"out":2991,"ok":true}
+{"at":"2026-10-20T00:26:40.232Z","label":"revise industrial/lot-claimed r1","model":"openai/gpt-6-astra","ms":50301,"cost":0.22431455,"in":6058,"out":2718,"ok":true}
+{"at":"2026-10-20T00:26:41.200Z","label":"revise modern/resident r1","model":"openai/gpt-6-astra","ms":50991,"cost":0.23862455,"in":6258,"out":2938,"ok":true}
+{"at":"2026-10-20T00:26:42.910Z","label":"revise modern/car r1","model":"openai/gpt-6-astra","ms":52698,"cost":0.2331258,"in":5579,"out":3004,"ok":true}
+{"at":"2026-10-20T00:26:42.919Z","label":"revise industrial/wild-tree r1","model":"openai/gpt-6-astra","ms":52970,"cost":0.2192133,"in":5777,"out":2692,"ok":true}
+{"at":"2026-10-20T00:26:47.094Z","label":"revise modern/arrival r1","model":"openai/gpt-6-astra","ms":56891,"cost":0.28518505,"in":6916,"out":3652,"ok":true}
+{"at":"2026-10-20T00:26:51.480Z","label":"revise modern/wild-tree r1","model":"openai/gpt-6-astra","ms":61284,"cost":0.2500328,"in":6091,"out":3195,"ok":true}
+{"at":"2026-10-20T00:26:54.746Z","label":"revise stone/cafe r1","model":"openai/gpt-6-astra","ms":131347,"cost":0.5307208,"in":7039,"out":8254,"ok":true}
+{"at":"2026-10-20T00:26:58.314Z","label":"revise modern/lot-claimed r1","model":"openai/gpt-6-astra","ms":41545,"cost":0.20740755,"in":5534,"out":2530,"ok":true}
+{"at":"2026-10-20T00:26:58.849Z","label":"revise industrial/river r1","model":"openai/gpt-6-astra","ms":68882,"cost":0.3193303,"in":7405,"out":4174,"ok":true}
+{"at":"2026-10-20T00:27:00.388Z","label":"revise stone/skyscraper r1","model":"openai/gpt-6-astra","ms":129159,"cost":0.5235128,"in":6791,"out":8180,"ok":true}
+{"at":"2026-10-20T00:27:01.443Z","label":"revise bronze/leader r1","model":"openai/gpt-6-astra","ms":41647,"cost":0.19937805,"in":5836,"out":2303,"ok":true}
+{"at":"2026-10-20T00:27:03.167Z","label":"revise industrial/street-light r1","model":"openai/gpt-6-astra","ms":20241,"cost":0.1248998,"in":4391,"out":1259,"ok":true}
+{"at":"2026-10-20T00:27:03.796Z","label":"revise modern/civic-lot r1","model":"openai/gpt-6-astra","ms":33520,"cost":0.16863805,"in":4764,"out":1991,"ok":true}
+{"at":"2026-10-20T00:27:04.607Z","label":"revise industrial/lot-sale r1","model":"openai/gpt-6-astra","ms":24370,"cost":0.1345458,"in":4951,"out":1301,"ok":true}
+{"at":"2026-10-20T00:27:05.721Z","label":"revise industrial/street r1","model":"openai/gpt-6-astra","ms":33983,"cost":0.16802855,"in":5018,"out":1916,"ok":true}
+{"at":"2026-10-20T00:27:06.280Z","label":"revise industrial/arrival r1","model":"openai/gpt-6-astra","ms":76323,"cost":0.3335608,"in":7651,"out":4381,"ok":true}
+{"at":"2026-10-20T00:27:10.128Z","label":"revise bronze/river r1","model":"openai/gpt-6-astra","ms":66092,"cost":0.28764955,"in":6550,"out":3790,"ok":true}
+{"at":"2026-10-20T00:27:11.825Z","label":"revise future/street-light r1","model":"openai/gpt-6-astra","ms":31815,"cost":0.1379643,"in":4829,"out":1396,"ok":true}
+{"at":"2026-10-20T00:27:13.021Z","label":"revise modern/street-light r1","model":"openai/gpt-6-astra","ms":21537,"cost":0.11373005,"in":4216,"out":1092,"ok":true}
+{"at":"2026-10-20T00:27:13.081Z","label":"revise future/bench r1","model":"openai/gpt-6-astra","ms":33058,"cost":0.1305708,"in":4443,"out":1353,"ok":true}
+{"at":"2026-10-20T00:27:14.378Z","label":"revise bronze/dog r1","model":"openai/gpt-6-astra","ms":39264,"cost":0.1813978,"in":5019,"out":2168,"ok":true}
+{"at":"2026-10-20T00:27:16.720Z","label":"revise future/street r1","model":"openai/gpt-6-astra","ms":36746,"cost":0.1701353,"in":5569,"out":1818,"ok":true}
+{"at":"2026-10-20T00:27:17.695Z","label":"revise bronze/arrival r1","model":"openai/gpt-6-astra","ms":77846,"cost":0.3142953,"in":7085,"out":4159,"ok":true}
+{"at":"2026-10-20T00:27:18.963Z","label":"revise future/street-tree r1","model":"openai/gpt-6-astra","ms":38961,"cost":0.18663155,"in":5714,"out":2093,"ok":true}
+{"at":"2026-10-20T00:27:23.983Z","label":"revise modern/centrepiece r1","model":"openai/gpt-6-astra","ms":56522,"cost":0.26427655,"in":6522,"out":3356,"ok":true}
+{"at":"2026-10-20T00:27:25.789Z","label":"revise industrial/camp r1","model":"openai/gpt-6-astra","ms":95813,"cost":0.40244755,"in":8214,"out":5540,"ok":true}
+{"at":"2026-10-20T00:27:25.912Z","label":"revise future/lot-claimed r1","model":"openai/gpt-6-astra","ms":45915,"cost":0.21554305,"in":6064,"out":2551,"ok":true}
+{"at":"2026-10-20T00:27:29.562Z","label":"revise bronze/camp r1","model":"openai/gpt-6-astra","ms":80016,"cost":0.36844805,"in":8068,"out":4935,"ok":true}
+{"at":"2026-10-20T00:27:31.037Z","label":"revise bronze/ground r1","model":"openai/gpt-6-astra","ms":29590,"cost":0.1345988,"in":4643,"out":1379,"ok":true}
+{"at":"2026-10-20T00:27:33.784Z","label":"revise future/wild-tree r1","model":"openai/gpt-6-astra","ms":53777,"cost":0.2295218,"in":6147,"out":2794,"ok":true}
+{"at":"2026-10-20T00:27:33.846Z","label":"revise industrial/civic-lot r1","model":"openai/gpt-6-astra","ms":29229,"cost":0.1624503,"in":4929,"out":1833,"ok":true}
+{"at":"2026-10-20T00:27:36.044Z","label":"revise modern/river r1","model":"openai/gpt-6-astra","ms":68005,"cost":0.3212383,"in":6677,"out":4392,"ok":true}
+{"at":"2026-10-20T00:27:39.487Z","label":"revise industrial/bench r1","model":"openai/gpt-6-astra","ms":36317,"cost":0.1500218,"in":4299,"out":1756,"ok":true}
+{"at":"2026-10-20T00:27:43.447Z","label":"revise future/centrepiece r1","model":"openai/gpt-6-astra","ms":63429,"cost":0.28560905,"in":6896,"out":3665,"ok":true}
+{"at":"2026-10-20T00:27:46.076Z","label":"revise bronze/civic-lot r1","model":"openai/gpt-6-astra","ms":35940,"cost":0.17097005,"in":4596,"out":2077,"ok":true}
+{"at":"2026-10-20T00:27:47.850Z","label":"revise industrial/cafe r1","model":"openai/gpt-6-astra","ms":117869,"cost":0.51395955,"in":6242,"out":8137,"ok":true}
+{"at":"2026-10-20T00:27:48.110Z","label":"revise industrial/dog r1","model":"openai/gpt-6-astra","ms":22316,"cost":0.1363478,"in":5019,"out":1318,"ok":true}
+{"at":"2026-10-20T00:27:49.760Z","label":"revise future/civic-lot r1","model":"openai/gpt-6-astra","ms":36672,"cost":0.17820455,"in":5170,"out":2070,"ok":true}
+{"at":"2026-10-20T00:27:52.300Z","label":"revise modern/head r1","model":"openai/gpt-6-astra","ms":69383,"cost":0.2708618,"in":6103,"out":3585,"ok":true}
+{"at":"2026-10-20T00:27:54.653Z","label":"revise future/arrival r1","model":"openai/gpt-6-astra","ms":74622,"cost":0.34099405,"in":7552,"out":4546,"ok":true}
+{"at":"2026-10-20T00:27:56.108Z","label":"revise industrial/leader r1","model":"openai/gpt-6-astra","ms":50383,"cost":0.2474093,"in":5977,"out":3174,"ok":true}
+{"at":"2026-10-20T00:28:01.955Z","label":"revise modern/skyscraper r1","model":"openai/gpt-6-astra","ms":63636,"cost":0.3034833,"in":5841,"out":4266,"ok":true}
+{"at":"2026-10-20T00:28:02.086Z","label":"revise bronze/head r1","model":"openai/gpt-6-astra","ms":44384,"cost":0.21951805,"in":6176,"out":2598,"ok":true}
+{"at":"2026-10-20T00:28:03.465Z","label":"revise future/head r1","model":"openai/gpt-6-astra","ms":44496,"cost":0.2350338,"in":6563,"out":2794,"ok":true}
+{"at":"2026-10-20T00:28:05.509Z","label":"revise modern/camp r1","model":"openai/gpt-6-astra","ms":84305,"cost":0.37918055,"in":7934,"out":5171,"ok":true}
+{"at":"2026-10-20T00:28:05.967Z","label":"revise industrial/centrepiece r1","model":"openai/gpt-6-astra","ms":67114,"cost":0.30068755,"in":6558,"out":4034,"ok":true}
+{"at":"2026-10-20T00:28:06.846Z","label":"revise modern/cafe r1","model":"openai/gpt-6-astra","ms":79749,"cost":0.3449293,"in":5685,"out":5087,"ok":true}
+{"at":"2026-10-20T00:28:09.193Z","label":"revise bronze/resident r1","model":"openai/gpt-6-astra","ms":54811,"cost":0.24922455,"in":6294,"out":3129,"ok":true}
+{"at":"2026-10-20T00:28:09.676Z","label":"revise industrial/car r1","model":"openai/gpt-6-astra","ms":107542,"cost":0.48878455,"in":6234,"out":7664,"ok":true}
+{"at":"2026-10-20T00:28:15.695Z","label":"revise bronze/cafe r1","model":"openai/gpt-6-astra","ms":109246,"cost":0.4814308,"in":6571,"out":7441,"ok":true}
+{"at":"2026-10-20T00:28:16.487Z","label":"revise future/leader r1","model":"openai/gpt-6-astra","ms":50571,"cost":0.2415793,"in":6369,"out":2966,"ok":true}
+{"at":"2026-10-20T00:28:19.438Z","label":"revise industrial/market r1","model":"openai/gpt-6-astra","ms":45583,"cost":0.20987205,"in":5300,"out":2635,"ok":true}
+{"at":"2026-10-20T00:28:22.222Z","label":"revise future/ground r1","model":"openai/gpt-6-astra","ms":27566,"cost":0.1416478,"in":4827,"out":1466,"ok":true}
+{"at":"2026-10-20T00:28:25.852Z","label":"revise industrial/head r1","model":"openai/gpt-6-astra","ms":37993,"cost":0.20526105,"in":5884,"out":2402,"ok":true}
+{"at":"2026-10-20T00:28:26.788Z","label":"revise industrial/resident r1","model":"openai/gpt-6-astra","ms":47292,"cost":0.2311118,"in":6075,"out":2842,"ok":true}
+{"at":"2026-10-20T00:28:27.020Z","label":"revise future/river r1","model":"openai/gpt-6-astra","ms":75187,"cost":0.32830055,"in":6970,"out":4452,"ok":true}
+{"at":"2026-10-20T00:28:27.280Z","label":"revise bronze/home r1","model":"openai/gpt-6-astra","ms":122531,"cost":0.49962305,"in":5936,"out":7943,"ok":true}
+{"at":"2026-10-20T00:28:32.952Z","label":"revise bronze/car r1","model":"openai/gpt-6-astra","ms":63387,"cost":0.28590055,"in":4906,"out":4168,"ok":true}
+{"at":"2026-10-20T00:28:33.406Z","label":"revise bronze/skyscraper r1","model":"openai/gpt-6-astra","ms":119245,"cost":0.4824643,"in":5837,"out":7644,"ok":true}
+{"at":"2026-10-20T00:28:34.396Z","label":"revise future/car r1","model":"openai/gpt-6-astra","ms":44632,"cost":0.2123233,"in":5677,"out":2587,"ok":true}
+{"at":"2026-10-20T00:28:48.925Z","label":"revise future/camp r1","model":"openai/gpt-6-astra","ms":92193,"cost":0.41906305,"in":8332,"out":5824,"ok":true}
+{"at":"2026-10-20T00:28:51.423Z","label":"revise future/lot-sale r1","model":"openai/gpt-6-astra","ms":47952,"cost":0.2015908,"in":5119,"out":2524,"ok":true}
+{"at":"2026-10-20T00:28:58.466Z","label":"revise future/home r1","model":"openai/gpt-6-astra","ms":84676,"cost":0.36198205,"in":5816,"out":5376,"ok":true}
+{"at":"2026-10-20T00:29:02.067Z","label":"revise future/market r1","model":"openai/gpt-6-astra","ms":45575,"cost":0.1988348,"in":5531,"out":2369,"ok":true}
+{"at":"2026-10-20T00:29:04.323Z","label":"revise future/dog r1","model":"openai/gpt-6-astra","ms":29925,"cost":0.15305605,"in":5048,"out":1626,"ok":true}
+{"at":"2026-10-20T00:29:05.080Z","label":"revise industrial/skyscraper r1","model":"openai/gpt-6-astra","ms":118797,"cost":0.52710355,"in":6558,"out":8306,"ok":true}
+{"at":"2026-10-20T00:29:12.202Z","label":"revise future/cafe r1","model":"openai/gpt-6-astra","ms":88752,"cost":0.38079705,"in":5964,"out":5694,"ok":true}
+{"at":"2026-10-20T00:29:13.296Z","label":"revise future/resident r1","model":"openai/gpt-6-astra","ms":51062,"cost":0.25547855,"in":6370,"out":3228,"ok":true}
+{"at":"2026-10-20T00:30:12.851Z","label":"revise future/skyscraper r1","model":"openai/gpt-6-astra","ms":105828,"cost":0.4289078,"in":5667,"out":6676,"ok":true}
+{"at":"2026-10-20T00:31:49.986Z","label":"critique medieval r2","model":"openai/gpt-6-astra","ms":204267,"cost":0.51857055,"in":9258,"out":7470,"ok":true}
+{"at":"2026-10-20T00:33:23.696Z","label":"critique stone r2","model":"openai/gpt-6-astra","ms":248705,"cost":0.56836405,"in":9216,"out":8420,"ok":true}
+{"at":"2026-10-20T00:34:02.639Z","label":"critique modern r2","model":"openai/gpt-6-astra","ms":262002,"cost":0.60416555,"in":9178,"out":9105,"ok":true}
+{"at":"2026-10-20T00:44:34.422Z","label":"critique industrial r2","model":"openai/gpt-6-astra","ms":174533,"cost":0.34685426,"in":9244,"out":6359,"ok":true}
+{"at":"2026-10-20T00:46:12.411Z","label":"critique bronze r2","model":"openai/gpt-6-astra","ms":272616,"cost":0.53964706,"in":9224,"out":9997,"ok":true}
+{"at":"2026-10-20T02:17:09.090Z","label":"revise stone/bench r2","model":"openai/gpt-6-astra","ms":19736,"cost":0.0938683,"in":4197,"out":722,"ok":true}
+{"at":"2026-10-20T02:17:10.059Z","label":"revise industrial/ground r2","model":"openai/gpt-6-astra","ms":24104,"cost":0.1270993,"in":4901,"out":1173,"ok":true}
+{"at":"2026-10-20T02:17:10.937Z","label":"revise industrial/lot-sale r2","model":"openai/gpt-6-astra","ms":24950,"cost":0.14224405,"in":5028,"out":1427,"ok":true}
+{"at":"2026-10-20T02:17:12.838Z","label":"revise medieval/ground r2","model":"openai/gpt-6-astra","ms":30456,"cost":0.1505518,"in":4919,"out":1611,"ok":true}
+{"at":"2026-10-20T02:17:13.437Z","label":"revise industrial/street r2","model":"openai/gpt-6-astra","ms":27456,"cost":0.1614963,"in":5649,"out":1635,"ok":true}
+{"at":"2026-10-20T02:17:13.557Z","label":"revise stone/street r2","model":"openai/gpt-6-astra","ms":24229,"cost":0.1460998,"in":5651,"out":1344,"ok":true}
+{"at":"2026-10-20T02:17:17.286Z","label":"revise medieval/street-tree r2","model":"openai/gpt-6-astra","ms":34861,"cost":0.1848693,"in":5829,"out":2031,"ok":true}
+{"at":"2026-10-20T02:17:18.296Z","label":"revise medieval/wild-tree r2","model":"openai/gpt-6-astra","ms":35866,"cost":0.20125955,"in":6078,"out":2278,"ok":true}
+{"at":"2026-10-20T02:17:19.746Z","label":"revise medieval/street r2","model":"openai/gpt-6-astra","ms":37338,"cost":0.18477655,"in":5758,"out":2047,"ok":true}
+{"at":"2026-10-20T02:17:20.420Z","label":"revise stone/market r2","model":"openai/gpt-6-astra","ms":31059,"cost":0.1622648,"in":5931,"out":1579,"ok":true}
+{"at":"2026-10-20T02:17:21.244Z","label":"revise medieval/civic-lot r2","model":"openai/gpt-6-astra","ms":38794,"cost":0.17796605,"in":4904,"out":2132,"ok":true}
+{"at":"2026-10-20T02:17:22.338Z","label":"revise stone/ground r2","model":"openai/gpt-6-astra","ms":33033,"cost":0.1623178,"in":4687,"out":1891,"ok":true}
+{"at":"2026-10-20T02:17:23.018Z","label":"revise industrial/street-tree r2","model":"openai/gpt-6-astra","ms":37020,"cost":0.1895863,"in":5557,"out":2188,"ok":true}
+{"at":"2026-10-20T02:17:23.652Z","label":"revise industrial/lot-claimed r2","model":"openai/gpt-6-astra","ms":37660,"cost":0.20239905,"in":6120,"out":2289,"ok":true}
+{"at":"2026-10-20T02:17:29.959Z","label":"revise industrial/wild-tree r2","model":"openai/gpt-6-astra","ms":43953,"cost":0.21556955,"in":6014,"out":2564,"ok":true}
+{"at":"2026-10-20T02:17:30.403Z","label":"revise stone/street-tree r2","model":"openai/gpt-6-astra","ms":41065,"cost":0.1984108,"in":5735,"out":2310,"ok":true}
+{"at":"2026-10-20T02:17:31.674Z","label":"revise stone/centrepiece r2","model":"openai/gpt-6-astra","ms":42323,"cost":0.21191255,"in":6222,"out":2443,"ok":true}
+{"at":"2026-10-20T02:17:32.291Z","label":"revise medieval/lot-claimed r2","model":"openai/gpt-6-astra","ms":49873,"cost":0.2442293,"in":6397,"out":3009,"ok":true}
+{"at":"2026-10-20T02:17:34.235Z","label":"revise stone/wild-tree r2","model":"openai/gpt-6-astra","ms":44891,"cost":0.2212008,"in":6099,"out":2649,"ok":true}
+{"at":"2026-10-20T02:17:35.996Z","label":"revise industrial/civic-lot r2","model":"openai/gpt-6-astra","ms":22555,"cost":0.14025655,"in":5410,"out":1294,"ok":true}
+{"at":"2026-10-20T02:17:36.390Z","label":"revise stone/lot-claimed r2","model":"openai/gpt-6-astra","ms":47058,"cost":0.23661055,"in":5734,"out":3031,"ok":true}
+{"at":"2026-10-20T02:17:37.264Z","label":"revise industrial/centrepiece r2","model":"openai/gpt-6-astra","ms":51252,"cost":0.26398505,"in":6928,"out":3249,"ok":true}
+{"at":"2026-10-20T02:17:40.508Z","label":"revise industrial/market r2","model":"openai/gpt-6-astra","ms":54491,"cost":0.2241688,"in":5515,"out":2851,"ok":true}
+{"at":"2026-10-20T02:17:47.841Z","label":"revise medieval/river r2","model":"openai/gpt-6-astra","ms":65398,"cost":0.3145338,"in":7003,"out":4184,"ok":true}
+{"at":"2026-10-20T02:17:47.955Z","label":"revise medieval/lot-sale r2","model":"openai/gpt-6-astra","ms":26706,"cost":0.14213805,"in":4960,"out":1442,"ok":true}
+{"at":"2026-10-20T02:17:53.972Z","label":"revise medieval/arrival r2","model":"openai/gpt-6-astra","ms":71536,"cost":0.33802605,"in":7408,"out":4526,"ok":true}
+{"at":"2026-10-20T02:17:59.189Z","label":"revise stone/street-light r2","model":"openai/gpt-6-astra","ms":22795,"cost":0.12170655,"in":4546,"out":1160,"ok":true}
+{"at":"2026-10-20T02:18:02.320Z","label":"revise medieval/street-light r2","model":"openai/gpt-6-astra","ms":30024,"cost":0.14717305,"in":4720,"out":1597,"ok":true}
+{"at":"2026-10-20T02:18:04.744Z","label":"revise medieval/leader r2","model":"openai/gpt-6-astra","ms":47453,"cost":0.2426128,"in":6247,"out":3016,"ok":true}
+{"at":"2026-10-20T02:18:05.115Z","label":"revise industrial/dog r2","model":"openai/gpt-6-astra","ms":27846,"cost":0.1420453,"in":4377,"out":1586,"ok":true}
+{"at":"2026-10-20T02:18:06.179Z","label":"revise industrial/leader r2","model":"openai/gpt-6-astra","ms":42522,"cost":0.22532155,"in":6586,"out":2605,"ok":true}
+{"at":"2026-10-20T02:18:06.849Z","label":"revise stone/lot-sale r2","model":"openai/gpt-6-astra","ms":32609,"cost":0.1731298,"in":5227,"out":1960,"ok":true}
+{"at":"2026-10-20T02:18:09.689Z","label":"revise stone/arrival r2","model":"openai/gpt-6-astra","ms":60591,"cost":0.29374455,"in":7150,"out":3755,"ok":true}
+{"at":"2026-10-20T02:18:12.841Z","label":"revise stone/river r2","model":"openai/gpt-6-astra","ms":59279,"cost":0.2518348,"in":6175,"out":3208,"ok":true}
+{"at":"2026-10-20T02:18:17.058Z","label":"revise medieval/bench r2","model":"openai/gpt-6-astra","ms":29098,"cost":0.12947105,"in":4064,"out":1427,"ok":true}
+{"at":"2026-10-20T02:18:18.375Z","label":"revise stone/resident r2","model":"openai/gpt-6-astra","ms":56032,"cost":0.25380905,"in":6384,"out":3193,"ok":true}
+{"at":"2026-10-20T02:18:18.606Z","label":"revise industrial/river r2","model":"openai/gpt-6-astra","ms":67663,"cost":0.33216955,"in":7438,"out":4408,"ok":true}
+{"at":"2026-10-20T02:18:19.269Z","label":"revise industrial/resident r2","model":"openai/gpt-6-astra","ms":38756,"cost":0.2223138,"in":5943,"out":2709,"ok":true}
+{"at":"2026-10-20T02:18:22.394Z","label":"revise industrial/head r2","model":"openai/gpt-6-astra","ms":46394,"cost":0.2379488,"in":6115,"out":2961,"ok":true}
+{"at":"2026-10-20T02:18:26.026Z","label":"revise industrial/arrival r2","model":"openai/gpt-6-astra","ms":75956,"cost":0.3513953,"in":7357,"out":4791,"ok":true}
+{"at":"2026-10-20T02:18:31.845Z","label":"revise medieval/market r2","model":"openai/gpt-6-astra","ms":37866,"cost":0.2020413,"in":5177,"out":2518,"ok":true}
+{"at":"2026-10-20T02:18:34.088Z","label":"revise medieval/centrepiece r2","model":"openai/gpt-6-astra","ms":46242,"cost":0.23234405,"in":6328,"out":2802,"ok":true}
+{"at":"2026-10-20T02:18:34.653Z","label":"revise medieval/head r2","model":"openai/gpt-6-astra","ms":29903,"cost":0.20266405,"in":5940,"out":2339,"ok":true}
+{"at":"2026-10-20T02:18:34.976Z","label":"revise stone/camp r2","model":"openai/gpt-6-astra","ms":74552,"cost":0.34528705,"in":7340,"out":4680,"ok":true}
+{"at":"2026-10-20T02:18:36.298Z","label":"revise medieval/resident r2","model":"openai/gpt-6-astra","ms":33973,"cost":0.2105213,"in":6109,"out":2445,"ok":true}
+{"at":"2026-10-20T02:18:37.134Z","label":"revise stone/civic-lot r2","model":"openai/gpt-6-astra","ms":37939,"cost":0.1765483,"in":4833,"out":2123,"ok":true}
+{"at":"2026-10-20T02:18:38.052Z","label":"revise medieval/camp r2","model":"openai/gpt-6-astra","ms":85207,"cost":0.39879055,"in":8046,"out":5513,"ok":true}
+{"at":"2026-10-20T02:18:43.572Z","label":"revise industrial/camp r2","model":"openai/gpt-6-astra","ms":80549,"cost":0.39412655,"in":8070,"out":5419,"ok":true}
+{"at":"2026-10-20T02:18:52.968Z","label":"revise stone/head r2","model":"openai/gpt-6-astra","ms":46116,"cost":0.2183123,"in":6205,"out":2568,"ok":true}
+{"at":"2026-10-20T02:18:58.832Z","label":"revise stone/leader r2","model":"openai/gpt-6-astra","ms":49137,"cost":0.2171198,"in":5735,"out":2663,"ok":true}
+{"at":"2026-10-20T02:19:10.586Z","label":"revise medieval/home r2","model":"openai/gpt-6-astra","ms":112286,"cost":0.56688005,"in":9392,"out":8348,"ok":true}
+{"at":"2026-10-20T02:19:14.349Z","label":"revise stone/home r2","model":"openai/gpt-6-astra","ms":103942,"cost":0.47704505,"in":9296,"out":6677,"ok":true}
+{"at":"2026-10-20T02:19:32.658Z","label":"revise stone/cafe r2","model":"openai/gpt-6-astra","ms":120982,"cost":0.55018505,"in":10584,"out":7735,"ok":true}
+{"at":"2026-10-20T02:19:33.159Z","label":"revise medieval/skyscraper r2","model":"openai/gpt-6-astra","ms":133408,"cost":0.5845953,"in":10493,"out":8407,"ok":true}
+{"at":"2026-10-20T02:19:33.699Z","label":"revise industrial/cafe r2","model":"openai/gpt-6-astra","ms":123735,"cost":0.5655418,"in":10799,"out":7971,"ok":true}
+{"at":"2026-10-20T02:19:41.505Z","label":"revise stone/car r2","model":"openai/gpt-6-astra","ms":83127,"cost":0.40085755,"in":6446,"out":5952,"ok":true}
+{"at":"2026-10-20T02:19:42.530Z","label":"revise industrial/car r2","model":"openai/gpt-6-astra","ms":96348,"cost":0.52328755,"in":9954,"out":7385,"ok":true}
+{"at":"2026-10-20T02:19:45.177Z","label":"critique future r2","model":"openai/gpt-6-astra","ms":273599,"cost":0.58386655,"in":9398,"out":8667,"ok":true}
+{"at":"2026-10-20T02:19:51.944Z","label":"revise medieval/car r2","model":"openai/gpt-6-astra","ms":94884,"cost":0.53065455,"in":10250,"out":7450,"ok":true}
+{"at":"2026-10-20T02:19:58.764Z","label":"revise stone/skyscraper r2","model":"openai/gpt-6-astra","ms":105919,"cost":0.51313805,"in":10740,"out":6997,"ok":true}
+{"at":"2026-10-20T02:20:03.049Z","label":"revise industrial/skyscraper r2","model":"openai/gpt-6-astra","ms":117928,"cost":0.59120705,"in":10396,"out":8556,"ok":true}
+{"at":"2026-10-20T02:20:48.162Z","label":"revise modern/street-light r2","model":"openai/gpt-6-astra","ms":21626,"cost":0.12154755,"in":4598,"out":1144,"ok":true}
+{"at":"2026-10-20T02:20:56.023Z","label":"revise modern/lot-sale r2","model":"openai/gpt-6-astra","ms":29529,"cost":0.16177455,"in":5266,"out":1736,"ok":true}
+{"at":"2026-10-20T02:21:01.123Z","label":"revise modern/ground r2","model":"openai/gpt-6-astra","ms":34678,"cost":0.1533343,"in":4925,"out":1662,"ok":true}
+{"at":"2026-10-20T02:21:06.344Z","label":"revise modern/wild-tree r2","model":"openai/gpt-6-astra","ms":39814,"cost":0.20449255,"in":6134,"out":2325,"ok":true}
+{"at":"2026-10-20T02:21:09.487Z","label":"revise modern/lot-claimed r2","model":"openai/gpt-6-astra","ms":42980,"cost":0.20189555,"in":6010,"out":2307,"ok":true}
+{"at":"2026-10-20T02:21:11.628Z","label":"revise modern/market r2","model":"openai/gpt-6-astra","ms":45079,"cost":0.19203755,"in":5018,"out":2369,"ok":true}
+{"at":"2026-10-20T02:21:13.865Z","label":"revise modern/street-tree r2","model":"openai/gpt-6-astra","ms":47349,"cost":0.21641755,"in":5550,"out":2696,"ok":true}
+{"at":"2026-10-20T02:21:23.297Z","label":"revise modern/centrepiece r2","model":"openai/gpt-6-astra","ms":56754,"cost":0.2613748,"in":6451,"out":3319,"ok":true}
+{"at":"2026-10-20T02:21:23.435Z","label":"revise modern/civic-lot r2","model":"openai/gpt-6-astra","ms":27408,"cost":0.1459143,"in":5385,"out":1407,"ok":true}
+{"at":"2026-10-20T02:21:43.109Z","label":"revise modern/river r2","model":"openai/gpt-6-astra","ms":54941,"cost":0.27651955,"in":6998,"out":3468,"ok":true}
+{"at":"2026-10-20T02:21:47.034Z","label":"revise modern/resident r2","model":"openai/gpt-6-astra","ms":37536,"cost":0.2191603,"in":6213,"out":2582,"ok":true}
+{"at":"2026-10-20T02:21:57.811Z","label":"revise modern/leader r2","model":"openai/gpt-6-astra","ms":46180,"cost":0.22277755,"in":5682,"out":2783,"ok":true}
+{"at":"2026-10-20T02:22:02.504Z","label":"revise modern/head r2","model":"openai/gpt-6-astra","ms":56153,"cost":0.2568168,"in":6267,"out":3279,"ok":true}
+{"at":"2026-10-20T02:22:09.546Z","label":"revise modern/camp r2","model":"openai/gpt-6-astra","ms":68416,"cost":0.3530648,"in":7627,"out":4755,"ok":true}
+{"at":"2026-10-20T02:22:10.495Z","label":"revise modern/car r2","model":"openai/gpt-6-astra","ms":47194,"cost":0.23417255,"in":5550,"out":3031,"ok":true}
+{"at":"2026-10-20T02:22:43.189Z","label":"revise modern/cafe r2","model":"openai/gpt-6-astra","ms":89322,"cost":0.4395343,"in":7985,"out":6297,"ok":true}
+{"at":"2026-10-20T02:26:09.263Z","label":"critique industrial r3","model":"openai/gpt-6-astra","ms":208833,"cost":0.55193405,"in":9244,"out":8103,"ok":true}
+{"at":"2026-10-20T02:26:19.848Z","label":"revise future/bench r2","model":"openai/gpt-6-astra","ms":20729,"cost":0.12046105,"in":4384,"out":1177,"ok":true}
+{"at":"2026-10-20T02:26:25.186Z","label":"revise future/lot-sale r2","model":"openai/gpt-6-astra","ms":26093,"cost":0.1533078,"in":5403,"out":1542,"ok":true}
+{"at":"2026-10-20T02:26:27.717Z","label":"revise future/street-light r2","model":"openai/gpt-6-astra","ms":28602,"cost":0.13911705,"in":4628,"out":1468,"ok":true}
+{"at":"2026-10-20T02:26:32.234Z","label":"revise future/street r2","model":"openai/gpt-6-astra","ms":33163,"cost":0.16858505,"in":5660,"out":1766,"ok":true}
+{"at":"2026-10-20T02:26:32.266Z","label":"critique stone r3","model":"openai/gpt-6-astra","ms":228639,"cost":0.54843605,"in":9216,"out":8044,"ok":true}
+{"at":"2026-10-20T02:26:36.044Z","label":"revise future/lot-claimed r2","model":"openai/gpt-6-astra","ms":36946,"cost":0.1903548,"in":6003,"out":2091,"ok":true}
+{"at":"2026-10-20T02:26:38.138Z","label":"revise bronze/ground r2","model":"openai/gpt-6-astra","ms":32649,"cost":0.15408955,"in":5038,"out":1648,"ok":true}
+{"at":"2026-10-20T02:26:38.151Z","label":"revise bronze/street r2","model":"openai/gpt-6-astra","ms":32640,"cost":0.17316955,"in":5274,"out":1949,"ok":true}
+{"at":"2026-10-20T02:26:39.737Z","label":"revise future/street-tree r2","model":"openai/gpt-6-astra","ms":40634,"cost":0.19744355,"in":5706,"out":2299,"ok":true}
+{"at":"2026-10-20T02:26:40.349Z","label":"revise future/wild-tree r2","model":"openai/gpt-6-astra","ms":41242,"cost":0.22094905,"in":6180,"out":2624,"ok":true}
+{"at":"2026-10-20T02:26:42.482Z","label":"revise bronze/market r2","model":"openai/gpt-6-astra","ms":36951,"cost":0.1786418,"in":5163,"out":2080,"ok":true}
+{"at":"2026-10-20T02:26:46.163Z","label":"revise future/centrepiece r2","model":"openai/gpt-6-astra","ms":47044,"cost":0.2527623,"in":6785,"out":3073,"ok":true}
+{"at":"2026-10-20T02:26:46.890Z","label":"revise bronze/wild-tree r2","model":"openai/gpt-6-astra","ms":41366,"cost":0.2054068,"in":6079,"out":2356,"ok":true}
+{"at":"2026-10-20T02:26:49.017Z","label":"revise bronze/street-tree r2","model":"openai/gpt-6-astra","ms":43497,"cost":0.1893478,"in":4923,"out":2342,"ok":true}
+{"at":"2026-10-20T02:26:51.252Z","label":"revise future/civic-lot r2","model":"openai/gpt-6-astra","ms":23528,"cost":0.14788855,"in":5602,"out":1390,"ok":true}
+{"at":"2026-10-20T02:27:00.344Z","label":"revise bronze/lot-claimed r2","model":"openai/gpt-6-astra","ms":54829,"cost":0.24116855,"in":5974,"out":3057,"ok":true}
+{"at":"2026-10-20T02:27:00.384Z","label":"revise future/market r2","model":"openai/gpt-6-astra","ms":40525,"cost":0.1993118,"in":5571,"out":2368,"ok":true}
+{"at":"2026-10-20T02:27:05.619Z","label":"revise future/ground r2","model":"openai/gpt-6-astra","ms":25876,"cost":0.1436088,"in":5059,"out":1445,"ok":true}
+{"at":"2026-10-20T02:27:11.275Z","label":"revise bronze/river r2","model":"openai/gpt-6-astra","ms":65733,"cost":0.2938638,"in":6723,"out":3864,"ok":true}
+{"at":"2026-10-20T02:27:14.226Z","label":"revise future/river r2","model":"openai/gpt-6-astra","ms":49031,"cost":0.2866293,"in":7869,"out":3441,"ok":true}
+{"at":"2026-10-20T02:27:15.996Z","label":"revise future/leader r2","model":"openai/gpt-6-astra","ms":43755,"cost":0.23427855,"in":6762,"out":2730,"ok":true}
+{"at":"2026-10-20T02:27:17.050Z","label":"revise bronze/civic-lot r2","model":"openai/gpt-6-astra","ms":38906,"cost":0.1838623,"in":5249,"out":2157,"ok":true}
+{"at":"2026-10-20T02:27:22.054Z","label":"revise bronze/arrival r2","model":"openai/gpt-6-astra","ms":76517,"cost":0.3398678,"in":7119,"out":4633,"ok":true}
+{"at":"2026-10-20T02:27:22.896Z","label":"revise bronze/leader r2","model":"openai/gpt-6-astra","ms":35998,"cost":0.19598605,"in":5464,"out":2332,"ok":true}
+{"at":"2026-10-20T02:30:44.921Z","label":"revise future/dog r2","model":"openai/gpt-6-astra","ms":45953,"cost":0.135362,"in":5123,"out":2451,"ok":true}
+{"at":"2026-10-20T02:30:50.045Z","label":"revise bronze/street-light r2","model":"openai/gpt-6-astra","ms":48532,"cost":0.0662606,"in":4433,"out":1161,"ok":true}
+{"at":"2026-10-20T02:30:50.388Z","label":"revise bronze/bench r2","model":"openai/gpt-6-astra","ms":38454,"cost":0.09553568,"in":4151,"out":1719,"ok":true}
+{"at":"2026-10-20T02:30:52.710Z","label":"revise bronze/resident r2","model":"openai/gpt-6-astra","ms":49853,"cost":0.16199132,"in":6445,"out":2927,"ok":true}
+{"at":"2026-10-20T02:30:56.345Z","label":"revise future/resident r2","model":"openai/gpt-6-astra","ms":55848,"cost":0.17534202,"in":6840,"out":3171,"ok":true}
+{"at":"2026-10-20T02:30:59.673Z","label":"revise future/head r2","model":"openai/gpt-6-astra","ms":58704,"cost":0.17709738,"in":6446,"out":3212,"ok":true}
+{"at":"2026-10-20T02:31:01.061Z","label":"revise bronze/head r2","model":"openai/gpt-6-astra","ms":60992,"cost":0.17367252,"in":6165,"out":3153,"ok":true}
+{"at":"2026-10-20T02:31:04.231Z","label":"revise future/car r2","model":"openai/gpt-6-astra","ms":62026,"cost":0.21341086,"in":5404,"out":3918,"ok":true}
+{"at":"2026-10-20T02:31:07.543Z","label":"revise bronze/lot-sale r2","model":"openai/gpt-6-astra","ms":67046,"cost":0.16966678,"in":5086,"out":3099,"ok":true}
+{"at":"2026-10-20T02:31:08.390Z","label":"revise bronze/centrepiece r2","model":"openai/gpt-6-astra","ms":67424,"cost":0.19484814,"in":5692,"out":3562,"ok":true}
+{"at":"2026-10-20T02:31:10.801Z","label":"revise bronze/dog r2","model":"openai/gpt-6-astra","ms":20753,"cost":0.1338833,"in":4569,"out":1384,"ok":true}
+{"at":"2026-10-20T02:31:16.119Z","label":"revise future/home r2","model":"openai/gpt-6-astra","ms":75615,"cost":0.28203526,"in":8244,"out":5156,"ok":true}
+{"at":"2026-10-20T02:31:19.949Z","label":"revise future/arrival r2","model":"openai/gpt-6-astra","ms":80962,"cost":0.24524372,"in":7385,"out":4479,"ok":true}
+{"at":"2026-10-20T02:31:36.806Z","label":"revise future/camp r2","model":"openai/gpt-6-astra","ms":88563,"cost":0.2884419,"in":8438,"out":5273,"ok":true}
+{"at":"2026-10-20T02:31:41.015Z","label":"revise bronze/skyscraper r2","model":"openai/gpt-6-astra","ms":100504,"cost":0.3637655,"in":9798,"out":6667,"ok":true}
+{"at":"2026-10-20T02:31:43.196Z","label":"revise future/cafe r2","model":"openai/gpt-6-astra","ms":103139,"cost":0.35980322,"in":8360,"out":6621,"ok":true}
+{"at":"2026-10-20T02:31:45.639Z","label":"revise bronze/camp r2","model":"openai/gpt-6-astra","ms":104142,"cost":0.28863058,"in":7816,"out":5289,"ok":true}
+{"at":"2026-10-20T02:34:18.840Z","label":"critique medieval r3","model":"openai/gpt-6-astra","ms":254530,"cost":0.4261571,"in":9258,"out":7855,"ok":true}
+{"at":"2026-10-20T02:52:51.379Z","label":"critique modern r3","model":"openai/gpt-6-astra","ms":190250,"cost":0.49678755,"in":9178,"out":7079,"ok":true}
+{"at":"2026-10-20T02:53:57.684Z","label":"critique bronze r3","model":"openai/gpt-6-astra","ms":166507,"cost":0.44434405,"in":9224,"out":6078,"ok":true}
+{"at":"2026-10-20T04:38:27.934Z","label":"revise stone/civic-lot r3","model":"openai/gpt-6-astra","ms":20884,"cost":0.14364855,"in":5698,"out":1286,"ok":true}
+{"at":"2026-10-20T04:38:32.537Z","label":"revise industrial/street-light r3","model":"openai/gpt-6-astra","ms":22856,"cost":0.14314505,"in":4672,"out":1533,"ok":true}
+{"at":"2026-10-20T04:38:35.165Z","label":"revise stone/street r3","model":"openai/gpt-6-astra","ms":28172,"cost":0.1524333,"in":5097,"out":1602,"ok":true}
+{"at":"2026-10-20T04:38:38.200Z","label":"revise stone/market r3","model":"openai/gpt-6-astra","ms":31166,"cost":0.15658055,"in":5154,"out":1666,"ok":true}
+{"at":"2026-10-20T04:38:39.048Z","label":"revise stone/lot-claimed r3","model":"openai/gpt-6-astra","ms":32031,"cost":0.2046913,"in":6685,"out":2191,"ok":true}
+{"at":"2026-10-20T04:38:39.599Z","label":"revise stone/street-tree r3","model":"openai/gpt-6-astra","ms":32576,"cost":0.19140155,"in":5450,"out":2249,"ok":true}
+{"at":"2026-10-20T04:38:41.584Z","label":"revise industrial/street-tree r3","model":"openai/gpt-6-astra","ms":31914,"cost":0.18872505,"in":5628,"out":2154,"ok":true}
+{"at":"2026-10-20T04:38:42.441Z","label":"revise industrial/wild-tree r3","model":"openai/gpt-6-astra","ms":32765,"cost":0.2012463,"in":5693,"out":2374,"ok":true}
+{"at":"2026-10-20T04:38:44.982Z","label":"revise industrial/street r3","model":"openai/gpt-6-astra","ms":35344,"cost":0.17640255,"in":5106,"out":2052,"ok":true}
+{"at":"2026-10-20T04:38:48.744Z","label":"revise industrial/lot-claimed r3","model":"openai/gpt-6-astra","ms":39078,"cost":0.2180473,"in":6045,"out":2603,"ok":true}
+{"at":"2026-10-20T04:38:49.394Z","label":"revise stone/river r3","model":"openai/gpt-6-astra","ms":42346,"cost":0.2339473,"in":6197,"out":2865,"ok":true}
+{"at":"2026-10-20T04:38:51.285Z","label":"revise stone/wild-tree r3","model":"openai/gpt-6-astra","ms":44257,"cost":0.2327283,"in":5905,"out":2915,"ok":true}
+{"at":"2026-10-20T04:38:55.688Z","label":"revise industrial/centrepiece r3","model":"openai/gpt-6-astra","ms":45994,"cost":0.2847743,"in":6905,"out":3647,"ok":true}
+{"at":"2026-10-20T04:38:57.602Z","label":"revise stone/arrival r3","model":"openai/gpt-6-astra","ms":50560,"cost":0.28825905,"in":7072,"out":3671,"ok":true}
+{"at":"2026-10-20T04:38:59.643Z","label":"revise industrial/lot-sale r3","model":"openai/gpt-6-astra","ms":17197,"cost":0.12745705,"in":4524,"out":1274,"ok":true}
+{"at":"2026-10-20T04:39:01.713Z","label":"revise industrial/ground r3","model":"openai/gpt-6-astra","ms":20124,"cost":0.1334328,"in":4679,"out":1348,"ok":true}
+{"at":"2026-10-20T04:39:05.118Z","label":"revise industrial/arrival r3","model":"openai/gpt-6-astra","ms":55419,"cost":0.3366878,"in":7495,"out":4479,"ok":true}
+{"at":"2026-10-20T04:39:11.219Z","label":"revise industrial/camp r3","model":"openai/gpt-6-astra","ms":61514,"cost":0.3762788,"in":8087,"out":5078,"ok":true}
+{"at":"2026-10-20T04:39:11.703Z","label":"revise stone/ground r3","model":"openai/gpt-6-astra","ms":22306,"cost":0.13720905,"in":4964,"out":1348,"ok":true}
+{"at":"2026-10-20T04:39:11.717Z","label":"revise industrial/resident r3","model":"openai/gpt-6-astra","ms":39165,"cost":0.2439113,"in":6477,"out":2983,"ok":true}
+{"at":"2026-10-20T04:39:14.949Z","label":"revise stone/resident r3","model":"openai/gpt-6-astra","ms":39779,"cost":0.2395918,"in":6419,"out":2916,"ok":true}
+{"at":"2026-10-20T04:39:19.637Z","label":"revise stone/head r3","model":"openai/gpt-6-astra","ms":41431,"cost":0.22964105,"in":6108,"out":2806,"ok":true}
+{"at":"2026-10-20T04:39:20.184Z","label":"revise stone/leader r3","model":"openai/gpt-6-astra","ms":41132,"cost":0.2133568,"in":5819,"out":2571,"ok":true}
+{"at":"2026-10-20T04:39:20.679Z","label":"revise industrial/head r3","model":"openai/gpt-6-astra","ms":31928,"cost":0.2138073,"in":6193,"out":2486,"ok":true}
+{"at":"2026-10-20T04:39:20.844Z","label":"revise stone/lot-sale r3","model":"openai/gpt-6-astra","ms":29550,"cost":0.1566998,"in":5067,"out":1690,"ok":true}
+{"at":"2026-10-20T04:39:22.677Z","label":"revise stone/street-light r3","model":"openai/gpt-6-astra","ms":25061,"cost":0.1476368,"in":4603,"out":1635,"ok":true}
+{"at":"2026-10-20T04:39:23.194Z","label":"revise industrial/civic-lot r3","model":"openai/gpt-6-astra","ms":23542,"cost":0.1364538,"in":4619,"out":1420,"ok":true}
+{"at":"2026-10-20T04:39:23.294Z","label":"revise industrial/market r3","model":"openai/gpt-6-astra","ms":27592,"cost":0.18239155,"in":5354,"out":2103,"ok":true}
+{"at":"2026-10-20T04:39:29.666Z","label":"revise industrial/river r3","model":"openai/gpt-6-astra","ms":44678,"cost":0.29141255,"in":7026,"out":3742,"ok":true}
+{"at":"2026-10-20T04:39:29.951Z","label":"revise industrial/dog r3","model":"openai/gpt-6-astra","ms":18723,"cost":0.1423103,"in":4561,"out":1545,"ok":true}
+{"at":"2026-10-20T04:39:30.827Z","label":"revise stone/camp r3","model":"openai/gpt-6-astra","ms":62883,"cost":0.35458855,"in":7874,"out":4722,"ok":true}
+{"at":"2026-10-20T04:39:44.680Z","label":"revise stone/bench r3","model":"openai/gpt-6-astra","ms":25035,"cost":0.13556605,"in":3872,"out":1590,"ok":true}
+{"at":"2026-10-20T04:39:45.190Z","label":"revise stone/centrepiece r3","model":"openai/gpt-6-astra","ms":33480,"cost":0.1920773,"in":5669,"out":2207,"ok":true}
+{"at":"2026-10-20T04:40:17.780Z","label":"revise stone/skyscraper r3","model":"openai/gpt-6-astra","ms":98178,"cost":0.54273855,"in":9582,"out":7845,"ok":true}
+{"at":"2026-10-20T04:40:20.666Z","label":"revise stone/home r3","model":"openai/gpt-6-astra","ms":65709,"cost":0.38577905,"in":9080,"out":5009,"ok":true}
+{"at":"2026-10-20T04:40:32.292Z","label":"revise industrial/cafe r3","model":"openai/gpt-6-astra","ms":90574,"cost":0.5413208,"in":10567,"out":7572,"ok":true}
+{"at":"2026-10-20T04:40:37.257Z","label":"revise industrial/skyscraper r3","model":"openai/gpt-6-astra","ms":92127,"cost":0.5582013,"in":10681,"out":7862,"ok":true}
+{"at":"2026-10-20T04:40:50.438Z","label":"revise stone/cafe r3","model":"openai/gpt-6-astra","ms":90249,"cost":0.51096505,"in":10384,"out":7045,"ok":true}
+{"at":"2026-10-20T04:40:55.955Z","label":"revise medieval/ground r3","model":"openai/gpt-6-astra","ms":24338,"cost":0.14131655,"in":5070,"out":1399,"ok":true}
+{"at":"2026-10-20T04:40:59.095Z","label":"revise medieval/street r3","model":"openai/gpt-6-astra","ms":27454,"cost":0.17067855,"in":5650,"out":1808,"ok":true}
+{"at":"2026-10-20T04:41:04.499Z","label":"revise medieval/street-tree r3","model":"openai/gpt-6-astra","ms":32846,"cost":0.18278905,"in":5576,"out":2055,"ok":true}
+{"at":"2026-10-20T04:41:10.577Z","label":"revise medieval/resident r3","model":"openai/gpt-6-astra","ms":38906,"cost":0.22969405,"in":5864,"out":2868,"ok":true}
+{"at":"2026-10-20T04:41:15.470Z","label":"revise medieval/lot-claimed r3","model":"openai/gpt-6-astra","ms":43823,"cost":0.21840505,"in":6356,"out":2532,"ok":true}
+{"at":"2026-10-20T04:41:16.941Z","label":"revise medieval/wild-tree r3","model":"openai/gpt-6-astra","ms":45283,"cost":0.2291243,"in":5889,"out":2851,"ok":true}
+{"at":"2026-10-20T04:41:19.278Z","label":"revise medieval/centrepiece r3","model":"openai/gpt-6-astra","ms":47612,"cost":0.25025805,"in":6712,"out":3044,"ok":true}
+{"at":"2026-10-20T04:41:25.213Z","label":"revise medieval/civic-lot r3","model":"openai/gpt-6-astra","ms":29252,"cost":0.17701205,"in":5344,"out":2004,"ok":true}
+{"at":"2026-10-20T04:41:30.797Z","label":"revise medieval/river r3","model":"openai/gpt-6-astra","ms":59123,"cost":0.3157263,"in":6789,"out":4260,"ok":true}
+{"at":"2026-10-20T04:41:36.482Z","label":"revise medieval/lot-sale r3","model":"openai/gpt-6-astra","ms":21005,"cost":0.12960355,"in":4386,"out":1349,"ok":true}
+{"at":"2026-10-20T04:41:36.998Z","label":"revise medieval/leader r3","model":"openai/gpt-6-astra","ms":37895,"cost":0.2172523,"in":6185,"out":2553,"ok":true}
+{"at":"2026-10-20T04:42:23.972Z","label":"critique future r3","model":"openai/gpt-6-astra","ms":202437,"cost":0.52901155,"in":9398,"out":7632,"ok":true}
+{"at":"2026-10-20T04:42:40.465Z","label":"revise medieval/cafe r3","model":"openai/gpt-6-astra","ms":89884,"cost":0.52077005,"in":9864,"out":7360,"ok":true}
+{"at":"2026-10-20T04:42:50.196Z","label":"revise medieval/home r3","model":"openai/gpt-6-astra","ms":105693,"cost":0.6127913,"in":10925,"out":8831,"ok":true}
+{"at":"2026-10-20T04:42:52.902Z","label":"revise medieval/skyscraper r3","model":"openai/gpt-6-astra","ms":95954,"cost":0.5678738,"in":10551,"out":8077,"ok":true}
+{"at":"2026-10-20T04:43:14.140Z","label":"revise bronze/civic-lot r3","model":"openai/gpt-6-astra","ms":21993,"cost":0.1423898,"in":5523,"out":1306,"ok":true}
+{"at":"2026-10-20T04:43:17.069Z","label":"revise modern/lot-sale r3","model":"openai/gpt-6-astra","ms":26082,"cost":0.1492003,"in":5289,"out":1493,"ok":true}
+{"at":"2026-10-20T04:43:18.077Z","label":"revise bronze/lot-sale r3","model":"openai/gpt-6-astra","ms":25954,"cost":0.1711423,"in":6697,"out":1555,"ok":true}
+{"at":"2026-10-20T04:43:19.978Z","label":"revise modern/street-light r3","model":"openai/gpt-6-astra","ms":28972,"cost":0.14261505,"in":4352,"out":1603,"ok":true}
+{"at":"2026-10-20T04:43:20.838Z","label":"revise modern/ground r3","model":"openai/gpt-6-astra","ms":29867,"cost":0.1436353,"in":4685,"out":1539,"ok":true}
+{"at":"2026-10-20T04:43:24.829Z","label":"revise modern/street-tree r3","model":"openai/gpt-6-astra","ms":33832,"cost":0.1907523,"in":5673,"out":2181,"ok":true}
+{"at":"2026-10-20T04:43:25.264Z","label":"revise bronze/street r3","model":"openai/gpt-6-astra","ms":33161,"cost":0.1847633,"in":5897,"out":2012,"ok":true}
+{"at":"2026-10-20T04:43:26.842Z","label":"revise modern/wild-tree r3","model":"openai/gpt-6-astra","ms":35841,"cost":0.20536705,"in":5936,"out":2391,"ok":true}
+{"at":"2026-10-20T04:43:31.936Z","label":"revise bronze/market r3","model":"openai/gpt-6-astra","ms":39795,"cost":0.19911305,"in":5404,"out":2406,"ok":true}
+{"at":"2026-10-20T04:43:31.995Z","label":"revise bronze/wild-tree r3","model":"openai/gpt-6-astra","ms":39859,"cost":0.2038963,"in":5785,"out":2401,"ok":true}
+{"at":"2026-10-20T04:43:34.450Z","label":"revise modern/centrepiece r3","model":"openai/gpt-6-astra","ms":43437,"cost":0.2544583,"in":6745,"out":3115,"ok":true}
+{"at":"2026-10-20T04:43:34.779Z","label":"revise modern/arrival r3","model":"openai/gpt-6-astra","ms":43761,"cost":0.27678455,"in":6678,"out":3553,"ok":true}
+{"at":"2026-10-20T04:43:35.630Z","label":"revise bronze/street-tree r3","model":"openai/gpt-6-astra","ms":43498,"cost":0.2151058,"in":5343,"out":2723,"ok":true}
+{"at":"2026-10-20T04:43:35.796Z","label":"revise bronze/lot-claimed r3","model":"openai/gpt-6-astra","ms":43668,"cost":0.22823655,"in":5950,"out":2819,"ok":true}
+{"at":"2026-10-20T04:43:36.542Z","label":"revise modern/river r3","model":"openai/gpt-6-astra","ms":45518,"cost":0.26112305,"in":6300,"out":3352,"ok":true}
+{"at":"2026-10-20T04:51:27.845Z","label":"revise modern/dog r3","model":"openai/gpt-6-astra","ms":20865,"cost":0.0819963,"in":4628,"out":1454,"ok":true}
+{"at":"2026-10-20T04:51:30.700Z","label":"revise bronze/bench r3","model":"openai/gpt-6-astra","ms":23317,"cost":0.07855554,"in":4782,"out":1386,"ok":true}
+{"at":"2026-10-20T04:51:32.337Z","label":"revise bronze/ground r3","model":"openai/gpt-6-astra","ms":26128,"cost":0.08403574,"in":4652,"out":1492,"ok":true}
+{"at":"2026-10-20T04:51:38.060Z","label":"revise modern/leader r3","model":"openai/gpt-6-astra","ms":31125,"cost":0.12927654,"in":5782,"out":2323,"ok":true}
+{"at":"2026-10-20T04:51:39.825Z","label":"revise modern/civic-lot r3","model":"openai/gpt-6-astra","ms":31407,"cost":0.10851856,"in":4749,"out":1952,"ok":true}
+{"at":"2026-10-20T04:51:52.077Z","label":"revise modern/head r3","model":"openai/gpt-6-astra","ms":46103,"cost":0.16140726,"in":6244,"out":2920,"ok":true}
+{"at":"2026-10-20T04:51:52.082Z","label":"revise modern/lot-claimed r3","model":"openai/gpt-6-astra","ms":44366,"cost":0.14993806,"in":5174,"out":2725,"ok":true}
+{"at":"2026-10-20T04:51:52.201Z","label":"revise bronze/street-light r3","model":"openai/gpt-6-astra","ms":21481,"cost":0.13106105,"in":4460,"out":1358,"ok":true}
+{"at":"2026-10-20T04:51:54.872Z","label":"revise modern/resident r3","model":"openai/gpt-6-astra","ms":46794,"cost":0.16871596,"in":6139,"out":3060,"ok":true}
+{"at":"2026-10-20T04:51:55.746Z","label":"revise modern/car r3","model":"openai/gpt-6-astra","ms":49761,"cost":0.1852933,"in":6078,"out":3374,"ok":true}
+{"at":"2026-10-20T04:51:58.020Z","label":"revise bronze/leader r3","model":"openai/gpt-6-astra","ms":49267,"cost":0.1785888,"in":5753,"out":3254,"ok":true}
+{"at":"2026-10-20T04:51:59.747Z","label":"revise bronze/head r3","model":"openai/gpt-6-astra","ms":51477,"cost":0.16730722,"in":5910,"out":3038,"ok":true}
+{"at":"2026-10-20T04:52:04.990Z","label":"revise bronze/arrival r3","model":"openai/gpt-6-astra","ms":57436,"cost":0.2147295,"in":7698,"out":3897,"ok":true}
+{"at":"2026-10-20T04:52:11.059Z","label":"revise modern/camp r3","model":"openai/gpt-6-astra","ms":63004,"cost":0.25987808,"in":7641,"out":4750,"ok":true}
+{"at":"2026-10-20T04:52:12.219Z","label":"revise bronze/centrepiece r3","model":"openai/gpt-6-astra","ms":39871,"cost":0.22577205,"in":6864,"out":2544,"ok":true}
+{"at":"2026-10-20T04:52:17.520Z","label":"revise bronze/river r3","model":"openai/gpt-6-astra","ms":69488,"cost":0.2478651,"in":6708,"out":4542,"ok":true}
+{"at":"2026-10-20T04:52:20.271Z","label":"revise bronze/camp r3","model":"openai/gpt-6-astra","ms":72054,"cost":0.2774656,"in":8133,"out":5072,"ok":true}
+{"at":"2026-10-20T04:52:37.558Z","label":"revise bronze/resident r3","model":"openai/gpt-6-astra","ms":45350,"cost":0.2422153,"in":6041,"out":3060,"ok":true}
+{"at":"2026-10-20T04:52:39.167Z","label":"revise bronze/cafe r3","model":"openai/gpt-6-astra","ms":92290,"cost":0.38535876,"in":10169,"out":7067,"ok":true}
+{"at":"2026-10-20T04:53:51.357Z","label":"critique medieval r4","model":"openai/gpt-6-astra","ms":186613,"cost":0.51963055,"in":9258,"out":7490,"ok":true}
+{"at":"2026-10-20T04:53:51.610Z","label":"critique industrial r4","model":"openai/gpt-6-astra","ms":187521,"cost":0.52347305,"in":9244,"out":7566,"ok":true}
+{"at":"2026-10-20T05:09:37.180Z","label":"revise future/bench r3","model":"openai/gpt-6-astra","ms":23581,"cost":0.1294578,"in":4423,"out":1337,"ok":true}
+{"at":"2026-10-20T05:09:38.228Z","label":"revise future/street r3","model":"openai/gpt-6-astra","ms":24714,"cost":0.1678033,"in":5749,"out":1729,"ok":true}
+{"at":"2026-10-20T05:09:39.818Z","label":"revise future/street-light r3","model":"openai/gpt-6-astra","ms":26242,"cost":0.1393953,"in":4821,"out":1425,"ok":true}
+{"at":"2026-10-20T05:09:40.321Z","label":"revise future/lot-sale r3","model":"openai/gpt-6-astra","ms":26776,"cost":0.1585283,"in":5153,"out":1703,"ok":true}
+{"at":"2026-10-20T05:09:44.707Z","label":"revise future/street-tree r3","model":"openai/gpt-6-astra","ms":31150,"cost":0.19073905,"in":5752,"out":2161,"ok":true}
+{"at":"2026-10-20T05:09:51.334Z","label":"revise future/lot-claimed r3","model":"openai/gpt-6-astra","ms":37783,"cost":0.2131183,"in":5897,"out":2547,"ok":true}
+{"at":"2026-10-20T05:09:57.324Z","label":"revise future/wild-tree r3","model":"openai/gpt-6-astra","ms":43755,"cost":0.2450773,"in":6253,"out":3061,"ok":true}
+{"at":"2026-10-20T05:10:13.721Z","label":"revise future/ground r3","model":"openai/gpt-6-astra","ms":22375,"cost":0.1381498,"in":5051,"out":1344,"ok":true}
+{"at":"2026-10-20T05:10:15.763Z","label":"revise future/centrepiece r3","model":"openai/gpt-6-astra","ms":62173,"cost":0.31181755,"in":6854,"out":4170,"ok":true}
+{"at":"2026-10-20T05:10:21.821Z","label":"revise future/head r3","model":"openai/gpt-6-astra","ms":41493,"cost":0.24784655,"in":6410,"out":3074,"ok":true}
+{"at":"2026-10-20T05:10:22.987Z","label":"revise future/river r3","model":"openai/gpt-6-astra","ms":44747,"cost":0.28123655,"in":7182,"out":3511,"ok":true}
+{"at":"2026-10-20T05:10:24.371Z","label":"revise future/leader r3","model":"openai/gpt-6-astra","ms":39659,"cost":0.23462305,"in":6476,"out":2808,"ok":true}
+{"at":"2026-10-20T05:10:25.310Z","label":"revise future/market r3","model":"openai/gpt-6-astra","ms":27982,"cost":0.1873073,"in":5413,"out":2181,"ok":true}
+{"at":"2026-10-20T05:10:38.847Z","label":"revise future/arrival r3","model":"openai/gpt-6-astra","ms":61655,"cost":0.3583913,"in":7553,"out":4874,"ok":true}
+{"at":"2026-10-20T05:10:45.395Z","label":"revise future/civic-lot r3","model":"openai/gpt-6-astra","ms":31664,"cost":0.18331905,"in":4936,"out":2225,"ok":true}
+{"at":"2026-10-20T05:10:50.954Z","label":"revise future/camp r3","model":"openai/gpt-6-astra","ms":71123,"cost":0.39547805,"in":8388,"out":5365,"ok":true}
+{"at":"2026-10-20T05:10:55.921Z","label":"revise future/dog r3","model":"openai/gpt-6-astra","ms":34097,"cost":0.2217838,"in":5551,"out":2797,"ok":true}
+{"at":"2026-10-20T05:10:57.396Z","label":"revise future/resident r3","model":"openai/gpt-6-astra","ms":34404,"cost":0.2319333,"in":6413,"out":2773,"ok":true}
+{"at":"2026-10-20T05:11:00.014Z","label":"revise future/car r3","model":"openai/gpt-6-astra","ms":34693,"cost":0.24108905,"in":6524,"out":2918,"ok":true}
+{"at":"2026-10-20T05:11:22.230Z","label":"revise future/cafe r3","model":"openai/gpt-6-astra","ms":66463,"cost":0.4450463,"in":9233,"out":6089,"ok":true}
+{"at":"2026-10-20T05:11:32.198Z","label":"revise future/skyscraper r3","model":"openai/gpt-6-astra","ms":67823,"cost":0.38842905,"in":8928,"out":5097,"ok":true}
+{"at":"2026-10-20T05:17:05.066Z","label":"critique stone r4","model":"openai/gpt-6-astra","ms":199992,"cost":0.45664058,"in":9216,"out":8431,"ok":true}
+{"at":"2026-10-20T05:18:31.949Z","label":"critique modern r4","model":"openai/gpt-6-astra","ms":179921,"cost":0.51019655,"in":9178,"out":7332,"ok":true}
+{"at":"2026-10-20T05:21:17.855Z","label":"critique bronze r4","model":"openai/gpt-6-astra","ms":236196,"cost":0.63959605,"in":9224,"out":9762,"ok":true}
+{"at":"2026-10-20T05:22:43.438Z","label":"revise stone/bench r4","model":"openai/gpt-6-astra","ms":20259,"cost":0.10313005,"in":4828,"out":739,"ok":true}
+{"at":"2026-10-20T05:22:53.445Z","label":"revise stone/street r4","model":"openai/gpt-6-astra","ms":30300,"cost":0.14200555,"in":5182,"out":1384,"ok":true}
+{"at":"2026-10-20T05:22:57.393Z","label":"revise medieval/street r4","model":"openai/gpt-6-astra","ms":33953,"cost":0.1500748,"in":5623,"out":1426,"ok":true}
+{"at":"2026-10-20T05:22:58.486Z","label":"revise stone/lot-sale r4","model":"openai/gpt-6-astra","ms":35324,"cost":0.13818955,"in":4906,"out":1381,"ok":true}
+{"at":"2026-10-20T05:23:01.787Z","label":"revise stone/market r4","model":"openai/gpt-6-astra","ms":38600,"cost":0.15599755,"in":5058,"out":1679,"ok":true}
+{"at":"2026-10-20T05:23:04.104Z","label":"revise medieval/street-tree r4","model":"openai/gpt-6-astra","ms":40655,"cost":0.17833705,"in":5652,"out":1952,"ok":true}
+{"at":"2026-10-20T05:23:05.255Z","label":"revise medieval/ground r4","model":"openai/gpt-6-astra","ms":41829,"cost":0.16516655,"in":4586,"out":1970,"ok":true}
+{"at":"2026-10-20T05:23:10.592Z","label":"revise medieval/wild-tree r4","model":"openai/gpt-6-astra","ms":47139,"cost":0.23139005,"in":5988,"out":2869,"ok":true}
+{"at":"2026-10-20T05:23:15.092Z","label":"revise stone/arrival r4","model":"openai/gpt-6-astra","ms":51901,"cost":0.2935193,"in":7277,"out":3719,"ok":true}
+{"at":"2026-10-20T05:23:18.622Z","label":"revise stone/street-tree r4","model":"openai/gpt-6-astra","ms":55451,"cost":0.2040553,"in":5585,"out":2454,"ok":true}
+{"at":"2026-10-20T05:23:21.729Z","label":"revise stone/lot-claimed r4","model":"openai/gpt-6-astra","ms":58562,"cost":0.23011805,"in":5964,"out":2851,"ok":true}
+{"at":"2026-10-20T05:23:22.438Z","label":"revise medieval/lot-claimed r4","model":"openai/gpt-6-astra","ms":58992,"cost":0.2124823,"in":6025,"out":2503,"ok":true}
+{"at":"2026-10-20T05:23:32.028Z","label":"revise medieval/arrival r4","model":"openai/gpt-6-astra","ms":68569,"cost":0.32294755,"in":7318,"out":4264,"ok":true}
+{"at":"2026-10-20T05:23:36.552Z","label":"revise stone/civic-lot r4","model":"openai/gpt-6-astra","ms":43096,"cost":0.1715928,"in":4847,"out":2026,"ok":true}
+{"at":"2026-10-20T05:23:43.861Z","label":"revise medieval/lot-sale r4","model":"openai/gpt-6-astra","ms":46457,"cost":0.1752763,"in":4721,"out":2127,"ok":true}
+{"at":"2026-10-20T05:23:45.262Z","label":"revise medieval/river r4","model":"openai/gpt-6-astra","ms":81798,"cost":0.31486505,"in":7548,"out":4054,"ok":true}
+{"at":"2026-10-20T05:23:45.331Z","label":"revise medieval/street-light r4","model":"openai/gpt-6-astra","ms":22887,"cost":0.11590305,"in":4700,"out":1012,"ok":true}
+{"at":"2026-10-20T05:23:46.291Z","label":"revise stone/wild-tree r4","model":"openai/gpt-6-astra","ms":83117,"cost":0.27909005,"in":6080,"out":3746,"ok":true}
+{"at":"2026-10-20T05:23:51.058Z","label":"revise medieval/civic-lot r4","model":"openai/gpt-6-astra","ms":45796,"cost":0.1892418,"in":5415,"out":2217,"ok":true}
+{"at":"2026-10-20T05:24:06.533Z","label":"revise stone/resident r4","model":"openai/gpt-6-astra","ms":64736,"cost":0.24432205,"in":6120,"out":3080,"ok":true}
+{"at":"2026-10-20T05:24:07.005Z","label":"revise medieval/bench r4","model":"openai/gpt-6-astra","ms":34969,"cost":0.1280268,"in":4423,"out":1310,"ok":true}
+{"at":"2026-10-20T05:24:09.922Z","label":"revise medieval/centrepiece r4","model":"openai/gpt-6-astra","ms":65809,"cost":0.25531955,"in":6446,"out":3206,"ok":true}
+{"at":"2026-10-20T05:24:12.787Z","label":"revise stone/river r4","model":"openai/gpt-6-astra","ms":89333,"cost":0.31950255,"in":6318,"out":4449,"ok":true}
+{"at":"2026-10-20T05:24:21.566Z","label":"revise stone/street-light r4","model":"openai/gpt-6-astra","ms":35268,"cost":0.14327755,"in":4566,"out":1562,"ok":true}
+{"at":"2026-10-20T05:24:30.489Z","label":"revise stone/centrepiece r4","model":"openai/gpt-6-astra","ms":68754,"cost":0.25537255,"in":5638,"out":3409,"ok":true}
+{"at":"2026-10-20T05:24:30.783Z","label":"revise medieval/dog r4","model":"openai/gpt-6-astra","ms":39719,"cost":0.18098705,"in":5120,"out":2135,"ok":true}
+{"at":"2026-10-20T05:24:30.930Z","label":"revise medieval/leader r4","model":"openai/gpt-6-astra","ms":45594,"cost":0.1987288,"in":5723,"out":2319,"ok":true}
+{"at":"2026-10-20T05:24:32.697Z","label":"revise stone/camp r4","model":"openai/gpt-6-astra","ms":94201,"cost":0.3576493,"in":7921,"out":4768,"ok":true}
+{"at":"2026-10-20T05:24:34.014Z","label":"revise stone/leader r4","model":"openai/gpt-6-astra","ms":57451,"cost":0.22733555,"in":5670,"out":2872,"ok":true}
+{"at":"2026-10-20T05:24:36.744Z","label":"revise medieval/resident r4","model":"openai/gpt-6-astra","ms":51477,"cost":0.2311648,"in":6167,"out":2820,"ok":true}
+{"at":"2026-10-20T05:24:45.686Z","label":"revise medieval/cafe r4","model":"openai/gpt-6-astra","ms":142220,"cost":0.5824753,"in":10241,"out":8430,"ok":true}
+{"at":"2026-10-20T05:25:08.510Z","label":"revise stone/head r4","model":"openai/gpt-6-astra","ms":61967,"cost":0.2219693,"in":5721,"out":2758,"ok":true}
+{"at":"2026-10-20T05:25:19.739Z","label":"critique future r4","model":"openai/gpt-6-astra","ms":212591,"cost":0.58174655,"in":9398,"out":8627,"ok":true}
+{"at":"2026-10-20T05:25:31.778Z","label":"revise medieval/skyscraper r4","model":"openai/gpt-6-astra","ms":141181,"cost":0.55964555,"in":10810,"out":7857,"ok":true}
+{"at":"2026-10-20T05:25:32.208Z","label":"revise medieval/camp r4","model":"openai/gpt-6-astra","ms":108340,"cost":0.4019308,"in":7943,"out":5598,"ok":true}
+{"at":"2026-10-20T05:25:38.627Z","label":"revise stone/cafe r4","model":"openai/gpt-6-astra","ms":143526,"cost":0.53473555,"in":10218,"out":7535,"ok":true}
+{"at":"2026-10-20T05:26:15.924Z","label":"revise stone/skyscraper r4","model":"openai/gpt-6-astra","ms":177298,"cost":0.60898855,"in":10730,"out":8808,"ok":true}
+{"at":"2026-10-20T05:30:13.411Z","label":"revise modern/street-light r4","model":"openai/gpt-6-astra","ms":38201,"cost":0.12976255,"in":4514,"out":1320,"ok":true}
+{"at":"2026-10-20T05:30:15.856Z","label":"revise industrial/lot-sale r4","model":"openai/gpt-6-astra","ms":41012,"cost":0.1457023,"in":5225,"out":1443,"ok":true}
+{"at":"2026-10-20T05:30:17.819Z","label":"revise modern/lot-sale r4","model":"openai/gpt-6-astra","ms":42633,"cost":0.1393953,"in":4709,"out":1453,"ok":true}
+{"at":"2026-10-20T05:30:19.138Z","label":"revise modern/lot-claimed r4","model":"openai/gpt-6-astra","ms":43935,"cost":0.17017505,"in":5732,"out":1778,"ok":true}
+{"at":"2026-10-20T05:30:20.517Z","label":"revise industrial/street r4","model":"openai/gpt-6-astra","ms":45690,"cost":0.1598003,"in":5569,"out":1623,"ok":true}
+{"at":"2026-10-20T05:30:23.468Z","label":"revise modern/street-tree r4","model":"openai/gpt-6-astra","ms":48262,"cost":0.1748788,"in":5807,"out":1848,"ok":true}
+{"at":"2026-10-20T05:30:33.621Z","label":"revise modern/civic-lot r4","model":"openai/gpt-6-astra","ms":58399,"cost":0.18180855,"in":5146,"out":2144,"ok":true}
+{"at":"2026-10-20T05:30:38.427Z","label":"revise industrial/street-tree r4","model":"openai/gpt-6-astra","ms":63577,"cost":0.1918123,"in":5849,"out":2157,"ok":true}
+{"at":"2026-10-20T05:30:39.370Z","label":"revise industrial/wild-tree r4","model":"openai/gpt-6-astra","ms":64517,"cost":0.20226655,"in":5790,"out":2369,"ok":true}
+{"at":"2026-10-20T05:30:40.625Z","label":"revise industrial/market r4","model":"openai/gpt-6-astra","ms":65762,"cost":0.1950718,"in":5211,"out":2378,"ok":true}
+{"at":"2026-10-20T05:30:42.442Z","label":"revise modern/wild-tree r4","model":"openai/gpt-6-astra","ms":67233,"cost":0.21821955,"in":5942,"out":2632,"ok":true}
+{"at":"2026-10-20T05:30:43.116Z","label":"revise modern/resident r4","model":"openai/gpt-6-astra","ms":67890,"cost":0.2375513,"in":6277,"out":2913,"ok":true}
+{"at":"2026-10-20T05:30:50.802Z","label":"revise industrial/centrepiece r4","model":"openai/gpt-6-astra","ms":75945,"cost":0.2596258,"in":6867,"out":3182,"ok":true}
+{"at":"2026-10-20T05:30:54.943Z","label":"revise modern/ground r4","model":"openai/gpt-6-astra","ms":31469,"cost":0.12464805,"in":4644,"out":1191,"ok":true}
+{"at":"2026-10-20T05:30:54.947Z","label":"revise modern/arrival r4","model":"openai/gpt-6-astra","ms":79728,"cost":0.2839263,"in":6605,"out":3706,"ok":true}
+{"at":"2026-10-20T05:31:14.441Z","label":"revise industrial/ground r4","model":"openai/gpt-6-astra","ms":53915,"cost":0.17131455,"in":5006,"out":1981,"ok":true}
+{"at":"2026-10-20T05:31:15.797Z","label":"revise industrial/arrival r4","model":"openai/gpt-6-astra","ms":100930,"cost":0.3284728,"in":7327,"out":4366,"ok":true}
+{"at":"2026-10-20T05:31:17.111Z","label":"revise industrial/river r4","model":"openai/gpt-6-astra","ms":102241,"cost":0.3202048,"in":7159,"out":4252,"ok":true}
+{"at":"2026-10-20T05:31:22.828Z","label":"revise modern/car r4","model":"openai/gpt-6-astra","ms":69406,"cost":0.2487608,"in":6207,"out":3142,"ok":true}
+{"at":"2026-10-20T05:31:23.757Z","label":"revise industrial/street-light r4","model":"openai/gpt-6-astra","ms":32948,"cost":0.1258008,"in":4439,"out":1264,"ok":true}
+{"at":"2026-10-20T05:31:26.486Z","label":"revise modern/centrepiece r4","model":"openai/gpt-6-astra","ms":68659,"cost":0.2440968,"in":6423,"out":3000,"ok":true}
+{"at":"2026-10-20T05:31:34.352Z","label":"revise modern/head r4","model":"openai/gpt-6-astra","ms":75198,"cost":0.2312443,"in":6161,"out":2823,"ok":true}
+{"at":"2026-10-20T05:31:49.042Z","label":"revise industrial/lot-claimed r4","model":"openai/gpt-6-astra","ms":70605,"cost":0.2458193,"in":5945,"out":3152,"ok":true}
+{"at":"2026-10-20T05:31:54.523Z","label":"revise industrial/dog r4","model":"openai/gpt-6-astra","ms":37407,"cost":0.14839205,"in":4732,"out":1617,"ok":true}
+{"at":"2026-10-20T05:32:10.434Z","label":"revise modern/home r4","model":"openai/gpt-6-astra","ms":87990,"cost":0.26401155,"in":5418,"out":3627,"ok":true}
+{"at":"2026-10-20T05:32:14.618Z","label":"revise industrial/resident r4","model":"openai/gpt-6-astra","ms":60166,"cost":0.22638155,"in":6174,"out":2728,"ok":true}
+{"at":"2026-10-20T05:32:16.189Z","label":"revise industrial/head r4","model":"openai/gpt-6-astra","ms":60382,"cost":0.2138338,"in":5943,"out":2549,"ok":true}
+{"at":"2026-10-20T05:32:16.496Z","label":"revise modern/camp r4","model":"openai/gpt-6-astra","ms":102862,"cost":0.34934155,"in":7646,"out":4680,"ok":true}
+{"at":"2026-10-20T05:32:33.568Z","label":"revise industrial/camp r4","model":"openai/gpt-6-astra","ms":137704,"cost":0.42574105,"in":8168,"out":5991,"ok":true}
+{"at":"2026-10-20T05:33:27.769Z","label":"revise industrial/cafe r4","model":"openai/gpt-6-astra","ms":168393,"cost":0.55792305,"in":10320,"out":7947,"ok":true}
+{"at":"2026-10-20T05:33:49.746Z","label":"revise industrial/skyscraper r4","model":"openai/gpt-6-astra","ms":189116,"cost":0.6147258,"in":10415,"out":8995,"ok":true}
+{"at":"2026-10-20T05:33:57.875Z","label":"revise industrial/car r4","model":"openai/gpt-6-astra","ms":154113,"cost":0.54589205,"in":10224,"out":7744,"ok":true}
+{"at":"2026-10-20T07:11:23.416Z","label":"revise future/ground r4","model":"openai/gpt-6-astra","ms":25750,"cost":0.15181055,"in":5230,"out":1557,"ok":true}
+{"at":"2026-10-20T07:11:29.552Z","label":"revise future/bench r4","model":"openai/gpt-6-astra","ms":31845,"cost":0.15194305,"in":4800,"out":1667,"ok":true}
+{"at":"2026-10-20T07:11:33.023Z","label":"revise future/street r4","model":"openai/gpt-6-astra","ms":35340,"cost":0.18710855,"in":5446,"out":2169,"ok":true}
+{"at":"2026-10-20T07:11:33.970Z","label":"revise future/lot-sale r4","model":"openai/gpt-6-astra","ms":36284,"cost":0.17733005,"in":5216,"out":2042,"ok":true}
+{"at":"2026-10-20T07:11:36.354Z","label":"revise future/street-tree r4","model":"openai/gpt-6-astra","ms":38660,"cost":0.19929855,"in":5870,"out":2293,"ok":true}
+{"at":"2026-10-20T07:11:37.713Z","label":"revise future/wild-tree r4","model":"openai/gpt-6-astra","ms":40015,"cost":0.2236653,"in":6221,"out":2665,"ok":true}
+{"at":"2026-10-20T07:11:44.974Z","label":"revise future/lot-claimed r4","model":"openai/gpt-6-astra","ms":47284,"cost":0.23661055,"in":6206,"out":2913,"ok":true}
+{"at":"2026-10-20T07:11:49.399Z","label":"revise bronze/ground r4","model":"openai/gpt-6-astra","ms":25633,"cost":0.1450133,"in":5037,"out":1477,"ok":true}
+{"at":"2026-10-20T07:11:53.260Z","label":"revise future/centrepiece r4","model":"openai/gpt-6-astra","ms":55557,"cost":0.28688105,"in":7128,"out":3631,"ok":true}
+{"at":"2026-10-20T07:11:53.374Z","label":"revise bronze/street r4","model":"openai/gpt-6-astra","ms":29589,"cost":0.16543155,"in":5862,"out":1656,"ok":true}
+{"at":"2026-10-20T07:11:54.964Z","label":"revise bronze/lot-claimed r4","model":"openai/gpt-6-astra","ms":31175,"cost":0.18997055,"in":6398,"out":1985,"ok":true}
+{"at":"2026-10-20T07:12:01.008Z","label":"revise bronze/centrepiece r4","model":"openai/gpt-6-astra","ms":37206,"cost":0.2073943,"in":5805,"out":2462,"ok":true}
+{"at":"2026-10-20T07:12:01.457Z","label":"revise future/civic-lot r4","model":"openai/gpt-6-astra","ms":31894,"cost":0.18016555,"in":5850,"out":1937,"ok":true}
+{"at":"2026-10-20T07:12:01.478Z","label":"revise bronze/wild-tree r4","model":"openai/gpt-6-astra","ms":37682,"cost":0.2057513,"in":6025,"out":2376,"ok":true}
+{"at":"2026-10-20T07:12:04.476Z","label":"revise bronze/street-tree r4","model":"openai/gpt-6-astra","ms":40684,"cost":0.1988348,"in":5975,"out":2258,"ok":true}
+{"at":"2026-10-20T07:12:06.808Z","label":"revise bronze/market r4","model":"openai/gpt-6-astra","ms":43003,"cost":0.1951248,"in":5103,"out":2406,"ok":true}
+{"at":"2026-10-20T07:12:11.687Z","label":"revise future/leader r4","model":"openai/gpt-6-astra","ms":37710,"cost":0.22503005,"in":6308,"out":2669,"ok":true}
+{"at":"2026-10-20T07:12:17.182Z","label":"revise bronze/river r4","model":"openai/gpt-6-astra","ms":53374,"cost":0.28449605,"in":7364,"out":3527,"ok":true}
+{"at":"2026-10-20T07:12:20.338Z","label":"revise future/head r4","model":"openai/gpt-6-astra","ms":47305,"cost":0.2570553,"in":6921,"out":3120,"ok":true}
+{"at":"2026-10-20T07:12:20.455Z","label":"revise future/street-light r4","model":"openai/gpt-6-astra","ms":27186,"cost":0.14078655,"in":4786,"out":1460,"ok":true}
+{"at":"2026-10-20T07:12:24.073Z","label":"revise bronze/street-light r4","model":"openai/gpt-6-astra","ms":22588,"cost":0.1249793,"in":4341,"out":1273,"ok":true}
+{"at":"2026-10-20T07:12:25.353Z","label":"revise bronze/bench r4","model":"openai/gpt-6-astra","ms":20872,"cost":0.1136903,"in":4649,"out":983,"ok":true}
+{"at":"2026-10-20T07:12:30.419Z","label":"revise future/river r4","model":"openai/gpt-6-astra","ms":66998,"cost":0.3402388,"in":7187,"out":4623,"ok":true}
+{"at":"2026-10-20T07:12:37.191Z","label":"revise future/car r4","model":"openai/gpt-6-astra","ms":52210,"cost":0.25730705,"in":6200,"out":3305,"ok":true}
+{"at":"2026-10-20T07:12:38.300Z","label":"revise bronze/lot-sale r4","model":"openai/gpt-6-astra","ms":37281,"cost":0.1766543,"in":5237,"out":2024,"ok":true}
+{"at":"2026-10-20T07:12:39.309Z","label":"revise bronze/resident r4","model":"openai/gpt-6-astra","ms":45926,"cost":0.2476478,"in":6287,"out":3101,"ok":true}
+{"at":"2026-10-20T07:12:43.419Z","label":"revise bronze/head r4","model":"openai/gpt-6-astra","ms":48444,"cost":0.24297055,"in":6262,"out":3019,"ok":true}
+{"at":"2026-10-20T07:12:44.742Z","label":"revise bronze/civic-lot r4","model":"openai/gpt-6-astra","ms":27552,"cost":0.1654713,"in":4961,"out":1882,"ok":true}
+{"at":"2026-10-20T07:12:47.121Z","label":"revise future/home r4","model":"openai/gpt-6-astra","ms":70761,"cost":0.41734055,"in":8122,"out":5844,"ok":true}
+{"at":"2026-10-20T07:12:55.751Z","label":"revise future/market r4","model":"openai/gpt-6-astra","ms":35286,"cost":0.1959463,"in":5661,"out":2282,"ok":true}
+{"at":"2026-10-20T07:12:55.997Z","label":"revise future/resident r4","model":"openai/gpt-6-astra","ms":44298,"cost":0.25306705,"in":6548,"out":3138,"ok":true}
+{"at":"2026-10-20T07:12:56.007Z","label":"revise bronze/dog r4","model":"openai/gpt-6-astra","ms":30645,"cost":0.1602508,"in":4483,"out":1903,"ok":true}
+{"at":"2026-10-20T07:12:58.999Z","label":"revise bronze/camp r4","model":"openai/gpt-6-astra","ms":69586,"cost":0.3825593,"in":8041,"out":5208,"ok":true}
+{"at":"2026-10-20T07:12:59.440Z","label":"revise bronze/arrival r4","model":"openai/gpt-6-astra","ms":52624,"cost":0.3003033,"in":7073,"out":3898,"ok":true}
+{"at":"2026-10-20T07:13:02.341Z","label":"revise future/arrival r4","model":"openai/gpt-6-astra","ms":60871,"cost":0.33322955,"in":7362,"out":4447,"ok":true}
+{"at":"2026-10-20T07:13:10.392Z","label":"revise bronze/leader r4","model":"openai/gpt-6-astra","ms":46312,"cost":0.26639655,"in":6354,"out":3438,"ok":true}
+{"at":"2026-10-20T07:13:10.399Z","label":"revise future/skyscraper r4","model":"openai/gpt-6-astra","ms":92682,"cost":0.4801058,"in":7803,"out":7108,"ok":true}
+{"at":"2026-10-20T07:13:42.218Z","label":"revise future/cafe r4","model":"openai/gpt-6-astra","ms":81873,"cost":0.4829413,"in":9285,"out":6791,"ok":true}
+{"at":"2026-10-20T07:13:56.926Z","label":"revise bronze/cafe r4","model":"openai/gpt-6-astra","ms":78617,"cost":0.48218605,"in":9796,"out":6649,"ok":true}
+{"at":"2026-10-21T05:34:24.887Z","label":"critique boards rfinal","model":"openai/gpt-6-astra","ms":154684,"cost":0.54210255,"in":19846,"out":5267,"ok":true}
+{"at":"2026-10-21T09:26:17.542Z","label":"revise stone/lot-sale rfinal","model":"openai/gpt-6-astra","ms":15157,"cost":0.10729055,"in":4210,"out":972,"ok":true}
+{"at":"2026-10-21T09:26:23.713Z","label":"revise stone/street rfinal","model":"openai/gpt-6-astra","ms":21289,"cost":0.12745705,"in":4352,"out":1317,"ok":true}
+{"at":"2026-10-21T09:26:26.486Z","label":"revise medieval/street rfinal","model":"openai/gpt-6-astra","ms":33824,"cost":0.16659755,"in":4746,"out":1957,"ok":true}
+{"at":"2026-10-21T09:26:26.587Z","label":"revise future/lot-sale rfinal","model":"openai/gpt-6-astra","ms":22518,"cost":0.1406143,"in":4813,"out":1450,"ok":true}
+{"at":"2026-10-21T09:26:27.289Z","label":"revise future/bench rfinal","model":"openai/gpt-6-astra","ms":23206,"cost":0.12234255,"in":4502,"out":1183,"ok":true}
+{"at":"2026-10-21T09:26:28.702Z","label":"revise future/street rfinal","model":"openai/gpt-6-astra","ms":24654,"cost":0.1519033,"in":5329,"out":1534,"ok":true}
+{"at":"2026-10-21T09:26:33.496Z","label":"revise industrial/lot-claimed rfinal","model":"openai/gpt-6-astra","ms":30794,"cost":0.2010608,"in":6091,"out":2271,"ok":true}
+{"at":"2026-10-21T09:26:35.572Z","label":"revise stone/street-tree rfinal","model":"openai/gpt-6-astra","ms":33157,"cost":0.16922105,"in":4948,"out":1956,"ok":true}
+{"at":"2026-10-21T09:26:41.698Z","label":"revise future/river rfinal","model":"openai/gpt-6-astra","ms":37621,"cost":0.2827338,"in":7279,"out":3515,"ok":true}
+{"at":"2026-10-21T09:26:42.844Z","label":"revise bronze/centrepiece rfinal","model":"openai/gpt-6-astra","ms":40850,"cost":0.25796955,"in":5498,"out":3493,"ok":true}
+{"at":"2026-10-21T09:26:58.814Z","label":"revise bronze/skyscraper rfinal","model":"openai/gpt-6-astra","ms":56770,"cost":0.5016768,"in":9183,"out":7170,"ok":true}
+{"at":"2026-10-21T09:27:01.939Z","label":"revise industrial/centrepiece rfinal","model":"openai/gpt-6-astra","ms":59264,"cost":0.29088255,"in":6394,"out":3890,"ok":true}
+{"at":"2026-10-21T09:27:07.223Z","label":"revise future/home rfinal","model":"openai/gpt-6-astra","ms":63136,"cost":0.49154055,"in":8682,"out":7104,"ok":true}
+{"at":"2026-10-21T09:28:09.385Z","label":"revise medieval/lot-sale rfinal","model":"openai/gpt-6-astra","ms":24478,"cost":0.1132928,"in":4647,"out":976,"ok":true}
+{"at":"2026-10-21T09:28:26.265Z","label":"revise medieval/leader rfinal","model":"openai/gpt-6-astra","ms":41347,"cost":0.2080038,"in":5631,"out":2517,"ok":true}
+{"at":"2026-10-21T09:28:34.014Z","label":"revise medieval/centrepiece rfinal","model":"openai/gpt-6-astra","ms":49138,"cost":0.2309528,"in":5775,"out":2914,"ok":true}
+{"at":"2026-10-21T09:39:26.930Z","label":"outfits industrial","model":"openai/gpt-6-astra","ms":69826,"cost":0.34573755,"in":2222,"out":5968,"ok":true}
+{"at":"2026-10-21T09:39:29.592Z","label":"outfits bronze","model":"openai/gpt-6-astra","ms":72493,"cost":0.31118155,"in":2246,"out":5310,"ok":true}
+{"at":"2026-10-21T09:39:38.286Z","label":"outfits medieval","model":"openai/gpt-6-astra","ms":81182,"cost":0.3606438,"in":2239,"out":6245,"ok":true}
+{"at":"2026-10-21T09:39:47.176Z","label":"outfits future","model":"openai/gpt-6-astra","ms":90063,"cost":0.3955443,"in":2269,"out":6896,"ok":true}
+{"at":"2026-10-21T09:39:55.129Z","label":"outfits modern","model":"openai/gpt-6-astra","ms":98018,"cost":0.3520313,"in":2185,"out":6096,"ok":true}
+{"at":"2026-10-21T09:39:59.409Z","label":"outfits stone","model":"openai/gpt-6-astra","ms":102332,"cost":0.3995458,"in":2223,"out":6983,"ok":true}
+{"at":"2026-10-21T09:42:22.735Z","label":"critique outfits bronze o1","model":"openai/gpt-6-astra","ms":38023,"cost":0.1435558,"in":6099,"out":1184,"ok":true}
+{"at":"2026-10-21T09:42:30.456Z","label":"critique outfits stone o1","model":"openai/gpt-6-astra","ms":47011,"cost":0.17857555,"in":7306,"out":1543,"ok":true}
+{"at":"2026-10-21T09:42:32.660Z","label":"critique outfits medieval o1","model":"openai/gpt-6-astra","ms":47482,"cost":0.1767603,"in":6829,"out":1628,"ok":true}
+{"at":"2026-10-21T09:42:35.320Z","label":"critique outfits modern o1","model":"openai/gpt-6-astra","ms":49868,"cost":0.1664783,"in":5973,"out":1648,"ok":true}
+{"at":"2026-10-21T09:43:14.567Z","label":"critique outfits industrial o1","model":"openai/gpt-6-astra","ms":90464,"cost":0.2645018,"in":6699,"out":3316,"ok":true}
+{"at":"2026-10-21T09:43:33.548Z","label":"revise bibles rfinal2","model":"openai/gpt-6-astra","ms":82544,"cost":0.3852888,"in":13635,"out":3861,"ok":true}
+{"at":"2026-10-21T09:43:34.196Z","label":"critique outfits future o1","model":"openai/gpt-6-astra","ms":54461,"cost":0.18904305,"in":7228,"out":1760,"ok":true}
+{"at":"2026-10-21T09:44:05.303Z","label":"revise future/civic-lot rfinal2","model":"openai/gpt-6-astra","ms":30656,"cost":0.13469155,"in":5106,"out":1265,"ok":true}
+{"at":"2026-10-21T09:44:08.793Z","label":"revise modern/street rfinal2","model":"openai/gpt-6-astra","ms":34158,"cost":0.1477958,"in":4827,"out":1582,"ok":true}
+{"at":"2026-10-21T09:44:34.209Z","label":"revise stone/river rfinal2","model":"openai/gpt-6-astra","ms":59638,"cost":0.23711405,"in":7168,"out":2682,"ok":true}
+{"at":"2026-10-21T09:44:38.787Z","label":"revise bronze/river rfinal2","model":"openai/gpt-6-astra","ms":64189,"cost":0.25224555,"in":6214,"out":3206,"ok":true}
+{"at":"2026-10-21T09:44:43.397Z","label":"revise future/river rfinal2","model":"openai/gpt-6-astra","ms":68753,"cost":0.28060055,"in":7234,"out":3486,"ok":true}
+{"at":"2026-10-21T09:44:44.124Z","label":"revise medieval/river rfinal2","model":"openai/gpt-6-astra","ms":69509,"cost":0.29024655,"in":6726,"out":3795,"ok":true}
+{"at":"2026-10-21T09:44:56.371Z","label":"revise bronze/camp rfinal2","model":"openai/gpt-6-astra","ms":81763,"cost":0.34775155,"in":7642,"out":4651,"ok":true}
+{"at":"2026-10-21T09:44:59.649Z","label":"revise modern/river rfinal2","model":"openai/gpt-6-astra","ms":85021,"cost":0.3017078,"in":6347,"out":4106,"ok":true}
+{"at":"2026-10-21T09:45:01.225Z","label":"revise industrial/river rfinal2","model":"openai/gpt-6-astra","ms":86605,"cost":0.3204168,"in":6919,"out":4316,"ok":true}
+{"at":"2026-10-21T09:46:31.720Z","label":"outfits modern r1","model":"openai/gpt-6-astra","ms":97763,"cost":0.61821055,"in":11374,"out":8821,"ok":true}
+{"at":"2026-10-21T09:47:06.536Z","label":"outfits bronze r1","model":"openai/gpt-6-astra","ms":117733,"cost":0.70306355,"in":10774,"out":10572,"ok":true}
+{"at":"2026-10-21T09:47:15.662Z","label":"outfits stone r1","model":"openai/gpt-6-astra","ms":139191,"cost":0.79764205,"in":12820,"out":11845,"ok":true}
+{"at":"2026-10-21T09:47:23.329Z","label":"outfits industrial r1","model":"openai/gpt-6-astra","ms":144669,"cost":0.70478605,"in":11856,"out":10334,"ok":true}
+{"at":"2026-10-21T09:47:25.019Z","label":"outfits medieval r1","model":"openai/gpt-6-astra","ms":111032,"cost":0.66784505,"in":12312,"out":9523,"ok":true}
+{"at":"2026-10-21T09:48:26.227Z","label":"outfits future r1","model":"openai/gpt-6-astra","ms":133978,"cost":0.70539555,"in":12738,"out":10125,"ok":true}
+{"at":"2026-10-21T09:49:26.183Z","label":"critique outfits bronze o2","model":"openai/gpt-6-astra","ms":62572,"cost":0.2555713,"in":11249,"out":2010,"ok":true}
+{"at":"2026-10-21T09:49:48.239Z","label":"critique outfits medieval o2","model":"openai/gpt-6-astra","ms":66111,"cost":0.24787305,"in":10260,"out":2112,"ok":true}
+{"at":"2026-10-21T09:49:57.483Z","label":"critique outfits modern o2","model":"openai/gpt-6-astra","ms":101623,"cost":0.3137388,"in":9395,"out":3571,"ok":true}
+{"at":"2026-10-21T09:50:13.724Z","label":"critique outfits stone o2","model":"openai/gpt-6-astra","ms":90662,"cost":0.32527955,"in":11978,"out":3143,"ok":true}
+{"at":"2026-10-21T09:50:53.231Z","label":"critique outfits future o2","model":"openai/gpt-6-astra","ms":61840,"cost":0.2333378,"in":10099,"out":1878,"ok":true}
+{"at":"2026-10-21T09:51:44.408Z","label":"critique outfits industrial o2","model":"openai/gpt-6-astra","ms":64678,"cost":0.2422948,"in":9687,"out":2150,"ok":true}
+{"at":"2026-10-21T09:53:22.451Z","label":"outfits medieval r2","model":"openai/gpt-6-astra","ms":96935,"cost":0.7257078,"in":14847,"out":9981,"ok":true}
+{"at":"2026-10-21T09:53:26.152Z","label":"outfits stone r2","model":"openai/gpt-6-astra","ms":121841,"cost":0.73542005,"in":16920,"out":9646,"ok":true}
+{"at":"2026-10-21T09:53:53.902Z","label":"outfits modern r2","model":"openai/gpt-6-astra","ms":113534,"cost":0.6762323,"in":13681,"out":9339,"ok":true}
+{"at":"2026-10-21T09:53:57.170Z","label":"outfits bronze r2","model":"openai/gpt-6-astra","ms":141177,"cost":0.8151453,"in":16181,"out":11335,"ok":true}
+{"at":"2026-10-21T09:55:25.246Z","label":"critique outfits medieval o3","model":"openai/gpt-6-astra","ms":52990,"cost":0.2335763,"in":10909,"out":1680,"ok":true}
+{"at":"2026-10-21T09:55:30.648Z","label":"outfits future r2","model":"openai/gpt-6-astra","ms":152650,"cost":0.76332455,"in":14858,"out":10688,"ok":true}
+{"at":"2026-10-21T09:56:29.797Z","label":"critique outfits stone o3","model":"openai/gpt-6-astra","ms":81504,"cost":0.29801105,"in":10428,"out":3016,"ok":true}
+{"at":"2026-10-21T09:56:34.434Z","label":"outfits industrial r2","model":"openai/gpt-6-astra","ms":165773,"cost":0.7325978,"in":14491,"out":10200,"ok":true}
+{"at":"2026-10-21T09:56:37.620Z","label":"critique outfits bronze o3","model":"openai/gpt-6-astra","ms":66434,"cost":0.2746778,"in":11243,"out":2372,"ok":true}
+{"at":"2026-10-21T09:56:47.827Z","label":"critique outfits modern o3","model":"openai/gpt-6-astra","ms":80113,"cost":0.29504305,"in":9712,"out":3139,"ok":true}
+{"at":"2026-10-21T09:58:08.611Z","label":"critique outfits future o3","model":"openai/gpt-6-astra","ms":83395,"cost":0.28810005,"in":10364,"out":2845,"ok":true}
+{"at":"2026-10-21T09:59:04.800Z","label":"critique outfits industrial o3","model":"openai/gpt-6-astra","ms":85984,"cost":0.2779373,"in":9413,"out":2891,"ok":true}
+{"at":"2026-10-23T01:16:53.253Z","label":"bible future","model":"openai/gpt-6-astra","ms":135174,"cost":0.44442355,"in":13498,"out":5011,"ok":true}
+{"at":"2026-10-23T01:17:39.117Z","label":"element future/street","model":"openai/gpt-6-astra","ms":20243,"cost":0.1351288,"in":4495,"out":1426,"ok":true}
+{"at":"2026-10-23T01:17:39.456Z","label":"element future/bench","model":"openai/gpt-6-astra","ms":20550,"cost":0.12456855,"in":4390,"out":1253,"ok":true}
+{"at":"2026-10-23T01:17:39.637Z","label":"build future/dog","model":"openai/gpt-6-astra","ms":20770,"cost":0.1087083,"in":1673,"out":1633,"ok":true}
+{"at":"2026-10-23T01:17:41.180Z","label":"element future/ground","model":"openai/gpt-6-astra","ms":22336,"cost":0.1249793,"in":4385,"out":1262,"ok":true}
+{"at":"2026-10-23T01:17:41.551Z","label":"element future/lot-sale","model":"openai/gpt-6-astra","ms":22672,"cost":0.12242205,"in":4464,"out":1194,"ok":true}
+{"at":"2026-10-23T01:17:42.496Z","label":"element future/street-light","model":"openai/gpt-6-astra","ms":23601,"cost":0.14123705,"in":4396,"out":1566,"ok":true}
+{"at":"2026-10-23T01:17:43.126Z","label":"build future/car","model":"openai/gpt-6-astra","ms":24254,"cost":0.1188525,"in":1673,"out":2151,"ok":true}
+{"at":"2026-10-23T01:17:48.174Z","label":"element future/wild-tree","model":"openai/gpt-6-astra","ms":29282,"cost":0.17759505,"in":4404,"out":2250,"ok":true}
+{"at":"2026-10-23T01:17:48.528Z","label":"element future/market","model":"openai/gpt-6-astra","ms":29618,"cost":0.17674705,"in":4404,"out":2234,"ok":true}
+{"at":"2026-10-23T01:17:50.782Z","label":"element future/street-tree","model":"openai/gpt-6-astra","ms":31894,"cost":0.16855855,"in":4470,"out":2063,"ok":true}
+{"at":"2026-10-23T01:17:55.173Z","label":"build future/home","model":"openai/gpt-6-astra","ms":36332,"cost":0.14518025,"in":1732,"out":2633,"ok":true}
+{"at":"2026-10-23T01:17:59.519Z","label":"build future/cafe","model":"openai/gpt-6-astra","ms":40653,"cost":0.19444375,"in":1734,"out":3562,"ok":true}
+{"at":"2026-10-23T01:18:00.631Z","label":"element future/lot-claimed","model":"openai/gpt-6-astra","ms":41749,"cost":0.2069968,"in":4499,"out":2781,"ok":true}
+{"at":"2026-10-23T01:18:03.490Z","label":"element future/centrepiece","model":"openai/gpt-6-astra","ms":44589,"cost":0.23931355,"in":4426,"out":3409,"ok":true}
+{"at":"2026-10-23T01:18:05.367Z","label":"element future/civic-lot","model":"openai/gpt-6-astra","ms":24179,"cost":0.13697055,"in":4402,"out":1484,"ok":true}
+{"at":"2026-10-23T01:18:08.433Z","label":"build future/skyscraper","model":"openai/gpt-6-astra","ms":49565,"cost":0.26413875,"in":1722,"out":4880,"ok":true}
+{"at":"2026-10-23T01:18:21.510Z","label":"element future/leader","model":"openai/gpt-6-astra","ms":32972,"cost":0.2040818,"in":4607,"out":2699,"ok":true}
+{"at":"2026-10-23T01:18:23.635Z","label":"element future/head","model":"openai/gpt-6-astra","ms":35452,"cost":0.2147083,"in":4629,"out":2894,"ok":true}
+{"at":"2026-10-23T01:18:29.779Z","label":"element future/river","model":"openai/gpt-6-astra","ms":50314,"cost":0.28094505,"in":4452,"out":4188,"ok":true}
+{"at":"2026-10-23T01:18:31.077Z","label":"element future/resident","model":"openai/gpt-6-astra","ms":48573,"cost":0.24827055,"in":4574,"out":3541,"ok":true}
+{"at":"2026-10-23T01:18:36.305Z","label":"element future/arrival","model":"openai/gpt-6-astra","ms":57176,"cost":0.29941555,"in":4450,"out":4537,"ok":true}
+{"at":"2026-10-23T01:19:00.395Z","label":"outfits future","model":"openai/gpt-6-astra","ms":101555,"cost":0.39884355,"in":2754,"out":6837,"ok":true}
+{"at":"2026-10-23T01:19:10.582Z","label":"element future/camp","model":"openai/gpt-6-astra","ms":89022,"cost":0.40875455,"in":4446,"out":6601,"ok":true}

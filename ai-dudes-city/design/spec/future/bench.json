@@ -1,0 +1,197 @@
+{
+  "name": "Tyre-Supported Salvaged Car Seat",
+  "description": "A broad two-person vehicle seat with patched olive upholstery and a slightly crooked backrest rests securely on a bolted timber crossbeam and two low tyres.",
+  "notes": "Reused vehicle upholstery, dusty rubber supports and exposed salvaged timber make this a welcoming survivor-built seat rather than a weathered park bench.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.66,
+        0.1,
+        0
+      ],
+      "size": [
+        0.72,
+        0.2,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#363733"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.66,
+        0.1,
+        0
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#45453e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.25,
+        0
+      ],
+      "size": [
+        2.08,
+        0.12,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#76614b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.38,
+        0.04
+      ],
+      "size": [
+        1.94,
+        0.14,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#74765a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.69,
+        -0.29
+      ],
+      "size": [
+        1.94,
+        0.6,
+        0.22
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0.025
+      ],
+      "color": "#666e57"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.5,
+        0.72,
+        -0.157
+      ],
+      "size": [
+        0.56,
+        0.32,
+        0.06
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0.025
+      ],
+      "color": "#b08852"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.68,
+        0.725,
+        -0.121
+      ],
+      "size": [
+        0.065,
+        0.22,
+        0.06
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0.025
+      ],
+      "color": "#b6a384"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.33,
+        0.734,
+        -0.122
+      ],
+      "size": [
+        0.065,
+        0.22,
+        0.06
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0.025
+      ],
+      "color": "#b6a384"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.81,
+        0.25,
+        0.27
+      ],
+      "size": [
+        0.09,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#8c8578"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.81,
+        0.25,
+        0.27
+      ],
+      "size": [
+        0.09,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#8c8578"
+    }
+  ]
+}

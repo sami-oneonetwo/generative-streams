@@ -1,0 +1,229 @@
+{
+  "elements": [
+    {
+      "id": "ground",
+      "problems": [
+        "High-frequency pale grass texture competes with the small props across both renders.",
+        "Flower clusters look like repeated coloured buttons, while the fallen twig resembles a miniature raised rail.",
+        "Reads as five scattered objects (three flower blobs, one puddle, one log with a stone) on an empty lawn; none of the grass clumps or fallen twigs from the bible are visible",
+        "Flower clumps are dark-green lumps with dots, illegible from the 40-degree camera",
+        "Nothing ties the land to this age or to this town",
+        "Only 5 small things on a 12 m tile: two 1 m flower clumps, one twig with two stones and one flat blue puddle. At stream scale they are specks and the meadow reads as flat green carpet.",
+        "The puddle is a flat 0.06 m blue ellipse that looks like a decal or spilled paint, not water in grass.",
+        "Flower clumps are 0.4 m cones plus 0.18 m spheres, too small to register next to a 1.8 m person."
+      ],
+      "fix": "Reduce meadow texture contrast substantially. Redistribute the 14 dressing parts into irregular, predominantly sub-0.35 m clumps; use unequal flower groupings and grounded, angled twigs without support-like legs. / Keep it under 0.35 m but spread 6-8 grass clumps (2-3 thin tilted cones, #548a52/#a5c880, 0.25-0.35 m) over the tile. Turn the flower blobs into 3 low drifts (1.2 x 0.6 m flat patches, 0.05 m tall, with 4-5 tiny coloured spheres in #efb749, #f0b9bd and #eee9d8). Add 2-3 small fallen twigs. Add one modern cue: a 1.0 m timber footpath waymarker post with a small green arrow disc. / Add 3–4 grass tussock clusters about 1.2–1.6 m wide and 0.35–0.45 m tall in dark #3f6e3f and #548a52, using 3 overlapping cones each, so the land has texture at a distance. Double the footprint of the two flower clumps (≈1.6 m across) and raise the blooms to 0.45 m. Ring the puddle with 3–4 small grass cones so it sits in the turf, and darken it to #347fa5 so it reads as water. Keep everything under 0.5 m."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "Survey flags and taut amber boundary cord compete with the availability signal.",
+        "The marker reads as a yellow framed structure rather than a compact recycled panel on one square post.",
+        "Amber survey tape runs the full 11.2 m frontage at z 5.6, 0.8 m high, so the free lot looks fenced off and closed rather than open to claim",
+        "The amber ring on a 2 x 1.6 m board on two 2.4 m posts reads as an archery target or billboard, not 'available'",
+        "Two small green cones and a white slab in the middle of the lot read as stray debris or toy trees",
+        "The amber tape strung across the whole front (11.2 m at 0.8 m high) plus the amber corner flags reads as a cordoned construction site: 'keep out', not 'free to claim'.",
+        "The amber empty ring on a cream panel is ambiguous from far away (target, lifebuoy, 'O'). Amber on cream is low contrast and the 2 × 1.6 m board is small on a 16 m gravel lot.",
+        "Amber posts on pale grey gravel (#a6afa2) are weak in contrast; the back corner flags are specks.",
+        "World rule: lotMarkers: change the abstract 'amber empty ring' to a wordless amber panel with a bold white house outline plus '+', and add 'no barrier, tape or rail across the street frontage; the lot stays visibly open'.",
+        "World rule: lotMarkers: the 'large amber empty ring' is ambiguous from the camera (it reads as a target or lifebuoy), and the bible lets the designer string tape across the lot front, which reads as 'construction, keep out'. Sami's notes name a FOR SALE sign on a post as today's version. Specify a bold amber board on dark posts with a white house outline and a '+' (wordless 'available'), and say explicitly that the free lot's front stays open (no tape or cordon).",
+        "World rule: surfaces: square tiles (#d2d1c2), pavement (#c5c9c7) and lotRough gravel (#a6afa2) are near-identical pale greys, so the vignette washes out and pale pieces vanish. Make the square a warmer mid-tone (e.g. base #b9ad96, accent #d6ccb5) and the lot gravel a little darker or warmer than the pavement, so each ground type and the pieces on it separate."
+      ],
+      "fix": "Keep the successful amber empty ring, but place it on an opaque pale panel supported by one square post near x 4.5, z 4.5. Remove the cord and surplus flags; use those parts for sparse grass and two distinct gravel patches. / Delete the front tape (the part at [0,0.8,5.6], 11.2 m long), or cut it into two short 2 m runs at the corners with a wide gap in the middle. Shrink the sign to 1.2 x 0.9 m on one square post at x 4.5, z 4.5, about 1.6 m tall. Replace the target ring with a bold white house outline with a '+' inside it on the amber panel. Replace the green cones with 3 low grass clumps; keep the gravel patches flush. / Delete the front tape (box at 0,0.8,5.6) so the front is open. Make the sign board 2.6 × 2.0 m on two dark charcoal (#3c454f) posts, 0.2 thick, with the panel top at about 2.8 m. Paint the face solid amber #efb749 with a bold white house outline (roof chevron plus walls, bars at least 0.18 thick) and a white '+' inside it, instead of the cream-on-amber ring. Add a dark 0.08 frame round the panel. Keep only two low corner stakes at the back."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "Owner colour covers two entire gateposts instead of forming the specified restrained nameplate strip.",
+        "The filled circular household emblem is not readable.",
+        "The IVY nameplate at x -5.45 is half hidden behind the 1.6 m red post at x -6, and the red emblem disc is buried in the post, so the name is barely readable",
+        "A second free-standing red post at x -3.5 stands alone with no gate or rail and reads as a stray bollard",
+        "The rails are 0.14 m slats with 0.06 m gaps; at stream distance they merge into two thin brown lines, and the dark posts disappear",
+        "The 'IVY' nameplate is 1.8 × 0.7 with 0.45 m letters. It hangs off one side of the red post with nothing under its far end (cantilevered and floating), and the lettering is unreadable at stream scale.",
+        "The red household emblem disc sits on the centre of the red gatepost, so the two merge into one red blob.",
+        "The lone second red post at x −3.5 stands in open grass with nothing tying it to the first, so it reads as a stray bollard rather than a gate.",
+        "The back-right post at x 6 sits on the tile edge (checks flag 18 parts outside the room)."
+      ],
+      "fix": "Retain the low, open timber-and-metal boundary. Neutralise the gateposts and mount a front-facing pale plate with large lettering reading Ivy, a #d9534f strip and one clearly filled household circle. / Move the nameplate so it faces the street on its own short post just inside the gap, about x -4.6, z 5.6, top at 1.2 m. Make it 1.4 x 0.6 m with the red strip along its top edge, the emblem circle at its left and IVY letters 0.35 m tall. Either remove the post at x -3.5 or turn the two red posts into a clear gateway with a 0.15 m red header beam across the gap. Make the slats 0.18 m tall and set the posts in #a4aeaf so the fence reads. / Give the nameplate its own two short dark posts (#4c555e) at x −6.0 and x −4.4, z 5.6. Mount a 2.2 × 0.85 m cream plate between them at 1.0 m centre height with 0.6 m tall dark blue letters. Put a 0.25 m wide red #d9534f owner strip along the plate's top edge, and move the round emblem to the left end of the plate on the cream face so it reads against cream. Turn the x −3.5 red post into a proper gatepost pair: add a matching red post at x −1.5 and a low 0.12 red top bar spanning between them at 1.1 m. Pull the back run in to x ≤ 5.8."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "The plane canopy is a stack of smooth cushions rather than an irregular branching crown.",
+        "The maple's isolated orange cone reads as an attached prop, not autumn foliage on a low branch.",
+        "The maple's 'amber-tipped branch' is a separate orange cone at [4.66,2.94] standing apart from the crown, and reads as a traffic cone or party hat, here and in the vignette",
+        "The maple crown is three nearly round spheres stacked into a lollipop, which fails 'uneven crown'",
+        "The plane's pale grey-brown trunk is thin under a wide stack of flattened discs, so it looks like a parasol pine, not a plane tree",
+        "The 'autumn tip' on the maple is a 1.55 m orange cone stuck on the right of the crown at 2.3–3.6 m. On the board it reads as a traffic cone floating beside the trunk.",
+        "The maple crown is a small pea-green cluster about 2.2 m wide, and its long side branch (x 3.8–4.5) pokes out bare past the foliage.",
+        "The plane's crown mixes upward-pointing cones between the spheres, giving a stacked pagoda look rather than a leafy canopy.",
+        "World rule: trees: add 'every seasonal colour accent is a recoloured crown clump attached to the tree, never a free-standing cone'."
+      ],
+      "fix": "Redistribute the 30 parts into offset faceted crowns with visible branch connections. Give the plane a subtle trunk bend and unequal crown lobes; give the smaller maple one connected low branch with integrated orange foliage, retaining separate permeable pits. / Delete the orange cone. Instead recolour one of the maple's crown spheres (the one at x 1.98) to #c9873a and push it out to one side, low on a visible branch. Squash the maple spheres to irregular sizes (e.g. 2.4x1.6, 1.4x1.1, 1.0x0.9) and offset them so the crown leans toward +x. Thicken the plane's lower trunk to 0.6 m with mottled bark patches, and make its crown 4 clumps of different sizes rather than evenly stacked discs. / Delete the orange cone. Instead tint two crown spheres on the maple's upper right #c9873a and #d9534f, so autumn colour is part of the crown. Enlarge the maple crown to about 3.0 m wide by 2.6 m tall using 4 overlapping spheres. Extend a foliage sphere (1.2 m) over the side-branch tip so no bare stick shows. On the plane, replace the two cones with spheres and deepen every crown sphere to at least 2.6 m in z, so the canopy has volume from the 40° camera."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The oak combines a rigid box cross with rounded blobs instead of a coherent heavy-limbed silhouette.",
+        "The willow resembles a flat mushroom with evenly spaced spikes.",
+        "The flowering shrub repeats evenly placed pastel balls.",
+        "The 'curtain willow' is a flat pale ellipse crown with ten upright cones under it pointing UP; it reads as a jellyfish, a mushroom or a table with spikes, not a willow",
+        "The oak crown mixes hard-edged boxes and spheres in different greens and looks like stacked blocks",
+        "The flowering shrub is three green boxes with dots, and its trunks poke out below like table legs",
+        "The oak crown mixes two hard-edged dark green boxes with spheres, so it looks like a voxel tree with balloons glued on: blobby and incoherent.",
+        "The willow is a flat pale lens (4.2 × 1.25 m sphere) sitting on top, with eleven upside-down cones hanging under its rim. It reads as a jellyfish, a mushroom or a café table, not a willow, and there is a visible gap between the lens and the cones.",
+        "The flowering scrub is three tilted boxes with dots on top and reads as crates.",
+        "The three trees are all the same light green on a light green meadow, so contrast is poor.",
+        "World rule: trees: add 'wild trees must be darker than the meadow; crowns built from spheres only, no boxes; willow strands hang down from inside a domed crown, never inverted cones under a flat disc'."
+      ],
+      "fix": "Rebuild the 38-part group around asymmetry: unequal oak limbs supporting angular foliage masses, a broad willow with staggered drooping clusters, and an off-centre shrub with uneven flower concentrations. Make every foliage mass visibly supported. / Willow: make the crown a taller dome (sphere 3.5 x 2.2 x 3.2). Rotate every curtain cone by [3.1416,0,0] so it hangs point down, start each one from the crown rim, and make them 0.4 m wide by 2.2-2.6 m long, with their tips stopping at least 0.5 m above the ground. Leave the trunk visible in the centre and lean it about 10 degrees. Oak: replace the boxes with 4-5 squashed spheres in 2 close greens, wider than tall, over a thick, visibly forked trunk. Shrub: replace the boxes with 3 overlapping squashed spheres sitting on the ground (no visible stems), with the flower dots on top. / Oak: replace both boxes with spheres and build the crown from 5–6 spheres (2.2–3.4 m) in #3f6e3f, #548a52 and #659b52, about 6 m wide, with the heavy limbs entering the crown. Willow: make the crown a domed sphere about 4.4 × 2.4 × 3.8 m centred at y 4.0 in #86ad62. Hang 10–12 vertical drooping strands from inside its rim: thin boxes or cylinders 0.3–0.4 m wide, 2.6–3.2 m tall, bottoms at about 0.9 m, upright not inverted, alternating #a5c880 and #6f9a50, so they visibly emerge from the crown. Keep the trunk visible in the middle. Scrub: three overlapping spheres (1.0–1.3 m) in #3f6e3f with the pink and white blossoms on them. Push all three trees darker than the meadow."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The hard cream disc beside each pole reads as a solid object on the road rather than illumination.",
+        "This conspicuous ground shape undermines an otherwise recognisable contemporary LED silhouette.",
+        "A 2.5 m cream glow disc on the ground at z 3.75 renders as an opaque pale puddle straddling kerb and road; in the vignette both lights leave blobs that read as spilled paint or manholes",
+        "The arm is four unrotated vertical cylinders, so it reads as a stepped stack rather than a smooth curved arm",
+        "The glowing ground disc (2.5 m cylinder at y 0.01, #f4ecc8, glow) renders as an opaque cream splotch half on the pavement and half on the road. It reads as a spill or manhole, not light.",
+        "The pole is a 0.2 m light grey (#a4aeaf) stick over pale grey pavement, so it nearly vanishes; only the head is visible.",
+        "The head floats far over the road (z 3.75), so the pole looks bent out of shape from above.",
+        "World rule: lighting: add 'no ground light-pool discs or decals; only the lamp's diffuser glows'. The current spec's 2.5 m cream ground disc renders as an opaque blob.",
+        "World rule: lighting: forbid glow decals or discs on the ground (light pools). In the renderer they show as opaque pale splotches. Only the lamp's diffuser glows, and the pole must be dark (#3c454f) to read against pale pavement."
+      ],
+      "fix": "Remove the opaque ground-disc effect. Retain the slim pole and flat head, refine the short curved arm, and restrict glow=true to the broad underside diffuser; any light pool should be soft and unobtrusive in daylight. / Delete the ground disc. Keep glow only on the diffuser under the head. Replace the four arm cylinders with one box 0.14 x 0.14 x 1.3 m, rotated about x by about 0.25 rad, joining the pole top to the head. / Delete the ground glow disc entirely. Recolour the pole, arm and head housing dark charcoal #3c454f and thicken the pole to 0.24 m, so it reads against both pavement and asphalt. Keep only the underside diffuser glowing, and make it slightly larger (0.7 × 1.3 m). Shorten the arm so the head sits at z about 4.2, within reach of the pole, with the curve clearly continuous."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "Tall clustered stone blades dominate the basin, contradicting the low civic centrepiece requirement.",
+        "Disk-capped blue jet shapes resemble little fixtures rather than short streams of water.",
+        "The 'offset stone form' is three separate slabs (white 3.6 m, grey 2.8 m, timber-brown 2 m) that read as broken shards or tombstones, and the brown timber slab clashes",
+        "The jets are solid cones capped with spheres and read as white mushrooms or candles, not water",
+        "As a raised ring basin with a central feature it is still the classic town fountain, too close to today's game and the earlier ages' fountains",
+        "The 'offset stone form' is two pale white slabs plus a leaning brown plank. On pale square tiles they look like broken dominoes or fallen boards, and the white ones vanish into the paving.",
+        "The coping (#e1e3dc and #d2d1c2) is the same tone as the square tiles (#d2d1c2), so the fountain's outline only shows thanks to the thin dark base ring.",
+        "At 4.5 m across it is small for the heart of a big pale square, and its silhouette is low and busy.",
+        "World rule: centrepiece: change it to a flush ground-level splash plaza (jets rising from the paving, one cohesive sculpture), not a raised basin with three slabs, so it reads as distinct from every earlier age's fountain and from today's game fountain.",
+        "World rule: centrepiece: replace 'a simple offset stone form' with 'one bold coloured sculpture (deep blue #315e83 ring or arch, about 3 m tall)'. Pale stone forms vanish on the pale square tiles. Also require coping darker than the square surface."
+      ],
+      "fix": "Within 48 parts, retain an approximately 4.5 m shallow circular basin and pale coping, replace the blades with one low offset stone form, and use three short tapered jets with small splash rings. Only recessed pool-light lenses should glow. / Make it a flush modern splash plaza. Lower the coping to 0.25 m with a broad seating edge on one side only. Replace the three slabs with one sculpture: a single 3 m leaning open ring (or a bent ribbon of 3 joined boxes) in #e1e3dc on the dark plinth. Turn each jet into a slim 0.12 m-wide cylinder of #b9e5e9 rising 1.2-1.8 m out of the paving itself, 6-8 of them in an arc, with no sphere caps. Keep the 4 glowing recessed lenses. / Replace the three slabs with one bold sculpture: a single 3.0 m tall open ring or arch, 0.4 m thick, in deep blue #315e83 (or two interlocking ones in #315e83 and #68b4a0) standing on a dark plinth in the basin's back third. Darken the coping to #65717a with a light top lip, so the basin ring stands out from the tiles. Make the three water jets taller (1.8–2.2 m) with a white spray cap, so the fountain has a vertical read from the camera."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "The kiosk shell reads well, but the glass display is difficult to distinguish from an open counter.",
+        "Fruit, pastries and refill bottles collapse into generic coloured stock blocks."
+      ],
+      "fix": "Keep the flat overhang and powder-coated shell within the 2.6 × 1.6 m footprint. Allocate the 32 parts to a clearly framed transparent display, one bold fruit crate, a recognisable pastry silhouette and a small group of necked refill bottles."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The rendered bridge approaches end at the water-tile boundary without demonstrating continuous landings onto both banks.",
+        "Centre-line dashes imply two traffic lanes on the specified roughly 4 m deck."
+      ],
+      "fix": "Show the approaches continuing to the real banks at z ±7, with modest grounded abutments and a deck about 1 m above water. Keep the shallow precast structure and open rails, but treat the 4 m deck as a narrow single-lane crossing rather than a miniature two-lane road."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The shared-centre symbol and building-hand pictogram merge into small pale marks at stream distance.",
+        "Long green perimeter lines dominate the intended four-corner-block boundary language.",
+        "The sign pictogram (yellow centre, four white dots) reads as a daisy, not 'shared'; the building-hand symbol is an illegible white blob",
+        "Ground strips are 0.1 m green lines and the corner posts are small, so at stream distance the lot barely reads as marked out",
+        "4 parts flagged outside the room",
+        "The lot boundary is 0.16 m wide, 0.1 m tall green strips lying on gravel. At game scale they are hairlines, and the corner blocks are small green stubs.",
+        "Apart from the sign colour, it looks identical to the free lot (same pale gravel field with markers), so 'town project lot' does not read at a glance.",
+        "The building-hand pictogram on the sign is a cluster of tiny white boxes and does not read.",
+        "World rule: surfaces: square tiles (#d2d1c2), pavement (#c5c9c7) and lotRough gravel (#a6afa2) are near-identical pale greys, so the vignette washes out and pale pieces vanish. Make the square a warmer mid-tone (e.g. base #b9ad96, accent #d6ccb5) and the lot gravel a little darker or warmer than the pavement, so each ground type and the pieces on it separate."
+      ],
+      "fix": "Simplify the boundary to four low corner blocks. Recompose the municipal panel with four large nodes around one contrasting centre and a separate bold building-hand pictogram, leaving the collaborative interior clear. / Replace the daisy with a bold white house outline over a 3-figure group (three white 0.15 m circles with shoulder bars below), filling about 70% of the panel. Make the corner posts 0.45 m square and 1.0 m tall with white tops. Raise the boundary strips into 0.25 m-high low green kerb blocks, and keep the boundary within |x|,|z| <= 5.9. / Replace the edge strips with a low green-painted kerb 0.35 m wide by 0.18 m tall in #548a52 with a white top line. Make the corner blocks 0.6 × 0.9 m. Enlarge the sign to 2.8 × 1.8 m and drop the hand pictogram. Keep only the 'four people round one centre' emblem, scaled up to about 1.2 m, in white on green with a gold centre. Add two small municipal planters (green boxes with shrub spheres) flanking the sign, so the lot reads civic and cared for while the interior stays clear."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The two parasols read as small café umbrellas rather than broad shelters for a tourist group.",
+        "The route display is not distinguishable from the surrounding luggage and check-in props.",
+        "The 'portable gathering light' is a red cap on a stalk that reads as a mushroom or stool; its glow does not show",
+        "There is no visible route display or cooler as the bible requires; the parasol tables read as a café terrace, not a coach camp",
+        "The red check-in awning is small and floats beside the coach"
+      ],
+      "fix": "Retain the coach and check-in awning, but widen both parasol canopies and give the folding tables credible person-relative scale. Within 82 parts, group luggage and cooler clearly, add a bold route-line-and-stops graphic, and give the portable gathering light a distinct diffuser as its only glowing surface. / Make the light a 0.5 m cylinder lantern with a glow=true diffuser body (#fff3d5) on a 1.2 m dark tripod pole. Add a 1.2 x 0.8 m route display board on two posts, showing a simple coloured line with 3 dots. Add a blue and white cooler box (0.6 x 0.4 x 0.4) by a table. Make the check-in awning 2.4 x 1.6 m with a folding table and a stack of luggage beside it."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The gold scissors overlap the sash and torso, reading as a chain-like tangle rather than the defining ceremonial tool.",
+        "The angular red ribbon is more prominent than the town badge and office-defining sash.",
+        "A 2.3 x 2.1 m pale ground plate sits under the Mayor, which renders as a plinth in the vignette",
+        "The ribbon is a floating red zig-zag line beside the figure and does not read as a ribbon",
+        "The scissors read as a gold lump at the hip; the sash is a thin pale strip rather than a broad gold sash",
+        "The Mayor reads as a man playing a guitar. The gold scissor handle rings sit at the hip like a guitar body, and the pale grey blades run up diagonally across the chest like a guitar neck.",
+        "The ribbon is a red zigzag of thin boxes at the left hip that reads as a lightning bolt or squiggle, not a ribbon loop.",
+        "The gold sash is 0.22 m wide and overlapped by the blades, so the office symbol is muddled. 'Oversized' scissors are actually tiny (0.2 m rings).",
+        "A 2.3 × 2.1 m pale ground slab is built into the figure.",
+        "Hair is a plain dark box, no distinctive neat hair; nothing about him is grander than a resident from a distance.",
+        "World rule: people/head/leader: add 'no ground plates or plinths under figures; the figure stands directly on y 0'. All three specs carry 2.3-2.7 m slabs that show in the vignette.",
+        "World rule: people/head/leader: state that characters carry no ground mat, plinth or slab, and feet sit at y 0. All three character specs added one, and in the game it would travel with the figure.",
+        "World rule: head: specify the scissors held out to the side at shoulder height with large silver blades and bright gold handles, and the ribbon as a red bow with tails in the other hand. Specify the sash as broad red with gold edging. As written ('beside a short ribbon loop'), the scissors ended up across the body and read as a guitar."
+      ],
+      "fix": "Separate the scissors from the body silhouette, using two oversized rounded handles and clearly contrasting blades. Make the broad civic sash and simple badge readable across the suit, and reduce the ribbon to a short loop beside the scissors without adding a brass chain. / Delete the ground plate. Make the sash a 0.16 m-wide #efb749 box running diagonally from right shoulder to left hip across the front of the torso. Hold the scissors raised in the right hand at chest height: two 0.5 m silver blades in an open V and two gold ring handles. Replace the zig-zag with a red ribbon loop and bow (two 0.2 m red boxes as bow loops plus a short trailing strip) held in the left hand. / Delete the ground slab. Sash: one broad 0.32 m band in bright red #d9534f with gold edging, running from the right shoulder to the left hip over the dark suit, plus a 0.25 m gold badge disc on the left chest. Scissors: hold them in the right hand, raised outward to the side at shoulder height (not across the body). Blades 0.8 m long, 0.12 thick, silver #e1e3dc, opened in a V. Handles are two 0.35 m bright gold rings. Ribbon: in the left hand, a wide 0.18 m red ribbon forming a clear bow, two loops 0.35 m each with two hanging tails 0.5 m, held out from the body. Hair: a neat light-grey side-parted block with a quiff, so the head reads as distinct."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "Residents stand on a rectangular display slab in the carriageway, and other character presentation bases remain visible in the square.",
+        "Repeated road tiles create three closely spaced crossings, with the minibus occupying one of them.",
+        "The large uninterrupted paved square reads as sterile hardscape, with almost all substantial planting confined to the opposite frontage.",
+        "World rule: Square surface: the bible's own avoid list says 'no sterile all-concrete landscapes', but the square is uniform grey tiles. Add a rule that the square has 2-4 planted beds or tree pits and some lawn or planting strips, so the modern square is green civic space.",
+        "World rule: surfaces: square tiles (#d2d1c2), pavement (#c5c9c7) and lotRough gravel (#a6afa2) are near-identical pale greys, so the vignette washes out and pale pieces vanish. Make the square a warmer mid-tone (e.g. base #b9ad96, accent #d6ccb5) and the lot gravel a little darker or warmer than the pavement, so each ground type and the pieces on it separate."
+      ],
+      "fix": "Strip all display bases from instantiated characters and ground their feet directly on the world surfaces. Use unmarked straight-road tiles between deliberately placed crossings, move bus boarding clear of the zebra markings, and introduce irregular planted pockets along square margins while preserving circulation and the four community build areas."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The spec includes a 2.4 x 2.4 m grey ground plate under the figures; in the vignette it renders as a white square under them in the plaza",
+        "The phone is too small to read; the work-jacket figure carries nothing visible",
+        "The spec includes a 2.4 × 2.4 m pale grey ground slab (box at 0,0.03,0) under the two figures. In the game a character would carry this mat around with them.",
+        "The phone is tiny (0.15 m), so the second figure's 'one carried thing' is invisible; the brown work jacket blends with skin tones.",
+        "World rule: people/head/leader: add 'no ground plates or plinths under figures; the figure stands directly on y 0'. All three specs carry 2.3-2.7 m slabs that show in the vignette.",
+        "World rule: people/head/leader: state that characters carry no ground mat, plinth or slab, and feet sit at y 0. All three character specs added one, and in the game it would travel with the figure."
+      ],
+      "fix": "Delete the ground plate part ([0,0.03,0] 2.4x0.06x2.4). Make the phone a 0.12 x 0.2 x 0.03 box in #315e83 held raised in front of the chest, and give the jacket a contrasting hi-vis stripe so the two silhouettes differ. / Delete the ground slab and keep feet at y 0. Make the phone a bolder 0.22 × 0.32 m dark slab held out in front at chest height, with a bright #88c3cf screen. Change the work jacket to a clear contrast colour such as #315e83 navy or #efb749 hi-vis, so the two silhouettes separate from skin and from each other."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "A 2.7 x 2.5 m green ground plate sits under the guide, showing as a green square in the vignette",
+        "The hat reads as a straw boater rather than a bucket hat, and there is no regional scarf",
+        "A 2.7 × 2.5 m green ground mat is built into the figure, with the legs lifted 0.06 m to stand on it.",
+        "The 'from far away' read relies on the small red suitcase; the folded map is a pair of tiny 0.25 m cards. Nothing above head height carries the tour-guide silhouette.",
+        "World rule: people/head/leader: add 'no ground plates or plinths under figures; the figure stands directly on y 0'. All three specs carry 2.3-2.7 m slabs that show in the vignette.",
+        "World rule: people/head/leader: state that characters carry no ground mat, plinth or slab, and feet sit at y 0. All three character specs added one, and in the game it would travel with the figure."
+      ],
+      "fix": "Delete the ground plate. Give the hat a sloping brim (a short cone frustum) in #68b4a0, and add a contrasting #d9534f scarf box around the neck. Raise the folded map to chest height so it reads. / Delete the mat and drop every part by 0.06 m so the feet sit at y 0. Add the classic tour-guide signal: a raised hand holding a thin pole to about 2.5 m, topped by a bright 0.5 × 0.35 m teal flag #68b4a0 (or a closed umbrella in amber). Enlarge the map to 0.45 × 0.35 m."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "A plain off-white flat roof covers about 60% of the silhouette from the overhead camera, so in the vignette the café reads as a blank white box",
+        "The glass front is a thin strip under the canopy and barely visible, so 'glass-fronted espresso bar' does not land",
+        "From the 40° camera the 8.6 × 6.3 m flat pale roof slab is most of the silhouette. The glass shopfront and counter sit under it and barely show, so the build reads as a white warehouse or garage with umbrellas in front.",
+        "The coffee-cup sign is a 0.9 m yellow cylinder on a bracket above the door. It reads as a yellow bucket.",
+        "The white parasol and pale terrace paving melt into the pale roof and slab; only the yellow parasol pops.",
+        "Checks: 3 parts reach outside the 16 m room (hedges at x ±5.65 plus the slab).",
+        "World rule: cafe (designDirection): add that from the 40° camera the roof must not be the dominant pale mass. Café roofs get a coloured parapet or awning and a rooftop sign so the front reads from above."
+      ],
+      "fix": "Shrink the roof's visual mass: drop the parapet, add a contrasting #39766f roof band, and put 2-3 rooftop units and a planter on the roof. Raise the glass shopfront to the full 3 m wall height on the two street-facing sides, using big #a9dadd panes with dark mullions. Run a #efb749 and white striped awning along the whole front. / Recolour the roof slab mid-grey #65717a and add a 0.6 m teal (#39766f) parapet band around its edge, so the building has a crisp coloured outline. Add a full-width striped awning over the shopfront (alternating teal and cream panels sloping down to the street at about 2.6 m), so the front reads 'café' from above. Replace the cup sign with a 1.4 m rooftop sign: a white cup with saucer and a dark brown coffee top, plus two tall steam swirls, standing on the front parapet. Make both parasols coloured (amber and teal). Pull the side hedges in to |x| ≤ 5.2."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "It renders as a long three-box saloon/estate (long bonnet, long rear) like an 80s Volvo, not the compact hatchback the bible and its own name call for"
+      ],
+      "fix": "Shorten the overall length to about 3.6 m. Cut the bonnet to 0.8 m and slope it. Bring the cabin forward and end the car with a near-vertical rear hatch directly behind the rear wheels, with no boot overhang. Make the cabin tall relative to the body (about 45% of total height)."
+    }
+  ]
+}

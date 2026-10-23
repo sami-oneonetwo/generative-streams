@@ -1,0 +1,432 @@
+{
+  "name": "Ceramic Guidance Street",
+  "description": "Sparse cyan guidance seams, planted drainage channels and low ceramic edge nodes frame an unobstructed pale-panel street with accessible pavement openings.",
+  "notes": "Matte composite fittings and flush navigational emitters replace asphalt markings and metal bollards, with only the guidance seams emitting light.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.55,
+        0.04,
+        -4.12
+      ],
+      "size": [
+        4.9,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.55,
+        0.04,
+        -4.12
+      ],
+      "size": [
+        4.9,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.55,
+        0.04,
+        4.12
+      ],
+      "size": [
+        4.9,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.55,
+        0.04,
+        4.12
+      ],
+      "size": [
+        4.9,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.55,
+        0.03,
+        -4.37
+      ],
+      "size": [
+        4.9,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.55,
+        0.03,
+        -4.37
+      ],
+      "size": [
+        4.9,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9cbea0"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.55,
+        0.03,
+        4.37
+      ],
+      "size": [
+        4.9,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9cbea0"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.55,
+        0.03,
+        4.37
+      ],
+      "size": [
+        4.9,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.7,
+        0.03,
+        -3.81
+      ],
+      "size": [
+        0.9,
+        0.06,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.7,
+        0.03,
+        -3.81
+      ],
+      "size": [
+        0.9,
+        0.06,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.7,
+        0.03,
+        3.81
+      ],
+      "size": [
+        0.9,
+        0.06,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.7,
+        0.03,
+        3.81
+      ],
+      "size": [
+        0.9,
+        0.06,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2,
+        0.03,
+        -2.8
+      ],
+      "size": [
+        1.1,
+        0.06,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b7c8ce"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        0.03,
+        2.8
+      ],
+      "size": [
+        0.9,
+        0.06,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c1b5dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.03,
+        -3.35
+      ],
+      "size": [
+        3.8,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        0.03,
+        -3.35
+      ],
+      "size": [
+        3.8,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.03,
+        3.35
+      ],
+      "size": [
+        3.8,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        0.03,
+        3.35
+      ],
+      "size": [
+        3.8,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.45,
+        0.16,
+        -5
+      ],
+      "size": [
+        0.46,
+        0.32,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.45,
+        0.16,
+        -5
+      ],
+      "size": [
+        0.46,
+        0.32,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.45,
+        0.16,
+        5
+      ],
+      "size": [
+        0.46,
+        0.32,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.45,
+        0.16,
+        5
+      ],
+      "size": [
+        0.46,
+        0.32,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    }
+  ],
+  "checks": [
+    "4 parts reach outside the 12 m room"
+  ]
+}

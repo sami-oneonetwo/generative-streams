@@ -1,0 +1,102 @@
+{
+  "name": "Split-Bark Fallen-Log Seat",
+  "description": "A thick fallen trunk seats two on a shallow, weather-darkened sitting face, with unequal stone chocks and a projecting splinter at its broken end.",
+  "notes": "Unpeeled round timber, a small adzed patch, angular loose stones and a dark torn end identify a gathered Stone Age seat rather than a constructed bench.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.235,
+        0
+      ],
+      "size": [
+        0.46,
+        2.4,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.12,
+        0.423,
+        0
+      ],
+      "size": [
+        1.4,
+        0.06,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.05,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.81,
+        0.115,
+        0.22
+      ],
+      "size": [
+        0.48,
+        0.17,
+        0.39
+      ],
+      "rotation": [
+        0.08,
+        0.31,
+        -0.07
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.77,
+        0.13,
+        -0.2
+      ],
+      "size": [
+        0.57,
+        0.18,
+        0.43
+      ],
+      "rotation": [
+        -0.1,
+        -0.24,
+        0.08
+      ],
+      "color": "#969387"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.2,
+        0.245,
+        -0.095
+      ],
+      "size": [
+        0.32,
+        0.46,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0.14,
+        -1.38
+      ],
+      "color": "#533d30"
+    }
+  ]
+}

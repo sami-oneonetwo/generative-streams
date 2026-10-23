@@ -1,0 +1,387 @@
+{
+  "name": "Town-Edge Wildflower Meadow",
+  "description": "Two bright wildflower pockets, a fallen branch beside rounded stones and a shallow rain pool form four readable clusters across open meadow.",
+  "notes": "Healthy wildflowers and clean rainwater replace industrial debris; use broad, subdued meadow colour variation without pale flecking so the low planting remains visible at board scale.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -3.5,
+        0.2,
+        -2.65
+      ],
+      "size": [
+        0.85,
+        0.4,
+        0.75
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#3f6e3f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -2.96,
+        0.22,
+        -2.45
+      ],
+      "size": [
+        0.78,
+        0.44,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -3.29,
+        0.18,
+        -2.04
+      ],
+      "size": [
+        0.9,
+        0.36,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#3f6e3f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.52,
+        0.33,
+        -2.65
+      ],
+      "size": [
+        0.42,
+        0.18,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.98,
+        0.35,
+        -2.45
+      ],
+      "size": [
+        0.4,
+        0.18,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.34,
+        0.29,
+        -2.04
+      ],
+      "size": [
+        0.44,
+        0.18,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.14,
+        0.28,
+        -2.83
+      ],
+      "size": [
+        0.36,
+        0.16,
+        0.35
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.86,
+        0.2,
+        2.95
+      ],
+      "size": [
+        0.85,
+        0.4,
+        0.76
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#3f6e3f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.4,
+        0.18,
+        3.12
+      ],
+      "size": [
+        0.8,
+        0.36,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.55,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.08,
+        0.22,
+        3.52
+      ],
+      "size": [
+        0.78,
+        0.44,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0.15,
+        0
+      ],
+      "color": "#3f6e3f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.85,
+        0.33,
+        2.95
+      ],
+      "size": [
+        0.42,
+        0.18,
+        0.39
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.43,
+        0.29,
+        3.13
+      ],
+      "size": [
+        0.4,
+        0.18,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.08,
+        0.35,
+        3.52
+      ],
+      "size": [
+        0.43,
+        0.18,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#df8190"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.7,
+        0.28,
+        3.32
+      ],
+      "size": [
+        0.37,
+        0.16,
+        0.36
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.42,
+        0.175,
+        -2.72
+      ],
+      "size": [
+        1,
+        0.35,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.01,
+        0.12,
+        -2.21
+      ],
+      "size": [
+        0.6,
+        0.24,
+        0.5
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#cad0bd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.65,
+        0.09,
+        -1.94
+      ],
+      "size": [
+        1.6,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#6b5640"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.88,
+        0.08,
+        -1.76
+      ],
+      "size": [
+        0.7,
+        0.16,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.75,
+        0
+      ],
+      "color": "#8b745a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.25,
+        0.03,
+        2.43
+      ],
+      "size": [
+        1.8,
+        0.06,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#459fc0"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.46,
+        0.03,
+        2.48
+      ],
+      "size": [
+        0.8,
+        0.06,
+        0.56
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#459fc0"
+    }
+  ]
+}

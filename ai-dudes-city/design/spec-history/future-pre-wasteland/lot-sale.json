@@ -1,0 +1,281 @@
+{
+  "name": "Unclaimed Lot with Amber Availability Halo",
+  "description": "A thick, empty amber halo floats at newcomer eye level above a dark ceramic projector, with sparse clover and reclaimed aggregate leaving the parcel open.",
+  "notes": "The Future replaces a sale sign with a restrained projected availability symbol, using saturated amber against a matte navy pedestal and shadow disc for clear street-facing readability.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        0.04,
+        4.5
+      ],
+      "size": [
+        1.28,
+        0.08,
+        1.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#253444"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        0.24,
+        4.5
+      ],
+      "size": [
+        0.78,
+        0.32,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.7,
+        4.5
+      ],
+      "size": [
+        1.25,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.225,
+        1.575,
+        4.5
+      ],
+      "size": [
+        0.414,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7854
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.35,
+        1.2,
+        4.5
+      ],
+      "size": [
+        0.18,
+        0.55,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.225,
+        0.825,
+        4.5
+      ],
+      "size": [
+        0.414,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.7,
+        4.5
+      ],
+      "size": [
+        1.25,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.775,
+        0.825,
+        4.5
+      ],
+      "size": [
+        0.414,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7854
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.65,
+        1.2,
+        4.5
+      ],
+      "size": [
+        0.18,
+        0.55,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.775,
+        1.575,
+        4.5
+      ],
+      "size": [
+        0.414,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#e89a1c",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.36,
+        0.1,
+        5.12
+      ],
+      "size": [
+        0.46,
+        0.2,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#527e61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.12,
+        0.075,
+        5.24
+      ],
+      "size": [
+        0.33,
+        0.15,
+        0.29
+      ],
+      "rotation": [
+        0,
+        -0.55,
+        0
+      ],
+      "color": "#739d78"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.29,
+        0.08,
+        5.25
+      ],
+      "size": [
+        0.37,
+        0.16,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0.43,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.34,
+        0.065,
+        4.95
+      ],
+      "size": [
+        0.42,
+        0.13,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.62,
+        0
+      ],
+      "color": "#bca783"
+    }
+  ]
+}

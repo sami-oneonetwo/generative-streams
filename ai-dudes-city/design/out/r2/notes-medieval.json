@@ -1,0 +1,273 @@
+{
+  "elements": [
+    {
+      "id": "ground",
+      "problems": [
+        "High-frequency grass mottling overwhelms the small countryside details at stream distance.",
+        "The neatly rimmed oval puddle and rectangular deadwood look manufactured rather than naturally occurring.",
+        "Only about six tiny features are visible on a 12 m tile. From the stream camera it reads as an empty lawn that could belong to any age.",
+        "The 'shallow puddle' is a crisp blue oval with a dark brown rim, so it reads as a garden pond or a manhole, not a puddle.",
+        "The meadow flowers and nettles are almost invisible (two pale dots and one dark cone). Nothing says medieval countryside: no hay, no hurdles, no field strips, no cart track.",
+        "The 14 parts are specks at cell scale. The nettle cones (0.4 m) and the cream/yellow flower spheres (0.45 m) are a few pixels each, and the mossy stones (0.6 m grey ovals) vanish into the meadow texture",
+        "The only readable features are the small pond (2.2 m blue disc) and the 1.4 m log; at a glance the tile reads as empty grass"
+      ],
+      "fix": "Reduce grass texture contrast and use broader meadow patches. Redistribute the 14 dressing parts into asymmetric nettle clumps, readable flower clusters, mossy stones, irregular shallow puddles and genuinely split deadwood, mostly below 0.35 m. / Remove the rimmed pond oval. Replace it with two irregular, rimless mud-brown puddles (#6b5a40, 1.2×0.04×0.7 and 0.8×0.04×0.5) along a faint cart track: two parallel worn-earth ellipsoids (#8a7556, 6×0.03×0.35) running diagonally across the tile. Add medieval farm cues, all low: a hay stook (cone #d6b25a, 0.9 dia × 0.9 h, at x 3, z -3); a toppled wattle hurdle panel (box #8b6240, 1.6×0.6×0.12, rotated 0.3 rad about z); and a ridge-and-furrow strip of three long low ridges (#7a9a52, 5×0.12×0.5) in one corner. Make the flowers clumps of 3–4 spheres (0.18 m, #e5d8b6 and #d6af55) so they show at distance. Keep the split log and the mossy stones. Total 16–20 parts. / Group the dressing into 4 readable clusters instead of scattering specks. (1) A nettle/bracken clump 1.5 m wide: 5–6 dark-green #2f4f2e cones 0.5–0.8 m tall at uneven heights. (2) A wildflower patch 1.5 m wide: 8 bright red #b74236 and white #eee5bd dots on a slightly lighter green mound. (3) A fallen split log 2.5 m long, 0.4 m thick, with a pale #c9a46b split face up. (4) A mossy boulder 1.0×0.6 m in #8a8a7a with a green cap. Keep the pond but give it a darker rim and 2–3 reed cones. Everything stays under 0.9 m."
+    },
+    {
+      "id": "street",
+      "problems": [
+        "Uniform oval cobbles in rigid rows read as a printed pattern rather than irregular, mud-jointed stone.",
+        "Repeated straight brown strokes make wheel wear look diagrammatic.",
+        "Sharp rectangular road edges and detached oval mud patches do not create the required thinning-cobble frontage.",
+        "The four 'edge gutters' are 4.5–5 m × 2.2 m tan ellipsoids straddling |z| 4–5. On the board and in the street corner they read as big muddy stepping pads lined up along both kerbs, not as a narrow flush gutter.",
+        "The 'wheel wear' is eight dark ellipsoids, each 4–6 m long and 0.3 m wide. They render as thin brown sticks or logs lying across the road at odd angles, not as continuous paired ruts.",
+        "The cobble surface is a perfectly regular grid of identical grey dots, which the bible's avoid list forbids ('perfectly regular cobbles').",
+        "4 parts reach outside the 12 m room: the boulders at (−5.06, 5.11) and (4.84, −5.03) and the frontage pads at |z| ≈ 4.5 with 2.2 m depth.",
+        "The walking-edge 'frontage' is 6 evenly spaced flat tan oval pancakes (2–3 m spheres), half on cobbles and half on grass. In the vignette they repeat along both sides like a row of mud puddles or stepping discs, not packed-earth frontage",
+        "The cream highlight ovals inside the pancakes look like fried eggs",
+        "The wheel-wear streaks are thin dark sticks, about 0.1 m, that read as cracks or twigs lying on the road rather than worn ruts",
+        "The frontage between the ovals is bright grass, so the street has a lawn verge, which is wrong for a medieval town lane",
+        "The check reports 4 parts outside the 12 m room",
+        "World rule: surfaces.road: the cobble pattern is a perfectly regular dot grid, which contradicts the bible's own avoid list ('perfectly regular cobbles'). The cobble pattern needs size, offset and colour jitter.",
+        "World rule: rules.walkingEdge / rules.roads: 'shallow edge gutters' and 'packed-earth frontage' were built as big tan ellipsoid pads. Specify a narrow (0.3–0.4 m) continuous flush gutter at |z| ≈ 3.9, and let the renderer draw the |z| 4–6 frontage as a packed-earth surface (add a 'frontage' surface: dirt #8a7556) instead of leaving it as lot grass.",
+        "World rule: Surfaces: 'pavement' is null, so the walking edge (|z| 4–6) renders as grass, which contradicts the walkingEdge rule (packed-earth frontage) and forces the street piece to fake it with mud pancakes. Add an edge surface such as {pattern:'dirt', base:'#857257', accent:'#9e8a68', accent2:'#6a5a44'}, or say explicitly that the frontage is drawn as continuous packed-earth parts."
+      ],
+      "fix": "Keep the 8 m carriageway but vary cobble size, spacing, rotation and exposed height. Introduce muddy joints and broad, softly interrupted cart wear; thin stones into irregular packed earth at |z| 4–6, with flush shallow gutters and the specified low dressing, leaving the centre unobstructed. / Delete the four big tan frontage ellipsoids. Replace them with a continuous narrow open gutter on each road margin: one long flat box per side (#5a4a36, 11.5×0.03×0.35 at z ±3.85) with 3–4 small dark damp patches (#493d2e, 0.6×0.03×0.4) along it. Replace the eight rut sticks with two continuous paired ruts running along x: four boxes (#605545, 11.5×0.03×0.28) at z ±0.9 and ±1.6, broken into 2–3 segments with small gaps so they look worn, not painted. Add 6–8 scattered replacement cobbles in a lighter tone (#a1a69b spheres, 0.35×0.08×0.3) and two darker sunk ones (#605a4e) to break the regular grid. Keep the two hitching stones but pull them inside |x|, |z| ≤ 5.6. / Delete the oval pancakes and the cream ovals. Along each edge (|z| 4–6), lay a continuous irregular packed-earth strip of 4–5 overlapping flat boxes, 0.04 m tall, in #8a7556/#7a6648, varying in width from 1.4 to 2 m and slightly rotated so the margin is ragged. Add a flush open gutter: a 0.35 m wide darker #605a4e strip at |z| ≈ 4.1 running the full length. Make the ruts two continuous parallel strips 0.3 m wide in #6a675c at z ±1.2, flush, running along x. Keep the 2–3 replacement stones and add 2 low hitching stones (0.5 m) at the edge. Keep all parts inside |x| ≤ 6."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The boundary reads as straight stacked rails rather than woven wattle.",
+        "Evenly cut members and long squared footing strips undermine the rough, hand-built construction.",
+        "The 'wattle' boundary is flat brown boxes with three long horizontal rails 11.8 m long over them. From the camera it reads as a post-and-rail ranch fence, with no woven texture at all.",
+        "The owner shield is a 1 m red box at the far front corner. In the sheet and the street corner it is a small red blob, and the 'name' is eight random 0.06 m dark ticks that cannot be read as a name.",
+        "The lone 0.9 m post at x −2.69 reads as a forgotten stump, not a gate post.",
+        "13 parts reach outside the 13 m room (the full-length rails and the corner posts at x/z 6).",
+        "The owner shield (1.0×0.85 m at 1.2 m) is a tiny red fleck at the front-left corner. The name lettering is built from 0.06 m strokes and is completely illegible",
+        "The boundary reads as a thin post-and-rail fence, not wattle. The 'wattle panels' are flat solid #8b6240 boxes that merge with the dirt, and the three rail lines on top dominate",
+        "The grey fieldstone footings at the back are half-buried flat ovals that barely show",
+        "The check reports 13 parts outside the 13 m room",
+        "World rule: ownerMarker: drop 'exact owner name in hand-painted lettering' built from geometry; at 0.06 m strokes it can never read. Ask for a 1.4 m shield with a large blank cream name strip for the game's name overlay."
+      ],
+      "fix": "Rebuild the rear and side boundaries as visibly woven panels between irregular oak posts, using alternating chunky twig bands and occasional separate fieldstone footings. Keep heights at 0.7–1.0 m, preserve the open frontage and retain the subordinate red shield with Ivy's pale name strip. / Replace each long panel and its three rails with woven wattle: 4–5 shorter panels per side (about 2.2 m each). Give each panel 5 thin horizontal withies in alternating tones (#8b6240 / #b08a59, 2.2×0.08×0.1) offset ±0.04 in depth so they zig-zag, between upright stakes. Pull everything inside |x|, |z| ≤ 6.3. Make the owner shield 1.2×1.0 m with a pointed bottom, mounted at 1.3 m on the front post facing +z, with a thick dark border (#343b40). Replace the tick marks with a pale name strip (#e5d8b6, 1.0×0.28) carrying 3–4 chunky block letters (0.12 m strokes). Give the free-standing post a short hinged half-gate (2 bars, 1.0×0.5 m, swung open 0.8 rad) so the entrance reads as a gate. / Make the shield the clear focal point: a 1.4×1.3 m red #d9534f shield on a 2.4 m front post, angled 20° toward the street, with a 1.3×0.35 m cream name strip and a bold dark emblem 0.4 m across. Drop the 0.06 m letter strokes; the in-game name overlay will carry the text. Make the panels read as woven wattle: on each panel, 5–6 vertical stakes (0.1 m, #5c4030) poking 0.15 m above a panel of 3 alternating light/dark horizontal bands (#b08a59/#7a5a3a). Remove the triple rail lines. Raise the footing stones to 0.35 m and make them chunkier and lighter #9a9886 so they read. Keep everything inside |x|,|z| ≤ 6.3."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "The pear crown is essentially a single flat slab with small attachments.",
+        "The pollarded lime has insufficient uneven regrowth to read as an old pollard.",
+        "Different heights alone do not compensate for the sparse, manufactured foliage silhouettes.",
+        "Both crowns are stacks of flat rectangular slabs. The pear's crown in particular is one flat lime-green tabletop on a thin trunk, so it reads as a parasol or a Minecraft tree, not an old fruit tree.",
+        "The pollarded lime's 'regrowth' is six thin vertical poles topped by a flat slab. The knuckle is barely visible and the crown is still a centred cap.",
+        "The pear's cream fruit boxes hang in a tidy row under the slab like lamps.",
+        "Both crowns are far too small and flat for their trunks. The pear's crown is a single lime-green slab about 2.4×1 m on a 3 m trunk, so it reads as a table, an umbrella or a mushroom",
+        "The pollarded lime's crown is a tight stack of small boxes perched on a tall knuckled trunk; it reads as broccoli",
+        "The pear's pale blossom boxes are tiny and lost in the crown",
+        "At street scale in the vignette the two trees read as sticks with green lids",
+        "World rule: Trees: add minimum crown sizes (street trees' crowns at least 3 m wide, the wild oak at least 5 m, the hawthorn at least 3 m), and ban pale or grey limb boxes that read as planks."
+      ],
+      "fix": "Within the 28-part budget, give the lime a substantial knuckled head and several unequal regrowth forks with offset foliage clusters. Give the smaller pear a visibly roadward lean, branching structure and an asymmetric crown made from several substantial masses rather than one plate. / Lime: make the pollard knuckle obvious (a fat #6b4a32 box 1.1×0.8×0.9 at y 3.2). Splay 5 shoots outward at different angles (rotate ±0.3–0.6 rad), then break the crown into 6–8 irregular clumps of different sizes (spheres and boxes 0.8–1.6 m, heights varying by 1 m), with gaps showing shoots through them. Pear: give it a leaning trunk (rotate 0.25 rad toward −z) with a fork. Replace the flat slab with 4–5 rounded uneven clumps (spheres #79964c / #9cb35a, 0.9–1.4 m) on one side heavier than the other. Scatter 4 small pears (0.18 m, #d6cf89) inside the clumps, not in a row below, and add 2 windfall pears on the ground. / Lime: keep the knuckled trunk, but grow 6–8 shoots (0.12 m, tilted outward 15–35°) from the pollard head, then a ragged crown 3.5 m wide by 2.5 m tall of 7 overlapping irregular boxes/spheres in 3 greens (#416c48, #5f8a45, #73984b) at varied heights, deliberately lopsided toward the road. Pear: 4.5 m tall with a leaning trunk, and a crown 3 m wide by 2.2 m tall of 5–6 rounded clumps in #79964c/#9cb35a, plus 6–8 larger 0.35 m cream blossom or fruit clusters spread around its outside. Make the two heights clearly different (lime 6.5 m, pear 4.5 m)."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The crooked oak dominates two tiny shrubs, so the required broad hawthorn does not register.",
+        "Foliage is concentrated into shallow stacked chunks rather than distinct branching crowns.",
+        "The oak's 'exposed deadwood' is two pale grey boxes (#91816b, #a3957c) sticking out sideways at mid-height. In the cell it reads as a floating plank stuck through the tree.",
+        "The 'broad hawthorn' is five upward-pointing cones, so it reads as a small cluster of conifers. The white flower boxes on top read as snow. It is narrow, not broad.",
+        "The oak crown is pleasingly ragged; the holly is fine.",
+        "A pale grey-beige plank (#91816b / #a3957c boxes at y 4.6–5.0) sits horizontally inside the oak, under its crown. It reads as a floating board, not a dead limb",
+        "The holly/hazel at the front is light green cones with off-white boxes on top; the white bits read as snow or sheep, not as a holly",
+        "The hawthorn is a small dark lump about 1.4 m wide with two tiny red dots, too small to be the 'broad' tree",
+        "World rule: Trees: add minimum crown sizes (street trees' crowns at least 3 m wide, the wild oak at least 5 m, the hawthorn at least 3 m), and ban pale or grey limb boxes that read as planks."
+      ],
+      "fix": "Redistribute the 36 parts into three clearly different silhouettes: a tall forked crooked oak, a lower but genuinely broad spreading hawthorn, and a compact irregular holly. Preserve gaps between foliage masses and vary branch direction rather than stacking crowns vertically. / Turn the deadwood into a short broken branch stub attached to the trunk: one box 0.25×0.25×1.2, rotated 0.5 rad, #8a7a63, its base inside the trunk, so it looks snapped. Rebuild the hawthorn as a broad, low, tangled shrub-tree: a short twisted trunk with 3 diverging branches, carrying 5–6 flattened irregular clumps (spheres/boxes 1.2–2 m wide, 0.6–0.9 m tall, #4d6b35 / #617f3e). Spread them over about 3.5 m width, keep the top below 3.5 m, and dot about 8 small blossom spheres (0.15 m, #eee3c8) across the clump sides, not on top. / Recolour the two pale limb boxes to bark #5c4030/#694a32 and make sure each starts at the trunk; or delete them. Rebuild the holly as dark glossy green #24432d cones (1.8 m tall) with 6–8 bold red #b74236 berry clusters 0.2 m across, and remove the white boxes. Widen the hawthorn to 3 m across and 2.5 m tall: a multi-stem trunk plus 6 dark-olive #345b35 clumps with sparse cream blossom dots 0.25 m. Keep the oak crown as is; it reads well."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The hanging emblem reads more like a star-shaped ornament than a wheel.",
+        "The pale cart cover reads as a rigid lid rather than cloth stretched over hoops.",
+        "The horse is a 1.45 m body with a short upright neck and a box head with two ear blocks. In the cell it reads as a llama or a big dog, not a draught horse, and it is smaller than the cart.",
+        "Each cart wheel is six thin grey bars radiating from a hub with no rim, so it renders as an asterisk or star. The bible asks for iron-rimmed wheels.",
+        "The 'hanging wheel emblem' on the hitching post is the same spoke-bars with three duplicate gold bars stacked in one place, so it reads as a gold star sign. There are duplicate overlapping parts (3× #d6af55, 2×3× #b38b55).",
+        "The luggage is two spheres, one blue with a stripe, so it reads as a beach ball.",
+        "2 parts reach outside the 12 m room.",
+        "The hitching-rail emblem is a small gold star or sun shape, not a readable cart wheel",
+        "The luggage is a blue sphere with gold banding, which reads as a beach ball",
+        "The arrival horse is a different, smaller and blockier design from the horse on the car wagon, so the same animal looks inconsistent across pieces",
+        "The cream cart cover on pale grey cobbles has weak contrast",
+        "The check reports 2 parts outside the 12 m room",
+        "World rule: Horses: define one shared horse build (1.5 m at the withers, clear neck and head, chestnut body, dark mane and tail) used by the arrival, car and camp pieces so the animal is consistent across the age."
+      ],
+      "fix": "Make the emblem an unmistakable open wooden rim with a hub and four chunky spokes. Rebuild the canopy with a bowed segmented profile, visible supporting hoops and a slightly hanging cloth edge, keeping the horse-cart assembly approximately 5 m long. / Rebuild the horse at real scale: body 1.9×0.85×0.7 at y 1.35; neck 0.45×0.9×0.4 angled forward 0.6 rad; head 0.8×0.35×0.35, long and pointing down-forward; a dark mane strip; a tail; four legs 0.18×1.1 with hooves, plus a collar and shafts to the cart. Replace all spoke-bar wheels with a cylinder rim (rotate 1.57 about x, 1.1 dia × 0.12, #343b40 iron tyre), a wooden inner disc (#8b6240, 0.9 dia) and a hub, so they read round. Make the emblem a single round wheel the same way (0.8 dia, no gold bars) hung from the arm by two short chains, and delete the duplicate parts. Replace the beach-ball spheres with a lashed box chest (#5c4030, iron bands) and a cloth bundle (#c5b58e box with a rope band). Keep everything within |x|, |z| ≤ 5.8. / Replace the emblem with a 0.8 m spoked wheel: a dark iron #343b40 torus-like ring of 8 short boxes, 4 crossing spokes and a hub, hanging from the rail by two short chains. Replace the sphere with 2 boxy chests (0.6×0.4×0.4 m, #5c4030 with iron bands) and a tied cloth sack. Use the same horse build as the car (shared proportions and colours). Darken the cart cover to a warm canvas #c9b48a and add a darker #8b6240 rim band. Pull the 2 overhanging parts back inside |z| ≤ 6."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The continuous-looking deck does not clearly distinguish two fixed approaches from a short central lifting leaf.",
+        "The lifting mechanism and stone pier noses are insufficiently legible.",
+        "Repeated green cylindrical bank-edge pieces resemble manufactured edging.",
+        "It reads as a plain plank footbridge with a gantry. The 'lowered lifting leaf' is just narrower planks in the same wood tones, with no gap, hinge or counterweight, so nothing says drawbridge.",
+        "Deck planks alternate four brown tones in stripes, which looks machine-patterned rather than weathered.",
+        "Black vertical cylinders and posts (the 4.3 m #343b40 cylinder and 3.37 m chains) clutter the centre, and the chains run diagonally to nowhere.",
+        "10 parts reach outside the 14 m room (bank strips and landings at |z| ≈ 6.5–7)."
+      ],
+      "fix": "Define the lowered central leaf with clear hinge gaps, a compact lifting frame and chains visibly terminating on that leaf. Expose squat stone piers with upstream noses, and replace the green edging with broken mossy bank profiles, irregular rocks and reed clusters while retaining the specified crossing dimensions. / Make the lifting leaf clearly separate: give the central 3 m section a darker oak (#6b4a32) with two iron straps across it, a 0.15 m visible gap at each end, and two chunky iron hinge blocks on the town side. Build a proper lifting frame on the town-side pier: two 0.35 m oak uprights 3 m tall, a crossbeam, and a counterweight beam (box 4.5×0.3×0.3 pivoting on the crossbeam, tilted 0.25 rad) with a stone counterweight box at its back end. Run two straight chains (0.08 m, #343b40) from the beam tip down to the leaf's far corners. Remove the stray vertical cylinders. Vary the deck planks randomly between two close tones rather than alternating stripes. Pull the bank strips and landings inside |z| ≤ 6.9."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The four corner markers are identical upright cuboids with contrasting caps, reading as manufactured parcel bollards rather than low fieldstones.",
+        "The four corner stones are neat grey boxes with bright blue caps, so they read as painted modern bollards or survey posts, not fieldstones.",
+        "The tablet is a cream board with four blue dots around an ochre disc. At stream scale it reads as a dartboard or target, and it looks almost identical to the free-lot board.",
+        "The corner markers are 0.55 m stones with thin blue caps; at game scale they are small grey dots",
+        "The front tablet reads, but the four blue dots and gold rosette are small. Overall it does not shout 'the town's ground' the way the TOWN LOT sign does today",
+        "World rule: rules.lotMarkers: the free-lot marker (cream board with an ochre ring) and the community marker (cream tablet with dots around an ochre rosette) are specified so alike that they look identical on stream. Give the free lot a straw-wisp 'for sale' bundle on a post with a dark board and a pale empty ring. Give the community lot a town banner in a single civic colour (e.g. deep green with a pale market-cross motif) and carved corner fieldstones with no painted caps."
+      ],
+      "fix": "Replace each cuboid with a low, differently shaped fieldstone marker, varying tilt and exposed height. Retain the communal tablet and its four-dot arrangement, with a clearly painted central rosette rather than private heraldry. / Make the corner markers irregular upright fieldstones: rotated spheres or boxes 0.5×0.9×0.4 with a 0.1–0.2 rad tilt in varied greys (#8a8a7a, #a4a18e). Replace the blue caps with a carved town mark (a small pale cross, two 0.06 m boxes) on the street-facing side. Swap the cream tablet for a dark oak board on two posts carrying a large town banner below it: a hanging cloth (0.9×1.2, deep green #416c48) with a pale ochre market-cross motif. Add a ring of 4 small baskets or a bundle of tools at the board's foot so it reads as 'build for everyone'. It must look nothing like the free-lot marker. / Make the corner stones chunky 0.9 m tall by 0.7 m standing stones in light #a4a18e, with a 0.25 m painted town-blue #405e8b band. Enlarge the tablet to 2.2×1.4 m, put the rosette at 0.8 m and the dots at 0.4 m. Add a 3 m pole beside it with a 0.6×1.0 m town-blue pennant. Optionally run a line of 8 short 0.4 m stakes along the front edge so the parcel outline reads."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The pavilions and banner rely on largely blank colour fields, leaving the travelling court without a readable heraldic identity.",
+        "The knight's shield and minstrel's lute disappear into small prop clusters.",
+        "World rule: rules.camp / rules.leader: specify that the jester's cap uses soft drooping cloth horns in red/green (no gold or yellow), so it never reads as a crown next to the King. The court badge should use medieval heraldic tinctures (purple/silver), not turquoise.",
+        "World rule: People/head/leader/camp: add a rule that characters have NO ground parts (no mats, discs, plinths or stepping stones). Figures move around the world, and the r2 resident, King and jester all baked in a floor.",
+        "World rule: Horses: define one shared horse build (1.5 m at the withers, clear neck and head, chestnut body, dark mane and tail) used by the arrival, car and camp pieces so the animal is consistent across the age."
+      ],
+      "fix": "Apply one bold unfamiliar court badge to the pavilion faces and banner. Reallocate detail within the 86-part budget to a broad shield silhouette and a clearly projecting lute body and neck; keep both cameos separated from luggage and the brazier."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The upright pointed cap reads too much like another crown rather than a three-point cloth jester cap.",
+        "The foreign badge and travel patches do not establish an unfamiliar court affiliation at scene distance.",
+        "The jester's three-point cap is gold-yellow cones with gold bells on a green band. From the camera it reads as a gold crown, so the caravan leader looks like a second King.",
+        "The 'unfamiliar court badge' is a cyan (#65ced0) disc, a modern turquoise that does not belong in the medieval palette.",
+        "The figure is small in the cell and the fool's baton is a short stick with a blob; the motley split is good.",
+        "The three-point cap is two gold cones and one green cone sticking up and out, with gold bells, so from the 40° camera it reads as a gold crown, a second King",
+        "The figure stands on a baked-in 2.7 m tan disc that travels with it",
+        "Bells (0.08 m), court badge (0.25 m) and baton head are specks; only the yellow/green split reads",
+        "World rule: rules.camp / rules.leader: specify that the jester's cap uses soft drooping cloth horns in red/green (no gold or yellow), so it never reads as a crown next to the King. The court badge should use medieval heraldic tinctures (purple/silver), not turquoise.",
+        "World rule: People/head/leader/camp: add a rule that characters have NO ground parts (no mats, discs, plinths or stepping stones). Figures move around the world, and the r2 resident, King and jester all baked in a floor.",
+        "World rule: Caravan leader: specify that the jester's cap points droop sideways and down and carry no gold on the cap itself, so the silhouette cannot read as a crown next to the King."
+      ],
+      "fix": "Make three distinct cloth points bend outward and droop, each ending in a readable bell. Enlarge and simplify one foreign court badge, add two broad contrasting travel patches, and keep the fool's baton clearly separated from the torso. / Make the cap unmistakably a floppy fool's cap. Use three soft cloth horns (cones 0.18 dia × 0.55, rotated 0.9–1.2 rad outward and drooping down at the tips) in alternating green and red (#3f8a4e, #9e443e), not yellow, each tipped with a small round bell (#c0a073, 0.1 m). Add a jagged dagged collar (6 small triangular points). Make the badge a foreign heraldic roundel in deep purple and silver (#603873 field, #c5c0a8 charge). Lengthen the baton to 0.9 m and top it with a carved little fool's head (0.2 m sphere and tiny cap). / Remove the 2.7 m ground cylinder. Rebuild the cap as three floppy points that droop sideways and down: cones rotated about ±2.2 rad on z so their tips hang below the ears, plus one hanging backward. Colour them green, yellow and green, with no gold on the cap. Bells become 0.15 m gold spheres at the drooping tips. Add a dagged collar of 6 alternating green/yellow triangles (cones) around the neck. Make the baton 0.9 m long with a 0.25 m carved head. Make the court badge a 0.3 m teal disc on the chest."
+    },
+    {
+      "id": "home",
+      "problems": [
+        "The dominant smooth ochre roof reads as a single manufactured sheet rather than constructed thatch or tiles.",
+        "Its roof treatment departs from the bible's slate-or-clay architectural direction."
+      ],
+      "fix": "Replace the smooth roof planes with broad, staggered clay-tile or slate courses, a chunky ridge and slightly uneven eaves. Preserve the successful timber frame, pale infill, footprint and domestic scale."
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "The upper floors read as one repeated straight-sided shaft, with too little stepped massing.",
+        "The smooth grey ground storey resembles a concrete plinth rather than rough medieval masonry.",
+        "Reads as a tall jettied timber house, but the actual tower is a narrow footprint centred on a 13.4 m flat dirt slab. The slab duplicates the lot ground and makes the tower look small and lonely in its cell",
+        "Windows are tiny dark slits with small blue/red shutter flecks, and the guild banner is small",
+        "The bible asks for a stepped timber-and-stone tower, but the silhouette is a straight box with one roof"
+      ],
+      "fix": "Create two or three clearly offset or jettied storey masses within the existing maximum footprint. Build the lower storey from large irregular stone courses, and simplify upper framing into bold structural bays instead of relying on repeated small windows. / Delete the 13.4 m ground slab. Make the tower step outward: a stone ground floor 6×6 m, then 3 jettied timber storeys each 0.5 m wider than the one below, under a steep slate roof with a small lantern turret or a second cross-gable. Add a 1.0×2.0 m guild banner in madder red hanging from the second storey and a lean-to stair or hoist beam. Enlarge the windows to 0.8×1.0 m with bright cream shutters so they read."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "The combination of dotted road texture, repeated oval mud patches and uniformly rectangular plaza stones makes the assembled town look procedurally stamped.",
+        "Character presentation discs and the residents' rectangular ground patch remain visibly pasted onto the shared town surfaces.",
+        "The road-to-frontage transition remains abrupt despite correctly avoiding raised sidewalks and kerbs.",
+        "World rule: surfaces.square: the 'flagstone' pattern renders as a huge regular running-bond grid of identical pale slabs. In the street corner it looks like a modern concrete patio and is the most anachronistic thing on screen. Change it to an irregular mix: rounded cobbles (like the road, slightly warmer #8f8a7a) with scattered large worn flags and trampled earth patches. Or use a 'flagstone' variant with irregular slab sizes, rotations and mud joints.",
+        "World rule: rules.walkingEdge / rules.roads: 'shallow edge gutters' and 'packed-earth frontage' were built as big tan ellipsoid pads. Specify a narrow (0.3–0.4 m) continuous flush gutter at |z| ≈ 3.9, and let the renderer draw the |z| 4–6 frontage as a packed-earth surface (add a 'frontage' surface: dirt #8a7556) instead of leaving it as lot grass.",
+        "World rule: Surfaces: 'pavement' is null, so the walking edge (|z| 4–6) renders as grass, which contradicts the walkingEdge rule (packed-earth frontage) and forces the street piece to fake it with mud pancakes. Add an edge surface such as {pattern:'dirt', base:'#857257', accent:'#9e8a68', accent2:'#6a5a44'}, or say explicitly that the frontage is drawn as continuous packed-earth parts."
+      ],
+      "fix": "Install characters directly on shared world surfaces, removing their sheet-presentation bases. Break up plaza flagstones with varied sizes, worn edges and restrained dirty joints, then connect road, packed-earth frontage and thresholds through irregular flush transitions; keep paving confined to the square rather than creating a sidewalk network."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The marker is tiny on a 16 m lot. In the street corner it is a 1.3 m pale board almost lost in the grass at the far end of the empty field, and it does not read as 'available' from far away.",
+        "The ochre ring (#d6af55) on cream limewash (#e5d8b6) is low contrast; at stream scale it is a pale smudge.",
+        "It looks almost identical to the community-lot tablet (cream board, ochre circle, dots), so a viewer cannot tell a free private lot from a town lot.",
+        "The marker is a speck: a 1.3×0.7 m board on a 2.2 m post at the far corner of a 16 m lot. In the vignette it is a few pixels at the right edge and does not read as 'available'",
+        "The painted ring is pale ochre #d6af55 on a cream #e5d8b6 board, almost the same value, so the only availability signal vanishes",
+        "The wood offcut and stone are tiny brown and grey flecks",
+        "World rule: rules.lotMarkers: the free-lot marker (cream board with an ochre ring) and the community marker (cream tablet with dots around an ochre rosette) are specified so alike that they look identical on stream. Give the free lot a straw-wisp 'for sale' bundle on a post with a dark board and a pale empty ring. Give the community lot a town banner in a single civic colour (e.g. deep green with a pale market-cross motif) and carved corner fieldstones with no painted caps.",
+        "World rule: lotMarkers: the pale-ochre ring on a cream board has almost no contrast. Require a bold dark-madder (#9e443e) ring on cream and a board at least 2.0×1.4 m on a 2.8 m post."
+      ],
+      "fix": "Make the free-lot marker distinct from the civic tablet and readable from far away. Raise the post to 2.6 m (#5c4030, 0.26 m thick). Replace the cream board with a straw-wisp 'for sale' bundle: a fat cone of straw (#d6b25a, 0.7 dia × 0.9 h, point down) tied under a short crossbar (#8b6240, 1.0×0.12×0.12) near the top. Below it, hang a small dark oak board (#5c4030, 0.9×0.6×0.08) with a large pale empty ring (#e5d8b6 outer 0.6 dia and #5c4030 inner 0.36 dia) so the ring pops against dark wood. Add 4 pegged stakes (0.08×0.5 m) marking the front corners at x ±5.5, z 5.5 and a small pile of cut hazel rods (#8b6240) beside the post. / Scale the marker up. Use a 2.8 m oak post, 0.3 m thick, and a 2.0×1.4 m board raised to 1.8–2.4 m, tilted slightly for the hand-made feel. Paint one bold ring 1.1 m across in dark madder #9e443e, 0.18 m thick, on the cream board so it contrasts strongly. Add a second short stake with a hanging strip of red cloth (0.3×0.8 m) that reads as a flag. Put the offcut pile (3 planks, 1.2 m) and a 0.5 m stone at the post foot. Optionally add 4 short corner pegs with cream tops so the parcel edge reads."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "A slim 0.22 m post 3.4 m tall with a black box lantern reads as a generic park or coach lamp post, close to the Victorian silhouette the bible forbids. It is not a stout oak post.",
+        "The lantern has only two horn panels (front and one side). The other faces are open, and from some angles it looks like a black cage with a ball inside.",
+        "The 'braced iron arm' is hard to see; the cap is two flat black slabs, not a pitched cap.",
+        "The lantern is a 0.5 m box hidden behind opaque amber/cream panels and a dark iron cap, so the glowing flame barely shows. In the vignette the lanterns read as dark dots on sticks, not as lights",
+        "The thin 0.07 m corner posts and the 0.09 m bracket fall below a readable thickness",
+        "World rule: rules.lighting: a freestanding post lantern is borderline anachronistic and drifts toward a lamp-post silhouette. Specify a gallows-bracket: a stout 0.35 m oak post with a diagonal brace and a horizontal arm from which a four-sided horn lantern hangs on a chain. The post itself should stay under 3 m."
+      ],
+      "fix": "Thicken the post to 0.36 m (#5c4030) and lower it to 2.8 m on a rough fieldstone footing (irregular sphere 0.7×0.4). Add a diagonal timber brace (0.14 m, rotated 0.7 rad) from the post up to a stout horizontal oak arm (1.0 m) so the shape reads as a gallows-bracket. Hang the lantern on a short iron chain (two 0.06 m links). Close all four sides of the lantern with warm amber horn panels (#e0b060) and frame the corners with thin dark iron edges. Cap it with a proper pyramid (cone, 4 sides look, #343b40, 0.7 dia × 0.4) and give it a ring handle. Enlarge the glowing flame to 0.35 m so the light reads. / Enlarge the lantern to 0.7 m wide by 0.9 m tall. Leave the front and street-facing faces open (corner posts only, 0.1 m) so the glow flame (make it 0.4×0.5 m, glow:true, #ffcf6a) shows from the 40° camera. Make the horn panels a light warm #f2d38a on two sides only. Thicken the bracket to 0.14 m and add a curved brace. Keep the pitched cap, but lighten it to iron grey #4a5157 so it separates from the dark post."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "A black iron crossbar at 2.96 m carries red and blue cloth banners, so from the camera the top half reads as a flag rack or gibbet. The cross finial above is a chunky 'T' that does not read as a cross at 40°.",
+        "The monument is about 4.2 m tall, against the bible's 'about 2.5 m'.",
+        "The large pale sphere at the front step (0.58 m, #b6aa83) is an unexplained lump. The notice tablet is small and hidden behind it.",
+        "As a landmark it is weak: a thin 0.4 m shaft with a tiny cross on a low plinth. From the vignette camera it reads as a grey post in the middle of the square, much less presence than the fountain it replaces",
+        "The red and blue pennants are about 0.3 m, and the baskets and notice tablet are specks",
+        "The grey steps sit on grey flagstone with almost no contrast, so the stepped base disappears",
+        "World rule: rules.centrepiece: say explicitly 'no banners or crossbars on the shaft' and 'stone cross finial clearly cruciform at 2.3–2.6 m'. The round-2 design added flag bars that turned it into a gibbet silhouette and overshot the height to 4.2 m.",
+        "World rule: Centrepiece: the rule says the monument is 'about 2.5 m high', which is too small to be the square's landmark at stream scale. Change it to 4–4.5 m with a 0.7 m octagonal shaft, contrasting step treads and risers, and large heraldic banners."
+      ],
+      "fix": "Delete the iron crossbar and both banners. Shorten the octagonal shaft to 1.6 m so the top sits at about 2.6 m. Put a clear stone cross finial on top: an upright 0.22×0.75×0.22 and an arm 0.6×0.2×0.22 at 2/3 height, slightly lighter stone (#b0a98f) so it reads against the sky, plus a small square capital block under it. Replace the pale lump with a proper notice board on a short post: a dark oak board 0.7×0.5 with 2–3 pinned cream parchment squares (#e5d8b6), placed on the front step facing +z. Keep the baskets. / Thicken the shaft to a 0.7 m octagonal column (use an 8-sided cylinder) 3.2 m tall, with a 1.2 m wide cross-head and a carved knop, total about 4.5 m. Build three clear steps (4.5, 3.6 and 2.6 m) with dark #6e6a5c risers and light #c5c0a8 treads so each step reads. Hang two 0.8×1.2 m heraldic banners (deep blue #405e8b and madder #9e443e) from a 1.6 m iron crossbar on the shaft. Group 6 baskets, 0.45 m each, with bright goods (yellow loaves, red apples) on the bottom step. Make the notice tablet 0.8×0.6 m in cream."
+    },
+    {
+      "id": "bench",
+      "problems": [
+        "The 'trestles' are two short upright blocks on flat feet, so it reads as a plank on bricks and could be a modern slab bench. There are no splayed trestle legs.",
+        "The 'slightly uneven brace' is a perfectly centred straight stretcher. At stream scale the bench is a small brown bar on the square with no medieval character."
+      ],
+      "fix": "Replace each upright block with a splayed A-frame trestle: two legs (0.12×0.5×0.12, #5c4030), each rotated ±0.35 rad about x so they splay front to back, joined by a short cross-piece under the seat. Tilt the stretcher by 0.06 rad and offset it 0.05 m. Make the seat plank slightly irregular: two planks 0.3 m wide with one 0.03 m higher, and visible pale pegs at each end. Put a small clay cup or bundle on one end so it reads as lived-in."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "The stall has only two tall uprights at the back (z −0.57). The awning's side rails run forward to z +0.79 with nothing under them, so in the cell the striped cloth looks like it floats over the counter.",
+        "The blue wool roll (#405e8b cylinder, standing upright) reads as a blue tin or modern canister on the counter."
+      ],
+      "fix": "Add two front uprights (0.16×2.0×0.16, #5c4030) at x ±1.13, z 0.75, angled 0.1 rad outward, so the awning is held at all four corners and dips 0.2 m toward the front. Add a scalloped front valance (5 small alternating red and cream boxes 0.5×0.2×0.04 hanging from the front edge). Lay the wool rolls on their side (rotate 1.57 rad about z) in undyed cream and a muted woad blue (#6a7fa0), stacked like bolts, and add a third basket of apples on the ground at the front."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The two figures sit on a baked-in 2.4×2.4 m brown mat with three grey stepping-stone ovals. Residents walk around, so in the vignette the pair drags a brown rug across the cobbles",
+        "Otherwise they read well: the green-tunic carpenter with a mallet and the red-dress breadmaker with a coif, apron and loaf",
+        "World rule: People/head/leader/camp: add a rule that characters have NO ground parts (no mats, discs, plinths or stepping stones). Figures move around the world, and the r2 resident, King and jester all baked in a floor."
+      ],
+      "fix": "Delete the 2.4 m ground box and the three grey stone spheres; figures must have no ground parts. Make the loaf slightly bigger (0.35 m) and hold it against the apron. Keep everything else."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The King stands on a baked-in 2.2 m grey disc (#a4a18e) that travels with him. In the vignette he carries a pale plate around the square",
+        "Otherwise strong: a big gold crown, a red cloak with fur edge and a sceptre read instantly",
+        "World rule: People/head/leader/camp: add a rule that characters have NO ground parts (no mats, discs, plinths or stepping stones). Figures move around the world, and the r2 resident, King and jester all baked in a floor."
+      ],
+      "fix": "Remove the 2.2 m ground cylinder. Optional: widen the cloak's back hem slightly so the cape silhouette shows from behind."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "The covered wagon reads well: blue canvas hood, spoked wheels, barrel and sack",
+        "The horse is a muddled block. Its head and neck barely separate from the body, it is only about 1.3 m at the withers (short next to a 1.8 m person), and its brown is too close to the wagon timber, so it merges with the shafts",
+        "World rule: Horses: define one shared horse build (1.5 m at the withers, clear neck and head, chestnut body, dark mane and tail) used by the arrival, car and camp pieces so the animal is consistent across the age."
+      ],
+      "fix": "Raise the horse to about 1.5 m at the withers with longer legs (1.0 m). Give it a clear forward-angled neck (0.4 m box tilted about 0.6 rad) and a 0.6 m long head with a lighter muzzle. Add a dark #34302c mane strip and a hanging tail. Colour the horse chestnut #7a4a2a, distinct from the #8b6240 shafts. Use this same horse in the arrival and camp pieces."
+    }
+  ]
+}

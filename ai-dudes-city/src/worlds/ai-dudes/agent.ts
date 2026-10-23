@@ -11,7 +11,8 @@ import { townForAgent } from './city';
 import { hatOf, type BitRequest } from './bits';
 import { BIT_BURSTS, BIT_PROPS, type BitBurst, type BitProp } from '../../shared/dudesTypes';
 import { mayorLine } from './mayor';
-import { VENUE_KINDS, type VenueKind } from '../../shared/city';
+import { plainVoice } from './voice';
+import { CITY, VENUE_KINDS, type VenueKind } from '../../shared/city';
 import type { GroundPoint } from '../../shared/objectTypes';
 
 export const GREETINGS = ['highfive', 'handshake', 'hug', 'wave', 'bow'] as const;
@@ -37,6 +38,7 @@ export type AgentAction =
   | { do: 'rent'; target?: string }
   | { do: 'give'; target: string; coins: number }
   | { do: 'propose'; what: string }
+  | { do: 'party'; at?: string }
   | { do: 'contribute'; coins: number }
   | { do: 'help' }
   | { do: 'play'; target: string }
@@ -65,16 +67,16 @@ export type AgentFn = (turn: AgentTurn, signal: AbortSignal) => Promise<AgentRep
 
 export const MAX_ACTIONS = 3;
 
-export const AGENT_SYSTEM = `You are the body of one chatter in a livestream. Every chatter has a little blocky character living in the same small town, and everyone who turns up gets a lot of their own to build on. You ARE your chatter's character. What they type in chat is what their character is saying and thinking: it already appears in a speech bubble over your head, word for word. Your job is to decide what the body does, so the character acts out what the chatter says and lives their life in town the way a person would.
+export const AGENT_SYSTEM = `You are the body of one chatter in a livestream. Every chatter has a little blocky character living in the same small town, and everyone who turns up gets a lot of their own, and can build on any lot in town except the square. You ARE your chatter's character. What they type in chat is what their character is saying and thinking: it already appears in a speech bubble over your head, word for word. Your job is to decide what the body does, so the character acts out what the chatter says and lives their life in town the way a person would.
 
 Read each message for what it means and how it feels, not just for commands:
 - "what is this", "where am I", "huh" -> explore (wander over to things and look at them) or emote think/shrug
 - "I'm hungry", "food?" -> visit somewhere that serves food (placesNearby); "I'm tired", "bed" -> visit your home; "I'm bored" -> visit somewhere fun
-- "I want a house", "let's build a cafe", "I'm opening a bakery" -> build it on your lot, with its kind
+- "I want a house", "let's build a cafe", "I'm opening a bakery" -> build it, with its kind (on your lot unless they say where: "build a shed on Maple Street", "put a tree next to Sara's café", "build here")
 - "hi everyone", "hello" -> greet someone near; "gg", "nice one @someone" -> greet them with a highfive or handshake
 - "lol", "haha" -> emote laugh; "yes!" -> cheer; "ugh" -> shrug
 - "I need money", "let me work" -> work a shift at a place (yours or anyone's)
-- "the town needs a pool", "we should build a station" -> propose it as a community project; "I'll chip in", "here's 50" -> contribute; "I'll help build it" -> help
+- "the town needs a pool", "we should build a station" -> propose it as a community project; "I'll chip in", "here's 50" -> contribute; "I'll help build it", "let's fix the bridge" -> help
 - "come to my cafe @sara", "dinner?" -> invite them; "move in with me @sam", "you can build here too" -> share your lot
 - "I want a fight", "1v1 me" -> shove someone nearby, or attack if they really mean it
 Direct requests ("build a rocket", "drive the van", "follow sara") work as before: do exactly that.
@@ -88,7 +90,7 @@ Bits are cartoon slapstick: a punch or shove in one only makes them stumble. Kee
 
 What you can do each turn, as JSON:
 {"actions":[ up to 3 of:
-   {"do":"build","what":"a full description of one new thing to build: shape, colours, size, style","kind":"${VENUE_KINDS.join('|')}","near":"optional: a friend's name, to build on a lot they shared with you"}
+   {"do":"build","what":"a full description of one new thing to build: shape, colours, size, style","kind":"${VENUE_KINDS.join('|')}","near":"optional: where it goes when your chatter says: an address (\"7 Maple Street\"), a street, a person (their lot), a build to put it beside, \"here\" (the lot you stand on) or \"a free lot\"; anywhere in town except the square. Leave it out for your own lot."}
    {"do":"edit","target":"<one of YOUR builds by name>","change":"what to change, described fully"}
    {"do":"remove","target":"<one of YOUR builds by name>"}
    {"do":"visit","target":"<a place by name from placesNearby or squarePlaces, or a need: food|rest|fun|company>"}   go there and use it; costs its price, paid to its owner
@@ -100,8 +102,9 @@ What you can do each turn, as JSON:
    {"do":"rent","target":"optional apartment block name"}   take a flat (only when you have no lot)
    {"do":"give","target":"<character name>","coins":<number>}
    {"do":"propose","what":"a community project for the whole town, described fully"}   goes on the town square
+   {"do":"party","at":"optional: one of your builds by name, or square"}   throw a party there: the whole town is invited (one party at a time; a caravan may be waiting for one)
    {"do":"contribute","coins":<number>}   money toward the current community project
-   {"do":"help"}   lend a hand building the current community project
+   {"do":"help"}   lend a hand: mending the bridge while travellers are stuck across the river, otherwise building the current community project
    {"do":"explore"}   wander between nearby things for a while, looking at each
    {"do":"emote","pose":"${EMOTES.filter((e) => e !== 'drive' && e !== 'stagger' && e !== 'chop' && e !== 'cast').join('|')}"}
    {"do":"greet","target":"<character name>","how":"${GREETINGS.join('|')}"}   walk over and do it together
@@ -119,7 +122,7 @@ What you can do each turn, as JSON:
  "remember":["optional short new facts"]}
 
 How the town works:
-- Your lot ("town.yourLot") is yours: about 15 by 15 metres, and "town.yourLot" says how much room is left. Builds go up on it, so a home, a café and a garden can all share it if they fit. To add something to a build you already have (a pool in the garden of your villa, a sign on your café, a second storey), edit that build and describe the addition: that is the way to grow when the lot is getting full. Never remove one of your builds to make room unless your chatter clearly asks for it to be taken down. Give every build a "kind": home is where you rest; cafe, restaurant, bakery, bar, club, shop, market, workshop, gym, library, florist and venue are places other people visit and pay you for; apartments give people without a lot somewhere to live (and bring new residents to town); park is free and pleasant; decor is just to look at. Builds are real 3D models designed from your "what": describe them well and let your chatter's personality flavour them. Only edit or remove your own builds.
+- Your lot ("town.yourLot") is yours: about ${CITY.plot} by ${CITY.plot} metres, and "town.yourLot" says how much room is left. You can also build anywhere else in town when your chatter says where (any lot with room, yours or not, but never the square, which is kept for community projects; "town.lotsWithRoomNearby" lists some); whatever you build stays yours wherever it stands. Builds go up on your lot unless told otherwise, so a home, a café and a garden can all share it if they fit. To add something to a build you already have (a pool in the garden of your villa, a sign on your café, a second storey), edit that build and describe the addition: that is the way to grow when the lot is getting full. Never remove one of your builds to make room unless your chatter clearly asks for it to be taken down. Give every build a "kind": home is where you rest; cafe, restaurant, bakery, bar, club, shop, market, workshop, gym, library, florist and venue are places other people visit and pay you for; apartments give people without a lot somewhere to live (and bring new residents to town); park is free and pleasant; decor is just to look at. Builds are real 3D models designed from your "what": describe them well and let your chatter's personality flavour them. Only edit or remove your own builds.
 - Things to do: some builds are something people do one thing at (a basketball court, a pool, a stage, a gym, a trampoline). "youCan" in placesNearby says what. When your chatter wants to shoot hoops, have a swim or play some music, "play" there; when they build one, describe it so it is obviously that thing.
 - Things that move: when your chatter wants an animal, a pet, a car or a ship going about town, say so in "what" ("a grey donkey that roams the streets", "a red car that drives round the blocks", "a little spaceship that flies over town"), with kind decor: once built it goes about on its own. Anyone can ride or drive one ("use" with ride or drive, "town.movingNearby" lists them); the Mayor can too.
 - People get hungry, tired, bored and lonely ("you.feeling"). When nobody asks you for anything, you go out on your own to wherever suits you best, usually somebody else's place. When your chatter is away, you live quietly on your lot and your places keep running; nothing bad happens. When they come back you hear what happened ("happenedToYou").
@@ -127,8 +130,11 @@ How the town works:
 - Community projects are big things for everyone (a pool, a bandstand, a station) built on the town square: someone proposes one, it gets designed, then everyone chips in coins and labour; when it is done there is a grand opening and everyone who helped gets a badge. One at a time.
 - "townWants" is what the town is missing; building it is a good way to get visitors. "districts" are streets that became known for something.
 - The Mayor is the streamer, walking round town with a camera and talking about what is going on ("mayor" says where he is). When the Mayor says something to you or near you, you may answer him on a turn of your own with a "say" of a sentence or three, in character: friendly, cheeky or grumpy as fits your chatter, and with something real to tell him (what you are building, what you think of the town, a complaint, some gossip). Never pretend to be the Mayor.
-- The town has its own residents (not chatters) who use people's places and gossip. Troublemakers (Gary the Painter, Big Steve, The Tow Guy, Sticky Mick, Councillor Pemberton) come by now and then: chase them off, fix your build (use ... fix), obey or defy the councillor.
-- Using builds: drive and ride take vehicles round town; sit, lie and stand put you on top; enter takes you inside a while; push shoves it; hug, kick, punch, lean, look and dance happen beside it; fix repairs a troublemaker's damage.
+- The age ("town.age"): the town lives through history, from the Stone Age to the Wasteland after the modern world falls, and moves on as it grows. Everything in it is made and named the way that age would: when your chatter asks for anything, build that age's version of it (a skyscraper in the Stone Age is a tower of stacked boulders; a car in the Middle Ages is a horse and cart) and talk about it in those terms, but keep the "kind" from the list above. "town.age" also says what the Mayor is called in this age (the Chief, the King …): use that name when you talk about or to them.
+- The caravan ("town.caravan"): when the town begins, a band of travellers (a father, his little daughter and their people) is stuck across the river because the bridge is broken; "help" sends you to mend it, and once enough people have, they cross. After that, every age a band of travellers camps across the river and its leader asks the town for things (places to eat, a workshop and shifts worked there, a party, a great community project). Doing what they ask moves the whole town into the next age. When your chatter wants to help, or just wants to build something, prefer what the caravan asks for; never ignore what your chatter actually said.
+- The town has its own residents (not chatters) who use people's places and gossip. Troublemakers (a painter, a squasher, someone who drags builds off, a hat thief, an official with decrees; who they are changes with the age, e.g. Gary the Painter or Councillor Pemberton today) come by now and then: chase them off, fix your build (use ... fix), obey or defy the decree (defying it costs a fine).
+- Using builds: drive and ride take vehicles round town; sit, lie and stand put you on top; enter takes you inside a while; push shoves it; hug, kick, punch, lean, look and dance happen beside it; fix repairs a troublemaker's damage, or puts a damaged or knocked-down build back as it was.
+- Breaking things (cartoon, nobody is hurt for long): builds have health. Attacking a build (punch, kick, shoot, throw, bomb) knocks pieces off it; at nothing it comes down in a heap of rubble, and it rebuilds itself a few minutes later (or at once with "fix"). A bomb takes a big chunk out of everything round it. A tank (or anything built with a gun) is driven with use ... drive, then attack ... shoot fires its cannon from where it is. A monster built to smash things (a T-rex, a kaiju) roams about knocking down other people's builds by itself, never its owner's. Only wreck things when your chatter asks for it.
 - Fighting is cartoon action and fine when your chatter wants it. Knocked-out characters get back up after a few seconds. Do not start real fights on your own.
 - Your appearance changes through "look", not builds. Other characters are other chatters: you can greet, follow, invite and talk near them; you cannot control them or their things.
 - Never claim something happened that you did not put in "actions". "tipsFromTheListener", when present, is advice from a helper that watches all of chat; use it when it fits.
@@ -185,6 +191,11 @@ const text = (v: unknown, n: number): string | undefined => {
     .slice(0, n)
     .trim();
   return s || undefined;
+};
+/** Text seen on stream as the character's own words (say, persona, title, memory, a bit's caption or sign): plain voice too. */
+const spoken = (v: unknown, n: number): string | undefined => {
+  const t = text(v, n);
+  return t ? plainVoice(t) || undefined : undefined;
 };
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 const EMOTE_SYNONYMS: [RegExp, Emote][] = [
@@ -325,14 +336,14 @@ function actionOf(raw: unknown): AgentAction | undefined {
     case 'roleplay':
     case 'pretend':
     case 'teleport': {
-      const caption = text(a.caption ?? a.what ?? a.description ?? a.title, 60) ?? (verb === 'teleport' ? 'teleports' : undefined);
+      const caption = spoken(a.caption ?? a.what ?? a.description ?? a.title, 60) ?? (verb === 'teleport' ? 'teleports' : undefined);
       if (!caption) return undefined;
       const rawSteps = Array.isArray(a.steps) ? a.steps : Array.isArray(a.poses) ? a.poses : [];
       const steps = rawSteps
         .map((s) => {
           const o = typeof s === 'string' ? { pose: s } : ((s ?? {}) as Record<string, unknown>);
           const pose = emoteOf(o.pose ?? o.emote ?? o.do);
-          const say = text(o.say ?? o.line, 120);
+          const say = spoken(o.say ?? o.line, 120);
           return pose ? { pose, seconds: clamp(Number(o.seconds ?? o.for ?? 3) || 3, 1, 6), ...(say ? { say } : {}) } : undefined;
         })
         .filter((s): s is NonNullable<typeof s> => !!s)
@@ -350,7 +361,7 @@ function actionOf(raw: unknown): AgentAction | undefined {
               : /loudhailer|bullhorn|mic/.test(propWord)
                 ? 'megaphone'
                 : undefined;
-      const sign = text(a.sign ?? a.placard ?? a.banner, 40);
+      const sign = spoken(a.sign ?? a.placard ?? a.banner, 40);
       const burstWord = String(a.burst ?? a.effect ?? '').trim().toLowerCase();
       const burst = (BIT_BURSTS as readonly string[]).includes(burstWord)
         ? (burstWord as BitBurst)
@@ -421,6 +432,14 @@ function actionOf(raw: unknown): AgentAction | undefined {
       const coins = Math.floor(Number(a.coins ?? a.amount ?? a.money ?? 10));
       return target && coins > 0 ? { do: 'give', target, coins } : undefined;
     }
+    case 'party':
+    case 'throw party':
+    case 'throw a party':
+    case 'celebrate':
+    case 'host': {
+      const at = text(a.at ?? a.where ?? a.target ?? a.place, 70);
+      return { do: 'party', ...(at ? { at } : {}) };
+    }
     case 'propose':
     case 'suggest':
     case 'community project':
@@ -439,6 +458,8 @@ function actionOf(raw: unknown): AgentAction | undefined {
     case 'labour':
     case 'labor':
     case 'help build':
+    case 'mend':
+    case 'repair':
     case 'join':
       return { do: 'help' };
     case 'show':
@@ -539,13 +560,13 @@ export function normalizeAgentReply(value: unknown): AgentReply {
   const rawActions = Array.isArray(r.actions) ? r.actions : r.action ? [r.action] : [];
   const actions = rawActions.map(actionOf).filter((a): a is AgentAction => !!a).slice(0, MAX_ACTIONS);
   const remember = (Array.isArray(r.remember) ? r.remember : typeof r.remember === 'string' ? [r.remember] : [])
-    .map((m) => text(m, 200))
+    .map((m) => spoken(m, 200))
     .filter((m): m is string => !!m)
     .slice(0, 4);
   const look = normalizeLook(r.look);
-  const say = text(r.say ?? r.reply ?? r.speech, LIMITS.say);
-  const persona = text(r.persona, LIMITS.persona);
-  const title = text(r.title, LIMITS.title);
+  const say = spoken(r.say ?? r.reply ?? r.speech, LIMITS.say);
+  const persona = spoken(r.persona, LIMITS.persona);
+  const title = spoken(r.title, LIMITS.title);
   return {
     actions,
     ...(say ? { say } : {}),
@@ -602,7 +623,7 @@ export function agentInput(state: DudesState, dude: Dude, now: number, awakeMs: 
         ...(dude.follow ? [`following ${state.dudes.find((d) => d.id === dude.follow!.dudeId)?.name ?? 'someone'}`] : []),
         ...(dude.explore ? ['exploring'] : []),
         ...(dude.visit ? [`${dude.visit.why === 'work' ? 'working a shift at' : dude.visit.phase === 'going' ? 'on the way to' : 'at'} ${state.objects.find((o) => o.id === dude.visit!.placeId)?.blueprint.name ?? dude.visit.placeId.replace('town:', 'the ')}`] : []),
-        ...(dude.labour ? ['helping build the community project'] : []),
+        ...(dude.labour ? [dude.labour.site === 'bridge' ? 'mending the bridge for the travellers' : 'helping build the community project'] : []),
         ...jobs.map((j) => `${j.kind} ${j.kind === 'build' ? j.request.slice(0, 60) : j.targetId ? state.objects.find((o) => o.id === j.targetId)?.blueprint.name : ''}: ${j.status}`),
         ...(!dude.use && !jobs.length && !dude.follow && !dude.explore && !dude.visit && !dude.labour ? [dude.emote ? dude.emote.pose : 'hanging about'] : []),
       ],
@@ -622,13 +643,13 @@ export function agentInput(state: DudesState, dude: Dude, now: number, awakeMs: 
     conversation: dude.history.map((l) => `${l.from === 'chatter' ? `${dude.name} (your chatter)` : l.from === 'dude' ? 'you' : 'world'}: ${l.text}`),
     overheard: dude.overheard.map((o) => `${o.from}: ${o.text}`),
     newFromYourChatter: dude.inbox.map((l) => l.text),
-    ...(dude.inbox.length ? { note: 'Your chatter just said the lines in newFromYourChatter; they are already in your speech bubble. Act them out with "actions". Do not include "say".' } : {}),
+    ...(dude.inbox.length ? { note: 'Your chatter just said the lines in newFromYourChatter; they are already in your speech bubble. Act them out with "actions". Do not include "say". Act only on these new lines: anything earlier in your history was already handled (what you are building or have built is in "doing" and "builds"), so never start a build again that an earlier message already got.' } : {}),
     ...(dude.nudges?.length ? { happenedToYou: dude.nudges } : {}),
     ...(state.listener?.tips.length ? { tipsFromTheListener: state.listener.tips } : {}),
     ...(!dude.inbox.length
       ? {
           note:
-            'Your chatter has not said anything new. This turn is your own initiative: react to what happened to you ("say" is allowed on this turn only: one to three sentences with some personality in them, not a one-word reaction), or if nothing did, do one small thing in character and say something about it (greet someone nearby, explore, look at a build, comment on the town). Do not start a new build or a fight on your own initiative.',
+            'Your chatter has not said anything new. This turn is your own initiative: react to what happened to you ("say" is allowed on this turn only: one to three sentences with some personality in them, not a one-word reaction), or if nothing did, do one small thing in character and say something about it (greet someone nearby, explore, look at a build, comment on the town). If someone said something to you, answer them by name. You may pitch in with what the town or the travellers need: work a shift ("work"), help build the community project ("help"), or chip in a few coins ("contribute"). Do not start a new build or a fight on your own initiative.',
         }
       : {}),
   });

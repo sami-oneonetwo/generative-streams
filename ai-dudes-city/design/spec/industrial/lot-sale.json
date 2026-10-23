@@ -1,0 +1,273 @@
+{
+  "name": "Unclaimed Lot with Broad Enamel Claim Ring",
+  "description": "A large cream enamel plate on a single bolted iron post displays a bold empty ochre ring above an open parcel, with a small grouped heap of brick, ballast and weeds.",
+  "notes": "Standardised ironwork, cream enamel and fired-brick remnants establish the Industrial Age, while the enlarged ring faces diagonally toward the street camera for clear wordless availability.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.42,
+        0.1,
+        4.35
+      ],
+      "size": [
+        0.7,
+        0.2,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.42,
+        1.3,
+        4.35
+      ],
+      "size": [
+        0.26,
+        2.4,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2,
+        4.5
+      ],
+      "size": [
+        2.16,
+        1.66,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.553,
+        2,
+        4.597
+      ],
+      "size": [
+        2,
+        1.5,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#f4e9cf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.586,
+        2,
+        4.658
+      ],
+      "size": [
+        1.3,
+        0.06,
+        1.3
+      ],
+      "rotation": [
+        1.570796,
+        0.5,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.615,
+        2,
+        4.711
+      ],
+      "size": [
+        0.94,
+        0.06,
+        0.94
+      ],
+      "rotation": [
+        1.570796,
+        0.5,
+        0
+      ],
+      "color": "#f4e9cf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.511,
+        0.46,
+        4.517
+      ],
+      "size": [
+        0.14,
+        0.12,
+        0.14
+      ],
+      "rotation": [
+        1.570796,
+        0.5,
+        0
+      ],
+      "color": "#a7a397"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.511,
+        0.86,
+        4.517
+      ],
+      "size": [
+        0.14,
+        0.12,
+        0.14
+      ],
+      "rotation": [
+        1.570796,
+        0.5,
+        0
+      ],
+      "color": "#a7a397"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.35,
+        0.17,
+        4.35
+      ],
+      "size": [
+        1.4,
+        0.34,
+        1.05
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "color": "#b5a993"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.65,
+        0.16,
+        4.96
+      ],
+      "size": [
+        0.64,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.02,
+        0.15,
+        4.86
+      ],
+      "size": [
+        0.52,
+        0.3,
+        0.4
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#c27f59"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.38,
+        0.43,
+        4.42
+      ],
+      "size": [
+        0.6,
+        0.26,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -5.02,
+        0.3,
+        4.12
+      ],
+      "size": [
+        0.6,
+        0.6,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#596f52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -3.78,
+        0.24,
+        4.08
+      ],
+      "size": [
+        0.5,
+        0.48,
+        0.58
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#7d8c63"
+    }
+  ]
+}

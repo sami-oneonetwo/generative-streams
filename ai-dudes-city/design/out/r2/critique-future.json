@@ -1,0 +1,209 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The modular habitats, shuttle and civic characters establish a convincing optimistic Future, but the assembled corner still mixes them with contemporary-looking street furniture and weak ecological silhouettes. Rework the lot signage, market pod, overcomplicated beacon and barely readable crossing deck, then unify the street surfaces and check every revision at stream distance.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the sparse, low ecological clusters and discreet sensor caps. Keep meadow texture subordinate to the silhouettes of flowers, stones and seed pods in the assembled scene."
+    },
+    {
+      "id": "street",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The assembled street abruptly changes from blue-grey ceramic panels to a nearly white arrival slab, breaking the road's material and guidance language.",
+        "Continuous dark edge strips read more strongly than the planted drainage seam; inset maintenance details are difficult to distinguish."
+      ],
+      "fix": "Continue the same ceramic panel scale, base colour and cyan guidance alignment through the arrival section. Separate matte drainage slots from narrow planted seams, add a few broad flush repair panels, and keep accessible pavement connections visibly uninterrupted."
+    },
+    {
+      "id": "lot-sale",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The broad amber base competes with the available ring and reads as another sign rather than a small ceramic projector.",
+        "The parcel reads as almost uniformly bare gravel; the specified sparse clover is not legible."
+      ],
+      "fix": "Replace the amber plate with a compact matte ivory projector near the front corner, retaining the large empty amber ring below head height as the only luminous element. Add a few readable clover patches and reclaimed aggregate chips without occupying the build area."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The owner marker reads as a conventional dark nameboard attached to a red post.",
+        "The boundary is a simple rail fence; its woven biocomposite construction is not apparent."
+      ],
+      "fix": "Use rounded ceramic posts and two or three broad interwoven strands per boundary bay, keeping the rails approximately 0.75 m high and the front open. Put a #d9534f insert into an ivory corner post and float a compact household emblem with the exact name Ivy immediately beside it, without an opaque signboard backing."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both crowns rely on repeated flattened green blobs, giving them a manufactured topiary appearance.",
+        "The tall tree reads as a nearly straight bare pole, while the flowering tree's long lateral branch is not a strong silhouette."
+      ],
+      "fix": "Redistribute the 32 parts into a visibly tilted, branching shade tree with an uneven broad crown and a smaller tree with one dominant lateral flowering branch. Vary foliage mass sizes, heights and gaps; retain natural, unlit bark and leaves."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The oak reads as separate round balls on a trunk rather than a connected irregular canopy.",
+        "The willow resembles two caps on parallel hanging rods, not a young branching shrub.",
+        "The pine's stacked cone construction remains conspicuous."
+      ],
+      "fix": "Reallocate the 40 parts to connected asymmetric foliage masses and exposed branching. Sweep the pine crown predominantly downwind, broaden the oak unevenly, and build the willow from a low branching base with drooping leafy sprays of different lengths."
+    },
+    {
+      "id": "street-light",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The thin straight pole and rectangular cyan lamp head read as a present-day LED street light with a palette change.",
+        "The specified tapered ceramic pillar and recessed broad emitter are not sufficiently distinct."
+      ],
+      "fix": "Reshape the 12 parts into a clearly tapered ivory pillar with a modest directional cap and a broad recessed cyan-white emitting face. Give the physical ceramic body a stronger silhouette while keeping all emission confined to the recess."
+    },
+    {
+      "id": "centrepiece",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The nearly complete amber orbit dominates the small seed and repeats the free-lot ring's visual language.",
+        "Stacked angular supports and upright blades make the beacon read as a dense armillary sculpture rather than a low, open civic hologram."
+      ],
+      "fix": "Rebuild the 46-part composition around a low matte dais approximately 4.5 m across and four clearly separated ceramic emitter petals. Make one faceted, translucent seed the focal point, replace the amber hoop with short cyan orbit arcs, and keep the complete image below about 2.5 m with clear views through it."
+    },
+    {
+      "id": "bench",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The slatted park-bench silhouette remains contemporary.",
+        "The almost seat-wide oval docking structure is too prominent to read as a discreet ground puck."
+      ],
+      "fix": "Use the 10 parts for one continuous warm biocomposite sitting shell with an integrated low back and two-person width. Reduce the dock to a small central puck, show a shallow stable levitation gap, and keep the sitting surface approximately 0.45 m above ground with only a narrow status strip illuminated."
+    },
+    {
+      "id": "market",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The yellow canopy and exposed produce counter read as an ordinary market stall placed on a hover base.",
+        "A rounded vending enclosure, clear product windows and a distinct fold-out serving tray are not legible.",
+        "The stock reads mainly as coloured produce blocks rather than three different future retail categories."
+      ],
+      "fix": "Rebuild within the 2.6 × 1.6 m footprint as a rounded ceramic vending shell with dark-framed product windows and a projecting physical serving tray. Use the 34 parts to distinguish fruit, cultured-food packs and refill capsules, plus small stabiliser nodes; restrict light to the interface and recessed lift emitters."
+    },
+    {
+      "id": "arrival",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the rounded shuttle, dark glazing, readable passenger-door seam and thin planted shelter. Preserve pavement-level boarding and keep the four lift recesses distinct from the matte body while applying the street's continuous paving treatment."
+    },
+    {
+      "id": "river",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The traversable deck is almost indistinguishable from the water, so the crossing reads as two rail tracks over the river.",
+        "The shallow bank-end pieces do not clearly communicate substantial physical anchors and landings."
+      ],
+      "fix": "Give the continuous 4 m-wide translucent deck a pale contrasting tint and a visible shallow edge approximately 1 m above the water. Connect it to unmistakable matte ceramic anchors at z ±7 in the bank sections, retain low transparent rails, and distinguish slim luminous guides from the entirely non-emissive water."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The continuous perimeter frame dominates the four-anchor language and makes the parcel resemble an enclosed pad.",
+        "The shared-node projection is much weaker than the private amber ring, especially its central connection."
+      ],
+      "fix": "Remove the enclosing raised frame and use four separate low ceramic anchor blocks around an otherwise empty build area. Enlarge and thicken the projected four-node-and-centre symbol above a compact front projector, keeping only that symbol luminous and preserving the 18-part budget."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the landed pod, two unfolded shelter wings, cargo capsules and compact rover. Preserve visible sheltered space beneath both wings and keep the shared light core low, with emission limited to the permitted functional indicators and apertures."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the gardener's broad hat and utility layers against the courier's stacked ceramic head and cloth tabard. Keep the seed capsule and parcel separated from the torsos so both occupations remain readable at gameplay scale."
+    },
+    {
+      "id": "head",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the ivory civic mantle, understated visor and three-panel constellation beside the face. Keep the shared-node insignia bold and limit emission to its inset and panel graphics so the Administrator remains a civilian office-holder rather than an armoured commander."
+    },
+    {
+      "id": "leader",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The tall antenna, paired shoulder hardware and hard chest blocks overpower the travel textiles, making the envoy read as an equipment robot.",
+        "The repaired shoulder, unfamiliar orbital emblem and asymmetric faceplate do not register clearly.",
+        "The meteorite merges with the dark hand and torso detailing."
+      ],
+      "fix": "Redistribute the 42 parts toward a broad layered travel tabard, one conspicuously repaired shoulder and a clearly asymmetric ceramic faceplate around a dark visor. Reduce the antenna and paired shoulder hardware, add one large orbital-coordinate emblem, and hold the faceted meteorite away from the torso in visibly segmented hands."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [
+        "Repeated spherical rooftop planting slightly undermines the otherwise convincing living-habitat treatment."
+      ],
+      "fix": "Retain the clustered ceramic modules, dark window bands and obvious entrance. Replace some rooftop balls with uneven connected planting masses and varied shrub silhouettes without changing the building footprint."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the rounded pavilion and physical serving hatch. Keep refill capsules and tea-service objects visible at the counter, with a clear approach between outdoor seats and planting."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped modular habitat silhouette, offset planted terraces and strong dark apertures. Preserve readable module separation and irregular living greenery rather than adding luminous façade trim."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the readable living dog and restrained hover-toy age cue. Keep the toy visibly separate from the paws and preserve ordinary companion-animal proportions rather than adding unnecessary robotic armour."
+    },
+    {
+      "id": "car",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The capsule silhouette is convincingly futuristic, but the large dark canopy offers no clearly readable passenger entry.",
+        "The continuous lower skirt obscures how the vehicle lifts, making the underside read as a generic plinth."
+      ],
+      "fix": "Add a broad, readable canopy-door seam with a small physical access detail and divide the lower skirt around recessed lift apertures. Show a shallow ground clearance and retain the compact ceramic body, dark glazing and restrained emitter lighting."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

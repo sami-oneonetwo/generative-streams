@@ -1,0 +1,223 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The hide shelters, communal bonfire and wheel-free transport establish a convincing Stone Age direction, but several shared assets still impose a modern, orderly town structure. Straight verge bands, regular fencing, ornamental-looking trees, signboard-like markers and dressed-block construction need revision, alongside stronger clothing silhouettes for the residents and leaders.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the sparse, low dressing and unobstructed meadow. Preserve scattered placement rather than increasing density to compensate for the small details disappearing at stream distance."
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The mud has ruler-straight parallel edges, bordered by continuous green strips that read as planned pedestrian verges.",
+        "Repeated puddle shapes and evenly distributed surface marks make the track feel stamped rather than trampled."
+      ],
+      "fix": "Keep the 8 m track footprint, but break its visible margins with shallow muddy incursions, flattened vegetation and irregular moss patches. Redistribute the 14 dressing parts asymmetrically, vary puddle outlines and drag-groove lengths, and keep solid clutter out of the middle."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the large vacant loop, two supports and empty parcel. Preserve the open centre at stream scale, with slightly uneven mud thickness so the pale loop continues to read as a handmade marker rather than a manufactured ring."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Repeated upright posts and continuous, aligned rails read as a conventional split-rail fence rather than a loosely assembled camp enclosure.",
+        "The owner marker reads primarily as a red rectangular tag; its mud-daubed bark, filled clan emblem and anchored player name are not legible."
+      ],
+      "fix": "Within 24 parts, vary stake lean, spacing and height, interrupt rails with loose branches and occasional boulders, and make hide lashings visible. Keep the frontage open; rebuild the owner marker as an irregular bark patch on a crooked post with a #d9534f tie, a bold filled emblem and the gameplay label 'Ivy' anchored to the patch."
+    },
+    {
+      "id": "street-tree",
+      "score": 4,
+      "ok": false,
+      "problems": [
+        "The birch is an upright pole supporting a compact rounded crown, not a leaning tree with a torn, sparse canopy.",
+        "The pine uses tidy stacked cones instead of a crooked silhouette with one heavy side.",
+        "Together they read as selected ornamental street trees, directly contradicting Sami's requirement."
+      ],
+      "fix": "Rebuild within 24 parts: angle the birch trunk, expose unequal branches and separate its foliage into sparse, offset masses. Give the shorter pine a kinked trunk, unequal branch lengths and a dominant lateral foliage mass; retain their specified positions without making them a matched pair."
+    },
+    {
+      "id": "wild-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The pine has some lean, but its nested-cone crown remains too orderly.",
+        "The birch still relies on rounded, closely packed foliage blobs.",
+        "The juniper resembles a cluster of miniature conifer tips rather than a squat, spreading bush."
+      ],
+      "fix": "Use the 34-part budget for a visibly wind-bent pine with broken crown spacing, a broad birch with exposed unequal forks, and a low juniper spreading horizontally in irregular lobes. Make each plant's silhouette distinct before adding small details."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the readable handheld-scale torch construction and compact flame. Keep the fork and hide binding distinct, and ensure only flame and ember parts use glow=true."
+    },
+    {
+      "id": "centrepiece",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the communal fire, broken stone ring and three log seats; this successfully replaces the fountain's function without retaining its silhouette. Preserve low, broad flames and irregular stone placement, with emission restricted to fire and embers."
+    },
+    {
+      "id": "bench",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the broad fallen-log silhouette, flattened sitting face and stone chocks. Preserve the approximately 0.45 m seat height and two-person length without introducing furniture-like legs or a backrest."
+    },
+    {
+      "id": "market",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The straight-edged rectangular goods spread reads like a shallow tray rather than an irregular hide laid on earth.",
+        "The trader's required kneeling pose is not clear from the review camera.",
+        "Several goods merge into generic brown blocks rather than distinct gathered or handmade objects."
+      ],
+      "fix": "Within 20 parts, give the hide an uneven outline with a folded corner and separate stone weights. Make the trader's bent knees and lowered torso unmistakable, and separate the goods into bold shallow baskets, a berry mass, pale antler tools, flint blanks and tied hide bundles."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The mammoth reads as a smooth, blocky elephant; its shaggy stepped outline and unequal tusks are insufficiently expressed.",
+        "The arrival pennant reads as a straight, rigid strip rather than knotted hanging hide."
+      ],
+      "fix": "Keep the wheel-free sledge and approximately 5 m overall length. Reallocate the 58 parts to stepped shoulder fur, an uneven belly fringe, visibly unequal tusks and a soft-looking hide harness; shorten and kink the pennant around its forked stake, leaving the waiting patch unraised."
+    },
+    {
+      "id": "river",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Squared supports and aligned rectangular walking stones create the impression of masonry abutments and an engineered bridge.",
+        "The paired straight trunks and orderly transitions reinforce a constructed bridge silhouette rather than an opportunistic fallen-log crossing."
+      ],
+      "fix": "Replace the block stacks with differently sized, rotated natural boulders. Lay several unequal bark-covered trunks across them, using irregular flat stones only to close walking gaps; maintain one continuous route inside the 4 m corridor, with adjoining bank landings at z ±7 about 1 m above the water."
+    },
+    {
+      "id": "civic-lot",
+      "score": 4,
+      "ok": false,
+      "problems": [
+        "The collective marker has a flat rectangular signboard silhouette instead of a forked-stick and clay construction.",
+        "The four matching upright, banded corner markers resemble manufactured bollards rather than rough stones.",
+        "Small stones scattered through the interior begin to delineate a project in an area required to remain empty."
+      ],
+      "fix": "Rebuild the 14-part asset with four irregular low corner stones and a crooked forked support carrying four chunky clay impressions around one shared centre. Eliminate the rectangular backing and interior stone pattern, leaving the building area visibly vacant."
+    },
+    {
+      "id": "camp",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The resting mammoth repeats the overly smooth, unshaggy animal construction.",
+        "Its adjacent sledge reads as a bare rectangular slab; runners, lashings and bundled equipment are not sufficiently clear.",
+        "The widely spaced branch rack offers little visual distinction as a windbreak."
+      ],
+      "fix": "Retain the two patched hide tents and small stone-ringed fire. Within 72 parts, add stepped fur to the resting mammoth, expose the sledge runners and lashings, group flint and hide bundles beside it, and overlap uneven branches into a more substantial windward screen."
+    },
+    {
+      "id": "resident",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The gathering resident's grass cape reads as a short triangular collar rather than clothing draped over the shoulders and back.",
+        "The boots and hide garments remain clean rectangular blocks with little visible construction.",
+        "The second resident's hair reads as a neat block cap rather than loose hair."
+      ],
+      "fix": "Keep the supplied bodies and 44-part total. Extend layered grass panels over the gatherer's shoulders and back, separate the hide skirt from the torso, add offset loose hair masses, and give the adze carrier uneven fur boot cuffs and a clearly tied sleeveless wrap."
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The headdress reads predominantly as a giant pale fork rather than an asymmetric antler-and-feather assembly.",
+        "The mantle is too narrow and rectangular to establish the required broad, layered Chief silhouette."
+      ],
+      "fix": "Within 38 parts, widen the mantle beyond the shoulders using overlapping uneven hide panels. Replace the monolithic fork shape with an offset branched antler and a contrasting feather grouping, retain the oversized bone-topped staff, and make the ochre cheek marks broad enough to survive the camera distance."
+    },
+    {
+      "id": "leader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The pale shell beads and hooked staff read well, but the head covering resembles a square cap rather than a weathered hood.",
+        "Patchwork fur, the braided belt and the travelled clan bundle are not clearly distinguished from the generic brown body."
+      ],
+      "fix": "Keep the readable beads and staff. Within 34 parts, frame the face with an uneven hood rim, give the fur wrap contrasting overlapping patches, expose a chunky braided belt, and hang a distinct hide bundle carrying a bold unfamiliar nonalphabetic clan emblem."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the weighted hide shelter, open dark entrance and domestic hearth grouping. Keep the strongest roof poles readable without multiplying thin spikes, and use the corrected shared owner marker when assembling claimed homes."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the hide canopy, broth vessels, ember hearth and log seating: the purpose translates successfully without modern café furniture. Integrate the ground dressing directly into the square rather than carrying the circular presentation base into the world."
+    },
+    {
+      "id": "skyscraper",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Large square-sided grey tiers read as dressed masonry or concrete blocks rather than natural rock.",
+        "Repeated identical log awnings and aligned ladders give the lodging a modular, manufactured façade.",
+        "The result is closer to a modern stepped tower decorated with timber than an accumulated clan dwelling."
+      ],
+      "fix": "Preserve the tall stepped mass and footprint, but reshape it as an irregular rock outcrop supporting lashed log terraces and varied hide sleeping shelters. Break corners, offset ledges, vary opening widths and ladder placement, and remove the continuous flat block faces."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the pointed ears, long muzzle, muted coat and sturdy blocky proportions. Keep the back and flank pieces reading as coat masses rather than adding regular plate-like detailing."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the wolf-dog hauling sledge, visible runners and bundled load; it translates transport without preserving a modern vehicle body. Keep harness connections visibly continuous and lashings distinct from the wooden frame."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "In assembly, straight green roadside bands and repeated puddle stamps strengthen the impression of a planned modern street.",
+        "The regular fence and tidy trees become dominant environmental cues, outweighing the successful hide shelters.",
+        "The café retains a visible circular presentation-base edge on the square.",
+        "Resident clothing distinctions largely collapse into brown blocks at the actual gameplay distance."
+      ],
+      "fix": "Reassemble with the revised road margins, wild trees and loose camp boundary, varying surface dressing without changing the parcel grid or road footprint. Remove presentation plinths from placed assets and test the revised clothing at this exact camera with 1.8 m residents, strengthening garment shapes rather than enlarging people."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The kiosk, LED lighting, low civic fountain and everyday buildings establish a convincing Modern Age rather than a recoloured industrial town. Approval is held back by blobby vegetation, noisy ground textures, weak details on the residents and car, and assembly problems that compromise pedestrian access and stream-distance readability.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Dense pale flecking dominates the meadow and competes with the deliberately sparse physical dressing.",
+        "Flowers, grass clumps and stones largely disappear against the textured surface at scene distance."
+      ],
+      "fix": "Reduce meadow texture contrast substantially and replace fine white flecks with broad, subdued colour variation. Redistribute the 14 low dressing parts into a few irregular, readable pockets while retaining open ground and the shallow puddles."
+    },
+    {
+      "id": "street",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The zebra crossing meets pavement edges that still read as continuous raised kerbs; lowered crossing points are not clearly expressed."
+      ],
+      "fix": "Model explicit dropped-kerb sections aligned with both crossing ends, with short slab transitions back to the 0.12 m kerb. Preserve the charcoal asphalt, flat paint, flush drains and unobstructed carriageway."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the modest recycled-panel marker and wordless amber ring; preserve its contrast when simplifying the surrounding ground texture."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the low, open timber-and-metal boundary, unobstructed frontage and modest Ivy nameplate. Keep the owner-colour strip and household emblem distinct at the final gameplay scale."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both trees use essentially the same smooth bubble-cluster crown, despite their different heights.",
+        "The plane tree's trunk bend and the maple's low branch are not readable, weakening the specified species and silhouette contrast."
+      ],
+      "fix": "Reallocate the 30 parts into a visibly bent, taller plane tree with broad faceted foliage masses and a smaller maple with an offset angular crown and exposed low branch. Keep their separate permeable pits and maintain clear pavement circulation."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The oak reads as a straight trunk topped with balloons rather than an irregular branching tree.",
+        "The willow resembles a bunch of hanging green capsules; its broad spreading branch structure is missing.",
+        "The flowering shrub repeats the same rounded-blob construction."
+      ],
+      "fix": "Within 38 parts, expose an uneven forked oak structure, spread the willow laterally with asymmetrical drooping foliage fans, and give the shrub a low, broken outline with clustered flower accents. Use chunky facets rather than uniformly rounded foliage balls."
+    },
+    {
+      "id": "street-light",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the slim pole, short curved arm and flat LED head. Keep emission confined to the broad underside diffuser."
+    },
+    {
+      "id": "centrepiece",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the low circular concrete basin, offset stone form and three short jets. Preserve the approximately 4.5 m diameter and keep water non-emissive."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the clear two-person proportions, broad timber slats and restrained aluminium frame; no ornamental detailing is needed."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the flat-roofed contemporary kiosk and strong panel colours. Keep the fruit, pastries and refill bottles separated into readable display groups without adding branding."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The shelter glazing reads as opaque pale wall panels rather than a transparent enclosure.",
+        "The shelter seat and continuous pedestrian bypass are not legible in either view."
+      ],
+      "fix": "Use lightly tinted transparent panels with sparse framing, reveal the small seat, and narrow or reposition the shelter to leave a visibly continuous walking route within the pavement strip. Preserve the minibus orientation and keep the stop-facing door's boarding path clear."
+    },
+    {
+      "id": "river",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the shallow concrete structure, open metal rails and restrained bank dressing. Preserve the bank landings through z ±7 and keep the water accents surface-flat."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the four low corner blocks, clear construction interior and green shared-project marker. Preserve separation between the node symbol and building-hand pictogram."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the tourist coach, two broad parasols and separate check-in awning. Keep luggage, tables, route display and gathering light visually subordinate to those three main masses."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The plant carrier's yellow hair reads as a cap or helmet rather than loose textured hair.",
+        "The working neighbour's tied-back hair and phone do not establish clear silhouettes."
+      ],
+      "fix": "Replace the cap-like hair stack with uneven chunky locks, add a clearly projecting tied-back hair shape to the neighbour, and hold a contrasting phone slightly away from the torso. Retain the base bodies, everyday clothing and 46-part total."
+    },
+    {
+      "id": "head",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contemporary suit, diagonal civic sash, neat hair and contrasting ceremonial scissors and ribbon. Keep the badge simple and avoid adding a heavy chain."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the practical bright jacket, bucket hat, map and stickered suitcase. Preserve the contrasting scarf and lanyard without adding finer costume detail."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contemporary domestic massing, broad windows and sheltered entrance. Update its small garden tree to the revised faceted foliage language."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the glazed frontage, simple cup symbol and compact service terrace. Keep the awning shallow and architectural rather than turning it into a market canopy."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped tower silhouette, pale structural frame and broad glazing bands. Keep terrace greenery secondary to the building's clear tiered massing."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the blocky muzzle, contrasting ears and contemporary harness. Preserve the separated legs and clear tail silhouette."
+    },
+    {
+      "id": "car",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The long bonnet, slab-like roof and weak rear-hatch definition make this read as a generic boxy car rather than an unmistakable compact hatchback.",
+        "The roof-to-windscreen transition is excessively abrupt even within the chunky toy language."
+      ],
+      "fix": "Shorten the bonnet and rear overhang, introduce a simple sloped windscreen, and make the rear hatch a clear body-colour frame around one broad glass panel. Retain chunky tyres and restrained detailing rather than adding photorealistic trim."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Presentation bases remain in the assembled world: the residents stand on a pale slab intruding into the carriageway, while the guide carries a conspicuous grass rectangle onto the paved square.",
+        "The broad, uninterrupted paving field disperses the fountain, benches and civic activity instead of establishing a readable gathering place.",
+        "Strong repeated ground and paving patterns compete with the small characters and props."
+      ],
+      "fix": "Strip display plinths and local ground patches from placed assets, then ground feet and furniture directly on the shared surfaces. Keep the carriageway clear, connect both crossings to lowered kerbs, and group seating and kiosk activity more deliberately around the existing fountain footprint; soften paving contrast and add restrained planting at square edges without occupying community construction lots."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

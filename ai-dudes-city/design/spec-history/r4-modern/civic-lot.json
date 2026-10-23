@@ -1,0 +1,577 @@
+{
+  "name": "Town Project Lot",
+  "description": "Four capped green corner blocks mark an open municipal plot, with a welcoming green sign showing a hand-supported community house, three people and an amber hammer.",
+  "notes": "Contemporary twin-post signage, green-tinted gravel and a low frontage rope with a wide entrance distinguish shared construction ground without medical-cross imagery.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.04,
+        0
+      ],
+      "size": [
+        11.8,
+        0.08,
+        11.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9a9f82"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.47,
+        -5.45
+      ],
+      "size": [
+        0.6,
+        0.78,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.92,
+        -5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.47,
+        -5.45
+      ],
+      "size": [
+        0.6,
+        0.78,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.92,
+        -5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.47,
+        5.45
+      ],
+      "size": [
+        0.6,
+        0.78,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.92,
+        5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.47,
+        5.45
+      ],
+      "size": [
+        0.6,
+        0.78,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.92,
+        5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.85,
+        1.46,
+        4.57
+      ],
+      "size": [
+        0.18,
+        2.76,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.45,
+        1.46,
+        4.57
+      ],
+      "size": [
+        0.18,
+        2.76,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.65,
+        2.2,
+        4.7
+      ],
+      "size": [
+        2.4,
+        1.6,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1e3dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.65,
+        2.2,
+        4.81
+      ],
+      "size": [
+        2.16,
+        1.36,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#386d49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.78,
+        2.22,
+        4.89
+      ],
+      "size": [
+        0.12,
+        0.6,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.76,
+        2.22,
+        4.89
+      ],
+      "size": [
+        0.12,
+        0.6,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.27,
+        1.96,
+        4.89
+      ],
+      "size": [
+        1.1,
+        0.12,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.005,
+        2.61,
+        4.89
+      ],
+      "size": [
+        0.65,
+        0.18,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.51
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.535,
+        2.61,
+        4.89
+      ],
+      "size": [
+        0.65,
+        0.18,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.51
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3,
+        2.37,
+        4.91
+      ],
+      "size": [
+        0.16,
+        0.16,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        2.16,
+        4.9
+      ],
+      "size": [
+        0.17,
+        0.22,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.27,
+        2.4,
+        4.91
+      ],
+      "size": [
+        0.17,
+        0.17,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.27,
+        2.17,
+        4.9
+      ],
+      "size": [
+        0.18,
+        0.24,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.54,
+        2.37,
+        4.91
+      ],
+      "size": [
+        0.16,
+        0.16,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.54,
+        2.16,
+        4.9
+      ],
+      "size": [
+        0.17,
+        0.22,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.27,
+        2.15,
+        4.9
+      ],
+      "size": [
+        0.14,
+        0.7,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.28
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.36,
+        2.47,
+        4.9
+      ],
+      "size": [
+        0.53,
+        0.22,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.28
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.4,
+        0.58,
+        5.45
+      ],
+      "size": [
+        0.08,
+        4.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.4,
+        0.58,
+        5.45
+      ],
+      "size": [
+        0.08,
+        4.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.29,
+        1.79,
+        4.9
+      ],
+      "size": [
+        0.85,
+        0.14,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.77,
+        1.69,
+        4.9
+      ],
+      "size": [
+        0.4,
+        0.18,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.48
+      ],
+      "color": "#eee9d8"
+    }
+  ]
+}

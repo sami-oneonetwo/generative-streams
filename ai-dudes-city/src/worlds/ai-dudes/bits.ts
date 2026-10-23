@@ -8,7 +8,8 @@
 // grammar: the agent picks from these; the app owns every number and every motion.
 import type { GroundPoint } from '../../shared/objectTypes';
 import { HATS, type BitBurst, type BitProp, type Emote, type Hat } from '../../shared/dudesTypes';
-import { cityOf, homeOf, leaveVisit, lotsOf } from './city';
+import { ageOf, cityOf, homeOf, leaveVisit, lotsOf, namingAge } from './city';
+import { ageStyle } from '../../shared/ages';
 import { matchName } from './index';
 import { MAYOR } from './mayor';
 import { clampToGround } from './placement';
@@ -45,7 +46,9 @@ export interface BitRequest {
 function targetOf(state: DudesState, d: Dude, phrase: string | undefined, now: number): Bit['target'] | string | undefined {
   const p = (phrase ?? '').trim().toLowerCase().replace(/^@/, '');
   if (!p || /^(me|here|myself)$/.test(p)) return undefined;
-  if (/\bmayor\b/.test(p) && !/'s|’s/.test(p)) {
+  // The streamer's character, by either name: "the Mayor", or what this age calls them ("the Chief").
+  const head = ageStyle(namingAge(state)).head.title.toLowerCase();
+  if ((/\bmayor\b/.test(p) || new RegExp(`\\b${head}\\b`).test(p)) && !/'s|’s/.test(p)) {
     const m = state.mayor;
     if (!m || m.hidden || now - m.lastInputAt > MAYOR.liveMs) return 'the Mayor is not out and about right now';
     return { kind: 'mayor', at: { ...m.position } };

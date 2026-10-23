@@ -1,0 +1,218 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The kit establishes a recognisable prehistoric identity, particularly through the wordless lot markers, Chief, hide shelters and wheel-free transport. Revision is needed because engineered-looking ground strips, schematic woodland, a framed market and an unreadable communal flame weaken age fidelity and stream-scale clarity.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The finely speckled meadow reads as a uniform lawn texture rather than chunky woodland ground.",
+        "Most low dressing reads as smooth oval patches; grass tussocks, moss and shallow puddles lack distinct silhouettes."
+      ],
+      "fix": "Simplify the meadow into larger, quieter colour variations. Rebuild the 14 dressing parts as sparse angular tussocks, irregular moss patches, loose flint, two visibly broken branches and shallow asymmetric puddles, mostly below 0.35 m."
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The road and contrasting green margins have ruler-straight boundaries, producing a sidewalk-like strip in the assembled scene.",
+        "Repeated footprints, long groove lines and evenly distributed oval clutter make the track feel patterned rather than trampled."
+      ],
+      "fix": "Keep the 8 m mud corridor but feather its edges irregularly into earth and flattened vegetation. Use 14 dressing parts with shallow, interrupted sledge-drag grooves, varied footprint groupings and uneven marginal clutter; preserve a clear middle and remove any continuous border effect."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the crooked supports and clearly vacant twig loop. Preserve its pale mud-and-ochre outline when simplifying the surrounding moss surface."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Widely separated stones and tiny posts do not establish a readable occupied camp enclosure.",
+        "The owner marker reads mainly as a red tie and pale nub; neither a filled clan emblem nor an anchored player-name label is legible."
+      ],
+      "fix": "Redistribute the 24 parts into irregular 0.6–0.9 m stakes, loose branches, hide lashings and occasional boulders along z -6 and x -6. Keep the +z frontage open. Enlarge the mud-daubed bark patch, show a filled emblem and #d9534f tie, and anchor the actual player-name gameplay label to it."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The birch crown is reduced to a few slab-like leaves, while the pine resembles stacked green plates.",
+        "Asymmetry is present, but the species and torn woodland character are not convincing at stream distance."
+      ],
+      "fix": "Use the 24-part budget for a leaning birch with forked, unequal branches and a broken airy crown, plus a shorter pine with tapered foliage clusters concentrated heavily on one side. Replace flat cap-like foliage with irregular faceted masses and retain visible branch breaks."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The pine's rounded crown masses do not clearly describe a tall wind-bent conifer.",
+        "The birch and juniper look like sparse assemblies of oversized foliage plates rather than broad and squat wild growth."
+      ],
+      "fix": "Redistribute the 34 parts around three distinct silhouettes: a visibly bent tall pine, a spreading uneven birch and a dense low juniper. Vary branch reach, crown height and foliage volume; avoid both centred rounded crowns and isolated flat leaf slabs."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the modest stake torch and readable warm flame. Keep wood and bindings non-emissive, and avoid repeating torches at municipal-looking intervals."
+    },
+    {
+      "id": "centrepiece",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The hearth reads primarily as a tall, tidy cone of timber rather than an active communal bonfire.",
+        "The flame mass disappears against the wood and pale surrounding shapes in the street scene."
+      ],
+      "fix": "Rebuild the 34 parts within roughly 4.5 m as a lower, wider, asymmetric heap of standing and fallen logs. Add broad orange and yellow flame wedges with visible embers, using glow only on those parts. Keep a broken stone ring and three clearly separate short log seats, with sightlines to residents behind."
+    },
+    {
+      "id": "bench",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The thin, straight, pale sitting surface reads as a neatly cut plank rather than a broad fallen log.",
+        "The split bark end and irregular trunk volume are not sufficiently visible."
+      ],
+      "fix": "Keep five parts: a thicker bark-sided log with only its upper sitting face roughly flattened, two unequal stone chocks and a clearly split end treatment. Set the sitting face around 0.45 m high and wide enough for two residents."
+    },
+    {
+      "id": "market",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The tall two-post display gantry dominates the silhouette and contradicts the specified ground-only barter spread.",
+        "The hide, goods and trader merge into a compact framed stall; the kneeling posture is unclear."
+      ],
+      "fix": "Remove the upright frame and rebuild the 20 parts within about 2.6 × 1.6 m. Put an irregular hide directly on the ground with stone weights, shallow woven baskets, berries, flint blanks, antler tools and wrapped bundles. Place a visibly kneeling trader beside, not behind, the goods."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The waiting patch has a crisp rectangular outline that reads as a laid mat or platform rather than flattened ground.",
+        "The mammoth's large smooth body masses give insufficient shaggy silhouette."
+      ],
+      "fix": "Within the 58-part budget, dissolve the waiting patch into irregular trampled earth beneath the forked pennant stake. Give the mammoth stepped shoulder fur, an uneven belly fringe and clearly contrasting unequal tusks. Retain the hide harness, wheel-free runners and approximately 5 m overall vehicle length."
+    },
+    {
+      "id": "river",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The paired trunks look too matched and clean-ended, while the bank boundaries are mechanically straight.",
+        "The central handoff reads as a knot of rounded stones rather than an obvious broad walking connection."
+      ],
+      "fix": "Use 42 parts for unequal fallen trunks with broken ends, exposed roots and irregular rock supports. Make the central stepping surfaces broad and continuously traversable within the 4 m corridor. Extend the crossing to adjoining bank landings at z ±7, about 1 m above water, while showing only the central 12 m of river in this tile."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the empty project area, four corner stones and shared-impression marker. Keep the collective symbol visibly distinct from the vacant free-lot loop."
+    },
+    {
+      "id": "camp",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The windbreak reads as upright poles with green blobs rather than an interlocked branch screen.",
+        "The tents repeat nearly the same tidy cone treatment, and the flint and hide supplies do not separate clearly."
+      ],
+      "fix": "Use the 72 parts to create a visibly woven tangle of loose branches, two differently sagging and patched hide tents, and separate readable flint and hide bundles. Preserve the low resting mammoth, adjacent sledge and stone-ringed fire; make only flames and embers emissive."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The adze reads as a large rectangular mallet, while the gathering basket resembles a pale solid bucket.",
+        "The grass cape is dominated by straight slabs, weakening the distinction between woven vegetation and hide clothing."
+      ],
+      "fix": "Retain both supplied blocky bodies and the 44-part total. Give the adze a visibly chipped stone head lashed across a crooked handle. Make the basket open-topped with a contrasting woven rim, and construct the cape from overlapping tapered grass bundles; clarify uneven fur boot cuffs and loose versus tied hair."
+    },
+    {
+      "id": "head",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the oversized asymmetric antler-and-feather silhouette, layered mantle and bone-topped staff. Preserve their strong separation from ordinary residents at stream distance."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the hooked staff, fur wrap, hood and contrasting shell-bead cluster. Keep the travel bundle and unfamiliar clan emblem readable without introducing written signage."
+    },
+    {
+      "id": "home",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Large straight-edged hide panels read as rigid sheet material rather than stretched and weighted skins.",
+        "The entrance is visually lost among overlapping pale panels and foreground props."
+      ],
+      "fix": "Preserve the shelter footprint but introduce sagging panel edges, uneven seams, visible lashings and weighted corners. Frame one unmistakable dark entrance large enough for a 1.8 m resident, and move props clear of its approach."
+    },
+    {
+      "id": "cafe",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The regular rectangular canopy and straight serving shelf read as a contemporary stall translated into tan materials.",
+        "The repeated roof panels lack the sag, irregular perimeter and lashings needed to identify stretched hide."
+      ],
+      "fix": "Rework the shelter around crooked forked poles and an asymmetrically tensioned hide canopy with visible ties. Replace the precise serving shelf with a rough split-log bowl rest or ground spread, and make a broth vessel beside the embers the functional focus. Retain simple log seating and an open entrance."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped rock-and-log clan lodging rather than introducing a modern tower silhouette. Preserve readable occupied ledges and chunky ladder connections at the final world scale."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the angular wolf-dog profile, pointed ears and muted natural coat. Keep the back masses reading as fur rather than separate armour plates."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the wheel-free hauling sledge, rough runners, oversized lashings and bundled cargo. Preserve open space beneath the load so the runner construction remains readable."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The noisy meadow, coin-like moss pattern and dense square mottling compete with the small residents and props.",
+        "Continuous straight green margins recreate the visual organisation of sidewalks despite using vegetation materials.",
+        "The central hearth lacks a strong warm focal point, while pale seating and small ownership details disappear into the ground."
+      ],
+      "fix": "Unify terrain with larger, lower-contrast patches and irregular transitions while preserving the town grid and parcel footprints. Break the continuous walking-edge bands, strengthen the bonfire's low warm silhouette and give important markers clean local contrast. Recheck at actual stream size with 1.8 m residents, then validate part budgets, dimensions and glow flags in the source."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

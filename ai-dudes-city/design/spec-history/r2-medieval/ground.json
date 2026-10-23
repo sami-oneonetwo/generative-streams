@@ -1,0 +1,273 @@
+{
+  "name": "Medieval Coppice Meadow",
+  "description": "Dark nettles, pale meadow flowers, moss-capped fieldstones and a small split-oak stack surround a mud-rimmed rain pool in open meadow.",
+  "notes": "A readable stack of hand-split coppice wood evokes medieval woodland work, while fourteen enlarged, sparse parts preserve the open countryside silhouette.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -4.15,
+        0.19,
+        -3.65
+      ],
+      "size": [
+        0.48,
+        0.38,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "color": "#2f4f2e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -3.82,
+        0.15,
+        -3.57
+      ],
+      "size": [
+        0.42,
+        0.3,
+        0.43
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#2f4f2e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.02,
+        0.165,
+        -3.29
+      ],
+      "size": [
+        0.43,
+        0.33,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#2f4f2e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.65,
+        0.15,
+        3.7
+      ],
+      "size": [
+        0.48,
+        0.16,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#eee5bd"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.25,
+        0.15,
+        3.52
+      ],
+      "size": [
+        0.43,
+        0.18,
+        0.46
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#e5ca71"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.75,
+        0.15,
+        -3.1
+      ],
+      "size": [
+        0.3,
+        1.4,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.9,
+        0.15,
+        -2.76
+      ],
+      "size": [
+        0.3,
+        1.4,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.8,
+        0.35,
+        -2.94
+      ],
+      "size": [
+        1.4,
+        0.14,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "color": "#c9a46b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.65,
+        0.14,
+        -4.25
+      ],
+      "size": [
+        0.7,
+        0.28,
+        0.61
+      ],
+      "rotation": [
+        0,
+        0.45,
+        0
+      ],
+      "color": "#8a8a7a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.72,
+        0.245,
+        -4.27
+      ],
+      "size": [
+        0.57,
+        0.15,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.45,
+        0
+      ],
+      "color": "#6f8a4e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.85,
+        0.12,
+        2.8
+      ],
+      "size": [
+        0.65,
+        0.24,
+        0.56
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#8a8a7a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.8,
+        0.205,
+        2.77
+      ],
+      "size": [
+        0.51,
+        0.15,
+        0.44
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#6f8a4e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.25,
+        0.03,
+        0.8
+      ],
+      "size": [
+        2.2,
+        0.06,
+        1.4
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#5c4a35"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.28,
+        0.04,
+        0.8
+      ],
+      "size": [
+        1.85,
+        0.08,
+        1.08
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#356a82"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import type { Engine } from '../engine/engine';
 import type { AdminStatus } from '../shared/protocol';
 import type { KickAuth } from '../kick/oauth';
 import { resubscribe } from '../kick/subscriptions';
+import type { PlaySeats } from './play';
 
 export interface AdminDeps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,6 +13,7 @@ export interface AdminDeps {
   auth: KickAuth;
   wsClientCount: () => number;
   kickSubscription: () => string | undefined;
+  play: PlaySeats;
 }
 
 export function makeAdminRouter(deps: AdminDeps): Router {
@@ -40,7 +42,7 @@ export function makeAdminRouter(deps: AdminDeps): Router {
     const status: AdminStatus = {
       worldId: engine.world.meta.id,
       worldName: engine.world.meta.name,
-      flags: { kickRepliesEnabled: flags.kickRepliesEnabled, devTimeScale: flags.devTimeScale },
+      flags: { kickRepliesEnabled: flags.kickRepliesEnabled, crierEnabled: flags.crierEnabled !== false, devTimeScale: flags.devTimeScale },
       kick: {
         disabled: config.KICK_DISABLED === 'true',
         configured: auth.configured,
@@ -82,6 +84,10 @@ export function makeAdminRouter(deps: AdminDeps): Router {
       flags.kickRepliesEnabled = req.body.kickRepliesEnabled;
       engine.log.push(`kick replies ${flags.kickRepliesEnabled ? 'ENABLED' : 'disabled'} (admin)`);
     }
+    if (typeof req.body?.crierEnabled === 'boolean') {
+      flags.crierEnabled = req.body.crierEnabled;
+      engine.log.push(`town crier ${flags.crierEnabled ? 'ENABLED' : 'disabled'} (admin)`);
+    }
     if (typeof req.body?.devTimeScale === 'number' && req.body.devTimeScale >= 1) {
       flags.devTimeScale = Math.min(10_000, req.body.devTimeScale);
       engine.log.push(`dev time scale set to x${flags.devTimeScale} (admin)`);
@@ -97,6 +103,8 @@ export function makeAdminRouter(deps: AdminDeps): Router {
     }
     try {
       const { backup } = engine.reset();
+      // Anyone walking about in the old town is sent off with a note to reload into the new one.
+      deps.play.releaseAll('The town was reset. Reload to come back in.');
       res.json({ ok: true, backup });
     } catch (e) {
       res.status(500).json({ error: (e as Error).message });
@@ -141,12 +149,40 @@ export function makeAdminRouter(deps: AdminDeps): Router {
       value = n;
     }
     try {
-      action.run(engine.ctx, value);
+      const refused = action.run(engine.ctx, value);
+      if (typeof refused === 'string' && refused) {
+        res.status(409).json({ error: refused });
+        return;
+      }
       engine.markDirty();
       res.json({ ok: true });
     } catch (e) {
       res.status(500).json({ error: (e as Error).message });
     }
+  });
+
+  // The /play page's seats: who is walking about in person, sending one out, opening or closing the doors.
+  router.get('/play', (_req, res) => {
+    res.json({ ...deps.play.count(), configured: !!config.PLAY_SECRET, players: deps.play.list() });
+  });
+  router.post('/play', (req, res) => {
+    const play = deps.play;
+    if (typeof req.body?.kick === 'string') {
+      // Kept in data/play-kicks.json, seated or not (a long `minutes` is a ban).
+      const minutes = Math.max(1, Math.min(60 * 24 * 365, Number(req.body.minutes) || 10));
+      const seated = play.kick(req.body.kick, minutes);
+      engine.log.push(`play: ${req.body.kick} ${seated ? 'sent out of town' : 'kept out of town'} for ${minutes} min (admin)`);
+    }
+    if (typeof req.body?.unkick === 'string' && play.unkick(req.body.unkick)) engine.log.push(`play: ${req.body.unkick} let back in (admin)`);
+    if (typeof req.body?.open === 'boolean') {
+      play.open = req.body.open;
+      engine.log.push(`play: doors ${play.open ? 'OPEN' : 'closed'} (admin)`);
+    }
+    if (Number.isInteger(req.body?.cap) && req.body.cap >= 0 && req.body.cap <= 100) {
+      play.cap = req.body.cap;
+      engine.log.push(`play: ${play.cap} seats (admin)`);
+    }
+    res.json({ ok: true, ...play.count(), players: play.list() });
   });
 
   router.post('/kick/resubscribe', (_req, res) => {

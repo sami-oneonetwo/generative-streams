@@ -1,0 +1,235 @@
+{
+  "name": "Unclaimed Lot with Straw-Wisp Claim Marker",
+  "description": "A tall pegged oak marker carries a golden straw bundle and an oversized dark board with one bold pale empty ring, above cut hazel rods, grass and a fieldstone.",
+  "notes": "The traditional straw-wisp signal and high-contrast empty ring distinguish this available private parcel from civic tablets using unmistakably medieval materials.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.4,
+        4.35
+      ],
+      "size": [
+        0.3,
+        2.8,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2.77,
+        4.48
+      ],
+      "size": [
+        1.2,
+        0.16,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.04
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.5,
+        2.43,
+        4.59
+      ],
+      "size": [
+        0.76,
+        0.78,
+        0.64
+      ],
+      "rotation": [
+        3.141593,
+        0,
+        0
+      ],
+      "color": "#d6b25a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        2.23,
+        4.59
+      ],
+      "size": [
+        0.4,
+        0.12,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.55,
+        4.58
+      ],
+      "size": [
+        2,
+        1.4,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0.045
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.43,
+        4.69
+      ],
+      "size": [
+        1.12,
+        0.06,
+        1.12
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.43,
+        4.73
+      ],
+      "size": [
+        0.72,
+        0.06,
+        0.72
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        2.13,
+        4.72
+      ],
+      "size": [
+        0.17,
+        0.16,
+        0.17
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.55,
+        0.12,
+        5
+      ],
+      "size": [
+        0.24,
+        1.35,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0.2,
+        1.570796
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.58,
+        0.34,
+        5
+      ],
+      "size": [
+        0.22,
+        1.25,
+        0.22
+      ],
+      "rotation": [
+        0,
+        -0.14,
+        1.570796
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.22,
+        0.25,
+        4.92
+      ],
+      "size": [
+        0.8,
+        0.5,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.08,
+        0.23,
+        4.08
+      ],
+      "size": [
+        0.65,
+        0.46,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#416c48"
+    }
+  ]
+}

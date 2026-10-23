@@ -1,0 +1,222 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The communal well, courtyard buildings and animal-drawn cart establish a convincing Bronze Age direction rather than a recoloured modern town. Revision is still needed for procedural street dressing, underdeveloped vegetation, incorrect awning materials, weak ownership cues and presentation artifacts in the assembled scene.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Dressing reads mainly as small stone-and-green-lump clusters; harvested barley, dry grass and fallen reeds are not distinguishable.",
+        "The busy, pale ground texture overwhelms the sparse physical dressing at stream distance."
+      ],
+      "fix": "Redistribute the 14 dressing parts into unequal patches of angular barley stubble, dry grass, fallen reed stems, limestone and terracotta fragments. Keep most below 0.35 m and reduce texture accent coverage so these silhouettes remain visible."
+    },
+    {
+      "id": "street",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Large outlined oval patches read as placed islands rather than shallow variations in compacted earth.",
+        "Identical patch spacing, uninterrupted straight ruts and dense pebble printing make the assembled road conspicuously procedural.",
+        "Bright turquoise puddles read as miniature pools rather than muddy depressions."
+      ],
+      "fix": "Keep the 8 m ochre-earth road and flush frontage, but rebuild the 16 dressing parts as shallow, irregular wear: broken compressed wheel tracks, hoof impressions, embedded stones, muddy puddles and short open terracotta channels near the edges. Remove the outlined oval islands and preserve a clear central walking route."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the open-centred ochre clay ring, timber support, small fragments and clear parcel interior."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The boundary reads as long, uniform rails rather than irregular mudbrick footings with short woven panels.",
+        "The gate and hanging ownership tablet are too indistinct to communicate ownership.",
+        "Ivy is named in the sheet caption, but the required anchored gameplay name is not visible on the asset."
+      ],
+      "fix": "Rebuild within 28 parts using irregular mudbrick courses and short reed or wattle panels along the two rear boundaries, 0.7–0.95 m high. Leave the frontage open between thicker gate posts; hang a clay tablet with fibre cords, a filled household seal, the exact gameplay label \"Ivy\", and a broad #d9534f post band."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The leaning fig has an excessively sparse crown of smooth oval blobs.",
+        "The palm reads as a radial star of straight strips rather than unequal, layered fronds around an off-centre crown."
+      ],
+      "fix": "Use the 26-part budget to give the fig several unequal faceted crown masses with visible branch separation. Offset the palm crown and vary frond length, angle and droop; retain the leaning silhouette and shallow earthen watering basins."
+    },
+    {
+      "id": "wild-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The tamarisk's pointed crown pieces suggest a sparse conifer rather than irregular river-country scrub.",
+        "The carob is a cluster of smooth blobs with little readable branching.",
+        "The thorn bush reads as a grass star rather than a low woody shrub."
+      ],
+      "fix": "Reallocate the 34 parts into a crooked, branching tamarisk with uneven foliage sprays, a broad carob with staggered faceted masses and open gaps, and a low spreading thorn bush with visible woody forks. Avoid conical treetops and repeated crown shapes."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the short civic oil-bowl silhouette and mudbrick base. Keep emission restricted to the flame parts."
+    },
+    {
+      "id": "centrepiece",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the low wellhead, timber rope frame, bucket, jars and collection basins; they communicate communal water collection without a fountain anachronism."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad low slab, two supports and thin sitting mat; preserve the approximately 0.45 m seat height."
+    },
+    {
+      "id": "market",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The canopy reads as several thick timber planks rather than a sloping reed mat.",
+        "The display ledge is a clean rectangular box without a clear mudbrick material identity."
+      ],
+      "fix": "Within 28 parts and the existing footprint, replace the roof boards with a thin bundled-reed canopy, visible edge bindings and lashings over forked posts. Break the ledge into a few irregular mudbrick courses and preserve distinct basket rims, jar necks, folded linen and bronze ingots."
+    },
+    {
+      "id": "arrival",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The plain red disc on a tall straight pole beside a rigid-roof shelter recreates a bus-stop silhouette.",
+        "The high red-backed seat and boxy vehicle body read more like a passenger wagon than a light chariot.",
+        "The carved tether stone and clay wheel emblem are not clearly identifiable."
+      ],
+      "fix": "Keep the approximately 5 m horse-and-rig assembly aligned along x, but use a light, open-backed two-wheeled chariot with low wooden sides, leather lashings and restrained bronze fittings. At the frontage, replace the signpost treatment with a low incised clay wheel medallion, a substantial carved tether stone with a visible tied rope, and a genuinely reed-mat shade."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The crossing primarily reads as a thick slab on block supports; its short corbelled openings are not sufficiently legible from the review camera.",
+        "Four matching raised end masses resemble formal planters and overpower the informal bank dressing."
+      ],
+      "fix": "Within 54 parts, expose three short stepped-corbel openings between squat piers so their construction reads from 40 degrees. Lower and vary the planter-like end masses, retain the continuous 4 m-wide deck, and clearly join its approaches to bank landings at z ±7 with irregular mud steps, reeds and mooring stones."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Evenly spaced pale rectangles along the frontage resemble a dashed plot or parking boundary.",
+        "The medallion's shared central bowl is not clearly distinguishable from its surrounding dots."
+      ],
+      "fix": "Remove the dashed frontage treatment and retain four low mudbrick corner markers with a clear interior. Rebuild the clay medallion with one unmistakable recessed bowl surrounded by four impressed dots, using broad relief rather than tiny decoration."
+    },
+    {
+      "id": "camp",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The matching cream-and-red striped awnings read as taut fabric, not the required reed coverings.",
+        "The narrow turquoise ribbon gives little sense of barges floating beside a riverbank.",
+        "Repeated identical awnings make the camp feel assembled from modern market-canopy modules."
+      ],
+      "fix": "Retain two shallow-draft barges and one shore shelter within the 80-part budget, but give them thin bundled-reed awnings on irregular timber frames. Connect the water treatment continuously to the river, show hulls sitting at the waterline, and make mooring ropes, bank access, sacks, textiles, the balance and ceramic hearth clearly readable."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The field tender's square white-and-turquoise headpiece reads as a rigid cap rather than a wrapped sun cloth.",
+        "Bright block-coloured garments lack sufficiently clear wrap overlaps and draped hems to distinguish woven Bronze Age clothing from generic toy uniforms.",
+        "The hoe blade is difficult to identify at stream scale."
+      ],
+      "fix": "Keep both base bodies and the 46-part budget. Add broad wrap overlaps, a distinct wool shoulder cloth, a knee-length belted tunic and a headcloth with visible wrapped bands and a hanging tail; use dye sparingly and turn the bronze hoe blade into a clear profile separated from the legs."
+    },
+    {
+      "id": "head",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the cream robe, ochre-and-turquoise mantle and paired sun emblems; the tall wooden staff makes the High Priest readable from above."
+    },
+    {
+      "id": "leader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The stacked square headgear reads as a tiered rigid hat rather than wrapped linen.",
+        "The striped wool mantle is reduced to a narrow, stiff sash instead of a recognisable draped garment."
+      ],
+      "fix": "Within 36 parts, replace the stacked hat blocks with offset cloth wraps and a folded tail. Broaden the striped mantle across one shoulder and the back, with a clear woven border; retain the readable balance, lapis-coloured collar and sandals."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the sun-baked mudbrick volumes, timber lintels, rooftop living area, ladder and shaded courtyard frontage."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the enclosed bread court, oven, pottery service and simple communal seating; this is a convincing age-specific replacement for a café."
+    },
+    {
+      "id": "skyscraper",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Numerous miniature setbacks, ladders and roof details compete with the main silhouette.",
+        "The strongly tapering stack reads more as a ceremonial tower than an inhabited lodging-and-storehouse compound.",
+        "Storage and domestic functions are not readable at stream distance."
+      ],
+      "fix": "Consolidate the same footprint and high-rise role into fewer, broader occupied mudbrick tiers. Add prominent storage doors, grouped grain jars or sacks and shaded residential landings; simplify ladder routes and keep timber beam ends subordinate to the main masses."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the clear chunky canine silhouette and plain, unadorned working-animal appearance."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the donkey-drawn two-wheeled wooden cart, visible shafts and pottery load; it preserves the transport role without modern vehicle construction."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Repeated oval road islands and uniform surface motifs expose the modular construction instead of producing a coherent lived-in street.",
+        "Presentation pads remain visible beneath characters, particularly the High Priest's circular base and the residents' rectangular patch.",
+        "Ground and paving patterns compete with the small residents and civic props at stream distance."
+      ],
+      "fix": "Remove character presentation geometry from the assembled world and seat feet directly on the shared terrain. Vary dressing placement between adjacent road modules, reduce surface accent coverage, and retain flagstone only within the designated square while keeping road frontages flush earth."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

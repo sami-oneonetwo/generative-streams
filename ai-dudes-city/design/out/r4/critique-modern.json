@@ -1,0 +1,202 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The kit establishes a convincing Modern Age through contemporary buildings, vehicles and civic furniture rather than recoloured historical assets. Approval is blocked by inconsistent lot markers, overly regular tree construction, conspicuous lamp artefacts and street staging that compromises crossings and the leafy public-space brief.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the sparse, low meadow dressing and restrained puddle treatment; keep these details subordinate to characters and buildings."
+    },
+    {
+      "id": "street",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the charcoal asphalt, sparse flat markings, slab pavements and dropped crossing edges. Make the crossing dressing independently placeable so it does not repeat automatically with every road tile."
+    },
+    {
+      "id": "lot-sale",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The availability marker is a broad, two-legged board rather than the specified compact panel on one square post.",
+        "The parcel reads as a uniform tan surface; the required two gravel patches and sparse grass are not clearly distinguished."
+      ],
+      "fix": "Keep the successful amber empty ring, but place it on a compact pale panel supported by one square post near x 4.5, z 4.5. Use the grey-green gravel palette and resolve two irregular gravel patches with a few separate grass tufts."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The front marker reads as a striped barrier spanning two supports, not a modest nameplate attached to a boundary post.",
+        "The owner name is not legible in the assembled scene."
+      ],
+      "fix": "Keep the low timber-and-metal boundary, but replace the freestanding barrier-like marker with one rectangular plate on the front post. Print \"Ivy\" in large simple lettering beside a filled household circle and a restrained #d9534f owner strip; preserve the open entrance."
+    },
+    {
+      "id": "street-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The plane tree has a regular bare fork supporting a small, evenly clustered crown.",
+        "The maple reads as a flower-shaped cap of rounded blobs, without a clearly legible low branch."
+      ],
+      "fix": "Redistribute the existing 30-part budget into an off-axis plane trunk with unequal branch lengths and a broader, broken crown. Give the maple an offset canopy and one conspicuous low lateral branch; retain separate permeable pits and clear walking space."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The willow's straight, similarly spaced hanging pieces read as supports beneath a canopy rather than drooping foliage.",
+        "The oak crown is assembled from repetitive rounded clusters over a nearly straight trunk, weakening the wild, uneven silhouette."
+      ],
+      "fix": "Rebuild the willow with spreading branches and staggered, tapered foliage curtains of unequal length. Lean and fork the oak trunk, vary crown mass sizes and leave asymmetric gaps; keep the flowering shrub low and offset within the 38-part group."
+    },
+    {
+      "id": "street-light",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "A hard-edged opaque white disc beside the pole reads as a stray mesh or painted patch, not illumination.",
+        "The artefact repeats conspicuously in the daylight street scene."
+      ],
+      "fix": "Remove the white ground-disc geometry or decal. Retain the contemporary curved arm and flat LED head, restrict glow=true to the underside diffuser, and use only soft lighting falloff when illumination is needed."
+    },
+    {
+      "id": "centrepiece",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the low concrete basin, three short jets and offset geometric stone. Preserve the shallow profile and ensure only recessed light lenses, not water or jets, use glow."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad timber slats, shallow back and simple aluminium supports. Maintain the approximately 0.45 m seat height and unobstructed two-person seating width."
+    },
+    {
+      "id": "market",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact flat-roofed kiosk, teal panels and clearly separated display goods. Preserve the service opening and unbranded packaging without adding small advertising."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "In the assembled scene, the minibus overlaps the pedestrian crossing.",
+        "The stop and crossing share the same landing area instead of establishing a distinct, unobstructed boarding route."
+      ],
+      "fix": "Keep the recognisable minibus and transparent shelter, but move the stopping position clear of the zebra crossing. Align the opening-side door with a dedicated kerb landing and keep the shelter, seat and sign out of the continuous pedestrian route."
+    },
+    {
+      "id": "river",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the shallow concrete structure and open metal rails. Preserve flush bank connections at z ±7 and keep reed and stone pockets irregular and clear of the landings."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The marker reads primarily as a building-and-tool sign; the required four nodes around one shared centre are not legible.",
+        "A tool-like yellow symbol substitutes for the specified building-hand pictogram, weakening the collaborative-construction identity."
+      ],
+      "fix": "Redraw the green marker with a large four-node shared-centre symbol and a separate, simplified building-in-hand pictogram. Retain the four low corner blocks and leave the construction interior and entrance clear."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the tourist coach, two parasols and separate check-in awning. Keep luggage, cooler and tables grouped into readable activity clusters, with the route display facing the approach and only the portable light diffuser glowing."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The plant carrier's hair reads as stacked rigid blocks rather than loose textured hair.",
+        "The hoodie silhouette is weak beside the similarly boxy work jacket, leaving colour and props to carry most of the clothing distinction."
+      ],
+      "fix": "Reallocate parts within the 46-part pair to give the plant carrier a visible hood behind the neck and several uneven, overlapping hair tufts. Preserve the cropped trousers, trainers and plant, and keep the other resident's tied-back hair and phone clearly separated from the torso."
+    },
+    {
+      "id": "head",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contemporary suit, broad civic sash, badge and oversized rounded scissors. Keep the ribbon compact and subordinate so the Mayor's silhouette remains readable at stream distance."
+    },
+    {
+      "id": "leader",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the bright practical jacket, bucket hat, folded map and contrasting scarf. Preserve the suitcase's bold sticker blocks and the clear separation between the guide's accessories."
+    },
+    {
+      "id": "home",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contemporary stepped volumes, timber upper storey, broad glazing and sheltered entrance. Keep garden dressing within the parcel and the entrance connected cleanly to the pavement."
+    },
+    {
+      "id": "cafe",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the glass frontage, compact service terrace and wordless coffee identity. Keep rooftop equipment chunky and restrained, and preserve circulation between the terrace furniture and entrance."
+    },
+    {
+      "id": "skyscraper",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped steel-and-concrete silhouette, broad window bands and planted setbacks. Avoid adding fine facade grids or reflective glass that would compete with the toy-like read."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the blocky muzzle, contrasting ears and contemporary harness. Keep all paws grounded and preserve a clear tail silhouette when scaled beside a resident."
+    },
+    {
+      "id": "car",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The long bonnet and stepped rear ledge make the silhouette read more like a small saloon than the specified compact hatchback."
+      ],
+      "fix": "Shorten the bonnet, extend the passenger roof closer to the rear axle and form a clear rear hatch with a large back window. Preserve the chunky tyres, simple glazing and restrained two-tone colour treatment."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Three crossings repeat along a short straight road without a visible junction hierarchy.",
+        "The minibus occupies one crossing, compromising the pedestrian and boarding layout.",
+        "The broad tiled square is largely empty and unplanted, contradicting the leafy public-space direction despite the small number of street trees."
+      ],
+      "fix": "Replace tile-by-tile crossing repetition with a deliberately placed crossing near the junction and stop the minibus beyond it. Within the existing footprints, group benches around the fountain, introduce asymmetric planted pockets around the square's edges and maintain clear pedestrian routes and community construction areas."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

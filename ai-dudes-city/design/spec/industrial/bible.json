@@ -1,0 +1,126 @@
+{
+  "id": "industrial",
+  "name": "the Industrial Age",
+  "summary": "Brick, iron, gaslight and steam make a proud civic town under the Alderman's chain of office.",
+  "rules": {
+    "sidewalks": true,
+    "kerbs": true,
+    "roadMarkings": false,
+    "roads": "Use dark rectangular granite setts along x, 8 m wide within |z| <= 4. Street dressing: 24 parts below 1.2 m, including flush drain grates, wheel-polished strips, damp patches, sandstone kerb sections and a few short iron bollards at the margins. Where tram track is needed, embed two grooved rails flush with the surface along x. Keep the middle traversable and omit painted traffic lanes.",
+    "walkingEdge": "Continuous flagstone pavements occupy |z| 4–6, raised about 0.12 m above the setts, with clearly cut kerbs and narrow road-side gutters. This is the first age with a deliberate municipal sidewalk system. Fixtures at z 5 stand on slabs; keep a usable route past them.",
+    "lotMarkers": "Free lot: 14 parts on a 16 m parcel, with a bolted iron post near x 4.5, z 4.5 supporting a cream enamel plate bearing a large ochre empty ring. The vacant centre, not text, signals availability; add brick fragments, ballast and sparse weeds. Community lot: 18 parts, with four low brick corner plinths and a front cast-iron public-works medallion showing four nodes around a central civic disc. Keep construction ground open.",
+    "boundaries": "Claimed lot: 34 parts including the owner marker. Use a low red-brick footing and simple cast-iron rail panels along z -6 and x -6, with total height around 0.9 m and always below 1.2 m. Leave the +z frontage open with a gap between short gate posts. Avoid dense spear forests and full-height factory fencing.",
+    "ownerMarker": "Mount a small enamel nameplate with a brass border on the front gate post. The post cap or broad enamel strip uses #d9534f, and the exact player name is set in clear, period-compatible painted lettering. Exposed bolts and a filled oval household emblem distinguish ownership from the free-lot ring.",
+    "lighting": "Street light: 16 parts at x 0, z 5, comprising a fluted cast-iron post, simple square lantern cage, glass panels and gas burner. Only the compact gas flame or mantle uses glow=true. Keep the silhouette upright and civic, with restrained ornament rather than miniature lacework.",
+    "centrepiece": "Use 52 parts for a cast-iron fountain on a stone plinth about 4.5 m across. A broad lower basin, short fluted column, shallow upper bowl and four modest spouts establish municipal pride. Use dark painted iron, brass fittings and visible blue water; water is not emissive. Keep the fountain around 2.4 m high and avoid decorative gears that serve no purpose.",
+    "seating": "Use 14 parts for a two-person bench with simplified cast-iron end frames and warm timber seat and back slats. Seat height is approximately 0.45 m. Broad curves and a few bolts are enough; do not model fine filigree.",
+    "market": "Use 34 parts within about 2.6 × 1.6 m: a timber barrow with two large iron-rimmed wheels, a folding canvas cover, an iron handle and a display of bread, tins, bundled newspapers and paper-wrapped goods. It is a movable street trader's barrow, not a medieval fixed striped stall or a plastic kiosk.",
+    "trees": "Street pair: 30 parts total at x -3 and x 3, z 5, with a slightly leaning young plane tree and a shorter elm with an uneven spreading crown. Give them low iron root guards and small pavement openings, not identical topiary. Wild group: 36 parts for a tall ash, a broad mature elm and a scrubby young birch. Countryside dressing: 16 low sparse parts of coarse grass, wildflowers, gravel, a few cinders and isolated sleeper offcuts near railway influence; keep most countryside healthy and readable rather than buried in soot.",
+    "arrival": "Use 68 parts for a short steam tram and its stop. At z 5 place an iron stop pole with an enamel tram-wheel emblem, a simple timetable case and a narrow canopy. At z 0, aligned along x, place a toy-compressed 5 m steam tram with a short boiler compartment, chimney, large exposed wheels and a timber passenger cabin. Rails are flush with the road. A tiny steam puff may suggest motion, but no opaque smoke plume may hide the town.",
+    "crossing": "Use 68 parts for a riveted iron viaduct crossing along z, about 4 m wide, with shallow lattice girders, stone piers and a timber carriage deck. The deck meets banks about 1 m above water, and side rails remain low and open. Water runs along x across |z| <= 7; show the central 12 m in the river tile and continue to real bank landings at z ±7. Add stone pier noses, gravel, mooring rings and a few reeds. Use structural ironwork, not decorative steampunk machinery.",
+    "camp": "Use 88 parts for two luxurious railway carriages serving as shelters, a striped veranda awning, a compact locomotive or tender, luggage trunks, coal baskets and a gas-lit gathering table across the river. Put them on a short siding that visibly continues off the camp tile; the train must not sit inexplicably on grass. Lamp flames use glow=true. The separate railway-baron leader uses 40 parts including the base figure: a cream travel coat, waistcoat, bowler, leather gloves and a pocket-watch chain, carrying a rolled railway concession map. Foreign railway crests and trunk labels imply a distant network.",
+    "people": "Use 48 parts total for two residents at x -0.6 and x 0.6, retaining the base bodies. One wears a flat cap, rolled shirt sleeves, waistcoat and heavy boots and carries a small tool case; the other wears a long practical skirt, fitted jacket and pinned hair and carries a ledger. Distinguish working roles without making everyone a soot-covered factory worker.",
+    "head": "The Alderman uses 42 parts including the base figure. Give them a tall black top hat, dark frock coat, waistcoat, polished boots and an oversized brass civic chain with one broad medallion. Carry a rolled town charter. The top hat and chain are the dominant office symbols, clearly different from the railway baron's travel coat and bowler."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "meadow",
+      "base": "#7d8c63",
+      "accent": "#a4ad7b",
+      "accent2": "#596f52",
+      "scale": 1.4
+    },
+    "road": {
+      "pattern": "setts",
+      "base": "#5d6264",
+      "accent": "#858b88",
+      "accent2": "#42494c",
+      "scale": 0.45
+    },
+    "pavement": {
+      "pattern": "flagstone",
+      "base": "#a7a397",
+      "accent": "#c8c1ad",
+      "accent2": "#827f76",
+      "scale": 1
+    },
+    "lotRough": {
+      "pattern": "gravel",
+      "base": "#928878",
+      "accent": "#b5a993",
+      "accent2": "#6d6a60",
+      "scale": 0.4
+    },
+    "lotClaimed": {
+      "pattern": "brick",
+      "base": "#a26048",
+      "accent": "#c27f59",
+      "accent2": "#7c5143",
+      "scale": 0.4
+    },
+    "square": {
+      "pattern": "flagstone",
+      "base": "#b7ad96",
+      "accent": "#d3c7aa",
+      "accent2": "#918a7c",
+      "scale": 1.2
+    },
+    "bank": {
+      "pattern": "gravel",
+      "base": "#858676",
+      "accent": "#aaa58d",
+      "accent2": "#66765a",
+      "scale": 0.5
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#4f8994",
+      "accent": "#83b6bd",
+      "accent2": "#386672",
+      "scale": 2.2
+    }
+  },
+  "light": {
+    "sky": "#c7dbe3",
+    "fog": "#d5d2bf",
+    "sun": "#ffe3b3",
+    "sunIntensity": 1.9,
+    "hemiSky": "#dce9ef",
+    "hemiGround": "#9d8066",
+    "hemiIntensity": 2
+  },
+  "palette": [
+    "#a26048",
+    "#c27f59",
+    "#d3c7aa",
+    "#a7a397",
+    "#42494c",
+    "#263f40",
+    "#8b6245",
+    "#b8914e",
+    "#596f52",
+    "#83b6bd",
+    "#f2cf83",
+    "#d9534f"
+  ],
+  "materials": [
+    "Red fired brick with pale mortar",
+    "Rectangular granite setts and cut sandstone slabs",
+    "Painted cast iron and riveted wrought iron",
+    "Timber carriage panels and bench slats",
+    "Brass civic fittings and small copper pipes",
+    "Cream vitreous enamel signage",
+    "Clear lantern glass",
+    "Wool tailoring, leather cases and heavy canvas"
+  ],
+  "avoid": [
+    "Modern asphalt lanes, zebra crossings and traffic lights",
+    "Plastic furniture, LED lamps and electronic displays",
+    "Medieval heraldic fencing and Bronze Age ritual decoration",
+    "Random exposed gears, giant smokestacks and fantasy steampunk clutter",
+    "Black lighting, permanent smog or unreadable soot-covered surfaces",
+    "Railway carriages without rails or a plausible off-tile connection",
+    "Modern bus bodies disguised with a chimney"
+  ],
+  "designDirection": "Build a bright late-19th-century civic town with red brick, disciplined street edges, dark iron and warm brass, using chunky silhouettes suitable for the 40° overhead view. Preserve the 5×5 grid, 16 m parcels, four central community lots and camp beyond the east river, with upgrades keeping the same footprint and service. Industrialisation should appear as standardised fabrication, public infrastructure and steam transport rather than arbitrary gears attached to older objects. A skyscraper becomes a stepped brick-and-iron commercial building, a car becomes a glazed horse cab, and a café becomes a tiled tea room with an enamel sign and timber shopfront. Keep daylight generous, smoke minimal and ironwork broad enough to read without visual noise."
+}

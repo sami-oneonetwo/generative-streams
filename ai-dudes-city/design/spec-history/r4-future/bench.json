@@ -1,0 +1,198 @@
+{
+  "name": "Docked Crescent Hover Seat",
+  "description": "A continuous ivory sitting shell with a low curved back and inset woven cushion floats above a compact docking puck, seating two at 0.45 m.",
+  "notes": "Rounded unsupported ends, a clear 0.15 m docking gap and a restrained cyan lift ring establish levitation, while a dark underside separates the ivory shell from the pale square.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.04,
+        0.04
+      ],
+      "size": [
+        0.6,
+        0.08,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.155,
+        0.04
+      ],
+      "size": [
+        0.5,
+        0.06,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.155,
+        0.04
+      ],
+      "size": [
+        0.36,
+        0.064,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.27,
+        0.02
+      ],
+      "size": [
+        1.94,
+        0.08,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.34,
+        0.02
+      ],
+      "size": [
+        1.96,
+        0.1,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.395,
+        -0.23
+      ],
+      "size": [
+        0.26,
+        1.96,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.56,
+        -0.29
+      ],
+      "size": [
+        1.96,
+        0.42,
+        0.14
+      ],
+      "rotation": [
+        -0.25,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.98,
+        0.34,
+        0.02
+      ],
+      "size": [
+        0.26,
+        0.18,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.98,
+        0.34,
+        0.02
+      ],
+      "size": [
+        0.26,
+        0.18,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.42,
+        0.1
+      ],
+      "size": [
+        1.8,
+        0.06,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    }
+  ]
+}

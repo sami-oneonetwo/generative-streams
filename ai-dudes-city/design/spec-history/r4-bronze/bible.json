@@ -1,0 +1,120 @@
+{
+  "id": "bronze",
+  "name": "the Bronze Age",
+  "summary": "Sun-baked mudbrick, reed shade and bronze sun emblems surround the High Priest's communal well.",
+  "rules": {
+    "sidewalks": false,
+    "kerbs": false,
+    "roadMarkings": false,
+    "roads": "Use compacted ochre earth along x, 8 m wide within |z| <= 4, with pale dust on high spots and darker compressed cart routes. Street dressing: 16 parts below 1.2 m, including shallow wheel ruts, hoof impressions, flush stone patches, puddles and fragments of open terracotta runoff channels near the edges. Keep the central walking route clear. Do not turn the whole town into a paved classical city.",
+    "walkingEdge": "At |z| 4–6, provide flush, swept earth frontage with occasional reed mats and irregular doorstep stones. These are not continuous pavements, and there is no raised kerb. Trees and corner fixtures at z 5 stand in this shared frontage.",
+    "lotMarkers": "Free lot: 12 parts on the 16 m parcel, with a forked timber post near x 4.5, z 4.5 holding a large sun-dried clay ring painted pale ochre. The empty centre continues the wordless available symbol; add pottery fragments, dry grass and a small stone weight. Community lot: 16 parts, with four low mudbrick corner markers and a front clay medallion showing four impressed dots around a shared central bowl. Keep its interior clear for a public project.",
+    "boundaries": "Claimed lot: 28 parts including the name marker. Use a low mudbrick footing with short woven-reed or wattle panels along z -6 and x -6, 0.7–0.95 m high and never above 1.2 m. Leave the +z frontage open with a gap between two thicker gate posts. Use hand-formed, slightly irregular brick courses rather than modern garden walls.",
+    "ownerMarker": "Hang an incised clay name tablet from the front gate post with fibre cord. Paint a broad band on the post in owner colour #d9534f and use a filled household seal. Display the exact player name as a gameplay label anchored to the tablet, avoiding fake historical script or a modern printed board.",
+    "lighting": "Street light: 12 parts at x 0, z 5, with a short mudbrick pedestal, timber fork and large shallow ceramic oil bowl. Flame parts use glow=true; oil vessels and bronze trim remain unlit. These are attended civic or temple-corner lamps, not electric-looking lamps distributed at mechanical intervals.",
+    "centrepiece": "Use 38 parts for a communal well court about 4.5 m across. A low limestone wellhead, timber rope beam, wooden bucket, four pottery water jars and shallow stone collection basins form the gathering place. A modest hammered-bronze sun disc marks the High Priest's civic stewardship. No powered jet, Roman fountain sculpture or unnecessary glow.",
+    "seating": "Use 6 parts for a broad limestone sitting slab on two low rubble-and-mudbrick supports, with a thin reed sitting mat. The top is about 0.45 m high and accommodates two people. Keep it heavy, simple and slightly uneven.",
+    "market": "Use 28 parts within 2.6 × 1.6 m: four forked timber uprights, a sloping reed-mat roof, a mudbrick display ledge, woven grain baskets, pottery jars, linen bundles and a few bronze ingots. Goods are traded with weights or barter rather than modern tills and price labels.",
+    "trees": "Street pair: 26 parts total at x -3 and x 3, z 5, consisting of a watered fig with a broad crown leaning away from its trunk and a younger date palm with unequal fronds and an off-centre crown. Small earthen watering basins replace metal tree grilles. Wild group: 34 parts for a tall irregular tamarisk, a broad carob and a low thorn bush. Countryside dressing: 14 sparse parts of dry grass, barley stubble, smooth limestone, fallen reed stems and a few potsherds, mostly below 0.35 m. Maintain asymmetry even in tended planting.",
+    "arrival": "Use 58 parts for a chariot arrival place and its rig. At z 5, place a carved tether stone, a reed shade and a clay wheel emblem; there is no raised transit platform. A horse and light two-wheeled chariot wait at z 0, aligned along x and toy-compressed to about 5 m overall. Use a wooden body, leather lashings and bronze fittings, without saddles, stirrups or iron chassis.",
+    "crossing": "Use 54 parts for a 4 m-wide limestone crossing running along z, built from several short corbelled arches on squat stone piers rather than a Roman semicircular arch. The deck meets each bank about 1 m above water, with low stone edge blocks. Water flows along x across |z| <= 7; show the central 12 m in the river tile and place true bank landings at z ±7 in its continuations. Dress banks with reeds, mud steps, jars and mooring stones. Keep the span continuous and walkable.",
+    "camp": "Use 80 parts for two shallow-draft trading barges moored at the far bank, each with a reed awning, plus one shore-side reed shelter. Add amphora-like storage jars, grain sacks, folded textiles, a balance scale and a ceramic hearth; hearth flames use glow=true. The separate caravan leader uses 36 parts including the base figure: a river trader in a striped wool mantle, wrapped linen headcloth and leather sandals, carrying a small balance. A lapis-coloured bead collar and unfamiliar woven border identify distant trading connections.",
+    "people": "Use 46 parts total for two residents at x -0.6 and x 0.6, retaining the base bodies. One wears a linen wrap skirt, short wool shoulder cloth and tied hair and carries a pottery jar; the other wears a knee-length belted tunic, a sun headcloth and sandals and carries a bronze-bladed hoe. Clothing is layered, dyed sparingly and clearly constructed from woven cloth.",
+    "head": "The High Priest uses 40 parts including the base figure. Use a long cream linen robe, an ochre-and-turquoise woven mantle, a wrapped ceremonial headdress and a large hammered-bronze sun disc on the chest. A tall wooden staff capped with a second simple sun emblem makes the office readable from above. Avoid medieval crowns, mitres and unrelated monumental-civilisation costume mixtures."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "meadow",
+      "base": "#b5a66b",
+      "accent": "#d2bc7a",
+      "accent2": "#7f9252",
+      "scale": 1.5
+    },
+    "road": {
+      "pattern": "dirt",
+      "base": "#b17a49",
+      "accent": "#d19b60",
+      "accent2": "#8b603d",
+      "scale": 1.3
+    },
+    "pavement": null,
+    "lotRough": {
+      "pattern": "sand",
+      "base": "#c3a16c",
+      "accent": "#ddbd84",
+      "accent2": "#a78656",
+      "scale": 1.4
+    },
+    "lotClaimed": {
+      "pattern": "dirt",
+      "base": "#c49561",
+      "accent": "#ddba82",
+      "accent2": "#a5774e",
+      "scale": 1.5
+    },
+    "square": {
+      "pattern": "flagstone",
+      "base": "#d2bb87",
+      "accent": "#ead7aa",
+      "accent2": "#ae9568",
+      "scale": 1.5
+    },
+    "bank": {
+      "pattern": "mud",
+      "base": "#857046",
+      "accent": "#b1975f",
+      "accent2": "#6d824b",
+      "scale": 1.2
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#429d9b",
+      "accent": "#7bc5b9",
+      "accent2": "#327c84",
+      "scale": 2.5
+    }
+  },
+  "light": {
+    "sky": "#b7e0ec",
+    "fog": "#e0d5ae",
+    "sun": "#ffe1a5",
+    "sunIntensity": 2.5,
+    "hemiSky": "#d8edf0",
+    "hemiGround": "#bb8c58",
+    "hemiIntensity": 1.7
+  },
+  "palette": [
+    "#b17a49",
+    "#d19b60",
+    "#d2bb87",
+    "#ead7aa",
+    "#6d4c32",
+    "#8a663d",
+    "#b68942",
+    "#6d824b",
+    "#429d9b",
+    "#365f86",
+    "#e2b34b",
+    "#d9534f"
+  ],
+  "materials": [
+    "Sun-dried mudbrick with rounded imperfect edges",
+    "Hand-cut pale limestone",
+    "Reed matting, woven wicker and fibre rope",
+    "Rough timber and pegged wooden joints",
+    "Unglazed terracotta and clay seal tablets",
+    "Hammered bronze with restrained turquoise patina",
+    "Woven linen, dyed wool and leather",
+    "Small lapis-coloured decorative inlays"
+  ],
+  "avoid": [
+    "Iron, steel, plastic and large glass panes",
+    "Roman columns, aqueduct silhouettes and semicircular imperial arches",
+    "Medieval battlements, heraldic shields and European crowns",
+    "Modern sign boards, pavements, kerbs and road paint",
+    "Powered fountains, gas lamps and electric glow",
+    "Stirrups, modern saddles and industrial wagon chassis",
+    "Generic Egyptian, Mesopotamian and Mesoamerican motifs mixed indiscriminately"
+  ],
+  "designDirection": "Use a coherent late-Bronze eastern Mediterranean river-town vocabulary: bright sun-baked masses, reed shade, woven cloth and small bronze accents, all rendered as chunky toys for the 40° overhead camera. Preserve the 5×5 block plan, 16 m parcels, four central community lots and camp beyond the east river, with every transformed asset retaining its footprint and role. Replace prehistoric improvisation with measured craft and civic ritual, but do not jump ahead to a classical stone city. A skyscraper becomes a stepped mudbrick lodging-and-storehouse compound, a car becomes a light two-wheeled cart, and a café becomes a shaded barley-bread and broth court. Use broad clay silhouettes and occasional sun discs rather than coating every object in shiny metal."
+}

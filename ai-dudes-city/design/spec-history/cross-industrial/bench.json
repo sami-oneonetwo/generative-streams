@@ -1,0 +1,273 @@
+{
+  "name": "Victorian Scroll-Arm Civic Bench",
+  "description": "A two-person timber bench with splayed cast-iron supports, boldly bent scroll arms and separated wooden slats provides seating at 0.45 m.",
+  "notes": "Dark iron scroll ends and a reclining slatted back give the compact fourteen-part bench a recognisably Victorian municipal character.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -1.02,
+        0.512,
+        0.24
+      ],
+      "size": [
+        0.14,
+        0.98,
+        0.3
+      ],
+      "rotation": [
+        0.25,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.02,
+        0.512,
+        0.24
+      ],
+      "size": [
+        0.14,
+        0.98,
+        0.3
+      ],
+      "rotation": [
+        0.25,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.335,
+        0.12
+      ],
+      "size": [
+        2.18,
+        0.13,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.02,
+        0.64,
+        -0.16
+      ],
+      "size": [
+        0.14,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        -0.4,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.02,
+        0.64,
+        0.16
+      ],
+      "size": [
+        0.14,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        0.4,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.02,
+        0.566,
+        -0.335
+      ],
+      "size": [
+        0.12,
+        0.12,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.02,
+        0.64,
+        -0.16
+      ],
+      "size": [
+        0.14,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        -0.4,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.02,
+        0.64,
+        0.16
+      ],
+      "size": [
+        0.14,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        0.4,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.02,
+        0.566,
+        -0.335
+      ],
+      "size": [
+        0.12,
+        0.12,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.4,
+        -0.22
+      ],
+      "size": [
+        2.12,
+        0.1,
+        0.17
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.4,
+        0
+      ],
+      "size": [
+        2.12,
+        0.1,
+        0.17
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a67c54"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.4,
+        0.22
+      ],
+      "size": [
+        2.12,
+        0.1,
+        0.17
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.72,
+        0.34
+      ],
+      "size": [
+        2.12,
+        0.17,
+        0.1
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ],
+      "color": "#a67c54"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.9356,
+        0.3837
+      ],
+      "size": [
+        2.12,
+        0.17,
+        0.1
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    }
+  ]
+}

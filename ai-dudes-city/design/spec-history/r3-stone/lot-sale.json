@@ -1,0 +1,387 @@
+{
+  "name": "Unclaimed Lot with Pale Clay Twig Loop",
+  "description": "A bold, empty pale-clay twig loop stands on two crooked wooden uprights above ochre mud collars, six scattered footing stones and dark grass tussocks.",
+  "notes": "An uneven hand-daubed loop nearly 2.6 metres across signals available ground without lettering or a board, while natural materials and sparse clutter keep the unclaimed parcel visibly open.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        3.52,
+        0.72,
+        4.5
+      ],
+      "size": [
+        0.26,
+        1.38,
+        0.28
+      ],
+      "rotation": [
+        0.04,
+        0,
+        -0.1
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.35,
+        0.72,
+        4.53
+      ],
+      "size": [
+        0.29,
+        1.38,
+        0.26
+      ],
+      "rotation": [
+        -0.04,
+        0,
+        0.12
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.45,
+        2.816,
+        4.5
+      ],
+      "size": [
+        0.32,
+        1.04,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.2535,
+        2.4835,
+        4.5
+      ],
+      "size": [
+        0.33,
+        1.04,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.586,
+        1.68,
+        4.5
+      ],
+      "size": [
+        0.32,
+        1.04,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        5.2535,
+        0.8765,
+        4.5
+      ],
+      "size": [
+        0.34,
+        1.04,
+        0.33
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7854
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.45,
+        0.544,
+        4.5
+      ],
+      "size": [
+        0.32,
+        1.04,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.6465,
+        0.8765,
+        4.5
+      ],
+      "size": [
+        0.33,
+        1.04,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.314,
+        1.68,
+        4.5
+      ],
+      "size": [
+        0.32,
+        1.04,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.6465,
+        2.4835,
+        4.5
+      ],
+      "size": [
+        0.33,
+        1.04,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7854
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.56,
+        0.14,
+        4.5
+      ],
+      "size": [
+        0.8,
+        0.28,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.3,
+        0.13,
+        4.54
+      ],
+      "size": [
+        0.78,
+        0.26,
+        0.7
+      ],
+      "rotation": [
+        0,
+        -0.32,
+        0
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.64,
+        0.12,
+        4.43
+      ],
+      "size": [
+        0.4,
+        0.24,
+        0.33
+      ],
+      "rotation": [
+        0,
+        0.32,
+        0
+      ],
+      "color": "#a4a18d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.05,
+        0.1,
+        5.16
+      ],
+      "size": [
+        0.36,
+        0.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.41,
+        0
+      ],
+      "color": "#a4a18d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.87,
+        0.13,
+        5.19
+      ],
+      "size": [
+        0.43,
+        0.26,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.56,
+        0
+      ],
+      "color": "#a4a18d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.24,
+        0.11,
+        4.57
+      ],
+      "size": [
+        0.36,
+        0.22,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.19,
+        0
+      ],
+      "color": "#a4a18d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.91,
+        0.09,
+        3.83
+      ],
+      "size": [
+        0.4,
+        0.18,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0.72,
+        0
+      ],
+      "color": "#a4a18d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.02,
+        0.12,
+        3.86
+      ],
+      "size": [
+        0.34,
+        0.24,
+        0.41
+      ],
+      "rotation": [
+        0,
+        -0.55,
+        0
+      ],
+      "color": "#a4a18d"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.99,
+        0.22,
+        4.03
+      ],
+      "size": [
+        0.65,
+        0.44,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0.47,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.39,
+        0.18,
+        3.34
+      ],
+      "size": [
+        0.57,
+        0.36,
+        0.67
+      ],
+      "rotation": [
+        0,
+        -0.36,
+        0
+      ],
+      "color": "#526b40"
+    }
+  ]
+}

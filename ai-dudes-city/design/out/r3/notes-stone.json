@@ -1,0 +1,312 @@
+{
+  "elements": [
+    {
+      "id": "street",
+      "problems": [
+        "The mud has ruler-straight parallel edges, bordered by continuous green strips that read as planned pedestrian verges.",
+        "Repeated puddle shapes and evenly distributed surface marks make the track feel stamped rather than trampled.",
+        "The mud surface renders with long straight parallel streaks and the same footprint glyph stamped on a regular grid, so the track reads as a wooden plank deck, not trampled mud.",
+        "The two puddles have bright orange-brown rings around them that read as manhole covers or drain surrounds.",
+        "The 14 dressing parts are almost invisible (0.03–0.08 m flat ellipses), so nothing on the road says 'ruts, stones, twigs'.",
+        "The walking edge is a uniform dark-green moss band with ruler-straight edges on both sides. It reads as a planted verge or sidewalk, which Sami said must not exist.",
+        "The road surface reads as wooden planks: long parallel grain streaks run along x, not blotchy mud",
+        "Dead-straight road edges and an equally straight, patterned 2 m band either side read as an engineered road with sidewalks",
+        "The drag grooves and footprints are almost invisible; only two puddles read, both at the margins, so the track looks empty",
+        "World rule: Walking edge: the |z| 4–6 strip renders as a uniform dark-green moss band with ruler-straight edges on both sides, which reads as a planted verge or sidewalk. Give the walking edge the same surface as the countryside (or the road mud) and add a rule that the road edge must be ragged, with mud tongues and grass tufts spilling across it.",
+        "World rule: Road surface: the 'mud' pattern renders with straight parallel streaks and regularly spaced repeated footprint glyphs, so it reads as wooden planks. Change the road surface parameters (lower-contrast accent2, larger scale, no linear grain) so it reads as blotchy trampled mud.",
+        "World rule: surfaces.road ('mud' pattern) renders as long parallel plank or wood-grain streaks along x. It needs a blotchy, non-directional mud pattern with darker wet patches, or it will always read as a wooden deck.",
+        "World rule: The street tile's walking edge (|z| 4-6) is drawn as a distinct straight band with its own repeating round pattern, which reads as a pavement or sidewalk even though pavement is null. For the stone age the edge must use the same meadow surface as the countryside, with no separate band, and road edges should be ragged."
+      ],
+      "fix": "Keep the 8 m track footprint, but break its visible margins with shallow muddy incursions, flattened vegetation and irregular moss patches. Redistribute the 14 dressing parts asymmetrically, vary puddle outlines and drag-groove lengths, and keep solid clutter out of the middle. / Make the puddle rims irregular, dark #533d30 and only 0.1–0.2 m wider than the water, with no bright ring. Add 2 broken drag grooves as short offset dark segments (not continuous), 4 half-buried rounded stones (0.4–0.6 m, #81847a, 0.15 m high) near the margins, 2 forked twig piles and 2 bunches of trampled grass tufts spilling from the edge onto the mud at |z| 3.5–4.5 so the boundary looks broken. See bibleChanges for the surface fixes. / Break the straight edges with parts: 6-8 low irregular mud lumps (#533d30 / #987052, 0.1-0.2 m tall, 1-2 m wide) straddling |z| 4, and meadow tufts creeping onto the track. Make the puddles larger (1.5-2.5 m) with darker rims. Make the two drag grooves dark (#533d30), 0.3 m wide and long enough to read. Add a few half-buried stones (0.4-0.6 m, #81847a) near the margins."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "Repeated upright posts and continuous, aligned rails read as a conventional split-rail fence rather than a loosely assembled camp enclosure.",
+        "The owner marker reads primarily as a red rectangular tag; its mud-daubed bark, filled clan emblem and anchored player name are not legible.",
+        "The boundary is a ranch split-rail fence: posts spaced exactly every 1.4 m and two continuous straight rails at the same heights (0.34 m and 0.64 m) along both sides. It contradicts the bible's 'irregular stakes, loose branches, not a fence' and the camp's own branch windbreak.",
+        "The owner marker's most visible element is a flat 0.88×0.62 m red box at 1.8 m height. From the camera it reads exactly like a red sign board or flag, the modern FOR SALE sign Sami wants gone.",
+        "The bark patch and the bone emblem disc are hidden behind the red slab.",
+        "The three pale lashing boxes are spaced evenly, which makes the fence look even more manufactured.",
+        "The boundary is a regular ranch fence: evenly spaced, same-height posts every 1.4 m, with two perfectly parallel horizontal rails at fixed heights",
+        "Mid-brown posts and rails on tan dirt have low contrast; the boundary reads as thin lines",
+        "The owner marker is a tiny red rectangle on a stub; the bark patch and the emblem are not visible",
+        "World rule: Owner marker: say explicitly that the owner colour appears only as a tie, wrap or streamer, never a flat coloured panel larger than 0.3 m. The current wording produced a red board that reads as a FOR SALE sign.",
+        "World rule: Boundaries: add 'no evenly spaced posts and no continuous parallel rails'. Require the claimed-lot boundary to use the same branch-windbreak language as the camp, so the pieces agree.",
+        "World rule: Remove the exact part counts from the rules (e.g. lot-sale 10, civic 14, claimed 24, street-light 8). The specs ignore them (20, 30, 40, 15) and they conflict with the catalogue's ranges.",
+        "World rule: Contrast rule missing. The square ('dirt' #aa8257), claimed lot (#9c7954), hides (#c3a575/#987052) and figure clothing are all the same tan-brown, so pieces vanish. Add a rule: every build and figure needs at least one high-contrast accent from the palette (cream #e1d3ae, charcoal #3b2a22, ochre-red #c88343 or #d9534f, or ginger #a0522d). Also darken the square to a trampled #8a6a48 or lighten hides to cream.",
+        "World rule: boundaries (claimed lot): add 'no continuous parallel rails, no even post spacing'. The current wording still produced a ranch fence."
+      ],
+      "fix": "Within 24 parts, vary stake lean, spacing and height, interrupt rails with loose branches and occasional boulders, and make hide lashings visible. Keep the frontage open; rebuild the owner marker as an irregular bark patch on a crooked post with a #d9534f tie, a bold filled emblem and the gameplay label 'Ivy' anchored to the patch. / Delete the continuous rails. Use stakes of different heights (0.5–1.0 m) with irregular spacing (0.8–2.2 m), leaning ±0.2 rad. Between them lay 6–8 loose crooked branches at varied heights and angles that overlap and cross rather than run parallel. Add 2 brushwood heaps (2–3 crossed thin cylinders) and keep 2 boulders. Remove the red box. Instead, wrap a 0.25 m-tall #d9534f hide tie around the post just under the patch and add one 0.5 m-long red streamer hanging downward. Enlarge the mud-daubed bark patch to about 0.7×0.6 m facing the street, with the bone-colour emblem disc clearly on its front. / Remove the continuous parallel rails. Use stakes of uneven height (0.5-1.1 m) at uneven spacing (0.9-1.9 m), with crossed diagonal branches lashed between some of them, two piled brush heaps (#526b40 leaves on #533d30 sticks) and one gap. Darken the wood to #533d30. Make the owner post 1.8 m with a 0.9×0.7 m pale bark patch (#e1d3ae) facing +z, a large filled emblem disc in #d9534f and a red hide tie streamer."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "The birch is an upright pole supporting a compact rounded crown, not a leaning tree with a torn, sparse canopy.",
+        "The pine uses tidy stacked cones instead of a crooked silhouette with one heavy side.",
+        "Together they read as selected ornamental street trees, directly contradicting Sami's requirement.",
+        "Birch: six spheres clustered into one round cloud on top of a near-vertical white trunk. It is a lollipop crown, not 'torn, sparse'.",
+        "Pine: three cones stacked on a single centred axis with only ±0.1 rad tilt. It reads as a garden Christmas tree; the 'heavy side' cone is low and half-hidden.",
+        "Both read as tidy planted street trees standing neatly on a green verge in the vignette, exactly Sami's complaint.",
+        "The birch is a straight pale pole with a round cloud of spheres on top: exactly the symmetrical lollipop Sami rejected",
+        "The pine is a stacked-cone Christmas tree, perfectly conical with a centred trunk",
+        "The birch's big crown shadow covers the road as a dark blob, and the crown floats as one mass with no visible branches into it",
+        "World rule: Trees rule: add hard geometry rules. No foliage sphere clusters sitting centred on top of a single trunk; no conifer cones stacked on a single axis; at least 40% of each crown's mass offset to one side of the trunk; visible gaps between foliage clumps; at least one bare or dead branch per tree.",
+        "World rule: trees: forbid stacked cones for conifers and a single cluster of spheres on a pole for broadleaf crowns. Require foliage as separated, offset clumps on visible bare branches with at least one dead limb, since 'never use centred lollipop crowns' alone was not enough."
+      ],
+      "fix": "Rebuild within 24 parts: angle the birch trunk, expose unequal branches and separate its foliage into sparse, offset masses. Give the shorter pine a kinked trunk, unequal branch lengths and a dominant lateral foliage mass; retain their specified positions without making them a matched pair. / Birch: lean the trunk 0.3 rad toward the road. Split it into 2 forked leaders that diverge by more than 0.8 rad. Replace the sphere cloud with 3–4 small separate foliage clumps (0.9–1.4 m flattened boxes or icosahedron-like spheres) placed at the branch tips with visible gaps and bare branch between them. Push the largest mass 1.2 m off the trunk axis on one side and add 2 bare dead twigs on top. Pine: shift the cones so their centres step 0.4–0.6 m sideways each tier. Make one tier on the windward side missing (bare trunk showing) and the leeward side heavy. Lean the trunk 0.25 rad, crop the top cone off-centre, and add a snapped dead branch. Replace the round shrub with a ragged 3-box scrub clump. / Birch: lean the trunk 15-20 degrees and split it into two unequal forks. Hang 3-4 small, separated foliage clumps (0.8-1.4 m) off the ends of bare branches, leaving gaps and one dead bare limb. Pine: replace the stacked cones with 3-4 flattened, offset foliage slabs (wide boxes/cones squashed to 0.6 m tall) sticking out to one side at different heights. Bend the trunk with one kink, leave the top bare and snapped, and keep a broken lower branch stub."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The pine has some lean, but its nested-cone crown remains too orderly.",
+        "The birch still relies on rounded, closely packed foliage blobs.",
+        "The juniper resembles a cluster of miniature conifer tips rather than a squat, spreading bush.",
+        "The broad birch is six large spheres fused into a round symmetrical cloud on a straight split trunk. It is the classic lollipop silhouette Sami rejected.",
+        "The tall pine is five centred stacked cones. The whole stack is tilted, but each tier is still a perfect cone on the axis, so it reads as a tilted Christmas tree, not wind-bent.",
+        "The juniper is four near-identical cones clustered together and reads as a group of tiny conifers.",
+        "The tall pine is still a tilted stacked-cone Christmas tree; tilting a symmetrical tree does not make it wild",
+        "The birch is a single round cloud crown on a short trunk: a lollipop",
+        "The juniper reads as two tiny green cones, a speck next to the others",
+        "The pine's root slabs stick out as flat brown boards at the base",
+        "World rule: Trees rule: add hard geometry rules. No foliage sphere clusters sitting centred on top of a single trunk; no conifer cones stacked on a single axis; at least 40% of each crown's mass offset to one side of the trunk; visible gaps between foliage clumps; at least one bare or dead branch per tree.",
+        "World rule: trees: forbid stacked cones for conifers and a single cluster of spheres on a pole for broadleaf crowns. Require foliage as separated, offset clumps on visible bare branches with at least one dead limb, since 'never use centred lollipop crowns' alone was not enough."
+      ],
+      "fix": "Use the 34-part budget for a visibly wind-bent pine with broken crown spacing, a broad birch with exposed unequal forks, and a low juniper spreading horizontally in irregular lobes. Make each plant's silhouette distinct before adding small details. / Birch: replace the sphere cloud with 4 separated foliage clumps of different sizes at different heights (3.5–6 m) on the ends of the diverging branches, with sky visible between them; make one side bare. Pine: flag the foliage to one side (all tiers offset 0.6–1.2 m downwind of the trunk), make the tiers unequal in width, leave 1–2 bare branch stubs on the windward side and break the top. Juniper: replace the cones with a low sprawling mound of 4–5 squashed spheres/boxes (wider than tall, 1.8×0.9 m) and add 2 dead grey twigs poking out. / Pine: build it as a wind-flagged tree, with a long bare trunk and foliage only on the leeward side in 3 flat, staggered tiers of different widths, plus one dead top spike. Birch: two crooked trunks with 4-5 separate irregular clumps of different sizes and a visible gap between them. Juniper: a wide, low (1.2 m), lumpy mound of 5-6 overlapping squashed spheres, about 2.5 m across, in dark #3e5938 with a lighter top. Replace the root boards with 2-3 short angled root cylinders."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "The straight-edged rectangular goods spread reads like a shallow tray rather than an irregular hide laid on earth.",
+        "The trader's required kneeling pose is not clear from the review camera.",
+        "Several goods merge into generic brown blocks rather than distinct gathered or handmade objects.",
+        "The trader is an unreadable stack of tan/orange boxes with no visible head, hair or face. It looks like crates, not a kneeling person.",
+        "The brown blocks beside the spread are sharp-edged rectangular boxes that read as machine-cut wooden crates.",
+        "The red-filled round 'baskets' read as glazed ceramic bowls or red buttons; the woven texture is not visible.",
+        "The hide spread is a flat rectangular cream panel with square corners that reads as a mat or tray.",
+        "The 'kneeling trader' is a stack of tan and brown boxes with a skin-coloured box on top: no hair, no face, no arms reading. It looks like a pile of crates",
+        "The hide spread is a pale tan rectangle on the tan square and nearly disappears",
+        "The goods are tiny; only the two red berry baskets read",
+        "World rule: Contrast rule missing. The square ('dirt' #aa8257), claimed lot (#9c7954), hides (#c3a575/#987052) and figure clothing are all the same tan-brown, so pieces vanish. Add a rule: every build and figure needs at least one high-contrast accent from the palette (cream #e1d3ae, charcoal #3b2a22, ochre-red #c88343 or #d9534f, or ginger #a0522d). Also darken the square to a trampled #8a6a48 or lighten hides to cream.",
+        "World rule: people: require one strong accent colour per figure, and forbid face marks across the mouth (the ochre bars on the Chief read as a beak)."
+      ],
+      "fix": "Within 20 parts, give the hide an uneven outline with a folded corner and separate stone weights. Make the trader's bent knees and lowered torso unmistakable, and separate the goods into bold shallow baskets, a berry mass, pale antler tools, flint blanks and tied hide bundles. / Build the trader from the base figure kneeling (legs folded under as 2 horizontal boxes, torso upright, skin-coloured head with dark hair box, hide wrap). Replace the crates with 2 rounded hide bundles (squashed spheres tied with a cream band) and a stack of 3 flint blanks. Make the baskets lower and wider in woven #c3a575 with a dark rim, and give the berries 4–6 small separate spheres instead of one red disc. Give the hide an irregular outline: 3 offset overlapping boxes rotated ±0.2 rad with one corner lifted, in #b7976c. / Rebuild the trader from the base figure proportions in a kneeling pose: legs folded under, torso upright, head with dark hair (#3b2a22) and a contrasting ochre-red hide wrap. Recolour the hide spread to a dark-edged spotted pelt (#76513b with #e1d3ae patches) at about 2.6×1.6 m with an irregular outline. Make the goods chunky: a 0.6 m stack of flint blanks (#5f5f58), a large pale antler (#e1d3ae, 0.8 m), and 3 baskets of different colours."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The mammoth reads as a smooth, blocky elephant; its shaggy stepped outline and unequal tusks are insufficiently expressed.",
+        "The arrival pennant reads as a straight, rigid strip rather than knotted hanging hide.",
+        "The harness is a tall pale rigid rectangular frame standing around the mammoth's head. It reads as a sawn wooden yoke or doorframe rather than hide straps.",
+        "At about 2.5 m the mammoth is small against a 5 m sledge and the 1.8 m people, so it reads as a bison or bear at stream scale.",
+        "The arrival stake and pennant are tiny and the waiting patch is a pale cream smear that reads like spilled paint.",
+        "The mammoth is a dark brown blob of boxes, barely taller than the sledge, and reads as a bison or bear. Dark fur on dark mud has no contrast",
+        "A tall pale yoke frame stands upright in front of the mammoth and reads as a signpost stuck through it",
+        "The arrival stake is a thin crooked stick with a tiny pennant; nothing says 'stop here' from the camera",
+        "World rule: Mammoth rule. Specify a ginger/rust fur (#a0522d-#c88343), not dark brown, so it reads on mud and grass. Specify at least 2.8 m shoulder height when standing, a domed head separated from the hump, and long curved tusks; at present both mammoths read as dark bears or bison."
+      ],
+      "fix": "Keep the wheel-free sledge and approximately 5 m overall length. Reallocate the 58 parts to stepped shoulder fur, an uneven belly fringe, visibly unequal tusks and a soft-looking hide harness; shorten and kink the pennant around its forked stake, leaving the waiting patch unraised. / Replace the cream frame with 2 dark hide straps (#76513b boxes 0.15 thick) wrapping the mammoth's chest and running back to the sledge. Scale the mammoth to about 3.2 m tall with a high domed head, a sloping back hump and long hanging fur fringes (3–4 boxes along the belly), plus a short trunk curling down. Raise the arrival stake to 2.4 m, make the knotted hide pennant 0.8×0.5 m in #b7976c with an ochre stripe, and make the waiting patch flattened grass (#8a8a55), not cream. / Scale the mammoth to about 3 m shoulder height (still compressed in length), with a stepped domed head, a high hump and long hanging fur skirt boxes. Use a reddish ginger fur (#a0522d / #c88343) so it separates from the mud, with two large, unequal curved tusks made of 2-3 segments each. Lay the yoke horizontal across the shoulders. Make the arrival stake 2.6 m and thick, with a large 1.0×0.6 m pale hide pennant (#e1d3ae) painted with an ochre-red stripe, and a ring of flattened grass (#a8ad68) around its base."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "Squared supports and aligned rectangular walking stones create the impression of masonry abutments and an engineered bridge.",
+        "The paired straight trunks and orderly transitions reinforce a constructed bridge silhouette rather than an opportunistic fallen-log crossing.",
+        "The bank landings and mid-river piers are rectangular grey boxes (1.4×0.8×1.3) with flat tops, stacked in neat threes. They read as cut-stone or concrete abutments, which the bible bans.",
+        "The fallen logs are two pairs of perfectly straight parallel cylinders at the same height. They read as a pipeline or rail track, not a natural fallen-log crossing.",
+        "The water is a hard-edged rectangle with a pale ellipse floating on it that looks like a surfboard.",
+        "The two crossing logs are perfectly straight and parallel, like rails or pipes, joined by a flat rectangular slab in the middle",
+        "The bank ends are clean square stone blocks, which read as masonry abutments (banned by the bible)",
+        "Pale oval fish shapes on the water read as floating white discs or surfboards",
+        "World rule: Crossing: add 'no box-shaped piers or flat-topped stones' to the avoid list, because the current wording still produced cubic stone abutments."
+      ],
+      "fix": "Replace the block stacks with differently sized, rotated natural boulders. Lay several unequal bark-covered trunks across them, using irregular flat stones only to close walking gaps; maintain one continuous route inside the 4 m corridor, with adjoining bank landings at z ±7 about 1 m above the water. / Replace all box piers with clusters of 2–3 irregular rounded boulders (flattened spheres of different sizes, #72796e–#929484, with moss caps). Use one huge fallen trunk (0.8 m diameter) per span plus a thinner second log at a different angle (±0.15 rad yaw) and height, with a root plate (flattened disc 1.6 m, #533d30, with 4 root stubs) at one bank end and broken branch stubs along the trunk. Recolour the pale ellipse to a subtle darker ripple (#367477) or delete it. Add 2 snags (dead branches poking out of the water) and a few reeds. / Use 3 logs of different thickness (0.5-0.8 m) that converge and cross slightly, one with a root ball at its bank end and one with broken branch stubs. Replace the mid slab with a cluster of 3-4 rounded boulders (#81847a) the logs rest on. Swap the bank blocks for heaps of rounded boulders and exposed roots (#533d30). Recolour the fish to a darker teal (#367477) or remove them, and add reed clumps (#7c9254 thin cones) in groups of 5 at both banks."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The collective marker has a flat rectangular signboard silhouette instead of a forked-stick and clay construction.",
+        "The four matching upright, banded corner markers resemble manufactured bollards rather than rough stones.",
+        "Small stones scattered through the interior begin to delineate a project in an area required to remain empty.",
+        "The marker is a 1.65×1.16 m flat pale cream slab mounted on a post at head height. It is a sign board, the exact thing Sami's note forbids, and it reads like a modern notice board.",
+        "The four corner stones are 1.4 m-tall upright rectangular grey posts with a neat orange band near the top. They read as survey posts or bollards.",
+        "Eight small pale chips laid out in a square ring look like litter or paving markers.",
+        "The four corner markers are grey square posts with orange bands, like modern bollards or survey stakes",
+        "The front marker is a flat white square board on a pole with four dots, which reads as a sign board (banned) or a dice face",
+        "Scattered pale chips across the lot read as litter",
+        "World rule: Community lot marker: 'a forked-stick marker bearing clay impressions' produced a 1.65 m flat slab on a post (a sign board). Rewrite it as a lumpy mud disc no wider than 0.7 m set in the fork, and add 'no flat rectangular panels above 0.5 m' to the avoid list.",
+        "World rule: Remove the exact part counts from the rules (e.g. lot-sale 10, civic 14, claimed 24, street-light 8). The specs ignore them (20, 30, 40, 15) and they conflict with the catalogue's ranges.",
+        "World rule: lotMarkers (community lot): forbid square boards and banded posts explicitly. Corner markers should be small cairns, and the clan marker should be a round clay disc in a forked branch, not a flat panel."
+      ],
+      "fix": "Rebuild the 14-part asset with four irregular low corner stones and a crooked forked support carrying four chunky clay impressions around one shared centre. Eliminate the rectangular backing and interior stone pattern, leaving the building area visibly vacant. / Remove the slab. In the fork of the crooked stick, set a lumpy mud-daubed disc (flattened sphere 0.7 m diameter, 0.2 thick, #79563b) facing the street, with 4 small charcoal hand prints (palm box + 3 finger boxes each, 0.06 m proud) around a central ochre #e9b04c dot. Lower the stick to 1.8 m and make it fork asymmetrically. Replace the corner posts with low rounded boulders (0.6–0.8 m, irregular) each with a smear of ochre on top (a thin flattened sphere, not a band). Delete the eight chips, or replace them with 4 small tufts. / Replace the corner posts with small cairns: 3 stacked rotated rough stones (0.4-0.7 m), each topped with an ochre-red (#c88343) daubed stone. Rebuild the front marker as a forked branch 2 m tall holding a round clay disc (0.9 m, #b7976c) on its side facing +z, with four dark handprint lumps (#533d30) around a raised centre lump. Remove the pale chips, or replace them with 3 trampled darker earth patches."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The resting mammoth repeats the overly smooth, unshaggy animal construction.",
+        "Its adjacent sledge reads as a bare rectangular slab; runners, lashings and bundled equipment are not sufficiently clear.",
+        "The widely spaced branch rack offers little visual distinction as a windbreak.",
+        "Both tents carry a pale cream flat square panel (door flap) that reads as a glass window on the hide.",
+        "The sledge on the right is a flat rectangular slab of planks with square edges. It reads as a wooden pallet or table, not a lashed sledge with runners.",
+        "The resting mammoth has a bright orange band (fringe) across it that reads as a plastic harness, and its body is a shapeless dark blob from the camera.",
+        "The resting mammoth is a dark brown blob with two white tusks; its head and body don't separate and it reads as a boar or bear",
+        "The second tent is a flat brown board leaning on a stick, which reads as a door panel or signboard",
+        "The windbreak is a loose tangle of crossed sticks that reads as a broken fence; the sledge reads as a table",
+        "World rule: Boundaries: add 'no evenly spaced posts and no continuous parallel rails'. Require the claimed-lot boundary to use the same branch-windbreak language as the camp, so the pieces agree.",
+        "World rule: Mammoth rule. Specify a ginger/rust fur (#a0522d-#c88343), not dark brown, so it reads on mud and grass. Specify at least 2.8 m shoulder height when standing, a domed head separated from the hump, and long curved tusks; at present both mammoths read as dark bears or bison."
+      ],
+      "fix": "Retain the two patched hide tents and small stone-ringed fire. Within 72 parts, add stepped fur to the resting mammoth, expose the sledge runners and lashings, group flint and hide bundles beside it, and overlap uneven branches into a more substantial windward screen. / Recolour the door flaps to darker hide (#79563b), make them triangular or trapezoid flaps hanging askew, and add a dark opening behind. Rebuild the sledge with 2 curved runners (thin cylinders upturned at the front), 4 crossbars and a lashed hide bundle on top, matching the arrival sledge. Change the mammoth fringe to dark ochre #987052 and give it the same domed head, hump and tusks as the arrival mammoth so they match. / Make the mammoth larger, about 2.5 m tall lying down, in ginger/rust fur (#a0522d) with a domed head separated from the hump by a dip, a trunk curling forward and folded legs visible. Rebuild the second tent as a low dome or A-frame with two sloped hide panels meeting at a ridge pole and a dark entrance. Thicken the windbreak into a dense curved wall of vertical branches with leafy tops (#526b40). Give the sledge upturned front runners."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The gathering resident's grass cape reads as a short triangular collar rather than clothing draped over the shoulders and back.",
+        "The boots and hide garments remain clean rectangular blocks with little visible construction.",
+        "The second resident's hair reads as a neat block cap rather than loose hair.",
+        "The woven-grass cape is a row of bright green vertical spikes round the shoulders. It reads as a Hawaiian hula/tiki costume rather than a woven cape.",
+        "The flintworker's adze is held up beside the head and is tiny, so it does not read at stream scale.",
+        "The grass cape is a ring of upside-down green cones around the torso; it reads as a tutu or pineapple, and the arms disappear inside it",
+        "The flintworker's clothing tones (#a87846, #c3a575) are close to the tan ground; at stream scale the figure is a brown block",
+        "The adze is held sideways at head height and reads as a stick poking out of the head",
+        "World rule: Contrast rule missing. The square ('dirt' #aa8257), claimed lot (#9c7954), hides (#c3a575/#987052) and figure clothing are all the same tan-brown, so pieces vanish. Add a rule: every build and figure needs at least one high-contrast accent from the palette (cream #e1d3ae, charcoal #3b2a22, ochre-red #c88343 or #d9534f, or ginger #a0522d). Also darken the square to a trampled #8a6a48 or lighten hides to cream.",
+        "World rule: people: require one strong accent colour per figure, and forbid face marks across the mouth (the ochre bars on the Chief read as a beak)."
+      ],
+      "fix": "Keep the supplied bodies and 44-part total. Extend layered grass panels over the gatherer's shoulders and back, separate the hide skirt from the torso, add offset loose hair masses, and give the adze carrier uneven fur boot cuffs and a clearly tied sleeveless wrap. / Make the grass cape a solid straw-coloured (#c3a575 with #a8ad68 streaks) trapezoid shoulder mantle that hangs to mid-torso, with 3 horizontal weave bands in darker #987052 and a ragged bottom edge of 5 short boxes, not green spikes. Lengthen the adze haft to 0.6 m with a 0.25×0.12 m grey flint head, held down at the side. / Make the grass cape a set of 4-5 flat overlapping box panels draped from the shoulders down to the hips (#7c9254 / #a8ad68), with the arms left visible outside it. Give the flintworker a darker hide wrap (#533d30) with a pale fur trim at the shoulder (#e1d3ae) so the silhouette pops. Lower the adze into the hand at hip height, angled downward, with a larger dark flint head (0.25 m)."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The headdress reads predominantly as a giant pale fork rather than an asymmetric antler-and-feather assembly.",
+        "The mantle is too narrow and rectangular to establish the required broad, layered Chief silhouette.",
+        "The headdress reads as one big pale bone or banana shape sticking up on one side. There are no branching tines, so it does not read as antlers.",
+        "The ochre face stripes merge with the head into a blurry orange beard band.",
+        "The body has the same brown wrap as the residents and the herder, so the 'broad layered mantle' does not stand out; the silhouette is narrow.",
+        "Only one antler reads; the other is hidden behind the staff head, so the headdress looks like a single big bone sticking out of the skull",
+        "The ochre face marks sit across the chin and mouth as orange bars, so the face reads like a duck bill",
+        "The bone-topped staff is a cartoon dog-bone; the body is dark brown on a tan base, and the cream shoulder pads make the mantle look like armour",
+        "World rule: people: require one strong accent colour per figure, and forbid face marks across the mouth (the ochre bars on the Chief read as a beak)."
+      ],
+      "fix": "Within 38 parts, widen the mantle beyond the shoulders using overlapping uneven hide panels. Replace the monolithic fork shape with an offset branched antler and a contrasting feather grouping, retain the oversized bone-topped staff, and make the ochre cheek marks broad enough to survive the camera distance. / Build 2 antlers, mirrored but unequal: each a main beam (cylinder 0.1 thick, 0.7 m long, angled outward 0.5 rad) with 3 tines of different lengths branching upward, in #e1d3ae, plus 2 dark feathers on one side only. Make the face marks 2 thin dark charcoal/ochre stripes on the cheeks only. Widen the mantle to 0.9 m across the shoulders with a pale fur collar (#e1d3ae) and an ochre-fringed hem, so the Chief's silhouette is clearly broader than a resident's. / Spread the antlers wide and symmetric in reach: each about 0.8 m with 3 tines, angled out to ±45 degrees. Move the staff to x 0.65 so its head clears the right antler. Put the ochre marks as two thin stripes on the cheeks at eye height, not across the mouth. Replace the dog-bone with a skull or jaw-bone shape and a hide streamer. Make the mantle a layered pelt with a lighter fur collar ring around the neck instead of two square pads, and add one strong accent colour (ochre-red #c88343 sash or feathers)."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The pale shell beads and hooked staff read well, but the head covering resembles a square cap rather than a weathered hood.",
+        "Patchwork fur, the braided belt and the travelled clan bundle are not clearly distinguished from the generic brown body.",
+        "The 'patchwork fur wrap' renders as uniform orange-brown; there are no patches visible.",
+        "The hood is a plain brown box on the head that reads as a square hat.",
+        "Head, hood, torso and legs are all mid-browns; the figure reads as one brown block, and the hood makes the head look like a solid box",
+        "The large travel bundle on the back is hidden behind the body from the camera, so the 'from far away' cue is lost",
+        "The hooked staff is thin and same-colour as the clothing",
+        "World rule: people: require one strong accent colour per figure, and forbid face marks across the mouth (the ochre bars on the Chief read as a beak)."
+      ],
+      "fix": "Keep the readable beads and staff. Within 34 parts, frame the face with an uneven hood rim, give the fur wrap contrasting overlapping patches, expose a chunky braided belt, and hang a distinct hide bundle carrying a bold unfamiliar nonalphabetic clan emblem. / Add 3–4 visibly different patches (#3b2a22, #b7976c, #987052) on the wrap and back. Give the hood a peak or droop at the back (a box tilted 0.4 rad behind the head) and a fur trim at the face. Keep the shell beads and the hooked staff. / Give the hood a contrasting colour (pale grey fur #b9ab8b) and pull it back so the face shows. Shift the travel bundle to sit high on one shoulder so it shows above the silhouette, and add the teal (#4d9495) clan emblem large on it. Thicken the staff to 0.14 m in pale #c3a575 with a darker hook. Keep the shell necklace, the strongest cue, and enlarge the shells by 30%."
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "Large square-sided grey tiers read as dressed masonry or concrete blocks rather than natural rock.",
+        "Repeated identical log awnings and aligned ladders give the lodging a modular, manufactured façade.",
+        "The result is closer to a modern stepped tower decorated with timber than an accumulated clan dwelling.",
+        "The tiers are perfectly rectangular flat-faced grey cubes stacked like brutalist concrete; nothing says 'rock', and the bible bans masonry. The ladders and log lintels help, but the mass reads as a modern concrete block with ladders.",
+        "The colour is uniform cool grey with no earth tones.",
+        "The rock tiers are clean rectangular grey boxes with flat faces, which read as concrete or masonry blocks",
+        "The log roof pieces look like stacked crates; the openings are dark rectangular doorways that read as modern apartment openings",
+        "The horned skull at the top is tiny and doesn't carry"
+      ],
+      "fix": "Preserve the tall stepped mass and footprint, but reshape it as an irregular rock outcrop supporting lashed log terraces and varied hide sleeping shelters. Break corners, offset ledges, vary opening widths and ladder placement, and remove the continuous flat block faces. / Make each tier irregular: 2–3 overlapping boulder masses per tier with different heights and slight rotations (±0.15 rad), plus bulging rounded corners (spheres at corners). Mix warm earthy rock and mud daub (#81847a with #9c7954 patches) and hang hide curtains (#b7976c) in the dark doorways. Keep the ladders and log beams. / Break each tier into 3-4 rotated, lumpy boulders of different sizes with overhangs, in two greys (#81847a, #6b6f65) with moss tops (#526b40). Make the entrances rounded cave mouths with hide door flaps (#987052), and put small glowing hearth fires in two of them. Lay the log decks as protruding beams that stick past the rock edges. Scale the top totem up to 1.5 m: a bull skull on a pole with a red banner."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "In assembly, straight green roadside bands and repeated puddle stamps strengthen the impression of a planned modern street.",
+        "The regular fence and tidy trees become dominant environmental cues, outweighing the successful hide shelters.",
+        "The café retains a visible circular presentation-base edge on the square.",
+        "Resident clothing distinctions largely collapse into brown blocks at the actual gameplay distance.",
+        "World rule: Walking edge: the |z| 4–6 strip renders as a uniform dark-green moss band with ruler-straight edges on both sides, which reads as a planted verge or sidewalk. Give the walking edge the same surface as the countryside (or the road mud) and add a rule that the road edge must be ragged, with mud tongues and grass tufts spilling across it.",
+        "World rule: Square surface: the square is a flat uniform tan rectangle with hard straight edges, which reads like a paved plaza. Define it as a trampled earth clearing whose edges feather into the meadow.",
+        "World rule: Contrast rule missing. The square ('dirt' #aa8257), claimed lot (#9c7954), hides (#c3a575/#987052) and figure clothing are all the same tan-brown, so pieces vanish. Add a rule: every build and figure needs at least one high-contrast accent from the palette (cream #e1d3ae, charcoal #3b2a22, ochre-red #c88343 or #d9534f, or ginger #a0522d). Also darken the square to a trampled #8a6a48 or lighten hides to cream."
+      ],
+      "fix": "Reassemble with the revised road margins, wild trees and loose camp boundary, varying surface dressing without changing the parcel grid or road footprint. Remove presentation plinths from placed assets and test the revised clothing at this exact camera with 1.8 m residents, strengthening garment shapes rather than enlarging people."
+    },
+    {
+      "id": "ground",
+      "problems": [
+        "The grass tufts are tiny dark-green clustered cones that read as miniature pine trees, not grass.",
+        "The puddle is a single flat teal blob with no muddy rim, so it reads as a sticker on the meadow.",
+        "It is so sparse and small that at stream scale the countryside reads as an empty flat lawn with no wildness: no flint, moss or broken branches are visible at the cell size.",
+        "Features are specks at stream scale: the tufts are 3-4 px dark dots and the two broken branches are hair-thin brown lines",
+        "Nothing has any height or mass; the only readable item is the small teal puddle",
+        "World rule: The street tile's walking edge (|z| 4-6) is drawn as a distinct straight band with its own repeating round pattern, which reads as a pavement or sidewalk even though pavement is null. For the stone age the edge must use the same meadow surface as the countryside, with no separate band, and road edges should be ragged."
+      ],
+      "fix": "Replace the dark cone tufts with 3–5-blade fans of thin tilted boxes (0.08×0.35×0.04) in #a8ad68/#7c9254, splayed at different angles. Give the puddle an irregular #76513b mud rim (2–3 flattened spheres under it, 0.04 m tall). Add 3 pale grey flint chips (0.3×0.12×0.2, #a7a698) and 2 broad irregular moss patches (1.2×0.04×0.8, #526b40). Make the two broken branches forked: a main box plus one angled twig each. Keep everything under 0.35 m. / Make the grass tussocks 0.6-0.9 m clumps of 3-4 cones in two greens (#526b40 / #a8ad68). Thicken the branches to 0.25 m diameter and 2-2.5 m long, in lighter #987052. Add two mossy grey boulders (#81847a, 0.7-1.0 m) and one cluster of pale flint (#e1d3ae). Keep it to under 20 parts, all under 0.9 m."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The 'loop' is a perfect regular octagon of 8 equal cream (#e1d3ae/#c3a575) segments. From the 40° camera it reads as a clean white archway or doorframe standing on two stumps, not a mud-and-twig loop.",
+        "There is no mud texture or lumpiness, and the near-white colour makes it look painted or plastic.",
+        "The surrounding stones are six neat grey cubes evenly placed in a ring, which looks arranged and manufactured.",
+        "The twig loop is drawn as thin, even, pale octagon segments; from the camera it reads as a croquet hoop or a small doorway arch, not a bold 'vacant' symbol",
+        "At vignette scale it is a small pale squiggle in the corner of a 16 m green parcel; the base stones and tufts disappear",
+        "World rule: Remove the exact part counts from the rules (e.g. lot-sale 10, civic 14, claimed 24, street-light 8). The specs ignore them (20, 30, 40, 15) and they conflict with the catalogue's ranges."
+      ],
+      "fix": "Rebuild the loop as 7–9 unequal crooked branch segments (lengths 0.6–1.2 m, thickness 0.14–0.22 m, rotations off-octagon by ±0.2 rad) in #987052/#76513b. Daub 4–5 lumpy mud blobs (flattened spheres 0.35×0.25×0.3, #79563b) over the joints, and put pale ochre #c3a575 only as 2–3 smears, not the whole ring. Make the loop slightly egg-shaped (1.9 m wide × 2.2 m tall), tilt the whole loop 0.15 rad and keep the centre clearly empty. Replace the cube stones with 4 irregular flattened spheres of different sizes clustered on one side of the base, plus 2 grass fans. / Thicken the loop segments to about 0.45 m and give them uneven lengths and slight jitter so the ring looks hand-bent. Raise the ring to about 3.2 m and tilt it 15-20 degrees toward the camera (+z) so the hole reads from above. Wrap two mud-daub lumps in #76513b at the joints for contrast. Put a ochre-red (#c88343) handprint smear on one post so the marker pops against the green."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The stake is thin (0.14–0.22 m) and nearly vertical, so at stream scale it reads as a tiki/garden torch on a pole rather than a hand-cut forked branch.",
+        "The two cream binding rings are perfectly circular bands that look like metal collars.",
+        "The 0.2 m dark-brown stake vanishes against the walking edge and mud, so the flame looks like it floats",
+        "At about 3.5 m total it reads as a small candle from the camera; the binding rings and bark bundle are invisible",
+        "World rule: Remove the exact part counts from the rules (e.g. lot-sale 10, civic 14, claimed 24, street-light 8). The specs ignore them (20, 30, 40, 15) and they conflict with the catalogue's ranges."
+      ],
+      "fix": "Thicken the lower stake to 0.28 m and lean it 0.15 rad. Make the fork clearly Y-shaped with arms 0.8 m long, and set the bark bundle in the crook, slightly off-centre. Change the binding bands to 2 short diagonal wraps (boxes 0.1×0.3×0.06 at ±0.5 rad) in #c3a575 instead of full cream rings. Keep the flames as they are. / Thicken the stake to 0.32 m and lighten it to #987052, with one pale (#e1d3ae) hide wrap 0.25 m tall at mid-height. Make the resin bundle a chunky 0.55 m dark cone bowl (#533d30) under the flame so the glowing part has a dark collar. Make the base a 1.0 m ring of 5 stones. Add a small charcoal (#3b2a22) scorch patch on the ground."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "A 1.3 m upright grey slab with a dark square on it stands behind the fire. From the camera the dark square reads as a hatch or a stove opening, like a mailbox or oven, not a clan handprint stone.",
+        "The ten ring stones are near-identical grey boxes of the same size, evenly spaced. The ring looks manufactured.",
+        "The flame cones are pale yellow and very centred and symmetrical.",
+        "The grey standing stone with a dark mark at z -2.6 reads as a phone box or parking meter beside the fire",
+        "The ring stones are near-identical grey cubes laid out evenly, which looks like paving blocks, not river stones",
+        "The flames are pale yellow cones that wash out against the tan square; the fire is bright but not hot-looking",
+        "World rule: Square surface: the square is a flat uniform tan rectangle with hard straight edges, which reads like a paved plaza. Define it as a trampled earth clearing whose edges feather into the meadow."
+      ],
+      "fix": "Turn the slab into a rough rounded boulder (flattened sphere 0.9×1.0×0.6, #81847a) and paint a hand in ochre #c88343 (palm box plus 5 thin finger boxes splayed), or remove it. Vary the ring stones from 0.35 to 0.8 m, mix sphere and box shapes, and leave one 0.6 m gap in the ring. Lean the flame cones outward by different amounts (0.1–0.3 rad) and make the tallest one #f07835 so the fire reads as orange, not cream. / Remove the slab stone or reshape it into a lumpy, leaning 1.6 m menhir (3 stacked rotated boxes with a tapered top) with a big ochre-red (#c88343) handprint. Vary the ring stones from 0.4 to 0.9 m, rotate them freely and use rounder spheres mixed with boxes. Make the outer flames saturated #f07835 / #d95b2d with only the inner core pale #ffd075, and put a dark charcoal ash disc (#3b2a22, 2.4 m) under the fire to frame it against the tan ground."
+    },
+    {
+      "id": "home",
+      "problems": [
+        "The doorway is a crisp dark rectangle with a neat tan rectangular frame. It reads as a sawn wooden door frame on the hide tent.",
+        "Three thin poles stick sideways out of the tent's right side at ground level, and the poles above the cone tip stick out at random angles",
+        "The tan tent cone blends into the tan ground disc and the mud apron",
+        "The scattered grey stone cubes around the skirt look like dropped blocks, not weights; the pale hide patches on the cone float off the surface",
+        "World rule: Contrast rule missing. The square ('dirt' #aa8257), claimed lot (#9c7954), hides (#c3a575/#987052) and figure clothing are all the same tan-brown, so pieces vanish. Add a rule: every build and figure needs at least one high-contrast accent from the palette (cream #e1d3ae, charcoal #3b2a22, ochre-red #c88343 or #d9534f, or ginger #a0522d). Also darken the square to a trampled #8a6a48 or lighten hides to cream."
+      ],
+      "fix": "Replace the framed door with a triangular hide flap pinned back on one side (a darker #79563b triangle tilted 0.4 rad), with an irregular dark opening behind it and no frame. / Remove the sideways poles. Keep 5-6 poles only, crossing neatly at the apex and extending 0.6-0.9 m above it. Colour the tipi cover in two hides: a lower band #e1d3ae and an upper #987052, with a charcoal smoke-hole ring. Ring the base with evenly sized rounded stones, and seat the hide patches flush on the cone. Shrink the door slab to a smaller dark triangular flap with an open corner."
+    },
+    {
+      "id": "bench",
+      "problems": [
+        "A single plain brown cylinder on a tan square: reads as a log, but nothing says 'seat'",
+        "The flattened sitting face is almost the same colour as the bark, so the cut is invisible from above",
+        "World rule: Square surface: the square is a flat uniform tan rectangle with hard straight edges, which reads like a paved plaza. Define it as a trampled earth clearing whose edges feather into the meadow."
+      ],
+      "fix": "Make the split sitting face pale fresh wood #c3a575, 0.36 m wide, running most of the log's length. Drape a fur throw (#e1d3ae with #76513b spots, 0.7×0.5 m) over one end. Add a short stump or flat stone at one end as a second perch. Darken the bark to #533d30 so the log outlines strongly against the square."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "The lean-to is a flat tan sheet on four posts over tan ground, so it vanishes; from above it looks like an empty picnic shelter",
+        "Nothing says 'broth served here': the pot over the fire is small and no counter, bowls or seating cluster reads",
+        "The logs are strewn at random angles, which reads as debris rather than seating",
+        "World rule: Square surface: the square is a flat uniform tan rectangle with hard straight edges, which reads like a paved plaza. Define it as a trampled earth clearing whose edges feather into the meadow.",
+        "World rule: Contrast rule missing. The square ('dirt' #aa8257), claimed lot (#9c7954), hides (#c3a575/#987052) and figure clothing are all the same tan-brown, so pieces vanish. Add a rule: every build and figure needs at least one high-contrast accent from the palette (cream #e1d3ae, charcoal #3b2a22, ochre-red #c88343 or #d9534f, or ginger #a0522d). Also darken the square to a trampled #8a6a48 or lighten hides to cream."
+      ],
+      "fix": "Make the lean-to cover dark smoked hide (#76513b) with a sloped roof (high front 2.4 m, low back 1.2 m) and a pale fringe edge. Put a large 0.9 m cooking pot (#5a5d57) on a tripod over a glowing fire as the focal point, a flat stone 'serving' slab in front with 4-5 pale bowls (#e1d3ae), and three seat logs arranged in a U facing the pot."
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "name": "Stone-Chocked Sitting Log",
+  "description": "A broad fallen log with a roughly flattened sitting face rests on two uneven stones, offering room for two around the communal square.",
+  "notes": "Unpeeled bark, a pale split end and rough stone chocks make this a gathered Stone Age resting place rather than constructed furniture.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -0.83,
+        0.12,
+        0.04
+      ],
+      "size": [
+        0.56,
+        0.24,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.79,
+        0.11,
+        -0.03
+      ],
+      "size": [
+        0.47,
+        0.22,
+        0.61
+      ],
+      "rotation": [
+        0,
+        -0.32,
+        0
+      ],
+      "color": "#969387"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.24,
+        0
+      ],
+      "size": [
+        0.4,
+        2.6,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.04,
+        0.39,
+        0
+      ],
+      "size": [
+        2.38,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#b08a5f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.29,
+        0.255,
+        -0.015
+      ],
+      "size": [
+        0.12,
+        0.29,
+        0.32
+      ],
+      "rotation": [
+        0.14,
+        0.1,
+        -0.12
+      ],
+      "color": "#c3a575"
+    }
+  ]
+}

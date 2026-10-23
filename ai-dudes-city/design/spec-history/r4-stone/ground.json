@@ -1,0 +1,368 @@
+{
+  "name": "Wild Flint-and-Moss Meadow",
+  "description": "Broad splayed grass fans, mossy stones and chunky forked branches scatter around a mud-rimmed rain hollow, leaving the wild meadow open.",
+  "notes": "Unworked flint, fallen wood and irregular vegetation establish Stone Age wilderness; the meadow surface should continue into ragged track margins without separate walking-edge bands or repeating pads.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -4.18,
+        0.34,
+        -3.65
+      ],
+      "size": [
+        0.19,
+        0.65,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0.48
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.92,
+        0.36,
+        -3.62
+      ],
+      "size": [
+        0.2,
+        0.7,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0.05,
+        -0.08
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.66,
+        0.31,
+        -3.58
+      ],
+      "size": [
+        0.19,
+        0.59,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        -0.55
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.48,
+        0.32,
+        3.62
+      ],
+      "size": [
+        0.2,
+        0.61,
+        0.15
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0.5
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.74,
+        0.39,
+        3.68
+      ],
+      "size": [
+        0.21,
+        0.75,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.25,
+        -0.16
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.01,
+        0.33,
+        3.71
+      ],
+      "size": [
+        0.2,
+        0.64,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0.4,
+        -0.52
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.35,
+        0.04,
+        -1.65
+      ],
+      "size": [
+        2.05,
+        0.08,
+        1.38
+      ],
+      "rotation": [
+        0,
+        -0.37,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.61,
+        0.04,
+        -1.4
+      ],
+      "size": [
+        1.2,
+        0.08,
+        1.02
+      ],
+      "rotation": [
+        0,
+        0.58,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.13,
+        0.075,
+        -1.58
+      ],
+      "size": [
+        1.78,
+        0.06,
+        0.85
+      ],
+      "rotation": [
+        0,
+        -0.31,
+        0
+      ],
+      "color": "#4d9495"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.33,
+        0.04,
+        2.66
+      ],
+      "size": [
+        1.85,
+        0.08,
+        1.12
+      ],
+      "rotation": [
+        0,
+        0.47,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.65,
+        0.04,
+        -2.86
+      ],
+      "size": [
+        1.65,
+        0.08,
+        1.07
+      ],
+      "rotation": [
+        0,
+        -0.63,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.12,
+        0.135,
+        2.62
+      ],
+      "size": [
+        2.25,
+        0.25,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0.27,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.64,
+        0.145,
+        2.2
+      ],
+      "size": [
+        1.04,
+        0.23,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0.94,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.49,
+        0.135,
+        4.42
+      ],
+      "size": [
+        2.12,
+        0.25,
+        0.28
+      ],
+      "rotation": [
+        0,
+        -0.36,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.08,
+        0.145,
+        4.34
+      ],
+      "size": [
+        0.92,
+        0.23,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0.56,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.74,
+        0.24,
+        -2.96
+      ],
+      "size": [
+        1.02,
+        0.48,
+        0.83
+      ],
+      "rotation": [
+        0,
+        0.34,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.83,
+        0.175,
+        2.98
+      ],
+      "size": [
+        0.81,
+        0.35,
+        0.68
+      ],
+      "rotation": [
+        0,
+        -0.48,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.76,
+        0.13,
+        -2.45
+      ],
+      "size": [
+        0.55,
+        0.18,
+        0.35
+      ],
+      "rotation": [
+        0.12,
+        0.58,
+        0.08
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.14,
+        0.105,
+        -2.16
+      ],
+      "size": [
+        0.4,
+        0.14,
+        0.28
+      ],
+      "rotation": [
+        -0.1,
+        -0.32,
+        -0.09
+      ],
+      "color": "#a7a698"
+    }
+  ]
+}

@@ -8,8 +8,11 @@ import type { GroundPoint, Moves, SafehouseObject } from '../../shared/objectTyp
 import { CITY_BOUNDS, roadLines } from '../../shared/city';
 import { abilitiesOf, movesFromRequest } from './blueprint';
 import { onGround, route } from './placement';
-import { step } from './sim';
+import { addEffect, step } from './sim';
 import type { DudesState } from './state';
+import { breakable, damageBuild, ruined } from './damage';
+import { smashes } from './weapons';
+import { knockOut, knockedOut } from './combat';
 
 export const MOVERS = {
   /** Metres a second on their own. */
@@ -28,6 +31,37 @@ export const MOVERS = {
   lane: 1.8,
 };
 
+/** A monster on the loose (a T-rex, a kaiju): it picks a build nearby, stomps over and knocks it about until it falls. */
+export const RAMPAGE = {
+  /** How far it looks for something to smash (metres). */
+  sight: 18,
+  speed: 2,
+  stompMs: 2200,
+  damage: 8,
+  /** Knocks down this many, then has a lie-down for a while (milliseconds). */
+  spree: 1,
+  restMs: [120_000, 240_000] as [number, number],
+  /** People this close to a stomp are knocked flat. */
+  splash: 1.6,
+  /** At most this many monsters go on the rampage in town at once (the oldest), one per owner; the rest just wander. */
+  maxLoose: 2,
+};
+
+/** The monsters allowed to smash things right now: the oldest few, no more than one each owner. */
+function looseMonsters(state: DudesState): Set<string> {
+  const loose = new Set<string>(),
+    owners = new Set<string>();
+  const monsters = state.objects.filter((o) => o.creature && o.blueprint.moves && !ruined(o) && smashes(o)).sort((a, b) => a.createdAt - b.createdAt);
+  for (const o of monsters) {
+    if (loose.size >= RAMPAGE.maxLoose) break;
+    const who = o.owner ?? o.createdBy;
+    if (owners.has(who)) continue;
+    owners.add(who);
+    loose.add(o.id);
+  }
+  return loose;
+}
+
 export const movesOf = (o: SafehouseObject): Moves | undefined => o.blueprint.moves;
 /** Can be ridden or driven: anything that moves on its own, or anything built as a vehicle. */
 export const rideable = (o: SafehouseObject) => !!o.blueprint.moves || abilitiesOf(o.blueprint).has('vehicle');
@@ -44,7 +78,9 @@ export function setAltitude(o: SafehouseObject, v: number): void {
 
 /** A build that has just gone up: if it is a mover, it becomes a living one (set off shortly). */
 export function startMoving(o: SafehouseObject, request: string): void {
-  const moves = o.blueprint.moves ?? movesFromRequest(request);
+  // A monster built to smash things (a T-rex, a kaiju) goes looking for something to smash, asked or not.
+  const beast = abilitiesOf(o.blueprint).has('smash') && !abilitiesOf(o.blueprint).has('vehicle') ? 'roam' : undefined;
+  const moves = o.blueprint.moves ?? movesFromRequest(request) ?? beast;
   if (!moves) return;
   o.blueprint.moves = moves;
   o.passable = true; // never in anyone's way, never holds up a build
@@ -111,14 +147,19 @@ function flyLeg(o: SafehouseObject, rng: () => number): GroundPoint[] {
 }
 
 export function tickMovers(state: DudesState, dt: number, now: number, rng: () => number): void {
+  let loose: Set<string> | undefined;
   for (const o of state.objects) {
     const moves = movesOf(o);
     const c = o.creature;
     if (!moves || !c) continue;
+    if (ruined(o)) {
+      c.moving = false; // knocked down itself: it lies where it fell until it is put back up
+      continue;
+    }
     // Somebody is aboard (they move it: sim.ts runUse, or the Mayor), or on their way to get on
     // (it waits for them, and a flyer comes down to be boarded). Aboard, a flyer goes back up.
     const boarding = state.dudes.some((d) => d.use?.objectId === o.id && d.use.phase === 'going');
-    if (boarding || state.dudes.some((d) => d.use?.objectId === o.id) || state.mayor?.riding === o.id) {
+    if (boarding || state.dudes.some((d) => d.use?.objectId === o.id || d.riding === o.id) || state.mayor?.riding === o.id) {
       c.moving = false;
       c.path = [];
       // (Under the Mayor, his page says how high.)
@@ -136,6 +177,8 @@ export function tickMovers(state: DudesState, dt: number, now: number, rng: () =
       c.replanMs = rand(rng, MOVERS.pause[moves]);
       state.worldRevision++;
     }
+    // A monster goes after the town's builds (between rests); otherwise it wanders like anything else.
+    if (smashes(o) && (loose ??= looseMonsters(state)).has(o.id) && rampage(state, o, dt, now, rng)) continue;
     // Back to cruising height, up or down, at a climb (left high by the Mayor, it sinks gently).
     if (c.flying) {
       const step = (MOVERS.climb * dt) / 1000,
@@ -157,6 +200,68 @@ export function tickMovers(state: DudesState, dt: number, now: number, rng: () =
     c.path = walker.path;
     c.moving = true;
   }
+}
+
+/** One tick of a monster's rampage. False when it is resting or there is nothing in reach to smash (it wanders). */
+function rampage(state: DudesState, o: SafehouseObject, dt: number, now: number, rng: () => number): boolean {
+  const c = o.creature!;
+  if (state.ai.destruction === false) return false; // nothing falls down: it is just an animal about town
+  if (c.restMs && c.restMs > 0) {
+    c.restMs -= dt;
+    return false;
+  }
+  c.cooldownMs = Math.max(0, (c.cooldownMs ?? 0) - dt);
+  const here = o.position;
+  const far = (t: SafehouseObject) => Math.hypot(t.position.x - here.x, t.position.z - here.z);
+  let target = c.targetId ? state.objects.find((t) => t.id === c.targetId) : undefined;
+  if (!target || ruined(target)) {
+    // Someone else's: never its own owner's builds, never the town's projects, never other things that go about.
+    target = state.objects
+      .filter((t) => t !== o && breakable(t) && !ruined(t) && !((t.guardUntil ?? 0) > now) && !t.creature && !t.civic && !t.blueprint.moves && (!o.owner || t.owner !== o.owner) && far(t) < RAMPAGE.sight)
+      .sort((a, b) => far(a) - far(b))[Math.floor(rng() * 2)];
+    c.targetId = target?.id;
+    c.path = [];
+    if (!target) return false;
+  }
+  const size = Math.max(o.footprint.width, o.footprint.depth) / 2;
+  const reach = Math.max(target.footprint.width, target.footprint.depth) / 2 + size * 0.6 + 0.6;
+  const d = far(target);
+  if (d > reach) {
+    // Stomp over, straight at it.
+    const dx = here.x - target.position.x,
+      dz = here.z - target.position.z,
+      len = Math.hypot(dx, dz) || 1;
+    c.path = [{ x: target.position.x + (dx / len) * (reach - 0.4), z: target.position.z + (dz / len) * (reach - 0.4) }];
+    const walker = { path: c.path, position: o.position, facing: c.facing };
+    step(walker, dt, RAMPAGE.speed);
+    o.position = walker.position;
+    c.facing = walker.facing;
+    c.path = walker.path;
+    c.moving = true;
+    return true;
+  }
+  c.moving = false;
+  c.path = [];
+  c.facing = Math.atan2(target.position.x - here.x, target.position.z - here.z);
+  if (c.cooldownMs > 0) return true;
+  c.cooldownMs = RAMPAGE.stompMs;
+  const owner = o.owner ? state.dudes.find((x) => x.id === o.owner) : undefined;
+  const by = { name: owner ? `${owner.name}'s ${o.blueprint.name}` : o.blueprint.name, id: owner?.id };
+  const contact = { x: here.x + Math.sin(c.facing) * size, z: here.z + Math.cos(c.facing) * size };
+  addEffect(state, { kind: 'slam', from: contact, radius: 2 + size * 0.5, at: now });
+  // Anyone underfoot goes flat.
+  for (const d2 of state.dudes)
+    if (!d2.hidden && !d2.riding && !knockedOut(d2, now) && Math.hypot(d2.position.x - contact.x, d2.position.z - contact.z) < RAMPAGE.splash)
+      knockOut(state, d2, owner && owner.id !== d2.id ? owner : undefined, owner && owner.id !== d2.id ? `stomped (with ${o.blueprint.name})` : `stomped by ${o.blueprint.name}`, now, { ms: 5000 });
+  if (damageBuild(state, target, RAMPAGE.damage, by, now, contact, 1.6) === 'fell') {
+    c.targetId = undefined;
+    c.hits = (c.hits ?? 0) + 1;
+    if (c.hits >= RAMPAGE.spree) {
+      c.hits = 0;
+      c.restMs = rand(rng, RAMPAGE.restMs);
+    }
+  }
+  return true;
 }
 
 /** For agents and the operator: what moves about town and who can ride it. */

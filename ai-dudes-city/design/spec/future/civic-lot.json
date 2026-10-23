@@ -1,0 +1,349 @@
+{
+  "name": "Survivors’ Shared Project Ground",
+  "description": "Four concrete-and-scrap corner markers reserve an empty communal parcel, with a salvaged hatch displaying four neighbours around a shared centre and a building resting on an open hand.",
+  "notes": "Blunt scrap stakes, a reused hatch panel and faded ochre pictograms identify survivor-maintained community ground without electronics or a modern municipal sign.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5.35,
+        0.14,
+        -5.35
+      ],
+      "size": [
+        0.82,
+        0.28,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.12,
+        0
+      ],
+      "color": "#9a9283"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.46,
+        -5.35
+      ],
+      "size": [
+        0.16,
+        0.72,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.08
+      ],
+      "color": "#8e563e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.35,
+        0.12,
+        -5.35
+      ],
+      "size": [
+        0.72,
+        0.24,
+        0.82
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#8e877a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.4,
+        0.43,
+        -5.4
+      ],
+      "size": [
+        0.18,
+        0.66,
+        0.16
+      ],
+      "rotation": [
+        0.09,
+        0,
+        0
+      ],
+      "color": "#74765a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.35,
+        0.13,
+        5.35
+      ],
+      "size": [
+        0.78,
+        0.26,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "color": "#a69d8d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.43,
+        0.44,
+        5.32
+      ],
+      "size": [
+        0.16,
+        0.68,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0.1
+      ],
+      "color": "#8e563e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.35,
+        0.15,
+        5.35
+      ],
+      "size": [
+        0.84,
+        0.3,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#9a9283"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.4,
+        0.45,
+        5.33
+      ],
+      "size": [
+        0.2,
+        0.7,
+        0.16
+      ],
+      "rotation": [
+        -0.07,
+        0,
+        0
+      ],
+      "color": "#66574b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.65,
+        0.66,
+        4.83
+      ],
+      "size": [
+        0.22,
+        1.32,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.06
+      ],
+      "color": "#8e563e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.6,
+        1.36,
+        4.96
+      ],
+      "size": [
+        1.66,
+        1.5,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66574b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.6,
+        1.73,
+        5.085
+      ],
+      "size": [
+        0.32,
+        0.08,
+        0.32
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#b6a384"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.02,
+        1.73,
+        5.085
+      ],
+      "size": [
+        0.23,
+        0.08,
+        0.23
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#b08852"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.18,
+        1.73,
+        5.085
+      ],
+      "size": [
+        0.23,
+        0.08,
+        0.23
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#b08852"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.6,
+        2,
+        5.085
+      ],
+      "size": [
+        0.22,
+        0.08,
+        0.22
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#b08852"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.6,
+        1.46,
+        5.085
+      ],
+      "size": [
+        0.22,
+        0.08,
+        0.22
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#b08852"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.6,
+        0.89,
+        5.085
+      ],
+      "size": [
+        0.78,
+        0.14,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.12
+      ],
+      "color": "#b6a384"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.54,
+        1.12,
+        5.085
+      ],
+      "size": [
+        0.4,
+        0.34,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b08852"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.75,
+        0.035,
+        4.57
+      ],
+      "size": [
+        2.05,
+        0.07,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0.06,
+        0
+      ],
+      "color": "#9f927b"
+    }
+  ]
+}

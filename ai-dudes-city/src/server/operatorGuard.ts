@@ -5,6 +5,27 @@ function isLoopback(address: string | undefined): boolean {
   return address === '127.0.0.1' || address === '::1' || address === '::ffff:127.0.0.1';
 }
 
+/** This machine only, whatever the token: loopback socket, a localhost Host, and nothing forwarded (the ngrok tunnel forwards). */
+export function isLocalRequest(req: { get(name: string): string | undefined; socket: { remoteAddress?: string } }): boolean {
+  const localHost = /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(req.get('host') ?? '');
+  const forwarded = ['forwarded', 'x-forwarded-for', 'x-forwarded-host', 'x-real-ip'].some((h) => req.get(h));
+  return isLoopback(req.socket.remoteAddress) && localHost && !forwarded;
+}
+
+/**
+ * The Kick connection (/kick/login, /kick/callback): localhost only, never through the tunnel. No
+ * Origin/Sec-Fetch-Site check here: Kick's redirect back to the callback is a cross-site navigation.
+ */
+export function localOnlyGuard(): RequestHandler {
+  return (req, res, next) => {
+    if (!isLocalRequest(req)) {
+      res.status(403).type('text/plain').send('Connect Kick from the streaming computer itself, via /admin on localhost.');
+      return;
+    }
+    next();
+  };
+}
+
 // Browser sources are public read-only views. Fake chat, flags and undo are not.
 export function operatorGuard(token?: string): RequestHandler {
   return (req, res, next) => {

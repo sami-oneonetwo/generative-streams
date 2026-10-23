@@ -1,0 +1,159 @@
+{
+  "name": "Pegged Oak Trestle Bench",
+  "description": "A thick, backless oak plank rests on two broad-footed trestles, seating two people at 0.45 m around the market square.",
+  "notes": "Rough oak, exposed wooden pegs and a slightly uneven stretcher give this bench a medieval carpenter-built character without metal park-bench fittings.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.38,
+        0
+      ],
+      "size": [
+        2.2,
+        0.14,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.76,
+        0.22,
+        0
+      ],
+      "size": [
+        0.2,
+        0.26,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.76,
+        0.22,
+        0
+      ],
+      "size": [
+        0.2,
+        0.26,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#654832"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.76,
+        0.055,
+        0
+      ],
+      "size": [
+        0.34,
+        0.11,
+        0.78
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#745236"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.76,
+        0.055,
+        0
+      ],
+      "size": [
+        0.34,
+        0.11,
+        0.76
+      ],
+      "rotation": [
+        0,
+        -0.02,
+        0
+      ],
+      "color": "#745236"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.205,
+        0
+      ],
+      "size": [
+        1.58,
+        0.12,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0.035
+      ],
+      "color": "#785237"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.76,
+        0.24,
+        0.27
+      ],
+      "size": [
+        0.09,
+        0.08,
+        0.09
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#c0a073"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.76,
+        0.24,
+        0.27
+      ],
+      "size": [
+        0.09,
+        0.08,
+        0.09
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#c0a073"
+    }
+  ]
+}

@@ -1,0 +1,313 @@
+{
+  "name": "Regenerated Pollinator Seedbank",
+  "description": "Dark angular meadow tufts, upright native flower spikes, weathered stones and fallen seed pods scatter unevenly around two low ceramic ecological monitors.",
+  "notes": "Distinct ivory sensor caps with recessed cyan indicators quietly identify the Future while sixteen sparse, ground-hugging parts preserve an open, naturally varied meadow.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -4.65,
+        0.16,
+        -3.6
+      ],
+      "size": [
+        0.66,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.48,
+        0
+      ],
+      "color": "#5f8f6a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -2.9,
+        0.145,
+        -3.05
+      ],
+      "size": [
+        0.48,
+        0.29,
+        0.7
+      ],
+      "rotation": [
+        0,
+        -0.62,
+        0
+      ],
+      "color": "#47795d"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.85,
+        0.17,
+        2.9
+      ],
+      "size": [
+        0.58,
+        0.34,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0.93,
+        0
+      ],
+      "color": "#5f8f6a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.12,
+        0.17,
+        -3.24
+      ],
+      "size": [
+        0.2,
+        0.34,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#efbd66"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -3.64,
+        0.145,
+        -2.94
+      ],
+      "size": [
+        0.18,
+        0.29,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "color": "#8c80b4"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.48,
+        0.16,
+        -2.66
+      ],
+      "size": [
+        0.2,
+        0.32,
+        0.17
+      ],
+      "rotation": [
+        0,
+        0.8,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.85,
+        0.145,
+        -4.3
+      ],
+      "size": [
+        0.64,
+        0.29,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.67,
+        0
+      ],
+      "color": "#8a948f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.65,
+        0.105,
+        2.45
+      ],
+      "size": [
+        0.43,
+        0.21,
+        0.59
+      ],
+      "rotation": [
+        0,
+        -0.38,
+        0
+      ],
+      "color": "#74857d"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.65,
+        0.125,
+        4.48
+      ],
+      "size": [
+        0.24,
+        0.72,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.65,
+        1.570796
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.14,
+        0.11,
+        4.14
+      ],
+      "size": [
+        0.21,
+        0.55,
+        0.22
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        1.570796
+      ],
+      "color": "#8a795c"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.72,
+        0.105,
+        -0.85
+      ],
+      "size": [
+        0.24,
+        0.21,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.72,
+        0.25,
+        -0.85
+      ],
+      "size": [
+        0.4,
+        0.08,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.72,
+        0.29,
+        -0.85
+      ],
+      "size": [
+        0.2,
+        0.06,
+        0.07
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.7,
+        0.075,
+        4.15
+      ],
+      "size": [
+        0.22,
+        0.15,
+        0.22
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.7,
+        0.19,
+        4.15
+      ],
+      "size": [
+        0.35,
+        0.08,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.7,
+        0.23,
+        4.15
+      ],
+      "size": [
+        0.15,
+        0.06,
+        0.07
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    }
+  ]
+}

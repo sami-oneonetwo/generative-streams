@@ -1,0 +1,213 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The buildings, vehicles and restrained palette establish a convincing Modern Age, but planting, civic graphics and the fountain fall short of the bible's clarity and craft requirements. The assembled corner also needs functional cleanup: remove character display bases, separate bus boarding from crossings and soften the oversized paved square with planting.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "High-frequency pale grass texture competes with the small props across both renders.",
+        "Flower clusters look like repeated coloured buttons, while the fallen twig resembles a miniature raised rail."
+      ],
+      "fix": "Reduce meadow texture contrast substantially. Redistribute the 14 dressing parts into irregular, predominantly sub-0.35 m clumps; use unequal flower groupings and grounded, angled twigs without support-like legs."
+    },
+    {
+      "id": "street",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the charcoal asphalt, sparse flat paint, slab pavements and restrained bollards. Provide an unmarked straight-road variant so assembly does not repeat the crossing on every tile."
+    },
+    {
+      "id": "lot-sale",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Survey flags and taut amber boundary cord compete with the availability signal.",
+        "The marker reads as a yellow framed structure rather than a compact recycled panel on one square post."
+      ],
+      "fix": "Keep the successful amber empty ring, but place it on an opaque pale panel supported by one square post near x 4.5, z 4.5. Remove the cord and surplus flags; use those parts for sparse grass and two distinct gravel patches."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Owner colour covers two entire gateposts instead of forming the specified restrained nameplate strip.",
+        "The filled circular household emblem is not readable."
+      ],
+      "fix": "Retain the low, open timber-and-metal boundary. Neutralise the gateposts and mount a front-facing pale plate with large lettering reading Ivy, a #d9534f strip and one clearly filled household circle."
+    },
+    {
+      "id": "street-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The plane canopy is a stack of smooth cushions rather than an irregular branching crown.",
+        "The maple's isolated orange cone reads as an attached prop, not autumn foliage on a low branch."
+      ],
+      "fix": "Redistribute the 30 parts into offset faceted crowns with visible branch connections. Give the plane a subtle trunk bend and unequal crown lobes; give the smaller maple one connected low branch with integrated orange foliage, retaining separate permeable pits."
+    },
+    {
+      "id": "wild-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The oak combines a rigid box cross with rounded blobs instead of a coherent heavy-limbed silhouette.",
+        "The willow resembles a flat mushroom with evenly spaced spikes.",
+        "The flowering shrub repeats evenly placed pastel balls."
+      ],
+      "fix": "Rebuild the 38-part group around asymmetry: unequal oak limbs supporting angular foliage masses, a broad willow with staggered drooping clusters, and an off-centre shrub with uneven flower concentrations. Make every foliage mass visibly supported."
+    },
+    {
+      "id": "street-light",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The hard cream disc beside each pole reads as a solid object on the road rather than illumination.",
+        "This conspicuous ground shape undermines an otherwise recognisable contemporary LED silhouette."
+      ],
+      "fix": "Remove the opaque ground-disc effect. Retain the slim pole and flat head, refine the short curved arm, and restrict glow=true to the broad underside diffuser; any light pool should be soft and unobtrusive in daylight."
+    },
+    {
+      "id": "centrepiece",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Tall clustered stone blades dominate the basin, contradicting the low civic centrepiece requirement.",
+        "Disk-capped blue jet shapes resemble little fixtures rather than short streams of water."
+      ],
+      "fix": "Within 48 parts, retain an approximately 4.5 m shallow circular basin and pale coping, replace the blades with one low offset stone form, and use three short tapered jets with small splash rings. Only recessed pool-light lenses should glow."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad timber slats, shallow back and simple aluminium supports. Preserve the clear two-person span and approximately 0.45 m seat height."
+    },
+    {
+      "id": "market",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The kiosk shell reads well, but the glass display is difficult to distinguish from an open counter.",
+        "Fruit, pastries and refill bottles collapse into generic coloured stock blocks."
+      ],
+      "fix": "Keep the flat overhang and powder-coated shell within the 2.6 × 1.6 m footprint. Allocate the 32 parts to a clearly framed transparent display, one bold fruit crate, a recognisable pastry silhouette and a small group of necked refill bottles."
+    },
+    {
+      "id": "arrival",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact minibus, recognisable glazing, stop-facing door and narrow transparent shelter. Preserve a continuous walking route around the shelter when placing the asset."
+    },
+    {
+      "id": "river",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The rendered bridge approaches end at the water-tile boundary without demonstrating continuous landings onto both banks.",
+        "Centre-line dashes imply two traffic lanes on the specified roughly 4 m deck."
+      ],
+      "fix": "Show the approaches continuing to the real banks at z ±7, with modest grounded abutments and a deck about 1 m above water. Keep the shallow precast structure and open rails, but treat the 4 m deck as a narrow single-lane crossing rather than a miniature two-lane road."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The shared-centre symbol and building-hand pictogram merge into small pale marks at stream distance.",
+        "Long green perimeter lines dominate the intended four-corner-block boundary language."
+      ],
+      "fix": "Simplify the boundary to four low corner blocks. Recompose the municipal panel with four large nodes around one contrasting centre and a separate bold building-hand pictogram, leaving the collaborative interior clear."
+    },
+    {
+      "id": "camp",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The two parasols read as small café umbrellas rather than broad shelters for a tourist group.",
+        "The route display is not distinguishable from the surrounding luggage and check-in props."
+      ],
+      "fix": "Retain the coach and check-in awning, but widen both parasol canopies and give the folding tables credible person-relative scale. Within 82 parts, group luggage and cooler clearly, add a bold route-line-and-stops graphic, and give the portable gathering light a distinct diffuser as its only glowing surface."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contrasting hoodie and work-jacket silhouettes, potted plant, phone and tied-back hair. Keep presentation bases separate from the gameplay characters."
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The gold scissors overlap the sash and torso, reading as a chain-like tangle rather than the defining ceremonial tool.",
+        "The angular red ribbon is more prominent than the town badge and office-defining sash."
+      ],
+      "fix": "Separate the scissors from the body silhouette, using two oversized rounded handles and clearly contrasting blades. Make the broad civic sash and simple badge readable across the suit, and reduce the ribbon to a short loop beside the scissors without adding a brass chain."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the practical bright jacket, bucket hat, lanyard, folded map and contrasting scarf. Preserve the suitcase's bold sticker blocks rather than adding tiny destination text."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contemporary two-storey massing, broad windows, restrained roof forms and small planted frontage. Preserve the parcel footprint and clear entrance path."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the glass-fronted espresso-bar language, simple cup symbol and compact terrace. Keep the entrance unobstructed and avoid adding fine advertising or reflective glass detail."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped steel-and-concrete silhouette, broad glazing bands and planted setbacks. Keep the ground-floor entrance legible without increasing facade detail."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the readable muzzle, drooping ears, raised tail and contemporary harness. Preserve its demonstrated scale beside the residents rather than the enlarged sheet presentation."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact hatchback proportions, bold glazing and rubber tyres. Keep the restrained toy-like detailing and short rear overhang."
+    },
+    {
+      "id": "street-corner",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Residents stand on a rectangular display slab in the carriageway, and other character presentation bases remain visible in the square.",
+        "Repeated road tiles create three closely spaced crossings, with the minibus occupying one of them.",
+        "The large uninterrupted paved square reads as sterile hardscape, with almost all substantial planting confined to the opposite frontage."
+      ],
+      "fix": "Strip all display bases from instantiated characters and ground their feet directly on the world surfaces. Use unmarked straight-road tiles between deliberately placed crossings, move bus boarding clear of the zebra markings, and introduce irregular planted pockets along square margins while preserving circulation and the four community build areas."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

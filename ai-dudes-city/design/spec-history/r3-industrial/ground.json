@@ -1,0 +1,311 @@
+{
+  "name": "Railway-Verge Meadow",
+  "description": "Uneven coarse-grass tufts and warm wildflowers dot an open meadow, with pale ballast, sleeper offcuts and a discarded rusty rail concentrated along one edge.",
+  "notes": "Squared railway timber, rusted iron and a small raised cinder heap establish the Industrial Age without covering the healthy meadow in soot, patterned discs or bright speckling.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -3.9,
+        0.22,
+        2.65
+      ],
+      "size": [
+        1.05,
+        0.44,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#596f52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -2.9,
+        0.17,
+        3.05
+      ],
+      "size": [
+        0.85,
+        0.34,
+        1.05
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#a4ad7b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.7,
+        0.24,
+        -2.2
+      ],
+      "size": [
+        1.15,
+        0.48,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#596f52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -3.65,
+        0.19,
+        -3.15
+      ],
+      "size": [
+        0.95,
+        0.38,
+        1.2
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#a4ad7b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.3,
+        0.2,
+        3.4
+      ],
+      "size": [
+        1.1,
+        0.4,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#596f52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.02,
+        0.31,
+        2.62
+      ],
+      "size": [
+        0.42,
+        0.22,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#f2cf83"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.68,
+        0.24,
+        2.8
+      ],
+      "size": [
+        0.34,
+        0.2,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.57,
+        0.33,
+        -2.22
+      ],
+      "size": [
+        0.42,
+        0.22,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#f2cf83"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.9,
+        0.25,
+        -2.04
+      ],
+      "size": [
+        0.38,
+        0.2,
+        0.42
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#d98a7b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.55,
+        0.125,
+        -3.15
+      ],
+      "size": [
+        1.1,
+        0.25,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#858b88"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.15,
+        0.09,
+        -3.38
+      ],
+      "size": [
+        0.9,
+        0.18,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.45,
+        0
+      ],
+      "color": "#aaa58d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.93,
+        0.105,
+        -2.8
+      ],
+      "size": [
+        0.8,
+        0.21,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.7,
+        0
+      ],
+      "color": "#857f72"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.95,
+        0.075,
+        -4.25
+      ],
+      "size": [
+        2,
+        0.15,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.22,
+        0
+      ],
+      "color": "#4a3a2a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.45,
+        0.075,
+        -4.95
+      ],
+      "size": [
+        2,
+        0.15,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#3a3430"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.85,
+        0.09,
+        -3.85
+      ],
+      "size": [
+        0.18,
+        0.18,
+        1.65
+      ],
+      "rotation": [
+        0,
+        0.16,
+        0
+      ],
+      "color": "#7a4a32"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.55,
+        0.11,
+        -3.2
+      ],
+      "size": [
+        0.75,
+        0.22,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#42494c"
+    }
+  ]
+}

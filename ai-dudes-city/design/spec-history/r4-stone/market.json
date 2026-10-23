@@ -1,0 +1,387 @@
+{
+  "name": "Spotted-Pelt Barter Spread",
+  "description": "A dark-haired trader kneels beside a stone-weighted, cream-patched pelt displaying berries, flint, a branching antler and a tied hide bundle.",
+  "notes": "Ground-level barter, irregular overlapping hide edges and gathered materials establish the Stone Age, while a red-ochre wrap and pale goods contrast with the square's earth.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -0.43,
+        0.055,
+        -0.05
+      ],
+      "size": [
+        1.76,
+        0.08,
+        1.25
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.29,
+        0.06,
+        0.09
+      ],
+      "size": [
+        1.58,
+        0.08,
+        1.3
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.47,
+        0.13,
+        0.03
+      ],
+      "size": [
+        1.4,
+        0.07,
+        1.04
+      ],
+      "rotation": [
+        0.09,
+        -0.16,
+        0.035
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.16,
+        0.16,
+        -0.46
+      ],
+      "size": [
+        0.32,
+        0.23,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.29,
+        0.16,
+        0.62
+      ],
+      "size": [
+        0.3,
+        0.23,
+        0.27
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#687166"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.91,
+        0.25,
+        0.23
+      ],
+      "size": [
+        0.64,
+        0.18,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.04,
+        0.365,
+        0.2
+      ],
+      "size": [
+        0.26,
+        0.23,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b2e3a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.8,
+        0.37,
+        0.28
+      ],
+      "size": [
+        0.28,
+        0.24,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.3,
+        0.26,
+        0.38
+      ],
+      "size": [
+        0.57,
+        0.2,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.48,
+        0
+      ],
+      "color": "#5f5f58"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.39,
+        0.255,
+        -0.39
+      ],
+      "size": [
+        0.17,
+        0.8,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.12,
+        1.5708
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.36,
+        0.26,
+        -0.25
+      ],
+      "size": [
+        0.14,
+        0.4,
+        0.13
+      ],
+      "rotation": [
+        1.5708,
+        0.48,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.2,
+        0.3,
+        -0.12
+      ],
+      "size": [
+        0.49,
+        0.32,
+        0.43
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#a0522d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.31,
+        -0.12
+      ],
+      "size": [
+        0.085,
+        0.32,
+        0.39
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.77,
+        0.145,
+        0.05
+      ],
+      "size": [
+        0.25,
+        0.29,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.055,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.12,
+        0.145,
+        0.03
+      ],
+      "size": [
+        0.25,
+        0.29,
+        0.7
+      ],
+      "rotation": [
+        0,
+        -0.075,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.945,
+        0.535,
+        0.12
+      ],
+      "size": [
+        0.51,
+        0.52,
+        0.35
+      ],
+      "rotation": [
+        0.05,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.945,
+        0.985,
+        0.16
+      ],
+      "size": [
+        0.37,
+        0.37,
+        0.35
+      ],
+      "rotation": [
+        0,
+        -0.1,
+        0
+      ],
+      "color": "#c88e67"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.945,
+        1.16,
+        0.105
+      ],
+      "size": [
+        0.41,
+        0.16,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.1,
+        0.025
+      ],
+      "color": "#3b2a22"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.62,
+        0.51,
+        0.24
+      ],
+      "size": [
+        0.17,
+        0.43,
+        0.18
+      ],
+      "rotation": [
+        -0.42,
+        0,
+        -0.28
+      ],
+      "color": "#c88e67"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.255,
+        0.515,
+        0.24
+      ],
+      "size": [
+        0.17,
+        0.42,
+        0.18
+      ],
+      "rotation": [
+        -0.45,
+        0,
+        0.22
+      ],
+      "color": "#c88e67"
+    }
+  ]
+}

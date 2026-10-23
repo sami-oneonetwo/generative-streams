@@ -1,0 +1,2232 @@
+{
+  "name": "Meetup Espresso",
+  "description": "A compact teal-trimmed glass café with a striped street awning, oversized rooftop coffee cup and colourful two-table terrace.",
+  "notes": "A mid-grey roof with a low teal parapet, rooftop equipment and planting breaks up the overhead silhouette while tall contemporary glazing and a bold cup sign establish the Modern Age espresso bar.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.08,
+        -0.2
+      ],
+      "size": [
+        9.8,
+        0.16,
+        9.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b9bfba"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.08,
+        5.05
+      ],
+      "size": [
+        2.2,
+        0.16,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.19,
+        -1.4
+      ],
+      "size": [
+        8,
+        0.06,
+        4.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.72,
+        -3.7
+      ],
+      "size": [
+        8,
+        3,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.9,
+        1.72,
+        -1.4
+      ],
+      "size": [
+        0.2,
+        3,
+        4.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.32,
+        -1.4
+      ],
+      "size": [
+        8.3,
+        0.2,
+        4.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.72,
+        -3.72
+      ],
+      "size": [
+        8.3,
+        0.6,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.72,
+        0.92
+      ],
+      "size": [
+        8.3,
+        0.6,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.07,
+        3.72,
+        -1.4
+      ],
+      "size": [
+        0.16,
+        0.6,
+        4.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.07,
+        3.72,
+        -1.4
+      ],
+      "size": [
+        0.16,
+        0.6,
+        4.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.35,
+        1.72,
+        0.81
+      ],
+      "size": [
+        2.9,
+        3,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a9dadd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.35,
+        1.72,
+        0.81
+      ],
+      "size": [
+        2.9,
+        3,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a9dadd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.86,
+        1.72,
+        0.89
+      ],
+      "size": [
+        0.16,
+        3,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.86,
+        1.72,
+        0.89
+      ],
+      "size": [
+        0.16,
+        3,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.83,
+        1.72,
+        0.89
+      ],
+      "size": [
+        0.14,
+        3,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.83,
+        1.72,
+        0.89
+      ],
+      "size": [
+        0.14,
+        3,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.35,
+        0.28,
+        0.9
+      ],
+      "size": [
+        2.9,
+        0.12,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.35,
+        0.28,
+        0.9
+      ],
+      "size": [
+        2.9,
+        0.12,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.15,
+        0.9
+      ],
+      "size": [
+        8,
+        0.14,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.38,
+        0.85
+      ],
+      "size": [
+        1.5,
+        2.32,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c4e6e4"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.87,
+        0.85
+      ],
+      "size": [
+        1.5,
+        0.5,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a9dadd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.58,
+        0.89
+      ],
+      "size": [
+        1.66,
+        0.12,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.53,
+        1.3,
+        0.97
+      ],
+      "size": [
+        0.08,
+        0.44,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.05,
+        2.06,
+        0.89
+      ],
+      "size": [
+        0.16,
+        1.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0.34
+      ],
+      "color": "#e4f4ee"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.92,
+        2.06,
+        0.89
+      ],
+      "size": [
+        0.16,
+        1.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0.34
+      ],
+      "color": "#e4f4ee"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.9,
+        1.72,
+        -2.48
+      ],
+      "size": [
+        0.08,
+        3,
+        2.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a9dadd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.9,
+        1.72,
+        -0.23
+      ],
+      "size": [
+        0.08,
+        3,
+        2.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a9dadd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        1.72,
+        -3.59
+      ],
+      "size": [
+        0.16,
+        3,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        1.72,
+        -1.36
+      ],
+      "size": [
+        0.16,
+        3,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        0.28,
+        -1.4
+      ],
+      "size": [
+        0.16,
+        0.12,
+        4.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        3.15,
+        -1.4
+      ],
+      "size": [
+        0.16,
+        0.14,
+        4.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        1.94,
+        -2.7
+      ],
+      "size": [
+        0.06,
+        1.5,
+        0.16
+      ],
+      "rotation": [
+        -0.32,
+        0,
+        0
+      ],
+      "color": "#e4f4ee"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        1.94,
+        -0.43
+      ],
+      "size": [
+        0.06,
+        1.5,
+        0.16
+      ],
+      "rotation": [
+        -0.32,
+        0,
+        0
+      ],
+      "color": "#e4f4ee"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.35,
+        0.52,
+        0.96
+      ],
+      "size": [
+        2.76,
+        0.48,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.35,
+        0.52,
+        0.96
+      ],
+      "size": [
+        2.76,
+        0.48,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.35,
+        1.22,
+        1.03
+      ],
+      "size": [
+        2.76,
+        0.12,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.35,
+        1.22,
+        1.03
+      ],
+      "size": [
+        2.76,
+        0.12,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.4,
+        1.6,
+        1
+      ],
+      "size": [
+        1.18,
+        0.64,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.4,
+        1.71,
+        1.23
+      ],
+      "size": [
+        1.02,
+        0.2,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.4,
+        1.32,
+        1.23
+      ],
+      "size": [
+        1.12,
+        0.08,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315651"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.68,
+        1.44,
+        1.24
+      ],
+      "size": [
+        0.2,
+        0.16,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.14,
+        1.44,
+        1.24
+      ],
+      "size": [
+        0.2,
+        0.16,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.45,
+        1.32,
+        1.04
+      ],
+      "size": [
+        1.2,
+        0.08,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.12,
+        1.46,
+        1.05
+      ],
+      "size": [
+        0.38,
+        0.22,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#edbf62"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.72,
+        1.46,
+        1.05
+      ],
+      "size": [
+        0.38,
+        0.22,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#edbf62"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.35,
+        2.76,
+        1.02
+      ],
+      "size": [
+        2.5,
+        0.1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffd594",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.35,
+        2.76,
+        1.02
+      ],
+      "size": [
+        2.5,
+        0.1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffd594",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.5,
+        2.88,
+        1.47
+      ],
+      "size": [
+        1,
+        0.12,
+        1.45
+      ],
+      "rotation": [
+        0.22,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.69,
+        2.17
+      ],
+      "size": [
+        8.04,
+        0.18,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.52,
+        3.53,
+        -2.38
+      ],
+      "size": [
+        1.44,
+        0.22,
+        1.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.52,
+        3.94,
+        -2.38
+      ],
+      "size": [
+        1.3,
+        0.6,
+        1.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.52,
+        4.27,
+        -2.38
+      ],
+      "size": [
+        0.76,
+        0.08,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.52,
+        4.32,
+        -2.38
+      ],
+      "size": [
+        0.68,
+        0.06,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.65,
+        3.53,
+        -2.53
+      ],
+      "size": [
+        1.24,
+        0.22,
+        1.04
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.65,
+        3.85,
+        -2.53
+      ],
+      "size": [
+        1.1,
+        0.42,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.65,
+        4.1,
+        -2.53
+      ],
+      "size": [
+        0.64,
+        0.08,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.65,
+        4.15,
+        -2.53
+      ],
+      "size": [
+        0.58,
+        0.06,
+        0.12
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.36,
+        3.7,
+        -2.72
+      ],
+      "size": [
+        2.42,
+        0.56,
+        0.92
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.36,
+        4,
+        -2.72
+      ],
+      "size": [
+        2.24,
+        0.06,
+        0.74
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#594737"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.57,
+        4.2,
+        -2.72
+      ],
+      "size": [
+        0.9,
+        0.58,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.35,
+        4.29,
+        -2.72
+      ],
+      "size": [
+        1.06,
+        0.76,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.12,
+        4.18,
+        -2.72
+      ],
+      "size": [
+        0.88,
+        0.54,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.06,
+        0.86
+      ],
+      "size": [
+        2.2,
+        0.16,
+        1.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.22,
+        0.86
+      ],
+      "size": [
+        1.92,
+        0.16,
+        1.64
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.8,
+        0.86
+      ],
+      "size": [
+        1.4,
+        1.04,
+        1.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff6df"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        5.32,
+        0.86
+      ],
+      "size": [
+        1.48,
+        0.12,
+        1.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        5.39,
+        0.86
+      ],
+      "size": [
+        1.18,
+        0.06,
+        1.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#594737"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.94,
+        5.1,
+        0.86
+      ],
+      "size": [
+        0.68,
+        0.2,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff6df"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.94,
+        4.51,
+        0.86
+      ],
+      "size": [
+        0.68,
+        0.2,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff6df"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.22,
+        4.805,
+        0.86
+      ],
+      "size": [
+        0.2,
+        0.79,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff6df"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.36,
+        5.65,
+        0.86
+      ],
+      "size": [
+        0.14,
+        0.46,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.3
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.36,
+        6.06,
+        0.86
+      ],
+      "size": [
+        0.14,
+        0.42,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0.32
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.25,
+        5.72,
+        0.86
+      ],
+      "size": [
+        0.16,
+        0.6,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.28
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.26,
+        6.22,
+        0.86
+      ],
+      "size": [
+        0.16,
+        0.46,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0.32
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.48,
+        0.43,
+        1.62
+      ],
+      "size": [
+        0.76,
+        0.54,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.48,
+        0.43,
+        1.62
+      ],
+      "size": [
+        0.76,
+        0.54,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.48,
+        0.95,
+        1.62
+      ],
+      "size": [
+        0.84,
+        0.66,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.48,
+        0.99,
+        1.62
+      ],
+      "size": [
+        0.84,
+        0.74,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.55,
+        0.22,
+        3.35
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.55,
+        0.22,
+        3.35
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.55,
+        0.55,
+        3.35
+      ],
+      "size": [
+        0.18,
+        0.66,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.55,
+        0.55,
+        3.35
+      ],
+      "size": [
+        0.18,
+        0.66,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.55,
+        0.93,
+        3.35
+      ],
+      "size": [
+        1.35,
+        0.12,
+        1.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.55,
+        0.93,
+        3.35
+      ],
+      "size": [
+        1.35,
+        0.12,
+        1.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.55,
+        1.75,
+        3.35
+      ],
+      "size": [
+        0.1,
+        1.64,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.55,
+        1.85,
+        3.35
+      ],
+      "size": [
+        0.1,
+        1.84,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -2.55,
+        2.62,
+        3.35
+      ],
+      "size": [
+        2.6,
+        0.46,
+        2.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.55,
+        2.82,
+        3.35
+      ],
+      "size": [
+        2.6,
+        0.46,
+        2.6
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.55,
+        2.87,
+        3.35
+      ],
+      "size": [
+        0.16,
+        0.16,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.55,
+        3.07,
+        3.35
+      ],
+      "size": [
+        0.16,
+        0.16,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.61,
+        0.36,
+        3.35
+      ],
+      "size": [
+        0.42,
+        0.4,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.61,
+        0.61,
+        3.35
+      ],
+      "size": [
+        0.58,
+        0.1,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.86,
+        0.92,
+        3.35
+      ],
+      "size": [
+        0.1,
+        0.62,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.49,
+        0.36,
+        3.35
+      ],
+      "size": [
+        0.42,
+        0.4,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.49,
+        0.61,
+        3.35
+      ],
+      "size": [
+        0.58,
+        0.1,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.24,
+        0.92,
+        3.35
+      ],
+      "size": [
+        0.1,
+        0.62,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#39766f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.49,
+        0.36,
+        3.35
+      ],
+      "size": [
+        0.42,
+        0.4,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.49,
+        0.61,
+        3.35
+      ],
+      "size": [
+        0.58,
+        0.1,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.24,
+        0.92,
+        3.35
+      ],
+      "size": [
+        0.1,
+        0.62,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.61,
+        0.36,
+        3.35
+      ],
+      "size": [
+        0.42,
+        0.4,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.61,
+        0.61,
+        3.35
+      ],
+      "size": [
+        0.58,
+        0.1,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.86,
+        0.92,
+        3.35
+      ],
+      "size": [
+        0.1,
+        0.62,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.84,
+        1.1,
+        3.65
+      ],
+      "size": [
+        0.2,
+        0.22,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.84,
+        1.1,
+        3.65
+      ],
+      "size": [
+        0.2,
+        0.22,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.85,
+        0.12,
+        -1
+      ],
+      "size": [
+        0.7,
+        0.24,
+        6.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#79a762"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.85,
+        0.12,
+        -1
+      ],
+      "size": [
+        0.7,
+        0.24,
+        6.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#79a762"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.85,
+        0.62,
+        0.35
+      ],
+      "size": [
+        0.7,
+        0.88,
+        2.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.85,
+        0.68,
+        -0.2
+      ],
+      "size": [
+        0.7,
+        1,
+        1.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.85,
+        0.47,
+        1.3
+      ],
+      "size": [
+        0.68,
+        0.58,
+        0.92
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.85,
+        0.47,
+        -1.64
+      ],
+      "size": [
+        0.68,
+        0.58,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5c880"
+    }
+  ]
+}

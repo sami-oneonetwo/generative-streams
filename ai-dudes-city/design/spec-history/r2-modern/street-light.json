@@ -1,0 +1,276 @@
+{
+  "name": "Warm-Rim LED Street Light",
+  "description": "A pale powder-coated pole curves toward the road to support a broad flat LED head with a visible warm rim and a soft circular pool of light below.",
+  "notes": "A practical segmented arm, maintenance hatch and low-profile LED head establish modern street infrastructure, with contrasting metal and an illuminated rim keeping the fixture readable from above.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.7,
+        0.12,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.16,
+        5
+      ],
+      "size": [
+        0.4,
+        0.08,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2b3238"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.29,
+        5
+      ],
+      "size": [
+        0.3,
+        0.18,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.25,
+        5
+      ],
+      "size": [
+        0.2,
+        3.9,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.85,
+        5.11
+      ],
+      "size": [
+        0.14,
+        0.42,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.24,
+        4.94
+      ],
+      "size": [
+        0.2,
+        0.42,
+        0.2
+      ],
+      "rotation": [
+        -0.4,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.52,
+        4.72
+      ],
+      "size": [
+        0.19,
+        0.42,
+        0.19
+      ],
+      "rotation": [
+        -1,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.64,
+        4.36
+      ],
+      "size": [
+        0.18,
+        0.48,
+        0.18
+      ],
+      "rotation": [
+        -1.45,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.67,
+        4.08
+      ],
+      "size": [
+        0.18,
+        0.34,
+        0.18
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.65,
+        3.75
+      ],
+      "size": [
+        0.8,
+        0.14,
+        1.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.55,
+        3.75
+      ],
+      "size": [
+        0.66,
+        0.06,
+        1.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.75,
+        3.75
+      ],
+      "size": [
+        0.8,
+        0.06,
+        1.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.82,
+        3.75
+      ],
+      "size": [
+        0.68,
+        0.08,
+        1.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1e3dc"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.01,
+        3.75
+      ],
+      "size": [
+        2.5,
+        0.02,
+        2.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f4ecc8",
+      "glow": true
+    }
+  ]
+}

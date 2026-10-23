@@ -1,0 +1,311 @@
+{
+  "name": "Shared Wellward Ground",
+  "description": "Four squat, uneven mudbrick corner markers reserve an empty communal parcel, while a low clay medallion shows four households gathered around a projecting shared bowl.",
+  "notes": "Offset sun-dried brick courses, unglazed clay and broad impressed-dot motifs establish Bronze Age civic ground without coloured caps, landscaped edging or modern signage.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5.34,
+        0.14,
+        -5.34
+      ],
+      "size": [
+        1.04,
+        0.28,
+        0.92
+      ],
+      "rotation": [
+        0,
+        0.045,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.39,
+        0.385,
+        -5.31
+      ],
+      "size": [
+        0.93,
+        0.21,
+        0.86
+      ],
+      "rotation": [
+        0,
+        -0.055,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.32,
+        0.16,
+        -5.32
+      ],
+      "size": [
+        0.98,
+        0.32,
+        1.02
+      ],
+      "rotation": [
+        0,
+        -0.055,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.28,
+        0.44,
+        -5.35
+      ],
+      "size": [
+        0.88,
+        0.24,
+        0.91
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.33,
+        0.13,
+        5.32
+      ],
+      "size": [
+        1.03,
+        0.26,
+        0.96
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.28,
+        0.365,
+        5.29
+      ],
+      "size": [
+        0.92,
+        0.21,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.07,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.32,
+        0.15,
+        5.3
+      ],
+      "size": [
+        1.02,
+        0.3,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0.05,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.35,
+        0.425,
+        5.26
+      ],
+      "size": [
+        0.9,
+        0.25,
+        0.87
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.34,
+        5.03
+      ],
+      "size": [
+        1.12,
+        0.68,
+        0.86
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1.17,
+        5.12
+      ],
+      "size": [
+        1.1,
+        0.2,
+        1.1
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.36,
+        1.17,
+        5.205
+      ],
+      "size": [
+        0.22,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.36,
+        1.17,
+        5.205
+      ],
+      "size": [
+        0.22,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1.53,
+        5.205
+      ],
+      "size": [
+        0.22,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.81,
+        5.205
+      ],
+      "size": [
+        0.22,
+        0.06,
+        0.22
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        1.07,
+        5.35
+      ],
+      "size": [
+        0.54,
+        0.36,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1.225,
+        5.35
+      ],
+      "size": [
+        0.35,
+        0.06,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    }
+  ]
+}

@@ -1,0 +1,425 @@
+{
+  "name": "Dust-Buried Survivor Street",
+  "description": "Worn concrete kerbs, scavenged repair plates and sand-clogged gutters border a clear asphalt street with faint surviving tyre tracks.",
+  "notes": "Broad scrap repairs and dust-filled breaks turn inherited municipal infrastructure into maintained Wasteland footpaths without markings, lights or obstructive rubble.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -4.7,
+        0.04,
+        -4.08
+      ],
+      "size": [
+        2.3,
+        0.08,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#928b7d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.9,
+        0.04,
+        -4.07
+      ],
+      "size": [
+        2.5,
+        0.08,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0.015,
+        0
+      ],
+      "color": "#a09887"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.8,
+        0.04,
+        -4.09
+      ],
+      "size": [
+        2.7,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        -0.018,
+        0
+      ],
+      "color": "#8e877a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.3,
+        0.04,
+        4.08
+      ],
+      "size": [
+        2.8,
+        0.08,
+        0.22
+      ],
+      "rotation": [
+        0,
+        -0.012,
+        0
+      ],
+      "color": "#9a9283"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.1,
+        0.04,
+        4.07
+      ],
+      "size": [
+        2.1,
+        0.08,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0.02,
+        0
+      ],
+      "color": "#8e877a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.4,
+        0.04,
+        4.08
+      ],
+      "size": [
+        2.4,
+        0.08,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a09887"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.4,
+        0.025,
+        -2.95
+      ],
+      "size": [
+        2.1,
+        0.05,
+        1.05
+      ],
+      "rotation": [
+        0,
+        0.07,
+        0
+      ],
+      "color": "#817869"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.7,
+        0.025,
+        2.95
+      ],
+      "size": [
+        2.35,
+        0.05,
+        1.15
+      ],
+      "rotation": [
+        0,
+        -0.055,
+        0
+      ],
+      "color": "#7e776b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.6,
+        0.025,
+        -5.05
+      ],
+      "size": [
+        2.4,
+        0.05,
+        1.25
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#a29885"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.8,
+        0.04,
+        -4.12
+      ],
+      "size": [
+        1.75,
+        0.08,
+        1.35
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "color": "#a3967e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.15,
+        0.035,
+        4.13
+      ],
+      "size": [
+        2.3,
+        0.07,
+        1.4
+      ],
+      "rotation": [
+        0,
+        -0.12,
+        0
+      ],
+      "color": "#aa9b80"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.55,
+        0.025,
+        -3.2
+      ],
+      "size": [
+        2.35,
+        0.05,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ],
+      "color": "#948b78"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.9,
+        0.01,
+        3.05
+      ],
+      "size": [
+        1.45,
+        0.02,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0.29,
+        0
+      ],
+      "color": "#6d6961"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.12,
+        0.01,
+        2.91
+      ],
+      "size": [
+        0.5,
+        0.02,
+        0.08
+      ],
+      "rotation": [
+        0,
+        -0.22,
+        0
+      ],
+      "color": "#6d6961"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.25,
+        0.01,
+        -1.95
+      ],
+      "size": [
+        2.25,
+        0.02,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0.015,
+        0
+      ],
+      "color": "#706d64"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.1,
+        0.01,
+        1.95
+      ],
+      "size": [
+        2.45,
+        0.02,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0.015,
+        0
+      ],
+      "color": "#716e65"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.3,
+        0.01,
+        -1.95
+      ],
+      "size": [
+        2.8,
+        0.02,
+        0.19
+      ],
+      "rotation": [
+        0,
+        -0.01,
+        0
+      ],
+      "color": "#716e65"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.55,
+        0.01,
+        1.95
+      ],
+      "size": [
+        2.3,
+        0.02,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.01,
+        0
+      ],
+      "color": "#706d64"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.6,
+        0.015,
+        3.73
+      ],
+      "size": [
+        1.05,
+        0.03,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#69685f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.48,
+        0.035,
+        3.79
+      ],
+      "size": [
+        0.81,
+        0.04,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#948872"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.5,
+        0.015,
+        -3.73
+      ],
+      "size": [
+        1.1,
+        0.03,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#69685f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.32,
+        0.035,
+        -3.78
+      ],
+      "size": [
+        0.76,
+        0.04,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#9b8e76"
+    }
+  ]
+}

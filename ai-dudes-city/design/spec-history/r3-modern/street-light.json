@@ -1,0 +1,236 @@
+{
+  "name": "Charcoal LED Street Light",
+  "description": "A slim charcoal pole supports a short rising arm and a broad, flat LED head with a warm underside diffuser.",
+  "notes": "Dark powder-coated metal, a maintenance hatch and a low-profile LED housing establish contemporary street infrastructure, with glow confined to the diffuser and no ground light-pool geometry.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.62,
+        0.12,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.16,
+        5
+      ],
+      "size": [
+        0.38,
+        0.08,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.29,
+        5
+      ],
+      "size": [
+        0.32,
+        0.18,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.25,
+        5
+      ],
+      "size": [
+        0.24,
+        3.9,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.86,
+        5.115
+      ],
+      "size": [
+        0.16,
+        0.44,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.98,
+        5.155
+      ],
+      "size": [
+        0.06,
+        0.06,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        4.13,
+        5
+      ],
+      "size": [
+        0.26,
+        0.26,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.26,
+        4.58
+      ],
+      "size": [
+        0.18,
+        0.18,
+        0.95
+      ],
+      "rotation": [
+        0.25,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.39,
+        4.64
+      ],
+      "size": [
+        0.3,
+        0.2,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.43,
+        4.2
+      ],
+      "size": [
+        0.84,
+        0.18,
+        1.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.31,
+        4.2
+      ],
+      "size": [
+        0.7,
+        0.06,
+        1.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.55,
+        4.2
+      ],
+      "size": [
+        0.66,
+        0.06,
+        1.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    }
+  ]
+}

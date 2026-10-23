@@ -1,0 +1,466 @@
+{
+  "name": "Municipal Sett and Tram Street",
+  "description": "Dark flush tram rails cross an open granite carriageway, with sandstone kerbs, distinct drainage gutters, broad iron grates and a single paired set of stout pavement bollards.",
+  "notes": "Standardised sandstone edging and cast-iron drainage establish the Industrial Age without painted markings, while four subdued irregular wear patches soften the supplied sett surface without forming lanes.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.08,
+        4.1
+      ],
+      "size": [
+        11.88,
+        0.16,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b7ad96"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.08,
+        -4.1
+      ],
+      "size": [
+        11.88,
+        0.16,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b7ad96"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.015,
+        3.82
+      ],
+      "size": [
+        11.88,
+        0.03,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.015,
+        -3.82
+      ],
+      "size": [
+        11.88,
+        0.03,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.015,
+        0.75
+      ],
+      "size": [
+        11.88,
+        0.03,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#364143"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.015,
+        -0.75
+      ],
+      "size": [
+        11.88,
+        0.03,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#364143"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.9,
+        0.02,
+        3.64
+      ],
+      "size": [
+        1.2,
+        0.04,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263638"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.38,
+        0.03,
+        3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.14,
+        0.03,
+        3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.9,
+        0.03,
+        3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.66,
+        0.03,
+        3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.42,
+        0.03,
+        3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.9,
+        0.02,
+        -3.64
+      ],
+      "size": [
+        1.2,
+        0.04,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263638"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.42,
+        0.03,
+        -3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.66,
+        0.03,
+        -3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.9,
+        0.03,
+        -3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.14,
+        0.03,
+        -3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.38,
+        0.03,
+        -3.64
+      ],
+      "size": [
+        0.14,
+        0.06,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#727974"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.1,
+        0.57,
+        4.5
+      ],
+      "size": [
+        0.36,
+        0.9,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.1,
+        0.57,
+        -4.5
+      ],
+      "size": [
+        0.36,
+        0.9,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.5,
+        0.01,
+        2.45
+      ],
+      "size": [
+        1.8,
+        0.02,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.11,
+        0
+      ],
+      "color": "#545a5c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.4,
+        0.01,
+        -2.2
+      ],
+      "size": [
+        1.55,
+        0.02,
+        1.05
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#52585a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.25,
+        0.01,
+        2.05
+      ],
+      "size": [
+        1.7,
+        0.02,
+        0.75
+      ],
+      "rotation": [
+        0,
+        -0.09,
+        0
+      ],
+      "color": "#565c5e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.65,
+        0.01,
+        -2.65
+      ],
+      "size": [
+        1.5,
+        0.02,
+        0.95
+      ],
+      "rotation": [
+        0,
+        0.19,
+        0
+      ],
+      "color": "#4f5456"
+    }
+  ],
+  "checks": [
+    "6 parts reach outside the 12 m room"
+  ]
+}

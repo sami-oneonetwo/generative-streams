@@ -1,0 +1,359 @@
+{
+  "elements": [
+    {
+      "id": "street",
+      "problems": [
+        "The mud and green shoulders meet along ruler-straight boundaries, making the walking edges resemble continuous landscaped strips.",
+        "Repeated footprint clusters and long parallel surface streaks make the track look mechanically patterned.",
+        "In the vignette the mud track has dead-straight, parallel edges, with a uniform 2 m mossy band on both sides. That reads as a planned road with verge or sidewalk strips, not a trampled track.",
+        "Almost all 14 parts are 0.03 m flat lines and ovals, invisible at stream scale. Only the 3 edge stones and 2 twigs register, so the parts do nothing to break the straight edges.",
+        "The footprints run in a neat diagonal line down the middle.",
+        "The mud track itself reads well as mud, but the footprint decals are a regular repeating stamp grid that reads as a tiled texture",
+        "The moss walking-edge bands at |z| 4–6 have dead-straight edges, so they read as a built verge or sidewalk strip running along the road",
+        "The parts (thin drag grooves, twigs) are too thin to register. Only the two teal puddles and two pale stones read",
+        "World rule: Walking edge: the |z| 4–6 strips render as a uniform, straight-edged mossy band on both sides of the road, which still implies a planned road with verges or sidewalks. The world rule should be that the road has no edge band: the mud meets the countryside or lot surface with a ragged, irregular edge (mud tongues, puddles and tussocks crossing it), and the renderer should not draw a distinct walking-edge surface when pavement is null.",
+        "World rule: Road texture: the 'mud' pattern stamps footprint marks on a visible regular grid; ask for randomised placement.",
+        "World rule: Walking edge: the |z| 4–6 strips render as a straight-edged moss band in a different pattern from the countryside, which reads as a built verge or sidewalk. Render the edge with the countryside meadow surface, or blend it irregularly into the mud, so no parallel strip flanks the road.",
+        "World rule: Road surface: the mud texture's footprint stamps repeat on a visible grid. Randomise or sparsify them so the road doesn't read as tiled."
+      ],
+      "fix": "Keep the 8 m mud corridor, but break its visual margins with irregular mud tongues, moss and flattened vegetation. Vary footprint directions and spacing, shorten and offset drag grooves, and concentrate the 14 dressing parts near the margins without obstructing the centre. / Add 6–8 irregular flat mud tongues (sphere, 0.03 m tall, 1.5–3 m long, #76513b/#533d30) that cross the |z|=4 edge and push 0.5–1.5 m into the verge on both sides at uneven x spacing. Add 6 grass tussocks (cones, 0.3–0.5 m, #526b40/#a8ad68) poking into the mud margin at |z| 3.4–3.9. Make two puddles larger (2–2.5 m) so they straddle the edge. Scatter the footprints in two wandering, offset trails rather than one line. / Break the straight road edge with 4–5 irregular mud tongues (flat 0.04 m patches, #76513b/#533d30, 1–2 m long) spilling across z ±4 into the edge band, and tufts of tall grass (#a8ad68, 0.3 m) along the margins. Replace the twig slivers with 2–3 chunkier half-buried stones (0.5 m) and a short broken branch 0.12 m thick near the margins. Keep the centre clear."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The vacant centre reads, but its thin, tidy polygonal frame resembles an empty sign frame more than mud-thickened twigs.",
+        "The supporting sticks are too straight and uniform.",
+        "Sami's note says sticks and mud, but there is no mud: the loop is six identical pale (#e1d3ae) straight cylinders forming a perfect regular hexagon.",
+        "In the vignette it reads as a crisp white empty picture frame or sign frame, i.e. a modern sign board with the board removed.",
+        "It is small and thin: posts 1.44 m, loop about 1.3 m across, sticks 0.2 m thick. It is easy to miss on the mottled green lot.",
+        "No mud mound at the base; the clutter is one stone and one tuft.",
+        "The loop marker reads as a pale picture frame or empty doorway made of bleached sticks. There is no 'mud' at all, though Sami asked for sticks and mud",
+        "At about 1.3 m across it is small in the cell and gets lost in the busy moss camo ground",
+        "The only clutter is one pebble and one tuft cone",
+        "World rule: Free-lot marker: require visible brown mud lumps on the loop and post bases, and an irregular, non-polygonal loop. The bible's 'thickened with mud and pale ochre' produced a clean pale hexagon frame. Community-lot marker: require at least 2.4 m height with an emblem of at least 0.9 m, plus upright corner stones or cairns at least 1.1 m tall, so neither reads as a person or vanishes.",
+        "World rule: lotRough surface: the 'moss' pattern is a high-contrast camo of large blotches that swallows every lot marker. Lower its contrast (accent and accent2 closer to base) and reduce its scale so markers read."
+      ],
+      "fix": "Within the 10-part allocation, use two visibly crooked, unequal sticks and a larger irregular twig loop with chunky pale-ochre mud joints. Preserve the completely empty centre and add clearly grounded stones and tufts around its feet. / Rebuild the loop from 8–9 crooked branch segments of unequal length (0.4–0.9 m) and thickness (0.14–0.26 m), in brown #76513b/#987052 rather than bone white, with overlapping ends and two short twigs sticking out past the ring. Add 5–6 lumpy mud daub balls (spheres 0.25–0.4 m, #533d30/#76513b) at the joints and where the loop meets the posts, plus a few pale-ochre (#c3a575) smears on the mud. Raise the posts to about 1.8 m and make them crooked (z rotation ±0.15). Build a mud mound around both post feet (flattened spheres 0.8 × 0.35 m, #76513b) with a couple of stones. Keep the loop's centre visibly empty and widen it to about 1.5 m. / Enlarge the loop to about 1.8 m across on posts 1.6 m tall, keep the hollow centre, and add 4–6 lumpy dark mud-daub spheres (#533d30/#76513b, 0.25–0.35 m) at the joints and post feet so it reads as sticks and mud. Add a small stone cairn (3 stacked grey stones, 0.6 m) at the base. Make the loop sticks thicker (0.25 m) in ochre #e9b04c rather than near-white, so it pops against the green."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "Regular upright posts and continuous straight rails read as a constructed fence rather than an improvised camp enclosure.",
+        "The owner patch and filled clan emblem are too small to distinguish reliably, and no player-name gameplay label is visible.",
+        "The boundary is a tidy post-and-rail fence: evenly spaced posts about every 2.8 m, joined by single straight horizontal rails along z −6 and x −6. It reads as a farm paddock fence, which the bible forbids ('not a picket fence', 'irregular low stakes, loose branches').",
+        "Only 2 boulders, and no hide ties are visible.",
+        "The owner marker is tiny (a 0.55 m bark patch, a 0.29 m red tie). In the cell it reads as a small figure, and the owner red cannot be seen from the stream camera.",
+        "The boundary is evenly spaced straight posts with straight horizontal rail cylinders, which reads exactly as a modern split-rail ranch fence, not stakes and brushwood",
+        "The owner marker is a speck at the front-left corner. The red #d9534f tie is a 0.29 m box at 0.5 m height and is basically invisible, so there is no readable ownership",
+        "The two grey boulders are the most visible thing on the lot",
+        "World rule: Boundaries and windbreaks: add 'no continuous horizontal rails'. Both the claimed lot and the camp windbreak came out as post-and-rail ranch fences.",
+        "World rule: lotRough surface: the 'moss' pattern is a high-contrast camo of large blotches that swallows every lot marker. Lower its contrast (accent and accent2 closer to base) and reduce its scale so markers read."
+      ],
+      "fix": "Rebuild the 24-part boundary from uneven stakes, sagging loose branches, visible hide ties and occasional boulders at 0.6–0.9 m high. Preserve the open frontage, enlarge the crooked-post bark patch and filled emblem, retain the #d9534f tie, and anchor the exact runtime player name as a gameplay label rather than painted lettering. / Delete the continuous horizontal rails. Replace them with irregular clusters of 2–4 leaning stakes (0.5–1.1 m, varied lean ±0.3 rad, some crossed in X pairs), with gaps between clusters. Add 3–4 heaped brush piles (flattened green-brown cones or spheres, 1.2 × 0.6 m) and 4 boulders of different sizes along the line, plus a couple of pale hide strips (#e1d3ae) tied around stake pairs. For the owner marker, use a 1.7 m crooked post with a 0.9 × 0.7 m mud-daubed bark patch, a large #d9534f hide streamer (0.25 × 0.9 m) hanging from the top, and a filled emblem disc about 0.4 m. / Replace the straight rails with piled brushwood: 3–4 branches per bay crossing at different angles (±0.3 rad yaw and pitch), varied lengths 1.5–3 m, with occasional gaps and 1–2 leaning stakes. Keep it under 1.2 m. Rebuild the owner marker as a 1.7 m crooked post with a 1.0 × 0.7 m bark patch facing +z and a large red #d9534f hide pennant (0.7 × 0.45 m) tied at the top, plus a cream clan-emblem disc 0.4 m on the patch. It must be the most visible object on the lot."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "The birch has a nearly straight trunk and rounded lollipop foliage.",
+        "The pine still reads as a centred stack of cones rather than a crooked survivor with one heavy side.",
+        "The birch is a near-straight pale pole carrying three or four smooth round balls: exactly the symmetrical lollipop or cotton-bud silhouette Sami called out, just tilted slightly.",
+        "The pine is a neat stack of upright cones (a Christmas tree). It has no heavy side and its boughs are not lopsided.",
+        "Both crowns are smooth spheres and cones with no gaps, so neither looks wind-torn or wild.",
+        "The birch is a straight, near-vertical white pole topped with three round sphere balls: a lollipop, which is exactly what Sami rejected",
+        "The pine is stacked symmetric cones that read as a small Christmas tree",
+        "Both trees are roughly the same height and the dark shadow blob dominates",
+        "World rule: Trees: add an explicit geometry rule. No vertically centred cone stacks and no sphere-cluster crowns around a vertical trunk; foliage masses must be flattened, offset to one side, with bare or dead branches and a trunk lean of at least 0.15 rad."
+      ],
+      "fix": "Reallocate the 24 parts into a leaning birch with exposed uneven branches and a torn, off-centre crown, plus a shorter bent pine with unequal branch lengths and most foliage on one side. Replace smooth foliage balls with angular, differently sized masses. / Birch: lean the trunk 0.3–0.4 rad toward the road. Fork it into two unequal leaders and add one bare dead branch. Replace the round crown balls with 4–5 flattened, rotated irregular masses (non-uniform sizes such as 1.6 × 0.7 × 1.1, rotated ±0.3) all pushed to one side, with a visible gap showing branches. Pine: tilt the cone tiers in different directions (rotation x/z ±0.2). Load 70% of the bough mass on one side with 2–3 wide, flattened horizontal bough slabs, shorten the other side to stubs, and give it a broken or bent top. / Birch: lean the trunk to 0.3 rad, add a dog-leg bend in the upper trunk, and replace the spheres with 4–5 flattened, faceted foliage clumps (scaled 1.4×0.6×1.0) concentrated on one side with a bare dead branch sticking out the other. Pine: shift each cone tier off-axis by 0.4–0.7 m to one side, make the top tier snapped or truncated, add one bare broken limb. Make the heights clearly differ (birch about 6.5 m, pine about 4 m)."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The pine retains a conventional tiered conical silhouette.",
+        "The birch and juniper are clusters of similarly rounded blobs, with insufficient variation in branch structure and crown distribution.",
+        "The broad birch crown is six smooth spheres clumped into a round puffy cloud, which reads as a broccoli or cartoon park tree.",
+        "The juniper is four green balls, a tidy topiary-like cluster.",
+        "The tall pine is good: tilted, layered cones and a wind lean.",
+        "The tall pine is a perfectly vertical stack of centred cones: a stock low-poly Christmas tree, not wind-bent",
+        "The birch crown is a symmetric cluster of round spheres around the trunk, a lollipop",
+        "The juniper is three round green balls",
+        "None of the bible's 'wind-bent, uneven, never centred crowns' made it into geometry",
+        "World rule: Trees: add an explicit geometry rule. No vertically centred cone stacks and no sphere-cluster crowns around a vertical trunk; foliage masses must be flattened, offset to one side, with bare or dead branches and a trunk lean of at least 0.15 rad."
+      ],
+      "fix": "Within 34 parts, make the tall pine visibly wind-bent, spread the birch crown unevenly across exposed branching, and flatten the juniper into a sprawling asymmetric bush. Vary foliage mass size, height and direction instead of repeating centred spheres and cones. / Birch: replace the sphere cluster with 5–6 flattened, irregular masses (e.g. size 2.4 × 0.9 × 1.6, rotations ±0.3) spread wide on one side over a longer crooked limb, with daylight between clumps. Add one bare snapped branch. Juniper: make it a low sprawling mat of 5–6 squashed cones and flat boxes at different angles (0.4–1.1 m tall), plus one taller spiky sprig, so it is not a ball cluster. / Pine: tilt the trunk 0.2–0.25 rad and offset every cone tier downwind (+x) by progressively more, with flattened tiers and a dead bare top spike. Birch: two forked trunks at different angles with flat irregular clumps at different heights, leaving visible gaps. Bush: replace the spheres with 5–6 squashed, overlapping angular masses of mixed greens (#526b40, #7c9254, #a8ad68), wider than tall. Add a fallen log or snag at the base for wildness."
+    },
+    {
+      "id": "bench",
+      "problems": [
+        "The constant-width, straight-edged seat reads more like a cut timber beam than a fallen log.",
+        "The split bark end and rough stone chocks do not distinguish themselves clearly.",
+        "The log is only 0.4 m in diameter and 2.6 m long. On the sheet and in the vignette it reads as a stick dropped on the ground, not seating.",
+        "The stone chocks are hidden under the log.",
+        "It is a single plain cylinder with a flat strip: it reads as a log, but as a stray thin dark stick on the square, not obviously a seat",
+        "The stone chocks are hidden under the log, and the split end is a tiny box"
+      ],
+      "fix": "Use the five parts for a slightly tapered, irregular log with only its sitting face flattened, two visibly rough stone chocks and a prominent split bark end. Keep the seat approximately 0.45 m high and wide enough for two residents. / Thicken the log to 0.65–0.7 m in diameter, sunk so the flattened face sits at 0.45 m. Add two broken-off branch stubs and a darker bark ring. Make the chocks visible at both ends (0.5–0.6 m stones). Add a flat rock seat (0.9 × 0.4 × 0.7 m) at one end so it clearly reads as a sitting place. / Give the log a lighter, wider flattened seat face (0.45 m wide, #c3a575) so the sitting surface reads from above. Add two short broken branch stubs and bark-band rings in #533d30. Swap one chock for a visible flat sitting rock (0.7 m, #81847a) at one end so 'two people sit here' reads."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "No kneeling trader is visible.",
+        "The straight-edged ground spread and rectangular bundles resemble a mat with small crates.",
+        "The berry containers read as smooth pots rather than shallow woven baskets.",
+        "The hide is two clean overlapping rectangles. It reads as a picnic blanket or rug; there is no hide outline with legs or flaps.",
+        "The goods are tiny (berries 0.2 m, flints 0.25 m) and almost invisible at stream scale.",
+        "The wrapped bundle (a box with a pale cross strap) reads as a gift-wrapped cardboard parcel.",
+        "The hide spread (#c3a575 / #b7976c) is the exact same colour as the square's accent blotches, so the stall almost disappears",
+        "All goods are under 0.5 m and tiny: baskets, berries and flints are a few pixels",
+        "There is no trader and no vertical element, so at stream scale it is a smudge, not a market",
+        "World rule: Contrast rule: figures, animals and goods must not share the ground colours. The mammoth (#79513a) matches the mud road #76513b, and the market hide and Chief's mantle match the square's #c3a575/#aa8257. Add a rule that every figure and animal carries one value-contrasting mass (near-black #3b2a22 or cream #e1d3ae) and one saturated accent.",
+        "World rule: Market rule: 'no roof frame' plus goods only on the ground makes the stall invisible. Allow a two-pole drying rack or windbreak up to about 1.8 m for silhouette."
+      ],
+      "fix": "Recompose the 20-part market around an irregular hide lying directly on the ground, weighted by rough stones. Include a kneeling trader, shallow baskets with chunky woven rims, recognisable flint and antler silhouettes, and uneven tied-hide bundles rather than box-shaped packages. / Give the hide an animal-pelt outline: a main body plus 4 corner leg-flap tabs angled outward, with uneven edges in two tones of tan. Scale the baskets up to 0.7–0.8 m and heap the berries visibly above the rim. Add a 0.6 m pile of flint and a larger antler (0.9 m). Replace the boxy bundle with a rolled hide (lying cylinder, 0.4 × 0.9 m) tied with two sinew bands. / Recolour the hide to a dark spotted fur (#5a3f2c base with 4–5 cream #e1d3ae spot discs) or a cream hide with a dark border so it contrasts with the dirt. Double the size of the baskets and fruit (berry piles 0.35 m, bright red #c75458 and purple), and add a stack of 3 pale antlers. Add a two-pole drying rack about 1.7 m tall with two hides and a string of dried fish or fur pelts hanging from it, so the stall has a silhouette. Optionally add a kneeling trader figure."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The mammoth's slab-sided body and parallel pieces across its back make it resemble a wooden crate animal.",
+        "The shaggy outline, unequal tusks and hide harness are not readable at scene distance.",
+        "The mammoth is about 2.2 m tall and 2.5 m long: pony-sized, no taller than a person. Built from stacked brown boxes, it reads as a cow or a brown box, not a mammoth.",
+        "The tusks are short (0.57 m) straight sticks.",
+        "There is no shaggy hair fringe and no domed head or back-hump silhouette.",
+        "Owner red (#d9534f) is used on the harness.",
+        "The waiting patch is a flat orange oval that reads like a doormat.",
+        "The mammoth's body colours (#79513a, #76513b, #67432f) are the same as the mud road (#76513b), so it vanishes into the road",
+        "The mammoth is a stack of boxes with short stubby legs and small, thin tusks, and reads as a brown crate or cart",
+        "The sledge is small and its cargo indistinct",
+        "The stop is a thin stake with a small pennant, a speck on the edge",
+        "World rule: Mammoth scale and form (arrival and camp must agree): shoulder height 3.0–3.4 m (clearly about twice a 1.8 m person), domed head, sloping back hump, hanging hair fringes, long curved tusks of about 1.6 m. The current 2.2–2.4 m box mammoths read as cows.",
+        "World rule: Reserve owner red #d9534f for ownership only. Remove it from the bible palette usage for embers (torch) and harness ties; use #f07835/#e9b04c/#c4452a for fire.",
+        "World rule: Contrast rule: figures, animals and goods must not share the ground colours. The mammoth (#79513a) matches the mud road #76513b, and the market hide and Chief's mantle match the square's #c3a575/#aa8257. Add a rule that every figure and animal carries one value-contrasting mass (near-black #3b2a22 or cream #e1d3ae) and one saturated accent."
+      ],
+      "fix": "Rebuild the mammoth with a stepped shoulder hump, hanging angular fur masses, distinct ears, a lowered trunk and two clearly unequal tusks. Keep the complete mammoth-and-sledge assembly approximately 5 m long within 58 parts, using visible hide harnessing, lashed runners and irregular bundled goods; retain the unbuilt waiting patch and forked arrival stake. / Scale the mammoth to a 3.0–3.4 m shoulder height and about 3.5 m body length. Give it a high domed head and a sloping back hump, and hang rows of jagged hair fringe slabs (#533d30/#67432f) down the flanks and legs to the knees. Use long curved tusks built from 3 segments each (about 1.6 m), curling up and inward, unequal lengths. Make the trunk 3 segments curling down. Recolour the harness tie to #c3a575 or a dyed ochre. Make the waiting patch an irregular trampled-earth shape with a few flat stones instead of a smooth oval. / Recolour the mammoth to contrast with the mud: either near-black fur #3b2a22 with a long ginger skirt (#b5683a) hanging over the legs, or a ginger body with dark legs. Make tusks 0.25 m thick, 1.4 m long, curving up in cream #f0e4c6. Add a raised domed head hump and a trunk hanging to 0.3 m. Lengthen the legs so it stands about 3 m tall. Load the sledge with 2–3 pale hide bundles and one red pennant pole. Enlarge the stop pennant to 0.9 × 0.6 m in ochre #e9b04c on a 2.5 m forked stake."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "Identical parallel logs meeting a flat circular stone hub create an engineered bridge composition.",
+        "Long straight water highlights resemble lane-like markings rather than flowing water.",
+        "The render does not clearly demonstrate the crossing continuing into the adjoining bank landings.",
+        "The crossing is six identical, parallel 5.35 m cylinders in two perfect sets of three, with pale flat cut ends. It reads as a sawn-log raft deck, not fallen trunks.",
+        "The central stepping-stone pile is one big pale grey blob that reads as a concrete platform.",
+        "The pale straight bars on the water read like road lane markings.",
+        "There are no rock supports under the trunks midway and no root plates or branch stubs.",
+        "The crossing logs are three identical, perfectly parallel straight cylinders on each side, the same diameter and length, so they read as sawn pipes or a modern raft, not fallen trunks",
+        "The central stone pad is a large flat pale beige disc blob sitting over the logs. It reads as a puddle of sand or a smudge, not stepping boulders",
+        "The flat pale flow stripes on the water read as road markings",
+        "World rule: Water ripples must be irregular blobs. Straight parallel bars read as road lane markings."
+      ],
+      "fix": "Within 42 parts, vary trunk diameter, length and angle, seat them visibly on irregular natural rocks, and replace the circular hub with uneven flat stepping stones. Maintain a continuous route inside the 4 m corridor, extending from the displayed central 12 m to landings at z ±7 about 1 m above water; replace straight water bars with irregular broad facets and add roots and reeds at the banks. / Vary the trunks: diameters 0.7–1.2 m, lengths 4.5–6 m, yaw ±0.15 rad so they splay and cross, a slight pitch toward the banks, and one trunk with a root plate (a flattened brown disc of 1.6 m with root stubs) at its bank end and 2–3 broken branch stubs. Darken the trunk ends to bark brown (no pale sawn faces). Break the central pile into 5–7 separate boulders of different greys and heights with water gaps between them, plus 2 boulders under the trunk midpoints. Replace the straight ripple bars with irregular flattened ellipses. / Use 2 fallen trunks per span with different diameters (0.8 and 1.1 m), different lengths, slight yaw (±0.12 rad) and pitch, plus root-plate discs and broken branch stubs on the ends. Replace the flat discs with 4–5 separate humped grey boulders (#81847a/#a4a18d, 0.8–1.4 m) stepping across the middle with visible water between them. Make the flow marks short, irregular and angled, or drop them."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The front marker collapses into a tiny twig-and-dot shape; four impressions surrounding a shared centre are not readable.",
+        "Its collective-building meaning is much weaker than the free lot's vacant-loop symbol.",
+        "The front marker (a 1.9 m forked stick with a small clay disc and four bead dots) reads as a little person standing on the lot.",
+        "The four corner stones are small (0.7–0.9 m, under 0.5 m tall) and barely visible on the moss texture.",
+        "At a distance it does not read as 'build something for everyone here', and it is hard to tell apart from an empty lot.",
+        "It is unreadable: four small grey boulders lost in the moss camo and a 1.9 m forked stick that is a speck at the front",
+        "Nothing says 'build something for everyone here'. It looks like an empty free lot with rocks",
+        "The clay impressions are 0.2 m discs, invisible at game scale",
+        "World rule: Free-lot marker: require visible brown mud lumps on the loop and post bases, and an irregular, non-polygonal loop. The bible's 'thickened with mud and pale ochre' produced a clean pale hexagon frame. Community-lot marker: require at least 2.4 m height with an emblem of at least 0.9 m, plus upright corner stones or cairns at least 1.1 m tall, so neither reads as a person or vanishes.",
+        "World rule: lotRough surface: the 'moss' pattern is a high-contrast camo of large blotches that swallows every lot marker. Lower its contrast (accent and accent2 closer to base) and reduce its scale so markers read."
+      ],
+      "fix": "Keep the project area empty and retain the four corner stones. Enlarge the front forked-stick marker's clay cluster within the 14-part budget, separating four chunky impressions around one unmistakable shared centre so it remains distinct from both the vacant loop and owner emblem. / Replace the corner stones with upright standing stones or cairns (3 stacked stones, 1.1–1.3 m tall, ochre band painted near the top). Make the marker a 2.5 m forked post holding a large 1.0 m mud-clay disc (#b58b58) with four ochre handprint-shaped impressions arranged around a central circle, lashed with pale hide. Add a trampled cleared circle of earth (flat, 6 m, #9c7954) or a dotted line of small stones linking the corners, so the plot reads as set aside. / Make the four corners upright standing stones (1.2 m tall, 0.5 m wide, #a4a18d) with a 0.15 m ochre #e9b04c band painted round each. Make the marker a 2.4 m post topped with a large 1.0 m ochre clay disc bearing four cream handprints around a centre. Lay a ring of 8–10 small stones (3 m diameter) on the ground at the plot centre to show the shared project area. The silhouette must differ clearly from the free lot's hollow loop."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The windbreak resembles a straight plank fence.",
+        "The tents have very regular triangular profiles and taut, planar surfaces.",
+        "The mammoth remains a rigid box form rather than a clearly resting shaggy animal.",
+        "The two tents are modern A-frame ridge tents (two flat sloped panels on a horizontal ridge pole). They look like scout or pup tents, not hide tents.",
+        "The windbreak is a post-and-rail fence with three straight horizontal rails and a flat board.",
+        "The resting mammoth is a stack of brown boxes about 2.4 m tall, so it reads as a bear or bull.",
+        "One part extends outside the 14 m room (automatic check).",
+        "It reads as a camp, but the tents are perfect triangular prisms (modern A-frame pup tents) rather than hide tents",
+        "The resting mammoth is a dark brown block with small tusks and reads as a bear or boar",
+        "A geometry check flags 1 part outside the 14 m room",
+        "World rule: Mammoth scale and form (arrival and camp must agree): shoulder height 3.0–3.4 m (clearly about twice a 1.8 m person), domed head, sloping back hump, hanging hair fringes, long curved tusks of about 1.6 m. The current 2.2–2.4 m box mammoths read as cows.",
+        "World rule: Boundaries and windbreaks: add 'no continuous horizontal rails'. Both the claimed lot and the camp windbreak came out as post-and-rail ranch fences.",
+        "World rule: Camp shelters: specify conical tipi or dome hide tents with pole tips and a smoke-hole, never A-frame ridge tents.",
+        "World rule: Contrast rule: figures, animals and goods must not share the ground colours. The mammoth (#79513a) matches the mud road #76513b, and the market hide and Chief's mantle match the square's #c3a575/#aa8257. Add a rule that every figure and animal carries one value-contrasting mass (near-black #3b2a22 or cream #e1d3ae) and one saturated accent."
+      ],
+      "fix": "Rework the 72 parts into uneven hide tents with overlapping panels and irregular hems, a loose branch-and-hide windbreak, and a mammoth with folded legs, a lowered body and stepped fur contours. Keep its lashed sledge and soft bundles distinct from crates, and preserve the small stone-ringed fire. / Rebuild the tents as conical hide tipis or low domes: 3–4 tapering cones or segmented panels around a pole bundle with 3–5 pole tips poking out the top, a dark smoke-hole and a door flap pulled open. Make the windbreak a leaning row of brush and branches (6–8 angled sticks with green-brown foliage slabs woven between them), no horizontal rails. Make the mammoth match the arrival one (3 m tall, domed head, hair fringe, long curved tusks) but lying down. Pull every part inside |x|, |z| ≤ 7. / Make the tents conical or lean-to hide shelters with 3–4 pole tips poking out the top and a lighter hide (#c3a575) with stitched darker patches. Give the mammoth large curved cream tusks (1.2 m), a visible trunk and a shaggy ginger skirt. Move the out-of-bounds part inside |x|,|z| ≤ 7."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "Clothing reads mainly as clean rectangular colour panels rather than constructed hide and woven grass.",
+        "The stone adze barely separates from its carrier's arm at stream scale.",
+        "At stream scale the hide-wrap figure reads as someone in a tan tank top and brown shorts, and the gatherer reads as a green T-shirt. The clothing has no hide, fur or grass character: straight hems, flat solid colour.",
+        "The fur boots and grass cape are not readable; the adze and basket are small.",
+        "Both figures are skin-and-brown against brown ground, so the low contrast makes them muddy blobs at game scale",
+        "The stone adze head is 0.2 m and invisible",
+        "A square 2.4 m ground slab (#9c7954) shows as a hard dark rectangle under round feet",
+        "The basket hangs in mid-air beside the hip with no hand contact",
+        "World rule: Contrast rule: figures, animals and goods must not share the ground colours. The mammoth (#79513a) matches the mud road #76513b, and the market hide and Chief's mantle match the square's #c3a575/#aa8257. Add a rule that every figure and animal carries one value-contrasting mass (near-black #3b2a22 or cream #e1d3ae) and one saturated accent."
+      ],
+      "fix": "Keep both supplied blocky bodies and the 44-part total, but give the hide wrap an overlapping flap and visible shoulder tie, and build the grass cape from broad overlapping fibre panels. Make the adze's stone head project clearly from its wooden shaft, while preserving the gathering basket, distinct hairstyles and uneven fur boots. / Wrap figure: make the wrap a one-shoulder diagonal hide with a jagged lower hem (3–4 offset triangular boxes), a pale fur trim band, and chunky fur boot wraps to mid-shin with tie bands. Gatherer: build the grass cape from 8–10 hanging straw strands (#a8ad68/#c3a575, thin tapered boxes) from shoulder to hip, not a solid green block, and give the hide skirt a fringed hem. Enlarge the adze head (0.3 m flint) and the basket (0.5 m woven cylinder with a rim band). / Remove the square ground slab. Make the grass cape a brighter yellow-green #a8ad68 and add one strong accent per figure (an ochre-red #b5452a band on the hide wrap, a cream bead necklace). Enlarge the adze head to 0.3 × 0.2 m in pale flint grey. Raise the basket so its handle meets the arm end at about 0.82 m, or sling it on the back."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The antlers and bone staff identify the Chief, but the torso remains a narrow, plain block outfit.",
+        "The required broad layered hide mantle does not read distinctly from ordinary resident clothing.",
+        "The mantle is no wider than a resident's body, so the Chief does not read as grander at stream scale.",
+        "The antler-and-feather headdress is narrow (about 0.5 m) and mostly vertical; from 40° overhead it is a small tuft.",
+        "The ochre face marks are invisible.",
+        "The headdress is a few 0.07–0.1 m-thin sticks: at stream scale it is a faint spike, not an instantly recognisable office",
+        "The mantle (#987052/#69503c) is the same brown as the square, so the Chief vanishes into the ground",
+        "The ochre face marks are invisible (0.07 m)",
+        "World rule: Contrast rule: figures, animals and goods must not share the ground colours. The mammoth (#79513a) matches the mud road #76513b, and the market hide and Chief's mantle match the square's #c3a575/#aa8257. Add a rule that every figure and animal carries one value-contrasting mass (near-black #3b2a22 or cream #e1d3ae) and one saturated accent."
+      ],
+      "fix": "Within 38 parts, broaden the shoulder silhouette using two or three overlapping, uneven hide layers. Retain the oversized bone-topped staff, strengthen the asymmetric antler-and-feather arrangement, and keep the ochre face marks visible without adding a crown or formal robe. / Widen the layered hide mantle to about 1.1 m across the shoulders, in 2–3 tiers with a pale fur collar and a jagged hem down to the knees. Make the headdress about 1.0 m wide: two branching antlers splayed outward with 4–5 tall feathers (#e9b04c/#d9534f) fanned behind. Add bold ochre stripes (0.06 m boxes) across the cheeks and a bone necklace. Keep the oversized bone-topped staff. / Make the headdress big: antlers 0.12–0.15 m thick, spreading 0.9 m wide and 0.7 m high, asymmetric, with a fan of 4 bright feathers (#e9b04c, #f07835, cream). Recolour the mantle to pale cream fur #e1d3ae with dark spots, or a white-and-black pelt, so it contrasts with the dirt. Enlarge the staff's bone top to 0.4 m. Add a broad ochre-red stripe across the face and chest."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The hood reads as a rigid box helmet rather than weathered fur.",
+        "The patchwork wrap, braided belt and unfamiliar clan emblem are not sufficiently differentiated from the torso blocks.",
+        "The herder reads as a hiker with a cardboard box backpack: the hide bundle is a square tan box with a green-and-white disc that looks like a modern logo or a ball.",
+        "The hood is a big squared helmet block; the fur wrap has no shaggy or patchwork character.",
+        "The shell beads are tiny, so nothing says 'from far away' at stream scale.",
+        "The whole figure is tan/brown monochrome on tan ground, with nothing that reads as 'from far away'",
+        "The hood is a big flat box over the head, so the head reads as a crate",
+        "The hide bundle floats beside the left thigh with a gap from the body and arm",
+        "The shell beads are tiny",
+        "World rule: Contrast rule: figures, animals and goods must not share the ground colours. The mammoth (#79513a) matches the mud road #76513b, and the market hide and Chief's mantle match the square's #c3a575/#aa8257. Add a rule that every figure and animal carries one value-contrasting mass (near-black #3b2a22 or cream #e1d3ae) and one saturated accent."
+      ],
+      "fix": "Retain the readable hooked staff and pale shell beads. Reallocate the 34 parts to an overlapping fur hood with an uneven rim, contrasting large hide patches, a clearly crossing braided belt and a separate soft bundle bearing one bold nonalphabetic clan emblem. / Replace the box pack with a rolled hide bundle (a lying cylinder about 0.5 × 1.0 m with two sinew ties) carrying a painted clan emblem in ochre and charcoal, not green and white. Round and slouch the hood with a fur rim. Build the wrap from 3–4 patch colours with jagged hems and a mammoth-hair shoulder fringe. Make a prominent necklace of 6–8 large pale shells (0.12 m) and add a dangling mammoth-ivory charm. Keep the hooked staff. / Give the patchwork wrap 2–3 contrasting patches (dark #3b2a22, cream, ochre). Shape the hood with a peaked point and an open face. Strap the bundle onto the back with visible straps crossing the chest. Make the shell beads a larger pale string across the chest (0.12 m beads), with a teal #4d9495 bead or two as the exotic accent. Make the hooked staff a lighter wood so it reads against the body."
+    },
+    {
+      "id": "home",
+      "problems": [
+        "The rectangular chimney, smooth continuous roof and regular wall panels read as a generic later-age cottage.",
+        "Paired spherical shrubs and neat rectangular entrance slabs introduce formal landscaping.",
+        "Hide-and-pole construction is not evident.",
+        "It has a masonry chimney stack (a grey box 0.95 × 3.1 m with a cap and a dark flue): a direct Stone Age anachronism.",
+        "The walls are square cut-stone or plastered blocks on a rectangular plan, with a framed doorway and lintel: a cottage under a round thatch hat.",
+        "The decorative red diamond over the door reads as a house plaque.",
+        "The thatch cone is a perfectly regular dodecagon.",
+        "It has a square masonry chimney box with a dark flue opening: an anachronism straight from a modern house",
+        "The walls are straight rectangular plaster-coloured boxes hidden under a smooth round cone roof, so it reads as a generic yurt or round gazebo",
+        "The door is a small dark gap under the eave and the entrance barely reads",
+        "World rule: Add explicit build-translation rules for player builds (home, cafe, skyscraper, car, dog), which currently ignore the bible. No chimneys (smoke-holes only). No rectangular cut-stone, plaster or plank walls. No doors with lintels, hanging signs or plaques. No tables or stools; seating is logs and stones. Domes, finials, pagoda eaves and regular storeys are banned. Homes are round or oval hide, branch-and-daub or mammoth-bone huts. The skyscraper is a stacked boulder or cliff terrace with log ladders and cave mouths. The car is a hauled sledge or travois with no seat, steering bar, headlights or painted panels. The dog is wolf-like with no saddle or harness.",
+        "World rule: Add to avoid: masonry or brick chimneys, painted sign boards on buildings, painted coloured lumber, headlamps and cushions. Smoke holes with protruding poles only."
+      ],
+      "fix": "Preserve the dwelling footprint and capacity, but rebuild it as an irregular pole-and-hide shelter with overlapping roof skins, visible ties and a simple smoke opening instead of a chimney stack. Replace the tiled approach with trampled earth and a rough threshold stone, and use sparse asymmetric wild growth rather than matched shrubs. / Remove the chimney entirely and put a dark smoke-hole at the roof apex with 2–3 pole tips poking out. Rebuild the house as a round or oval hut about 6 m across: a low ring of piled stones or mud-daub (0.5 m) with an irregular conical roof of hide and branch panels (6–8 tilted slabs in varied tans and browns), or a mammoth-bone hut with tusk arches over the doorway. The doorway should be an open hide flap held by two crooked poles, no lintel. Swap the plaque for an ochre handprint on a hide flap. Keep the outdoor fire and log seats. / Remove the chimney. Instead, have 5–6 roof poles cross and poke 0.6 m out of the apex around a smoke hole. Make the walls a round wattle-and-daub drum (cylinder) in mud tones, or have hides lean right to the ground. Break the cone roof into 2–3 tiers or patchwork hide panels in different tans. Make the doorway a larger dark hide-flap opening (1.2 × 1.8 m) with a pale pulled-back flap, and put a firepit and drying rack outside."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "The tidy post-and-panel hut, regular table-and-stool set and rectangular entrance pavers retain a conventional café composition.",
+        "A hanging plaque introduces sign-board language.",
+        "The roof lacks readable hide seams, sag or lashings.",
+        "There is a hanging sign board on a bracket with a pale cup glyph: an explicit bible violation ('sign boards').",
+        "Round pedestal tables with stools read as modern café furniture.",
+        "The walls are flat sawn planks (0.18 m boards) on four straight round posts, under a perfectly regular thatch cone: machine-cut lumber.",
+        "The counter is a squared plank bar.",
+        "It hangs a rectangular sign board with cream glyph bars on the front post, which the bible bans (no sign boards)",
+        "The front fire's flame cones and ember sphere have no glow=true, against the bible rule",
+        "Under the same smooth cone roof as the home, it reads as 'home with a table', and the café identity comes only from the stumps",
+        "World rule: Add explicit build-translation rules for player builds (home, cafe, skyscraper, car, dog), which currently ignore the bible. No chimneys (smoke-holes only). No rectangular cut-stone, plaster or plank walls. No doors with lintels, hanging signs or plaques. No tables or stools; seating is logs and stones. Domes, finials, pagoda eaves and regular storeys are banned. Homes are round or oval hide, branch-and-daub or mammoth-bone huts. The skyscraper is a stacked boulder or cliff terrace with log ladders and cave mouths. The car is a hauled sledge or travois with no seat, steering bar, headlights or painted panels. The dog is wolf-like with no saddle or harness.",
+        "World rule: Add to avoid: masonry or brick chimneys, painted sign boards on buildings, painted coloured lumber, headlamps and cushions. Smoke holes with protruding poles only."
+      ],
+      "fix": "Keep the café's footprint and social purpose, but turn it into a crooked-pole hide shelter serving broth beside low embers. Use overlapping tied hides, a communal vessel, chunky bowls and rough sitting logs or stones; remove the hanging plaque, regular paving and precision furniture. / Delete the sign board and its cup glyph. Mark the place instead with a forked pole hung with 2–3 clay bowls and a hide pennant. Replace the tables and stools with log stumps and flat stones arranged around the fire pit. Rebuild the shelter as an open lean-to: 4–5 crooked poles at varied leans supporting 2–3 overlapping hide panels or a branch-and-hide roof, with a windbreak of brush on the back side and no plank walls. Make the 'counter' a fallen log with clay pots of broth on hot stones beside the fire. / Delete the sign board and its 4 glyph parts. Replace them with a tripod over the fire holding a large clay or skin cooking pot (0.6 m) and a row of bowls on the table in bright ochre and red. Set glow=true on the fire's flame and ember parts. Make the roof an open lean-to or awning shelter (front open, hide stretched on poles) so it differs from the home."
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "Repeated panelled storeys, continuous horizontal cornices and a centred cap read as a pagoda-like building, not prehistoric clan lodging.",
+        "There is no convincing stepped rock-and-log structure.",
+        "Regular entrance paving and ornamental round shrubs repeat the later-age building kit.",
+        "It is a five-storey stepped pagoda of perfectly rectangular cut-stone wall blocks, even floor slabs and square posts. It reads as an Asian temple or Mesoamerican pyramid, an engineered building.",
+        "The orange dome, finial sphere and flag at the top are anachronistic and temple-like.",
+        "It ignores the bible's 'stepped rock-and-log clan lodging'; there are no boulders, logs or hides.",
+        "It reads as an Asian wooden pagoda: five regular stacked plank tiers with machined straight edges and a dome-cap lantern",
+        "It has nothing rocky or prehistoric. The bible asks for stepped rock-and-log clan lodging",
+        "World rule: Add explicit build-translation rules for player builds (home, cafe, skyscraper, car, dog), which currently ignore the bible. No chimneys (smoke-holes only). No rectangular cut-stone, plaster or plank walls. No doors with lintels, hanging signs or plaques. No tables or stools; seating is logs and stones. Domes, finials, pagoda eaves and regular storeys are banned. Homes are round or oval hide, branch-and-daub or mammoth-bone huts. The skyscraper is a stacked boulder or cliff terrace with log ladders and cave mouths. The car is a hauled sledge or travois with no seat, steering bar, headlights or painted panels. The dog is wolf-like with no saddle or harness."
+      ],
+      "fix": "Retain the tall lodging role and footprint, but rebuild the mass as uneven load-bearing rock terraces supporting lashed log platforms and hide sleeping alcoves. Offset successive tiers, show substantial supports and crude access ladders, and remove repeated cornices, framed facade bays, formal paving and ornamental planting. / Rebuild it as a tall natural rock outcrop or cliff stack. Use 4 irregular terraces built from rotated boulders and spheres in mixed greys (#81847a/#96988a/#72796e), each terrace with a dark cave mouth or a hide-covered lean-to and a little fire glow. Connect levels with lashed log ladders (2 poles plus rungs, angled). Give the terrace edges irregular log palisade lips. Replace the dome and finial with a tall antler-and-skull totem pole or a summit bonfire. / Rebuild the tiers as irregular grey rock ledges (#81847a/#a4a18d boulders) of decreasing size, each with a log-and-hide shelter on top. Offset the tiers off-centre and run leaning ladders (two poles with rungs) between levels. Replace the dome cap with a tall hide cone and an antler crown or pennant. Add hide door flaps on 2–3 levels so it reads as a stacked village rather than a temple."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "Removing the wheels has not removed the modern vehicle silhouette: the upright bench, rectangular body and circular front detail still read as a toy car.",
+        "Straight orange rails and pale crosspieces resemble machine-cut components rather than lashed branches.",
+        "It reads as a go-kart or ride-on toy car: a padded yellow seat cushion with an upright orange backrest, a steering handlebar on a column, and a yellow disc on the front panel that reads as a headlight.",
+        "The bright orange (#dc7135) side panels look painted.",
+        "It has no draught animal or pull pole, so it looks self-propelled.",
+        "It reads as an orange sofa or go-kart: smooth painted orange side panels, a yellow seat cushion with a backrest, and a yellow headlamp disc on the front",
+        "Nothing pulls it or shows it is a hauling sledge, and the splayed runner tips read as table feet",
+        "Painted bright orange planks contradict the bible's materials",
+        "World rule: Add explicit build-translation rules for player builds (home, cafe, skyscraper, car, dog), which currently ignore the bible. No chimneys (smoke-holes only). No rectangular cut-stone, plaster or plank walls. No doors with lintels, hanging signs or plaques. No tables or stools; seating is logs and stones. Domes, finials, pagoda eaves and regular storeys are banned. Homes are round or oval hide, branch-and-daub or mammoth-bone huts. The skyscraper is a stacked boulder or cliff terrace with log ladders and cave mouths. The car is a hauled sledge or travois with no seat, steering bar, headlights or painted panels. The dog is wolf-like with no saddle or harness.",
+        "World rule: Add to avoid: masonry or brick chimneys, painted sign boards on buildings, painted coloured lumber, headlamps and cushions. Smoke holes with protruding poles only."
+      ],
+      "fix": "Replace the car body with a low hauling sledge made from two rough runners, irregular crossbranches and conspicuous rawhide lashings. Provide transport seating through tied hide pads among bundled goods, removing the dashboard-like crossbar, upright car-style seat and front badge while preserving the vehicle footprint and purpose. / Remove the seat cushion, backrest, steering bar and headlight disc. Rebuild it as a log hauling sledge: two upturned crooked runner poles, cross-lashed branch slats, and a heap of bundled goods (rolled hides, a basket, firewood) tied down with sinew bands, in natural wood and hide colours only. Add a forward pull pole with a hide harness loop (and optionally a small mammoth or two people pulling) so it reads as hauled. / Remove the headlamp sphere, the cushion and the backrest. Make the runners raw logs with upcurved front tips. Build the deck from lashed poles (visible cream sinew bindings), with 2–3 hide-wrapped cargo bundles and one owner-colour pennant on a pole. Add a towing pole and harness out front (or a pulling wolf-dog) so it reads as a vehicle. Use natural wood and hide colours, with one strong accent from the cargo hide."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "Continuous straight green verge bands still imply designed pedestrian strips when the assets are assembled.",
+        "High-contrast circular ground mottling competes with the small people, market goods and gameplay markers.",
+        "The residents retain a conspicuous rectangular presentation pad beneath them on the road.",
+        "The later-age home and café silhouettes dominate the scene, outweighing the smaller prehistoric props.",
+        "World rule: Walking edge: the |z| 4–6 strips render as a uniform, straight-edged mossy band on both sides of the road, which still implies a planned road with verges or sidewalks. The world rule should be that the road has no edge band: the mud meets the countryside or lot surface with a ragged, irregular edge (mud tongues, puddles and tussocks crossing it), and the renderer should not draw a distinct walking-edge surface when pavement is null.",
+        "World rule: Walking edge: the |z| 4–6 strips render as a straight-edged moss band in a different pattern from the countryside, which reads as a built verge or sidewalk. Render the edge with the countryside meadow surface, or blend it irregularly into the mud, so no parallel strip flanks the road."
+      ],
+      "fix": "After replacing the building and tree silhouettes, break up the visual verge boundaries without changing road coordinates or parcel footprints. Reduce ground-pattern contrast and repetition, remove character presentation pads from in-world instances, and test the revised markers, clothing and mammoth silhouettes at this exact stream framing."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "It reads as an ordinary campfire about 1.5 m across, the same thing as the camp fire and the café fire pit. It does not register as the town's heart in the vignette; it is smaller on screen than a single hut's doorway area.",
+        "The stones are small (0.4–0.5 m), the flames are 1.1 m, and the three log seats are thin (0.47 m) and read as dropped sticks.",
+        "Nothing marks it as the Chief's communal hearth rather than a cooking fire.",
+        "It reads correctly as a bonfire, but it is small and low for the heart of the town: flames top out at about 1.6 m and the whole thing is a small bright dot in the vignette square",
+        "The stone ring is tiny grey pebbles (0.4 m) that blur into the dirt",
+        "The three log seats are short (1.4 m) and dark, and read as scattered debris rather than seating",
+        "World rule: Centrepiece: require it to be visibly larger and distinct from domestic fires (cafe pit, camp fire), e.g. log teepee, 3 m stone ring and 2–3 ochre standing stones or antler poles, so it reads as the town's heart.",
+        "World rule: Centrepiece rule: 'flames broad and low' left it too small for the town's heart. Allow a leaning-log teepee up to about 2.2 m with flames to about 1.8 m."
+      ],
+      "fix": "Use the full 4.5 m diameter. Build a teepee of 6–7 leaning logs (0.35–0.45 m thick, 2.0–2.4 m long) over the fire, a broken ring of 12–14 larger boulders (0.6–0.9 m) at about 1.6 m radius, and three chunky log seats (0.6–0.7 m diameter, flattened top at 0.45 m) at about 2.1 m radius. Keep the broad flames under 1.6 m tall. Add 2–3 standing stones or antler-topped poles (1.8–2.4 m) on the ring, smeared with ochre, so the silhouette is unique to the square. / Add a leaning-log teepee (5–6 logs about 2.2 m long, leaning inward to meet at about 2 m) around the flames so the silhouette is a recognisable bonfire shape. Raise the central flame to about 1.8 m but keep it broad. Enlarge the ring stones to 0.55–0.65 m in a lighter grey (#a4a18d). Make the three seat logs 2 m long with a lighter flat top face (#b08a5f), set evenly on the ring about 1 m out."
+    },
+    {
+      "id": "dog",
+      "problems": [
+        "A golden-yellow dog with floppy ears and a red-and-tan saddle and harness reads as a modern pet Labrador in a dog jacket.",
+        "The 'hide saddle' strapped across its back has no Stone Age meaning and uses the owner red.",
+        "It is too domesticated in silhouette.",
+        "It clearly reads as a dog, but as a modern golden retriever/beagle with floppy brown ears and a yellow coat",
+        "It is far too large: about 0.95 m at the shoulder and 1.48 m to the head top, chest-high on a 1.8 m person",
+        "World rule: Add explicit build-translation rules for player builds (home, cafe, skyscraper, car, dog), which currently ignore the bible. No chimneys (smoke-holes only). No rectangular cut-stone, plaster or plank walls. No doors with lintels, hanging signs or plaques. No tables or stools; seating is logs and stones. Domes, finials, pagoda eaves and regular storeys are banned. Homes are round or oval hide, branch-and-daub or mammoth-bone huts. The skyscraper is a stacked boulder or cliff terrace with log ladders and cave mouths. The car is a hauled sledge or travois with no seat, steering bar, headlights or painted panels. The dog is wolf-like with no saddle or harness.",
+        "World rule: Add a dog rule: Stone Age dogs are wolfish (pricked ears, grey-tawny, about 0.7 m at the shoulder), not modern breeds."
+      ],
+      "fix": "Make it a wolf-dog: grey-tan coat (#81847a body, #c3a575 underside), upright triangular ears, a longer tapered snout, a bushy tail hanging low, slightly longer legs. Remove the saddle and straps; at most add a thin sinew cord with one tooth charm at the neck. / Scale it to about 0.7 m at the shoulder. Make it wolfish: upright pointed ears, a longer narrower muzzle, a grey-tawny coat (#8a7a66 with a cream belly), and a bushy tail hanging low. Keep the ochre hide harness as the owned or camp accent."
+    },
+    {
+      "id": "ground",
+      "problems": [
+        "The dressing is so small and sparse that it vanishes: green tufts (#526b40/#7c9254) on the green meadow are invisible, and the two branches and three pebbles show as 1-pixel specks in the cell",
+        "The only thing that reads is the teal puddle, so the countryside has no Stone Age character at stream scale"
+      ],
+      "fix": "Keep it sparse but make fewer, bigger features: one 3 m fallen trunk with a broken root plate (dark #533d30), two grey boulders 0.8–1.0 m wide (#81847a), and 4–5 grass tussocks 0.35 m tall in straw yellow #c2b36a so they contrast with the meadow. Drop the sub-0.2 m pebbles and twigs."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "It reads as a thin stick with a tiny flame: about 0.45 m of flame at 3 m height, a speck at stream scale",
+        "The ember sphere uses #d9534f, the reserved owner colour",
+        "There is nothing at the base, so it looks like a stray pole rather than a tended gathering point",
+        "World rule: Reserve owner red #d9534f for ownership only. Remove it from the bible palette usage for embers (torch) and harness ties; use #f07835/#e9b04c/#c4452a for fire.",
+        "World rule: Reserve #d9534f strictly for owner accents. The street-light ember uses it, so give fire and embers #f07835/#e9b04c only."
+      ],
+      "fix": "Thicken the stake to 0.3 m with a visible crook. Enlarge the flame cluster to about 0.7 m wide by 1.0 m tall (still chunky cones, glow) and recolour the ember from #d9534f to #f07835. Add a 0.8 m-wide stone cairn (4–5 grey stones) around the foot to brace it. Wrap a pale hide binding (#e1d3ae) under the bark bundle for contrast against the brown mud."
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "name": "Town-Edge Rain Meadow",
+  "description": "Sparse meadow tufts, cheerful wildflowers, rounded stones and fallen twigs surround two shallow rain puddles, leaving the countryside open.",
+  "notes": "A lightly cared-for modern green margin replaces the industrial fringe’s cinders and sleeper scraps with healthy meadow growth and clean rainwater.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -4.5,
+        0.15,
+        -3.7
+      ],
+      "size": [
+        0.48,
+        0.3,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.18,
+        0.11,
+        -3.56
+      ],
+      "size": [
+        0.32,
+        0.22,
+        0.28
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.85,
+        0.16,
+        2.8
+      ],
+      "size": [
+        0.5,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.65,
+        0.12,
+        -4.75
+      ],
+      "size": [
+        0.42,
+        0.24,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.65,
+        0.1,
+        3.55
+      ],
+      "size": [
+        0.08,
+        0.2,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.65,
+        0.23,
+        3.55
+      ],
+      "size": [
+        0.26,
+        0.12,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.28,
+        0.08,
+        3.78
+      ],
+      "size": [
+        0.07,
+        0.16,
+        0.07
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.28,
+        0.19,
+        3.78
+      ],
+      "size": [
+        0.23,
+        0.12,
+        0.22
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.55,
+        0.13,
+        -2.9
+      ],
+      "size": [
+        0.68,
+        0.26,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.03,
+        0.085,
+        -3.18
+      ],
+      "size": [
+        0.34,
+        0.17,
+        0.29
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "color": "#cad0bd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.85,
+        0.045,
+        -1.8
+      ],
+      "size": [
+        0.85,
+        0.09,
+        0.11
+      ],
+      "rotation": [
+        0,
+        0.55,
+        0
+      ],
+      "color": "#8b745a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.61,
+        0.045,
+        -1.77
+      ],
+      "size": [
+        0.38,
+        0.09,
+        0.07
+      ],
+      "rotation": [
+        0,
+        -0.55,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.7,
+        0.03,
+        1.45
+      ],
+      "size": [
+        1.25,
+        0.06,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#459fc0"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.42,
+        0.03,
+        1.76
+      ],
+      "size": [
+        0.55,
+        0.06,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#88d0dc"
+    }
+  ]
+}

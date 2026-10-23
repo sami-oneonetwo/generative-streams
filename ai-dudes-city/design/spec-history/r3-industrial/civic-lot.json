@@ -1,0 +1,349 @@
+{
+  "name": "Municipal Works Ground",
+  "description": "Four sandstone-capped brick plinths reserve open communal ground, announced by a round civic medallion with four ochre household nodes surrounding a larger red-brown civic disc.",
+  "notes": "A single ribbed cast-iron post, cream enamel medallion and standardized brick plinths establish Industrial Age public ownership without resembling a rectangular vacant-lot board.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5.2,
+        0.25,
+        -5.2
+      ],
+      "size": [
+        0.8,
+        0.5,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.2,
+        0.57,
+        -5.2
+      ],
+      "size": [
+        0.96,
+        0.14,
+        0.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d3c7aa"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2,
+        0.25,
+        -5.2
+      ],
+      "size": [
+        0.8,
+        0.5,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2,
+        0.57,
+        -5.2
+      ],
+      "size": [
+        0.96,
+        0.14,
+        0.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d3c7aa"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.2,
+        0.25,
+        5.2
+      ],
+      "size": [
+        0.8,
+        0.5,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.2,
+        0.57,
+        5.2
+      ],
+      "size": [
+        0.96,
+        0.14,
+        0.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d3c7aa"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2,
+        0.25,
+        5.2
+      ],
+      "size": [
+        0.8,
+        0.5,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2,
+        0.57,
+        5.2
+      ],
+      "size": [
+        0.96,
+        0.14,
+        0.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d3c7aa"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.5,
+        0.1,
+        4.85
+      ],
+      "size": [
+        0.44,
+        0.2,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.5,
+        1.1,
+        4.85
+      ],
+      "size": [
+        0.2,
+        2,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.5,
+        0.84,
+        4.95
+      ],
+      "size": [
+        0.08,
+        1.28,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.5,
+        2.05,
+        4.9
+      ],
+      "size": [
+        1.2,
+        0.18,
+        1.2
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.5,
+        2.05,
+        5.01
+      ],
+      "size": [
+        1.04,
+        0.06,
+        1.04
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#f1e7cd"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.5,
+        2.05,
+        5.075
+      ],
+      "size": [
+        0.46,
+        0.08,
+        0.46
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.78,
+        2.33,
+        5.075
+      ],
+      "size": [
+        0.18,
+        0.08,
+        0.18
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.22,
+        2.33,
+        5.075
+      ],
+      "size": [
+        0.18,
+        0.08,
+        0.18
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.78,
+        1.77,
+        5.075
+      ],
+      "size": [
+        0.18,
+        0.08,
+        0.18
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.22,
+        1.77,
+        5.075
+      ],
+      "size": [
+        0.18,
+        0.08,
+        0.18
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    }
+  ]
+}

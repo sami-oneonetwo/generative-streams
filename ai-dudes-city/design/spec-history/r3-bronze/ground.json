@@ -1,0 +1,273 @@
+{
+  "name": "Bronze Age Barley Field Margin",
+  "description": "Two short rows of squared barley stubble meet a broken limestone field boundary, with fallen bound reeds, dry grass and a dark pottery fragment grouped nearby.",
+  "notes": "Cut stalks, rough fieldstones and fibre-bound reeds establish cultivated Bronze Age outskirts while dark straw colours and clustered silhouettes stand apart from the meadow without additional ground-texture overlays.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.65,
+        0.17,
+        -2.05
+      ],
+      "size": [
+        0.18,
+        0.34,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0.16,
+        0
+      ],
+      "color": "#8a7a3e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.95,
+        0.15,
+        -2.02
+      ],
+      "size": [
+        0.22,
+        0.3,
+        0.18
+      ],
+      "rotation": [
+        0,
+        -0.12,
+        0
+      ],
+      "color": "#59633b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.25,
+        0.165,
+        -1.98
+      ],
+      "size": [
+        0.18,
+        0.33,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#8a7a3e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.57,
+        0.14,
+        -1.25
+      ],
+      "size": [
+        0.22,
+        0.28,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.22,
+        0
+      ],
+      "color": "#59633b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.87,
+        0.17,
+        -1.2
+      ],
+      "size": [
+        0.18,
+        0.34,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "color": "#8a7a3e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.17,
+        0.145,
+        -1.24
+      ],
+      "size": [
+        0.22,
+        0.29,
+        0.18
+      ],
+      "rotation": [
+        0,
+        -0.28,
+        0
+      ],
+      "color": "#756232"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.3,
+        0.16,
+        -2.2
+      ],
+      "size": [
+        0.74,
+        0.32,
+        0.58
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#8a7a5a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.92,
+        0.145,
+        -1.42
+      ],
+      "size": [
+        0.6,
+        0.29,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0.26,
+        0
+      ],
+      "color": "#a18a60"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.4,
+        0.17,
+        -0.58
+      ],
+      "size": [
+        0.78,
+        0.34,
+        0.6
+      ],
+      "rotation": [
+        0,
+        -0.48,
+        0
+      ],
+      "color": "#8a7a5a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.2,
+        0.11,
+        2.05
+      ],
+      "size": [
+        0.22,
+        1.65,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5707963268
+      ],
+      "color": "#a8945a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.32,
+        0.1,
+        2.27
+      ],
+      "size": [
+        0.2,
+        1.4,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5707963268
+      ],
+      "color": "#8a7a3e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.2,
+        0.12,
+        2.155
+      ],
+      "size": [
+        0.14,
+        0.24,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.08,
+        0.18,
+        -0.7
+      ],
+      "size": [
+        0.12,
+        0.32,
+        0.46
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0.3
+      ],
+      "color": "#756232"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.95,
+        0.045,
+        2.78
+      ],
+      "size": [
+        0.46,
+        0.09,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.58,
+        0
+      ],
+      "color": "#8e432e"
+    }
+  ]
+}

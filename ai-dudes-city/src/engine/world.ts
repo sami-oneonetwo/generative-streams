@@ -56,6 +56,7 @@ export interface WorldCtx<S> {
   checkpoint?(): void; // durable world transition; throws if saving fails
   log(line: string, level?: 'info' | 'warn' | 'alert'): void; // terminal + JSONL
   say(text: string, opts?: { toKick?: boolean }): void; // speech bubble; mirrors to Kick only if the toggle is on
+  announce?(text: string): void; // a notice from the world (no bubble): log, and Kick chat while the crier toggle is on
   enqueueTask(task: TaskSpec<S>): { id: string };
   readonly queue: ReadonlyArray<QueueEntryView>;
   llm: {
@@ -113,7 +114,11 @@ export interface AdminAction<S> {
     placeholder?: string;
     maxLength?: number;
   };
-  run(ctx: WorldCtx<S>, value?: number | string): void;
+  /**
+   * Does the thing. Returns a reason when it declined and changed nothing (no troublemaker while one is
+   * already out, no such chatter, ...): the admin route answers 409 with it so the dashboard shows it.
+   */
+  run(ctx: WorldCtx<S>, value?: number | string): void | string;
 }
 
 // Engine-owned data the world needs to build the scene.
@@ -186,4 +191,12 @@ export interface WorldModule<S> {
   adminStatus?(state: S, now: number): unknown;
   tuning: Record<string, number>;
   layout: WorldLayout;
+  // Logged-in players driving their own character (the /play page, src/server/play.ts holds the
+  // seats). `join` returns the character or why not; `input` returns what every page should hear
+  // now (between snapshots) and a note for the player, if any.
+  players?: {
+    join(ctx: WorldCtx<S>, userId: string, name: string): { id: string; position: { x: number; z: number }; facing: number } | string;
+    input(ctx: WorldCtx<S>, userId: string, msg: unknown): { broadcast?: unknown; note?: string; reply?: unknown } | undefined;
+    leave(ctx: WorldCtx<S>, userId: string): void;
+  };
 }

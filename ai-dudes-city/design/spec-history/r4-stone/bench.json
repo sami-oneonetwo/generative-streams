@@ -1,0 +1,292 @@
+{
+  "name": "Fur-Draped Split-Log Rest",
+  "description": "A dark fallen log offers two people a broad pale sitting face, with a spotted fur throw over one end and a low stump providing an extra perch.",
+  "notes": "Loose stone chocks, split bark and untreated fur establish Stone Age seating, while shallow irregular earth and moss patches blend into the square’s trampled clearing rather than defining a paved platform.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -0.7,
+        0.03,
+        0.17
+      ],
+      "size": [
+        2.35,
+        0.06,
+        1.42
+      ],
+      "rotation": [
+        0,
+        0.16,
+        0
+      ],
+      "color": "#9c7954"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.66,
+        0.035,
+        -0.12
+      ],
+      "size": [
+        2.05,
+        0.07,
+        1.24
+      ],
+      "rotation": [
+        0,
+        -0.24,
+        0
+      ],
+      "color": "#b7976c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.94,
+        0.03,
+        0.08
+      ],
+      "size": [
+        1.18,
+        0.06,
+        1.05
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#9c7954"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.43,
+        0.035,
+        -0.48
+      ],
+      "size": [
+        0.8,
+        0.07,
+        0.48
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.235,
+        0
+      ],
+      "size": [
+        0.44,
+        2.4,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.05,
+        0.43,
+        0
+      ],
+      "size": [
+        2.12,
+        0.06,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.81,
+        0.145,
+        0.22
+      ],
+      "size": [
+        0.48,
+        0.17,
+        0.39
+      ],
+      "rotation": [
+        0.08,
+        0.31,
+        -0.07
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.77,
+        0.155,
+        -0.2
+      ],
+      "size": [
+        0.57,
+        0.18,
+        0.43
+      ],
+      "rotation": [
+        -0.1,
+        -0.24,
+        0.08
+      ],
+      "color": "#969387"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.19,
+        0.245,
+        -0.095
+      ],
+      "size": [
+        0.27,
+        0.43,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.14,
+        -1.38
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.69,
+        0.485,
+        0.015
+      ],
+      "size": [
+        0.7,
+        0.07,
+        0.5
+      ],
+      "rotation": [
+        0,
+        -0.07,
+        0
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.67,
+        0.355,
+        0.245
+      ],
+      "size": [
+        0.67,
+        0.3,
+        0.08
+      ],
+      "rotation": [
+        -0.12,
+        -0.07,
+        0.035
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.85,
+        0.525,
+        -0.055
+      ],
+      "size": [
+        0.22,
+        0.06,
+        0.17
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.53,
+        0.525,
+        0.105
+      ],
+      "size": [
+        0.18,
+        0.06,
+        0.23
+      ],
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.97,
+        0.22,
+        0.05
+      ],
+      "size": [
+        0.68,
+        0.38,
+        0.61
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.95,
+        0.41,
+        0.05
+      ],
+      "size": [
+        0.59,
+        0.06,
+        0.53
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#c3a575"
+    }
+  ]
+}

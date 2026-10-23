@@ -5,6 +5,7 @@ import type { Request, Response } from 'express';
 import { API_BASE } from './oauth';
 import type { ChatMessageSentEvent } from './types';
 import type { ChatMessage } from '../engine/world';
+import { isChatBot } from './bots';
 
 type LogFn = (line: string, level?: 'info' | 'warn' | 'alert') => void;
 
@@ -112,6 +113,7 @@ export function makeWebhookHandler(deps: WebhookDeps) {
       if (deps.isEcho(payload.message_id, payload.content)) return;
       const username = String(payload.sender.username ?? `user${payload.sender.user_id}`);
       deps.log(`kick chat <${username}> ${payload.content}`);
+      if (isChatBot(username)) return; // BotRix and friends: logged, never a character
       deps.onChatMessage({
         id: `kick:${payload.message_id ?? messageId}`,
         userId: `kick:${payload.sender.user_id}`,

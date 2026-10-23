@@ -1,0 +1,219 @@
+{
+  "elements": [
+    {
+      "id": "ground",
+      "problems": [
+        "Flowers read as isolated oversized coloured discs rather than meadow clusters.",
+        "Grass clumps are difficult to distinguish from the uniform lawn texture.",
+        "Only 6 visible features on the whole tile, and the 'meadow flowers' are flat pink and yellow ovals lying on the grass that read as eggs or dropped surfboards, not flowers",
+        "The single brown stick and one tiny potted-looking tuft add nothing; no grass clumps visible at 40 deg",
+        "The puddle (blue oval with green rim) is the only readable item",
+        "The 'flowers' are flat squashed spheres 1.35–1.65 m long (yellow and pink). They read as giant pills or eggs on the grass, not meadow flowers.",
+        "Each item sits on a pale flat cone halo (#a5c880), which makes a light disc under it like a sticker.",
+        "The 'twigs' are one long brown stick. The tan 0.36 m box with a leaf cone reads as a potted seedling or a parcel.",
+        "There are only 5 readable clusters, all tiny. At stream scale the countryside is a featureless green sheet."
+      ],
+      "fix": "Within 14 dressing parts, replace the large flower discs with small irregular flower-and-leaf clusters, add clearly silhouetted low grass tufts, and keep puddles flush and most dressing below 0.35 m. / Replace the two flat ovals with 3 upright flower clumps: each 3-5 small cones/spheres (0.15-0.25 m) in #efb749, #d9534f and white on short green stems (0.3 m), grouped in loose drifts. Add 4 grass tufts (2-3 tilted thin boxes, 0.3-0.4 m, #548a52/#a5c880) and 2 rounded grey stones (0.4 m spheres flattened to 0.2 m). Keep the puddle. Total 14-18 parts, all under 0.45 m. / Drop the pale halo cones. Make each flower patch a cluster of 6–10 small spheres 0.18–0.25 m wide (yellow #efb749, pink #f0b9bd, white) on short 0.25 m green stems, spread over about 1 m, with 2–3 dark green grass clumps (#548a52 cones 0.3 wide × 0.4 tall) at its edge. Replace the tan box with 2–3 rounded grey stones (#a4aeaf, 0.4–0.6 m). Turn the single stick into 2–3 crossed short twigs. Keep the puddle but give it a soft brown mud rim. Aim for 6–7 clusters spread across the tile."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The marker uses a house-plus graphic instead of the required amber empty ring.",
+        "Two separate gravel patches do not register against the uniform parcel surface.",
+        "The marker panel is 1.2 x 0.9 m with its top at 1.7 m; in the street-corner scene it is an unreadable 10-pixel dot, so 'free to claim' does not read from far away",
+        "Its icon is a white house outline with a plus, not the bible's large amber empty ring; it looks like an estate-agent or 'add home' UI button",
+        "Ground clutter is two flat gravel ovals and three tiny green flecks; the lot looks like an empty car park",
+        "The only marker is a 1.2 × 0.9 m amber panel on a 1.6 m post. In the cell and in the vignette it is a speck, smaller than the litter-sized gravel patch.",
+        "The bible's 'large amber empty ring on a pale field' (the wordless 'available' signal) is not built at all.",
+        "The pale gravel lot (#a6afa2) is nearly the same value as the concrete pavement beside it. In the vignette the free lot reads as an empty car park or plaza, not a parcel for sale.",
+        "The white house-plus icon is made of 0.09 m strokes, which disappear at stream scale. Clutter is only two flat discs and three tiny tufts.",
+        "World rule: lotMarkers: give minimum sizes: 'free-lot panel at least 1.8 x 1.4 m with its top at 2.4-2.6 m; the amber ring at least 1.0 m across'.",
+        "World rule: surfaces.lotRough: the gravel base #a6afa2 and accent #cad0bd are nearly the same value as the pavement #c5c9c7 and the square tiles. An unclaimed lot reads as an empty car park or plaza. Change it to a warm rough-ground pattern (e.g. base #a8976f bare earth, accent #79a861 weeds, accent2 #8a7a58) so free lots clearly differ from built paving.",
+        "World rule: lotMarkers (free lot): the specified sign is too small for stream scale. Require the panel at least 1.8 × 1.2 m with its top at at least 2.4 m. Spell out how the 'amber empty ring' is built: an amber disc with a smaller ground-coloured disc on top, at least 2 m across."
+      ],
+      "fix": "Rebuild the 12-part dressing with a compact recycled panel on a square post near x 4.5, z 4.5. Make a thick amber empty ring dominate a pale field, remove the house-plus symbol, and distinguish two irregular gravel patches alongside sparse grass. / Scale the sign up: post 0.2 m square, 2.4 m tall; panel 1.8 x 1.4 m with its top at 2.5 m, facing +z. Replace the house and plus with one bold amber (#efb749) ring (a cylinder rotated pi/2 about x, about 1.1 m across) on a pale #eee9d8 field, with a darker #315e83 rim. Add a low 0.4 m amber ground stake or pennant at the opposite front corner (x -4.5, z 4.5) so the lot's frontage is marked. Add 3 visible grass clumps of 0.3-0.4 m. / Put the sign on two posts with the panel at 1.4–2.4 m, 1.8 m wide × 1.2 m tall in #efb749, and a thick 0.15 m charcoal frame. Make the house-plus icon 0.18 m strokes. Lay a flat amber ring on the ground in front of the sign: an amber #efb749 disc 2.2 m across at y 0.03 with a smaller ground-coloured disc 1.6 m across at y 0.05 on top, so it reads as a ring. Add 4 short amber corner stakes (0.15 × 0.6 m) at the lot corners. Add 6–8 darker weed clumps (#548a52) and 2 larger dirt patches so the lot reads as rough and unclaimed."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "Both crowns are assembled from conspicuously smooth balls rather than branching, faceted foliage masses.",
+        "The maple reads as stacked coloured scoops, and its required low branch is not legible.",
+        "The plane tree lacks enough crown structure to distinguish it beyond being the taller green tree.",
+        "The plane tree's crown is two smooth equal spheres, so it still reads as a lollipop, just doubled",
+        "The maple's crown is a stack of green, orange and one bright red sphere; the red ball reads as a balloon or an apple, not foliage",
+        "The tree pits are tiny flat squares, invisible at board scale; there is no sense of a planted, tended street tree",
+        "Both crowns overhang the road by 2-3 m and the maple is barely taller than the bus",
+        "The plane tree's crown is two or three big overlapping smooth spheres on a thin bent stick. It reads as a cloud lollipop rather than a plane tree.",
+        "The maple has a bright red sphere stuck to one side of its crown. It reads as a red ball or apple glued on.",
+        "Both crowns are the same smooth-ball language, so 'never identical' comes only from the colours, and the plane's thin trunk vanishes against the asphalt.",
+        "World rule: trees: add an explicit rule against single sphere-cluster crowns on bare stick trunks. Crowns are 6+ flattened blobs of different sizes, with visible limbs; autumn colour sits inside the crown, never as one odd-coloured ball on the side; the willow needs long hanging strands that reach near the ground."
+      ],
+      "fix": "Redistribute the 30 parts into a visibly bent plane trunk with unequal branch forks and a smaller maple with one exposed low branch. Use angular, differently sized crown masses with gaps and uneven spread; retain separate permeable pits. / Plane tree: trunk 0.35 m with one lean and a fork at 3 m; crown of 5-6 overlapping squashed spheres of varied size (0.9-2 m) in two greens (#548a52, #79a861), offset toward +x, top at 8 m. Maple: 5.5 m, a crown of 4-5 spheres all in warm greens with only 1-2 small amber (#efb749) clusters, no pure red. Make each pit a 1.2 m square in dark #3c454f with a 0.06 m raised metal edge (#a4aeaf) and a short timber stake beside the young maple. Shift crowns so they overhang the road by at most 1 m. / Plane: thicken the trunk to 0.35 m, pale mottled #b5a68a with 2–3 darker patches, and fork it at 3 m into 2–3 visible limbs. Build the crown from 6–8 squashed spheres of different sizes (0.9–2 m, flattened to 60% height) in two greens (#548a52 and #79a861), spread wider than tall and offset to one side. Maple: shorter (4 m), with a crown of 5–6 small squashed blobs, mainly #e08a3c with 2 #c9483f blobs set into the top of the crown (not sticking out of the side), plus one low bare branch on the street side. Keep the square tree pits."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The oak has a compact ball-cluster crown with little visible branching hierarchy.",
+        "The willow resembles a rounded cap with hanging green rods rather than a broad, irregular weeping canopy.",
+        "The willow is a dense green dome with 5 thick cylinder 'fronds' that read as jellyfish tentacles or a mushroom",
+        "The oak's crown is a symmetric ball cluster sitting straight up on a bare pole trunk",
+        "The flowering shrub is fine but very small next to the trees",
+        "The 'oak' is a long bare 0.4 m trunk with a sphere-cluster crown perched on top, the classic lollipop. It is the opposite of a broad oak.",
+        "The willow is a dome blob with stubby green drips under it. It reads as a jellyfish or green octopus, not a willow.",
+        "The flowering shrub is tiny (under 1 m) with white specks that disappear.",
+        "World rule: trees: add an explicit rule against single sphere-cluster crowns on bare stick trunks. Crowns are 6+ flattened blobs of different sizes, with visible limbs; autumn colour sits inside the crown, never as one odd-coloured ball on the side; the willow needs long hanging strands that reach near the ground."
+      ],
+      "fix": "Within 38 parts, give the oak an off-centre fork and unequal spreading limbs. Widen the willow and replace repeated dangling rods with staggered tapered foliage masses at different heights; keep the flowering shrub low and asymmetrical. / Willow: a short thick trunk leaning about 15 deg, a wide flattened crown (4 m wide, 2 m tall) in pale yellow-green #a5c880, with 10-12 thin hanging boxes (0.12 x 2-3 m, varied lengths) draped around the rim to near ground level, in #79a861. Oak: give the trunk one big side branch (a rotated cylinder) and push 2 crown spheres off to that side so the canopy is lopsided. Scale the shrub to 1.2 m with 3 lumps. / Oak: trunk 0.6 m thick, 2.5 m to a fork, then 3 thick angled limbs carrying a broad crown 6 m wide and 3 m tall, built from 8–10 flattened blobs in two greens, lopsided. Willow: a leaning 3 m trunk, a modest crown dome, and 12–16 long thin hanging strands (boxes 0.15 × 2–2.8 m × 0.15, yellow-green #a5c880) falling from the crown edge to about 0.4 m above the ground, so it is wider than tall. Shrub: 1.4–1.6 m wide from 4–5 overlapping blobs, with 8–10 visible pink and white flower spheres 0.18 m wide on the top."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The head sits on a tiny angular bracket rather than the specified short curved arm.",
+        "The LED head reads as a dark paddle without a clearly differentiated diffuser edge.",
+        "Every visible surface is charcoal (#3c454f / #4c555e). The head's top is dark grey and the glowing diffuser is on the underside, which the 40° overhead camera never sees, so the lamp looks unlit and dead.",
+        "The head overhangs the dark asphalt, so dark-on-dark makes the most important part vanish. In the vignette the lights are tiny black sticks.",
+        "The pole is 0.24 m, so the silhouette is thin, and 12 parts is the bare minimum.",
+        "World rule: lighting: 'Only the diffuser uses glow=true' on the underside makes the glow invisible from the 40° overhead camera. Allow or require a glowing rim strip on the sides of the head, and a light-grey top to the head, so street lights read as lit over dark asphalt."
+      ],
+      "fix": "Use the 12 parts to create a short segmented curved arm and a flat housing with a broad pale underside diffuser visible at its edge. Set glow=true only on the diffuser and retain the slim powder-coated pole. / Make the head 1.6 × 0.22 × 0.6 m and colour its top light grey #a4aeaf. Add a glowing #fff3d5 strip 0.08 m tall around the whole rim of the head, so the camera sees the glow on its sides. Add a soft warm light pool on the road under the head (a flat 2 m disc, #fff3d5 at low opacity or a pale #e1e3dc patch). Thicken the pole to 0.2 m with a 0.32 m base section, recolour the pole #4c555e, and give it a mid-grey #a4aeaf base collar so it stands out on the pavement."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "The tall blue architectural arch directly contradicts the required low fountain and simple offset stone form.",
+        "The basin reads grey rather than shallow blue, and the coping lacks the specified pale concrete character.",
+        "Numerous thin uprights resemble a railing rather than three readable water jets.",
+        "The dominant element is a 2.5 m tall navy (#315e83) rectangular box arch; it reads as a portal, door frame or stargate, not a civic fountain, and contradicts the bible's 'low', 'simple offset stone form'",
+        "No blue water anywhere: the basin is grey and charcoal (#65717a/#3c454f) discs, so nothing says 'fountain' or 'splash pad'",
+        "The six jets are solid 0.12 m pale cyan cylinders 1.2-1.6 m tall with cone caps; they read as glass bollards or a railing, not water",
+        "In the street-corner scene it looks like a door standing alone in the square",
+        "The tallest and most visible part is a 2.8 m navy arch made of 0.4 m posts and a lintel. From the camera it reads as an empty doorway or portal, not a fountain or a low 'offset stone form'.",
+        "There is no water surface anywhere: the basin is grey #65717a ringed with pale grey #e1e3dc, so nothing looks blue or wet.",
+        "The six 'jets' are 0.12 m pale-cyan cylinders 1.2–1.6 m tall with tiny cone tips. They read as a ring of glass poles or a cage round the arch, not as water.",
+        "At vignette scale it is a small dark blue frame in the middle of a big pale plaza. It doesn't say 'gather here'.",
+        "World rule: centrepiece: add 'Total height under 1.6 m; the water surface (#459fc0) must be the largest visible colour; no arches, frames or portals; jets are short white/pale-cyan cones, not solid rods.'",
+        "World rule: centrepiece: require a visible bright blue water surface (#459fc0) inside the coping, and jets at least 0.35 m wide. Cap any sculpture at 1.6 m and forbid frame or arch forms; 'offset stone form' produced a 2.8 m navy doorway that reads as a portal."
+      ],
+      "fix": "Replace the arch composition with a 48-part circular fountain about 4.5 m across: low pale concrete coping, a visibly blue shallow basin, exactly three short non-glowing jets and one low offset stone form. Restrict glow to recessed pool-light lenses and maintain accessible surrounding space. / Delete the three arch boxes and the dark plinth under them. Build a low fountain: an outer coping ring (cylinder 4.5 m across, 0.45 m tall, #e1e3dc) with a visible water disc inside (4.0 m across, top at 0.38 m, #459fc0) and a lighter ring of #88d0dc ripples. Put one off-centre pale stone sculpture in the pool: two stacked rounded boxes, about 1.2 m tall, #a4aeaf, tilted 10-15 deg. Make the jets three short white/pale-cyan (#e8f6f8) cones of 0.25 m base, 0.6-0.9 m tall, each with a small white sphere 'splash' on top and a wider flat #88d0dc splash ring where it lands. Keep the 4 glowing lenses in the coping. Nothing above 1.6 m. / Delete the arch. Build a 4.5 m low round pool: pale concrete coping ring 0.45 m tall and 0.4 m wide (#e1e3dc), and inside it a bright water disc #459fc0 about 3.7 m across at y 0.3, with a lighter #88d0dc ripple disc on top. Replace the 6 thin jets with 3 chunky white-aqua (#d8f2f5) cones or stacked cylinders, 0.35–0.5 m wide and 0.9–1.4 m tall, rising from the water, each with a splash disc 0.8 m wide at its base. Make the sculpture a low offset slab or boulder no taller than 1.6 m in a warm or contrasting colour (#efb749 or #b58b60), set off-centre on the coping. Keep the four pool lights on the coping top so the camera can see them."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The stop sign reads as a tiny bordered colour tile rather than a large, unmistakable bus pictogram.",
+        "World rule: Palette discipline: reserve teal #68b4a0 for one class of thing (e.g. planting fixtures). Vehicles and kiosks use #315e83, #efb749 and #d9534f liveries, so the bus, car and kiosk do not all come out the same teal."
+      ],
+      "fix": "Within the 64-part budget, enlarge the pictogram within the existing sign face: use a bold pale bus-front silhouette with a clear windscreen and two wheels on dark blue. Preserve the narrow shelter, recognisable minibus and unobstructed route from the pavement to its door."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The approaches do not clearly demonstrate flush road connections; exposed deck ends and grassy bank lips read as abrupt thresholds.",
+        "Reed and stone accents feel mechanically paired rather than naturally distributed."
+      ],
+      "fix": "Carry the bridge approaches continuously onto the real bank landings at z ±7, with shallow concrete beams and modest abutments visibly supporting a deck about 1 m above water. Resolve grass-to-road thresholds and stagger reed pockets and stones while preserving the 4 m bridge width and 58-part budget."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The municipal marker reads as a white cross with an amber centre, not four nodes around one shared centre.",
+        "The required building-hand pictogram is not independently legible.",
+        "The sign's emblem is four white squares around a yellow diamond on dark green, which reads instantly as a first-aid or pharmacy cross, not 'build something together'",
+        "The bible's building-hand pictogram is missing",
+        "The corner blocks are fine, but the gravel fill is the same beige as the free lot, so the two lots are hard to tell apart",
+        "The sign's 'four nodes round a shared centre' is four white squares around a rotated amber square on a green panel. It reads unmistakably as a pharmacy or first-aid cross, so the community lot looks like a clinic site.",
+        "There is no building-hand pictogram, and the sign is only 2.75 m tall on a 2.8 m wide panel set low near the corner.",
+        "The corner blocks (green with pale caps) and the sandy fill read well.",
+        "World rule: lotMarkers: for the community lot: 'never arrange the nodes as a plus or cross (it reads as medical); use diagonal nodes joined to a centre'.",
+        "World rule: lotMarkers (community lot): 'four nodes around one shared centre' reliably turns into a pharmacy or first-aid cross. Replace it with a house outline plus small figures and a hammer pictogram, and forbid plus or cross shapes."
+      ],
+      "fix": "Rework the 16-part lot dressing so the green sign carries four bold outer nodes connected to one shared centre, plus a separate simple hand-supporting-building silhouette. Retain the four low corner blocks and clear construction interior. / Redraw the emblem: one amber (#efb749) circle in the centre (a cylinder rotated pi/2 about x, 0.5 m) with four smaller white circles at the DIAGONALS (not up/down/left/right), each joined to the centre by a 0.08 m white bar, so it reads as a network or people round a table. Beside it on the panel, add a simple white hammer or crane-hook pictogram. Tint the lot surface slightly greener (#9a9f82) or add a 0.1 m green kerb band round the perimeter so it reads as municipal. / Remove the cross arrangement. On the green #386d49 panel, draw a simple white house outline (two 0.18 m sloping roof strokes over a square) with 3 small white figure shapes (sphere head plus box body) inside or under it, and an amber hammer (box handle plus box head) beside it. Make the panel 2.4 × 1.6 m with a white 0.12 m border, on two posts so the top is at 3 m. Keep the four green corner blocks and add a low amber rope line (0.08 m) between them along the front edge."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The hoodie resident's hair reads as a solid helmet-like cap rather than loose textured hair.",
+        "The cropped-trouser break is not clear.",
+        "The carried plant reads as a green ball on a pot rather than a leafy silhouette.",
+        "The second resident's phone is a pale-blue box hanging at hip height. It reads as a belt pouch or holster, not a phone in hand.",
+        "The first figure's 'hoodie' is just a teal top: no hood silhouette, so it reads as a T-shirt.",
+        "The two figures share the same stance and arm pose. Their difference comes almost entirely from colour; the ponytail sphere is the only silhouette change."
+      ],
+      "fix": "Redistribute the 46 parts without altering the base bodies: break the loose hair into a few uneven chunks, expose a clear ankle or sock band above the trainers, and give the plant two or three unequal leaf masses. Preserve the second resident's tied-back hair, workwear and visible phone. / Bend the right forearm forward and up and put the phone (0.1 × 0.18 × 0.03 m, dark #30353a with a bright #88d0dc screen face) in front of the chest, facing the head. Add a hood box 0.36 × 0.18 × 0.12 m behind the neck of the first figure, plus a kangaroo-pocket band. Give the first figure a wider stance or one foot forward, and swing the plant-holding arm out so the potted plant clears the body."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The scissors have long rigid blades that dominate the figure instead of a rounded ceremonial profile.",
+        "The ribbon reads as a bulky red bow rather than a short open loop.",
+        "The sash is a 0.32 m red box rotated over a charcoal suit; at board scale it merges into the red ribbon bow and reads as a red blob on the chest, not a broad diagonal sash",
+        "The red bow in the left hand is four floating rectangles and reads as a red rag or bloody cloth",
+        "The scissors work and the silver hair is distinctive, but the figure's red and black colour story makes the Mayor look more like a waiter or magician than a civic head",
+        "The ribbon loop is #d9534f, the same red as the sash. The left-hand ribbon reads as a red bag or a blob merged into the sash, so the 'ribbon plus scissors' office symbol halves its punch.",
+        "The scissors' finger rings are 14 thin 0.07 m yellow sticks, which read as a gold scribble rather than two clean rings.",
+        "The town badge (a 0.25 m flat amber disc on the chest) is lost behind the sash.",
+        "World rule: head: specify the sash colour (gold #efb749 with a red edge) and that the suit is not black/charcoal, so the sash contrasts and the Mayor does not read as a waiter."
+      ],
+      "fix": "Within 38 parts, retain the suit, civic sash, badge and neat hair, but shorten and round the scissor blades while keeping oversized circular handles and a clear pivot. Reduce the ribbon to a short readable loop separated from the sash. / Make the sash a continuous 0.2 m wide band in #efb749 gold with a thin red edge, running from the right shoulder to the left hip across front and back (two rotated boxes), clearly separated from the hand. Make the ribbon a long red strip (1.2 m) held taut between the left hand and a small post or stretched downward, not a bow. Lighten the suit to navy #315e83 so the gold sash pops. Keep the silver hair and gold scissors. / Recolour the sash a civic royal blue #315e83 with amber edges, and keep the ribbon red. Make the ribbon a wide 0.2 m red band strung between two short brass stanchions or held taut in the left hand, with no loose bow block. Rebuild each scissor ring as one torus-like pair (a yellow cylinder disc 0.3 m wide with a darker 0.18 m disc in its centre), with blades 0.14 m wide. Move the badge to the left lapel above the sash, 0.2 m, amber."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "The minibus overlaps the right-hand pedestrian crossing.",
+        "Zebra crossings repeat with the road modules instead of forming a sparse, deliberate junction-led layout.",
+        "The civic side becomes a nearly uninterrupted paved apron, weakening the bible's leafy public-space identity."
+      ],
+      "fix": "Move the bus stopping position clear of the crossing and align its door with an unobstructed boarding area. Remove redundant crossings, coordinate dropped kerbs at the retained crossing, and reuse redesigned trees and low planting along the plaza perimeter without changing parcel footprints or blocking circulation; verify all source part budgets and glow assignments before re-rendering."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The hat is a teal cone brim with a 0.21 m tall cylinder crown, so it reads as a bowler or derby, a Victorian echo, not a bucket hat",
+        "Very busy palette (yellow jacket, red scarf, teal hat, navy legs, red case, teal flag) with no dominant 'guide' colour",
+        "World rule: leader: specify 'bucket hat with a downward-sloping brim, crown no taller than 0.12 m; no bowler or derby shapes'."
+      ],
+      "fix": "Rebuild the hat as a bucket hat: a crown cylinder 0.4 m wide but only 0.12 m tall, and a brim made of a 0.5 m wide shallow cone angled downward (the brim drooping, not flat), in #efb749 to match the jacket. Make the flag and lanyard the same bright colour so the guide reads as one uniformed silhouette."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "The roof is long and flat across a 2.2 m glasshouse, with a near-vertical rear hatch and a box body; it reads as a 1990s estate or Land Cruiser, not a contemporary compact hatchback",
+        "The windscreen is barely raked, and the bonnet and roof meet in a hard step",
+        "Teal again (#23aaa6), the same as the bus, kiosk and café",
+        "The body is 2.4 m wide × 3.6 m long × about 1.45 m tall with a flat slab roof. It reads as a stubby box van or SUV rather than the compact hatchback the bible names.",
+        "The wheels sit inside the body silhouette and look small for the mass. Teal on teal (#5cc6bd body, darker teal trim) gives little internal contrast.",
+        "World rule: Palette discipline: reserve teal #68b4a0 for one class of thing (e.g. planting fixtures). Vehicles and kiosks use #315e83, #efb749 and #d9534f liveries, so the bus, car and kiosk do not all come out the same teal.",
+        "World rule: Add a car rule (the bible only mentions it in designDirection): 'compact 3.6-3.9 m hatchback, raked windscreen about 35 deg, sloping hatch, roof under 1.5 m; no boxy estate or SUV silhouette'.",
+        "World rule: Example builds scale: add to designDirection that animals and vehicles must sit at real scale next to the 1.8 m figure (dog back about 0.5 m; hatchback about 1.8 × 4.0 × 1.5 m)."
+      ],
+      "fix": "Shorten the cabin to 1.7 m and lower the roof to 1.45 m. Rake the windscreen to about 35 deg (rotation x -0.9) and slope the rear hatch at about 20 deg so the roofline drops at the back. Add a slight wedge to the beltline (a body box rising 0.05 m toward the rear). Recolour the body to #d9534f red or #efb749, with black wheel arches. / Resize the body to 1.8 m wide × 4.0 m long, with a lower 0.75 m body and a 0.6 m cabin. Slope the windscreen back about 30°, and give the rear a near-vertical hatch with a short roof overhang. Use 0.65 m wheels that poke slightly out of the body sides, with pale hub caps. Add a dark charcoal lower bumper and sill band, and put white roof rails or a white roof panel on top so the roof reads from above."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The boundary is 0.18 m brown rails between 0.24 m pale-grey posts. From the camera they are thin brown lines that nearly vanish into the grass, and the posts disappear.",
+        "The owner colour #d9534f is a 0.1 m strip on top of the plate, a hairline at stream scale, so ownership by colour doesn't read.",
+        "The nameplate sits low (0.4–1.2 m), close to the pavement corner. The name letters are 0.1 m strokes that will blur.",
+        "World rule: ownerMarker: a thin owner-colour strip doesn't read at stream scale. Require the owner colour on a whole gate post or cap, or a band at least 0.25 m tall."
+      ],
+      "fix": "Make 3 rails 0.22 m tall each, in darker timber #8a5a36, with posts 0.3 m square in charcoal #4c555e and pale caps. Paint the whole front gate post owner-red #d9534f and add a red post cap. Make the nameplate's red band 0.28 m tall and the household emblem disc 0.5 m. Lift the plate to 0.9–1.6 m on two posts. Use 0.16 m letter strokes for the name."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "Both parasols are big flat discs about 2 m up (yellow and teal). From the camera they read as giant tables or lily pads rather than parasols.",
+        "The 'portable gathering light' is a thin black tripod with a small white sphere, which nearly vanishes on the grass.",
+        "The check-in awning is a flat red box on four sticks that blends with the luggage clutter. The coach itself reads well."
+      ],
+      "fix": "Turn each parasol canopy into a shallow cone (2.6 m wide, 0.5 m tall) with a contrasting 0.15 m rim band, on a 0.1 m pole, and put a folding table and two stools under each. Make the gathering light a 1.8 m pole with a 0.5 m glowing lantern box (glow:true, #fff3d5) and a pale ground disc. Give the check-in awning a sloped canopy and a 0.6 m route-display board with a big white arrow."
+    },
+    {
+      "id": "dog",
+      "problems": [
+        "The dog is pony-sized: back at 0.9 m, head top 1.28 m, 1.75 m long. Next to a 1.8 m person its head reaches the person's chest, which breaks scale in the street.",
+        "The silhouette (big ears, harness, raised tail) is otherwise a clear, friendly dog.",
+        "World rule: Example builds scale: add to designDirection that animals and vehicles must sit at real scale next to the 1.8 m figure (dog back about 0.5 m; hatchback about 1.8 × 4.0 × 1.5 m)."
+      ],
+      "fix": "Scale the whole build by about 0.55 so the back is around 0.5 m and the head top about 0.7 m. Keep the ear and tail sizes slightly exaggerated (×1.2 after scaling) so it still reads at stream scale."
+    }
+  ]
+}

@@ -1,0 +1,311 @@
+{
+  "name": "Dustbound Survivor Outskirts",
+  "description": "Sparse straw tufts, worn stones and flattened scrub interrupt the dusty open ground alongside broken twigs, concrete remnants and a sand-choked tyre.",
+  "notes": "Bleached vegetation and a few low remnants of the fallen modern world mark the Wasteland without turning the countryside into a rubbish heap.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -4.65,
+        0.19,
+        -3.5
+      ],
+      "size": [
+        0.24,
+        0.34,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0.3
+      ],
+      "color": "#b6a384"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.39,
+        0.16,
+        -3.43
+      ],
+      "size": [
+        0.3,
+        0.28,
+        0.24
+      ],
+      "rotation": [
+        0.2,
+        -0.4,
+        -0.34
+      ],
+      "color": "#a99974"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.7,
+        0.18,
+        3.88
+      ],
+      "size": [
+        0.27,
+        0.32,
+        0.3
+      ],
+      "rotation": [
+        -0.2,
+        0.5,
+        0.26
+      ],
+      "color": "#b6a384"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.95,
+        0.14,
+        3.99
+      ],
+      "size": [
+        0.3,
+        0.24,
+        0.25
+      ],
+      "rotation": [
+        0.18,
+        0,
+        -0.38
+      ],
+      "color": "#a99974"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.85,
+        0.11,
+        -3.13
+      ],
+      "size": [
+        0.66,
+        0.22,
+        0.47
+      ],
+      "rotation": [
+        0,
+        0.38,
+        0
+      ],
+      "color": "#aaa393"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.6,
+        0.09,
+        1.28
+      ],
+      "size": [
+        0.47,
+        0.18,
+        0.62
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#b6ad99"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.5,
+        0.075,
+        4.62
+      ],
+      "size": [
+        0.44,
+        0.15,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "color": "#a39e8d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.37,
+        0.055,
+        1.65
+      ],
+      "size": [
+        0.84,
+        0.11,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0.48,
+        0
+      ],
+      "color": "#76614b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.12,
+        0.06,
+        1.35
+      ],
+      "size": [
+        0.42,
+        0.12,
+        0.1
+      ],
+      "rotation": [
+        0,
+        -0.67,
+        0
+      ],
+      "color": "#8c805f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.72,
+        0.105,
+        3.74
+      ],
+      "size": [
+        0.83,
+        0.21,
+        0.57
+      ],
+      "rotation": [
+        0,
+        0.42,
+        0
+      ],
+      "color": "#8c805f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.42,
+        0.085,
+        -4.65
+      ],
+      "size": [
+        0.63,
+        0.17,
+        0.91
+      ],
+      "rotation": [
+        0,
+        -0.55,
+        0
+      ],
+      "color": "#85836a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.42,
+        0.085,
+        -3.66
+      ],
+      "size": [
+        0.71,
+        0.17,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#9a9283"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.96,
+        0.055,
+        -3.44
+      ],
+      "size": [
+        0.32,
+        0.11,
+        0.26
+      ],
+      "rotation": [
+        0,
+        -0.47,
+        0
+      ],
+      "color": "#aaa393"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.9,
+        0.08,
+        -3.7
+      ],
+      "size": [
+        0.78,
+        0.16,
+        0.78
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#494940"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.9,
+        0.145,
+        -3.7
+      ],
+      "size": [
+        0.46,
+        0.06,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a89a80"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.26,
+        0.095,
+        -3.66
+      ],
+      "size": [
+        1.05,
+        0.19,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#b0a289"
+    }
+  ]
+}

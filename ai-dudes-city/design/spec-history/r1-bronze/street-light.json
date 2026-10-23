@@ -1,0 +1,237 @@
+{
+  "name": "Forked Ceramic Oil Lamp",
+  "description": "A timber fork on a low mudbrick pedestal cradles a broad terracotta oil bowl, lighting the swept-earth street corner with a warm flame.",
+  "notes": "Hand-formed clay, fibre lashings and a restrained bronze collar mark an attended Bronze Age civic lamp rather than a modern streetlight.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.15,
+        5
+      ],
+      "size": [
+        0.84,
+        0.3,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0.04,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.025,
+        0.405,
+        5.015
+      ],
+      "size": [
+        0.66,
+        0.21,
+        0.6
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#d19b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.07,
+        5
+      ],
+      "size": [
+        0.22,
+        1.22,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.2,
+        1.72,
+        5
+      ],
+      "size": [
+        0.16,
+        0.64,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.55
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        1.72,
+        5
+      ],
+      "size": [
+        0.17,
+        0.64,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.55
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.49,
+        5
+      ],
+      "size": [
+        0.3,
+        0.2,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c4aa72"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.68,
+        5
+      ],
+      "size": [
+        0.3,
+        0.12,
+        0.31
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b68942"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        1.96,
+        5
+      ],
+      "size": [
+        0.94,
+        0.3,
+        0.82
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a95e3b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.055,
+        5
+      ],
+      "size": [
+        0.98,
+        0.1,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#cf8956"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.092,
+        5
+      ],
+      "size": [
+        0.78,
+        0.06,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#493725"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.1,
+        2.25,
+        5.16
+      ],
+      "size": [
+        0.29,
+        0.34,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "color": "#ff9b32",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.13,
+        2.45,
+        5.16
+      ],
+      "size": [
+        0.22,
+        0.4,
+        0.21
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.2
+      ],
+      "color": "#ffe1a5",
+      "glow": true
+    }
+  ]
+}

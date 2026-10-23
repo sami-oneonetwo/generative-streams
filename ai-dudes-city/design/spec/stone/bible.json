@@ -1,0 +1,120 @@
+{
+  "id": "stone",
+  "name": "the Stone Age",
+  "summary": "Wild woodland, muddy tracks and hide shelters gather around the Chief's communal bonfire.",
+  "rules": {
+    "sidewalks": false,
+    "kerbs": false,
+    "roadMarkings": false,
+    "roads": "Use an uneven, trampled mud track running along x, 8 m wide within |z| <= 4. Street dressing: 14 parts, all below 1.2 m, comprising shallow wheel-free drag grooves, footprints, puddles, embedded stones and broken twigs. Concentrate solid clutter near the margins and keep the middle unobstructed. No paving, straight drainage channels or engineered road edges.",
+    "walkingEdge": "The strips at |z| 4–6 are irregular earth, moss and flattened vegetation, not pavements. Walking simply spills onto this ground. Trees, arrival markers and corner lights can occupy z 5 without implying a constructed sidewalk.",
+    "lotMarkers": "Free lot: 10 parts on an unclaimed 16 m parcel, with the marker near x 4.5, z 4.5. Two crooked sticks support a large empty twig loop thickened with mud and pale ochre; its visibly vacant centre is the wordless available symbol used throughout the ages. Add a few stones and tufts, never a sign board. Community lot: 14 parts, with four corner stones and a front forked-stick marker bearing four small clay impressions around one shared centre; this means collective building rather than private availability. Keep the project area empty.",
+    "boundaries": "Claimed lot: 24 parts including its owner marker. Use irregular low stakes, loose branches, hide ties and occasional boulders along z -6 and x -6, approximately 0.6–0.9 m high and always below 1.2 m. Keep the +z frontage open with a clear entrance gap. This is an occupied camp enclosure, not a picket fence.",
+    "ownerMarker": "At the front corner, lash a mud-daubed bark patch to a crooked post. An owner-colour tie in #d9534f and a filled clan emblem distinguish it from the empty free-lot loop. Show the exact player name as a restrained gameplay label anchored to the patch; do not invent alphabetic Stone Age signage.",
+    "lighting": "Street light: 8 parts at x 0, z 5, comprising an uneven stake, fork, hide bindings, a resinous bark bundle and chunky flame shapes. Flame and ember parts use glow=true; wood and bindings do not. These are hand-tended gathering-point torches, not a regular municipal lighting installation.",
+    "centrepiece": "Square centrepiece: 34 parts within a roughly 4.5 m diameter. Build a communal bonfire from irregular standing and fallen logs, a broken ring of stones, chunky flame wedges and three short log seats. Only flame and ember parts use glow=true. Keep flames broad and low enough that people behind remain visible; no fountain basin or hidden modern fountain silhouette.",
+    "seating": "Use 5 parts for a broad fallen log with a roughly flattened sitting face, two stone chocks and a split bark end. Seat height is about 0.45 m, with room for two. No legs cut to furniture precision, backrest slats or metal fittings.",
+    "market": "Use 20 parts within about 2.6 × 1.6 m: an irregular hide spread directly on the ground, stone corner weights, shallow woven baskets, berries, flint blanks, antler tools and wrapped bundles. The trader kneels beside the goods. No elevated sales counter, roof frame or coins.",
+    "trees": "Street pair: 24 parts total, at x -3 and x 3, z 5; use a leaning birch with a torn, sparse crown and a shorter crooked pine with one heavy side. They are surviving wild growth beside a track, not deliberately planted street trees. Wild group: 34 parts for a tall wind-bent pine, a broad uneven birch and a squat juniper bush. Vary trunk angles, branch lengths, crown heights and foliage masses; never use centred lollipop crowns. Countryside dressing: 14 low, scattered parts made from grass tussocks, loose flint, moss patches, two broken branches and shallow puddles; keep them sparse and mostly below 0.35 m.",
+    "arrival": "Use 58 parts including the vehicle and stop. At z 5 place a forked arrival stake with a knotted hide pennant and a flattened waiting patch, not a platform. At z 0, aligned along x, place a toy-compressed mammoth-drawn wooden sledge approximately 5 m long overall. Give the mammoth a shaggy stepped silhouette, unequal tusks and a hide harness; the sledge has runners, lashings and bundled passengers' goods, never wheels.",
+    "crossing": "Use 42 parts for stepping boulders and a fallen-log crossing within a 4 m-wide corridor running along z. Several broad fallen trunks bridge between natural rock supports, with flat stones filling walkable gaps; retain a continuous traversable route without modern decking or rails. Water runs along x and occupies |z| <= 7; the tile displays its central 12 m, while bank landings belong at z ±7 in the adjoining bank sections. Meet the banks about 1 m above water. Add reeds, exposed roots and uneven rocks, not masonry abutments.",
+    "camp": "Use 72 parts for two hide tents, a branch windbreak, a stone-ringed fire, flint and hide bundles, and a resting mammoth beside its sledge across the east river. Only fire and embers use glow=true. The separate caravan-leader figure uses 34 parts including the base body: a mammoth herder in a patchwork fur wrap, weathered hood and braided belt, carrying a hooked wooden staff. Pale exotic shell beads and a hide bundle with an unfamiliar clan emblem say the herder has travelled far.",
+    "people": "Use 44 parts total for two residents at x -0.6 and x 0.6, retaining the supplied blocky base bodies. One wears a sleeveless hide wrap, uneven fur boots and tied dark hair and carries a stone adze; the other wears a woven-grass cape over a hide skirt, loose hair and carries a gathering basket. Use convincing clothing construction rather than generic ragged caveman costumes.",
+    "head": "The Chief uses 38 parts including the base figure. Give them a broad layered hide mantle, an asymmetric antler-and-feather headdress, ochre face marks and an oversized bone-topped wooden staff. The large headdress and staff must identify the office at stream scale; no metal crown, throne-room robes or modern mayoral sash."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "meadow",
+      "base": "#7c9254",
+      "accent": "#a8ad68",
+      "accent2": "#526b40",
+      "scale": 1.5
+    },
+    "road": {
+      "pattern": "mud",
+      "base": "#76513b",
+      "accent": "#987052",
+      "accent2": "#533d30",
+      "scale": 1.2
+    },
+    "pavement": null,
+    "lotRough": {
+      "pattern": "moss",
+      "base": "#687b46",
+      "accent": "#919457",
+      "accent2": "#7d6044",
+      "scale": 1.3
+    },
+    "lotClaimed": {
+      "pattern": "dirt",
+      "base": "#9c7954",
+      "accent": "#b7976c",
+      "accent2": "#79563b",
+      "scale": 1.4
+    },
+    "square": {
+      "pattern": "dirt",
+      "base": "#aa8257",
+      "accent": "#c3a575",
+      "accent2": "#79553b",
+      "scale": 1.8
+    },
+    "bank": {
+      "pattern": "mud",
+      "base": "#65583d",
+      "accent": "#87905a",
+      "accent2": "#a79268",
+      "scale": 1.1
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#4d9495",
+      "accent": "#81b7a8",
+      "accent2": "#367477",
+      "scale": 2.4
+    }
+  },
+  "light": {
+    "sky": "#b8dce2",
+    "fog": "#c5d8c6",
+    "sun": "#ffe0a6",
+    "sunIntensity": 2.1,
+    "hemiSky": "#d5e7de",
+    "hemiGround": "#927353",
+    "hemiIntensity": 1.8
+  },
+  "palette": [
+    "#76513b",
+    "#987052",
+    "#c3a575",
+    "#e1d3ae",
+    "#526b40",
+    "#7c9254",
+    "#a8ad68",
+    "#81847a",
+    "#4d9495",
+    "#e9b04c",
+    "#f07835",
+    "#d9534f"
+  ],
+  "materials": [
+    "Crooked unpeeled branches and hand-split logs",
+    "Mud daub with visible lumped edges",
+    "Rawhide, sinew ties and uneven fur",
+    "Woven grass and simple basket fibres",
+    "Flint, rough river stone, antler and bone",
+    "Ochre and charcoal marks",
+    "Opaque faceted foliage",
+    "Chunky emissive fire without volumetric smoke"
+  ],
+  "avoid": [
+    "Metal, glass windows, plastic and machine-cut lumber",
+    "Sign boards, alphabetic shop signs and FOR SALE lettering",
+    "Wheels, brickwork, masonry arches and engineered drains",
+    "Pavements, kerbs, road paint and formal flower beds",
+    "Identical planted trees, symmetrical crowns and clipped hedges",
+    "Modern furniture or buildings merely covered in fur",
+    "Huge flames, smoke or dense ground clutter that hide characters"
+  ],
+  "designDirection": "Build bright, chunky low-poly toys for a roughly 40° overhead view, using irregular silhouettes rather than fine texture to express age. Preserve the 5×5 block plan, 16 m parcels, four community lots around the central square, and caravan camp beyond the river east of the ring road; transformations retain footprint and purpose. Translate every request through communal shelter, hand tools, gathered materials and fire, with mammoth transport as the setting's deliberate prehistoric fantasy. A skyscraper becomes stepped rock-and-log clan lodging, a car becomes a lashed hauling sledge, and a café becomes a hide shelter serving warm broth beside embers. Keep open entrances, readable owner accents and strong vacant-loop versus occupied-emblem silhouettes throughout."
+}

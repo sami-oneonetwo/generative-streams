@@ -9,7 +9,8 @@ import type { DudeLook, HappeningView } from '../../shared/dudesTypes';
 import { clampToGround, GROUND, route } from './placement';
 import { choosePlacement } from './placement';
 import { measureBlueprint } from './blueprint';
-import { awake, face, inUse, parkObject, shake, step } from './sim';
+import { damageNote, heal } from './damage';
+import { addEffect, awake, face, inUse, parkObject, shake, step } from './sim';
 import { LIMITS, nextId, pushFeed, pushLine, type Dude, type DudesState, type Npc, type NpcKind, type NpcStep } from './state';
 
 export const EVENTS = {
@@ -37,6 +38,19 @@ const NAMES: Record<NpcKind, string> = {
   thief: 'Sticky Mick',
   mayor: 'Councillor Pemberton',
 };
+/** The same five sorts of trouble, as each age has them (stone, bronze, medieval, industrial; the Modern age uses NAMES; the Wasteland last). */
+const AGE_NAMES: Partial<Record<number, Record<NpcKind, string>>> = {
+  0: { painter: 'Ochre Ug', squasher: 'Big Grak', tow: 'The Dragger', thief: 'Sticky Ug', mayor: 'Elder Bramm' },
+  1: { painter: 'Daubus the Dyer', squasher: 'The River Bull', tow: 'The Barge Puller', thief: 'A River Raider', mayor: 'The Tax Collector' },
+  2: { painter: 'Gilbert the Limner', squasher: 'Sir Squatsalot', tow: "The Reeve's Ox-Cart", thief: 'Cutpurse Mick', mayor: 'The Sheriff' },
+  3: { painter: 'Whitewash Willy', squasher: 'The Steamroller Man', tow: 'The Bailiff', thief: 'Artful Mick', mayor: 'Alderman Pemberton' },
+  5: { painter: 'Spray Can Sal', squasher: 'Crusher', tow: 'The Scrap Hauler', thief: 'A Scavenger', mayor: 'Warlord Pemberton' },
+};
+/** Who this sort of trouble is in the town's age (everyday names in the sandbox, or before ages). */
+export function troublemakerName(state: DudesState, kind: NpcKind): string {
+  const age = state.ai.themes === false ? undefined : state.city?.age;
+  return (age !== undefined ? AGE_NAMES[age]?.[kind] : undefined) ?? NAMES[kind];
+}
 const LINES: Record<NpcKind, { enter: string[]; act: string[]; leave: string[] }> = {
   painter: {
     enter: ['Right. This whole field needs a fresh coat.', 'Who approved these colours? Nobody. Fixing it.'],
@@ -64,7 +78,9 @@ const LINES: Record<NpcKind, { enter: string[]; act: string[]; leave: string[] }
     leave: ['The council has spoken.', 'Carry on, citizens.'],
   },
 };
-const GARISH = ['#ff3fd2', '#7dff3a', '#ffe11a', '#28e0ff', '#ff7a1a'];
+/** What the councillor's fine costs anyone not in the decreed colour. */
+const DECREE_FINE = 15;
+const GARISH = ['#ff3fd2','#7dff3a', '#ffe11a', '#28e0ff', '#ff7a1a'];
 const DECREES: { colour: string; hex: string; hue: number }[] = [
   { colour: 'red', hex: '#c4402f', hue: 5 },
   { colour: 'blue', hex: '#3f6fb0', hue: 215 },
@@ -158,7 +174,7 @@ export function startHappening(state: DudesState, now: number, rng: () => number
   const npc: Npc = {
     id: nextId(state, 'n'),
     kind: chosen,
-    name: NAMES[chosen],
+    name: troublemakerName(state, chosen),
     look: LOOKS[chosen],
     position: enter,
     facing: 0,
@@ -215,10 +231,10 @@ export function startHappening(state: DudesState, now: number, rng: () => number
         { do: 'goto', to: campOf(state, now), camp: true },
         { do: 'decree-check' },
       );
-      title = 'COUNCILLOR PEMBERTON';
+      title = npc.name.toUpperCase();
       text = `decrees: everyone wears ${decree.colour}. Three minutes.`;
       state.happening = { kind: chosen, npcId: npc.id, title, text, startedAt: now, until: now + EVENTS.decreeMs, decree: { colour: decree.colour, hex: decree.hex } };
-      for (const d of awakeDudes) nudge(state, d, `Councillor Pemberton has decreed that everyone must wear ${decree.colour} within three minutes, or be fined. Change your look if you want to comply.`, now);
+      for (const d of awakeDudes) nudge(state, d, `${npc.name} has decreed that everyone must wear ${decree.colour} within three minutes, or be fined. Change your look if you want to comply.`, now);
       break;
     }
   }
@@ -264,6 +280,7 @@ export function restore(state: DudesState, o: SafehouseObject): boolean {
   o.blueprint = v.original;
   o.revision++;
   delete state.vandalised![o.id];
+  heal(state, o);
   state.worldRevision++;
   return true;
 }
@@ -395,7 +412,7 @@ function runNpc(state: DudesState, npc: Npc, dt: number, now: number, rng: () =>
       npc.towing = o.id;
       npcSay(npc, pick(lines.act, rng), now);
       const owner = state.dudes.find((d) => d.id === o.owner);
-      if (owner) nudge(state, owner, `The Tow Guy is towing your build ${o.blueprint.name} to the edge of the field. You can drive it back with "use".`, now);
+      if (owner) nudge(state, owner, `${npc.name} is towing your build ${o.blueprint.name} to the edge of the field. You can drive it back with "use".`, now);
       break;
     }
     case 'steal-hat': {
@@ -412,7 +429,7 @@ function runNpc(state: DudesState, npc: Npc, dt: number, now: number, rng: () =>
         d.look = { ...d.look, hat: 'none' };
         face(npc, d.position);
         npcSay(npc, pick(lines.act, rng), now);
-        nudge(state, d, `Sticky Mick just stole your hat and ran off with it.`, now);
+        nudge(state, d, `${npc.name} just stole your hat and ran off with it.`, now);
       }
       done();
       break;
@@ -449,7 +466,7 @@ function runNpc(state: DudesState, npc: Npc, dt: number, now: number, rng: () =>
       state.worldRevision++;
       for (const l of npc.loot) {
         const d = state.dudes.find((x) => x.id === l.dudeId);
-        if (d) nudge(state, d, `Sticky Mick dumped the stolen hats in a "Pile of stolen hats". Use it (any way) to get yours back.`, now);
+        if (d) nudge(state, d, `${npc.name} dumped the stolen hats in a "Pile of stolen hats". Use it (any way) to get yours back.`, now);
       }
       npc.loot = [];
       goTo(state, npc, edgeNear(position, rng));
@@ -465,11 +482,17 @@ function runNpc(state: DudesState, npc: Npc, dt: number, now: number, rng: () =>
         if (wearing(d.look, h.decree.colour)) {
           ok.push(d.name);
           d.emote = { pose: 'cheer', until: now + 4000 };
-          nudge(state, d, `Councillor Pemberton inspected the field and praised you for wearing ${h.decree.colour}.`, now);
+          nudge(state, d, `${npc.name} inspected the field and praised you for wearing ${h.decree.colour}.`, now);
         } else {
           fined.push(d.name);
           d.title = 'fined by the council';
-          nudge(state, d, `Councillor Pemberton fined you for not wearing ${h.decree.colour}. Your title is now "fined by the council" until you choose a new one.`, now);
+          // A real fine (as far as they can pay), floated up in red over them.
+          const fine = Math.min(DECREE_FINE, d.coins ?? 150);
+          if (fine > 0) {
+            d.coins = (d.coins ?? 150) - fine;
+            addEffect(state, { kind: 'coins', at: now, to: { ...d.position }, amount: -fine });
+          }
+          nudge(state, d, `${npc.name} fined you ${fine > 0 ? `§${fine} ` : ''}for not wearing ${h.decree.colour}. Your title is now "fined by the council" until you choose a new one.`, now);
         }
       }
       const verdict = !fined.length
@@ -479,7 +502,7 @@ function runNpc(state: DudesState, npc: Npc, dt: number, now: number, rng: () =>
           : `Well done ${ok.slice(0, 3).join(', ')}. The rest of you are fined.`;
       npcSay(npc, verdict, now);
       npc.plan.unshift({ do: 'wait', ms: 4000 });
-      pushFeed(state, now, `Councillor Pemberton: ${ok.length} obeyed, ${fined.length} fined`);
+      pushFeed(state, now, `${npc.name}: ${ok.length} obeyed, ${fined.length} fined`);
       break;
     }
   }
@@ -521,7 +544,7 @@ function tow(state: DudesState, npc: Npc, dt: number, now: number): boolean {
     npc.towing = undefined;
     npc.emote = undefined;
     npc.plan.shift();
-    pushFeed(state, now, `The Tow Guy dumped ${o.blueprint.name} at the edge`);
+    pushFeed(state, now, `${npc.name} dumped ${o.blueprint.name} at the edge`);
   }
   return true;
 }
@@ -532,8 +555,12 @@ export function tickEvents(state: DudesState, dt: number, now: number, rng: () =
   const awakeCount = state.dudes.filter((d) => awake(d, now) && !d.muted).length;
   if (state.nextHappeningAt === undefined || (awakeCount < EVENTS.minAwake && !state.happening))
     state.nextHappeningAt = now + EVENTS.firstAfterMs;
-  // Troublemakers come by now and then, never in the middle of a grand opening.
-  if (enabled && !state.city?.party && !state.happening && now >= state.nextHappeningAt && awakeCount >= EVENTS.minAwake) {
+  // Troublemakers come by now and then, never in the middle of a grand opening, a caravan's scene,
+  // the bridge being mended, or while a crowd is building the community project: they wait for a lull.
+  const c = state.city;
+  const crowded = !!c?.party || !!c?.scene || (!!c?.caravan?.stranded && !!c.caravan.asks.length) || state.dudes.filter((d) => d.labour?.phase === 'working').length >= 2;
+  if (enabled && crowded && !state.happening && now >= state.nextHappeningAt) state.nextHappeningAt = now + 30_000;
+  if (enabled && !crowded && !state.happening && now >= state.nextHappeningAt && awakeCount >= EVENTS.minAwake) {
     startHappening(state, now, rng);
     state.nextHappeningAt = now + EVENTS.gapMs[0] + rng() * (EVENTS.gapMs[1] - EVENTS.gapMs[0]);
   }
@@ -556,12 +583,15 @@ export function happeningLine(state: DudesState, now: number): string | undefine
   const h = state.happening;
   if (!h) return undefined;
   const left = h.until ? ` (${Math.max(0, Math.round((h.until - now) / 1000))} s left)` : '';
-  return `${NAMES[h.kind]} ${h.text}${left}`;
+  return `${state.npcs?.find((n) => n.id === h.npcId)?.name ?? NAMES[h.kind]} ${h.text}${left}`;
 }
 
 /** How a vandalised build reads to an agent. */
 export function damageOf(state: DudesState, objectId: string): string | undefined {
   const v = state.vandalised?.[objectId];
+  const o = state.objects.find((x) => x.id === objectId);
+  const hurt = o && damageNote(o);
+  if (v && hurt) return `${hurt} (by ${v.by})`;
   if (v) return `${v.kind === 'wrecked' ? 'blown up' : v.kind} by ${v.by}; use it with "fix" to restore it`;
   if (state.hatPiles?.[objectId]) return 'a pile of stolen hats; use it to get your hat back if it is in there';
   return undefined;

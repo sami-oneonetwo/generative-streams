@@ -18,6 +18,8 @@ import * as THREE from 'three';
 import { badgeMarkup } from './badges';
 import { Track, turn } from './motion';
 import type { Accessory, DudeLook, DudeView, Emote, Hat } from './types';
+import { outfitByKey, type Outfit, type OutfitBone, type OutfitPart } from '../../src/shared/outfits';
+import { emoteNames, emoteParts, emoteUrl } from '../../src/shared/emotes';
 
 // --- the part vocabulary -------------------------------------------------------------------------
 
@@ -108,6 +110,9 @@ interface Figure {
   sayText: string;
   sayW: number;
   sayH: number;
+  /** When this line arrived (page clock), for keeping the newest bubbles; and whether it is shrunk to a dot. */
+  sayAt?: number;
+  sayDot?: boolean;
   last: { tag: string; say: string; think: string; zz: string };
 }
 
@@ -139,15 +144,41 @@ REST[P_CAPE_X] = 0.06;
 // +x, so outward is +z for it and −z for the right). Legs: negative x swings forward.
 const HEARD_MS = 2500; // the quick wave after a message
 const TAG_RECENT_MS = 20_000; // a recent speaker's tag shows even if it would otherwise be thinned
+/** Speech bubbles drawn in full at once: the newest lines; older ones still being said shrink to a dot. */
+const BUBBLE_CAP = 7;
+
+/** A line into its bubble: text as text, Kick emotes as pictures (DOM nodes, never HTML from chat). */
+function renderSay(box: HTMLElement, text: string): void {
+  const parts = emoteParts(text);
+  if (parts.every((p) => 'text' in p)) {
+    box.textContent = text;
+    return;
+  }
+  box.replaceChildren(
+    ...parts.map((p) => {
+      if ('text' in p) return document.createTextNode(p.text);
+      const img = document.createElement('img');
+      img.className = 'emote';
+      img.alt = p.name;
+      img.title = p.name;
+      img.decoding = 'async';
+      img.referrerPolicy = 'no-referrer';
+      img.onerror = () => img.replaceWith(document.createTextNode(p.name));
+      img.src = emoteUrl(p.id);
+      return img;
+    }),
+  );
+}
 const POSE_RATE = 16; // per second: how fast a pose eases to its target
 const TURN_RATE = 9;
 const LIFT_RATE = 10; // about 0.3 s to climb on or off a build
 const HIDE_RATE = 10; // about 0.3 s to vanish into one
 
-type Tool = '' | 'hammer' | 'gun' | 'bomb' | 'plans' | 'ball' | 'racket' | 'guitar' | 'brush' | 'sign' | 'drink' | 'flowers' | 'megaphone';
+type Tool = '' | 'hammer' | 'gun' | 'launcher' | 'bomb' | 'plans' | 'ball' | 'racket' | 'guitar' | 'brush' | 'sign' | 'drink' | 'flowers' | 'megaphone';
 const TOY_BODY = 0xe8a33a,
   TOY_TIP = 0x3a6fd8,
   TOY_GRIP = 0x4a4a52,
+  LAUNCHER = 0x5f6b3a,
   BOMB = 0x222226,
   FUSE = 0xc9b48a,
   STAR = 0xffd84a,
@@ -218,7 +249,13 @@ const HAT_TOP: Record<Hat, number> = {
 /** Hats that sit on the hair rather than replacing its top. */
 const OVER_HAIR = new Set<Hat>(['none', 'crown', 'party', 'headband']);
 
-function compose(look: DudeLook): { parts: Part[]; dims: Dims; counts: number[] } {
+const OUTFIT_BONE: Record<OutfitBone, number> = { hips: B_HIPS, head: B_HEAD, armL: B_ARM_L, armR: B_ARM_R, legL: B_LEG_L, legR: B_LEG_R, cape: B_CAPE };
+const OUTFIT_SHAPE: Record<OutfitPart['shape'], number> = { box: BOX, cylinder: CYL, sphere: SPHERE, cone: CONE };
+
+function compose(look: DudeLook, override?: Outfit): { parts: Part[]; dims: Dims; counts: number[] } {
+  // The age's garment kit (src/shared/outfits.ts): its parts go on after the body, and it may set base pieces aside.
+  const outfit = override ?? outfitByKey(look.outfit);
+  const hides = new Set(outfit?.hide ?? []);
   const k = clamp(Number(look.height) || 1, 0.85, 1.15),
     b = clamp(Number(look.build) || 1, 0.85, 1.2),
     hk = (1 + k) / 2;
@@ -228,8 +265,12 @@ function compose(look: DudeLook): { parts: Part[]; dims: Dims; counts: number[] 
     hair = colour(look.hair, DEFAULT_LOOK.hair),
     hat = colour(look.hatColor, DEFAULT_LOOK.hatColor),
     acc = colour(look.accessoryColor, DEFAULT_LOOK.accessoryColor);
-  const hatKind: Hat = (look.hat in HAT_TOP ? look.hat : 'none') as Hat;
-  const accessory: Accessory = look.accessory ?? 'none';
+  const hatKind: Hat = hides.has('hat') ? 'none' : ((look.hat in HAT_TOP ? look.hat : 'none') as Hat);
+  const accessory: Accessory = hides.has('accessory') ? 'none' : (look.accessory ?? 'none');
+  // Set aside by the kit: bare legs, bare arms, bare feet.
+  const legs = hides.has('trousers') ? skin : pants,
+    sleeves = hides.has('sleeves') ? skin : shirt,
+    feet = hides.has('shoes') ? shade(skin, 0.82) : new THREE.Color(SHOES);
   const torsoD = 0.26 * (0.6 + 0.4 * b);
   const dims: Dims = {
     k,
@@ -285,15 +326,15 @@ function compose(look: DudeLook): { parts: Part[]; dims: Dims; counts: number[] 
   // Legs and shoes: from the hip pivot down to the ground.
   const legLen = dims.hipY - 0.09;
   for (const bone of [B_LEG_L, B_LEG_R]) {
-    add(BOX, bone, [0, (0.02 - legLen) / 2, 0], [0.17, legLen + 0.02, 0.19], pants);
-    add(BOX, bone, [0, -dims.hipY + 0.045, 0.04], [0.19, 0.09, 0.27], SHOES);
+    add(BOX, bone, [0, (0.02 - legLen) / 2, 0], [0.17, legLen + 0.02, 0.19], legs);
+    add(BOX, bone, [0, -dims.hipY + 0.045, 0.04], [0.19, 0.09, 0.27], feet);
   }
   // Torso, with the trousers' waist showing under it.
   add(BOX, B_HIPS, [0, 0.3 * k, 0], [0.44 * b, 0.6 * k, torsoD], shirt);
-  add(BOX, B_HIPS, [0, 0.02, 0], [0.42 * b, 0.12, torsoD - 0.01], pants);
+  add(BOX, B_HIPS, [0, 0.02, 0], [0.42 * b, 0.12, torsoD - 0.01], legs);
   // Arms: a sleeve and a hand, hinged at the shoulder. The right one carries the hammer while building.
   for (const bone of [B_ARM_L, B_ARM_R]) {
-    add(BOX, bone, [0, -0.18 * k, 0], [0.13, 0.4 * k, 0.15], shirt);
+    add(BOX, bone, [0, -0.18 * k, 0], [0.13, 0.4 * k, 0.15], sleeves);
     add(BOX, bone, [0, -0.4 * k - 0.06, 0], [0.12, 0.12, 0.13], skin);
   }
   const hand = -0.4 * k - 0.06;
@@ -303,6 +344,11 @@ function compose(look: DudeLook): { parts: Part[]; dims: Dims; counts: number[] 
   add(BOX, B_ARM_R, [0, hand - 0.17, 0.02], [0.07, 0.26, 0.08], TOY_BODY, [0, 0, 0], 'gun');
   add(BOX, B_ARM_R, [0, hand - 0.31, 0.02], [0.05, 0.04, 0.06], TOY_TIP, [0, 0, 0], 'gun');
   add(BOX, B_ARM_R, [0, hand - 0.07, -0.06], [0.05, 0.07, 0.12], TOY_GRIP, [0, 0, 0], 'gun');
+  // A rocket launcher: a fat tube along the arm with a dark mouth, a sight on top and a grip under it.
+  add(CYL, B_ARM_R, [0, hand - 0.22, 0.05], [0.15, 0.7, 0.15], LAUNCHER, [0, 0, 0], 'launcher');
+  add(CYL, B_ARM_R, [0, hand - 0.58, 0.05], [0.12, 0.03, 0.12], TOY_TIP, [0, 0, 0], 'launcher');
+  add(BOX, B_ARM_R, [0, hand - 0.2, 0.15], [0.04, 0.12, 0.06], TOY_GRIP, [0, 0, 0], 'launcher');
+  add(BOX, B_ARM_R, [0, hand - 0.05, -0.04], [0.05, 0.07, 0.1], TOY_GRIP, [0, 0, 0], 'launcher');
   // The plans: a blueprint board in the left hand (flat across the forearm, so it tilts up toward the
   // face when the arm comes forward) and a pencil in the right, while a design is being drawn up.
   add(BOX, B_ARM_L, [0.02, hand - 0.03, 0.1], [0.4, 0.025, 0.3], BLUEPRINT, [0, 0, 0], 'plans');
@@ -332,8 +378,10 @@ function compose(look: DudeLook): { parts: Part[]; dims: Dims; counts: number[] 
   // Head, eyes, hair.
   head(BOX, [0, 0.16, 0], [0.3, 0.32, 0.28], skin);
   for (const x of [-0.065, 0.065]) head(BOX, [x, 0.18, 0.141], [0.045, 0.055, 0.02], EYES);
-  head(BOX, [0, 0.22, -0.13], [0.32, 0.2, 0.06], hair);
-  if (OVER_HAIR.has(hatKind)) head(BOX, [0, 0.335, 0], [0.32, 0.07, 0.3], hair);
+  if (!hides.has('hair')) {
+    head(BOX, [0, 0.22, -0.13], [0.32, 0.2, 0.06], hair);
+    if (OVER_HAIR.has(hatKind)) head(BOX, [0, 0.335, 0], [0.32, 0.07, 0.3], hair);
+  }
 
   // Hats, on the head bone. HB is the crown of the head; hats over hair start a little higher.
   const HB = OVER_HAIR.has(hatKind) ? 0.37 : 0.33;
@@ -442,7 +490,60 @@ function compose(look: DudeLook): { parts: Part[]; dims: Dims; counts: number[] 
     case 'none':
       break;
   }
+
+  // The kit's own parts, in each bone's frame for a standard figure, stretched to this one's height and build.
+  if (outfit) {
+    const zk = torsoD / 0.26;
+    const roles: Record<string, THREE.Color> = { shirt, pants, hat, accent: acc, skin, hair };
+    for (const p of outfit.parts) {
+      const bone = OUTFIT_BONE[p.bone],
+        shape = OUTFIT_SHAPE[p.shape];
+      if (bone === undefined || shape === undefined) continue;
+      const [role, tone] = p.colour.split(':');
+      const base = /^#[0-9a-f]{6}$/i.test(p.colour) ? new THREE.Color(p.colour) : (roles[role] ?? shirt);
+      const color = tone === 'dark' ? shade(base, 0.72) : tone === 'light' ? tint(base, 0.4) : base;
+      const [x, y, z] = p.position,
+        [w, h, d] = p.size;
+      if (bone === B_HEAD) head(shape, [x, y, z], [w, h, d], color, p.rotation);
+      else if (bone === B_HIPS || bone === B_CAPE) add(shape, bone, [x * b, y * k, z * zk], [w * b, h * k, d * zk], color, p.rotation);
+      else add(shape, bone, [x, y * k, z], [w, h * k, d], color, p.rotation);
+    }
+  }
   return { parts, dims, counts };
+}
+
+/**
+ * A figure at rest, as plain meshes (no tools in hand, propellers still): the design board draws
+ * people this way, with the same parts and bones the town draws them with.
+ */
+export function figureGroup(look: Partial<DudeLook>, outfit?: Outfit): THREE.Group {
+  const { parts, dims: d } = compose({ ...DEFAULT_LOOK, ...look }, outfit);
+  const root = new THREE.Group();
+  const bones: THREE.Object3D[] = [];
+  for (let i = 0; i < BONES; i++) bones.push(new THREE.Object3D());
+  root.add(bones[B_BODY]);
+  bones[B_BODY].add(bones[B_HIPS], bones[B_LEG_L], bones[B_LEG_R]);
+  bones[B_HIPS].add(bones[B_HEAD], bones[B_ARM_L], bones[B_ARM_R], bones[B_CAPE]);
+  bones[B_HIPS].position.set(0, d.hipY, 0);
+  bones[B_HEAD].position.set(0, d.neckY, 0);
+  bones[B_ARM_L].position.set(d.shoulderX, d.shoulderY, 0);
+  bones[B_ARM_L].rotation.set(0, 0, REST[P_ARML_Z]);
+  bones[B_ARM_R].position.set(-d.shoulderX, d.shoulderY, 0);
+  bones[B_ARM_R].rotation.set(0, 0, REST[P_ARMR_Z]);
+  bones[B_LEG_L].position.set(d.hipX, d.hipY, 0);
+  bones[B_LEG_R].position.set(-d.hipX, d.hipY, 0);
+  bones[B_CAPE].position.set(0, d.shoulderY, d.capeZ);
+  bones[B_CAPE].rotation.set(REST[P_CAPE_X], 0, 0);
+  const geos = [new THREE.BoxGeometry(1, 1, 1), new THREE.CylinderGeometry(0.5, 0.5, 1, 10), new THREE.ConeGeometry(0.5, 1, 10), new THREE.SphereGeometry(0.5, 12, 8)];
+  for (const p of parts) {
+    if (p.tool) continue;
+    const m = new THREE.Mesh(geos[p.shape], new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.85 }));
+    (p.spin ? p.local.clone().multiply(p.spin) : p.local).decompose(m.position, m.quaternion, m.scale);
+    m.castShadow = true;
+    m.receiveShadow = true;
+    bones[p.bone].add(m);
+  }
+  return root;
 }
 
 // --- instanced batches ----------------------------------------------------------------------------
@@ -508,7 +609,7 @@ export interface OverlayOptions {
 export interface DudesHandles {
   root: THREE.Group;
   /** A snapshot just landed: note where every dude is at that server time. */
-  sample(list: DudeView[], serverTime: number, skip?: string): void;
+  sample(list: DudeView[], serverTime: number, skip?: Set<string>): void;
   /** The drawn world has reached this snapshot: who is here, how they look, what they said. */
   sync(list: DudeView[], nameOf?: (objectId: string) => string | undefined, serverNow?: number): void;
   /** Where a figure's head is drawn right now (the overlay anchor), for effects aimed at it. */
@@ -732,7 +833,8 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       return `${v.use.phase === 'going' ? 'heading off' : 'using'} · ${v.use.how} ${name}`;
     }
     const j = v.job;
-    if (!j) return '';
+    // Off on an errand of their own: why and where ("hungry → Sara's Bakery").
+    if (!j) return v.heading ?? '';
     const verb = j.kind === 'edit' ? 'changing' : j.kind === 'remove' ? 'taking down' : 'building';
     switch (j.status) {
       case 'queued':
@@ -1291,7 +1393,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
                       ? 'brush'
                       : v.bit?.prop
                         ? v.bit.prop
-                        : armed === 'shoot' ? 'gun' : armed === 'bomb' ? 'bomb' : '';
+                        : armed === 'shoot' ? 'gun' : armed === 'bomb' ? 'bomb' : v.armed === 'rocket' ? 'launcher' : v.armed === 'blaster' ? 'gun' : '';
       const wantDim = v.away ? 0.6 : 1;
       f.dim = reduced ? wantDim : f.dim + (wantDim - f.dim) * (1 - Math.exp(-dt * 3));
       f.rise = f.cur[P_RISE];
@@ -1384,13 +1486,13 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       const pinned = f.id === opts.hovered || f.id === opts.selected;
       // Recency of speech ranks the tags; the hovered or selected one always wins.
       // Troublemakers always keep their tag; so do the hovered and the selected.
-      const prio = pinned || v.npc || v.mayor
+      const prio = pinned || v.npc || v.mayor || v.traveller
         ? Infinity
         : Math.max(v.heardAt ?? 0, sayActive ? serverNow : 0) + (v.thinking ? 2 : 0) + (v.job ? 1 : 0);
-      const tagW = Math.max((f.nameLine.length + f.badgeChars + (f.moodKey ? 2 : 0)) * metrics.char, f.jobLine.length * metrics.jobChar) + metrics.pad;
+      const tagW = Math.max((f.nameLine.length + f.badgeChars + (f.moodKey ? 2 : 0) + (v.queued && !v.thinking ? 2 : 0)) * metrics.char, f.jobLine.length * metrics.jobChar) + metrics.pad;
       const tagH = metrics.height + (f.jobLine ? metrics.jobHeight : 0);
       const busy = !!v.thinking || !!v.job || !!v.use || !!v.attacking || v.activity === 'using' || (v.ko ?? 0) > serverNow;
-      const wanted = on && (!v.away || pinned || spokeRecently || busy || !!v.npc || !!v.mayor);
+      const wanted = on && (!v.away || pinned || spokeRecently || busy || !!v.npc || !!v.mayor || !!v.traveller);
       items.push({ f, rx, ry, on, prio, tagW, tagH, tagShown: wanted });
     }
     // Tags: greedy, most recent speaker first; one that would overlap an accepted tag is hidden.
@@ -1414,11 +1516,27 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     // Bubbles: never hidden for crowding, but nudged up above one already placed. Placed in the
     // same order (most recent first), then any other dude's tag a bubble covers is dropped.
     const bubbles: (Rect & { owner: Figure })[] = [];
+    // Only the newest few lines are drawn in full (the Mayor, travellers, troublemakers and the
+    // hovered or selected one always are); the rest shrink to a dot until they finish.
+    const speaking = (it: Item) => it.on && !!it.f.sayText && !!it.f.view.say && it.f.view.say.until > serverNow;
+    const lines = items.filter(speaking).sort((a, b) => Number(b.prio === Infinity) - Number(a.prio === Infinity) || (b.f.sayAt ?? 0) - (a.f.sayAt ?? 0));
+    const full = new Set(lines.slice(0, BUBBLE_CAP).map((it) => it.f));
+    // "…" only for the pinned and the most recent speakers, in whatever room the lines leave (two at least).
+    const thinkers = items
+      .filter((it) => it.on && !speaking(it) && !!it.f.view.thinking)
+      .sort((a, b) => Number(b.prio === Infinity) - Number(a.prio === Infinity) || (b.f.view.heardAt ?? 0) - (a.f.view.heardAt ?? 0));
+    const thinkOk = new Set(thinkers.slice(0, Math.max(2, BUBBLE_CAP - full.size)).map((it) => it.f));
     for (const it of items) {
       const f = it.f,
         v = f.view;
       const sayActive = !!f.sayText && !!v.say && v.say.until > serverNow;
-      const thinking = !sayActive && !!v.thinking;
+      const thinking = !sayActive && !!v.thinking && thinkOk.has(f);
+      const dot = sayActive && it.on && !full.has(f);
+      if (dot !== !!f.sayDot) {
+        f.sayDot = dot;
+        f.say.classList.toggle('dot', dot);
+        f.say.hidden = true; // measured again below at its new size
+      }
       const base = it.ry - (it.tagShown ? it.tagH + 5 : 4);
       if (sayActive && it.on) {
         if (f.say.hidden) {
@@ -1492,7 +1610,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       for (const v of list) {
         let f = figures.get(v.id);
         if (!f) figures.set(v.id, (f = build(v)));
-        if (v.id === skip) continue; // its own stream carries it (the Mayor, sampleOne)
+        if (skip?.has(v.id)) continue; // its own stream carries it (the Mayor, a player: sampleOne)
         f.track.sample({ t: serverTime, x: v.position.x, y: v.y ?? 0, z: v.position.z, facing: v.facing, tag: v.activity });
       }
     },
@@ -1525,6 +1643,9 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
         if (f.tag.classList.contains('npc') !== !!v.npc) f.tag.classList.toggle('npc', !!v.npc);
         if (f.tag.classList.contains('resident') !== !!v.resident) f.tag.classList.toggle('resident', !!v.resident);
         if (f.tag.classList.contains('mayor') !== !!v.mayor) f.tag.classList.toggle('mayor', !!v.mayor);
+        // The caravan's travellers stand out from the town's residents; their leader carries a "!" while asks are open.
+        if (f.tag.classList.contains('traveller') !== !!v.traveller) f.tag.classList.toggle('traveller', !!v.traveller);
+        if (f.tag.classList.contains('asking') !== !!v.asking) f.tag.classList.toggle('asking', !!v.asking);
         // The mood diamond, in the tag too: the 3D one over the head is hidden behind it.
         const moodKey = v.mood === undefined || v.npc || v.resident ? '' : v.mood >= 65 ? 'good' : v.mood >= 40 ? 'ok' : 'low';
         if (moodKey !== f.moodKey) {
@@ -1550,13 +1671,17 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
           f.tagJob.classList.toggle('ko', jobLine === 'knocked out');
         }
         f.tagJob.classList.toggle('bit', !!v.bit);
+        // Waiting its turn with the agents: a dim "…" on the tag, so a queued character doesn't look frozen.
+        const queued = !!v.queued && !v.thinking;
+        if (f.tagTitle.classList.contains('queued') !== queued) f.tagTitle.classList.toggle('queued', queued);
         // A placard held up (a bit's sign) is drawn as a board, not a speech bubble.
         if (f.say.classList.contains('placard') !== !!v.say?.placard) f.say.classList.toggle('placard', !!v.say?.placard);
         const text = v.say?.text ?? '';
         if (text !== f.sayText) {
           f.sayText = text;
-          f.say.textContent = text;
-          f.say.classList.toggle('long', text.length > 90);
+          f.sayAt = performance.now();
+          renderSay(f.say, text);
+          f.say.classList.toggle('long', emoteNames(text).length > 90);
           // Re-measured the next time it is placed; a fresh line pops in.
           f.say.hidden = true;
           f.say.classList.remove('pop');

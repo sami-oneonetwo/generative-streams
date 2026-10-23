@@ -1,0 +1,1188 @@
+{
+  "name": "Covered Horse-Cart Arrival",
+  "description": "A harnessed horse waits with a cloth-covered passenger cart beside a timber hitching rail and hanging wheel emblem on the worn roadside frontage.",
+  "notes": "Pegged oak, iron-rimmed wooden wheels, a curved canvas cover and scattered edge cobbles establish a medieval arrival point without a raised pavement or modern shelter.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.035,
+        4.95
+      ],
+      "size": [
+        3.8,
+        0.07,
+        1.7
+      ],
+      "rotation": [
+        0,
+        0.08,
+        0
+      ],
+      "color": "#947953"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.85,
+        0.045,
+        4.38
+      ],
+      "size": [
+        2.1,
+        0.09,
+        0.8
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#7e6b50"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.65,
+        0.075,
+        3.83
+      ],
+      "size": [
+        0.65,
+        0.15,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#92958a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.95,
+        0.065,
+        3.95
+      ],
+      "size": [
+        0.48,
+        0.13,
+        0.39
+      ],
+      "rotation": [
+        0,
+        -0.34,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.47,
+        0.07,
+        3.88
+      ],
+      "size": [
+        0.57,
+        0.14,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0.43,
+        0
+      ],
+      "color": "#a1a69b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.85,
+        0.085,
+        5.35
+      ],
+      "size": [
+        0.53,
+        0.1,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0.36,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.45,
+        0.67,
+        5
+      ],
+      "size": [
+        0.23,
+        1.3,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.04,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.45,
+        0.65,
+        5
+      ],
+      "size": [
+        0.25,
+        1.26,
+        0.23
+      ],
+      "rotation": [
+        0,
+        -0.06,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.08,
+        5
+      ],
+      "size": [
+        3.2,
+        0.24,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0.015
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.75,
+        1.15,
+        5.25
+      ],
+      "size": [
+        0.21,
+        2.24,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.45,
+        2.18,
+        5.25
+      ],
+      "size": [
+        0.95,
+        0.18,
+        0.21
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.1,
+        2.005,
+        5.25
+      ],
+      "size": [
+        0.08,
+        0.27,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.1,
+        1.65,
+        5.25
+      ],
+      "size": [
+        0.68,
+        0.14,
+        0.68
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#c5a36a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.1,
+        1.65,
+        5.25
+      ],
+      "size": [
+        0.5,
+        0.16,
+        0.5
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.1,
+        1.65,
+        5.25
+      ],
+      "size": [
+        0.53,
+        0.08,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5a36a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.1,
+        1.65,
+        5.25
+      ],
+      "size": [
+        0.08,
+        0.53,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5a36a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.5,
+        1.12,
+        0
+      ],
+      "size": [
+        1.15,
+        0.66,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.95,
+        1.18,
+        0
+      ],
+      "size": [
+        0.55,
+        0.7,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.01,
+        1.57,
+        0
+      ],
+      "size": [
+        0.43,
+        0.9,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0.3
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.3,
+        1.92,
+        0
+      ],
+      "size": [
+        0.66,
+        0.43,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0.1
+      ],
+      "color": "#a8754b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.62,
+        1.8,
+        0
+      ],
+      "size": [
+        0.38,
+        0.3,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#694b37"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.15,
+        2.22,
+        -0.15
+      ],
+      "size": [
+        0.13,
+        0.31,
+        0.15
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0.12
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.15,
+        2.22,
+        0.15
+      ],
+      "size": [
+        0.13,
+        0.31,
+        0.15
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0.12
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.85,
+        1.64,
+        0
+      ],
+      "size": [
+        0.17,
+        0.7,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0.3
+      ],
+      "color": "#40332c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.88,
+        0.435,
+        -0.23
+      ],
+      "size": [
+        0.18,
+        0.77,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#805334"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.88,
+        0.435,
+        0.23
+      ],
+      "size": [
+        0.18,
+        0.77,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.02,
+        0.435,
+        -0.23
+      ],
+      "size": [
+        0.18,
+        0.77,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#805334"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.02,
+        0.435,
+        0.23
+      ],
+      "size": [
+        0.18,
+        0.77,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9b6943"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.92,
+        0.085,
+        -0.23
+      ],
+      "size": [
+        0.26,
+        0.17,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#34312c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.92,
+        0.085,
+        0.23
+      ],
+      "size": [
+        0.26,
+        0.17,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#34312c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.06,
+        0.085,
+        -0.23
+      ],
+      "size": [
+        0.26,
+        0.17,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#34312c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.06,
+        0.085,
+        0.23
+      ],
+      "size": [
+        0.26,
+        0.17,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#34312c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.61,
+        0.99,
+        0
+      ],
+      "size": [
+        0.14,
+        0.65,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.3
+      ],
+      "color": "#40332c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.94,
+        1.23,
+        0
+      ],
+      "size": [
+        0.18,
+        0.66,
+        0.73
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#49392d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.36,
+        1.94,
+        0
+      ],
+      "size": [
+        0.12,
+        0.47,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0.1
+      ],
+      "color": "#49392d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.2,
+        2.01,
+        0.24
+      ],
+      "size": [
+        0.08,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#242825"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.15,
+        0.83,
+        -0.51
+      ],
+      "size": [
+        2.65,
+        0.12,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.15,
+        0.83,
+        0.51
+      ],
+      "size": [
+        2.65,
+        0.12,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.3,
+        0.86,
+        0
+      ],
+      "size": [
+        2.1,
+        0.18,
+        1.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.3,
+        1.14,
+        -0.68
+      ],
+      "size": [
+        2.1,
+        0.46,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a17b4d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.3,
+        1.14,
+        0.68
+      ],
+      "size": [
+        2.1,
+        0.46,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a17b4d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.3,
+        1.15,
+        0
+      ],
+      "size": [
+        0.12,
+        0.5,
+        1.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.48,
+        1.18,
+        0
+      ],
+      "size": [
+        0.45,
+        0.15,
+        1.21
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c09a63"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.4,
+        0.56,
+        0
+      ],
+      "size": [
+        0.18,
+        0.18,
+        1.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.4,
+        0.55,
+        -0.86
+      ],
+      "size": [
+        0.98,
+        0.16,
+        0.98
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.4,
+        0.55,
+        -0.86
+      ],
+      "size": [
+        0.8,
+        0.18,
+        0.8
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#a17b4d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.4,
+        0.55,
+        -0.86
+      ],
+      "size": [
+        0.24,
+        0.26,
+        0.24
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.4,
+        0.55,
+        0.86
+      ],
+      "size": [
+        0.98,
+        0.16,
+        0.98
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.4,
+        0.55,
+        0.86
+      ],
+      "size": [
+        0.8,
+        0.18,
+        0.8
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#a17b4d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.4,
+        0.55,
+        0.86
+      ],
+      "size": [
+        0.24,
+        0.26,
+        0.24
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.55,
+        1.61,
+        -0.6
+      ],
+      "size": [
+        0.1,
+        1.12,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.55,
+        1.61,
+        0.6
+      ],
+      "size": [
+        0.1,
+        1.12,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.15,
+        1.61,
+        -0.6
+      ],
+      "size": [
+        0.1,
+        1.12,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.15,
+        1.61,
+        0.6
+      ],
+      "size": [
+        0.1,
+        1.12,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.35,
+        2.55,
+        0
+      ],
+      "size": [
+        1.95,
+        0.1,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9e443e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.35,
+        2.45,
+        -0.33
+      ],
+      "size": [
+        1.95,
+        0.09,
+        0.36
+      ],
+      "rotation": [
+        -0.55,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.35,
+        2.45,
+        0.33
+      ],
+      "size": [
+        1.95,
+        0.09,
+        0.36
+      ],
+      "rotation": [
+        0.55,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.35,
+        2.203,
+        -0.577
+      ],
+      "size": [
+        1.95,
+        0.09,
+        0.38
+      ],
+      "rotation": [
+        -1.02,
+        0,
+        0
+      ],
+      "color": "#c5b792"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.35,
+        2.203,
+        0.577
+      ],
+      "size": [
+        1.95,
+        0.09,
+        0.38
+      ],
+      "rotation": [
+        1.02,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2,
+        1.18,
+        0
+      ],
+      "size": [
+        0.5,
+        0.46,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6f4e36"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2,
+        1.195,
+        0
+      ],
+      "size": [
+        0.12,
+        0.49,
+        0.67
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.55,
+        1.435,
+        0
+      ],
+      "size": [
+        0.5,
+        0.36,
+        0.75
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#405e8b"
+    }
+  ],
+  "checks": [
+    "1 parts reach outside the 12 m room"
+  ]
+}

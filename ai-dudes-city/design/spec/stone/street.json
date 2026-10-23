@@ -1,0 +1,273 @@
+{
+  "name": "Wandering Drag-Groove Mud Track",
+  "description": "Broken wet drag hollows, muddy puddles and scattered footprints mark an open earth track with irregular margins, embedded flint and a snapped twig.",
+  "notes": "Short, uneven oval hollows suggest hand-dragged loads rather than wheels or engineered rails, while low clutter stays near the unpaved margins and leaves the middle clear.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -3.62,
+        0.035,
+        -3.96
+      ],
+      "size": [
+        2.63,
+        0.07,
+        1.29
+      ],
+      "rotation": [
+        0,
+        0.29,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.13,
+        0.035,
+        3.99
+      ],
+      "size": [
+        2.17,
+        0.07,
+        1.37
+      ],
+      "rotation": [
+        0,
+        -0.43,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.63,
+        0.03,
+        -2.48
+      ],
+      "size": [
+        1.48,
+        0.06,
+        0.27
+      ],
+      "rotation": [
+        0,
+        -0.24,
+        0
+      ],
+      "color": "#4a2f1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.17,
+        0.03,
+        -2.15
+      ],
+      "size": [
+        1.12,
+        0.06,
+        0.39
+      ],
+      "rotation": [
+        0,
+        -0.09,
+        0
+      ],
+      "color": "#4a2f1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.68,
+        0.03,
+        -2.34
+      ],
+      "size": [
+        1.63,
+        0.06,
+        0.31
+      ],
+      "rotation": [
+        0,
+        0.31,
+        0
+      ],
+      "color": "#4a2f1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.19,
+        0.03,
+        -2.43
+      ],
+      "size": [
+        1.29,
+        0.06,
+        0.46
+      ],
+      "rotation": [
+        0,
+        -0.19,
+        0
+      ],
+      "color": "#4a2f1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.16,
+        0.035,
+        -2.57
+      ],
+      "size": [
+        1.04,
+        0.07,
+        0.73
+      ],
+      "rotation": [
+        0,
+        0.47,
+        0
+      ],
+      "color": "#65583d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.41,
+        0.035,
+        3.13
+      ],
+      "size": [
+        1.73,
+        0.07,
+        0.87
+      ],
+      "rotation": [
+        0,
+        -0.37,
+        0
+      ],
+      "color": "#655f4b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.51,
+        0.03,
+        1.87
+      ],
+      "size": [
+        0.43,
+        0.06,
+        0.23
+      ],
+      "rotation": [
+        0,
+        -0.22,
+        0
+      ],
+      "color": "#4a2f1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.19,
+        0.03,
+        2.15
+      ],
+      "size": [
+        0.39,
+        0.06,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.16,
+        0
+      ],
+      "color": "#4a2f1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.83,
+        0.12,
+        3.36
+      ],
+      "size": [
+        0.66,
+        0.24,
+        0.47
+      ],
+      "rotation": [
+        0,
+        0.64,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.16,
+        0.085,
+        -3.69
+      ],
+      "size": [
+        0.43,
+        0.17,
+        0.57
+      ],
+      "rotation": [
+        0,
+        -0.31,
+        0
+      ],
+      "color": "#a39d85"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.11,
+        0.065,
+        -3.37
+      ],
+      "size": [
+        1.07,
+        0.13,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.58,
+        0
+      ],
+      "color": "#60452f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.37,
+        0.055,
+        -3.43
+      ],
+      "size": [
+        0.47,
+        0.11,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0.76,
+        0
+      ],
+      "color": "#987052"
+    }
+  ]
+}

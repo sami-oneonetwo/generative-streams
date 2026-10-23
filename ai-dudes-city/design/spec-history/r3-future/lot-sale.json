@@ -1,0 +1,399 @@
+{
+  "name": "Unclaimed Lot with Floating Amber Availability Ring",
+  "description": "A large, continuous amber hoop floats just above a compact ceramic projector, surrounded by three low clover patches and reclaimed aggregate chips beside an otherwise open parcel.",
+  "notes": "Overlapping chunky ring segments preserve a clear silhouette within the 20-part budget; only the availability ring glows, reserving amber for free lots and eliminating competing ground bars.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        4.45,
+        0.16,
+        4.5
+      ],
+      "size": [
+        0.8,
+        0.32,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.45,
+        0.36,
+        4.5
+      ],
+      "size": [
+        0.72,
+        0.08,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.45,
+        2.45,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.925,
+        2.322724,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.523599
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.272724,
+        1.975,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.047198
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.4,
+        1.5,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.570796
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.272724,
+        1.025,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.094395
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.925,
+        0.677276,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.617994
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.45,
+        0.55,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.975,
+        0.677276,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        2.617994
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.627276,
+        1.025,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        2.094395
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.5,
+        1.5,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.627276,
+        1.975,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        1.047198
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.975,
+        2.322724,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.3,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0.523599
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.25,
+        0.09,
+        5.12
+      ],
+      "size": [
+        0.82,
+        0.18,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#6d9c8a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.68,
+        0.075,
+        5.3
+      ],
+      "size": [
+        0.66,
+        0.15,
+        0.54
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#6d9c8a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.28,
+        0.11,
+        3.72
+      ],
+      "size": [
+        0.76,
+        0.22,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "color": "#6d9c8a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.32,
+        0.09,
+        3.76
+      ],
+      "size": [
+        0.5,
+        0.18,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.45,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.25,
+        0.065,
+        5.18
+      ],
+      "size": [
+        0.42,
+        0.13,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.55,
+        0
+      ],
+      "color": "#dce0dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.38,
+        0.075,
+        3.65
+      ],
+      "size": [
+        0.38,
+        0.15,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.72,
+        0
+      ],
+      "color": "#95a7a7"
+    }
+  ]
+}

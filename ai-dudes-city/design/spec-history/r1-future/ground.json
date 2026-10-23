@@ -1,0 +1,311 @@
+{
+  "name": "Regenerated Sensor Meadow",
+  "description": "Sparse clover, native flowers, restored stones and fallen seed pods scatter around two discreet ecological sensor caps, leaving the meadow open.",
+  "notes": "Low ivory monitoring caps suggest quietly managed future ecology while natural, unlit vegetation remains the dominant ground detail.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -4.35,
+        0.08,
+        -3.7
+      ],
+      "size": [
+        0.46,
+        0.16,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.04,
+        0.09,
+        -3.63
+      ],
+      "size": [
+        0.44,
+        0.18,
+        0.42
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#6d9c8a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.2,
+        0.075,
+        -3.37
+      ],
+      "size": [
+        0.42,
+        0.15,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.55,
+        0
+      ],
+      "color": "#c6d6b3"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.7,
+        0.085,
+        3.95
+      ],
+      "size": [
+        0.65,
+        0.17,
+        0.46
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -2.9,
+        0.115,
+        2.65
+      ],
+      "size": [
+        0.18,
+        0.23,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d9c8a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.9,
+        0.265,
+        2.65
+      ],
+      "size": [
+        0.34,
+        0.15,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#efbd66"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.8,
+        0.095,
+        -2.65
+      ],
+      "size": [
+        0.16,
+        0.19,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.8,
+        0.225,
+        -2.65
+      ],
+      "size": [
+        0.38,
+        0.14,
+        0.31
+      ],
+      "rotation": [
+        0,
+        -0.45,
+        0
+      ],
+      "color": "#c1b5dc"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.85,
+        0.13,
+        -4.75
+      ],
+      "size": [
+        0.66,
+        0.26,
+        0.47
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#b8c4b1"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.65,
+        0.095,
+        0.25
+      ],
+      "size": [
+        0.43,
+        0.19,
+        0.32
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.3,
+        0.075,
+        2.85
+      ],
+      "size": [
+        0.52,
+        0.15,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.65,
+        0.065,
+        0.75
+      ],
+      "size": [
+        0.4,
+        0.13,
+        0.19
+      ],
+      "rotation": [
+        0,
+        -0.85,
+        0
+      ],
+      "color": "#8f8069"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.55,
+        0.045,
+        -1.65
+      ],
+      "size": [
+        0.32,
+        0.09,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.55,
+        0.13,
+        -1.65
+      ],
+      "size": [
+        0.36,
+        0.08,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.55,
+        0.045,
+        4.45
+      ],
+      "size": [
+        0.28,
+        0.09,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.55,
+        0.13,
+        4.45
+      ],
+      "size": [
+        0.32,
+        0.08,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d7e1e8"
+    }
+  ]
+}

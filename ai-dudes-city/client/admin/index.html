@@ -1,151 +1,496 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ai dudes admin</title>
+  <title>AI Dudes admin</title>
   <style>
-    :root { color-scheme: dark; }
-    body {
-      margin: 0; padding: 24px; background: #0b0f14; color: #e8edf5;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px;
+    :root {
+      color-scheme: dark;
+      --bg: #0c1016;
+      --card: #141a23;
+      --card-2: #19212c;
+      --line: #263040;
+      --line-2: #323e51;
+      --text: #e9eef6;
+      --dim: #9aa6b8;
+      --faint: #6b778a;
+      --accent: #5aa9ff;
+      --accent-ink: #06121f;
+      --ok: #3ccf7d;
+      --warn: #f2b33d;
+      --bad: #ff6166;
+      --gold: #ffd25e;
+      --radius: 12px;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
-    h1 { font-size: 18px; margin: 0 0 20px; color: #ffd25e; }
-    h2 { font-size: 13px; margin: 0 0 10px; color: #8a93a5; text-transform: uppercase; letter-spacing: 1px; }
-    h3 { font-size: 12px; margin: 14px 0 6px; color: #8a93a5; text-transform: uppercase; letter-spacing: 1px; }
-    main { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 1200px; }
-    section { background: #11151c; border: 1px solid #2a3340; border-radius: 8px; padding: 16px; }
-    section.wide { grid-column: 1 / -1; }
-    input[type="text"], input[type="number"], textarea {
-      background: #0d1117; color: #e8edf5; border: 1px solid #2a3340; border-radius: 4px;
-      padding: 7px 9px; font: inherit;
-    }
-    textarea { width: 100%; min-height: 120px; resize: vertical; font-size: 12px; }
-    button, a.btn {
-      background: #1a2233; color: #bcd8ff; border: 1px solid #3fa9f5; border-radius: 4px;
-      padding: 7px 12px; font: inherit; cursor: pointer; text-decoration: none; display: inline-block;
-    }
-    button:hover, a.btn:hover { background: #223049; }
-    button.small { padding: 4px 9px; font-size: 12px; }
-    label { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
-    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
-    pre { background: #0d1117; border: 1px solid #2a3340; border-radius: 4px; padding: 10px; overflow: auto; margin: 0; font-size: 12px; white-space: pre-wrap; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    td, th { text-align: left; padding: 3px 8px 3px 0; border-bottom: 1px solid #1c222c; color: #8a93a5; vertical-align: top; }
-    th { color: #5a6472; }
-    td.intent { color: #37d67a; }
-    td.fallback { color: #ffb020; }
-    td.name { color: #e8edf5; white-space: nowrap; }
-    td.num { text-align: right; padding-right: 14px; }
-    details summary { cursor: pointer; color: #bcd8ff; }
-    details ul { margin: 6px 0 2px; padding-left: 18px; }
-    .err { color: #ff4d4f; }
-    .muted { color: #5a6472; }
-    .scroll { overflow-x: auto; }
-    .ok { color: #37d67a; } .bad { color: #ff4d4f; } .warn { color: #ffb020; }
     * { box-sizing: border-box; }
-    a { color: #bcd8ff; }
-    input[type="password"] { background:#0d1117; color:#e8edf5; border:1px solid #2a3340; padding:7px; }
-    section { min-width:0; }
-    @media(max-width:700px) { body { padding:16px; } main { grid-template-columns:1fr; } label { flex-wrap:wrap; } }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 var(--sans); }
+    a { color: var(--accent); }
+    [hidden] { display: none !important; }
+
+    /* ---- header ---- */
+    header.top {
+      position: sticky; top: 0; z-index: 5; background: rgba(12, 16, 22, 0.92);
+      backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+    }
+    .top-inner { max-width: 1320px; margin: 0 auto; padding: 12px 20px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+    .brand { font-size: 17px; font-weight: 700; margin: 0; white-space: nowrap; }
+    .brand .town { color: var(--gold); }
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+      background: var(--card-2); border: 1px solid var(--line); color: var(--dim); font-size: 12.5px; white-space: nowrap;
+    }
+    .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+    .pill.ok::before { background: var(--ok); }
+    .pill.warn::before { background: var(--warn); }
+    .pill.bad::before { background: var(--bad); }
+    .pill.bad { color: #ffc4c6; border-color: #5a2a2e; }
+    .pill b { color: var(--text); font-weight: 600; }
+    .links { display: flex; gap: 6px; align-items: center; }
+    .token-row { max-width: 1320px; margin: 0 auto; padding: 0 20px 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .token-row label { color: var(--dim); font-size: 13px; }
+
+    .banner { max-width: 1320px; margin: 14px auto 0; padding: 0 20px; }
+    .banner div { background: #2a1417; border: 1px solid #5a2a2e; color: #ffc4c6; border-radius: 10px; padding: 10px 14px; }
+
+    /* ---- layout ---- */
+    main {
+      max-width: 1320px; margin: 0 auto; padding: 18px 20px 60px;
+      display: grid; grid-template-columns: minmax(340px, 440px) minmax(0, 1fr); gap: 18px; align-items: start;
+    }
+    .col { display: grid; gap: 18px; min-width: 0; }
+    .span { grid-column: 1 / -1; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; min-width: 0; }
+    .card > h2 { margin: 0 0 14px; font-size: 15px; font-weight: 650; display: flex; align-items: center; gap: 8px; }
+    .card > h2 .count { color: var(--faint); font-weight: 500; }
+    h3 { margin: 18px 0 8px; font-size: 12px; font-weight: 650; color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; }
+    h3:first-child { margin-top: 0; }
+    .muted { color: var(--faint); }
+    .dim { color: var(--dim); }
+    .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); } .err { color: var(--bad); }
+    .mono { font-family: var(--mono); font-size: 12.5px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .stack { display: grid; gap: 10px; }
+    .sep { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
+
+    /* ---- controls ---- */
+    button, .btn {
+      font: 500 13.5px/1 var(--sans); padding: 8px 13px; border-radius: 8px; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;
+      background: var(--card-2); color: var(--text); border: 1px solid var(--line-2);
+    }
+    button:hover, .btn:hover { border-color: #4a5a72; background: #1e2836; }
+    button:focus-visible, .btn:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 2px;
+    }
+    button:disabled { opacity: 0.55; cursor: default; }
+    button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 650; }
+    button.primary:hover { background: #79b9ff; }
+    button.danger { color: #ffb3b6; border-color: #5a2a2e; background: #22161a; }
+    button.danger:hover { background: #2e1a1f; border-color: #8a3a40; }
+    button.ghost { background: transparent; border-color: transparent; color: var(--dim); }
+    button.ghost:hover { background: var(--card-2); color: var(--text); }
+    button.sm, .btn.sm { padding: 6px 10px; font-size: 12.5px; border-radius: 7px; }
+    button.chip { padding: 5px 10px; border-radius: 999px; font-size: 12.5px; color: var(--dim); }
+    input[type="text"], input[type="number"], input[type="password"], select, textarea {
+      font: 14px/1.3 var(--sans); color: var(--text); background: #0e131a; border: 1px solid var(--line-2);
+      border-radius: 8px; padding: 8px 10px; min-width: 0;
+    }
+    textarea { width: 100%; min-height: 130px; resize: vertical; font: 12.5px/1.5 var(--mono); }
+    select { cursor: pointer; padding-right: 28px; appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--dim) 50%), linear-gradient(135deg, var(--dim) 50%, transparent 50%);
+      background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px; background-repeat: no-repeat; }
+    select.big { font-size: 15px; font-weight: 600; padding: 10px 34px 10px 12px; width: 100%; }
+
+    /* field label + inline status */
+    .field { display: grid; gap: 6px; }
+    .field > .label { font-size: 12.5px; color: var(--dim); display: flex; justify-content: space-between; gap: 8px; }
+    .status-text { font-size: 12.5px; color: var(--dim); min-height: 1em; }
+    .status-text.ok { color: var(--ok); } .status-text.bad { color: var(--bad); }
+
+    /* switches */
+    .switches { display: grid; gap: 2px; }
+    .switch-row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+    .switch-row:last-child { border-bottom: 0; }
+    .switch-row .txt { flex: 1; min-width: 0; }
+    .switch-row .txt b { font-weight: 600; display: block; }
+    .switch-row .txt span { font-size: 12.5px; color: var(--faint); }
+    button.switch {
+      position: relative; width: 44px; height: 26px; padding: 0; border-radius: 999px; flex: none;
+      background: #2a3342; border: 1px solid var(--line-2); transition: background 0.15s, border-color 0.15s;
+    }
+    button.switch::after {
+      content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
+      background: #c9d2df; transition: transform 0.15s;
+    }
+    button.switch[aria-checked="true"] { background: var(--ok); border-color: var(--ok); }
+    button.switch[aria-checked="true"]::after { transform: translateX(18px); background: #fff; }
+    button.switch.pending { opacity: 0.7; }
+
+    .project { background: var(--card-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 8px; }
+    .bar { height: 6px; background: #0e131a; border-radius: 999px; overflow: hidden; }
+    .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+    .happening { font-size: 13px; color: var(--dim); }
+    .happening b { color: var(--warn); }
+
+    /* characters */
+    .people { display: grid; container-type: inline-size; }
+    .person { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: start; }
+    .person:first-child { padding-top: 0; }
+    .person:last-child { border-bottom: 0; padding-bottom: 0; }
+    .person .who { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+    .person .who .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); align-self: center; flex: none; }
+    .person.awake .who .dot { background: var(--ok); box-shadow: 0 0 0 3px rgba(60, 207, 125, 0.15); }
+    .person .who .nm { font-size: 15px; font-weight: 650; }
+    .person .who .title { color: var(--dim); font-style: italic; }
+    .person .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--dim); font-size: 12.5px; margin-top: 3px; }
+    .person .meta span b { color: var(--text); font-weight: 600; font-family: var(--mono); }
+    .person .acts { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; align-items: center; }
+    /* Narrow card: the buttons drop under the name instead of squeezing it. */
+    @container (max-width: 430px) {
+      .person { grid-template-columns: minmax(0, 1fr); }
+      .person .acts { justify-content: flex-start; }
+    }
+    /* The per-row menu for the rare, destructive actions. */
+    details.menu { position: relative; }
+    details.menu > summary { list-style: none; color: var(--text); font-size: 15px; letter-spacing: 1px; padding: 4px 10px 6px; }
+    details.menu > summary::-webkit-details-marker { display: none; }
+    details.menu[open] > summary { border-color: var(--accent); }
+    .menu-pop {
+      position: absolute; right: 0; top: calc(100% + 4px); z-index: 4; min-width: 190px; display: grid; gap: 4px; padding: 6px;
+      background: var(--card-2); border: 1px solid var(--line-2); border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+    .menu-pop button { justify-content: flex-start; width: 100%; }
+    @container (max-width: 430px) { .menu-pop { right: auto; left: 0; } }
+    .person .more { grid-column: 1 / -1; }
+    .badge { font-size: 11px; font-weight: 650; padding: 2px 7px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .badge.warn { background: #3a2c10; color: var(--warn); }
+    .badge.dim { background: var(--card-2); color: var(--faint); }
+    details > summary { cursor: pointer; color: var(--dim); font-size: 13px; }
+    details > summary:hover { color: var(--text); }
+    .persona { margin-top: 6px; font-size: 13px; color: var(--dim); background: var(--card-2); border-radius: 8px; padding: 10px 12px; }
+    .persona ul { margin: 6px 0 0; padding-left: 18px; }
+    .person .lasterr { grid-column: 1 / -1; font-size: 12.5px; color: var(--bad); font-family: var(--mono); word-break: break-word; }
+
+    /* builds */
+    .builds { display: grid; }
+    .build { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+    .build:last-child { border-bottom: 0; }
+    .build .ref { font-family: var(--mono); font-size: 12px; color: var(--faint); flex: none; }
+    .build .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .build .nm .by { color: var(--faint); }
+    .badge.dmg { text-transform: none; letter-spacing: 0; flex: none; white-space: nowrap; cursor: help; }
+
+    /* test chat */
+    .inject { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 8px; }
+
+    /* advanced */
+    details.advanced { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+    details.advanced > summary { padding: 16px 18px; font-size: 15px; font-weight: 650; color: var(--text); list-style: none; display: flex; align-items: center; gap: 8px; }
+    details.advanced > summary::-webkit-details-marker { display: none; }
+    details.advanced > summary::before { content: "▸"; color: var(--faint); transition: transform 0.15s; display: inline-block; }
+    details.advanced[open] > summary::before { transform: rotate(90deg); }
+    details.advanced > summary .muted { font-weight: 400; font-size: 13px; }
+    .adv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 18px 18px; }
+    .adv-grid > .card { background: var(--card-2); }
+    .adv-grid > .card.span { grid-column: 1 / -1; }
+    pre { margin: 0; background: #0e131a; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow: auto; font: 12px/1.5 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--dim); max-height: 360px; }
+    .kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; font-size: 13px; }
+    .kv dt { color: var(--faint); }
+    .kv dd { margin: 0; overflow-wrap: anywhere; }
+    .scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    td, th { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--dim); }
+    th { color: var(--faint); font-weight: 600; }
+    td.num { text-align: right; font-family: var(--mono); }
+    td.name { color: var(--text); }
+    .other-action { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 6px 0; }
+
+    /* toasts */
+    /* Bottom centre and click-through, so a toast never sits on (or swallows a click meant for) a button. */
+    #toasts {
+      position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 20; display: grid; gap: 8px; justify-items: center;
+      width: max-content; max-width: min(420px, calc(100vw - 32px)); pointer-events: none;
+    }
+    .toast { background: #1d2733; border: 1px solid var(--line-2); border-left: 4px solid var(--ok); color: var(--text); padding: 10px 14px; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,0.4); font-size: 13.5px; animation: pop 0.18s ease-out; }
+    .toast.bad { border-left-color: var(--bad); }
+    @keyframes pop { from { transform: translateY(8px); opacity: 0; } }
+
+    @media (max-width: 960px) {
+      main { grid-template-columns: minmax(0, 1fr); }
+      /* One column: the cards go World, Characters, Builds, Test chat, Advanced. */
+      .col { display: contents; }
+      #world-card { order: 1; } #people-card { order: 2; } #builds-card { order: 3; } #chat-card { order: 4; } #advanced { order: 5; }
+      .adv-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .top-inner, .token-row, .banner { padding-left: 16px; padding-right: 16px; }
+      main { padding: 14px 16px 60px; gap: 14px; }
+      .col { gap: 14px; }
+      .card { padding: 15px; }
+      .adv-grid { padding: 0 12px 12px; }
+      .inject { grid-template-columns: minmax(0, 1fr) auto; }
+      .inject #inj-user { grid-column: 1 / -1; }
+      header.top { position: static; }
+      .top-inner { padding-top: 10px; padding-bottom: 10px; }
+      .pills { order: 3; flex-basis: 100%; }
+      .build .nm { white-space: normal; overflow-wrap: anywhere; }
+      .links { margin-left: auto; }
+    }
   </style>
 </head>
 <body>
-  <h1>ai dudes admin · <a href="/" target="_blank" rel="noopener">Open stream view ↗</a></h1>
-  <div class="row"><label for="operator-token">Operator token (if configured)</label><input id="operator-token" type="password" autocomplete="off" placeholder="Kept only in this page" /><button id="operator-connect">Connect</button></div>
-  <main>
-    <section class="wide">
-      <h2>Inject chat</h2>
-      <div class="row">
-        <input type="text" id="inj-user" placeholder="username" value="dave" style="width:130px" />
-        <input type="text" id="inj-text" placeholder="message" maxlength="1000" aria-label="Chat message" style="flex:1; min-width: 160px; max-width:100%" />
-        <button id="inj-send">send</button>
+  <header class="top">
+    <div class="top-inner">
+      <h1 class="brand">AI Dudes · <span class="town" id="h-town">…</span></h1>
+      <div class="pills" id="pills"></div>
+      <div class="links">
+        <a class="btn sm" href="/" target="_blank" rel="noopener">Open stream ↗</a>
+        <a class="btn sm" href="/mayor" target="_blank" rel="noopener">Mayor ↗</a>
+        <button class="ghost sm" id="token-toggle" title="Operator token" aria-label="Operator token" aria-expanded="false">🔒</button>
       </div>
-      <div class="row" id="canned"></div>
-    </section>
+    </div>
+    <div class="token-row" id="token-row" hidden>
+      <label for="operator-token">Operator token</label>
+      <input id="operator-token" type="password" autocomplete="off" placeholder="Only if the server has one set" style="width:240px" />
+      <button class="sm" id="operator-connect">Connect</button>
+    </div>
+  </header>
 
-    <section class="wide">
-      <h2>Simulate chat</h2>
-      <p class="muted" style="margin:0 0 8px">One <b>username: message</b> per line. Send all posts every line at once, no delay — for testing many agents in parallel.</p>
-      <textarea id="sim-lines" spellcheck="false">alex: hi! I'm a grumpy pirate who loves boats
+  <div class="banner" id="banner" hidden><div id="banner-text"></div></div>
+
+  <main>
+    <div class="col">
+      <!-- World: the primary controls -->
+      <section class="card" id="world-card">
+        <h2>World</h2>
+        <div class="stack">
+          <div class="field">
+            <div class="label"><label for="age-select">Age</label><span class="status-text" id="age-status"></span></div>
+            <select id="age-select" class="big"></select>
+          </div>
+
+          <div class="switches">
+            <div class="switch-row">
+              <div class="txt"><b>AI agents</b><span id="sw-ai-sub">Characters think, talk and build</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-ai" aria-label="AI agents"></button>
+            </div>
+            <div class="switch-row">
+              <div class="txt"><b>Town life</b><span>Residents walk about; characters go out on their own</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-town" aria-label="Town life"></button>
+            </div>
+            <div class="switch-row">
+              <div class="txt"><b>Caravan</b><span>Travellers bring asks and move the age on. Off is sandbox mode: build anything</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-caravan" aria-label="Caravan"></button>
+            </div>
+            <div class="switch-row">
+              <div class="txt"><b>Age themes</b><span>Builds, ground, names and clothes follow the town's age. Off is the sandbox world: no themes, build anything in any style (the caravan stops too)</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-themes" aria-label="Age themes"></button>
+            </div>
+            <div class="switch-row">
+              <div class="txt"><b>Troublemakers</b><span id="sw-events-sub">Painters, thieves and tow trucks come by</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-events" aria-label="Troublemakers"></button>
+            </div>
+            <div class="switch-row">
+              <div class="txt"><b>Idle turns</b><span>Quiet characters act on their own now and then</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-idle" aria-label="Idle turns"></button>
+            </div>
+          </div>
+
+          <div>
+            <h3>Quick actions</h3>
+            <div class="stack">
+              <button id="qa-party" style="justify-self:start">🎉 Throw a party on the square</button>
+              <div class="row">
+                <select id="qa-trouble" aria-label="Troublemaker" style="flex:1">
+                  <option value="random">Random troublemaker</option>
+                  <option value="painter">Painter</option>
+                  <option value="squasher">Squasher</option>
+                  <option value="tow">Tow truck</option>
+                  <option value="thief">Thief</option>
+                  <option value="mayor">Mayor's decree</option>
+                </select>
+                <button id="qa-trouble-send">Send</button>
+              </div>
+              <div class="row">
+                <button class="sm" id="qa-designs-cancel" title="Drops every waiting and in-flight design and the pending restyles; the AI stays on">🛑 Cancel designs</button>
+                <button class="sm" id="qa-clear-bubbles" title="Clears every speech bubble on screen">Clear bubbles</button>
+                <button class="sm" id="qa-clear-feed" title="Clears the feed lines on screen">Clear feed</button>
+              </div>
+              <div class="happening" id="happening"></div>
+            </div>
+          </div>
+
+          <div id="project-wrap" hidden>
+            <h3>Community project</h3>
+            <div class="project">
+              <div class="row" style="justify-content:space-between"><b id="pj-name"></b><span class="badge dim" id="pj-status"></span></div>
+              <div class="dim" style="font-size:12.5px" id="pj-coins"></div>
+              <div class="bar"><i id="pj-bar-coins"></i></div>
+              <div class="dim" style="font-size:12.5px" id="pj-work"></div>
+              <div class="bar"><i id="pj-bar-work"></i></div>
+              <div class="row"><button class="sm primary" id="pj-finish">Finish now</button><button class="sm danger" id="pj-shelve">Shelve</button></div>
+            </div>
+          </div>
+
+          <div class="row" style="justify-content:space-between">
+            <span class="dim">Town name: <b id="town-name" style="color:var(--text)">…</b></span>
+            <button class="sm ghost" id="town-rename">✎ Rename</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="builds-card">
+        <h2>Builds <span class="count" id="builds-count"></span><span class="count" style="margin-left:auto;font-size:12.5px">newest first</span></h2>
+        <div class="builds" id="builds"></div>
+        <button class="sm ghost" id="builds-more" hidden style="margin-top:8px"></button>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card" id="play-card">
+        <h2>Players <span class="count" id="play-count"></span></h2>
+        <div class="muted" style="margin-bottom:6px">Chatters logged in with Kick on <a href="https://stream-play.kick-product.com/play" target="_blank" rel="noopener">stream-play.kick-product.com</a>, walking their own character.</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><button class="sm" id="play-open"></button><label class="muted">seats <input id="play-cap" type="number" min="0" max="100" style="width:56px"></label></div>
+        <div id="play-list"></div>
+      </section>
+      <section class="card" id="people-card">
+        <h2>Characters <span class="count" id="dudes-count"></span></h2>
+        <div class="people" id="people"><div class="muted" id="people-empty">Loading…</div></div>
+      </section>
+
+      <!-- Test chat -->
+      <section class="card" id="chat-card">
+        <h2>Test chat <span class="count">for trying things out</span></h2>
+        <div class="inject">
+          <input type="text" id="inj-user" placeholder="username" value="dave" aria-label="Username" />
+          <input type="text" id="inj-text" placeholder="Message…" maxlength="1000" aria-label="Chat message" />
+          <button class="primary" id="inj-send">Send</button>
+        </div>
+        <div class="row" id="canned" style="margin-top:10px"></div>
+        <details id="sim-details" style="margin-top:14px">
+          <summary>Simulate many chatters at once</summary>
+          <p class="muted" style="margin:8px 0">One <b>username: message</b> per line; every line is sent at once.</p>
+          <textarea id="sim-lines" spellcheck="false">alex: hi! I'm a grumpy pirate who loves boats
 bea: build me a tiny lighthouse
 cam: go hang out with alex and dance
 dina: make me look like a wizard
 eli: what's everyone up to?</textarea>
-      <div class="row" style="margin-top:8px"><button id="sim-send">Send all</button><span id="sim-result" class="muted"></span></div>
-    </section>
+          <div class="row" style="margin-top:8px"><button id="sim-send">Send all</button><span id="sim-result" class="status-text"></span></div>
+        </details>
+      </section>
 
-    <section class="wide" id="dudes-section" hidden>
-      <h2>Characters</h2>
-      <pre id="dudes-ai"></pre>
-      <h3>Characters (<span id="dudes-count">0</span>)</h3>
-      <div class="scroll">
-        <table id="dudes-table"><thead><tr><th>name</th><th>title</th><th>turns</th><th>builds</th><th>inbox</th><th>muted</th><th>heard</th><th>persona</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <details class="advanced span" id="advanced">
+      <summary>Advanced <span class="muted">AI budget, listener, Kick, engine, jobs</span></summary>
+      <div class="adv-grid">
+        <section class="card">
+          <h3>AI budget</h3>
+          <div class="stack">
+            <div id="budget-warn" class="bad" hidden><b>⚠ The cap is off:</b> nothing limits AI spend.</div>
+            <div id="allow-info" class="dim"></div>
+            <div class="row">
+              <label class="dim" for="budget-agent">Agent calls / hour</label>
+              <input type="number" id="budget-agent" min="0" max="1000000" step="1" style="width:100px" />
+              <button class="sm" id="budget-agent-set">Set</button>
+            </div>
+            <div class="row">
+              <label class="dim" for="budget-design">Design calls / hour</label>
+              <input type="number" id="budget-design" min="0" max="1000000" step="1" style="width:100px" />
+              <button class="sm" id="budget-design-set">Set</button>
+            </div>
+            <div class="switch-row" style="border:0;padding:0">
+              <div class="txt"><b>Enforce the budget</b><span>Refills continuously: switching it on only slows calls to the rate</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-enforce" aria-label="Enforce AI budget"></button>
+            </div>
+            <div id="ai-models" class="muted" style="font-size:12.5px"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Kick</h3>
+          <dl class="kv" id="kick-info"><dt>status</dt><dd>loading…</dd></dl>
+          <div class="row" style="margin-top:12px">
+            <a class="btn sm" href="/kick/login">Connect Kick</a>
+            <button class="sm" id="kick-resub">Resubscribe</button>
+          </div>
+        </section>
+
+        <section class="card span" id="listener-section" hidden>
+          <h3>Listener</h3>
+          <div class="stack">
+            <div class="switch-row" style="border:0;padding:0">
+              <div class="txt"><b>Listening to chat</b><span id="listener-info"></span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-listener" aria-label="Listening to chat"></button>
+            </div>
+            <div class="row"><button class="sm" id="listener-now">Read chat now</button><button class="sm danger" id="listener-clear">Clear wishes and tips</button></div>
+            <div><h3>Tips</h3><pre id="listener-tips"></pre></div>
+            <div>
+              <h3>Wishlist (<span id="listener-count">0</span>)</h3>
+              <div class="scroll"><table id="listener-wishes"><thead><tr><th>count</th><th>status</th><th>wish</th><th>askers</th><th>examples</th><th>how</th></tr></thead><tbody></tbody></table></div>
+            </div>
+            <div><h3>Builder proposals</h3><pre id="builder-proposals"></pre></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Engine</h3>
+          <div class="stack">
+            <div class="row">
+              <button class="sm" id="btn-save">Force save</button>
+              <button class="sm danger" id="btn-reset" title="Backs up the current world, then starts it over from an empty field">Reset world…</button>
+            </div>
+            <div class="switch-row" style="border:0;padding:0">
+              <div class="txt"><b>Kick replies</b><span>Post replies to Kick chat</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-kick-replies" aria-label="Kick replies"></button>
+            </div>
+            <div class="switch-row" style="border:0;padding:0">
+              <div class="txt"><b>Town Crier</b><span>Post caravan news and the deeds board to Kick chat</span></div>
+              <button class="switch" role="switch" aria-checked="false" id="sw-crier" aria-label="Town Crier"></button>
+            </div>
+            <div class="row">
+              <span class="dim">Time scale ×</span>
+              <input type="number" id="flag-timescale" min="1" max="10000" value="1" style="width:90px" aria-label="Time scale" />
+              <button class="sm" id="flag-timescale-set">Set</button>
+              <button class="sm chip" data-ts="1">×1</button>
+              <button class="sm chip" data-ts="60">×60</button>
+              <button class="sm chip" data-ts="600">×600</button>
+            </div>
+            <div id="engine-info" class="muted mono"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Jobs</h3>
+          <pre id="dudes-jobs"></pre>
+          <h3>In flight</h3>
+          <div id="ai-flight" class="dim mono"></div>
+        </section>
+
+        <section class="card span" id="other-section" hidden>
+          <h3>Other actions</h3>
+          <div id="actions"></div>
+        </section>
+
+        <section class="card span">
+          <h3>World state</h3>
+          <pre id="state-summary">loading…</pre>
+        </section>
+
+        <section class="card span" id="classifications-section" hidden>
+          <h3>Last classifications</h3>
+          <div class="scroll"><table id="classifications"><thead><tr><th>time</th><th>user</th><th>message</th><th>intent</th><th>conf</th><th>via</th></tr></thead><tbody></tbody></table></div>
+        </section>
       </div>
-      <h3>Jobs</h3>
-      <pre id="dudes-jobs"></pre>
-      <h3>Objects</h3>
-      <pre id="dudes-objects"></pre>
-    </section>
-
-    <section class="wide" id="listener-section" hidden>
-      <h2>Listener</h2>
-      <pre id="listener-info"></pre>
-      <h3>Tips</h3>
-      <pre id="listener-tips"></pre>
-      <h3>Wishlist (<span id="listener-count">0</span>)</h3>
-      <div class="scroll">
-        <table id="listener-wishes"><thead><tr><th>count</th><th>status</th><th>wish</th><th>askers</th><th>examples</th><th>how</th></tr></thead><tbody></tbody></table>
-      </div>
-      <h3>Builder proposals</h3>
-      <pre id="builder-proposals"></pre>
-    </section>
-
-    <section>
-      <h2>Flags</h2>
-      <label><input type="checkbox" id="flag-kick-replies" /> Kick replies (posts replies to chat)</label>
-      <label>Time scale ×<input type="number" id="flag-timescale" min="1" max="10000" value="1" style="width:90px" />
-        <button class="small" id="flag-timescale-set">set</button>
-        <button class="small" data-ts="1">×1</button>
-        <button class="small" data-ts="60">×60</button>
-        <button class="small" data-ts="600">×600</button>
-      </label>
-    </section>
-
-    <section>
-      <h2>Kick</h2>
-      <div id="kick-info" class="row">loading…</div>
-      <div class="row">
-        <a class="btn" href="/kick/login">Connect Kick</a>
-        <button id="kick-resub">Resubscribe</button>
-      </div>
-    </section>
-
-    <section class="wide">
-      <h2>Engine</h2>
-      <div class="row">
-        <button id="btn-save">Force save</button>
-        <button id="btn-reset" title="Backs up the current world, then starts it over from an empty field">Reset world…</button>
-      </div>
-      <div class="row" id="actions"></div>
-      <div id="engine-info"></div>
-    </section>
-
-    <section class="wide">
-      <h2>Force event</h2>
-      <div class="row" id="events">loading…</div>
-    </section>
-
-    <section class="wide">
-      <h2>World state</h2>
-      <pre id="state-summary">loading…</pre>
-    </section>
-
-    <section class="wide" id="classifications-section">
-      <h2>Last classifications</h2>
-      <table id="classifications"><thead><tr><th>time</th><th>user</th><th>message</th><th>intent</th><th>conf</th><th>via</th></tr></thead><tbody></tbody></table>
-    </section>
+    </details>
   </main>
+
+  <div id="toasts" aria-live="polite"></div>
   <script src="/admin.js"></script>
 </body>
 </html>

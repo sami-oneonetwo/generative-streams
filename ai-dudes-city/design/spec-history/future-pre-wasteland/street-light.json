@@ -1,0 +1,238 @@
+{
+  "name": "Tapered Halo Light Pillar",
+  "description": "A tapered slate-navy pillar carries a broad ivory halo cap with a recessed cyan light ring and a clearly visible top guidance strip.",
+  "notes": "The arm-free ceramic column and restrained halo express the Future, with a contrasting navy footing and dark backing behind every emitter for daylight readability.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.1,
+        5
+      ],
+      "size": [
+        0.9,
+        0.2,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.8,
+        5
+      ],
+      "size": [
+        0.22,
+        3.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.11,
+        1.8,
+        5
+      ],
+      "size": [
+        0.12,
+        3.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.036
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.11,
+        1.8,
+        5
+      ],
+      "size": [
+        0.12,
+        3.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0.036
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.3,
+        5
+      ],
+      "size": [
+        0.56,
+        0.2,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.5,
+        5
+      ],
+      "size": [
+        1.4,
+        0.24,
+        1.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.37,
+        5
+      ],
+      "size": [
+        1.18,
+        0.15,
+        1.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.36,
+        5
+      ],
+      "size": [
+        0.84,
+        0.18,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.65,
+        5
+      ],
+      "size": [
+        0.98,
+        0.14,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.735,
+        5
+      ],
+      "size": [
+        0.84,
+        0.07,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.77,
+        5
+      ],
+      "size": [
+        0.68,
+        0.06,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.82,
+        4.835
+      ],
+      "size": [
+        0.08,
+        0.96,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    }
+  ]
+}

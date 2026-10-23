@@ -1,0 +1,273 @@
+{
+  "name": "Shared Clan Ground",
+  "description": "Four low, irregular boulders reserve an empty communal plot, while a crooked fork holds a small clay gathering emblem beside the open frontage.",
+  "notes": "Unpeeled branches cradle a lumpy mud disc bearing four dark clay impressions around one shared ochre centre, without lettering, rectangular boards, banded posts or interior clutter.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -5.3,
+        0.24,
+        -5.25
+      ],
+      "size": [
+        0.79,
+        0.48,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.31,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.23,
+        0.19,
+        -5.34
+      ],
+      "size": [
+        0.67,
+        0.38,
+        0.81
+      ],
+      "rotation": [
+        0,
+        -0.48,
+        0
+      ],
+      "color": "#969584"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.28,
+        0.28,
+        5.27
+      ],
+      "size": [
+        0.64,
+        0.56,
+        0.73
+      ],
+      "rotation": [
+        0,
+        0.67,
+        0
+      ],
+      "color": "#888778"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.32,
+        0.21,
+        5.22
+      ],
+      "size": [
+        0.82,
+        0.42,
+        0.61
+      ],
+      "rotation": [
+        0,
+        -0.23,
+        0
+      ],
+      "color": "#a09b85"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.76,
+        0.65,
+        4.84
+      ],
+      "size": [
+        0.19,
+        1.28,
+        0.21
+      ],
+      "rotation": [
+        0.035,
+        0,
+        0.105
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.01,
+        1.43,
+        4.84
+      ],
+      "size": [
+        0.15,
+        0.78,
+        0.17
+      ],
+      "rotation": [
+        -0.025,
+        0,
+        0.42
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.59,
+        1.38,
+        4.83
+      ],
+      "size": [
+        0.18,
+        0.66,
+        0.19
+      ],
+      "rotation": [
+        0.045,
+        0,
+        -0.59
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.83,
+        1.13,
+        4.91
+      ],
+      "size": [
+        0.29,
+        0.18,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.19
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.8,
+        1.48,
+        4.97
+      ],
+      "size": [
+        0.7,
+        0.66,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0.13
+      ],
+      "color": "#79563b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.81,
+        1.685,
+        5.055
+      ],
+      "size": [
+        0.13,
+        0.16,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.18
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.585,
+        1.49,
+        5.055
+      ],
+      "size": [
+        0.16,
+        0.13,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0.21
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.79,
+        1.275,
+        5.055
+      ],
+      "size": [
+        0.14,
+        0.16,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0.16
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.015,
+        1.465,
+        5.055
+      ],
+      "size": [
+        0.16,
+        0.14,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.24
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.8,
+        1.48,
+        5.085
+      ],
+      "size": [
+        0.2,
+        0.19,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0.14
+      ],
+      "color": "#e9b04c"
+    }
+  ]
+}

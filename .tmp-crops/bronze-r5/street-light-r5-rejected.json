@@ -1,0 +1,238 @@
+{
+  "name": "White-Rimmed Civic Oil Lamp",
+  "description": "A wide dark-timber fork cradles a lime-white-rimmed ceramic oil bowl with three small wick flames above three offset mudbrick courses.",
+  "notes": "Exposed timber prongs, hand-laid mudbrick and restrained oil flames establish Bronze Age craft, while the pale bowl rim and dark fork contrast strongly with ochre ground.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -0.035,
+        0.12,
+        5.015
+      ],
+      "size": [
+        1.02,
+        0.24,
+        0.9
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.035,
+        0.36,
+        4.985
+      ],
+      "size": [
+        0.94,
+        0.24,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0.045,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.015,
+        0.6,
+        5.01
+      ],
+      "size": [
+        0.88,
+        0.24,
+        0.8
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.1,
+        5
+      ],
+      "size": [
+        0.4,
+        0.88,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.54,
+        2.05,
+        5
+      ],
+      "size": [
+        0.26,
+        1.7,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0.5
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.54,
+        2.05,
+        5
+      ],
+      "size": [
+        0.26,
+        1.7,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.5
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        2.4,
+        5
+      ],
+      "size": [
+        1.5,
+        0.24,
+        1.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.5,
+        5
+      ],
+      "size": [
+        1.54,
+        0.12,
+        1.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.555,
+        5
+      ],
+      "size": [
+        1.28,
+        0.06,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.49,
+        2.775,
+        4.92
+      ],
+      "size": [
+        0.2,
+        0.38,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffb347",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.49,
+        2.795,
+        4.92
+      ],
+      "size": [
+        0.22,
+        0.42,
+        0.21
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffe18a",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0,
+        2.765,
+        4.6
+      ],
+      "size": [
+        0.19,
+        0.36,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffd16a",
+      "glow": true
+    }
+  ]
+}

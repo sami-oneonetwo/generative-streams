@@ -1,0 +1,235 @@
+{
+  "name": "Unclaimed Lot with Recycled Availability Marker",
+  "description": "A compact pale sign with a bold empty amber ring marks an otherwise open lot, with two gravel patches and sparse grass nearby.",
+  "notes": "A recycled-composite panel, square powder-coated post and crisp wordless availability symbol establish a practical Modern Age marker.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.06,
+        4.46
+      ],
+      "size": [
+        0.38,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.06,
+        4.46
+      ],
+      "size": [
+        0.14,
+        2,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.65,
+        4.5
+      ],
+      "size": [
+        1.5,
+        1.24,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.65,
+        4.6
+      ],
+      "size": [
+        1.34,
+        1.08,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.65,
+        4.66
+      ],
+      "size": [
+        0.94,
+        0.06,
+        0.94
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.65,
+        4.68
+      ],
+      "size": [
+        0.62,
+        0.06,
+        0.62
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.5,
+        0.04,
+        3.8
+      ],
+      "size": [
+        1.2,
+        0.08,
+        0.78
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#cad0bd"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.7,
+        0.04,
+        -2.9
+      ],
+      "size": [
+        1.48,
+        0.08,
+        0.9
+      ],
+      "rotation": [
+        0,
+        -0.45,
+        0
+      ],
+      "color": "#7d8c7c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.13,
+        0.19,
+        4.18
+      ],
+      "size": [
+        0.12,
+        0.34,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0.28
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.32,
+        0.15,
+        4.22
+      ],
+      "size": [
+        0.12,
+        0.26,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        -0.32
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.18,
+        0.17,
+        -2.48
+      ],
+      "size": [
+        0.14,
+        0.29,
+        0.12
+      ],
+      "rotation": [
+        0.18,
+        0.4,
+        -0.22
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.01,
+        0.14,
+        -2.44
+      ],
+      "size": [
+        0.12,
+        0.23,
+        0.14
+      ],
+      "rotation": [
+        -0.12,
+        -0.2,
+        0.3
+      ],
+      "color": "#a5c880"
+    }
+  ]
+}

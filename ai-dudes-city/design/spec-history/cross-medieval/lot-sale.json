@@ -1,0 +1,387 @@
+{
+  "name": "Unclaimed Lot with Pegged Oak Board and Straw Sheaf",
+  "description": "A tall oak peg post carries a broad dark board with a bold empty ochre ring, topped by a tied, fanning straw sheaf above dry grass, a fieldstone and discarded timber.",
+  "notes": "Pegged timber and bound straw establish the medieval age, while the wide ring-board silhouette distinguishes the free lot from a community pennant pole and dry yellow grass helps separate it from meadow.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.2,
+        4.32
+      ],
+      "size": [
+        0.22,
+        2.4,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.55,
+        4.5
+      ],
+      "size": [
+        1.4,
+        1.05,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.07
+      ],
+      "color": "#50382b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.915,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.758,
+        1.808,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.785398
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.865,
+        1.55,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.758,
+        1.292,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785398
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.185,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.242,
+        1.292,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.785398
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.135,
+        1.55,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.242,
+        1.808,
+        4.625
+      ],
+      "size": [
+        0.38,
+        0.18,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785398
+      ],
+      "color": "#e5c070"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.47,
+        2.025,
+        4.64
+      ],
+      "size": [
+        0.13,
+        0.12,
+        0.13
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#c8a46a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.45,
+        2.5,
+        4.38
+      ],
+      "size": [
+        0.25,
+        0.6,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0.24
+      ],
+      "color": "#c8ad73"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.3,
+        2.68,
+        4.38
+      ],
+      "size": [
+        0.2,
+        0.6,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0.48
+      ],
+      "color": "#ddc58b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.43,
+        2.69,
+        4.42
+      ],
+      "size": [
+        0.18,
+        0.6,
+        0.18
+      ],
+      "rotation": [
+        0.08,
+        0,
+        0.12
+      ],
+      "color": "#c8ad73"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.56,
+        2.66,
+        4.37
+      ],
+      "size": [
+        0.19,
+        0.58,
+        0.19
+      ],
+      "rotation": [
+        -0.08,
+        0,
+        -0.27
+      ],
+      "color": "#e0cb97"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.48,
+        2.38,
+        4.38
+      ],
+      "size": [
+        0.32,
+        0.12,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0.24
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.57,
+        0.16,
+        4.98
+      ],
+      "size": [
+        1,
+        0.2,
+        0.28
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#b08a57"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.16,
+        0.235,
+        4.91
+      ],
+      "size": [
+        0.62,
+        0.35,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#a1a69b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.95,
+        0.3,
+        3.98
+      ],
+      "size": [
+        0.62,
+        0.48,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#8e9453"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.25,
+        0.04,
+        4.55
+      ],
+      "size": [
+        3,
+        0.08,
+        2.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9a9a5a"
+    }
+  ]
+}

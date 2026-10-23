@@ -1,0 +1,2223 @@
+{
+  "kits": [
+    {
+      "name": "Flintworker of the Sinew Seam",
+      "hide": [
+        "hat",
+        "hair",
+        "sleeves",
+        "accessory"
+      ],
+      "parts": [
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.28,
+            0
+          ],
+          "size": [
+            0.47,
+            0.58,
+            0.29
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.065,
+            0.23,
+            0.16
+          ],
+          "size": [
+            0.29,
+            0.49,
+            0.035
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.12
+          ],
+          "colour": "shirt:light"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            -0.14,
+            0.55,
+            0.015
+          ],
+          "size": [
+            0.085,
+            0.055,
+            0.33
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.07,
+            0
+          ],
+          "size": [
+            0.49,
+            0.065,
+            0.32
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants:dark"
+        },
+        {
+          "bone": "hips",
+          "shape": "sphere",
+          "position": [
+            0.16,
+            0.07,
+            0.18
+          ],
+          "size": [
+            0.075,
+            0.065,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.16,
+            -0.015,
+            0.18
+          ],
+          "size": [
+            0.035,
+            0.14,
+            0.03
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.15
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "legL",
+          "shape": "box",
+          "position": [
+            0,
+            -0.655,
+            0.025
+          ],
+          "size": [
+            0.22,
+            0.29,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "legR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.685,
+            0.025
+          ],
+          "size": [
+            0.225,
+            0.23,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants:dark"
+        },
+        {
+          "bone": "legL",
+          "shape": "box",
+          "position": [
+            0,
+            -0.515,
+            0.015
+          ],
+          "size": [
+            0.24,
+            0.075,
+            0.26
+          ],
+          "rotation": [
+            0,
+            0,
+            0.06
+          ],
+          "colour": "pants:light"
+        },
+        {
+          "bone": "legR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.575,
+            0.015
+          ],
+          "size": [
+            0.235,
+            0.065,
+            0.26
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ],
+          "colour": "pants:light"
+        },
+        {
+          "bone": "legL",
+          "shape": "box",
+          "position": [
+            0,
+            -0.61,
+            0.17
+          ],
+          "size": [
+            0.19,
+            0.04,
+            0.025
+          ],
+          "rotation": [
+            0,
+            0,
+            0.16
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "legR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.66,
+            0.17
+          ],
+          "size": [
+            0.19,
+            0.04,
+            0.025
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.12
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0,
+            0.305,
+            -0.025
+          ],
+          "size": [
+            0.32,
+            0.075,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "hair:dark"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0,
+            0.19,
+            -0.15
+          ],
+          "size": [
+            0.3,
+            0.23,
+            0.075
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "hair:dark"
+        },
+        {
+          "bone": "head",
+          "shape": "sphere",
+          "position": [
+            0,
+            0.3,
+            -0.23
+          ],
+          "size": [
+            0.18,
+            0.16,
+            0.16
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "hair:dark"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0,
+            0.29,
+            -0.19
+          ],
+          "size": [
+            0.19,
+            0.04,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "armR",
+          "shape": "cylinder",
+          "position": [
+            0,
+            -0.22,
+            0.115
+          ],
+          "size": [
+            0.055,
+            0.67,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            0.1
+          ],
+          "colour": "#76513b"
+        },
+        {
+          "bone": "armR",
+          "shape": "box",
+          "position": [
+            -0.025,
+            0.075,
+            0.19
+          ],
+          "size": [
+            0.1,
+            0.09,
+            0.25
+          ],
+          "rotation": [
+            0.16,
+            0,
+            0
+          ],
+          "colour": "#81847a"
+        },
+        {
+          "bone": "armR",
+          "shape": "box",
+          "position": [
+            -0.025,
+            0.065,
+            0.12
+          ],
+          "size": [
+            0.12,
+            0.065,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "armR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.33,
+            0.005
+          ],
+          "size": [
+            0.155,
+            0.15,
+            0.18
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            -0.105,
+            -0.055,
+            0.11
+          ],
+          "size": [
+            0.23,
+            0.2,
+            0.14
+          ],
+          "rotation": [
+            0,
+            0,
+            0.06
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            -0.255,
+            0.025,
+            0.045
+          ],
+          "size": [
+            0.11,
+            0.15,
+            0.15
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ],
+          "colour": "pants:light"
+        }
+      ]
+    },
+    {
+      "name": "Overlapping-Grass Gatherer",
+      "hide": [
+        "hat",
+        "hair",
+        "sleeves",
+        "accessory"
+      ],
+      "parts": [
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            -0.12,
+            0.135
+          ],
+          "size": [
+            0.48,
+            0.37,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            -0.115,
+            -0.135
+          ],
+          "size": [
+            0.47,
+            0.36,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants:dark"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.215,
+            -0.11,
+            0
+          ],
+          "size": [
+            0.065,
+            0.35,
+            0.29
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.04
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            -0.215,
+            -0.095,
+            0
+          ],
+          "size": [
+            0.065,
+            0.32,
+            0.29
+          ],
+          "rotation": [
+            0,
+            0,
+            0.04
+          ],
+          "colour": "pants:light"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.055,
+            0
+          ],
+          "size": [
+            0.49,
+            0.065,
+            0.32
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "hips",
+          "shape": "sphere",
+          "position": [
+            -0.14,
+            0.055,
+            0.18
+          ],
+          "size": [
+            0.08,
+            0.065,
+            0.05
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "cape",
+          "shape": "box",
+          "position": [
+            0,
+            -0.25,
+            -0.055
+          ],
+          "size": [
+            0.55,
+            0.52,
+            0.095
+          ],
+          "rotation": [
+            0.1,
+            0,
+            0
+          ],
+          "colour": "shirt:dark"
+        },
+        {
+          "bone": "cape",
+          "shape": "box",
+          "position": [
+            -0.195,
+            -0.29,
+            -0.12
+          ],
+          "size": [
+            0.14,
+            0.5,
+            0.055
+          ],
+          "rotation": [
+            0.12,
+            0,
+            -0.07
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "cape",
+          "shape": "box",
+          "position": [
+            -0.065,
+            -0.31,
+            -0.125
+          ],
+          "size": [
+            0.15,
+            0.54,
+            0.055
+          ],
+          "rotation": [
+            0.12,
+            0,
+            -0.02
+          ],
+          "colour": "shirt:light"
+        },
+        {
+          "bone": "cape",
+          "shape": "box",
+          "position": [
+            0.07,
+            -0.285,
+            -0.13
+          ],
+          "size": [
+            0.15,
+            0.49,
+            0.055
+          ],
+          "rotation": [
+            0.12,
+            0,
+            0.025
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "cape",
+          "shape": "box",
+          "position": [
+            0.2,
+            -0.255,
+            -0.12
+          ],
+          "size": [
+            0.14,
+            0.43,
+            0.055
+          ],
+          "rotation": [
+            0.12,
+            0,
+            0.08
+          ],
+          "colour": "shirt:light"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.17,
+            0.49,
+            0.005
+          ],
+          "size": [
+            0.22,
+            0.13,
+            0.37
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.12
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            -0.17,
+            0.49,
+            0.005
+          ],
+          "size": [
+            0.22,
+            0.13,
+            0.37
+          ],
+          "rotation": [
+            0,
+            0,
+            0.12
+          ],
+          "colour": "shirt:light"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.45,
+            0.19
+          ],
+          "size": [
+            0.19,
+            0.045,
+            0.035
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0,
+            0.305,
+            -0.025
+          ],
+          "size": [
+            0.33,
+            0.085,
+            0.29
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "hair"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0.135,
+            0.115,
+            -0.07
+          ],
+          "size": [
+            0.095,
+            0.35,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0.045
+          ],
+          "colour": "hair"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            -0.135,
+            0.095,
+            -0.075
+          ],
+          "size": [
+            0.095,
+            0.39,
+            0.18
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.045
+          ],
+          "colour": "hair:dark"
+        },
+        {
+          "bone": "armL",
+          "shape": "cylinder",
+          "position": [
+            0.11,
+            -0.73,
+            0.115
+          ],
+          "size": [
+            0.33,
+            0.29,
+            0.29
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "armL",
+          "shape": "cylinder",
+          "position": [
+            0.11,
+            -0.585,
+            0.115
+          ],
+          "size": [
+            0.35,
+            0.05,
+            0.31
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "armL",
+          "shape": "cylinder",
+          "position": [
+            0.1,
+            -0.49,
+            0.115
+          ],
+          "size": [
+            0.055,
+            0.31,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            1.5708
+          ],
+          "colour": "accent:light"
+        },
+        {
+          "bone": "legL",
+          "shape": "box",
+          "position": [
+            0,
+            -0.735,
+            0.025
+          ],
+          "size": [
+            0.21,
+            0.13,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants:dark"
+        },
+        {
+          "bone": "legR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.735,
+            0.025
+          ],
+          "size": [
+            0.21,
+            0.13,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants:dark"
+        }
+      ]
+    },
+    {
+      "name": "Hearthkeeper in the Folded Shoulder Hide",
+      "hide": [
+        "hat",
+        "accessory"
+      ],
+      "parts": [
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.255,
+            0
+          ],
+          "size": [
+            0.48,
+            0.64,
+            0.3
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            -0.12,
+            0.15,
+            0.17
+          ],
+          "size": [
+            0.23,
+            0.62,
+            0.045
+          ],
+          "rotation": [
+            0,
+            0,
+            0.055
+          ],
+          "colour": "shirt:light"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.15,
+            0.49,
+            0
+          ],
+          "size": [
+            0.25,
+            0.18,
+            0.38
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.1
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "cape",
+          "shape": "box",
+          "position": [
+            0.065,
+            -0.2,
+            -0.045
+          ],
+          "size": [
+            0.45,
+            0.43,
+            0.08
+          ],
+          "rotation": [
+            0.08,
+            0,
+            0.12
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.1,
+            0
+          ],
+          "size": [
+            0.5,
+            0.055,
+            0.33
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants:dark"
+        },
+        {
+          "bone": "hips",
+          "shape": "cylinder",
+          "position": [
+            0.12,
+            0.43,
+            0.205
+          ],
+          "size": [
+            0.04,
+            0.13,
+            0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            0.45
+          ],
+          "colour": "#e1d3ae"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0,
+            0.285,
+            0
+          ],
+          "size": [
+            0.33,
+            0.055,
+            0.31
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "legL",
+          "shape": "box",
+          "position": [
+            0,
+            -0.68,
+            0.025
+          ],
+          "size": [
+            0.215,
+            0.24,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "legR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.68,
+            0.025
+          ],
+          "size": [
+            0.215,
+            0.24,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "armR",
+          "shape": "cylinder",
+          "position": [
+            0,
+            -0.76,
+            0.1
+          ],
+          "size": [
+            0.075,
+            1.14,
+            0.075
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.035
+          ],
+          "colour": "#76513b"
+        }
+      ]
+    },
+    {
+      "name": "Young Ridge Scout",
+      "hide": [
+        "hat",
+        "sleeves",
+        "accessory"
+      ],
+      "parts": [
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.29,
+            0
+          ],
+          "size": [
+            0.465,
+            0.55,
+            0.29
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "shirt"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.085,
+            0.265,
+            0.16
+          ],
+          "size": [
+            0.24,
+            0.48,
+            0.035
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ],
+          "colour": "shirt:light"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0,
+            0.065,
+            0
+          ],
+          "size": [
+            0.49,
+            0.065,
+            0.32
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent:dark"
+        },
+        {
+          "bone": "hips",
+          "shape": "box",
+          "position": [
+            0.18,
+            -0.06,
+            0.19
+          ],
+          "size": [
+            0.15,
+            0.2,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.08
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            0,
+            0.28,
+            0
+          ],
+          "size": [
+            0.33,
+            0.055,
+            0.31
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "accent"
+        },
+        {
+          "bone": "head",
+          "shape": "box",
+          "position": [
+            -0.18,
+            0.18,
+            -0.075
+          ],
+          "size": [
+            0.045,
+            0.23,
+            0.045
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.2
+          ],
+          "colour": "accent:light"
+        },
+        {
+          "bone": "legL",
+          "shape": "box",
+          "position": [
+            0,
+            -0.7,
+            0.025
+          ],
+          "size": [
+            0.215,
+            0.2,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "legR",
+          "shape": "box",
+          "position": [
+            0,
+            -0.7,
+            0.025
+          ],
+          "size": [
+            0.215,
+            0.2,
+            0.28
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "colour": "pants"
+        },
+        {
+          "bone": "armR",
+          "shape": "cylinder",
+          "position": [
+            0,
+            -0.28,
+            0.115
+          ],
+          "size": [
+            0.045,
+            1.55,
+            0.045
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.035
+          ],
+          "colour": "#987052"
+        },
+        {
+          "bone": "armR",
+          "shape": "cone",
+          "position": [
+            0.03,
+            0.565,
+            0.115
+          ],
+          "size": [
+            0.095,
+            0.18,
+            0.055
+          ],
+          "rotation": [
+            0,
+            0,
+            -0.035
+          ],
+          "colour": "#81847a"
+        }
+      ]
+    }
+  ],
+  "head": {
+    "name": "Chief of the Great Branched Antlers",
+    "hide": [
+      "hat",
+      "accessory"
+    ],
+    "parts": [
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0,
+          0.24,
+          0
+        ],
+        "size": [
+          0.49,
+          0.68,
+          0.31
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "shirt"
+      },
+      {
+        "bone": "cape",
+        "shape": "box",
+        "position": [
+          0,
+          -0.265,
+          -0.065
+        ],
+        "size": [
+          0.69,
+          0.57,
+          0.12
+        ],
+        "rotation": [
+          0.1,
+          0,
+          0
+        ],
+        "colour": "shirt:dark"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0.19,
+          0.48,
+          0.005
+        ],
+        "size": [
+          0.32,
+          0.19,
+          0.41
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.12
+        ],
+        "colour": "shirt:light"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          -0.19,
+          0.48,
+          0.005
+        ],
+        "size": [
+          0.32,
+          0.19,
+          0.41
+        ],
+        "rotation": [
+          0,
+          0,
+          0.12
+        ],
+        "colour": "shirt"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0.15,
+          0.34,
+          0.185
+        ],
+        "size": [
+          0.28,
+          0.31,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.16
+        ],
+        "colour": "shirt"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          -0.15,
+          0.37,
+          0.185
+        ],
+        "size": [
+          0.28,
+          0.25,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          0.16
+        ],
+        "colour": "shirt:light"
+      },
+      {
+        "bone": "hips",
+        "shape": "cylinder",
+        "position": [
+          0,
+          0.4,
+          0.235
+        ],
+        "size": [
+          0.055,
+          0.18,
+          0.055
+        ],
+        "rotation": [
+          0,
+          0,
+          1.25
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          0,
+          0.325,
+          -0.015
+        ],
+        "size": [
+          0.37,
+          0.1,
+          0.32
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "hat"
+      },
+      {
+        "bone": "head",
+        "shape": "cylinder",
+        "position": [
+          0.22,
+          0.49,
+          -0.055
+        ],
+        "size": [
+          0.075,
+          0.39,
+          0.075
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.55
+        ],
+        "colour": "#c3a575"
+      },
+      {
+        "bone": "head",
+        "shape": "cylinder",
+        "position": [
+          0.36,
+          0.72,
+          -0.055
+        ],
+        "size": [
+          0.06,
+          0.27,
+          0.06
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.3
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "head",
+        "shape": "cone",
+        "position": [
+          0.2,
+          0.67,
+          -0.035
+        ],
+        "size": [
+          0.065,
+          0.22,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          0.2
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "head",
+        "shape": "cone",
+        "position": [
+          0.46,
+          0.7,
+          -0.045
+        ],
+        "size": [
+          0.06,
+          0.22,
+          0.06
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.95
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "head",
+        "shape": "cylinder",
+        "position": [
+          -0.23,
+          0.455,
+          -0.055
+        ],
+        "size": [
+          0.08,
+          0.34,
+          0.08
+        ],
+        "rotation": [
+          0,
+          0,
+          0.78
+        ],
+        "colour": "#c3a575"
+      },
+      {
+        "bone": "head",
+        "shape": "cone",
+        "position": [
+          -0.37,
+          0.62,
+          -0.055
+        ],
+        "size": [
+          0.065,
+          0.27,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          0.35
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          -0.23,
+          0.43,
+          -0.14
+        ],
+        "size": [
+          0.085,
+          0.29,
+          0.035
+        ],
+        "rotation": [
+          -0.15,
+          0,
+          0.55
+        ],
+        "colour": "accent:dark"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          -0.32,
+          0.38,
+          -0.13
+        ],
+        "size": [
+          0.075,
+          0.25,
+          0.035
+        ],
+        "rotation": [
+          -0.15,
+          0,
+          0.95
+        ],
+        "colour": "accent"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          0.09,
+          0.095,
+          0.145
+        ],
+        "size": [
+          0.085,
+          0.04,
+          0.012
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.2
+        ],
+        "colour": "#d9534f"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          -0.09,
+          0.095,
+          0.145
+        ],
+        "size": [
+          0.085,
+          0.04,
+          0.012
+        ],
+        "rotation": [
+          0,
+          0,
+          0.2
+        ],
+        "colour": "#d9534f"
+      },
+      {
+        "bone": "armR",
+        "shape": "cylinder",
+        "position": [
+          0,
+          -0.3,
+          0.13
+        ],
+        "size": [
+          0.085,
+          2,
+          0.085
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "#76513b"
+      },
+      {
+        "bone": "armR",
+        "shape": "cylinder",
+        "position": [
+          0,
+          -0.46,
+          0.13
+        ],
+        "size": [
+          0.105,
+          0.23,
+          0.105
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "accent:dark"
+      },
+      {
+        "bone": "armR",
+        "shape": "box",
+        "position": [
+          0,
+          0.79,
+          0.13
+        ],
+        "size": [
+          0.28,
+          0.23,
+          0.19
+        ],
+        "rotation": [
+          0.1,
+          0,
+          0
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "armR",
+        "shape": "box",
+        "position": [
+          0,
+          0.675,
+          0.175
+        ],
+        "size": [
+          0.13,
+          0.14,
+          0.13
+        ],
+        "rotation": [
+          0.15,
+          0,
+          0
+        ],
+        "colour": "#c3a575"
+      },
+      {
+        "bone": "armR",
+        "shape": "cone",
+        "position": [
+          0.17,
+          0.91,
+          0.12
+        ],
+        "size": [
+          0.09,
+          0.32,
+          0.09
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.6
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "armR",
+        "shape": "cone",
+        "position": [
+          -0.17,
+          0.91,
+          0.12
+        ],
+        "size": [
+          0.09,
+          0.32,
+          0.09
+        ],
+        "rotation": [
+          0,
+          0,
+          0.6
+        ],
+        "colour": "#e1d3ae"
+      }
+    ]
+  },
+  "leader": {
+    "name": "Far-Roving Shell-Cowl Mammoth Herder",
+    "hide": [
+      "hat",
+      "accessory"
+    ],
+    "parts": [
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0,
+          0.24,
+          0
+        ],
+        "size": [
+          0.49,
+          0.68,
+          0.32
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "shirt:dark"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0.105,
+          0.31,
+          0.18
+        ],
+        "size": [
+          0.26,
+          0.4,
+          0.055
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.06
+        ],
+        "colour": "shirt"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          -0.12,
+          0.145,
+          0.18
+        ],
+        "size": [
+          0.23,
+          0.35,
+          0.055
+        ],
+        "rotation": [
+          0,
+          0,
+          0.055
+        ],
+        "colour": "shirt:light"
+      },
+      {
+        "bone": "cape",
+        "shape": "box",
+        "position": [
+          0,
+          -0.19,
+          -0.06
+        ],
+        "size": [
+          0.57,
+          0.42,
+          0.11
+        ],
+        "rotation": [
+          0.1,
+          0,
+          0
+        ],
+        "colour": "shirt"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          0,
+          0.345,
+          -0.025
+        ],
+        "size": [
+          0.4,
+          0.12,
+          0.37
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "hat"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          0.185,
+          0.155,
+          -0.015
+        ],
+        "size": [
+          0.095,
+          0.34,
+          0.32
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.05
+        ],
+        "colour": "hat"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          -0.185,
+          0.14,
+          -0.025
+        ],
+        "size": [
+          0.095,
+          0.37,
+          0.3
+        ],
+        "rotation": [
+          0,
+          0,
+          0.05
+        ],
+        "colour": "hat:dark"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0,
+          0.075,
+          0
+        ],
+        "size": [
+          0.51,
+          0.055,
+          0.34
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "accent:dark"
+      },
+      {
+        "bone": "hips",
+        "shape": "box",
+        "position": [
+          0,
+          0.105,
+          0.18
+        ],
+        "size": [
+          0.48,
+          0.035,
+          0.035
+        ],
+        "rotation": [
+          0,
+          0,
+          0.06
+        ],
+        "colour": "accent"
+      },
+      {
+        "bone": "hips",
+        "shape": "sphere",
+        "position": [
+          -0.17,
+          0.47,
+          0.205
+        ],
+        "size": [
+          0.095,
+          0.115,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          0.25
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "hips",
+        "shape": "sphere",
+        "position": [
+          0,
+          0.405,
+          0.21
+        ],
+        "size": [
+          0.11,
+          0.13,
+          0.07
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "hips",
+        "shape": "sphere",
+        "position": [
+          0.17,
+          0.47,
+          0.205
+        ],
+        "size": [
+          0.095,
+          0.115,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.25
+        ],
+        "colour": "#e1d3ae"
+      },
+      {
+        "bone": "armL",
+        "shape": "box",
+        "position": [
+          0.025,
+          -0.68,
+          0.13
+        ],
+        "size": [
+          0.3,
+          0.32,
+          0.24
+        ],
+        "rotation": [
+          0,
+          0,
+          0.08
+        ],
+        "colour": "pants"
+      },
+      {
+        "bone": "armL",
+        "shape": "box",
+        "position": [
+          0.025,
+          -0.64,
+          0.13
+        ],
+        "size": [
+          0.32,
+          0.045,
+          0.26
+        ],
+        "rotation": [
+          0,
+          0,
+          0.08
+        ],
+        "colour": "accent:dark"
+      },
+      {
+        "bone": "armL",
+        "shape": "box",
+        "position": [
+          -0.015,
+          -0.715,
+          0.255
+        ],
+        "size": [
+          0.035,
+          0.14,
+          0.012
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.55
+        ],
+        "colour": "#4d9495"
+      },
+      {
+        "bone": "armL",
+        "shape": "box",
+        "position": [
+          0.045,
+          -0.715,
+          0.255
+        ],
+        "size": [
+          0.035,
+          0.14,
+          0.012
+        ],
+        "rotation": [
+          0,
+          0,
+          0.55
+        ],
+        "colour": "#4d9495"
+      },
+      {
+        "bone": "armR",
+        "shape": "cylinder",
+        "position": [
+          0,
+          -0.39,
+          0.12
+        ],
+        "size": [
+          0.065,
+          1.84,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "colour": "#76513b"
+      },
+      {
+        "bone": "armR",
+        "shape": "cylinder",
+        "position": [
+          0.075,
+          0.565,
+          0.12
+        ],
+        "size": [
+          0.065,
+          0.23,
+          0.065
+        ],
+        "rotation": [
+          0,
+          0,
+          -1.05
+        ],
+        "colour": "#987052"
+      },
+      {
+        "bone": "armR",
+        "shape": "cylinder",
+        "position": [
+          0.18,
+          0.545,
+          0.12
+        ],
+        "size": [
+          0.06,
+          0.19,
+          0.06
+        ],
+        "rotation": [
+          0,
+          0,
+          0.2
+        ],
+        "colour": "#987052"
+      },
+      {
+        "bone": "head",
+        "shape": "box",
+        "position": [
+          0,
+          -0.005,
+          0.14
+        ],
+        "size": [
+          0.23,
+          0.17,
+          0.085
+        ],
+        "rotation": [
+          0.15,
+          0,
+          0
+        ],
+        "colour": "hair:dark"
+      }
+    ]
+  }
+}

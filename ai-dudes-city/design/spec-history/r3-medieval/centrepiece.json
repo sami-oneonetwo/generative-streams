@@ -1,0 +1,843 @@
+{
+  "name": "King's Heraldic Market Cross",
+  "description": "A broad stepped market cross gathers the square around a stout stone shaft, bold heraldic cloth, provision baskets and a front-facing public notice tablet.",
+  "notes": "The revised 4.5 m landmark uses contrasting worn stone steps, a clearly cruciform finial, medieval heraldry and oak-mounted parchment rather than fountain machinery.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        0
+      ],
+      "size": [
+        4.5,
+        0.12,
+        4.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6e6a5c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.15,
+        0
+      ],
+      "size": [
+        4.5,
+        0.06,
+        4.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c0a8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.24,
+        0
+      ],
+      "size": [
+        3.6,
+        0.12,
+        3.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6e6a5c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.33,
+        0
+      ],
+      "size": [
+        3.6,
+        0.06,
+        3.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c0a8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.42,
+        0
+      ],
+      "size": [
+        2.6,
+        0.12,
+        2.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6e6a5c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.51,
+        0
+      ],
+      "size": [
+        2.6,
+        0.06,
+        2.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c0a8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.63,
+        0
+      ],
+      "size": [
+        1.04,
+        0.18,
+        1.04
+      ],
+      "rotation": [
+        0,
+        0.3927,
+        0
+      ],
+      "color": "#817a65"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.14,
+        0
+      ],
+      "size": [
+        0.7,
+        3.2,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.3927,
+        0
+      ],
+      "color": "#948970"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.79,
+        0
+      ],
+      "size": [
+        0.84,
+        0.14,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0.3927,
+        0
+      ],
+      "color": "#b0a98f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        3.58,
+        0
+      ],
+      "size": [
+        0.86,
+        0.32,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0.3927,
+        0
+      ],
+      "color": "#a79e83"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.76,
+        0
+      ],
+      "size": [
+        0.94,
+        0.12,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c0a8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.14,
+        0
+      ],
+      "size": [
+        0.28,
+        0.72,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b0a98f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.25,
+        0
+      ],
+      "size": [
+        1.2,
+        0.22,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b0a98f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.36,
+        0.44
+      ],
+      "size": [
+        1.6,
+        0.1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.52,
+        2.71,
+        0.44
+      ],
+      "size": [
+        0.8,
+        1.2,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.025
+      ],
+      "color": "#405e8b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.52,
+        2.71,
+        0.44
+      ],
+      "size": [
+        0.8,
+        1.2,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.025
+      ],
+      "color": "#9e443e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.52,
+        2.76,
+        0.52
+      ],
+      "size": [
+        0.3,
+        0.3,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.52,
+        2.27,
+        0.52
+      ],
+      "size": [
+        0.64,
+        0.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.025
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.52,
+        2.76,
+        0.52
+      ],
+      "size": [
+        0.32,
+        0.32,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.52,
+        2.27,
+        0.52
+      ],
+      "size": [
+        0.64,
+        0.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.025
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.48,
+        0.37,
+        1.99
+      ],
+      "size": [
+        0.45,
+        0.38,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#987144"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.48,
+        0.55,
+        1.99
+      ],
+      "size": [
+        0.49,
+        0.08,
+        0.49
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#c09a61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.48,
+        0.63,
+        1.99
+      ],
+      "size": [
+        0.36,
+        0.22,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "color": "#e4b752"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.94,
+        0.35,
+        1.99
+      ],
+      "size": [
+        0.45,
+        0.34,
+        0.45
+      ],
+      "rotation": [
+        0,
+        -0.1,
+        0
+      ],
+      "color": "#a77b45"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.94,
+        0.51,
+        1.99
+      ],
+      "size": [
+        0.49,
+        0.08,
+        0.49
+      ],
+      "rotation": [
+        0,
+        -0.1,
+        0
+      ],
+      "color": "#c09a61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.94,
+        0.6,
+        1.99
+      ],
+      "size": [
+        0.34,
+        0.25,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.99,
+        0.37,
+        1.44
+      ],
+      "size": [
+        0.45,
+        0.38,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#987144"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.99,
+        0.55,
+        1.44
+      ],
+      "size": [
+        0.49,
+        0.08,
+        0.49
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#c09a61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.99,
+        0.63,
+        1.44
+      ],
+      "size": [
+        0.36,
+        0.22,
+        0.34
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#e4b752"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.48,
+        0.37,
+        1.99
+      ],
+      "size": [
+        0.45,
+        0.38,
+        0.45
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#a77b45"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.48,
+        0.55,
+        1.99
+      ],
+      "size": [
+        0.49,
+        0.08,
+        0.49
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#c09a61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.48,
+        0.64,
+        1.99
+      ],
+      "size": [
+        0.34,
+        0.25,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.94,
+        0.35,
+        1.99
+      ],
+      "size": [
+        0.45,
+        0.34,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "color": "#987144"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.94,
+        0.51,
+        1.99
+      ],
+      "size": [
+        0.49,
+        0.08,
+        0.49
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "color": "#c09a61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.94,
+        0.59,
+        1.99
+      ],
+      "size": [
+        0.36,
+        0.22,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#e4b752"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.99,
+        0.37,
+        1.44
+      ],
+      "size": [
+        0.45,
+        0.38,
+        0.45
+      ],
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "color": "#a77b45"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.99,
+        0.55,
+        1.44
+      ],
+      "size": [
+        0.49,
+        0.08,
+        0.49
+      ],
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "color": "#c09a61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.99,
+        0.64,
+        1.44
+      ],
+      "size": [
+        0.34,
+        0.25,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.54,
+        1.98
+      ],
+      "size": [
+        0.18,
+        0.72,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1,
+        1.98
+      ],
+      "size": [
+        0.94,
+        0.74,
+        0.14
+      ],
+      "rotation": [
+        -0.16,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.22,
+        1.01,
+        2.085
+      ],
+      "size": [
+        0.36,
+        0.58,
+        0.06
+      ],
+      "rotation": [
+        -0.16,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.2,
+        0.96,
+        2.095
+      ],
+      "size": [
+        0.36,
+        0.46,
+        0.06
+      ],
+      "rotation": [
+        -0.16,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.22,
+        1.22,
+        2.08
+      ],
+      "size": [
+        0.08,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.2,
+        1.12,
+        2.1
+      ],
+      "size": [
+        0.08,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    }
+  ]
+}

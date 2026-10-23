@@ -14,6 +14,8 @@ import type { ChatMessage, DialogueRequest, EngineView, WorldCtx, WorldModule } 
 
 export interface EngineFlags {
   kickRepliesEnabled: boolean;
+  /** The world's own notices (the Town Crier) go to Kick chat; separate from agent replies. Absent: on. */
+  crierEnabled?: boolean;
   devTimeScale: number;
 }
 
@@ -52,7 +54,7 @@ export class Engine<S> {
   nextMutterAt = 0;
   /** Set by the pipeline while it replays messages held through an outage. */
   replay: { remaining: number } | undefined;
-  kickSend: ((text: string) => void) | null = null;
+  kickSend: ((text: string, opts?: { queue?: boolean }) => void) | null = null;
 
   private dialogueService: DialogueService;
   private stopWorld?: () => void;
@@ -148,6 +150,7 @@ export class Engine<S> {
         engine.markDirty();
       },
       say: (text, opts) => engine.say(text, opts),
+      announce: (text) => engine.announce(text),
       enqueueTask: (spec) => {
         const r = engine.tasks.enqueue(spec);
         engine.markDirty();
@@ -190,6 +193,15 @@ export class Engine<S> {
     if (opts?.toKick && this.flags.kickRepliesEnabled && this.kickSend) {
       this.kickSend(trimmed);
     }
+    this.markDirty();
+  }
+
+  /** A notice from the world itself: logged, and queued for Kick chat (never dropped for pacing). */
+  announce(text: string): void {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    this.log.push(`[crier] ${trimmed}`);
+    if (this.flags.crierEnabled !== false && this.kickSend) this.kickSend(trimmed, { queue: true });
     this.markDirty();
   }
 

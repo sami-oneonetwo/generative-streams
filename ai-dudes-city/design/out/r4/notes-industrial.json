@@ -1,0 +1,227 @@
+{
+  "elements": [
+    {
+      "id": "street",
+      "problems": [
+        "Long pavement runs read as smooth continuous strips rather than clearly cut flagstone slabs.",
+        "Roadside gutters and wheel-polished or damp surface variation are not clearly readable; evenly spaced bollards dominate the dressing.",
+        "There are 4 long continuous dark strips across the road: rails at z ±0.87 in #364143 and 0.5 m 'wheel-polished' bands at z ±2.2 in #6b7173. Together with the dark gutter strips at z ±3.8, they read as painted lane lines or a double track, both in the cell and in the street-corner scene. The bible says no road markings.",
+        "The rails are at z ±0.87, but the tram stop's rails are at z ±0.75, so the two pieces disagree and the street-corner scene shows doubled or offset rails.",
+        "The piece draws its own 12×1.8 m pavement slabs on top of the age's pavement surface, which doubles the edge.",
+        "The pavement is drawn as a solid #a7a397 box over the renderer's flagstone surface, so the walkway reads as a blank pale strip with no flags",
+        "Kerb #d3c7aa is almost the same value as the pavement, so the raised kerb edge barely reads",
+        "The rails at z ±0.87 (#364143) plus the 'wheel-polished strips' at z ±2.2 make four long stripes that read exactly like painted traffic lanes, which the bible bans",
+        "Drain grates and damp patches are 0.02 m flat specks that are invisible at stream scale",
+        "World rule: roads: set one shared tram gauge for every piece (rails at z ±0.75, steel grey #9aa0a0, flush). Say that wheel-polished strips are short, broken and LIGHTER than the setts, and that no long continuous dark strip may run along x, because it reads as a painted lane line.",
+        "World rule: street / walkingEdge: the age's surfaces already draw the pavement, so pieces add only kerb edges, gutters, grates and bollards and must not lay their own full-length pavement slabs. Limit bollards to 2 per 12 m of street so the joined-up street does not fill with posts.",
+        "World rule: roads: remove 'wheel-polished strips'. Long pale strips plus rails read as painted lanes, which contradicts 'omit painted traffic lanes'. Specify one flush tram-rail pair in steel grey, and forbid covering the pavement with solid boxes (the renderer's flagstone surface must show)."
+      ],
+      "fix": "Keep the unpainted granite setts and flush rails. Divide both raised pavements into broad, visible slabs, define narrow gutters beneath the kerbs, and redistribute the 24 dressing parts between flush grates, restrained wear patches and fewer margin bollards while keeping the carriageway clear. / Recolour the rails to bright steel #9aa0a0 at 0.08 m wide and move them to z ±0.75 to match the tram stop. Delete the two continuous 11.8 m strips at z ±2.2. If you want wheel polish, use 3–4 short broken pieces (1.5–2.5 m long) a shade lighter than the setts (#7d8384), never darker. Make the gutters short sections broken by the drain grates. Remove the 12 m pavement boxes and keep only the sandstone kerb edges. / Delete the two full-length pavement boxes so the flagstone surface shows. Make the kerb a darker sandstone #827f76 strip 0.3 m wide x 0.16 m tall so a clear dark edge separates setts from flags. Remove the two pale 'polished strip' boxes at z ±2.2 entirely. Make the tram rails one pair of steel-grey (#9aa09c) strips 0.1 m wide, flush, each with a thin dark groove beside it, so they read as metal. Drains: 2 bigger 0.6x0.6 dark grates with 3 lighter bars each, set right against the kerb. Keep the four bollards but cap each with a brass #b8914e ring so they read as municipal iron rather than black pegs."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The marker uses a twin-legged open frame instead of the specified single bolted iron post.",
+        "The cream plate is too insubstantial, leaving the availability ring thin and difficult to distinguish in the assembled scene.",
+        "The enamel plate is small, about 0.8 m on short legs. From the 40° camera it is a tiny dark square with a dot, and in the street-corner scene it nearly disappears on the gravel.",
+        "The four survey pegs are tiny white-tipped stubs that read as noise. The 'brick, ballast and weeds' is one red brick, one grey pebble and one green cone.",
+        "The claim plate is only 1.3 x 0.95 m on 1.6 m legs: in a 16 m lot it is a speck in the cell and nearly invisible in the vignette",
+        "The ochre ring is 0.65 m across inside a dark frame: the 'free' symbol is too small to read",
+        "Corner stakes (0.18 m posts) and the brick or ballast clutter are specks",
+        "Dark iron frame on mid-brown gravel is low contrast",
+        "World rule: lotMarkers (free lot): raise the minimum size. The plate must be at least 2.0 x 1.5 m on 2.4 m legs with a ring of at least 1.2 m, turned toward the camera; corner markers at least 0.5 m. The current size makes a speck on a 16 m parcel."
+      ],
+      "fix": "Rebuild the marker around one bolted iron post near x 4.5, z 4.5. Mount a broad cream enamel plate with a thick ochre empty ring and a clearly vacant centre; retain sparse ballast, brick fragments and weeds within the 14-part parcel treatment. / Raise the plate to about 1.6 m on a single bolted iron post, as the bible says, and enlarge it to 1.2 × 0.9 m, cream #f0e5ca with a thick 0.12 m ochre (#b8914e) ring and a dark iron border, angled about 20° towards the camera. Make the 4 corner pegs 0.5 m tall with a broad cream band so they mark out the plot. Group the clutter into one heap: 3 broken bricks, 4 ballast chips and 2 weed tufts near the back corner. / Double the marker. Use a 2.0 x 1.5 m cream enamel plate (#f4e9cf) on two 2.4 m iron legs, with a 1.2 m outer ring in bold ochre #b8914e (0.12 m thick band) around an empty cream centre and a thin dark iron border. Turn the plate 0.5 rad toward the camera (+x). Corner markers: replace the 0.18 m stakes with 0.5 x 0.5 x 0.5 m brick stubs topped with cream caps so the parcel corners read. Group the clutter into one readable heap near the front left: 4-5 bricks of about 0.35 m, a ballast mound 1.2 m wide and 2 weed cones of 0.5 m."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "Different heights help, but both crowns still rely on similarly rounded, clustered foliage balls.",
+        "The plane and elm are distinguished more by size than by branching structure and crown character.",
+        "Both trees are crowns of 5 near-equal green spheres in a tight round cluster on a bare stick trunk. In the cell and the street-corner scene they look like twin lollipop or broccoli trees, which Sami explicitly does not want.",
+        "Every crown centre sits at z 4.4–4.65, so each crown is a flat wall along x with no depth, and the two trees have almost the same shape, height and green.",
+        "The 'plane' and the 'elm' cannot be told apart: neither has the plane's mottled bark or the elm's vase shape.",
+        "Both trees are the same recipe: a long straight brown pole topped with a 5-sphere 'broccoli' crown in near-identical greens. They look cloned, and the brief demands visible variety",
+        "In the vignette the long bare trunks with crowns only at the top read like palm trees, not a plane and an elm",
+        "The pale bark-patch boxes stuck flat on the plane trunk look like stickers",
+        "The crowns overhang the road by about 2 m, crowding the tram line",
+        "World rule: trees: add 'built from 6–8 crown blobs of mixed size spread in depth (z) as well as x, with visible limbs; the two street trees differ in silhouette (domed plane versus vase-shaped elm), height and green; no tight sphere clusters on bare sticks'.",
+        "World rule: trees: specify contrasting silhouettes, not just species names. Plane = tall narrow oval crown, grey-olive trunk; elm = low, wide, flat umbrella crown on a forked trunk, about 2 m shorter. Crowns must not overhang the road past |z| 2.5. Raise the street-pair budget to about 40 parts."
+      ],
+      "fix": "Within the 30-part pair, give the plane a visible leaning fork and an offset crown. Make the shorter elm substantially wider and uneven, using flatter angular foliage masses, exposed branch gaps and unequal lobe sizes; retain small pavement openings and low iron root guards. / Plane (x -3): a straight trunk to 3 m, then 3 limbs angled out 25–35°. Spread 6–7 crown blobs of mixed sizes (1.4–2.6 m) over z 3.6–6.0, heaviest on the street side, with a gap so one limb shows through. Add 3 pale patches #c8c1ad on the trunk for the mottled bark. Elm (x 3): a trunk that forks at 2 m into 2 rising limbs in a V, with a crown wider at the top (vase shape), flattened blobs (height about 0.6 × width) in darker #4a6339, and 1.5 m shorter than the plane. Give each tree its own green and keep both root guards. / Make the two read as different species by silhouette. Plane (x -3): a tall narrow oval crown from 3-4 vertically stacked, slightly squashed spheres (2.0 w x 2.6 h) in yellow-green #7e9956 and #8fa660. Give it a mottled grey-olive trunk (#8f8a74) about 3 m to the first fork, with 2 limbs visibly entering the crown, and drop the sticker patches. Elm (x 3): a short trunk (2.2 m) forking into 3 limbs that splay outward, carrying a wide flat umbrella crown of 4 flattened spheres (3.0 w x 1.3 h) in dark #4f6b3f and #3f5a35, lopsided toward -x, about 2 m lower than the plane. Pull both crowns back so nothing extends past z 2.5 over the road. Keep the iron root guards but make them 0.25 m tall with a brass rim so they read."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "Repeated spherical foliage makes the group read as generic ornamental trees despite the varied heights.",
+        "The tall ash lacks a clearly readable fork, while the mature elm needs a more convincing broad branch structure.",
+        "The ash and the elm are both stacked-sphere clusters, similar size and green, so they blur into one blob",
+        "The birch is a white stick with small pale spheres stuck to its sides, which reads as a lollipop skewer and is very thin against the meadow",
+        "The bush and log are tiny",
+        "World rule: trees: add 'built from 6–8 crown blobs of mixed size spread in depth (z) as well as x, with visible limbs; the two street trees differ in silhouette (domed plane versus vase-shaped elm), height and green; no tight sphere clusters on bare sticks'."
+      ],
+      "fix": "Reallocate the 36 parts toward a strong forked ash trunk, a laterally spreading elm and a sparse, crooked birch. Replace repeated foliage balls with unequal faceted masses and leave irregular gaps through the crowns. / Ash: tall (10-11 m) and open. Use a slim trunk with 3 visible upward limbs and 4 small separated crown clumps with gaps between them, so sky shows through. Elm: broad and low (7 m), with a thick dark trunk (#5b4636) and a wide flattened dome made of 5 large spheres in dark green #4f6b3f. Birch: a slender white trunk (0.25 m) with 2-3 dark bark bands, and one narrow teardrop crown from 2 stacked cones or oval spheres (1.6 w x 3 h) in light #a4ad7b leaning 0.15 rad. Make the scrub a 1.5 m wide 3-sphere bush, and the log 2 m long x 0.35 m."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "A civic clock has replaced the explicitly required cast-iron fountain.",
+        "This changes the centrepiece's service rather than preserving its purpose through the age upgrade.",
+        "The lower basin, upper bowl, four spouts and visible blue water are absent.",
+        "It is a cast-iron civic clock, not the cast-iron fountain the bible asks for, so piece and bible disagree.",
+        "The shaft is as wide as the clock head, so the whole thing is one dark slab. In the street-corner scene it reads as a black pillar box or phone booth, not the proud heart of the square.",
+        "The four lanterns on thin posts copy the street gas lamp, and the clock faces are small cream discs that are hard to read from the camera.",
+        "World rule: centrepiece: the bible asks for a cast-iron fountain, which is close to today's stone fountain (the thing Sami asked to change), and the design has already moved to a civic clock. Rewrite the rule as: a cast-iron four-faced civic clock (about 6.5 m) on a 4.5 m octagonal sandstone stepped base people sit on, with a slim fluted column, large cream faces, a brass finial, and lamps fixed to the column rather than separate posts. No fountain.",
+        "World rule: centrepiece: replace the cast-iron fountain rule with the four-faced cast-iron civic clock column on a stepped sandstone plinth (about 6 m tall, 4.5 m plinth, four short gas-lamp standards at the corners). The modern age already has the fountain, so a clock separates the ages and is what the design delivers."
+      ],
+      "fix": "Replace the clock with the specified 52-part fountain: a stone plinth about 4.5 m across, broad dark-iron lower basin, short fluted column, shallow upper bowl and four modest brass spouts. Keep the assembly around 2.4 m high and make the blue water clearly visible but non-emissive. / Slim the shaft to a 0.6 m fluted column (#263f40) with a brass band halfway up. Make the head a wider 1.4 m square case with four 1.0–1.1 m cream (#f2e8cc) faces with bold black hands and brass rims. Add a pyramid or ogee cap and a brass finial at about 6.5 m. Widen the sandstone steps to a 4.5 m octagon with 2 visible tiers people can sit on. Cut the corner lanterns to 2 short, stout lamps on the steps, or fit them to the column as brackets."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "The canopy reads as a rigid roof slab on four posts rather than a folding canvas cover.",
+        "That roof treatment pulls the otherwise convincing wheeled barrow toward a miniature fixed kiosk."
+      ],
+      "fix": "Keep the barrow, large wheels and projecting handles, but rebuild the cover with two broad folding supports and a visibly draped canvas edge. Separate the bread, tins, newspaper bundle and wrapped parcels into bold contrasting groups within the existing footprint and 34-part budget."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The stop emblem reads as a plain ochre disc rather than an enamel tram-wheel symbol.",
+        "The timetable case disappears into the dark stop furniture at scene distance.",
+        "The shelter is a solid 2 m dark-green back panel, two posts and a deep flat roof over a bench. It is the shape of today's bus shelter painted green.",
+        "The 'tram' is a small exposed locomotive with a separate coach behind it. It is closer to a toy train than a steam tram (the boiler and cab should be inside one boxy tram body).",
+        "The stop-pole emblem renders as a yellow hook or question mark rather than a readable tram wheel. Its rails at z ±0.75 do not match the street piece's ±0.87. One part sits outside the room.",
+        "World rule: roads: set one shared tram gauge for every piece (rails at z ±0.75, steel grey #9aa0a0, flush). Say that wheel-polished strips are short, broken and LIGHTER than the setts, and that no long continuous dark strip may run along x, because it reads as a painted lane line.",
+        "World rule: arrival: add 'the stop canopy is open, two slim fluted posts carrying a small glazed or slate canopy with no solid back panel; it must not look like a modern bus shelter' and 'the steam tram is one enclosed boxy tram body with the motor cab coupled tight, not an exposed locomotive pulling a coach'."
+      ],
+      "fix": "Retain the compact boiler, chimney, exposed wheels and timber passenger cabin. Give the stop a cream enamel roundel with a bold dark wheel-and-spoke graphic and a separate pale timetable face; keep the canopy narrow enough to leave a continuous paved walking route. / Replace the shelter with an open cast-iron canopy: 2 slim fluted posts, a 2.4 × 1.0 m glazed or slate-pitched roof with a cream valance and no back panel, and the bench left in the open. Rebuild the vehicle as one 5 m tram: a box steam-motor cab (dark green, enclosed, with a short chimney through the roof) coupled tight to a double-length timber saloon with a clerestory roof, with wheels mostly hidden behind valances. Make the wheel emblem a cream disc with 6 dark spokes, facing the camera. Rails at z ±0.75, the same as the street."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The deck appears to finish against raised retaining-wall edges instead of visibly flush carriage approaches.",
+        "Stone pier noses and structural connections are not sufficiently legible to sell the crossing as an engineered viaduct.",
+        "The bank walls are smooth #a7a397 slabs 1.24 m tall that read as modern poured concrete, not stone",
+        "The pale #83b6bd ripple boxes are long, straight and evenly spaced, so they read as white lane dashes on a blue road",
+        "The stone piers sit under the deck and are invisible; the deck seems to float on the walls",
+        "Reeds are a few lone cones lost in the corners"
+      ],
+      "fix": "Open the retaining walls at both bridge mouths and align the timber deck with real bank landings at z ±7, approximately 1 m above water. Within the 68 parts, strengthen the stone supports with projecting noses and add a few oversized rivet connections while retaining the shallow open lattice rails. / Build the bank walls as rusticated sandstone. Make each run 3-4 blocks of slightly different heights in #b5a993, #a39a85 and #c8bfa6, with a darker #827f76 coping strip on top. Replace the four dash boxes with 6-8 short, curved ripple pairs (2 small flattened spheres of 0.6 x 0.04 x 0.25 m) of varied size near the piers and banks. Make the piers visible: 2 stone piers of 1.4 m wide at z ±2.4, projecting 0.6 m outside the deck on both sides, each with a pointed cutwater nose (rotated box at 0.785) facing upstream. Add 2 reed clumps of 4-5 cones (0.8-1.2 m) at each bank corner."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The visible siding terminates within the meadow instead of continuing off the camp tile.",
+        "The distant railway network is weakly communicated because carriage crests and trunk labels do not read at this scale.",
+        "The siding ends in open grass at both ends. Nothing shows the track carrying on off the tile, so it breaks the bible rule 'the train must not sit inexplicably on grass'.",
+        "The only light is 2 tiny gas globes (0.25 m) on the table, so there is no warm gathering point. From above the camp reads as a parked train with a picnic table.",
+        "4 parts are outside the room."
+      ],
+      "fix": "Extend the siding through the tile boundary and provide a matching adjoining rail connection; do not merely lengthen the isolated track stub. Retain both luxurious carriages, locomotive and striped veranda, then add bold foreign railway crests and contrasting trunk-label blocks within the 88-part budget. / Carry the rails and sleepers to the tile edge at x 7 with a ballast bed that fades out. On the west end add a timber buffer stop painted red and white, plus a set of points curving off at the corner. Make the gathering table a proper focus: a 1.6 m-tall standard gas lamp with a 0.5 m glowing globe beside it, and 2 more glowing lamps hung under the veranda awning. Pull everything inside |x|,|z| ≤ 7."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "The assembled square confirms the loss of the fountain service rather than this being a sheet-only substitution.",
+        "Jointless pavement runs and generic rounded tree crowns weaken the otherwise coherent period architecture.",
+        "The free-lot ring and tram-stop emblem lose definition at actual scene distance.",
+        "World rule: centrepiece: the bible asks for a cast-iron fountain, which is close to today's stone fountain (the thing Sami asked to change), and the design has already moved to a civic clock. Rewrite the rule as: a cast-iron four-faced civic clock (about 6.5 m) on a 4.5 m octagonal sandstone stepped base people sit on, with a slim fluted column, large cream faces, a brass finial, and lamps fixed to the column rather than separate posts. No fountain."
+      ],
+      "fix": "Reassemble the corner with the revised fountain, pavements, tree crowns and enamel markers. Validate their silhouettes and symbols at this exact camera distance, using the residents as scale references and keeping a continuous walking route past trees, lamps, the stop and café seating."
+    },
+    {
+      "id": "ground",
+      "problems": [
+        "The 'cinder patch' is a flat, dark charcoal rectangle with square corners. From above it reads as a patch of modern asphalt or a manhole slab, not cinders.",
+        "Only about 4 small clusters on a 12 m tile, so the countryside looks empty and nothing beyond the one sleeper says 'industrial'.",
+        "Only four tiny clumps in a 12 m tile: at board scale the cell reads as empty green felt with specks",
+        "The cinder patch is a flat #42494c slab (1.2x0.8) that reads as a black hole or shadow, not cinders",
+        "Wildflowers are 0.3 m boxes sitting on top of cone tufts like little cubes, not flowers",
+        "The sleeper offcut and stone are tiny and lost",
+        "World rule: countryside dressing: raise from 16 to 24-30 parts in 8-10 clusters with tufts of 0.6-0.9 m. At 16 tiny parts the meadow reads empty from the camera."
+      ],
+      "fix": "Replace the dark rectangle with 5–7 small irregular cinder lumps (boxes 0.15–0.3 m, rotated at random, #3e3a36 and #5a524a) spread over about 1.5 m, plus a few pale ballast chips. Lay 2 sleepers at an angle to each other instead of 1. Add 2 more coarse grass tufts and a small group of rosebay willowherb (pink #c46a9a spikes, 0.5 m), so most of the meadow stays healthy but the railway edge reads clearly. / Use 24-30 parts in 8-10 clusters spread over the whole tile. Grass tufts should be bigger and irregular: 3-5 cones of 0.6-0.9 m tall per clump, mixing #596f52 and #a4ad7b, tilted at varied angles. Make flowers small spheres (0.18 m) in #f2cf83 and #d9534f scattered beside the tufts instead of cubes on top. Recolour the cinder patch to warm grey #6d6a60, give it an irregular shape from 2-3 overlapping flat boxes, and add 3-4 small dark lumps on it. Make the sleeper a clear 2.0x0.2x0.25 m #6b5140 timber with a rusty spike, and add 2 fieldstones of about 0.5 m."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The owner nameplate (2.2 × 0.8 m at x -5.2, z 6) has a red top stripe and thin dark letter bars that read as red-and-white barrier stripes. The name 'IVY' cannot be read at board scale.",
+        "The plate hangs to x -6.3 and the rail runs past the lot (9 parts outside the room), so it collides with the neighbouring lot.",
+        "The small red post in the middle of the frontage (seen in the street-corner scene) has no clear purpose and looks like a modern traffic bollard.",
+        "The owner nameplate (2.2 x 0.8 m at y 1.6) hangs off the corner at x -6.3, outside the boundary, and its 'lettering' is a dozen 0.12 m dark box strokes that render as unreadable scribble",
+        "Owner red #d9534f shows only as two tiny 0.4 m post caps and a thin strip, so the ownership colour does not read from the camera",
+        "The railing is two 0.14 m black bars with no verticals: from above it reads as a black hose or pipe lying on a brick kerb, not an iron fence",
+        "The paired pale slab path in the middle looks like a dropped plank and is unexplained",
+        "World rule: ownerMarker: drop 'exact player name in painted lettering' as geometry. Box glyphs render as scribble. Specify a clean cream name field (the game overlays the name) plus a bold owner-red band and a filled red oval emblem, mounted inboard on the gate post, not hanging past x -6.",
+        "World rule: boundaries: allow 50-60 parts so the iron rail can have vertical pickets every 1 m. Two horizontal bars with no verticals read as a pipe, not a fence."
+      ],
+      "fix": "Move the plate onto the inner face of the gate post at x -5.6, keeping it within x ≥ -6. Make the letters 0.5 m tall from bars at least 0.14 m thick in #263f40, on a cream field with a narrow #d9534f top band, not a broad one. Cut the boundary courses to 12.0 m so they stop at ±6. Remove the stray red post, or make it the second gate post with a #d9534f cap that matches the first. / Move the nameplate inboard onto the front gate post at x -5.6, z 5.7, and make it a 1.6 x 0.7 m cream enamel plate with a 0.1 m brass border. Fill the whole upper third with an owner-red band, and put a filled red oval emblem of 0.4 m on the left. Drop the box-glyph letters: the game will overlay the real name, so leave a clean cream field. Cap both gate posts with 0.5 m red #d9534f pyramids or cones. Rebuild the rail as 0.9 m panels: keep the top and bottom rails and add vertical pickets of 0.08 x 0.6 m every 1.0 m along both runs (about 24 parts), with a slightly heavier post every 3 m. Lighten the iron to #30494a so it separates from shadows. Replace the two-slab path with a 1.2 m wide flagstone path running from the gate gap to z 0, made of 4 separate slabs."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "The flat dark roof inside a cream parapet, the wide striped awning and the black café chairs on a pale paved terrace read as today's corner café with a brick finish.",
+        "The tiled shopfront and the enamel sign the bible asks for are not visible, and the teacup crest is a small blob. 4 parts are outside the room.",
+        "From the overhead camera most of the build is a flat 8.8 x 6.6 m dark grey roof slab, which reads as an empty black box lid",
+        "The outdoor seating is cream discs with black block chairs that read like tombstones or domino dots",
+        "The brass cup sign sits on the back of the parapet and is small relative to the roof"
+      ],
+      "fix": "Replace the flat roof with a pitched slate roof (#42494c) or a mansard with 2 dormers, and add 2 chimney stacks. Give the ground floor a timber shopfront with glazing bars, green-and-cream glazed tile pilasters, and a long cream enamel fascia with a dark border and a 1 m brass teacup in the middle. Swap the terrace chairs for 2 cast-iron tables with bentwood chairs in dark iron and timber, and keep the whole terrace within ±6.5. / Replace the flat roof with a shallow pitched slate roof (two rotated boxes in #4a5257) with a light #d3c7aa ridge, a glazed skylight strip and two chimney pots, so the top view has form. Move the cup sign to the front parapet edge and scale it to 1.6 m with a cream enamel 'board' behind it. Chairs: use bentwood shapes, a 0.4 m seat box in #8b6245 plus a thin dark back, not solid black blocks. Add 3 small striped parasols over the tables in the awning green and cream."
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "The tower is a grid of large blue-glazed windows between thin pilasters. Under the copper dome it reads as a modern office tower painted brick, not the 'stepped brick-and-iron commercial building' the bible describes.",
+        "16 parts are outside the 16 m room, so it overhangs its lot.",
+        "World rule: designDirection, skyscraper: say 'masonry piers dominate; windows are paired sash openings, not a continuous glass grid; at most about 10 storeys, set back in 2 steps; stays inside the parcel'."
+      ],
+      "fix": "Make the masonry dominant: brick piers at least 0.6 m wide, windows cut down to paired sash windows about 1.2 × 1.8 m with sandstone sills, and a heavy rusticated sandstone ground floor with arched openings. Set the tower back in 2 steps (podium, a 6-storey shaft, then a 2-storey crown with a cornice), keep the copper dome, and pull every part inside ±7.5."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The flame sphere (0.3 m) sits under a 1.06 m roof cone that overhangs the 0.8 m cage, so from the 40° overhead view the light is hidden: the lantern reads as a dark cube with two white slivers",
+        "Only two glass panels (x ±0.35) and they are blue-white, so there is no warm 'lit' read",
+        "The whole lamp is #263f40, near-black against dark setts"
+      ],
+      "fix": "Make all four sides of the lantern warm glass: 4 panels of 0.55 x 0.6 m in #ffe7a8 with glow=true on the panels too, or make the flame sphere 0.45 m with glow. Shrink the roof cone to 0.85 m wide x 0.25 m and add a small brass finial on top. Raise the lantern to 4.0 m so it sits clearly above a person. Give the post a brass collar at 1.0 m and under the lantern, and lighten the iron to #30494a so the silhouette separates from the grey setts."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The clerk's 'hair pin' is a 0.38 m gold bar floating at y 2.03 above and behind her head, reading as a propeller or antenna",
+        "The mechanic's tool case hangs through his arm (arm bottom 0.82, case top 0.79, same x), a part collision",
+        "The clerk's dark #263f40 skirt and the mechanic's #42494c trousers both go near-black; the two read mainly by their cream shirt and green jacket"
+      ],
+      "fix": "Delete the floating gold bar. Either sit a 0.12 m brass comb flush on the back of the bun (y 1.92, z -0.2), or give her a small straw boater: a 0.42 m flat cylinder plus a 0.3 m crown in #d8c48a with a red band. Move the tool case to x -1.0 so it hangs below the hand, with a 0.06 m handle box connecting the hand to the case. Lift the mechanic's trousers to mid-grey-brown #6a5a48 and give the skirt a deep plum or navy #3c3f5c so both figures separate from the ground."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The brass medallion (0.42 m disc at y 1.2), chain V and vertical charter scroll held at chest height all overlap in front of the chin and chest, forming one gold-and-cream clump that reads like a tuba or a bouquet",
+        "The raised forearm (rotated -1.15) points straight at the camera and is hidden by the scroll",
+        "The coat #30494a is nearly black, so the chain is the only read and it is clumped"
+      ],
+      "fix": "Lower the medallion to y 1.0 and keep the chain as two clean brass straps from the shoulders forming a clear V on the coat front, with nothing in front of it. Put the charter in the right hand at the side: an arm hanging at x 0.33, and the scroll horizontal (rotation z 1.57) at y 0.9, x 0.45, length 0.6 m, with a red seal ribbon. Lift the coat to a richer dark green-black #2e4a3c with a 0.06 m brass button line, so the black top hat stands apart from the coat."
+    },
+    {
+      "id": "dog",
+      "problems": [
+        "The rust-tan body #b0703c is almost the same hue and value as the terracotta brick ground (#a26048 / #c27f59), so on claimed lots and the display disc the dog melts into the floor except for its white socks",
+        "The collar is a 0.39 x 0.12 x 0.37 m brass slab that reads like a neck ruff or a plate around the head",
+        "The tail is a thin stick"
+      ],
+      "fix": "Recolour to a contrasting coat: a black-and-tan or liver #5a3826 body with a cream chest, muzzle and socks, keeping the dark ears. Make the collar a 0.06 m tall dark leather band #3a2c22 that wraps the neck, with one 0.12 m brass tag disc hanging at the front. Thicken the tail to 0.12 m with a cream tip, angled up at 0.6 rad."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "The brougham cab reads beautifully, but the horse is pony-sized next to it (back about 1.6 m against a 2.7 m cab) and its head (0.34 m box) is lost, so it reads as a headless brown box",
+        "The cream collar frame and dark straps across the horse's body make stripes that read like a barrel or zebra banding",
+        "The bay #965536 horse on the brick display ground has low contrast"
+      ],
+      "fix": "Scale the horse up 20% (withers about 1.6 m, body 0.9 x 0.75 x 2.1 m). Add a clear neck of 0.4 x 1.0 m angled up 0.7 rad, a 0.32 x 0.42 x 0.75 m head angled down toward the road, ears and a black mane strip. Recolour it to dark bay #5e3a24 with black lower legs and a black tail. Simplify the harness to one dark collar ring at the shoulders and one thin breast strap; delete the cream frame."
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "name": "Reed-Mat Limestone Square Bench",
+  "description": "A thick limestone slab seats two at 0.45 m above the ground on visible rubble-and-mudbrick feet, with an undyed reed straw mat and a half-metre pottery water jar.",
+  "notes": "Warm hand-cut limestone, dark stacked mudbrick supports and an undyed reed straw mat establish Bronze Age craft, with open shadow gaps beneath the seat and no added paving.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -0.72,
+        0.07,
+        0.025
+      ],
+      "size": [
+        0.46,
+        0.14,
+        1
+      ],
+      "rotation": [
+        0,
+        0.045,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.72,
+        0.205,
+        0.015
+      ],
+      "size": [
+        0.45,
+        0.13,
+        0.96
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#b8a37a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.72,
+        0.075,
+        -0.015
+      ],
+      "size": [
+        0.46,
+        0.15,
+        1
+      ],
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.72,
+        0.21,
+        0.005
+      ],
+      "size": [
+        0.44,
+        0.12,
+        0.95
+      ],
+      "rotation": [
+        0,
+        0.03,
+        0
+      ],
+      "color": "#b8a37a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.36,
+        0
+      ],
+      "size": [
+        2.4,
+        0.18,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c4ab78"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.07,
+        0.48,
+        0
+      ],
+      "size": [
+        1.65,
+        0.06,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0.087266,
+        0
+      ],
+      "color": "#cbb578"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.5083,
+        0.487,
+        0.0383
+      ],
+      "size": [
+        0.06,
+        0.06,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0.087266,
+        0
+      ],
+      "color": "#a67c45"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.07,
+        0.487,
+        0
+      ],
+      "size": [
+        0.06,
+        0.06,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0.087266,
+        0
+      ],
+      "color": "#a67c45"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.3683,
+        0.487,
+        -0.0383
+      ],
+      "size": [
+        0.06,
+        0.06,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0.087266,
+        0
+      ],
+      "color": "#a67c45"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.56,
+        0.18,
+        0.12
+      ],
+      "size": [
+        0.46,
+        0.36,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.56,
+        0.355,
+        0.12
+      ],
+      "size": [
+        0.23,
+        0.19,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.56,
+        0.455,
+        0.12
+      ],
+      "size": [
+        0.3,
+        0.07,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ca8b5e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.56,
+        0.47,
+        0.12
+      ],
+      "size": [
+        0.18,
+        0.06,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#563927"
+    }
+  ]
+}

@@ -1,0 +1,388 @@
+{
+  "name": "Oak Gallows Horn Lantern",
+  "description": "A stout, stone-footed oak gallows bracket suspends a broad horn lantern with an exposed golden flame beneath a pitched iron-grey cap.",
+  "notes": "Heavy braced timber, simple chain suspension and pale horn panels give this hand-tended medieval corner light a clear silhouette without a Victorian lamp standard or raised sidewalk.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        0.2,
+        5
+      ],
+      "size": [
+        0.7,
+        0.4,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.5,
+        5
+      ],
+      "size": [
+        0.36,
+        2.6,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.4,
+        2.66,
+        5
+      ],
+      "size": [
+        1.15,
+        0.22,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.29,
+        2.27,
+        5
+      ],
+      "size": [
+        0.14,
+        0.85,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        2.49,
+        5
+      ],
+      "size": [
+        0.06,
+        0.12,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        2.37,
+        5
+      ],
+      "size": [
+        0.09,
+        0.12,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        2.27,
+        5
+      ],
+      "size": [
+        0.28,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4a5157"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.75,
+        2.17,
+        5
+      ],
+      "size": [
+        0.08,
+        0.2,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4a5157"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.95,
+        2.17,
+        5
+      ],
+      "size": [
+        0.08,
+        0.2,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4a5157"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        0.96,
+        5
+      ],
+      "size": [
+        0.74,
+        0.12,
+        0.74
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4a5157"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.55,
+        1.42,
+        4.7
+      ],
+      "size": [
+        0.1,
+        0.84,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.15,
+        1.42,
+        4.7
+      ],
+      "size": [
+        0.1,
+        0.84,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.55,
+        1.42,
+        5.3
+      ],
+      "size": [
+        0.1,
+        0.84,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.15,
+        1.42,
+        5.3
+      ],
+      "size": [
+        0.1,
+        0.84,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        1.42,
+        5.3
+      ],
+      "size": [
+        0.52,
+        0.78,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2d38a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.55,
+        1.42,
+        5
+      ],
+      "size": [
+        0.06,
+        0.78,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2d38a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.88,
+        1.08,
+        4.96
+      ],
+      "size": [
+        0.38,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.9,
+        1.4,
+        4.92
+      ],
+      "size": [
+        0.4,
+        0.5,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "color": "#ffcf6a",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.63,
+        1.99,
+        5
+      ],
+      "size": [
+        0.53,
+        0.1,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
+      ],
+      "color": "#4a5157"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.07,
+        1.99,
+        5
+      ],
+      "size": [
+        0.53,
+        0.1,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.6
+      ],
+      "color": "#4a5157"
+    }
+  ]
+}

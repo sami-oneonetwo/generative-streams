@@ -1,0 +1,235 @@
+{
+  "name": "Unclaimed Lot with Clay Availability Ring",
+  "description": "A forked timber post holds a large empty pale-ochre clay ring above sparse pottery, dry grass and a stone weight, leaving the lot open for a newcomer.",
+  "notes": "The hand-formed clay ring and worked timber fork express Bronze Age craft while preserving the wordless open-loop symbol of available ground.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.66,
+        4.66
+      ],
+      "size": [
+        0.22,
+        1.32,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.34,
+        1.35,
+        4.66
+      ],
+      "size": [
+        0.16,
+        0.7,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0.48
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.66,
+        1.35,
+        4.66
+      ],
+      "size": [
+        0.17,
+        0.72,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.48
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2.569,
+        4.5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ead7aa"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.01,
+        2.275,
+        4.5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.0472
+      ],
+      "color": "#ddbd84"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.01,
+        1.685,
+        4.5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        1.0472
+      ],
+      "color": "#ddbd84"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.391,
+        4.5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d2bb87"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.99,
+        1.685,
+        4.5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.0472
+      ],
+      "color": "#ead7aa"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.99,
+        2.275,
+        4.5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        1.0472
+      ],
+      "color": "#ead7aa"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.24,
+        0.16,
+        4.79
+      ],
+      "size": [
+        0.56,
+        0.32,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.32,
+        0
+      ],
+      "color": "#ae9568"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.45,
+        0.055,
+        4.12
+      ],
+      "size": [
+        0.36,
+        0.09,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.58,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.15,
+        0.21,
+        3.94
+      ],
+      "size": [
+        0.33,
+        0.38,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.2
+      ],
+      "color": "#b5a66b"
+    }
+  ]
+}

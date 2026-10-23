@@ -10,21 +10,34 @@ import { addEffect, awake, endUse, face, shake, walkTo } from './sim';
 import { nudge } from './events';
 import { LIMITS, pushFeed, pushLine, type Dude, type DudesState, type Npc } from './state';
 import { leaveVisit } from './city';
+import { damageBuild } from './damage';
+import { WEAPON, armedBuild, blast, fire } from './weapons';
 
 export const COMBAT = {
   range: { shove: 1.3, punch: 1.3, kick: 1.3, shoot: 14, throw: 9, bomb: 2 } as Record<AttackWith, number>,
   hit: { shove: 1, punch: 0.7, kick: 0.7, shoot: 0.75, throw: 0.6, bomb: 1 } as Record<AttackWith, number>,
   koMs: 10_000,
+  /** Back up after a knockout: nobody can knock them flat again for this long (no chain knockouts). */
+  koGuardMs: 7000,
   npcKoMs: 4000,
   fuseMs: 3000,
-  blast: 4.5, // metres
+  blast: 3, // metres
   runFrom: 6, // a bomber runs this far from a lit bomb
-  giveUpMs: 30_000, // can't get in range in this long, forget it
+  giveUpMs: 60_000, // can't get in range in this long, forget it (the town is a minute's walk across)
   runOverReach: 1.3,
+  /** At a build: how much each blow takes off (damage.ts), and how many blows one attack lands. */
+  buildDamage: { shove: 0, punch: 2, kick: 2, shoot: 3, throw: 2, bomb: 45 } as Record<AttackWith, number>,
+  blows: { shove: 1, punch: 5, kick: 5, shoot: 6, throw: 4, bomb: 1 } as Record<AttackWith, number>,
+  blowMs: 700,
+  /** Aboard a build with a gun: shells per attack. */
+  shells: 4,
 };
 
 const dist = (a: GroundPoint, b: GroundPoint) => Math.hypot(a.x - b.x, a.z - b.z);
 export const knockedOut = (d: Dude, now: number) => !!d.ko && d.ko.until > now;
+/** Knocked out, then back up: not again before this (server time). */
+const koGuard = new WeakMap<Dude, number>();
+export const koGuarded = (d: Dude, now: number) => (koGuard.get(d) ?? 0) > now;
 
 type Target = { kind: 'dude'; dude: Dude } | { kind: 'npc'; npc: Npc } | { kind: 'object'; object: SafehouseObject };
 function find(state: DudesState, kind: 'dude' | 'npc' | 'object' | 'boss', id: string): Target | undefined {
@@ -54,8 +67,9 @@ function score(state: DudesState, id: string, field: 'kos' | 'downs'): void {
 
 /** Knock a character out: flat on its back for a few seconds, whatever it was doing set aside. */
 export function knockOut(state: DudesState, victim: Dude, by: Dude | undefined, how: string, now: number, opts: { ms?: number; quiet?: boolean } = {}): void {
-  if (knockedOut(victim, now) || victim.hidden) return;
+  if (knockedOut(victim, now) || victim.hidden || koGuarded(victim, now)) return;
   const ms = opts.ms ?? COMBAT.koMs;
+  koGuard.set(victim, now + ms + COMBAT.koGuardMs);
   endUse(state, victim, now);
   victim.attack = undefined;
   leaveVisit(victim);
@@ -98,10 +112,46 @@ function pick<T>(list: T[]): T {
 
 /** Start an attack: resolve nothing here but the target; walk into range in `runAttack`. */
 export function startAttack(state: DudesState, dude: Dude, kind: 'dude' | 'npc' | 'object' | 'boss', targetId: string, how: AttackWith, now: number): void {
-  endUse(state, dude, now);
+  // Aboard a tank, a shot (or a bomb, or a throw) is its cannon: they stay in it.
+  if (!gunAboard(state, dude) || (how !== 'shoot' && how !== 'bomb' && how !== 'throw')) endUse(state, dude, now);
   dude.emote = undefined;
-  dude.attack = { with: how, kind, targetId, phase: 'going', giveUpAt: now + COMBAT.giveUpMs };
+  dude.attack = { with: how, kind, targetId, phase: 'going', giveUpAt: now + COMBAT.giveUpMs, ...(kind === 'object' ? { left: COMBAT.blows[how] } : {}) };
   dude.path = [];
+}
+/** The build with a gun this character is driving or riding, if any. */
+function gunAboard(state: DudesState, dude: Dude) {
+  const o = dude.riding && dude.use && (dude.use.how === 'drive' || dude.use.how === 'ride') ? state.objects.find((x) => x.id === dude.riding) : undefined;
+  return o && armedBuild(o) ? o : undefined;
+}
+
+/** Aboard a tank: drive into range of the target, then fire its cannon every beat until the shells are spent. */
+function runTank(state: DudesState, dude: Dude, tank: NonNullable<ReturnType<typeof gunAboard>>, t: Target, now: number): void {
+  const a = dude.attack!;
+  const target = where(t);
+  const from = tank.driven?.at ?? tank.position;
+  const range = WEAPON.cannon.range * 0.85 + reachOf(t);
+  const use = dude.use!;
+  if (dist(from, target) > range) {
+    // Head for it: the run's route is pointed at the target, and the run goes on a while longer.
+    const last = use.route?.at(-1);
+    if (!last || dist(last, target) > range * 0.6) {
+      const dx = from.x - target.x,
+        dz = from.z - target.z,
+        d = Math.hypot(dx, dz) || 1;
+      use.route = [clampToGround({ x: target.x + (dx / d) * range * 0.6, z: target.z + (dz / d) * range * 0.6 }, 2)];
+    }
+    use.until = Math.max(use.until ?? now, now + 20_000);
+    return;
+  }
+  use.route = [];
+  use.until = Math.max(use.until ?? now, now + 6000);
+  if ((a.nextAt ?? 0) > now) return;
+  a.nextAt = now + 1500;
+  tank.driven = { ...tank.driven!, turn: Math.atan2(target.x - from.x, target.z - from.z) };
+  dude.facing = tank.driven.turn;
+  fire(state, { id: dude.id, name: dude.name, position: dude.position, facing: dude.facing, dude, vehicle: tank }, 'cannon', target, now);
+  a.left = (a.left ?? COMBAT.shells) - 1;
+  if (a.left <= 0 || (t.kind === 'object' && t.object.destroyedAt !== undefined)) dude.attack = undefined;
 }
 
 /** Walk into range, then strike, shoot, throw, or plant the bomb and run. */
@@ -115,11 +165,13 @@ export function runAttack(state: DudesState, dude: Dude, now: number, rng: () =>
     return;
   }
   const t = find(state, a.kind, a.targetId);
-  if (!t || now > a.giveUpAt || (t.kind === 'dude' && (t.dude.hidden || knockedOut(t.dude, now)))) {
+  if (!t || now > a.giveUpAt || (t.kind === 'dude' && (t.dude.hidden || knockedOut(t.dude, now))) || (t.kind === 'object' && t.object.destroyedAt !== undefined)) {
     if (t && now <= a.giveUpAt) pushLine(dude.history, { from: 'world', text: `${nameOf(t)} was out of reach`, at: now }, LIMITS.history);
     dude.attack = undefined;
     return;
   }
+  const tank = gunAboard(state, dude);
+  if (tank && (a.with === 'shoot' || a.with === 'bomb' || a.with === 'throw')) return runTank(state, dude, tank, t, now);
   const at = where(t);
   const range = COMBAT.range[a.with] + reachOf(t);
   if (dist(dude.position, at) > range) {
@@ -137,6 +189,7 @@ export function runAttack(state: DudesState, dude: Dude, now: number, rng: () =>
   dude.path = [];
   dude.walkingFor = undefined;
   face(dude, at);
+  if ((a.nextAt ?? 0) > now) return; // between blows on a build
   const verb = { shove: 'shoved', punch: 'punched', kick: 'kicked', shoot: 'shot', throw: 'hit', bomb: 'bombed' }[a.with];
   if (a.with === 'bomb') {
     // Plant it, light it, run.
@@ -161,13 +214,20 @@ export function runAttack(state: DudesState, dude: Dude, now: number, rng: () =>
     return;
   }
   dude.emote = { pose: a.with === 'kick' ? 'kick' : a.with === 'shoot' ? 'point' : 'punch', until: now + 1500 };
-  if (a.with === 'shoot' || a.with === 'throw') addEffect(state, { kind: a.with === 'shoot' ? 'shot' : 'throw', from: dude.position, to: at, at: now });
-  dude.attack = undefined;
+  // At a build, the line lands on its near side.
+  const near = t.kind === 'object' ? edgeOf(t.object, dude.position) : at;
+  if (a.with === 'shoot' || a.with === 'throw') addEffect(state, { kind: a.with === 'shoot' ? 'shot' : 'throw', from: dude.position, to: near, at: now });
   const hit = rng() < COMBAT.hit[a.with];
   if (t.kind === 'object') {
-    shake(state, t.object.id, now);
+    // A few blows, a beat apart: each takes a little off (damage.ts).
+    if (hit || a.with !== 'shoot') damageBuild(state, t.object, COMBAT.buildDamage[a.with], { name: dude.name, id: dude.id }, now, near, a.with === 'kick' ? 0.5 : 1.2);
+    else shake(state, t.object.id, now);
+    a.left = (a.left ?? 1) - 1;
+    a.nextAt = now + COMBAT.blowMs;
+    if (a.left <= 0 || t.object.destroyedAt !== undefined) dude.attack = undefined;
     return;
   }
+  dude.attack = undefined;
   if (!hit) {
     pushLine(dude.history, { from: 'world', text: `you ${a.with === 'shoot' ? 'shot at' : 'swung at'} ${nameOf(t)} and missed`, at: now }, LIMITS.history);
     if (t.kind === 'dude') t.dude.emote = { pose: 'jump', until: now + 1200 };
@@ -182,10 +242,18 @@ function explode(state: DudesState, bomber: Dude, at: GroundPoint, now: number, 
   addEffect(state, { kind: 'boom', from: at, radius: COMBAT.blast, at: now });
   for (const d of state.dudes) if (!d.hidden && dist(d.position, at) <= COMBAT.blast) knockOut(state, d, bomber, 'blew up', now);
   for (const n of state.npcs ?? []) if (dist(n.position, at) <= COMBAT.blast) knockOutNpc(state, n, bomber, 'blew up', now);
-  for (const o of state.objects) {
-    const p = o.driven?.at ?? o.position;
-    if (dist(p, at) <= COMBAT.blast + Math.max(o.footprint.width, o.footprint.depth) / 2) wreck(state, o, bomber, rng, now);
-  }
+  // Builds: the nearest takes the full charge, the rest less the further off (damage.ts).
+  blast(state, { id: bomber.id, name: bomber.name, position: bomber.position, facing: bomber.facing, dude: bomber }, at, COMBAT.buildDamage.bomb, COMBAT.blast, undefined, now, 'blew up');
+  void rng;
+}
+
+/** The point on a build's edge nearest `from`. */
+function edgeOf(o: SafehouseObject, from: GroundPoint): GroundPoint {
+  const c = o.driven?.at ?? o.position;
+  return {
+    x: Math.max(c.x - o.footprint.width / 2, Math.min(c.x + o.footprint.width / 2, from.x)),
+    z: Math.max(c.z - o.footprint.depth / 2, Math.min(c.z + o.footprint.depth / 2, from.z)),
+  };
 }
 
 /** Blown apart: the parts tumble outward and down. The design before is kept so `fix` puts it back. */

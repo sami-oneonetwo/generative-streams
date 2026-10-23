@@ -1,0 +1,194 @@
+{
+  "elements": [
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The availability marker is a broad, two-legged board rather than the specified compact panel on one square post.",
+        "The parcel reads as a uniform tan surface; the required two gravel patches and sparse grass are not clearly distinguished.",
+        "A 12×12 m beige (#a8976f) slab covers the whole lot, so it reads as a sandpit or desert and overrides the bible's grey-green gravel lotRough surface",
+        "The small yellow block at (-4.5, 4.5) has no clear meaning",
+        "The availability panel is a large blue-framed board on a 2.4 m pole, close to a billboard",
+        "The availability symbol is an amber #efb749 ring on a cream #eee9d8 panel. Yellow on cream is the lowest-contrast pair on the board, and the ring reads as a lifebuoy or a letter O, not 'free to claim'.",
+        "The ground clutter (3 green blobs 0.7-0.95 m, a 0.22 m yellow stake, 2 flat patches) is invisible specks.",
+        "Nothing marks the lot's extent except the ground colour.",
+        "World rule: lotMarkers: add 'no full-lot base slab; the lotRough gravel surface is the ground'. r4 laid a beige 12 m sand slab over it.",
+        "World rule: lotMarkers: 'a large amber empty ring on a pale field' is unreadable: amber on cream has almost no contrast, and the ring reads as a lifebuoy or an O. Change it to a solid amber #efb749 panel about 2x1.4 m, top at about 2.8 m, carrying a dark navy house-outline-with-plus pictogram, plus 4 amber pennant stakes about 0.9 m tall at the lot corners."
+      ],
+      "fix": "Keep the successful amber empty ring, but place it on a compact pale panel supported by one square post near x 4.5, z 4.5. Use the grey-green gravel palette and resolve two irregular gravel patches with a few separate grass tufts. / Delete the 12×12 base box so the lotRough gravel shows. Replace the lone yellow block with four amber survey pegs, about 0.5 m tall, one at each corner, to echo the amber ring. Shrink the sign panel to about 1.6×1.4 m on a 1.8 m post and keep the amber ring as the dominant mark. / Make the panel itself solid amber #efb749, 2.0x1.4 m, on two navy #315e83 posts with its top at 2.8 m. Put a big dark navy pictogram on it (a house outline with a '+' inside, strokes 0.2 m wide). Add 4 corner stakes 0.9 m tall at (+-5.6, +-5.6), each topped with a 0.4x0.3 m amber pennant. Remove the tiny yellow stake and the green blobs."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The front marker reads as a striped barrier spanning two supports, not a modest nameplate attached to a boundary post.",
+        "The owner name is not legible in the assembled scene.",
+        "16 parts reach outside the 13 m room: the fence runs past the lot edge.",
+        "The owner marker is a 2.7x0.7 m cream board low at 1.25 m. The 'name' is 5 slanted navy boxes that read as scribble, and the owner-red strip is only 0.28 m tall, so the owner colour barely shows from the camera.",
+        "The red gate post is short (1.04 m) and stubby next to a 1.5 m sign post.",
+        "World rule: ownerMarker: the rule asks the designer to 'print the exact player name in large, simple lettering', which cannot be done with box primitives (r4 used five illegible 0.3 m stroke boxes). Change it to: geometry supplies a blank cream nameplate at least 1.6×0.6 m, and the game draws the player's name on it as a text label.",
+        "World rule: boundaries/ownerMarker: drop 'print the exact player name in large lettering'. The renderer can't do text and the result is scribble glyphs. Ask instead for a board whose top half is solid owner colour with a white emblem disc; the game overlays the name."
+      ],
+      "fix": "Keep the low timber-and-metal boundary, but replace the freestanding barrier-like marker with one rectangular plate on the front post. Print \"Ivy\" in large simple lettering beside a filled household circle and a restrained #d9534f owner strip; preserve the open entrance. / Clamp the fence to |x|,|z|<=6.4. Make the marker one sturdy post 1.7 m tall in owner red #d9534f, with a 1.4x0.8 m board whose top half is solid #d9534f and bottom half cream. Put a white 0.45 m household disc on the red half and drop the glyph boxes (the game prints the name). Make the gate post opposite the marker also #d9534f, at full fence height plus a 0.1 m cap."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "The plane tree has a regular bare fork supporting a small, evenly clustered crown.",
+        "The maple reads as a flower-shaped cap of rounded blobs, without a clearly legible low branch.",
+        "Plane tree: three long bare leaders carry a thin flat cap of spheres at 6–7.5 m, so it reads as an African acacia or umbrella pine, not a plane",
+        "Maple: an orange and red (#e08a3c / #c9483f) autumn crown on a 3.6 m stem looks like a mushroom or lollipop and clashes with every other green tree in the age (wild trees, home tree, skyscraper trees)",
+        "There is a big height mismatch (7.5 m against 3.6 m), and the maple's crown is too small for its pit",
+        "The maple is only about 4 m tall. Its crown is 6 flattened orange spheres at 2.3-3.6 m with two red #c9483f spheres on top, so it reads as a red-capped toadstool or mushroom next to the road.",
+        "The plane has a pale #b5a68a trunk that vanishes on the pale pavement. It forks into 4 thin limbs carrying sparse flattened discs (1.1 m thick) at 6.3-7.4 m, so it reads as a spindly acacia or broccoli, not a leafy plane.",
+        "The maple's timber stake (0.12 m) and tie are noise.",
+        "World rule: trees: say that every street and wild tree uses summer greens (#3f6e3f to #a5c880); variety comes from shape, height and green shade, not autumn colour. The r4 maple is orange and red while all other trees are green.",
+        "World rule: trees: add minimum sizes. Street trees should be 6-8 m tall, with crowns of overlapping masses at least 3.5 m wide and no visible gaps; the smaller maple must still be at least 5.5 m, and its accent colour must never sit as a cap on top. Wild willow: the drooping canopy is built from solid hanging masses at least 0.5 m wide that stop about 0.9 m above ground, never thin vertical strands."
+      ],
+      "fix": "Redistribute the existing 30-part budget into an off-axis plane trunk with unequal branch lengths and a broader, broken crown. Give the maple an offset canopy and one conspicuous low lateral branch; retain separate permeable pits and clear walking space. / Plane: lower the canopy base to about 3.5 m and make it a deeper, layered irregular crown (8–10 spheres in two tiers from 3.5–7 m, offset to one side) on one thicker trunk that forks once at 3 m. Keep the mottled pale bark patches. Maple: recolour the crown to mid greens (#548a52 / #79a861 / #a5c880) and enlarge it to about 3 m wide and 2.5 m deep, starting at 2 m, with one low side branch. Raise the maple to about 5 m and keep the stake and tie. / Plane: trunk 0.5 m thick in #7d7a68 with a slight 0.1 rad lean, two main limbs, and a full crown of 9-10 overlapping spheres 2-2.6 m wide and 1.6 m tall. The crown should form one mass about 5 m wide and 3.2 m deep, base at 4.5 m and top near 8 m, in #548a52 and #79a861. Maple: total height 6 m, trunk 0.35 m in #6b5743 up to 2.2 m, crown of 6 overlapping spheres about 1.8 m forming a lopsided 3.5x2.6 m mass. Use mostly #e08a3c with one #c9483f sphere on the side, never on top. Delete the stake."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The willow's straight, similarly spaced hanging pieces read as supports beneath a canopy rather than drooping foliage.",
+        "The oak crown is assembled from repetitive rounded clusters over a nearly straight trunk, weakening the wild, uneven silhouette.",
+        "Willow: ten vertical green 2.2–2.8 m boxes run from the crown to the ground, so it reads as a jellyfish, a table with legs, or a cage, not drooping fronds",
+        "The willow crown is a flat pale disc, too similar to a parasol",
+        "The willow's 'strands' are 10 thin vertical green boxes (0.15 m wide, 2.2-2.8 m tall) running from near the ground up to the crown. From the camera they read as stilts or table legs under a floating pale-green cloud; the willow looks like a jellyfish or a gazebo.",
+        "The willow crown #a5c880 is nearly the colour of the meadow #79a861/#a5c880, so it washes out.",
+        "The oak is good, but it is the only tree that reads.",
+        "World rule: trees: add minimum sizes. Street trees should be 6-8 m tall, with crowns of overlapping masses at least 3.5 m wide and no visible gaps; the smaller maple must still be at least 5.5 m, and its accent colour must never sit as a cap on top. Wild willow: the drooping canopy is built from solid hanging masses at least 0.5 m wide that stop about 0.9 m above ground, never thin vertical strands."
+      ],
+      "fix": "Rebuild the willow with spreading branches and staggered, tapered foliage curtains of unequal length. Lean and fork the oak trunk, vary crown mass sizes and leave asymmetric gaps; keep the flowering shrub low and offset within the 38-part group. / Willow: delete the ten vertical boxes. Build the drooping curtain from 8–12 elongated spheres or cones hanging off the crown's outer rim, each tilted 0.2–0.4 rad outward, ending 0.8–1.2 m above the ground, in a darker #548a52 against the lighter crown. Give the crown a domed top that droops at the edges. Keep the oak and the flowering shrub. / Willow: a dark #5e4f3c trunk 0.7 m thick leaning 0.15 rad, with a domed crown in #79a861. Replace the 10 sticks with 7 hanging masses: tall narrow boxes or cones 0.6 m wide and 1.8-2.2 m long, hung from the crown edge and ending at about 0.9 m above the ground (never touching it), tilted 0.15 rad outward, in #548a52. Keep the oak. Grow the shrub to 2.2 m wide and 1.3 m tall."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "A hard-edged opaque white disc beside the pole reads as a stray mesh or painted patch, not illumination.",
+        "The artefact repeats conspicuously in the daylight street scene.",
+        "An opaque white #e1e3dc 2 m disc at z 3 is painted on the asphalt as a fake light pool; in the vignette it shows as a big white blob or manhole on the road next to every lamp",
+        "The pole and arm are #4c555e, the exact asphalt colour. Where the lamp overhangs the road the whole fixture vanishes and only the white head floats.",
+        "A 2 m flat white #e1e3dc disc at z 3, meant as a light pool, sits on the road. It reads as a white manhole plate or a dropped plate.",
+        "The LED head is 0.08 m thick and the glow is only on its underside, which the overhead camera never sees, so the lamp reads unlit.",
+        "World rule: lighting: add 'no painted ground discs or fake light pools on the road; only the diffuser glows'.",
+        "World rule: lighting: forbid any flat ground 'light pool' disc, which reads as a manhole plate. Require the pole to contrast with asphalt (never #4c555e), and require a glowing edge strip visible from the overhead camera, not only an underside diffuser.",
+        "World rule: surfaces/palette: road asphalt #4c555e is also the default colour for poles, bollards and sign posts, so street furniture disappears over the road. Reserve a separate furniture colour (e.g. navy #315e83 or light grey #a4aeaf). Square tiles #d2d1c2, pavement #c5c9c7 and concrete fittings are all near-identical pale greys; give the square a warmer or more distinct tone."
+      ],
+      "fix": "Remove the white ground-disc geometry or decal. Retain the contemporary curved arm and flat LED head, restrict glow=true to the underside diffuser, and use only soft lighting falloff when illumination is needed. / Delete the ground cylinder at [0,0.03,3]. Let only the LED diffuser carry glow=true. / Delete the ground disc. Recolour pole and arm to light grey #a4aeaf, or navy #315e83, with a dark base collar so they read against both pavement and road. Thicken the head to 1.4x0.2x0.55 in #e1e3dc. Add a glowing 0.06 m rim strip in #fff3d5 with glow:true around the head's front and side edges so the light shows from above."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "In the assembled scene, the minibus overlaps the pedestrian crossing.",
+        "The stop and crossing share the same landing area instead of establishing a distinct, unobstructed boarding route."
+      ],
+      "fix": "Keep the recognisable minibus and transparent shelter, but move the stopping position clear of the zebra crossing. Align the opening-side door with a dedicated kerb landing and keep the shelter, seat and sign out of the continuous pedestrian route."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The marker reads primarily as a building-and-tool sign; the required four nodes around one shared centre are not legible.",
+        "A tool-like yellow symbol substitutes for the specified building-hand pictogram, weakening the collaborative-construction identity.",
+        "The two yellow 'ropes' are 0.08 m cylinders running from a corner block to nothing: their inner ends float in mid-air at x +-1.35. They read as thin scratches on the ground.",
+        "The ground #9a9f82 is a dull khaki-grey that looks like dead earth and barely differs from the gravel border.",
+        "The sign's pictogram (3 figures and a hammer) is fine, but the dark green #386d49 panel is close to the green corner blocks; the sign doesn't pop."
+      ],
+      "fix": "Redraw the green marker with a large four-node shared-centre symbol and a separate, simplified building-in-hand pictogram. Retain the four low corner blocks and leave the construction interior and entrance clear. / End each rope at a new 0.9 m post in #548a52 at x +-1.6, z 5.45, and thicken the ropes to 0.12 m. Recolour the ground to a fresh, clearly civic surface, light green turf #a1c47a or pale gravel #cad0bd, so it reads differently from the tan free lot. Give the sign panel a 0.12 m amber #efb749 border."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The plant carrier's hair reads as stacked rigid blocks rather than loose textured hair.",
+        "The hoodie silhouette is weak beside the similarly boxy work jacket, leaving colour and props to carry most of the clothing distinction.",
+        "Second figure: the navy jacket (#315e83) and the blue jeans (#4f7fa6) merge into one boilersuit or police uniform",
+        "The yellow 0.5 m band across the chest reads as a hi-vis police strap",
+        "The phone is a tiny dark 0.1 m chip held at belly height, invisible",
+        "The right figure is navy jacket #315e83, blue jeans #4f7fa6, dark skin and black hair: one dark column with no internal contrast.",
+        "Their phone is a tiny 0.1x0.18 m box, and the 0.5 m yellow #efb749 bar across the chest reads as a belt or a gold strap, not a work jacket detail.",
+        "The left figure (teal hoodie, cropped trousers, white trainers, potted plant) reads well."
+      ],
+      "fix": "Reallocate parts within the 46-part pair to give the plant carrier a visible hood behind the neck and several uneven, overlapping hair tufts. Preserve the cropped trousers, trainers and plant, and keep the other resident's tied-back hair and phone clearly separated from the torso. / Recolour the work jacket to tan canvas #b58b60 with a contrasting collar and remove the yellow chest band. Keep the jeans mid-blue. Raise the phone hand to chest or face height and enlarge the phone to 0.14×0.24 m with a bright #88d0dc screen. / Right figure: make the work jacket a mid tone, e.g. olive #8a8f4e or rust #b5653f, with 2 hi-vis stripes 0.06 m tall across the torso instead of the chest bar. Keep the jeans blue. Enlarge the phone to 0.12x0.22 m held at chest height in front of the body, with the glowing screen facing up."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "The long bonnet and stepped rear ledge make the silhouette read more like a small saloon than the specified compact hatchback.",
+        "It is a three-box sedan with a separate boot deck (the box at z -1.52), a long bonnet and a flat cream roof, which reads as a 1980s Volvo, not the bible's compact hatchback",
+        "The cream roof panel is very bright and dominates the car from above",
+        "It is a three-box 80s sedan (separate 0.76 m boot deck), not the compact hatchback the bible asks for.",
+        "The cream #eee9d8 roof slab is the biggest surface the overhead camera sees, so the car reads as a two-tone taxi or a cream car with a red skirt.",
+        "World rule: Add a 'car' rule to back up designDirection: a two-box compact hatchback about 3.6 m long with a near-vertical tailgate and no separate boot, roof the same colour as the body or dark."
+      ],
+      "fix": "Shorten the bonnet, extend the passenger roof closer to the rear axle and form a clear rear hatch with a large back window. Preserve the chunky tyres, simple glazing and restrained two-tone colour treatment. / Delete the rear deck box. Extend the cabin and glass back to z -1.75 with a near-vertical tailgate window. Shorten the bonnet by about 0.3 m and raise the roofline 0.1 m. Shorten the overall length to about 3.6 m. Recolour the roof to the body red, or a dark #29323b panoramic roof. / Remove the boot deck. Extend the cabin to the rear bumper with a rear hatch glass tilted about 0.35 rad. Paint the roof body-red #d9534f or charcoal #29323b. Slightly enlarge the wheels (0.7 m) so the stance reads chunky."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "Three crossings repeat along a short straight road without a visible junction hierarchy.",
+        "The minibus occupies one crossing, compromising the pedestrian and boarding layout.",
+        "The broad tiled square is largely empty and unplanted, contradicting the leafy public-space direction despite the small number of street trees.",
+        "World rule: Square: no rule covers dressing the town square, so the vignette shows a sterile all-tile plaza that breaks the bible's own avoid list. Add a 'square' rule: 3–4 planted beds or trees in pits, about 1.2 m, around the centrepiece; paving must not be more than about 70% of the visible square.",
+        "World rule: surfaces/palette: road asphalt #4c555e is also the default colour for poles, bollards and sign posts, so street furniture disappears over the road. Reserve a separate furniture colour (e.g. navy #315e83 or light grey #a4aeaf). Square tiles #d2d1c2, pavement #c5c9c7 and concrete fittings are all near-identical pale greys; give the square a warmer or more distinct tone."
+      ],
+      "fix": "Replace tile-by-tile crossing repetition with a deliberately placed crossing near the junction and stop the minibus beyond it. Within the existing footprints, group benches around the fountain, introduce asymmetric planted pockets around the square's edges and maintain clear pedestrian routes and community construction areas."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "The offset 'stone form' is two stacked plain grey boxes that read as a utility cabinet or dumped crate, not a sculpture",
+        "The jets are small white cones with balls, about 1 m high, so the fountain reads low-key from the overhead camera",
+        "In the vignette the fountain sits alone in a huge empty pale-tile plaza: the 'sterile all-concrete landscape' the bible says to avoid",
+        "The pale concrete coping (#c5c9c7) sits on pale square tiles (#d2d1c2). Only the blue water reads, as a small disc.",
+        "The three jets are white cones topped with balls; they read as traffic cones or meringues, not water.",
+        "The 'offset stone form' is a plain grey box on a grey box and reads as a vent or a plinth with a missing statue.",
+        "At 4.5 m across and under 1.5 m tall it is visually weaker than the kiosk next to it in the vignette.",
+        "World rule: Square: no rule covers dressing the town square, so the vignette shows a sterile all-tile plaza that breaks the bible's own avoid list. Add a 'square' rule: 3–4 planted beds or trees in pits, about 1.2 m, around the centrepiece; paving must not be more than about 70% of the visible square.",
+        "World rule: centrepiece: require a contrasting outer edge (a dark seat ledge or a planter ring) so the fountain separates from the pale square tiles. Water jets are slim columns with spray tops, not cones. The 'simple offset stone form' should be a bold coloured abstract sculpture about 2 m tall."
+      ],
+      "fix": "Replace the two grey boxes with one sculptural form: a tilted 1.6 m slab rotated about 0.3 rad, or an open ring 1.4 m across, in warm #b58b60 or #68b4a0 so it reads as deliberate art. Raise the jets to 1.4–1.8 m. Add 3–4 low planter beds with shrubs or a small tree, about 1.2×1.2 m, around the outside of the coping so the square has greenery. / Add a 0.35 m tall charcoal #65717a outer seat-ledge ring just outside the coping, plus 4 low planter boxes of #548a52 shrubs at the cardinal points, to separate it from the tiles. Replace the cones with slim cylinders 0.14 m wide and 1.2-1.6 m tall in #88d0dc, each with a 0.35 m flattened spray sphere on top. Replace the grey block with one bold abstract sculpture about 2.2 m tall: a tilted ring or arch in #68b4a0 or #efb749 standing in the basin."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The Mayor's left hand holds a 1.2 m red post on a round black base: a queue-barrier stanchion, not a ribbon",
+        "The sash is a vertical 0.2 m yellow strip down the chest and back with a red pinstripe, so it reads as a tie or apron panel rather than a diagonal civic sash",
+        "The scissors sit as small vertical blades by the right hip and are hard to read",
+        "Both arms stick straight out sideways, stiff and puppet-like",
+        "Both arms float 0.16 m away from the torso (x +-0.48 vs torso edge 0.245). The left arm box runs to y 1.72, above shoulder level, so it reads as a raised hunch or a pad beside the head.",
+        "The hand sits about 0.2 m beyond the end of the arm.",
+        "The 'ribbon loop' is a 1.2 m vertical red board on a grey stanchion base; it reads as a bollard or a barrier post, not a ceremonial ribbon.",
+        "The sash is two vertical gold boxes on the front and back of the torso, so it reads as a gold apron or tie, not a diagonal sash.",
+        "The white-grey hair box reads as an old man; it isn't a distinctive neat hairstyle.",
+        "World rule: head: 'short ribbon loop' is ambiguous and produced a red queue stanchion. Specify: a flat red ribbon band draped in a loop from the left hand, with no posts or stands; the sash runs diagonally from shoulder to hip.",
+        "World rule: head: change 'a short ribbon loop' to 'a red ribbon stretched between two short chrome stanchions with a centre bow'. State that the sash runs diagonally from shoulder to hip, and that arms stay attached at the base-figure shoulder positions."
+      ],
+      "fix": "Delete the stanchion (the red box and its base, collar and ball parts). Add a ribbon: a flat 0.08 m thick red #d9534f band about 0.15 m wide, draped in a short loop that hangs from the left hand to knee height. Rebuild the sash as one 0.16 m wide yellow #efb749 band rotated about 0.7 rad around Z, running from the left shoulder to the right hip, with a red edge stripe and the round town badge where it crosses the chest. Make the scissors 0.6 m long with blades horizontal and pointing forward from the right hand, yellow handles towards the body. Lower both arms about 0.4 rad so they angle forward rather than straight out. / Attach the arms at x +-0.31 per the base figure, top at shoulder height 1.42. Put the hands at the arm ends. Make the sash a single 0.16 m wide box rotated about 0.6 rad on z, running from the left shoulder to the right hip, front and back. Replace the red board with a red ribbon 1.4 m long and 0.12 m tall stretched between two 1.0 m chrome stanchions in front of the Mayor, with a bow in the middle. Hold the scissors (gold handles 0.3 m) in the right hand at the ribbon. Hair: a dark brown #493c35 side-parted box with a quiff."
+    },
+    {
+      "id": "ground",
+      "problems": [
+        "Every feature is tiny: flower cones 0.38x0.3, flower spheres 0.2-0.25, stones 0.4-0.58, twig 0.8x0.09. In the cell they are coloured specks on a flat field.",
+        "Pond is a 1.6x0.9 ellipse that reads as a dropped blue coin.",
+        "Grass clumps #548a52 on meadow #79a861 vanish green-on-green.",
+        "World rule: trees (countryside dressing): 'mostly below 0.35 m' produces invisible specks. Change it to 3-5 clustered features, each 1-2.5 m across and up to 0.8 m tall, in colours that contrast with the meadow base."
+      ],
+      "fix": "Rebuild as 4 clusters, each 1-2.5 m across. (1) Wildflower patch: 4 grass cones 0.5 m tall in #3f6e3f plus 6 flower spheres 0.25 m in #efb749, #fff7df and #d9534f. (2) Pond 2.6x1.6 m with a dark #6b5a45 rim and 3 reed cones 0.8 m tall at one edge. (3) Fallen log, cylinder 1.6 m long and 0.35 m diameter in #6b5743, lying along x, with a lighter cut-end disc. (4) A pair of rocks, 0.7 m and 0.45 m, in #a4aeaf. Keep everything under 0.8 m and use 16-20 parts in total."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The 'portable gathering light' is a 0.5 m glowing box on a 1.8 m pole with navy caps; from the camera it reads as a post box, not a light.",
+        "The route display is a 0.6x0.6 m board and illegible.",
+        "There is a lot of tiny clutter: folding stools 0.48 m, cooler, small suitcases scattered between the parasols. It turns into confetti at stream scale.",
+        "1 part reaches outside the 14 m room."
+      ],
+      "fix": "Make the light a 2.8 m pole with a 0.8 m glowing #fff3d5 globe (glow:true) and a cream cap. Mount a 1.6x1.0 m navy route board with a white arrow on the check-in awning's front. Merge the scattered stools and luggage into 2 stacks: one luggage pile 1.2 m tall by the coach door, and one table set per parasol. Clamp parts to |x|,|z|<=7."
+    },
+    {
+      "id": "home",
+      "problems": [
+        "Both storeys carry flat 0.22 m green slab roofs. The overhead camera mostly sees roofs, so the house reads as a clinic, office or flat-roofed block more than a cosy family home.",
+        "The upper storey is a different material (orange timber) and is offset, which makes the massing look like two stacked boxes."
+      ],
+      "fix": "Replace the upper flat slab with a pitched gable roof: two boxes rotated +-0.5 rad meeting at a ridge 1.6 m above the eaves, in slate #4c555e or terracotta #b5653f, with 0.3 m eave overhangs. Pitch the lower front roof as a lean-to sloping toward the street. Keep the porch, chimney and window box."
+    }
+  ]
+}

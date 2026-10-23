@@ -1,0 +1,197 @@
+{
+  "name": "Unclaimed Lot with Crooked Sticks and Ochre Hide",
+  "description": "Three unequal bark sticks rise from a lumpy mud mound, with a small ochre hide rag marking the otherwise empty parcel as available.",
+  "notes": "Dark unpeeled wood, hand-knotted hide and scattered pebbles replace the pale hoop with a low, unmistakably Stone Age arrival marker.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        4.48,
+        0.13,
+        4.5
+      ],
+      "size": [
+        1.6,
+        0.26,
+        1.05
+      ],
+      "rotation": [
+        0,
+        0.16,
+        0
+      ],
+      "color": "#6b4a2e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.91,
+        0.1,
+        4.77
+      ],
+      "size": [
+        0.92,
+        0.2,
+        0.7
+      ],
+      "rotation": [
+        0,
+        -0.37,
+        0
+      ],
+      "color": "#6b4a2e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.22,
+        0.58,
+        4.48
+      ],
+      "size": [
+        0.17,
+        1.08,
+        0.2
+      ],
+      "rotation": [
+        0.08,
+        0.12,
+        0.16
+      ],
+      "color": "#5a3a22"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.67,
+        0.46,
+        4.56
+      ],
+      "size": [
+        0.21,
+        0.84,
+        0.18
+      ],
+      "rotation": [
+        -0.11,
+        -0.16,
+        -0.22
+      ],
+      "color": "#7a5232"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.96,
+        0.34,
+        4.43
+      ],
+      "size": [
+        0.16,
+        0.59,
+        0.19
+      ],
+      "rotation": [
+        0.17,
+        0.08,
+        0.28
+      ],
+      "color": "#654127"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.36,
+        0.97,
+        4.58
+      ],
+      "size": [
+        0.46,
+        0.24,
+        0.08
+      ],
+      "rotation": [
+        0.08,
+        -0.16,
+        -0.19
+      ],
+      "color": "#b8843f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.53,
+        0.81,
+        4.6
+      ],
+      "size": [
+        0.19,
+        0.23,
+        0.08
+      ],
+      "rotation": [
+        -0.12,
+        0.09,
+        0.2
+      ],
+      "color": "#a87436"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.15,
+        1,
+        4.55
+      ],
+      "size": [
+        0.24,
+        0.09,
+        0.24
+      ],
+      "rotation": [
+        0.08,
+        0.12,
+        0.16
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.79,
+        0.1,
+        4.92
+      ],
+      "size": [
+        0.36,
+        0.2,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.16,
+        0.08,
+        4.99
+      ],
+      "size": [
+        0.29,
+        0.16,
+        0.36
+      ],
+      "rotation": [
+        0,
+        -0.42,
+        0
+      ],
+      "color": "#929080"
+    }
+  ]
+}

@@ -1,0 +1,314 @@
+{
+  "name": "Forked Timber Civic Oil Lamp",
+  "description": "A tall, visibly splayed timber fork rises from stepped mudbrick to cradle a broad terracotta oil bowl with three bright flames and a hanging refill jar.",
+  "notes": "Earth-coloured mudbrick, fibre lashings and an attended ceramic oil bowl establish a Bronze Age civic corner lamp rather than a modern roadside fixture.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.94,
+        0.12,
+        0.88
+      ],
+      "rotation": [
+        0,
+        0.04,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.025,
+        0.32,
+        5.015
+      ],
+      "size": [
+        0.9,
+        0.4,
+        0.82
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.025,
+        0.71,
+        4.99
+      ],
+      "size": [
+        0.76,
+        0.38,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0.065,
+        0
+      ],
+      "color": "#ba8551"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.33,
+        5
+      ],
+      "size": [
+        0.28,
+        1.26,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.255,
+        2.06,
+        5
+      ],
+      "size": [
+        0.23,
+        0.9,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.255,
+        2.06,
+        5
+      ],
+      "size": [
+        0.23,
+        0.9,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.6
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.78,
+        5
+      ],
+      "size": [
+        0.38,
+        0.2,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d2bc7a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        2.51,
+        5
+      ],
+      "size": [
+        1.3,
+        0.24,
+        1.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.595,
+        5
+      ],
+      "size": [
+        1.3,
+        0.1,
+        1.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a54f35"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.63,
+        5
+      ],
+      "size": [
+        1.08,
+        0.06,
+        0.94
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.2,
+        2.965,
+        5.03
+      ],
+      "size": [
+        0.48,
+        0.7,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0.14
+      ],
+      "color": "#ff8b25",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.2,
+        2.935,
+        5.02
+      ],
+      "size": [
+        0.42,
+        0.62,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.17
+      ],
+      "color": "#ffb347",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.015,
+        2.97,
+        4.83
+      ],
+      "size": [
+        0.37,
+        0.68,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.045
+      ],
+      "color": "#ffe18a",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.52,
+        2.06,
+        4.87
+      ],
+      "size": [
+        0.06,
+        0.5,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d2bc7a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.52,
+        1.68,
+        4.87
+      ],
+      "size": [
+        0.29,
+        0.32,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.52,
+        1.825,
+        4.87
+      ],
+      "size": [
+        0.15,
+        0.13,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a54f35"
+    }
+  ]
+}

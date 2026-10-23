@@ -12,23 +12,31 @@ import { createObjectsLayer, type PreviewSpec } from './objects';
 import { createDudesLayer } from './dudes';
 import { createEffectsLayer } from './effects';
 import { Timeline, Track, turn } from './motion';
-import { createOperator } from './operator';
+import { LOCAL_SHOT, createOperator, type LocalShot } from './operator';
+import { createPlayer } from './player';
 import { createPlansLayer } from './plans';
 import { createAudio } from './audio';
 import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type MayorView, type ServerMsg } from './types';
+import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
+import { emoteNames } from '../../src/shared/emotes';
+import { PITCH_DEFAULT, SCENES, fillLine, sceneLine, scenePose, type CamPose } from '../../src/shared/scenes';
 
 const el = (id: string) => document.getElementById(id)!;
+/** For newer bits of markup: a page served older HTML (the copy lags the script) skips them rather than throwing. */
+const maybeEl = (id: string) => document.getElementById(id) ?? undefined;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Stream mode (`/?stream=1`, for an OBS browser source): the HUD is scaled up for a 1080p canvas
 // watched on phones and the click-only controls are hidden, because nobody can click through a
 // stream. `scale` overrides the HUD scale; `zoom` tightens (>1) or loosens (<1) the auto framing.
 const params = new URLSearchParams(location.search);
 const streamMode = params.get('stream') === '1';
-const uiScale = Math.max(0.5, Math.min(3, Number(params.get('scale')) || (streamMode ? 1.7 : 1)));
+const uiScale = Math.max(0.5, Math.min(3, Number(params.get('scale')) || (streamMode ? 2.6 : 1)));
 const zoomBias = Math.max(0.5, Math.min(2.5, Number(params.get('zoom')) || 1));
 // The operator page (`/mayor`): the streamer walks the Mayor and steers the camera; the stream view
 // follows that camera (operator.ts).
 const operatorMode = location.pathname.startsWith('/mayor');
+// The player page (`/play`): a chatter logged in with Kick walks their own character (player.ts).
+const playerMode = location.pathname.startsWith('/play');
 // Sound: on for the stream (OBS captures it), off on the operator page (the streamer would hear it
 // twice) unless `?sound=1`; `?sound=0` silences any page. `music`, `sfx`, `ambience` set levels 0..1.
 const level = (name: string, fallback: number) => Math.max(0, Math.min(1, params.has(name) ? Number(params.get(name)) : fallback));
@@ -94,8 +102,12 @@ const CAM_BACK = 43,
   HALF_MIN = 5,
   HALF_MAX = 60,
   AUTO_MIN = 6,
-  AUTO_MAX = 50;
+  AUTO_MAX = 40;
 const SIN_ELEVATION = CAM_UP / Math.hypot(CAM_UP, CAM_BACK);
+/** How close the stream camera comes in on one person (orthographic half-height, metres). */
+const FOCUS_HALF = 8;
+/** How many times further back than CAM_BACK/CAM_UP the camera actually stands. */
+const CAM_FAR = 12;
 
 function start() {
   document.body.classList.toggle('stream', streamMode);
@@ -147,16 +159,18 @@ function start() {
   }
 
   // --- camera ---
-  const camera = new THREE.OrthographicCamera(-20, 20, 20, -20, 0.1, 400);
+  const camera = new THREE.OrthographicCamera(-20, 20, 20, -20, 0.1, 2400);
   let yaw = 0.65,
     half = 16,
     autoCamera = true;
+  // The tilt down: fixed but for cutscenes, which bring it low for faces (shared/scenes.ts).
+  let pitch = PITCH_DEFAULT;
   const focus = new THREE.Vector3(0, 0, 0);
   const right = new THREE.Vector3(),
     up = new THREE.Vector3(),
     forward = new THREE.Vector3();
   function axes() {
-    forward.set(-Math.sin(yaw) * CAM_BACK, -CAM_UP, -Math.cos(yaw) * CAM_BACK).normalize();
+    forward.set(-Math.sin(yaw) * Math.cos(pitch), -Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch));
     right.set(Math.cos(yaw), 0, -Math.sin(yaw));
     up.crossVectors(right, forward);
   }
@@ -167,7 +181,10 @@ function start() {
     camera.top = half;
     camera.bottom = -half;
     camera.updateProjectionMatrix();
-    camera.position.set(focus.x + Math.sin(yaw) * CAM_BACK, focus.y + CAM_UP, focus.z + Math.cos(yaw) * CAM_BACK);
+    // Far back along the same line (orthographic: distance changes nothing on screen), so a zoomed-out
+    // view's near edge never falls behind the camera and gets clipped (the south-east cut-off).
+    const far = Math.hypot(CAM_BACK, CAM_UP) * CAM_FAR;
+    camera.position.set(focus.x + Math.sin(yaw) * Math.cos(pitch) * far, focus.y + Math.sin(pitch) * far, focus.z + Math.cos(yaw) * Math.cos(pitch) * far);
     camera.lookAt(focus);
     camera.updateMatrixWorld();
   }
@@ -340,7 +357,7 @@ function start() {
     if (drag.moved) {
       follow(false);
       if (drag.pan) pan(e.clientX - drag.lastX, e.clientY - drag.lastY);
-      else if (operatorMode) yaw = drag.yaw + (e.clientX - drag.x) * 0.004;
+      else if (operatorMode || playerMode) yaw = drag.yaw + (e.clientX - drag.x) * 0.004;
       else yaw = Math.max(YAW_MIN, Math.min(YAW_MAX, drag.yaw + (e.clientX - drag.x) * 0.003));
     }
     drag.lastX = e.clientX;
@@ -362,7 +379,7 @@ function start() {
     (e) => {
       e.preventDefault();
       // The operator zooms round the Mayor; anyone else zooms round the pointer and takes the camera over.
-      if (operatorMode) return void (half = Math.max(HALF_MIN, Math.min(45, half * Math.exp(e.deltaY * 0.0012))));
+      if (operatorMode || playerMode) return void (half = Math.max(HALF_MIN, Math.min(playerMode ? 30 : 45, half * Math.exp(e.deltaY * 0.0012))));
       follow(false);
       zoomAbout(e.clientX, e.clientY, Math.exp(e.deltaY * 0.0012));
     },
@@ -375,7 +392,10 @@ function start() {
     // The operator choosing where the Mayor's build goes takes the click first.
     const spot = op ? groundAt(x, y) : undefined;
     if (op && spot && op.pick({ x: spot.x, z: spot.z })) return;
+    // Carrying a weapon (or aboard something with a gun): a click fires at that spot.
+    if (op && spot && op.fireAt({ x: spot.x, z: spot.z })) return;
     const dude = dudes.pick(x, y, camera);
+    if (dude && op?.pickPerson(dude)) return;
     if (dude) {
       inspect({ kind: 'dude', id: dude });
       return;
@@ -386,6 +406,25 @@ function start() {
     inspect(hit ? { kind: 'object', id: hit.object.userData.objectId as string } : undefined);
   }
   el('inspect-close').onclick = () => inspect(undefined);
+  el('inspect-rework').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = el('inspect-rework-text') as HTMLInputElement;
+    const change = input.value.trim();
+    if (!op || !change || selected?.kind !== 'object' || !op.canRework(selected.id)) return;
+    op.edit(selected.id, change);
+    input.value = '';
+    input.blur();
+  });
+  el('inspect-focus').onclick = () => {
+    if (op && selected?.kind === 'dude') op.focusOn(selected.id);
+  };
+  el('inspect-delete').onclick = () => {
+    if (!op || selected?.kind !== 'object' || !op.canRework(selected.id)) return;
+    const name = state?.objects.find((o) => o.id === selected!.id)?.blueprint.name ?? 'this build';
+    if (!confirm(`Take down ${name}?`)) return;
+    op.remove(selected.id);
+    inspect(undefined);
+  };
   const nameOf = (who: string) => {
     const d = state?.dudes.find((x) => x.id === who || x.name.toLowerCase() === who.toLowerCase());
     return d?.name ?? who.replace(/^dev:/, '');
@@ -463,10 +502,12 @@ function start() {
         ? `lives in ${state.town?.name ?? 'town'}`
         : [v.title, v.address, v.coins !== undefined ? `§${v.coins}` : '', built ? `${built} build${built === 1 ? '' : 's'}` : ''].filter(Boolean).join(' · ');
       el('inspect-doing').textContent = doingOf(v, serverNow);
-      const say = v.say && v.say.until > serverNow ? `“${v.say.text}”` : '';
+      const say = v.say && v.say.until > serverNow ? `“${emoteNames(v.say.text)}”` : '';
       el('inspect-say').textContent = say;
       el('inspect-say').hidden = !say;
       needBars(v.needs);
+      el('inspect-rework').hidden = true;
+      el('inspect-focus').hidden = !operatorMode || v.id === 'mayor';
     } else {
       const o = state.objects.find((x) => x.id === selected!.id);
       if (!o) {
@@ -475,6 +516,9 @@ function start() {
         return;
       }
       el('inspect-name').textContent = o.blueprint.name;
+      // On the operator page the Mayor can rework any build from here.
+      el('inspect-rework').hidden = !op?.canRework(o.id);
+      el('inspect-focus').hidden = true;
       const stats = state.town?.places?.[o.id];
       el('inspect-detail').textContent = [
         o.venue && o.venue !== 'decor' ? (o.civic ? `the town's ${o.venue}` : o.venue === 'home' ? 'a home' : `a ${o.venue}`) : '',
@@ -578,7 +622,8 @@ function start() {
       'scores',
       (s.scores ?? []).filter((r) => r.kos > 0).slice(0, 5).map((r) => ({ text: r.name, note: String(r.kos) })),
     );
-    const feed = (s.feed ?? []).slice(-5);
+    // On stream only the last three lines: phones can read three.
+    const feed = (s.feed ?? []).slice(streamMode ? -3 : -5);
     const key = feed.map((f) => `${f.at}:${f.text}`).join('|');
     if (key !== feedKey) {
       feedKey = key;
@@ -588,7 +633,7 @@ function start() {
           const line = document.createElement('div');
           line.textContent = item.text;
           // Newest last and brightest; the older ones fade out above it.
-          line.style.opacity = String([0.3, 0.45, 0.6, 0.8, 1][5 - feed.length + i] ?? 1);
+          line.style.opacity = String(Math.max(0.3, 1 - (feed.length - 1 - i) * 0.18));
           return line;
         }),
       );
@@ -647,6 +692,50 @@ function start() {
     half += (want - half) * (reduced ? 1 : 1 - Math.exp(-dt * 0.9));
   }
 
+  // --- cutscenes (shared/scenes.ts): the server says which and since when; the script does the rest ---
+  let sceneFrom: { key: string; pose: CamPose } | undefined;
+  let subtitleKey = '';
+  function cinema(serverNow: number): void {
+    const sc = state?.town?.scene;
+    const scene = sc && SCENES[sc.id];
+    const t = sc ? serverNow - sc.at : 0;
+    const on = !!scene && t >= 0 && t < scene.ms;
+    document.body.classList.toggle('cinema', on);
+    if (!on || !scene || !sc) {
+      sceneFrom = undefined;
+      if (subtitleKey) {
+        subtitleKey = '';
+        el('subtitle').hidden = true;
+      }
+      // Back to the usual tilt after a scene, eased.
+      if (Math.abs(pitch - PITCH_DEFAULT) > 1e-4) pitch += (PITCH_DEFAULT - pitch) * 0.08;
+      else pitch = PITCH_DEFAULT;
+      return;
+    }
+    // The shots start from wherever the camera was when the scene began.
+    const key = `${sc.id}:${sc.at}`;
+    if (sceneFrom?.key !== key) sceneFrom = { key, pose: { focus: [focus.x, focus.y, focus.z], yaw, pitch, half } };
+    // Reduced motion: no glides, each shot cuts straight to where it settles.
+    const pose = reduced ? ([...scene.shots].reverse().find((s) => s.at <= t)?.pose ?? sceneFrom.pose) : scenePose(scene, t, sceneFrom.pose);
+    focus.set(...pose.focus);
+    yaw = pose.yaw;
+    pitch = pose.pitch;
+    half = pose.half;
+    const vars = { leader: sc.leader ?? '', ...sc.vars };
+    const line = sceneLine(scene, t, vars);
+    const lk = line ? `${sc.at}:${line.at}:${line.text}` : '';
+    if (lk !== subtitleKey) {
+      subtitleKey = lk;
+      const box = el('subtitle');
+      box.hidden = !line;
+      box.classList.toggle('title', !!line?.title);
+      if (line) {
+        el('subtitle-who').textContent = fillLine(line.who, vars);
+        el('subtitle-text').textContent = fillLine(line.text, vars);
+      }
+    }
+  }
+
   // --- the Mayor ---
   let liveMayor: MayorView | undefined;
   const mayorFocus = new THREE.Vector3();
@@ -670,7 +759,7 @@ function start() {
     audioKey = key;
     for (const d of s.dudes) {
       const text = d.say?.text ?? '';
-      if (text && text !== lastSaid.get(d.id)) audio.speech(seedOf(d.id), text, d.position, d.mayor);
+      if (text && text !== lastSaid.get(d.id)) audio.speech(seedOf(d.id), emoteNames(text), d.position, d.mayor);
       lastSaid.set(d.id, text);
     }
     const ids = new Set(s.objects.map((o) => o.id));
@@ -729,7 +818,16 @@ function start() {
   environment.world.add(buildMarker);
   let ridingLocal: string | undefined;
   let lastRide: { x: number; z: number; facing: number; y: number } | undefined;
-  const op = operatorMode ? createOperator(el, () => state) : undefined;
+  const op = operatorMode ? createOperator(el, () => state) : playerMode ? createPlayer(el, () => state) : undefined;
+  // This page's own shots are drawn the moment they are fired (not half a second later off the
+  // snapshot); the server's copy of a blaster bolt is then skipped here.
+  let localShotAt = -Infinity;
+  addEventListener(LOCAL_SHOT, (e) => {
+    const shot = (e as CustomEvent<LocalShot>).detail;
+    localShotAt = performance.now();
+    fx.local(shot, localShotAt);
+    audio.pew(shot.from);
+  });
   if (op) follow(false);
 
   // --- the socket and the drawn clock ---
@@ -742,6 +840,87 @@ function start() {
   /** Server time as drawn: what bubbles, emotes and waves are measured against. */
   const serverClock = () => (timeline.ready ? timeline.renderTime(performance.now()) : Date.now() + offset);
 
+  // The caravan's board (bottom right): who is camped across the river and what their leader asks.
+  let caravanKey = '';
+  /** What to type for the first ask still open, as an example a viewer can copy. */
+  function typedAsk(c: NonNullable<NonNullable<DudesScene['town']>['caravan']>): string {
+    const open = c.asks.filter((a) => a.have < a.need).map((a) => a.label);
+    for (const label of open) {
+      if (/bridge/i.test(label)) return 'help at the bridge';
+      const eat = /to eat \(([^,)…]+)/i.exec(label);
+      if (eat) return `build a ${eat[1].trim()}`;
+      const shift = /^work .*shifts? at an? (.+)$/i.exec(label);
+      if (shift) return `work a shift at the ${shift[1].trim()}`;
+      const place = /^build an? (.+?) for /i.exec(label);
+      if (place) return `build a ${place[1].trim()}`;
+      if (/party/i.test(label)) return 'throw a party';
+      const wonder = /^build (.+?) on the square/i.exec(label);
+      if (wonder) return `propose ${wonder[1].trim()}`;
+    }
+    return '';
+  }
+  function renderCaravan(c: NonNullable<DudesScene['town']>['caravan'], age = MODERN): void {
+    const box = el('caravan');
+    const key = JSON.stringify(c ?? null) + age;
+    if (key === caravanKey) return;
+    caravanKey = key;
+    box.hidden = !c;
+    if (!c) return;
+    // Where the town is in its history: "Age 3/6 · The Middle Ages", and a six-step strip.
+    const name = ageStyle(age).name;
+    const ageLine = maybeEl('caravan-age');
+    if (ageLine) ageLine.textContent = `Age ${age + 1}/${AGES.length} · ${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+    maybeEl('caravan-steps')?.replaceChildren(
+      ...AGES.map((_a, i) => {
+        const step = document.createElement('i');
+        if (i < age) step.className = 'past';
+        else if (i === age) step.className = 'now';
+        return step;
+      }),
+    );
+    el('caravan-title').textContent = c.stranded ? `${c.name} · stuck at the river` : `${c.name} · visit ${c.visit} of ${c.of}`;
+    el('caravan-say').textContent = c.between ? `${c.leader} is pleased. More news soon…` : c.problem;
+    const asks = el('caravan-asks');
+    asks.replaceChildren();
+    if (!c.between)
+      for (const a of c.asks) {
+        const done = a.have >= a.need;
+        const label = document.createElement('span');
+        label.textContent = `${done ? '✓ ' : ''}${a.label}`;
+        const bar = document.createElement('span');
+        bar.className = 'bar';
+        const fill = document.createElement('i');
+        fill.style.width = `${Math.round((Math.min(a.have, a.need) / Math.max(1, a.need)) * 100)}%`;
+        bar.append(fill);
+        const count = document.createElement('span');
+        count.textContent = `${Math.min(a.have, a.need)}/${a.need}`;
+        for (const x of [label, bar, count]) {
+          if (done) x.classList.add('done');
+          asks.append(x);
+        }
+      }
+    // The call to action, typed out: what to put in chat, word for word.
+    const typed = c.between ? '' : typedAsk(c);
+    const then = c.stranded ? 'and they can cross into town' : c.visit === c.of ? 'and the town moves into the next age' : 'and the town moves on';
+    el('caravan-note').textContent = typed ? `Type “${typed}” in chat ${then}.` : c.stranded ? 'Mend it and they can cross into town.' : c.visit === c.of ? 'Finish this and the town moves into the next age.' : 'Help them and the town moves on.';
+  }
+
+  // The corner line: where to walk your own character, and how many seats are taken.
+  let playKey = '';
+  function playLine(p: StateMsg['play']): void {
+    const key = p ? `${p.url}|${p.used}|${p.cap}` : '';
+    if (key === playKey) return;
+    playKey = key;
+    const box = maybeEl('play-line'),
+      url = maybeEl('play-url'),
+      seats = maybeEl('play-seats');
+    if (!box || !url || !seats) return;
+    box.hidden = !p || playerMode;
+    if (!p) return;
+    url.textContent = p.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    seats.textContent = `${p.used}/${p.cap} seats`;
+  }
+
   // Brief happenings (`scene.effects`): a kick or a punch rattles the build. The newest id seen is
   // remembered so a reconnect never replays old ones; the first snapshot only primes it.
   let lastEffectId: number | undefined;
@@ -749,7 +928,14 @@ function start() {
     const next = msg.scene as unknown as DudesScene;
     state = next;
     liveMayor = next.mayor; // the snapshot has the last word (the operator page may have closed)
+    // The town's age first: the scenery is rebuilt in its style, and builds from other ages take its colours.
+    const age = next.town?.age ?? MODERN;
+    // The theme-free sandbox: the plain (Modern) town, and every build in its own colours.
+    environment.setAge(next.town?.sandbox ? MODERN : age);
+    objects.setAge(next.town?.sandbox ? NO_AGE : age);
     environment.town(next.town);
+    renderCaravan(next.town?.caravan, next.town?.age);
+    playLine(msg.play);
     objects.syncCommitted(next.objects);
     objects.syncPreviews(previewsOf(next));
     const names = new Map(next.objects.map((o) => [o.id, o.blueprint.name]));
@@ -763,10 +949,26 @@ function start() {
       const now = performance.now();
       for (const e of effects) {
         if (e.id <= lastEffectId) continue;
+        const mine = (e.kind === 'shot' || e.kind === 'shell') && !!e.dudeId && e.dudeId === op?.self() && now - localShotAt < 3000;
+        if (mine && e.kind === 'shot') continue; // already drawn when it was fired
         if (e.kind === 'shake') {
           if (e.objectId) objects.shake(e.objectId, now);
-          audio.thud(e.objectId ? objects.positionOf(e.objectId) : undefined);
-        } else fx.play(e, now, reduced);
+          // A hit says it with its own sound; a plain rattle thuds.
+          if (!effects.some((x) => x.kind === 'hit' && x.objectId === e.objectId && Math.abs(x.at - e.at) < 50)) audio.thud(e.objectId ? objects.positionOf(e.objectId) : undefined);
+        } else {
+          const tint = e.objectId ? next.objects.find((o) => o.id === e.objectId)?.blueprint.color : undefined;
+          fx.play(e, now, reduced, tint ? parseInt(tint.slice(1), 16) : undefined);
+        }
+        if (e.kind === 'shell' && e.from && e.to) {
+          // Off it goes, and it lands a moment later where it was aimed.
+          if (!mine) audio.pew(e.from);
+          const at = e.to;
+          setTimeout(() => audio.boom(at), Math.max(120, (Math.hypot(e.to.x - e.from.x, e.to.z - e.from.z) / 38) * 1000));
+        } else if (e.kind === 'hit') audio.thud(e.to);
+        else if (e.kind === 'collapse') {
+          audio.boom(e.from);
+          audio.thud(e.from);
+        }
         if (e.kind === 'coins') audio.coins(e.to);
         else if (e.kind === 'pop') audio.play(e.pose, e.to);
         else if (e.kind === 'burst') audio.burst(e.label, e.to);
@@ -797,6 +999,7 @@ function start() {
       }
     }
   }
+  let epoch: string | undefined;
   let socket: WebSocket | undefined,
     retry: ReturnType<typeof setTimeout> | undefined,
     attempts = 0,
@@ -813,6 +1016,10 @@ function start() {
         const msg = JSON.parse(event.data) as ServerMsg;
         if (msg.t === 'hello') {
           offset = msg.serverTime - Date.now();
+          // A different server start: build ids and revisions may have been reused (a save older than
+          // what this page saw), so every build's parts are fetched again.
+          if (msg.epoch && epoch && msg.epoch !== epoch) objects.resetGeometry();
+          if (msg.epoch) epoch = msg.epoch;
           return;
         }
         if (msg.t === 'mayor') {
@@ -827,7 +1034,17 @@ function start() {
           const cam = msg.mayor.cam;
           if (!operatorMode) mayorTrack.sample({ t: msg.serverTime, x: cam.x ?? msg.mayor.position.x, y: 0, z: cam.z ?? msg.mayor.position.z, facing: 0 });
           if (!operatorMode && msg.mayor.live && !msg.mayor.hidden)
-            dudes.sampleOne({ id: 'mayor', name: 'The Mayor', position: msg.mayor.position, facing: msg.mayor.facing, activity: ride ? 'using' : msg.mayor.moving ? 'walking' : 'idle', ...(ride ? { y: ride.seat + ride.altitude } : {}) } as DudeView, msg.serverTime);
+            dudes.sampleOne({ id: 'mayor', name: state?.town?.head ?? 'The Mayor', position: msg.mayor.position, facing: msg.mayor.facing, activity: ride ? 'using' : msg.mayor.moving ? 'walking' : 'idle', ...(ride ? { y: ride.seat + ride.altitude } : {}) } as DudeView, msg.serverTime);
+          return;
+        }
+        if (msg.t === 'dude') {
+          // A player between snapshots (this page's own player is drawn where this page says).
+          if (msg.dude.id === op?.self()) return;
+          const known = dudes.view(msg.dude.id);
+          if (!known) return; // the next snapshot brings them in
+          const ride = msg.dude.ride;
+          if (ride) objects.sampleOne(ride.id, { t: msg.serverTime, x: msg.dude.position.x, y: ride.altitude, z: msg.dude.position.z, facing: msg.dude.facing });
+          dudes.sampleOne({ ...known, id: msg.dude.id, position: msg.dude.position, facing: msg.dude.facing, activity: ride ? 'using' : msg.dude.moving ? 'walking' : 'idle', ...(ride ? { y: ride.y } : {}) } as DudeView, msg.serverTime);
           return;
         }
         if (msg.t !== 'state') return;
@@ -840,11 +1057,21 @@ function start() {
         timeline.observe(msg.serverTime, now);
         // The Mayor's own messages carry him, many times a second and stamped when he moved; the
         // snapshot's copy of him is on another clock and would make him stop and start.
-        dudes.sample(next.dudes, msg.serverTime, !operatorMode && next.mayor?.live ? 'mayor' : undefined);
-        objects.sample(next.objects, msg.serverTime, !operatorMode && next.mayor?.live ? next.mayor.riding?.id : undefined);
+        // Players walking their own characters are carried the same way, by their own messages.
+        const skip = new Set(next.dudes.filter((d) => d.piloted).map((d) => d.id));
+        if (!operatorMode && next.mayor?.live) skip.add('mayor');
+        dudes.sample(next.dudes, msg.serverTime, skip);
+        // Rides steered from a page (the Mayor's, players') come in on their own messages, between snapshots.
+        const steered = new Set(next.dudes.filter((d) => d.piloted && d.riding && d.id !== op?.self()).map((d) => d.riding!));
+        if (!operatorMode && next.mayor?.live && next.mayor.riding) steered.add(next.mayor.riding.id);
+        objects.sample(next.objects, msg.serverTime, steered);
         // The first snapshot shows at once; with reduced motion the newest is drawn, so nothing waits.
         if (!state || reduced) apply(msg);
-        else inbox.push({ at: timeline.applyAt(msg.serverTime), msg });
+        else {
+          inbox.push({ at: timeline.applyAt(msg.serverTime), msg });
+          // A hidden tab draws nothing and drains nothing: keep only the newest few, not an hour of worlds.
+          if (inbox.length > 4) inbox.splice(0, inbox.length - 4);
+        }
       } catch (error) {
         console.error('Invalid dudes snapshot', error);
       }
@@ -893,7 +1120,8 @@ function start() {
       }
       ridingLocal = me.ride?.id;
       if (me.ride) lastRide = { x: me.x, z: me.z, facing: me.facing, y: 0 }; // it lands when he gets off
-      dudes.setLocal('mayor', { ...me, ...(me.ride ? { y: me.ride.seat + me.ride.altitude, moving: false, pose: me.ride.moves === 'drive' || me.ride.moves === 'vehicle' ? 'drive' : 'sit' } : {}) });
+      const self = op.self();
+      if (self) dudes.setLocal(self, { ...me, ...(me.ride ? { y: me.ride.seat + me.ride.altitude, moving: false, pose: me.ride.moves === 'drive' || me.ride.moves === 'vehicle' ? 'drive' : 'sit' } : {}) });
       // Where the next build goes, while the build box is open.
       const pick = op.spot();
       buildMarker.visible = !!pick;
@@ -903,6 +1131,14 @@ function start() {
       }
       const k = reduced ? 1 : 1 - Math.exp(-dt * (me.free ? 14 : 6));
       focus.lerp(mayorFocus.set(me.cam.x, 1, me.cam.z), k);
+    } else if (autoCamera && mayor?.live && mayor.focus && dudes.positionOf(mayor.focus)) {
+      // The stream: on the one person the Mayor chose, close in, eased.
+      const p = dudes.positionOf(mayor.focus)!;
+      const k = reduced ? 1 : 1 - Math.exp(-dt * 5),
+        kc = reduced ? 1 : 1 - Math.exp(-dt * 2);
+      focus.lerp(mayorFocus.set(p.x, 1, p.z), k);
+      yaw = turn(yaw, mayor.cam.yaw, kc);
+      half += (FOCUS_HALF - half) * kc;
     } else if (autoCamera && mayor?.live && mayor.follow) {
       // The stream: the operator's camera, eased, centred on the Mayor as he is drawn.
       const at = mayorTrack.at(renderTime) ?? { x: mayor.position.x, z: mayor.position.z };
@@ -921,6 +1157,8 @@ function start() {
       focus.lerp(want.centre, k);
       half += (want.half - half) * k;
     }
+    // A cutscene has the camera, the letterbox and the subtitles, on every page (the operator's too).
+    cinema(serverNow);
     applyCamera();
     const g = centreOnGround();
     environment.frame(g.x, g.z, half * Math.max(1, innerWidth / innerHeight) * 1.1);

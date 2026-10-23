@@ -16,13 +16,25 @@ export function startLoop<S>(engine: Engine<S>, broadcast: (msg: ServerMsg) => v
   engine.nextEventRollAt = scheduleNextRoll(engine.world.tuning, Math.random);
   engine.deferMutter();
 
+  // A throw in one step is logged and the rest of the loop still runs: a timer callback that
+  // throws would otherwise take the whole stream down.
+  const guard = (step: string, fn: () => void) => {
+    try {
+      fn();
+    } catch (e) {
+      engine.log.push(`${step} error: ${(e as Error).message}`, 'alert');
+    }
+  };
+
   const interval = setInterval(() => {
     const now = Date.now();
 
     // 1. Task state machine (walk -> work -> complete).
-    engine.syncMode();
-    if (engine.tasks.advance(now, engine.protagonist, engine.ctx, engine.emergencyActive)) engine.markDirty();
-    if (engine.tasks.current || engine.protagonist.state !== 'idle') engine.markDirty(); // live progress
+    guard('tasks', () => {
+      engine.syncMode();
+      if (engine.tasks.advance(now, engine.protagonist, engine.ctx, engine.emergencyActive)) engine.markDirty();
+      if (engine.tasks.current || engine.protagonist.state !== 'idle') engine.markDirty(); // live progress
+    });
 
     // 2. World simulation tick, dt scaled by the dev time-scale flag.
     if (now - lastTickAt >= Math.max(LOOP_MS, engine.world.tickMs ?? TICK_MS)) {
@@ -36,7 +48,7 @@ export function startLoop<S>(engine: Engine<S>, broadcast: (msg: ServerMsg) => v
       engine.markDirty();
     }
 
-    engine.syncMode(); // An emergency raised by this tick interrupts work immediately.
+    guard('syncMode', () => engine.syncMode()); // An emergency raised by this tick interrupts work immediately.
 
     // 2b. The world can hear again: everything held during the outage lands.
     if (engine.pipeline.heldCount > 0) void engine.pipeline.release();
@@ -44,8 +56,10 @@ export function startLoop<S>(engine: Engine<S>, broadcast: (msg: ServerMsg) => v
     // 3. Event roll (no-op while the world's event table is empty).
     if (now >= engine.nextEventRollAt) {
       engine.nextEventRollAt = scheduleNextRoll(engine.world.tuning, Math.random);
-      const name = engine.emergencyActive ? undefined : rollEvent(engine.world, engine.ctx);
-      if (name) engine.log.push(`event: ${name}`);
+      guard('event roll', () => {
+        const name = engine.emergencyActive ? undefined : rollEvent(engine.world, engine.ctx);
+        if (name) engine.log.push(`event: ${name}`);
+      });
     }
 
     // 4. Idle mutter — keeps the protagonist from going silent for long.
@@ -59,7 +73,8 @@ export function startLoop<S>(engine: Engine<S>, broadcast: (msg: ServerMsg) => v
     if (!engine.emergencyActive && persona.idleMutterMs > 0 && now >= engine.nextMutterAt && !mutterInFlight) {
       engine.deferMutter();
       mutterInFlight = true;
-      const focus = persona.idleFocus?.(engine.state);
+      let focus: string | undefined;
+      guard('idleFocus', () => void (focus = persona.idleFocus?.(engine.state)));
       engine
         .generateDialogue({
           instruction:
@@ -73,6 +88,7 @@ export function startLoop<S>(engine: Engine<S>, broadcast: (msg: ServerMsg) => v
         .then((line) => {
           if (line) engine.say(line);
         })
+        .catch((e: Error) => engine.log.push(`mutter failed: ${e.message}`, 'warn'))
         .finally(() => {
           mutterInFlight = false;
         });
@@ -89,7 +105,7 @@ export function startLoop<S>(engine: Engine<S>, broadcast: (msg: ServerMsg) => v
       lastBroadcastAt = now;
       engine.renderDirty = false;
       engine.rev++;
-      broadcast({ t: 'state', rev: engine.rev, serverTime: now, scene: engine.buildScene(now) });
+      guard('broadcast', () => broadcast({ t: 'state', rev: engine.rev, serverTime: now, scene: engine.buildScene(now) }));
     }
 
     // 7. Autosave.

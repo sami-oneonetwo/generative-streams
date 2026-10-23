@@ -1,0 +1,273 @@
+{
+  "name": "Broken-Edge Sledge Track",
+  "description": "Offset hauling scars cross an open mud track beside unequal dark puddles, half-buried flint, broken branches and flattened grass spilling over its ragged margins.",
+  "notes": "Use these 14 dressing parts over blotchy, non-directional mud with base #76513b, accent #987052, accent2 #69503d and scale 2.4, disabling linear grain and stamped footprints; retain the nominal 8 m track but feather its margins irregularly into the countryside meadow, using that same meadow throughout the unpaved |z| 4–6 shoulders without separate bands.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -3.85,
+        0.065,
+        -3.96
+      ],
+      "size": [
+        2.64,
+        0.13,
+        1.51
+      ],
+      "rotation": [
+        0,
+        0.31,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.85,
+        0.105,
+        -3.96
+      ],
+      "size": [
+        2.48,
+        0.08,
+        1.35
+      ],
+      "rotation": [
+        0,
+        0.31,
+        0
+      ],
+      "color": "#4d7974"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.68,
+        0.06,
+        3.98
+      ],
+      "size": [
+        1.67,
+        0.12,
+        0.94
+      ],
+      "rotation": [
+        0,
+        -0.67,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.68,
+        0.1,
+        3.98
+      ],
+      "size": [
+        1.51,
+        0.08,
+        0.78
+      ],
+      "rotation": [
+        0,
+        -0.67,
+        0
+      ],
+      "color": "#64897a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.33,
+        0.045,
+        -2.51
+      ],
+      "size": [
+        2.75,
+        0.09,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.12,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.36,
+        0.045,
+        -2.79
+      ],
+      "size": [
+        1.58,
+        0.09,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.19,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.54,
+        0.075,
+        -3.48
+      ],
+      "size": [
+        0.58,
+        0.15,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0.53,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.12,
+        0.075,
+        -3.9
+      ],
+      "size": [
+        0.42,
+        0.15,
+        0.51
+      ],
+      "rotation": [
+        0,
+        -0.26,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.53,
+        0.075,
+        3.66
+      ],
+      "size": [
+        0.6,
+        0.15,
+        0.43
+      ],
+      "rotation": [
+        0,
+        -0.64,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.95,
+        0.075,
+        3.79
+      ],
+      "size": [
+        0.46,
+        0.15,
+        0.57
+      ],
+      "rotation": [
+        0,
+        0.38,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.19,
+        0.07,
+        -3.71
+      ],
+      "size": [
+        1.34,
+        0.14,
+        0.18
+      ],
+      "rotation": [
+        0,
+        -0.43,
+        0
+      ],
+      "color": "#60452f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.39,
+        0.15,
+        -3.48
+      ],
+      "size": [
+        0.77,
+        0.14,
+        0.13
+      ],
+      "rotation": [
+        0,
+        -1.12,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.72,
+        0.14,
+        3.98
+      ],
+      "size": [
+        1.72,
+        0.28,
+        1.31
+      ],
+      "rotation": [
+        0,
+        -0.48,
+        0
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.6,
+        0.11,
+        -4.03
+      ],
+      "size": [
+        1.26,
+        0.22,
+        1.58
+      ],
+      "rotation": [
+        0,
+        0.37,
+        0
+      ],
+      "color": "#7c9254"
+    }
+  ]
+}

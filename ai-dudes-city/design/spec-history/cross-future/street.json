@@ -1,0 +1,590 @@
+{
+  "name": "Living-Seam Ceramic Street",
+  "description": "Pale ceramic road panels meet accessible walking edges through planted drainage seams, with sparse cyan navigation insets and low ivory guidance nodes.",
+  "notes": "Staggered panel-joint emitters replace conventional lane markings, while shallow ceramic transitions, living drainage and recessed service fittings keep the future street open and tangible.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.03,
+        0
+      ],
+      "size": [
+        5.98,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d7e1e8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        0.03,
+        0
+      ],
+      "size": [
+        5.98,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d7e1e8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.031,
+        0
+      ],
+      "size": [
+        0.06,
+        0.06,
+        7.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c6bfd8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.031,
+        0
+      ],
+      "size": [
+        0.06,
+        0.06,
+        7.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c6bfd8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        0.031,
+        0
+      ],
+      "size": [
+        0.06,
+        0.06,
+        7.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c6bfd8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.24,
+        0.04,
+        -1.5
+      ],
+      "size": [
+        0.6,
+        0.06,
+        0.15
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.76,
+        0.04,
+        1.5
+      ],
+      "size": [
+        0.6,
+        0.06,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.24,
+        0.04,
+        -1.5
+      ],
+      "size": [
+        0.6,
+        0.06,
+        0.15
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.24,
+        0.04,
+        1.5
+      ],
+      "size": [
+        0.6,
+        0.06,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.76,
+        0.04,
+        -1.5
+      ],
+      "size": [
+        0.6,
+        0.06,
+        0.15
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.24,
+        0.04,
+        1.5
+      ],
+      "size": [
+        0.6,
+        0.06,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        -4.25
+      ],
+      "size": [
+        11.98,
+        0.06,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        4.25
+      ],
+      "size": [
+        11.98,
+        0.06,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.7,
+        0.09,
+        -4.25
+      ],
+      "size": [
+        0.95,
+        0.16,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c6d6b3"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.1,
+        0.1,
+        4.25
+      ],
+      "size": [
+        1.2,
+        0.18,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9cbea0"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.4,
+        0.032,
+        -3.7
+      ],
+      "size": [
+        0.8,
+        0.06,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.4,
+        0.032,
+        -3.7
+      ],
+      "size": [
+        0.8,
+        0.06,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.4,
+        0.032,
+        3.7
+      ],
+      "size": [
+        0.8,
+        0.06,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.4,
+        0.032,
+        3.7
+      ],
+      "size": [
+        0.8,
+        0.06,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.04,
+        -4.04
+      ],
+      "size": [
+        11.98,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.04,
+        4.04
+      ],
+      "size": [
+        11.98,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.8,
+        0.09,
+        -4.45
+      ],
+      "size": [
+        0.34,
+        0.18,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.8,
+        0.09,
+        -4.45
+      ],
+      "size": [
+        0.34,
+        0.18,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.8,
+        0.09,
+        4.45
+      ],
+      "size": [
+        0.34,
+        0.18,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.8,
+        0.09,
+        4.45
+      ],
+      "size": [
+        0.34,
+        0.18,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.8,
+        0.16,
+        -4.45
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.8,
+        0.16,
+        -4.45
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.8,
+        0.16,
+        4.45
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.8,
+        0.16,
+        4.45
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.6,
+        0.033,
+        -3.1
+      ],
+      "size": [
+        0.66,
+        0.06,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e2e7e9"
+    }
+  ],
+  "checks": [
+    "8 parts reach outside the 12 m room"
+  ]
+}

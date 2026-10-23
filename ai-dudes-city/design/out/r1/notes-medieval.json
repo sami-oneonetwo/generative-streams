@@ -1,0 +1,293 @@
+{
+  "elements": [
+    {
+      "id": "ground",
+      "problems": [
+        "Dense, speckled meadow texture overwhelms the sparse low-poly dressing at stream distance.",
+        "Most vegetation reads as isolated green dots rather than nettles, meadow flowers or distinct groundcover.",
+        "The 14 parts are specks at sheet scale. Green tufts (#416c48-ish) on green meadow are invisible, and only the log, two puddles and one grey stone register.",
+        "Puddles are flat pale-blue ovals that look like holes in the texture, not water in a meadow.",
+        "Nothing says 'medieval countryside' as opposed to any age: no split deadwood pile or field-edge feature you can read."
+      ],
+      "fix": "Simplify the meadow into broader, quieter colour patches. Within the 14 dressing parts, distinguish serrated nettle clumps, a few flower clusters, moss-capped stones, visibly split deadwood and flush puddles; keep the distribution sparse and mostly below 0.35 m. / Keep it sparse but make each feature 2-3x larger and contrasting. Make nettle clumps 0.6-0.8 m clusters of 3 dark cones (#2f4f2e) and meadow-flower patches 0.8 m across with pale yellow/white dots raised to 0.15 m. Add one split-log pile of 3 stacked cylinders (0.3 m dia, 1.4 m long, #8b6240 with pale #c9a46b end caps) and two mossy fieldstones at 0.5-0.7 m (#8a8a7a, top half #6f8a4e). Give puddles a darker mud rim ring (#5c4a35) so they read as wet ground."
+    },
+    {
+      "id": "street",
+      "problems": [
+        "Identical oval cobbles form a mechanically repeated dot pattern on a pale rectangular strip.",
+        "Cart wear forms exceptionally straight, uniform tracks.",
+        "The road edge remains ruler-straight rather than thinning into shared packed-earth frontage.",
+        "The cobble texture is a uniform grid of identical pale-grey ellipses in straight rows. It reads as polka dots or machine setts, not irregular rounded cobbles, and there are no muddy joints.",
+        "Overall tone is cool light grey, like concrete, against the warm medieval palette.",
+        "Wheel-wear dressing is long, flat, dark-brown strips laid on top that look like planks or skid marks, not ruts worn into the stones.",
+        "Dressing stones are scattered at the edges, but there are no shallow edge gutters to read as a road margin.",
+        "The 'wheel wear' parts are long dark-brown bars lying on the cobbles. They read as logs or planks dropped on the road, not ruts.",
+        "The grey-teal ovals (damp patches) read as grey blobs. The light grey dot cobble surface on pale grey looks like a polka-dot mat, and the joints are not muddy.",
+        "No shallow edge gutter is visible, and nothing marks the transition from cobble to packed-earth frontage at |z| 4-6. The road just ends in a hard rectangle against grass.",
+        "World rule: Road surface: 'cobble' at scale 0.65 renders as an even polka-dot grid in cool light grey. Specify irregular cobble sizes, a warmer grey-brown base (~#867c6c) and dark muddy joints (accent2 ~#5a4a36), so it is never read as concrete or machine setts.",
+        "World rule: surfaces.road: the cobble pattern renders as uniform grey dots on light grey (a polka-dot mat). Give the joints a brown mud accent (accent2 around #6a5a44 and more prominent) to match 'rounded cobblestones with muddy joints'."
+      ],
+      "fix": "Replace the repeated oval grid with varied rounded cobbles, irregular spacing and darker muddy joints. Break up the wheel wear and thin the stones unevenly toward |z| 4–6, retaining the 8 m road width, clear centre and 20 low dressing parts without introducing kerbs. / Vary the cobble size (0.25–0.5 m) and stagger the rows randomly. Darken the joints to a muddy brown (#5a4a36) and warm the base to grey-brown (#867c6c). Replace the brown wheel strips with two parallel darker, slightly sunken cart ruts (#6a6152, 0.02 m high, 0.35 m wide) running along x at z ±1.2. Add a narrow brown-grey open gutter strip flush along each road edge at |z|≈3.8. / Replace the brown rut bars with pairs of long, very flat (0.03 m), slightly darker grey-brown strips (#5f5a50), 0.25 m wide and 1.6 m apart, set into the cobbles along x, so they read as worn wheel tracks. Make damp patches mud-brown (#5c4a35) with a soft darker centre. Add a flush gutter strip of darker flat stones (#605a4e) along both z ±4 edges. Along |z| 4-6 add 4-6 irregular packed-earth patches (#8a7556) and two pale threshold slabs so the edge feathers out. Keep two or three low hitching stones at 0.5 m."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The boundary reads as long horizontal rails, not woven wattle panels.",
+        "Posts and rails are conspicuously machine-matched, with little visible rough-stone footing.",
+        "The owner shield resolves as a red fleck rather than a clear household emblem and pale name strip.",
+        "The boundary is a two-rail post-and-rail ranch fence along two sides. There are no woven wattle panels at all, so it reads as an American paddock, not a medieval croft.",
+        "The owner shield is a tiny red blob at the far-left corner post, not hung from a front gate post, and has no readable name strip.",
+        "There are no visible rough-stone footings and no gate post marking an entrance gap on the +z frontage.",
+        "The owner marker is a 0.54 x 0.40 m red box at 0.66 m height on the corner post. It is a red speck, and the name strip is 0.48 x 0.12 m, unreadable.",
+        "The boundary reads as a thin modern post-and-rail ranch fence. There is no wattle weave and no visible stone footing, and the thin rails disappear against the dirt.",
+        "The check flags 6 parts outside the 13 m room.",
+        "There is no clear gate post or entrance gap marked at the +z frontage.",
+        "World rule: lotMarkers / ownerMarker: add minimum sizes so markers read on stream. Free-lot board at least 1.2 m wide on a post at least 2 m tall. Community corner stones at least 0.8 m upright, and the community tablet at least 1.5 m wide. Owner shield at least 1.0 x 1.2 m on a 1.8 m gate post facing the street.",
+        "World rule: boundaries: say explicitly that wattle panels are solid woven panels (not post-and-rail), so they read as wattle rather than a ranch fence."
+      ],
+      "fix": "Rework the 30-part boundary into low panels with broad, visibly interlaced wattle between irregular oak posts and occasional fieldstone feet. Keep the frontage open and the fence 0.7–1.0 m high; give the subordinate red shield a bold filled emblem and a contrasting strip carrying the exact owner name. / Replace the rails with solid woven wattle panels 0.9 m high (dense brown #7a5a3a with lighter horizontal weave bands) between rough oak posts every 2 m along z -6 and x -6. Put fieldstone footing clusters under 3–4 panels. Add two short gate posts flanking a 2.5 m gap at the +z front. Hang a 0.6 × 0.7 m shield (#d9534f field, pale name strip) from the right-hand gate post, facing the street. / Pull all parts inside |x|,|z| <= 6.5. Build wattle as solid panels 0.9 m tall and 0.12 m thick in mid-brown (#8b6240), with 2-3 darker horizontal bands (#5c4030) to suggest weave, between 0.18 m oak posts every 2 m. Add a grey fieldstone footing course (0.25 m tall, #8a8a7a) under the back run. At the front corner (x -5.5, z 5.5) stand a 1.8 m gate post facing +z carrying a shield 1.0 m wide x 1.2 m tall in owner red #d9534f. Put a cream name strip (#e5d8b6, 0.9 x 0.25 m) across it and a dark simple emblem. Add a second short gate post 2.5 m along x to frame the gap."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "Both crowns are assembled from similar spherical blobs, despite their different heights.",
+        "The lime lacks a convincing pollarded branch structure, and the pear's lean does not sufficiently distinguish its silhouette.",
+        "Both trees are sphere-cluster crowns on straight trunks: lollipop trees with balls stuck together. Neither reads as a pollarded lime (knuckled head with sprouting whips) or a gnarled leaning pear.",
+        "The pear's lean toward the road is barely perceptible.",
+        "They sit on neat round dirt disks like modern tree pits.",
+        "Both trees are clusters of smooth spheres on a stick, the same lollipop formula Sami rejected. The 'pollarded lime' has no pollard knuckle or regrowth shoots; it is just a ball crown.",
+        "The tan disc tree-pits at their bases read as modern planted tree surrounds.",
+        "The pear barely leans, and the two crowns are the same green family and shape, so the pair looks like one tree at two sizes.",
+        "At about 5.5 m they are small next to a two-storey cottage.",
+        "World rule: Trees rule should explicitly ban sphere-cluster crowns on straight trunks for all trees in this age; require flattened, lopsided crowns and angled trunk segments.",
+        "World rule: trees: forbid sphere-cluster or ball crowns entirely, since sphere clusters are the lollipop look Sami rejected. Prescribe faceted, irregular, flattened clumps on angled limb boxes, with a kinked trunk and a dead limb on the wild oak."
+      ],
+      "fix": "Use the 28 parts for a knuckled lime trunk with unequal regrowth branches and offset, differently sized faceted foliage masses. Give the smaller pear a pronounced roadward lean and an irregular tapered crown, avoiding a centred cluster of balls. / Lime: a thick 2.2 m trunk ending in a knobbly swollen head (2–3 boxes, 0.6 m), with 6–8 thin upright shoot cylinders (0.08 m, 1–1.5 m long) at different angles and only small, flattened, irregular leaf clumps on top. Pear: tilt the trunk 15–20° toward the road with one kinked branch, and give it a lopsided crown of 2 flattened, uneven ellipsoids, one much larger. Remove the round dirt disks, or make them irregular trampled patches. / Lime: a thick 0.5 m trunk to 3.2 m, capped by a wider knobbly box 'knuckle' (#6b4a32). Add 6-8 thin upright shoots (0.08 m boxes, 1-1.5 m, splayed) each carrying small irregular box or low-poly leaf clumps (#5f8a45), not spheres, so the head looks cropped and bushy-flat. Pear: a 0.3 m trunk leaning 15-20 degrees toward -z (the road), with an asymmetric crown of 3 offset faceted clumps in a lighter yellow-green (#9cb35a). Add a few white blossom/pale fruit dots. Remove the tan pits and replace them with a few flat grey stones or bare earth that blends into the frontage. Make the trees 6.5 m and 4.5 m tall."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The oak is essentially an upright pole topped with balls rather than a tall crooked tree.",
+        "Hawthorn and holly repeat the same rounded foliage language, weakening species distinction and wildness.",
+        "The 'crooked oak' is a straight vertical trunk topped by a symmetrical ball cluster: the same lollipop as the street trees, only bigger.",
+        "The hawthorn is a round green blob with no thorny, spreading structure, and the holly is a round dark bush. All three are made of the same spheres.",
+        "Nothing shows age or wildness: no dead limb, no twisted trunk, no broad low spread.",
+        "The oak is a symmetric ball of spheres on a straight trunk with splayed root legs. It reads as a cartoon lollipop, not a crooked oak.",
+        "The hawthorn is another smooth sphere cluster, and the holly is a mound of dark spheres. All three use smooth rounded forms in close greens, so there is no silhouette variety.",
+        "No deadwood, broken limb or lean.",
+        "World rule: Trees rule should explicitly ban sphere-cluster crowns on straight trunks for all trees in this age; require flattened, lopsided crowns and angled trunk segments.",
+        "World rule: trees: forbid sphere-cluster or ball crowns entirely, since sphere clusters are the lollipop look Sami rejected. Prescribe faceted, irregular, flattened clumps on angled limb boxes, with a kinked trunk and a dead limb on the wild oak."
+      ],
+      "fix": "Redistribute the 36 parts into a visibly crooked, forked oak; a low, spreading hawthorn with uneven lateral branches; and a dense angular holly or young hazel. Vary canopy mass, branch direction and gaps instead of repeating spherical clusters. / Oak: bend the trunk with 2–3 angled segments, split it into 2 big limbs reaching sideways (one bare dead limb in grey-brown), and use a broad, flat, uneven crown wider than it is tall. Hawthorn: a low, wide (3 m), multi-stem shrub with angular dark branches poking out and cream blossom dots. Holly: a dark glossy cone-ish, irregular bush with red berry dots. Vary the greens across all three. / Oak: a 0.7 m trunk with a visible kink, splitting into 2-3 angled boxes as major limbs at different heights. Put flattened, faceted irregular clumps (scaled boxes or 6-sided low-poly cylinders, dark #3f6b3a and #567f3d) on the limb ends, so the crown is broad, ragged and lopsided, with one bare dead branch sticking out. Hawthorn: a wide, low, spiky shape built from tilted cones (#4d6b35) on a twisted short trunk, with red haw dots. Holly: a dark glossy cone-ish shrub (#2b4a2c) with red berry dots, slightly tilted. Vary heights to roughly 8.5, 4, 1.5 m."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "The pale shaft and fragmented-looking finial merge with the pale paving in the assembled scene.",
+        "The steps read as pristine stacked plates rather than broad worn stone.",
+        "No cross is readable. The shaft and finial look like a squat white pedestal, so from above the monument reads as a dry fountain base or plinth, which is exactly what Sami asked to get away from.",
+        "The public-notice tablet is a red-brown two-legged frame that looks like a tiny torii gate.",
+        "The stone is the same pale cream as the square paving, so the steps vanish into the ground.",
+        "The baskets are tiny and sit apart from the base.",
+        "The steps and shaft are pale grey-white on pale grey flagstones. The monument almost vanishes into the square, and only its shadow outlines it.",
+        "At 2.54 m the whole cross is shorter than the cottage's door frame. The octagonal shaft is a stubby block, and the cross finial is not readable as a cross; it looks like a small plinth or birdbath.",
+        "The dark-red notice frame in front looks like a little chair. The two baskets are tiny.",
+        "It does not anchor the square as the town's centre the way the fountain did.",
+        "World rule: Square surface: the 'flagstone' pattern renders as huge regular running-bond pale pavers, which look like a modern plaza and clash with the cobbled street. Change the square to irregular large fieldstone setts mixed with cobble and trampled-earth patches (base ~#9a9384, darker muddy joints), so street and square read as one paving system.",
+        "World rule: centrepiece: 2.5 m is too low. The market cross becomes a small plinth that does not anchor the square. Raise to about 4.5 m with a clear cross head, and require its stone to be darker and warmer (#8f8a78) than the square paving so it does not vanish.",
+        "World rule: surfaces.square: the 'flagstone' pattern renders as regular rectangular running-bond pavers in pale grey (#a4a18e / #c5c0a8). It reads as a modern patio, contradicting avoid: 'concrete slabs' and 'perfectly regular'. It also washes out everything placed on it. Use an irregular flagstone or cobble pattern with a warmer, darker base (around #948a72) and visible earth-brown joints."
+      ],
+      "fix": "Within 44 parts and the existing approximately 4.5 m base, simplify the finial into one unmistakable cross silhouette and separate the short octagonal shaft with stronger stone-value contrast. Add restrained chips and uneven step edges while keeping the whole monument about 2.5 m high. / Make the octagonal shaft 1.6 m tall and 0.35 m wide, topped by an unmistakable cross: an upright of 0.7 m and arms 0.8 m wide × 0.15 m, in darker weathered stone (#8f8a7a). Make the steps a warmer grey with darker edges so they separate from the paving. Replace the notice frame with a flat wooden board leaned against the top step. Cluster 3–4 larger baskets (0.4 m) and a sack against the steps. / Raise the monument to 4.5 m. Base: 3 steps 4.5 / 3.4 / 2.4 m wide in warmer, darker weathered stone (#8f8a78 with #6e6a5c edges), so they contrast with the square. Shaft: an octagonal cylinder 0.5 m dia x 2.6 m tall. On top, a cross with arms 1.1 m wide x 0.25 m thick (or a small gabled lantern head), in a slightly lighter stone. Add colour: two hanging cloth banners in madder red (#9e443e) and blue (#405e8b) from short iron arms, 4-6 baskets of 0.5 m with bread and apples on the steps, and a 0.8 m notice board on its own post. The goal is a strong vertical you can see from any spot on the square."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The cart cover resembles another flat market-stall awning rather than a curved passenger-cart cover.",
+        "The hitching rail's crisp rectangular pad reads as a platform instead of worn earth.",
+        "Harness connections and bundled luggage are too weak to establish the arrival function clearly.",
+        "The horse is about the height of the cart bed, pony or dog-sized next to a 5 m cart.",
+        "The cart cover is a flat-topped red/white striped box, not a curved cloth tilt.",
+        "The hitching rail stands on a rectangular plank platform, which the bible explicitly excludes (worn earth, no platform).",
+        "No bundled luggage reads.",
+        "The cart cover is red-and-white like the market awning, so the cart reads as a mobile market stall, not a passenger cart.",
+        "The 'stop' is a low hitching rail with a tiny wheel emblem on an earth mat. It does not read as a landmark where people arrive, and the wheel emblem is a speck.",
+        "1 part reaches outside the 12 m room.",
+        "There is no bundled luggage visible on or beside the cart.",
+        "World rule: Add a wheels/vehicles rule: every wheel in the age is wooden-spoked with a thin iron rim (no black tyre discs), and draught animals are scaled true to the vehicle (horse withers ~1.6 m).",
+        "World rule: arrival / designDirection (car): set horse scale (about 2.2 m long, 1.5 m at the withers) and require a hooped canvas cover in plain canvas colours distinct from the market stall's red/cream stripes."
+      ],
+      "fix": "Rebuild the cover over chunky curved hoops, expose a readable passenger compartment and group the luggage into two clear bundles. Replace the rail pad with irregular flush earth, clarify the horse-to-cart harness and retain the 62-part budget, approximately 5 m overall length and prescribed placement. / Scale the horse to a 1.6 m withers height and 2.2 m body, chunky, with a visible collar harness. Rebuild the cover as a half-cylinder hoop tilt in undyed canvas (#e5d8b6) over the bed. Remove the plank base under the hitching rail and replace it with an irregular trampled-earth patch. Add 2–3 bundled sacks or a chest at the cart tail. / Pull every part inside |x|,|z| <= 6. Give the cart a hooped canvas cover in plain cream (#e5d8b6) over 3 visible darker hoops, and drop the red stripe. Turn the stop into a 2.6 m post with a crossarm hanging a large 0.9 m cart-wheel sign (dark #5c4030 rim, 6 spokes, ochre hub). Keep the hitching rail beside it, and add 2-3 bundles and chests (0.5-0.7 m, cloth-wrapped in blue or ochre) stacked at the rail. Check that the horse is about 2.2 m long and 1.5 m at the withers."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The fixed approaches read as large smooth timber slabs, unlike the visibly planked central section.",
+        "Squat stone piers and projecting pier noses are not clearly readable.",
+        "Straight capped bank strips and overlapping rail/chain diagonals make the crossing feel schematic.",
+        "The water texture carries long white dashed strokes running along the flow. They read like lane markings on a road.",
+        "The 'squat stone piers' aren't visible: the bridge seems to sit on a single hidden block, and no stone pier noses break the water.",
+        "The bank continuations are perfectly straight green boxes with hard edges, like modern embankment kerbs.",
+        "World rule: Water surface: the white dashed strokes in the 'water' pattern read as lane markings; use soft irregular ripple patches instead."
+      ],
+      "fix": "Within 64 parts, articulate broad planks across both fixed approaches, expose squat masonry supports and add distinct upstream pier noses. Clarify the hinge, compact lifting frame and chain attachments around the lowered central leaf; soften the bank edges with irregular moss, rocks and reeds while preserving the specified crossing dimensions and river direction. / Swap the white dashes for irregular soft ripple patches. Add two clearly visible grey fieldstone piers (1.2 × 1.5 m) with pointed upstream noses standing in the water under the deck. Break the bank edges with irregular stones, reeds and uneven heights."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The pavilions read as smooth round huts with coloured roofs; their heraldic cloth construction depends on tiny flags.",
+        "The knight's shield and minstrel's lute are difficult to distinguish at sheet distance.",
+        "Both pavilions are a cylinder wall plus a dome cap with a door. They read as Mongolian yurts, not medieval heraldic pavilions.",
+        "The baggage wagon has black tyre-like wheels.",
+        "The knight and minstrel cameos are tiny; the shield and lute silhouettes do not register.",
+        "The two pavilions are drum-shaped with low domed roofs. They read as yurts or Mongolian gers, not heraldic medieval pavilions.",
+        "There are no banners or pennants, so 'travelling court' depends on colour alone.",
+        "The knight and minstrel cameos are 1 m-scale specks, and the packhorse is tiny.",
+        "World rule: Add a wheels/vehicles rule: every wheel in the age is wooden-spoked with a thin iron rim (no black tyre discs), and draught animals are scaled true to the vehicle (horse withers ~1.6 m).",
+        "World rule: Add a pavilion rule for the camp: medieval pavilions have a tall conical or ridged peak, a scalloped valance and striped walls, never a dome cap on a cylinder (yurt).",
+        "World rule: camp/leader: the jester's motley must not use the King's blue/red. Specify yellow/green (or yellow/purple) so the two figures stay distinct. Pavilions must be tall conical tents with scalloped valances and pennants, not drum or yurt shapes."
+      ],
+      "fix": "Use broad heraldic cloth panels, visible entrance folds and restrained seams to establish two travelling pavilions. Strengthen the cameos with a wide shield silhouette and a clearly projecting lute body and neck; retain the supply awning, packhorse, wagon, chests and glowing brazier within 86 parts. / Rebuild the pavilions as round or rectangular tents with a tall conical peak (cone, height ≥ the wall height), a scalloped valance band of alternating coloured boxes around the eave, vertical stripes on the walls, and a pennant on a pole at the apex. Recolour the wagon wheels wood-brown with dark iron rims. Enlarge the shield on the knight (0.6 m, heraldic colours) and give the minstrel a clear lute shape. / Rebuild the pavilions as tall, round, conical-roofed tents: wall 2 m, steep cone roof up to 4.5 m. Add a scalloped valance ring (8 small alternating-colour boxes) at the roof edge, a centre pole poking 0.6 m above the cone and a 0.8 m triangular pennant in gold or white. Use vertical stripes on the walls (blue/cream and red/cream). Add one tall banner pole 4 m high with a heraldic flag. Scale the cameos to the full 1.8 m base figure and the packhorse to about 2.2 m long."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The cap and motley identify a jester, but the boots read as ordinary square footwear rather than curled soft shoes.",
+        "The foreign court badge, travel patches and carved fool's-baton head do not read clearly.",
+        "The jester's motley is red and blue, the same colours as the King. At stream scale the two read as similar red/blue toy figures.",
+        "The fool's baton and the travel patches/court badge are not readable.",
+        "World rule: camp/leader: the jester's motley must not use the King's blue/red. Specify yellow/green (or yellow/purple) so the two figures stay distinct. Pavilions must be tall conical tents with scalloped valances and pennants, not drum or yurt shapes."
+      ],
+      "fix": "Within 38 parts, add unmistakable upturned cloth shoe tips, one broad unfamiliar court badge and two contrasting travel patches. Give the baton a chunky carved fool's head while retaining the three-point bell cap and two-colour motley. / Recolour the motley to split yellow (#e3c04a) and green (#3f8a4e), or yellow and purple, with the halves contrasting left/right including the legs. Keep the three-point cap but in the same split with gold bell spheres of 0.08 m. Make the baton 0.7 m with a carved head (0.18 m) held out. Add a bright 0.25 m foreign court badge disc on the chest and a satchel or bedroll on the back to say 'traveller'."
+    },
+    {
+      "id": "home",
+      "problems": [
+        "Continuous pale ridge-to-eave roof lines suggest standing-seam roofing rather than clay tiles.",
+        "Thin, perfectly regular framing and a largely blank side wall weaken the late-medieval construction language.",
+        "It reads as a modern holiday cottage. A bright orange roof with evenly spaced white stripes looks like standing-seam metal sheeting.",
+        "The windows are glazed squares with red shutters, like a suburban house. Commoners' windows would be unglazed openings with shutters or lattice.",
+        "A tidy rendered chimney stack, poured-concrete-looking front steps and a smooth cream plaster box with thin trim. There is no heavy timber framing, no jetty and no thatch.",
+        "In the vignette it is identical in material language to the café, so the street looks like one housing-estate kit.",
+        "It reads as a modern holiday cottage. The terracotta roof carries white seam lines like a standing-seam metal roof, and the walls are plain cream with neat glazed windows and red shutters.",
+        "There is no visible half-timbering or jettying, nothing that says late-medieval.",
+        "The stone stair and window box look suburban.",
+        "World rule: Add a buildings rule: common houses and shops use thatch or plain clay tile (no stripe ribs) and exposed heavy dark oak framing with jettied upper storeys. Windows are unglazed openings with plank shutters or lattice. No smooth rendered chimney stacks, concrete steps, lawns, clipped hedges, fabric shop awnings or picnic tables. Tall buildings jetty outward on brackets under one steep roof, with no tiered flared eaves (which read as a pagoda).",
+        "World rule: designDirection: the café and home must use different roof materials and silhouettes (for example the home thatched, the cookshop clay-tiled with an open hatch and a hanging sign). The 'stepped' lodging tower must jetty outward per storey with a single steep roof, not stack setback skirt roofs, which reads as a pagoda."
+      ],
+      "fix": "Replace the roof lines with a few broad, staggered clay-tile courses. Strengthen selected oak posts and braces, recess the shuttered openings and introduce an uneven fieldstone footing with restrained irregularity in the lime-plaster infill, preserving the footprint. / Swap the roof for thick thatch (#b8954f, 0.4 m eaves overhang, rounded ridge) with no stripes. Expose heavy dark oak framing (#4a3426, 0.18 m) on the plaster: corner posts, a mid-rail and diagonal braces. Jetty the upper gable 0.4 m forward. Replace the glazed windows with dark openings plus open plank shutters. Replace the concrete steps with a single flat threshold stone. Swap the chimney for a low smoke louvre on the ridge, or a rough fieldstone stack. / Replace the white roof lines with darker tile courses (#8f3e2c) on a deeper clay roof (#b2553a), or use a thick straw thatch (#c9a35a) with a rounded ridge. Add dark oak framing on the plaster: corner posts, a mid rail and 2-3 diagonal braces per wall (#4a3324, 0.12 m). Jetty the upper gable 0.3 m out over the ground floor. Use small deep-set windows with dark leaded panes instead of glazed ones, and drop the shutters to plain plank. Change the step to a single worn threshold stone and add a woodpile against one wall."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "The serving area reads primarily as a teal canopy over a bar; the open bread-and-ale hatch is not sufficiently legible.",
+        "The featureless roof and clean shell make this feel like a generic cottage conversion rather than a distinct medieval cookshop.",
+        "The teal fabric shop awning is a modern café awning.",
+        "The picnic table with attached benches is a modern pub-garden picnic set.",
+        "It uses the same orange striped roof and plaster box as the home, with no serving hatch, no ale-stake and nothing saying cookshop.",
+        "The stepping-stone pavers on the forecourt look like garden-centre slabs.",
+        "It uses the same roof, wall colour and footprint as the home, so you cannot tell it is a different kind of building from camera.",
+        "The teal awning is a modern café colour, and the picnic table with attached benches is a modern park picnic bench.",
+        "There is no open serving hatch with goods, no ale or bread signage you can read, and the sign over the door is a tiny oval.",
+        "World rule: Add a buildings rule: common houses and shops use thatch or plain clay tile (no stripe ribs) and exposed heavy dark oak framing with jettied upper storeys. Windows are unglazed openings with plank shutters or lattice. No smooth rendered chimney stacks, concrete steps, lawns, clipped hedges, fabric shop awnings or picnic tables. Tall buildings jetty outward on brackets under one steep roof, with no tiered flared eaves (which read as a pagoda).",
+        "World rule: designDirection: the café and home must use different roof materials and silhouettes (for example the home thatched, the cookshop clay-tiled with an open hatch and a hanging sign). The 'stepped' lodging tower must jetty outward per storey with a single steep roof, not stack setback skirt roofs, which reads as a pagoda."
+      ],
+      "fix": "Create a deep, dark open serving hatch with a thick timber sill, prominent bread rounds and wooden drinking vessels. Add a simple carved loaf sign or ale barrel, articulate broad clay-tile courses and retain the existing low building footprint. / Remove the teal awning. Cut a wide open serving hatch (1.6 × 0.8 m) with a hinged-down plank counter and loaves on it. Hang an ale-stake (a pole with a green bush ball) out over the frontage. Replace the picnic set with two trestle tables and backless benches. Add a barrel or two and a bread oven dome beside the wall. Use thatch or clay tile without stripes, and different timber framing from the home so the two buildings differ. / Make the front an open serving hatch: a 2.5 m wide opening with a drop-down counter shelf holding big bread rounds and 2 tankards, under a madder-red (#9e443e) and cream cloth canopy instead of teal. Hang a large painted sign on an iron bracket off the corner: a 0.8 m board with a golden loaf, plus an 'ale stake' pole with a green bush on the end. Stack 3 barrels by the door. Replace the picnic table with a trestle board and two separate log benches. Use a different roof material from the home (e.g. dark slate #4b5560 or thatch)."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "The blue cover reads as rigid sheet roofing rather than cloth over a wagon frame.",
+        "Featureless wheel discs and weak harness articulation leave the construction less readable than the overall horse-wagon silhouette.",
+        "The wheels are solid black discs with yellow hubs: they read as rubber tyres and modern rims.",
+        "The roof is a flat, hard blue panel on four posts, like a modern gazebo canopy, not a cloth wagon cover.",
+        "The horse is far too small, at about a third of the cart's height, and stands like a toy dog.",
+        "A red cushioned bench seat suggests an upholstered car seat.",
+        "The horse is pony-sized (body 0.7 x 0.7 x 1.4 m, back at about 1.5 m) next to a 2.7 m wagon with a 2.8 m roof. It reads as a goat or donkey pulling a big carriage.",
+        "The flat blue canopy on four posts makes it look like a rickshaw, a modern farm carriage or a parade float, not a covered market wagon.",
+        "The wheels are dark grey discs with a pale hub cap, so they look like rubber tyres.",
+        "World rule: Add a wheels/vehicles rule: every wheel in the age is wooden-spoked with a thin iron rim (no black tyre discs), and draught animals are scaled true to the vehicle (horse withers ~1.6 m).",
+        "World rule: arrival / designDirection (car): set horse scale (about 2.2 m long, 1.5 m at the withers) and require a hooped canvas cover in plain canvas colours distinct from the market stall's red/cream stripes."
+      ],
+      "fix": "Support a faceted cloth cover on visible oak hoops, adding a slight sag or loose edge instead of rigid sheet corners. Give the wooden wheels broad readable spokes and iron rims, and clarify the shafts and leather harness without introducing a modern chassis. / Make the wheels wood-brown spoked disks (1.0 m) with thin dark iron rims. Replace the hard roof with a curved canvas tilt (half-cylinder hoop shape) in blue-dyed cloth, sagging slightly. Scale the horse up to a 1.6 m withers height with a clear collar harness and shafts running to it. Use a plain plank driver's bench. / Scale the horse to about 2.2 m long with its back at 1.5 m and its head top at about 2.3 m, using thicker legs (0.22 m) and a dark mane and tail. Replace the flat canopy with a hooped canvas cover: 3-4 arched hoops built from thin tilted boxes, under a rounded cream or blue cloth (#405e8b) top made of 3-4 angled boxes. Recolour the wheels to wood (#8b6240) with 6 visible spoke boxes and a thin dark iron rim (#343b40). Add sacks and barrels in the bed."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "Residents, King and jester retain conspicuous display patches or polygonal bases on the road and square.",
+        "Repeated verge stones and patches create a regular edging rhythm despite the intended informal shared frontage.",
+        "Busy meadow texture competes with small characters, while the market cross loses contrast against the square.",
+        "World rule: Square surface: the 'flagstone' pattern renders as huge regular running-bond pale pavers, which look like a modern plaza and clash with the cobbled street. Change the square to irregular large fieldstone setts mixed with cobble and trampled-earth patches (base ~#9a9384, darker muddy joints), so street and square read as one paving system.",
+        "World rule: surfaces.square: the 'flagstone' pattern renders as regular rectangular running-bond pavers in pale grey (#a4a18e / #c5c0a8). It reads as a modern patio, contradicting avoid: 'concrete slabs' and 'perfectly regular'. It also washes out everything placed on it. Use an irregular flagstone or cobble pattern with a warmer, darker base (around #948a72) and visible earth-brown joints."
+      ],
+      "fix": "Remove presentation bases from placed characters and ground their feet directly on the scene surfaces. Break up verge dressing into irregular clusters with open gaps, reduce meadow texture frequency and apply the cross's contrast revision; retain the flush square and avoid adding sidewalks or kerbs."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "The availability board is tiny (about 0.5 m) on a thin post. On the board and in the vignette it is a dot on a large empty green square and the ochre ring is barely legible.",
+        "The board is a neat regular hexagon, which looks manufactured rather than an uneven hand-split board.",
+        "The marker is a tiny speck: total extent 1.9 x 0.9 m footprint and the board is roughly 0.6 m. On the sheet it is a dot, and in the vignette it is barely findable on the empty lot.",
+        "The pale-ochre ring on the board is not readable at all, and the board is the same brown as its post.",
+        "The ground clutter (offcut, stone) is too small to see.",
+        "World rule: lotMarkers / ownerMarker: add minimum sizes so markers read on stream. Free-lot board at least 1.2 m wide on a post at least 2 m tall. Community corner stones at least 0.8 m upright, and the community tablet at least 1.5 m wide. Owner shield at least 1.0 x 1.2 m on a 1.8 m gate post facing the street."
+      ],
+      "fix": "Enlarge the board to about 1.0 × 0.7 m on a 1.4 m stout oak post (0.15 m), tilted 5° off true. Make it an uneven rectangle with one clipped corner, and paint a bold 0.5 m pale-ochre ring with a 0.1 m stroke. Add a second short peg and a tuft of grass at the post foot. / Scale the marker up: a 0.18 m oak post 2.2 m tall, with an uneven board 1.3 m wide x 1.0 m tall x 0.08 m, tilted 5 degrees, facing +z/street. Paint the board a pale limewash ground (#e5d8b6) with a bold empty ochre ring (#d6af55, outer 0.8 m, stroke 0.15 m) built from a thin cylinder plus a darker disc, so it reads as a 'vacant' symbol. Add a second short peg and a pile of 3 offcut planks (1 m long) at its foot, plus a 0.5 m stone."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The lantern is a small dark box with a faint yellow face. The horn panels read black, the flame glow barely registers, and the pitched cap isn't visible at board scale.",
+        "The post is a plain dark stick and does not read as stout oak with a forged bracket.",
+        "The post is thin and dark, about 3 m tall, and the lantern is a small dark box. In the vignette it reads as a black stick with a yellow dot.",
+        "The horn panels look navy or black, not translucent amber, and the pitched cap and iron bracket are not distinguishable.",
+        "The flame glow is too small to register in daylight."
+      ],
+      "fix": "Thicken the post to 0.22 m in mid-brown oak with a visible diagonal brace. Extend the iron bracket 0.6 m out. Enlarge the lantern to 0.4 × 0.5 m with warm amber translucent horn panels (#e8c070) around a clearly glowing flame. Top it with a 0.5 m dark pitched cap. / Make the post 0.22 m square oak (#6b4a32), 3.4 m tall, with a stone base block 0.5 x 0.4 m. Add a forged bracket of 2 dark iron boxes (#343b40) reaching 0.7 m toward the road. Make the lantern 0.5 x 0.6 x 0.5 m, with warm amber translucent horn panels (#e6b45a) and a dark iron frame. Make the glow flame a 0.25 m sphere (#ffcf6a, glow) and add a 0.4 m pyramid cap in dark iron so the lamp reads as a lit shape."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The tablet with four dots and a rosette is a small dark board, barely legible at board scale.",
+        "The four corner markers are small grey pebbles that read as random rocks, not deliberate boundary stones.",
+        "The 'four low fieldstone corner markers' are small grey pebbles, nearly invisible on the green lot.",
+        "The front tablet is about 1 m wide and low. Its four dots and rosette are unreadable, so the lot looks empty, not 'reserved for the town'.",
+        "Nothing ties it visually to the square or the community (no colour cue).",
+        "World rule: lotMarkers / ownerMarker: add minimum sizes so markers read on stream. Free-lot board at least 1.2 m wide on a post at least 2 m tall. Community corner stones at least 0.8 m upright, and the community tablet at least 1.5 m wide. Owner shield at least 1.0 x 1.2 m on a 1.8 m gate post facing the street."
+      ],
+      "fix": "Raise the tablet to 1.0 × 0.8 m on two stout posts and use a pale board with four bold coloured dots around a large central rosette. Make the corner markers upright fieldstone blocks (0.4 × 0.6 m tall) with a lighter top face so they read as placed markers. / Make each corner marker a 0.9 m upright standing stone (0.5 x 0.9 x 0.4 m, #8a8a7a), with a painted band in a community colour such as town blue #405e8b at the top. Make the front marker a 1.6 m wide x 1.1 m tall tablet on two posts (top at 2.2 m) in pale limewash. Paint a large central rosette (0.5 m ochre disc) ringed by four 0.25 m blue dots. Optionally run a low cord line of thin stakes between the corner stones."
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "Each storey has a flared, overhanging slate eave skirt, so the silhouette reads as an East Asian pagoda, not a European guild tower.",
+        "It stands on a bright green manicured lawn with clipped box hedges, a suburban landscaping cue.",
+        "The windows are uniform dark-green rectangles in a regular grid, like a modern block.",
+        "Each storey has a broad slate skirt-roof and steps inward, so the tower reads as a Chinese or Japanese pagoda, not a European timber-and-stone tower.",
+        "The setbacks go the wrong way for medieval timber building, which jettied each floor outward.",
+        "The red heraldic banner is small.",
+        "World rule: Add a buildings rule: common houses and shops use thatch or plain clay tile (no stripe ribs) and exposed heavy dark oak framing with jettied upper storeys. Windows are unglazed openings with plank shutters or lattice. No smooth rendered chimney stacks, concrete steps, lawns, clipped hedges, fabric shop awnings or picnic tables. Tall buildings jetty outward on brackets under one steep roof, with no tiered flared eaves (which read as a pagoda).",
+        "World rule: designDirection: the café and home must use different roof materials and silhouettes (for example the home thatched, the cookshop clay-tiled with an open hatch and a hanging sign). The 'stepped' lodging tower must jetty outward per storey with a single steep roof, not stack setback skirt roofs, which reads as a pagoda."
+      ],
+      "fix": "Remove the flared eave skirts between floors. Instead jetty each upper storey 0.3–0.5 m outward on visible timber brackets, with a single steep slate roof plus a small spire or bell-cote at the top. Put a fieldstone ground storey under the half-timbered upper floors. Vary the window sizes and give them shutters. Replace the lawn and hedges with trampled earth, a woodpile and a handcart. / Remove the intermediate skirt roofs. Build a stone ground floor (#8a8a7a, 4 m) topped by 3 jettied timber storeys, each overhanging the one below by 0.3-0.4 m, with dark oak framing and cross braces on cream plaster. Cap it with one steep gable roof or a pyramid spire in slate (#4b5560), with a small belfry or lookout and a weathervane. Hang a 1 x 2 m guild banner from a pole at the top storey so the guild reads from far away."
+    },
+    {
+      "id": "dog",
+      "problems": [
+        "The blue saddle-blanket vest with a yellow badge reads as a modern service-dog harness or hi-vis jacket.",
+        "The tail is a straight orange stick.",
+        "The blue gold-trimmed saddle-cloth covers the back, so the silhouette reads as a tiny pack horse or pony more than a dog.",
+        "The legs are short and the pale paw boxes look like separate blocks under the legs. The tail is a thin stick pointing straight up.",
+        "Its 1.2 m height is large for a mastiff (about 0.8 m at the shoulder) next to a 1.8 m person."
+      ],
+      "fix": "Remove the vest. Give the mastiff a thick dark leather collar with iron studs, plus perhaps a small heraldic cloth tab. Make the tail a slightly curved two-segment shape in body colour. / Remove the saddle-cloth and give it a simple leather collar (#5c4030) with a small brass tag instead. Scale it to 0.8 m at the shoulder and about 1.1 m long. Make the legs longer relative to the body, with paws flush and the same colour family. Give the tail a thicker curve angled back and up at 45 degrees. Keep the dark muzzle and floppy ears and add a darker brindle patch so it reads as a dog."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "From the front the King reads as a nutcracker or toy soldier. The red cloak is a thin slab hanging behind, the fur edge is not visible, and the stiff blue tunic with gold buttons looks military.",
+        "The sceptre is small and hidden against the body."
+      ],
+      "fix": "Make the cloak wide and dramatic: a box 0.75 m wide that flares past the shoulders, hangs to 0.15 m above the ground and wraps to the front sides. Add a thick white fur collar band (#f2ece0, 0.12 m tall, 0.6 m wide) across the shoulders, visible from the front, with a dark ermine spot or two. Remove the gold button column and use a gold belt instead. Lengthen the sceptre to 0.9 m, held out from the body at a slight angle, with a 0.15 m gold orb top."
+    }
+  ]
+}

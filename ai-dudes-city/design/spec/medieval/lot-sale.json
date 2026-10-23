@@ -1,0 +1,235 @@
+{
+  "name": "Unclaimed Lot with Blank Shield Claim Board",
+  "description": "A pegged oak board displays a large blank pale shield above sparse grass, a fieldstone and discarded timber, inviting a newcomer to add their household emblem.",
+  "notes": "Rough oak joinery and an unpainted household identity establish a medieval claim marker without lettering, a target ring or modern sale signage.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.1,
+        4.32
+      ],
+      "size": [
+        0.24,
+        2.2,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.51,
+        4.5
+      ],
+      "size": [
+        1.38,
+        1.22,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.04
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.65,
+        4.63
+      ],
+      "size": [
+        0.76,
+        0.48,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.41,
+        4.63
+      ],
+      "size": [
+        0.537,
+        0.537,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785398
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.49,
+        1.99,
+        4.625
+      ],
+      "size": [
+        0.13,
+        0.1,
+        0.13
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#c5a16c"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.51,
+        1.01,
+        4.625
+      ],
+      "size": [
+        0.13,
+        0.1,
+        0.13
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#c5a16c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.28,
+        1.14,
+        4.33
+      ],
+      "size": [
+        0.13,
+        0.76,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.6
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.42,
+        0.04,
+        4.4
+      ],
+      "size": [
+        2.45,
+        0.08,
+        1.9
+      ],
+      "rotation": [
+        0,
+        0.17,
+        0
+      ],
+      "color": "#9d9068"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.64,
+        0.11,
+        4.92
+      ],
+      "size": [
+        0.82,
+        0.18,
+        0.25
+      ],
+      "rotation": [
+        0,
+        -0.36,
+        0
+      ],
+      "color": "#a47b4d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.17,
+        0.17,
+        4.83
+      ],
+      "size": [
+        0.54,
+        0.34,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.99,
+        0.22,
+        3.95
+      ],
+      "size": [
+        0.48,
+        0.44,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#8eaa62"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.22,
+        0.16,
+        4.06
+      ],
+      "size": [
+        0.36,
+        0.32,
+        0.32
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#63864c"
+    }
+  ]
+}

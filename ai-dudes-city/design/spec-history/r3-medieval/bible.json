@@ -1,0 +1,120 @@
+{
+  "id": "medieval",
+  "name": "the Middle Ages",
+  "summary": "Cobblestone lanes, timber craft and heraldic cloth gather beneath the King's market cross.",
+  "rules": {
+    "sidewalks": false,
+    "kerbs": false,
+    "roadMarkings": false,
+    "roads": "Use irregular rounded cobblestones along x, 8 m wide within |z| <= 4, with muddy joints and worn cart routes. Street dressing: 20 low parts below 1.2 m, including shallow edge gutters, replacement stones, damp patches, wheel wear and a few low hitching stones. Keep the centre free of obstacles. The road is unmistakably cobbled, not flat modern paving or industrial rectangular setts.",
+    "walkingEdge": "At |z| 4–6, cobbles thin into irregular packed-earth frontage and isolated threshold slabs. There is no continuous raised sidewalk and no kerb. A shallow open gutter can follow the road margin, but it must remain flush and walkable; fixtures at z 5 occupy the shared frontage.",
+    "lotMarkers": "Free lot: 12 parts on the 16 m parcel, with a pegged timber post and an uneven wooden board near x 4.5, z 4.5. Paint one large pale-ochre empty ring on the board so availability reads without words; add grass, a small stone and a discarded wood offcut. Community lot: 16 parts, with four low fieldstone corner markers and a front timber tablet bearing four painted dots around a shared central rosette. No private heraldic shield on the community marker.",
+    "boundaries": "Claimed lot: 30 parts including the owner marker. Use low wattle panels between oak posts, with occasional rough-stone footings along z -6 and x -6. Keep everything 0.7–1.0 m high and below 1.2 m. Leave the +z frontage open with a clear entrance gap and a short gate post, not a continuous front wall.",
+    "ownerMarker": "Hang a small wooden shield from the front post, with a broad owner-colour field in #d9534f and a simple filled household emblem. Put the exact owner name on a pale painted strip across the shield in broad hand-painted lettering. The shield must remain subordinate to the building, not become a giant advertising sign.",
+    "lighting": "Street light: 14 parts at x 0, z 5. A stout oak post and short iron bracket carry a sheltered oil lantern with horn panels and a pitched cap. Only its flame uses glow=true; horn panels can be translucent but are not independent emitters. Use sparse watched lamps at important corners rather than Victorian rows of elaborate lamp standards.",
+    "centrepiece": "Use 44 parts for a market cross approximately 4.5 m across at its stepped base. Build broad worn stone steps, a short octagonal shaft and a simple cross finial, with small baskets and a public-notice tablet tucked against the base. Keep the whole monument about 2.5 m high so it remains readable without hiding the square. It is the market's meeting landmark, not a modern fountain or a monumental church spire.",
+    "seating": "Use 8 parts for a thick oak plank bench on two trestles, with visible wooden pegs and one slightly uneven brace. Seat height is about 0.45 m and width suits two people. Keep it backless and sturdy, without cast-iron park-bench ends.",
+    "market": "Use 30 parts within 2.6 × 1.6 m: a pegged timber counter, two tall uprights, a madder-red and cream striped cloth awning, bread rounds, cheeses, apples, wool rolls and woven baskets. Stripes are broad enough to read on stream. No tomatoes, potatoes, coffee machines or printed packaging.",
+    "trees": "Street pair: 28 parts total at x -3 and x 3, z 5; use an old pollarded lime with uneven regrowth and a smaller pear tree leaning toward the road. Neither has a centred ball crown or matching height. Wild group: 36 parts for a tall crooked oak, a broad hawthorn and a low holly or young hazel. Countryside dressing: 14 sparse low parts of nettle clumps, meadow flowers, mossy stones, split deadwood and shallow puddles, mostly below 0.35 m.",
+    "arrival": "Use 62 parts for a horse-cart arrival point. A timber hitching rail and hanging wheel emblem stand at z 5 on worn earth, without a platform or bus shelter. At z 0, aligned along x, place a horse and wooden passenger cart approximately 5 m long overall, with iron-rimmed wheels, a curved cloth cover and bundled luggage. Keep the horse and harness chunky, with no modern vehicle chassis hidden underneath.",
+    "crossing": "Use 64 parts for a timber drawbridge carried by squat stone piers, with a fixed approach at each end and a short central lifting section shown lowered. The crossing runs along z, is about 4 m wide and meets the banks roughly 1 m above water; low timber rails preserve visibility. Water flows along x across |z| <= 7, with only its central 12 m shown in the river tile and landings at z ±7 in bank continuations. Add a compact lifting frame, chains, reeds, river rocks and stone pier noses. No enormous gatehouse blocking the town.",
+    "camp": "Use 86 parts for a travelling court across the river: two heraldic cloth pavilions and one supply awning, a packhorse, a small baggage wagon, chests and a communal brazier. Include simple knight and minstrel camp cameos, with shield and lute silhouettes; brazier coals use glow=true. The separate caravan leader uses 38 parts including the base figure: a jester in two-colour motley, a three-point cloth cap with small bells and curled soft shoes, carrying a carved fool's baton. An unfamiliar court badge and travel patches make the jester visibly foreign to the town.",
+    "people": "Use 48 parts total for two residents at x -0.6 and x 0.6, retaining the base bodies. One wears a belted wool tunic, hose, a hood pushed back and leather shoes and carries a carpenter's mallet; the other wears a long wool dress, linen coif and work apron and carries a round loaf. Use varied hair and silhouettes, not two recoloured copies.",
+    "head": "The King uses 44 parts including the base figure. Give them a broad gold crown, a deep blue tunic, a red cloak with a simplified pale fur edge, a large clasp and a short ceremonial sceptre. The crown and cape establish rank instantly. Keep the body blocky and friendly, avoiding realistic armour detail or a silhouette indistinguishable from the caravan's knight."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "meadow",
+      "base": "#63864c",
+      "accent": "#8eaa62",
+      "accent2": "#416c48",
+      "scale": 1.4
+    },
+    "road": {
+      "pattern": "cobble",
+      "base": "#7b827f",
+      "accent": "#a1a69b",
+      "accent2": "#605a4e",
+      "scale": 0.65
+    },
+    "pavement": null,
+    "lotRough": {
+      "pattern": "grass",
+      "base": "#758c50",
+      "accent": "#9daa6a",
+      "accent2": "#736147",
+      "scale": 1.2
+    },
+    "lotClaimed": {
+      "pattern": "dirt",
+      "base": "#a28b65",
+      "accent": "#c0aa80",
+      "accent2": "#7e6b50",
+      "scale": 1.1
+    },
+    "square": {
+      "pattern": "flagstone",
+      "base": "#a4a18e",
+      "accent": "#c5c0a8",
+      "accent2": "#807f70",
+      "scale": 1.1
+    },
+    "bank": {
+      "pattern": "moss",
+      "base": "#55794e",
+      "accent": "#85975f",
+      "accent2": "#77775f",
+      "scale": 1.2
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#438b9b",
+      "accent": "#78b7bd",
+      "accent2": "#356a82",
+      "scale": 2.3
+    }
+  },
+  "light": {
+    "sky": "#bbdcef",
+    "fog": "#cadbd2",
+    "sun": "#fff0cb",
+    "sunIntensity": 2.1,
+    "hemiSky": "#d5e8f4",
+    "hemiGround": "#8d8c6a",
+    "hemiIntensity": 1.9
+  },
+  "palette": [
+    "#5c4030",
+    "#8b6240",
+    "#c5c0a8",
+    "#7b827f",
+    "#e5d8b6",
+    "#416c48",
+    "#8eaa62",
+    "#405e8b",
+    "#9e443e",
+    "#d6af55",
+    "#343b40",
+    "#d9534f"
+  ],
+  "materials": [
+    "Pegged oak, rough planks and wattle",
+    "Lime plaster and irregular fieldstone",
+    "Rounded cobblestones with muddy joints",
+    "Hand-forged iron brackets, chains and wheel rims",
+    "Wool, linen and broad-striped canvas",
+    "Horn lantern panels",
+    "Painted wooden heraldic shields",
+    "Restrained gold or brass on royal symbols"
+  ],
+  "avoid": [
+    "Continuous raised sidewalks, modern kerbs and lane paint",
+    "Victorian gas lamps, cast-iron park benches and steam machinery",
+    "Modern asphalt, concrete slabs, plastic and plate-glass shopfronts",
+    "Coffee, potatoes, tomatoes and modern packaged goods",
+    "Perfectly regular cobbles or machine-matched timber",
+    "Turning every resident into a knight or every building into a castle",
+    "Dense tall walls and gatehouses that hide builds"
+  ],
+  "designDirection": "Use a coherent late-medieval river market town, with chunky oak frames, pale stone, slate or clay roofs and bold cloth accents, readable from the bright 40° overhead view. Preserve the 5×5 plan, 16 m lots, four central community parcels and camp across the east river, retaining every asset's footprint and purpose through transformation. Let guild craft, household heraldry and shared market life replace Bronze Age sun ritual without introducing industrial civic furniture. A skyscraper becomes a stepped timber-and-stone lodging tower, a car becomes a covered horse wagon, and a café becomes a bread-and-ale cookshop with an open serving hatch. Keep streets genuinely cobbled and shared by feet and carts, with irregular frontage rather than an anachronistic pavement network."
+}

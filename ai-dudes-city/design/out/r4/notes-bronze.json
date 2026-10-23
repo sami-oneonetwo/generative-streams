@@ -1,0 +1,272 @@
+{
+  "elements": [
+    {
+      "id": "ground",
+      "problems": [
+        "The rectangular pads beneath some stubble clusters read as little manufactured tiles rather than countryside.",
+        "Grass and barley silhouettes are too weak to distinguish from scattered debris at stream distance.",
+        "The two stubble patches are flat dark rectangles (1.2 x 0.8 m) with straw cones on them. From above they look like square mats or dropped paper, not field stubble.",
+        "Very sparse: about 8 small items on a 12 m tile. It reads as generic beach sand, not worked river-town farmland.",
+        "The fallen 'reed' is a single stick lying flat and the potsherds are tiny dots. Neither is legible at stream scale.",
+        "Parts 0 and 1 are flat 1.2x0.8 m rectangular boxes (#8f7a3a) under the stubble clusters. They render as two square tiles laid on the meadow, the exact issue round 3 flagged.",
+        "The stubble tufts (0.3 m pale cones, #e0cc8a/#d8bd72) are nearly the same colour as the meadow (#b5a66b/#d2bc7a). At stream distance they are specks.",
+        "20 parts against the bible's 14, yet the tile still looks empty: only the white fieldstones read."
+      ],
+      "fix": "Within the 14-part budget, remove rectangular cluster bases and group unequal stalks directly into the ground. Keep the sparse distribution and low height, but distinguish straw-coloured stubble, dry grass, limestone and terracotta through broader silhouettes. / Replace the two rectangles with 3 or 4 irregular, slightly curving rows of 6–8 short stubble cylinders (0.08 x 0.25 m, #c8aa62 to #8f7a3a), angled across the tile, not square. Add one low, uneven field-edge line of 6–8 limestone lumps of varying size, and one clump of tall dry grass. Enlarge the potsherds to at least 0.3 m and keep them terracotta #b8734d. / Delete parts 0 and 1, the rectangular pads. Regroup the stubble as 3 loose clumps of 4–5 thin tilted cylinders (0.5–0.7 m tall), set straight into the soil in dark straw #8a663d and olive #6d824b so they contrast with the meadow. Keep the limestone fieldstones and make two of them larger (1.2 m). Add one low clump of dark dry thornscrub (#4f6b2e, 0.4 m). Keep everything below 0.7 m and come back to about 14 parts."
+    },
+    {
+      "id": "street",
+      "problems": [
+        "The wheel ruts read as rigid strips laid onto the road rather than shallow compressed impressions.",
+        "Identical round patches and straight tracks repeat conspicuously across the assembled scene.",
+        "The ruts are two perfectly straight, continuous, evenly spaced dark lines running the full tile. They read as tram rails or road paint, which breaks the bible's no-road-markings rule.",
+        "Four large flat orange ovals (#b17a49, 2.3–3.3 m) sit at the road edges and spill into the frontage. They read as paint spills or rendering patches, not puddles or doorsteps.",
+        "The pale frontage strip at |z| 4–6 renders as a continuous straight-edged band on both sides. In the vignette it is unmistakably a pavement, which Sami's notes rule out.",
+        "The terracotta runoff-channel fragments are tiny red slivers and can't be read.",
+        "The wheel ruts are six dead-straight dark boxes (parts 0–5) in two perfectly parallel lines. Joined end to end, they read as rails or painted lane markings, not worn ruts.",
+        "Four large flat ellipses (parts 22–25) in road colour #b17a49 cross the road/frontage boundary. In the vignette they repeat as identical scallops along both edges of every module, like stickers with visible rims.",
+        "The terracotta runoff channel (parts 16–21) is a tiny red-orange speck.",
+        "World rule: rules.walkingEdge: the flush frontage at |z| 4–6 renders as a continuous, straight-edged pale band along both sides of the road, which reads as a pavement. Change it to the road's own earth colour, blending raggedly into lot ground with no constant-width strip. Doorstep stones and mats should be the only frontage marks.",
+        "World rule: rules.roads: say that cart ruts must be broken, wavering and of varying width (never two continuous parallel straight lines), so they can't read as rails or road paint.",
+        "World rule: roads: specify ruts as 'interrupted, slightly wavering segments 1–2.5 m long', not continuous lines. Forbid large repeated identical patch shapes along the frontage, because they tile visibly across modules."
+      ],
+      "fix": "Keep the 8 m ochre-earth road and flush frontage. Rework the 16 dressing parts into interrupted, shallow ruts, irregular compressed routes, inset stone patches and flatter organic puddles; vary their positions between modules while leaving the central walking route clear. / Break each rut into 3–5 segments with gaps. Give them slight yaw wobble (±4°) and varying width (0.2–0.45 m), and fade one rut out where the other continues. Shrink the orange ovals to 0.8–1.4 m. Make 2 of them darker wet-mud puddles (#6f5236) with a hint of water colour, and the rest irregular doorstep stones. Render the frontage in the road's earth colour, breaking into lot ground on a ragged edge (see bibleChanges). Make the channel pieces 1.2 m long, U-shaped and #b8734d, half sunk at the road edge. / Replace parts 0–5 with 8–10 shorter rut segments (1–2.5 m long). Give each a slight y-rotation (±0.08) and a z wobble of ±0.15, leave gaps between them, and use two shades (#8b603d, #7a5434). Delete the 4 ellipse patches. Mark the frontage with 2–3 irregular doorstep stone groups (#ead7aa limestone, 0.6–0.9 m) and one darker puddle (#5f6a4a) instead. Lengthen the open channel to a 3 m run of U-shaped terracotta sections along one road edge so it reads at distance. Keep everything flush and the centre clear."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The long, regular boundary sections read more like rail fencing than short woven panels on imperfect mudbrick courses.",
+        "No readable gameplay name is anchored to the gate tablet; the sheet caption does not fulfil that requirement.",
+        "The 'wattle panels' are two straight horizontal rails between evenly spaced posts. That is a modern ranch or garden fence, not woven reed or wattle.",
+        "The mudbrick footing is a single flat course only 0.24–0.34 m high, so it reads as a kerb or plinth rather than hand-formed brick.",
+        "The two gate posts with red bands and rounded caps look like modern bollards. The clay name tablet is small and turned away from the camera, and no 'Ivy' label shows on the sheet.",
+        "8 parts reach outside the 13 m room (the geometry check).",
+        "The woven panels are thin double horizontal rails with gaps on short posts. They read as a modern ranch/rail fence, not reed or wattle panels on a mudbrick footing.",
+        "The mudbrick footing is a thin, low strip the same colour as the claimed-lot ground (#c49561), so the boundary has no mass.",
+        "The gate posts and the clay name tablet are tiny. The owner band (#d9534f) is a small red cap on one post. No name label is visible anywhere in the cell.",
+        "The geometry check says 8 parts reach outside the 13 m room."
+      ],
+      "fix": "Rebuild the 28-part boundary with staggered mudbrick footing and broad reed or wattle infill, keeping it 0.7–0.95 m high and the frontage open. Make the cord-hung clay tablet and filled household seal explicit, retain the #d9534f post band, and anchor the exact player name 'Ivy' to the tablet as a gameplay label. / Replace each run of rails with wattle panels: 5–7 thin vertical stakes per 2.5 m section, with 3 alternating horizontal weave bands of 0.12 m (#b68942 / #e0cc8a), panels 0.8 m high and slightly leaning. Make the footing 2 offset courses of rounded mudbrick, 0.45 m high, with uneven tops. Make the gate posts square timber 0.35 m wide, 1.6 m high, with no round caps; paint the red as a band at mid-height. Hang a larger tablet (0.9 x 0.6 m) facing +z and towards the camera. Pull the runs in so nothing passes |x|,|z| 6.5. / Rebuild the boundary as solid panels: a 0.35 m-tall footing in darker mudbrick #8b603d with staggered course blocks, topped by continuous woven panels (one box per 2 m bay, 0.5 m tall, no gaps, colour #b89a52 with darker #8a663d bands). The total stays under 0.95 m. Make the two gate posts chunky (0.4x1.4x0.4 m, #6d4c32) and wrap the full upper half of the front-corner post in #d9534f. Hang a 0.6x0.45 m pale clay tablet (#ead7aa) on a cord facing +z and anchor the player-name label to it. Pull every part back inside |x|,|z| ≤ 6.5."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "The fig remains a narrow trunk topped with a few rounded blobs rather than a broad, leaning crown.",
+        "The palm fronds resemble stiff radial boards, and the watering basins are not clearly expressed as earth depressions.",
+        "The fig is three similar green spheres sitting centred on a straight vertical trunk: the symmetrical lollipop Sami called out. It does not lean away from its trunk as the bible asks.",
+        "The palm's crown is fine, but its trunk is perfectly straight and its fronds are near-identical radial blades.",
+        "The earthen watering basins are small cream pebbles and don't read as basins.",
+        "The fig is six stacked spheres on a straight cylinder trunk. It still reads as a generic broccoli/lollipop: the crown centre sits only about 0.8 m off the trunk, and no branches show outside the crown.",
+        "Both trees stand inside the orange road edge in the cell rather than clearly on the frontage. The watering basins are flat brown discs that don't read as dished earth.",
+        "The palm crown is good, but the trunk is short (about 4 m) and smooth.",
+        "World rule: rules.trees: tighten to 'no sphere-on-stick crowns, crown offset from the trunk axis by at least 0.6 m, trunks leaning or forked', for both tended and wild trees."
+      ],
+      "fix": "Redistribute the 26 parts into an offset fig crown supported by visible asymmetric branches and a younger palm with unequal, bent fronds. Replace the small collar-like bases with shallow irregular earthen watering basins. / Lean the fig trunk 12–18° towards -x and add a forked second limb. Build the crown from 5–6 flattened, differently sized lumps offset 0.8–1.2 m to one side of the trunk top, with a broad, wide, low silhouette (about 3.5 m wide x 1.6 m tall) and two greens (#6d824b, #4f6a3a). Give the palm a curved, segmented trunk (3 tilted pieces) and 6–7 fronds of differing length and droop. Ring each base with a dark raised earth lip 1.2 m across (#8b603d), a flattened torus of 6 box segments. / Fig: lean the trunk 0.3 rad and split it at 1.6 m into 3 visible grey-brown limbs (#7a6a55) reaching out 1.5–2 m. Use 4 flattened, wide crown blobs (height 0.8, width 2–2.5 m) pushed 1.5–2 m sideways over the leaning side, so the crown overhangs the frontage. Palm: raise it to 5.5 m with a slight curve (2 trunk segments with different tilts) and add 3 ring bands for frond scars. Basins: make a raised ring of earth (a 1.6 m darker #8b603d torus of 5 boxes) around a darker centre."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The tamarisk reads as a bundle of upright spears with matching hanging tips, not an irregular tree.",
+        "The carob has a stacked, pancake-like canopy on a central stump.",
+        "The thorn bush is too fragmentary to establish a useful silhouette.",
+        "The 'tamarisk' is 4–5 pale grey-green upside-down cones on stalks. It looks like a bunch of celery or alien plants, not a feathery weeping tamarisk.",
+        "The carob is a single flat glossy green blob on a hidden trunk, like a mushroom cap. Its 'low fork' isn't visible.",
+        "The thorn bush is a tiny cluster of cones and barely reads.",
+        "The three trees don't form a group; they are scattered islands.",
+        "The tamarisk foliage is eight inverted pale sage cones (#9aa86a/#8a9a7a). They read as upside-down lampshades or icicles, and their value almost matches the straw meadow #b5a66b, so the tallest tree fades into the ground from above.",
+        "The carob is one flat dark-green lily pad (4.7x1.08 m sphere) that hides its trunk. From 40° it reads as a green mat on a stick or a mushroom.",
+        "The thorn bush is a cluster of small olive cones about 0.6 m tall that disappears at stream scale.",
+        "World rule: rules.trees: tighten to 'no sphere-on-stick crowns, crown offset from the trunk axis by at least 0.6 m, trunks leaning or forked', for both tended and wild trees.",
+        "World rule: trees: tamarisk and thorn foliage must be darker than #6d824b (for example #4f6b2e / #5b7a52) so the tallest wild tree does not fade into the straw meadow. Require visible trunk/limbs under every crown (no single flat canopy blob)."
+      ],
+      "fix": "Use the 34 parts for unequal branching and clustered foliage: a tall, broken-outline tamarisk, a low-forked carob with a broad off-centre crown, and a compact thorn bush with a few projecting branches. Avoid repeated terminal shapes and evenly spaced limbs. / Tamarisk: a twisted leaning trunk with 3 diverging limbs, each ending in a drooping cluster of 3–4 elongated, soft, pinkish grey-green spheres (#9aa57a, #b7a99a) hanging lower on one side. Carob: show a short, thick split trunk forking at 0.8 m, with a dense crown of 4–5 uneven dark-green lumps, wider than tall and asymmetric. Thorn: a 1.2 m wide, low (0.6 m) tangle of 8–10 thin angled sticks with a few dull olive tufts. Cluster all three within a 6 m radius on a patch of dry grass. / Tamarisk: replace the inverted cones with 6–7 drooping feathery masses (stretched spheres, 1.2x2x1 m, tilted 0.3–0.5 rad outward) in darker blue-green #5b7a52/#4f6b2e, with dusty-pink tips (#c98f9a) on 3 of them, hung from 3 spread trunks. Carob: build the crown from 3–4 overlapping lumpy spheres at different heights (2.6–3.6 m) so there is a gap under the crown that shows a thick twisted trunk splitting into 2 limbs. Thorn bush: raise it to 1.2 m and widen it to 2 m, and use dark #3f5a2a with 4–5 bare pale twigs (#c4ab78) poking out."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "The continuous raised octagonal perimeter makes the court resemble an enclosed ornamental basin.",
+        "There is no clear walk-in opening to the communal well and its collection basins.",
+        "The bronze sun disc is a horizontal cylinder lying flat on top of the rope beam. From the camera it looks like a coin or a plate balanced on the beam, not a raised emblem.",
+        "The court sits on the regular pale flagstone square, so the whole centre reads as a modern paved plaza around a well (see bibleChanges).",
+        "The dark earth court disc and the mudbrick ring are almost the same brown, so the wellhead loses contrast.",
+        "World rule: surfaces.square is a pale 'flagstone' pattern with a regular rectangular grid. It renders as a modern paved plaza, contradicting the bible's own 'Do not turn the whole town into a paved classical city' and the centrepiece designer's note. Change square to compacted earth (pattern 'dirt', base #c9a46a, accents #cdb789 / #b18d59) and reserve dressed limestone flags for a ring of about 5 m around the well court only.",
+        "World rule: rules.head and rules.centrepiece: sun emblems must have separated, tapering rays, not toothed rims, to avoid reading as industrial gears. The centrepiece disc must be upright and facing the square."
+      ],
+      "fix": "Keep the limestone wellhead, rope beam, bucket and restrained sun emblem, but open the perimeter on two sides or bring it flush with the court. Within 38 parts, arrange four jars and shallow collection basins around an obvious accessible working space about 4.5 m across. / Rotate the sun disc upright (rotation [π/2,0,0]), facing +z towards the square. Mount it on a short post above the beam centre at about 3.4 m and give it 8 short ray boxes, flat rectangles not serrations. Lighten the court floor to a packed-earth #a5774e and keep the limestone wellhead #d2bb87 so it pops. Add the rope from the beam down into the well as a visible 0.06 m cord."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "The roof reads as several broad wooden panels rather than a sloping reed mat.",
+        "The smooth rectangular display front looks like a timber counter; its mudbrick construction is unclear.",
+        "The goods include saturated red and blue rectangular blocks that read as modern cartons or packaged goods, not linen bundles.",
+        "The roof is 4 neat identical planks, like corrugated sheeting, rather than a sloping reed mat.",
+        "There are no visible bronze ingots or balance weights, so nothing says barter or bronze."
+      ],
+      "fix": "Within 28 parts and the existing footprint, give the roof bundled reed edges, a slight sag and visible fibre ties on forked uprights. Break the display ledge into a few irregular mudbrick courses while preserving the readable jars, baskets, textiles and bronze goods. / Make the linen bundles rounded flattened spheres or rolled cylinders in undyed cream (#ead7aa) and one muted madder (#a44832), tied with a dark cord band. Make the roof one mat of 8–10 thin tan reed strips with ragged overhanging ends and a slight sag. Add 3 ox-hide-shaped bronze ingots (flat boxes with notched corners, #b68942) and a small balance on the ledge."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The visible bridge ends sit on pads at the water rather than demonstrating continuous connections to true bank landings.",
+        "Several short corbelled openings are not clearly legible beneath the deck.",
+        "The near terminal lip appears to close across the walking route.",
+        "The crossing reads as a flat modern concrete slab bridge: a smooth beige deck with straight parallel edges. The corbelled arches are tiny notches under the deck and barely visible.",
+        "The water has two long straight pale streaks that look like lane markings.",
+        "The banks are bare brown with only 2–3 tiny reed tufts and one jar. There are no mud steps or mooring stones visible.",
+        "6 parts reach outside the 14 m room.",
+        "The corbelled arches are almost invisible. The deck reads as a flat pale plank lying on the water, with only faint darker bumps under it, so it does not read as a bridge on piers.",
+        "Bank dressing (reeds, jars, mooring stones) is a few tiny specks at the deck ends, and the banks are bare.",
+        "The geometry check says 6 parts reach outside the 14 m room."
+      ],
+      "fix": "Rebuild the 54-part crossing with distinct squat piers and stepped corbels that leave visible water openings. Keep the deck 4 m wide and about 1 m above water, open both ends, and show walkable bank connections at z ±7 in the continuation tiles rather than terminating within the central river tile. / Make the deck out of 6–8 visibly separate limestone blocks of varying tone (#d2bb87, #c2a575), with irregular low edge blocks rather than a continuous parapet strip. Give it 3 squat rubble piers, at least 1.2 m wide, each with a stepped corbelled opening (3 stepped boxes) clearly visible above the water. Replace the straight streaks with short broken ripple dashes. On each bank add 3 clumps of tall reeds (6–8 thin green cylinders, 1.2–1.6 m), mud steps, and a mooring stone. Keep all parts inside ±7. / Add 3 squat piers that stick out 0.4 m beyond each side of the deck, with pointed cutwaters facing upstream (darker limestone #ae9568). Between them, show 2–3 dark stepped corbel openings (#3a2a1c inner faces) so the water visibly passes under. Thicken the deck edge blocks to 0.35 m. Add 4 reed clumps of 5–7 dark green (#4f6b2e) blades 1.2–1.6 m tall on each bank, plus 2 large jars and 2 mooring stones 0.6 m tall. Pull the out-of-room parts back inside |x|,|z| ≤ 7."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The barge awnings read as broad plank roofs rather than reed coverings.",
+        "The narrow turquoise pads beneath the boats make the mooring read as an isolated display rather than part of a continuous far riverbank.",
+        "Hull profiles and separate cargo loads are weak at stream distance.",
+        "The shore shelter's red and white striped panel reads as a modern beach or deckchair awning.",
+        "The barges float in a narrow teal channel strip that doesn't match the river tile's water or banks.",
+        "5 parts reach outside the 14 m room.",
+        "The barges sit in a narrow teal water strip that ends abruptly in the middle of the dry meadow. They read as beached in a ditch or sitting on a blue rug, not moored at a river bank.",
+        "The shore shelter's striped red cloth reads well, but the sacks, scale and textiles round it are tiny specks.",
+        "The geometry check says 5 parts reach outside the 14 m room.",
+        "World rule: camp: say where the water is. The barges must be moored against the river edge running off the tile's −x side, or hauled up on the bank. Never put them in an isolated water strip in the meadow."
+      ],
+      "fix": "Stage both barges against one continuous river continuation, with clear hull waterlines and visible shore moorings. Within 80 parts, give the awnings bundled reed edges and lashings, distinguish the shallow hull ends, and separate jar, sack and textile cargo into bold clusters around the shore shelter. / Make the textile a woven wool panel with 2–3 muted bands (#a44832, #365f86, #ead7aa) of unequal width, hung loosely, not a regular candy stripe. Use the river tile's water colours (#429d9b / #327c84) and add a mud bank edge with reeds where the barges moor. Pull all parts inside ±7. / Either run the water strip fully off the −x tile edge as the river margin, with a muddy bank lip (#857046) and 2 mooring posts, or remove the water and pull both barges up on the bank on log rollers with their bows tilted. Enlarge the goods pile beside the shelter (3 amphorae 0.9 m tall, 2 sacks 0.7 m, 1 bright folded-textile stack in #365f86/#d9534f). Keep every part inside |x|,|z| ≤ 7."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The field tender's thick rectangular tool head reads as a mallet rather than a bronze-bladed hoe.",
+        "The bronze-bladed hoe's head is a flat yellow rectangle on top of the pole, so it reads as a flag or a sign on a stick.",
+        "The water carrier's red shoulder cloth hangs as a stiff rectangle that reads as a backpack or sash, not draped wool.",
+        "The right figure's 'bronze hoe' is a flat yellow box at the top of a thin pole. It reads as a placard or flag, not a hoe.",
+        "The left figure's jar reads well, but her torso is bare skin (#d9a27a) under a thin diagonal red strip. The silhouette reads as a nearly unclothed body rather than a layered wrap.",
+        "Both figures are tan/cream with tan skin. The only strong separators are the red strip and the indigo bands."
+      ],
+      "fix": "Within the 46-part pair, reshape the tool head into a broad, thin bronze blade angled across the wooden shaft. Offset it from the headcloth so the hoe silhouette remains visible from above; retain the layered clothing and pottery carrier. / Make the hoe a wooden haft with a narrow bronze blade (0.25 x 0.12 m, #b68942) set at 90° to the haft near the bottom, carried over the shoulder blade-down. Drape the shoulder cloth as 2 angled boxes across one shoulder and the chest, ending at the waist, in a muted ochre #b68942 rather than bright red. / Hoe: carry it over the shoulder, blade-end behind and up. Make the blade a 0.3x0.08x0.25 m bronze plate set at 90° to the shaft (hanging down from the shaft tip), and thicken the shaft to 0.09 m. Left figure: add a short wool shoulder cloth box covering the full upper torso in a dyed colour (#b65a40 or #365f86) over a cream wrap, and darken her hair and skirt hem. Vary the skin tones more."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "Both sun emblems read as toothed cogwheels rather than simple hammered-bronze discs.",
+        "The oversized chest emblem obscures the mantle, weakening the required ochre-and-turquoise woven costume.",
+        "Both sun emblems (chest and staff) have serrated, toothed rims. From the camera they read as industrial cogs or gears, which is an anachronistic read.",
+        "The chest disc is held out in front like a shield and covers the robe.",
+        "The teal headdress with a white puffed top reads as a chef's or nurse's cap rather than a wrapped ceremonial headdress.",
+        "The chest sun disc (part 21) is 0.55 m wide and tilted forward 1.15 rad. On camera it hangs off the figure's side at hip height like a held shield or cog, and it competes with the staff disc so the office emblem reads twice.",
+        "The staff hand is a straight horizontal bar (part 28) jutting from hip height to x 0.8, while the base right arm still hangs at the side. The staff looks held at the hip by a plank, at arm's length.",
+        "The robe is a single 0.5x1.35 m box that turns the body into a cream column. The mantle stripes are thin and get lost.",
+        "World rule: rules.head and rules.centrepiece: sun emblems must have separated, tapering rays, not toothed rims, to avoid reading as industrial gears. The centrepiece disc must be upright and facing the square."
+      ],
+      "fix": "Within 40 parts, replace the gear-like outlines with simple faceted bronze discs carrying restrained radial impressions. Reduce the chest disc enough to expose broad ochre and turquoise mantle panels, strengthen the overlapping headcloth wraps, and retain the tall wooden staff as the primary office silhouette. / Make each sun a smooth hammered disc with 8 thin, separated, tapering rays (gaps between them), not a toothed rim. Hang the chest disc flat on the chest at 0.5 m across from a cord collar. Rebuild the headdress as 3 stacked, slightly offset wrapped bands (cream, ochre, turquoise) narrowing upward, with one trailing cloth tail down the back. Keep the staff 2.4 m with the smooth sun on top. / Shrink the chest disc to 0.32 m, set it upright flat on the chest (rotation 0, z 0.16, y 1.25) and drop its separate ray boxes, so the staff sun is the one big emblem. Move the staff to x 0.45 and rotate the right arm forward and outward (z −0.35) so the hand meets the staff at y 1.2. Delete part 28. Flare the robe hem with a wider 0.62 m bottom box (y 0.15). Widen the ochre/turquoise mantle bands to 0.15 m and run them over one shoulder."
+    },
+    {
+      "id": "street-corner",
+      "problems": [
+        "Repeated circular road patches and uninterrupted straight rut strips expose the modular construction immediately.",
+        "The large uniform flagstone field overwhelms the civic objects and makes the distinction between square, frontage and ordinary parcel surfaces unclear.",
+        "World rule: surfaces.square is a pale 'flagstone' pattern with a regular rectangular grid. It renders as a modern paved plaza, contradicting the bible's own 'Do not turn the whole town into a paved classical city' and the centrepiece designer's note. Change square to compacted earth (pattern 'dirt', base #c9a46a, accents #cdb789 / #b18d59) and reserve dressed limestone flags for a ring of about 5 m around the well court only.",
+        "World rule: rules.walkingEdge: the flush frontage at |z| 4–6 renders as a continuous, straight-edged pale band along both sides of the road, which reads as a pavement. Change it to the road's own earth colour, blending raggedly into lot ground with no constant-width strip. Doorstep stones and mats should be the only frontage marks.",
+        "World rule: rules.roads: say that cart ruts must be broken, wavering and of varying width (never two continuous parallel straight lines), so they can't read as rails or road paint.",
+        "World rule: roads: specify ruts as 'interrupted, slightly wavering segments 1–2.5 m long', not continuous lines. Forbid large repeated identical patch shapes along the frontage, because they tile visibly across modules."
+      ],
+      "fix": "Vary road dressing across adjacent modules and soften their joins. Keep flagstone within the defined civic square, explicitly preserve the flush swept-earth street edge, and retain earth surfaces for ordinary parcels so the assembled corner reads as a mudbrick river town rather than a broad paved plaza."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "Good concept (the claim ring is not a sign board), but the whole marker is about 2.7 m tall and pale cream. It nearly vanishes against the pale sand lot surface in both the cell and the vignette.",
+        "The forked post reads as a slingshot, and the ring is made of 8 boxes, which look like a cog or a lifebuoy rather than a clay ring.",
+        "The limestone weight and dry grass are hidden under the ring.",
+        "The pale ochre clay ring (#efd9a0) is about 1.3 m across. In the lot cell it is a 40-pixel speck in the corner, and in the vignette you can barely find it.",
+        "It is pale on pale: the ring and limestone weight sit on lotRough #c3a16c with almost no value contrast. Only the dark fork post reads.",
+        "The scatter of pottery and grass is too small to register.",
+        "World rule: Contrast rule (new): ground surfaces in this age are all mid ochres (countryside #b5a66b, lotRough #c3a16c, road #b17a49, square #d2bb87), so every marker, seat and signal object must have a strong value contrast with the surface it stands on. Use lime-white #f4ead2, dark timber #3a2a1c/#6d4c32, red ochre #8f4938, indigo #365f86 or patina turquoise #429d9b for the identifying part. Never use mudbrick/limestone tones on a mudbrick/limestone ground.",
+        "World rule: lotMarkers: change the free-lot ring from 'painted pale ochre' to 'lime-washed white with a red-ochre outer band, at least 2 m across, ring centre about 2.5 m up'. Change the community-lot corner markers from 'four low mudbrick corner markers' to '1.0–1.2 m stepped mudbrick pillars with lime-white caps', and make the front medallion at least 1.5 m across, lime-white with dark impressed dots."
+      ],
+      "fix": "Raise the post to about 3.2 m and thicken the fork arms to 0.3 m. Make the ring a smoother 12-segment hoop, about 1.4 m across, with a darker ochre outer band (#b68942) so it contrasts with the sand. Hang it from visible dark fibre cords. Pull the weight stone and grass tufts out in front to +z 5.2 so they read from the camera. Consider a ring of 5–6 small stones on the ground around the post's foot to mark the claim spot. / Scale the marker up by about 1.6x: post 3.5 m, ring outer diameter 2.0 m centred at y 2.5, and ring segments 0.4 m thick. Paint the ring lime-white #f4ead2 and add a broad red-ochre #b8734d outer band (8 thin boxes behind the ring) so it has a dark rim against the sky and ground. Add a dark swept-earth patch (#8b603d, 2.5x2 m, flush) under the post as a ground halo. Make the limestone weight 0.7 m."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The three flame cones are 0.9–1.1 m tall, so the lamp reads as a fire basket or tiki brazier, not an attended oil lamp.",
+        "The timber fork is almost hidden behind the bowl, so the silhouette is just a dark block topped with fire.",
+        "The pedestal's dark #6d4c32 core block makes it read as wood, not mudbrick.",
+        "World rule: Contrast rule (new): ground surfaces in this age are all mid ochres (countryside #b5a66b, lotRough #c3a16c, road #b17a49, square #d2bb87), so every marker, seat and signal object must have a strong value contrast with the surface it stands on. Use lime-white #f4ead2, dark timber #3a2a1c/#6d4c32, red ochre #8f4938, indigo #365f86 or patina turquoise #429d9b for the identifying part. Never use mudbrick/limestone tones on a mudbrick/limestone ground."
+      ],
+      "fix": "Drop the flames to 2–3 small cones of 0.35–0.45 m sitting at the bowl rim like wicks. Widen the fork so its two prongs rise clearly above and beside the bowl rim (0.3 m higher). Make the pedestal visibly 3 offset mudbrick courses in #c49561/#b17a49 with no dark core. Optionally add a small jar of oil at its foot."
+    },
+    {
+      "id": "bench",
+      "problems": [
+        "The top slab is divided into 4 even plank-like panels, so it reads as a wooden park bench, not one heavy limestone slab.",
+        "The slab is the same pale cream as the flagstone paving underneath, so it disappears in the vignette.",
+        "It is not visibly uneven and the reed mat can't be read.",
+        "The limestone slab (#c4ab78) and limestone supports (#b8a37a) sit on the limestone flagstone square (#d2bb87). The bench nearly disappears in the sheet and vignette, and only its shadow reads.",
+        "The three thin dark cross-strips on the mat read as wooden slats, so it looks like a modern slatted bench rather than a reed mat on a stone slab.",
+        "The rubble feet are 0.27 m blocks mostly hidden under the slab.",
+        "World rule: Contrast rule (new): ground surfaces in this age are all mid ochres (countryside #b5a66b, lotRough #c3a16c, road #b17a49, square #d2bb87), so every marker, seat and signal object must have a strong value contrast with the surface it stands on. Use lime-white #f4ead2, dark timber #3a2a1c/#6d4c32, red ochre #8f4938, indigo #365f86 or patina turquoise #429d9b for the identifying part. Never use mudbrick/limestone tones on a mudbrick/limestone ground.",
+        "World rule: seating: a 'limestone slab' bench on the limestone flagstone square is invisible. Specify dark mudbrick supports and a saturated woven mat (indigo or red-ochre), or a darker sandstone slab."
+      ],
+      "fix": "Make the top one slab 0.2 m thick in a warmer limestone #d2bb87, tilted 2–3° and slightly trapezoid. Remove the plank divisions. Make the supports chunky rubble and mudbrick stacks (2 boxes each, #b17a49) showing clearly beneath. Lay a 0.9 x 0.5 m reed mat in #b68942 with 3 darker stripes across one half of the seat. / Make the supports clearly mudbrick red-brown (#8b603d / #6d4c32) and taller (show 0.3 m below a 0.15 m slab). Push the slab to a warmer, darker sandstone (#a8885a) with a bevelled lighter top edge. Replace the slat strips with one woven mat in a saturated colour (#365f86 indigo with a #d9534f border band). Keep the seat at 0.45 m."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The 'reed shade' is a flat 4-legged slatted top at about 1.1 m, which reads as a picnic table, not a shade a person stands under.",
+        "The tether stone is a small grey-white blob and the clay wheel emblem isn't readable, so nothing says 'arrival place'.",
+        "The chariot is small and boxy and the horse looks like a pony; the pair don't read as a chariot rig from the camera.",
+        "The reed shade is a flat slatted roof (six parallel cylinders with gaps) on two thin posts in a single line. From the camera it reads as a picnic table or bench, not a shelter.",
+        "The tether stone and its clay wheel emblem form a small pale cube with a 1 m disc that almost blends with the frontage colour.",
+        "Each chariot wheel is a ring of 6 thin boxes that reads as a star or flower at distance. The horse's body (#875333) is close to the road colour (#b17a49) and loses its outline.",
+        "World rule: Contrast rule (new): ground surfaces in this age are all mid ochres (countryside #b5a66b, lotRough #c3a16c, road #b17a49, square #d2bb87), so every marker, seat and signal object must have a strong value contrast with the surface it stands on. Use lime-white #f4ead2, dark timber #3a2a1c/#6d4c32, red ochre #8f4938, indigo #365f86 or patina turquoise #429d9b for the identifying part. Never use mudbrick/limestone tones on a mudbrick/limestone ground."
+      ],
+      "fix": "Raise the shade to 2.2 m on 2 forked posts with a slanted reed mat roof and ragged ends, and put a person-height space under it. Make the tether stone a 1 m standing limestone post with a hole and a cord tied to it. Mount the clay wheel emblem (1 m, 6 spokes, terracotta) upright on the stone, facing the street. Lengthen the horse body and legs (shoulder at about 1.4 m). Give the chariot a visible curved front rail and a 0.9 m six-spoked wheel. / Shade: rebuild it as a lean-to. Use 4 posts (2 at 2.4 m at the back, 2 at 1.8 m at the front), a continuous thatch slab 0.25 m thick (no gaps, #b89a52 with darker #8a663d bundle ridges) tilted 0.25 rad toward +z, and a woven back screen. Tether stone: 1.4 m tall, lime-white #ead7aa, with the wheel emblem painted dark red-ochre #8f4938 and 1.2 m across. Wheels: add a solid dark #3a2a1c disc behind the spokes, or thicken the rim to 0.18 m. Horse: darken it to #5a3a24 with a cream mane so it separates from the road."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The front medallion is a cylinder lying flat on a block, so from above it is a lumpy brown blob. The four-dots-around-a-bowl symbol is unreadable.",
+        "The four corner markers are flat 0.5 m stubs and blend with the earth; the lot reads as an empty parcel with a few bricks.",
+        "Its palette is too close to the free lot's, so the two aren't clearly distinguished.",
+        "The four corner markers are flat 1x0.5 m mudbrick lumps whose top colour (#c49561) nearly matches the lot ground (#c3a16c). They read as dropped bricks, not as boundary markers.",
+        "The front medallion is a brown-on-brown disc with four tiny dark dots and a small bowl, mounted low. Unlike the free-lot ring, it says nothing at distance.",
+        "At stream distance the lot looks like an empty lot with debris.",
+        "World rule: Contrast rule (new): ground surfaces in this age are all mid ochres (countryside #b5a66b, lotRough #c3a16c, road #b17a49, square #d2bb87), so every marker, seat and signal object must have a strong value contrast with the surface it stands on. Use lime-white #f4ead2, dark timber #3a2a1c/#6d4c32, red ochre #8f4938, indigo #365f86 or patina turquoise #429d9b for the identifying part. Never use mudbrick/limestone tones on a mudbrick/limestone ground.",
+        "World rule: lotMarkers: change the free-lot ring from 'painted pale ochre' to 'lime-washed white with a red-ochre outer band, at least 2 m across, ring centre about 2.5 m up'. Change the community-lot corner markers from 'four low mudbrick corner markers' to '1.0–1.2 m stepped mudbrick pillars with lime-white caps', and make the front medallion at least 1.5 m across, lime-white with dark impressed dots."
+      ],
+      "fix": "Stand the medallion upright, rotated so it faces +z, as a 1.2 m terracotta disc on a 1 m mudbrick pillar. Put 4 bold dark dots (0.25 m) around a projecting pale bowl (#ead7aa) on its face. Make the corner markers 0.9 m-tall stepped mudbrick piers (3 courses) with a dab of turquoise #429d9b on top as the community colour. Lay a flush swept-earth ring of darker #a5774e inside the lot to mark it as shared ground. / Raise each corner marker into a 1.1 m stepped pillar of 3 courses in darker mudbrick #8b603d, topped with a lime-white cap (#f4ead2) and a small turquoise-patina bronze knob (#429d9b). Mount the medallion on a 1.4 m plinth and enlarge it to a 1.6 m disc in lime-white with four bold 0.35 m dark red-ochre (#8f4938) dots around a 0.6 m bronze (#b68942) bowl. Add a flush 0.3 m-wide darker swept-earth line joining the corners so the parcel outline reads."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The linen headcloth is a flat cream box sitting on the head, so it reads as a baker's hat.",
+        "The balance is a long plank held straight out with tiny pans; it reads as a stick or a tray.",
+        "The striped mantle is just a diagonal sash, so the 'from far away' woven mantle is underplayed."
+      ],
+      "fix": "Wrap the headcloth as 2 rounded bands, with a cloth tail falling to the shoulder. Make the balance a short beam (0.6 m) hanging from the hand on a cord, with two clearly visible bronze pans on strings. Extend the mantle into a wide draped wrap over both shoulders and down to the knees, in 3–4 bold stripes (#365f86, #e2b34b, #a44832), with a fringed hem."
+    },
+    {
+      "id": "dog",
+      "problems": [
+        "The dark brown and cream colouring with a deep chest reads as a modern pet breed (a Bernese-type dog), not a Bronze Age pariah or saluki-type street hound.",
+        "The neck is long and the head held high, so from above it looks slightly like a llama or goat.",
+        "The cord collar and bronze bead are invisible."
+      ],
+      "fix": "Recolour to a sandy tan (#c49561) with a cream belly and paws. Give it upright pointed ears, a lower, longer head and a tail curled over the back. Make the body leaner and longer. Widen the collar to a visible 0.08 m dark cord band with a bead of at least 0.12 m."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "The two slatted pergola roofs cover the eating areas from the camera's angle. The tables, bowls and cushions underneath are tiny specks, so it reads as a walled yard with two sheds rather than a place to eat.",
+        "The only strong café cue (the round bread oven) sits half-hidden behind the left pergola.",
+        "The low perimeter wall is the same colour as the base plate. The geometry check says 12 parts reach outside the 16 m room."
+      ],
+      "fix": "Move the domed bread oven (1.6 m, #b8734d, with a glowing #ff8b25 mouth) to the front-right corner of the court where the camera sees it. Add a large bronze broth cauldron (1 m) on a 3-stone hearth with glowing embers in the open centre. Replace one slatted pergola with a solid dyed cloth awning (#365f86 with a #e2b34b border) so the seating zone has a strong colour block. Enlarge the tables to 1.2 m low clay platforms with 0.3 m bowls. Darken the perimeter wall to #8b603d, and keep all parts inside |x|,|z| ≤ 7."
+    }
+  ]
+}

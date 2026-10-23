@@ -335,6 +335,7 @@ const ABILITY_WORDS: [RegExp, Ability][] = [
   [/^(vehicle|drive|drivable|driveable|ride|rideable|car|mount)$/, 'vehicle'],
   [/^(weapon|gun|shoots?|turret|cannon|fires?|ranged)$/, 'weapon'],
   [/^(trap|traps|snare|pit|spikes?)$/, 'trap'],
+  [/^(smash|smashes|smasher|wreck|wrecks|wrecker|destroy|destroys|destroyer|rampage|rampages|stomp|stomps|demolish|demolition)$/, 'smash'],
 ];
 /** `["Boat","flying"]` → `['floats','flies']`; anything outside the vocabulary is dropped. */
 export function normalizeAbilities(raw: unknown): Ability[] {
@@ -351,14 +352,19 @@ const ABILITY_GUESS: [RegExp, Ability][] = [
   [/\b(boat|raft|canoe|kayak|ship|yacht|submarine|pontoon|ferry|gondola|dinghy|surfboard|log)\b/, 'floats'],
   [/\b(jet ?pack|rocket|wings?|balloon|helicopter|plane|airplane|jet|glider|blimp|airship|ufo|drone|dragon|hoverboard|broomstick|flying|space ?ship|starship|spacecraft|shuttle|saucer|zeppelin|hover ?car|flying car|chopper)\b/, 'flies'],
   [/\b(car|truck|kart|go-kart|van|bus|tank|bike|bicycle|motorbike|motorcycle|scooter|tractor|wagon|cart|horse|vehicle|jeep|buggy)\b/, 'vehicle'],
-  [/\b(gun|cannon|turret|crossbow|catapult|blaster|launcher|ballista|laser|bazooka|minigun|trebuchet|slingshot)\b/, 'weapon'],
+  [/\b(gun|cannon|turret|crossbow|catapult|blaster|launcher|ballista|laser|bazooka|minigun|trebuchet|slingshot|(?<!fish |water |septic |fuel |oil |gas |think |shark )tank|warship|battleship|gunship|mech)\b/, 'weapon'],
   [/\b(trap|pit|snare|spikes|bear trap|net)\b/, 'trap'],
 ];
+/** A monster or a wrecking machine, by its name; never a dinosaur museum, a monster truck rally stand or a T-rex statue. */
+const SMASHER = /\b(t-?rex|tyrannosaur\w*|dinosaur|godzilla|kaiju|monster|king kong|giant ape|wrecking ball|bulldozer|battering ram|juggernaut|giant robot|mech|colossus|rampag\w*)\b/;
+const NOT_A_SMASHER = /\b(museum|park|statue|sculpture|house|home|cafe|café|shop|store|bar|toy|plush|skeleton|fossil|sign|mural|garden|playground|slide|bounce|bouncy|costume|cake|pizza|burger|diner|restaurant|cinema|theatre|theater|school|library|hotel|stand|stall|truck rally|arena|zoo|exhibit|model|figurine|topiary|inflatable|lamp|bench|fountain)\b/;
 /** What a build can do: what the designer said, plus what its name and description make obvious. */
 export function abilitiesOf(b: Pick<Blueprint, 'name' | 'description' | 'abilities'>): Set<Ability> {
   const out = new Set<Ability>(b.abilities ?? []);
   const text = `${b.name} ${b.description}`.toLowerCase();
   for (const [re, a] of ABILITY_GUESS) if (re.test(text)) out.add(a);
+  const name = b.name.toLowerCase();
+  if (SMASHER.test(name) && !NOT_A_SMASHER.test(name)) out.add('smash');
   if (out.has('floats') || out.has('flies')) out.add('vehicle');
   return out;
 }

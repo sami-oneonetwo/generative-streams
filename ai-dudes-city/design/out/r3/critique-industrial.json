@@ -1,0 +1,207 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The brick, iron and tailored silhouettes establish a convincing Industrial Age, but several pieces miss explicit bible requirements or lose their defining details at stream distance. Restore the fountain, connect the railway camp off-tile, strengthen ownership and resident-role cues, and remove presentation geometry from the assembled street.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the healthy meadow, sparse cinders and isolated sleeper offcuts; keep railway debris subordinate to the countryside."
+    },
+    {
+      "id": "street",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Repeated rectangular dark patches become an obvious stamped pattern in the assembled scene rather than irregular dampness and wheel wear.",
+        "The fine sett pattern becomes visual noise at stream distance; the required longitudinal rectangular structure is weak."
+      ],
+      "fix": "Use larger, clearly rectangular setts oriented along x. Replace the repeated dark rectangles with a few irregular damp patches and restrained longitudinal wheel-polished strips, preserving flush rails, clear gutters and the raised flagstone pavements."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the large empty ochre ring on cream enamel, open gravel centre and sparse brick debris; preserve the ring's contrast at town scale."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The enclosure reads as long horizontal bars rather than cast-iron panels on a distinct raised brick footing.",
+        "The central surface reads as a flat terracotta sheet rather than the specified brick surface.",
+        "The ownership plate's name, brass border and filled household emblem do not resolve clearly at this camera."
+      ],
+      "fix": "Build a low brick footing with sparse, broad iron panel uprights along the two specified boundaries, keeping the total height around 0.9 m and the frontage open. Add a readable brick surface and enlarge the gate-post enamel plate enough to distinguish 'Ivy', a filled oval, brass border, exposed bolts and the #d9534f ownership strip."
+    },
+    {
+      "id": "street-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Both crowns rely on similar smooth, flattened foliage blobs, weakening the plane-versus-elm distinction.",
+        "Root guards and pavement openings collapse into tiny dark marks rather than readable municipal tree infrastructure."
+      ],
+      "fix": "Within the 30-part pair, give the leaning plane a broken, off-centre crown and the shorter elm a wider, uneven branch spread. Use a few angular foliage masses and clearly outlined low iron guards around visible pavement openings, leaving a usable walking route."
+    },
+    {
+      "id": "wild-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The tall ash reads as a long bare pole with a small rounded tuft.",
+        "The ash and elm crowns still look assembled from repeated rounded blobs rather than irregular branching structures."
+      ],
+      "fix": "Redistribute the 36 parts into a visibly forked ash with crown masses at unequal heights, a broad asymmetrical elm and a crooked, sparsely leafed birch. Keep their existing height differences, but replace stacked blobs with larger faceted masses and visible off-axis branches."
+    },
+    {
+      "id": "street-light",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The cool, solid-looking lantern does not reveal a readable gas burner or mantle.",
+        "The thin shaft loses much of its cast-iron civic character in the assembled view."
+      ],
+      "fix": "Keep the 16-part upright silhouette, but slightly strengthen the post and base. Build a broad square cage with distinguishable glass panels around one compact warm mantle; only that mantle should use glow=true."
+    },
+    {
+      "id": "centrepiece",
+      "score": 4,
+      "ok": false,
+      "problems": [
+        "The rendered clock tower replaces the explicitly required municipal fountain.",
+        "There is no broad basin, upper bowl, visible blue water or four-spout fountain silhouette.",
+        "Changing a fountain into a clock also breaks the same-purpose transformation rule."
+      ],
+      "fix": "Replace the clock tower with the specified 52-part cast-iron fountain: approximately 4.5 m stone plinth, broad lower basin, short fluted column, shallow upper bowl and four modest spouts. Keep it around 2.4 m high, with restrained brass fittings and clearly visible non-emissive blue water."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the warm timber slats and broad dark iron end frames, maintaining a two-person width and approximately 0.45 m seat height."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the movable barrow silhouette, large wheels, projecting handle and plain folding canvas cover. Keep the contrasting bread, tins and paper goods grouped into readable masses."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The stop marker reads as a generic yellow circular sign rather than a clearly identifiable enamel tram-wheel emblem.",
+        "The timetable case is not legible.",
+        "The wheels read as small rim accents beneath the body rather than prominent exposed steam-running gear."
+      ],
+      "fix": "Within 68 parts, retain the short boiler, chimney and timber cabin but enlarge the exposed wheel silhouettes. Give the stop pole a high-contrast enamel wheel-and-spokes emblem and a distinct rectangular timetable case, keeping the canopy narrow and the pavement route clear."
+    },
+    {
+      "id": "river",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the shallow open lattice girders, timber deck and stone pier noses. Keep both gravel approaches visibly flush with the deck at the bank landings, and preserve the roughly 1 m clearance above water."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the four low brick corner plinths, open construction ground and public-works medallion; keep its filled civic centre visually distinct from the free-lot ring."
+    },
+    {
+      "id": "camp",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The siding visibly terminates within the grassy tile instead of continuing off-tile.",
+        "The train therefore reads as a parked display arrangement without a plausible railway connection."
+      ],
+      "fix": "Extend the siding continuously through at least one camp boundary and show an unobstructed off-tile railway approach. Retain the two luxury carriages, striped veranda, compact locomotive, trunks and gathering table within the 88-part budget; keep all wheelsets seated on the rails."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The clerk's lower silhouette does not clearly distinguish a long practical skirt from blocky trousers.",
+        "The clerk's brown carried object reads too similarly to the worker's tool case rather than as a ledger.",
+        "Pinned hair is not a strong identifying silhouette."
+      ],
+      "fix": "Retain the worker's cap, rolled sleeves, waistcoat and boots. Give the clerk one continuous, slightly flared skirt over visible shoes, a distinct pinned bun and a thin contrasting bound ledger held against the body, retaining both base figures within 48 parts."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the dominant tall top hat, oversized brass civic chain, dark frock coat and rolled charter. Preserve the strong separation from the railway leader's cream coat and bowler."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the cream travel coat, low bowler, waistcoat and concession-map prop. Keep the pocket-watch chain smaller than the Alderman's civic chain and preserve the foreign luggage crest."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the red masonry, pale window surrounds, dark pitched roof and chimney. Keep the entrance and two-storey proportions scaled consistently to the residents."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the enamel tea-room sign, dark timber shopfront, restrained awnings and masonry shell. In town placement, join its customer apron directly to the municipal paving rather than retaining a separate display platform."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped masonry massing, strong cornices, repeated tall windows and restrained copper crown; avoid adding modern curtain glazing or arbitrary machinery."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the chunky hound anatomy and simple brass identification tag. Keep the tag subordinate to the muzzle and body silhouette at resident scale."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the glazed brougham cabin, horse, carriage wheels and restrained brass trim. Keep the paired shafts and harness visually separated from the horse's body when assembling the vehicle."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The residents retain a pale presentation slab in the carriageway, interrupting the continuous sett surface at the tram route.",
+        "Repeated street dressing exposes the underlying tile stamp across the road.",
+        "The café's separate turf-and-apron platform reads as an asset placed on the square rather than integrated municipal ground."
+      ],
+      "fix": "Strip presentation bases from town instances and place feet directly on the finished ground. Maintain uninterrupted flush rails and setts, vary the road-dressing arrangement between modules, and merge the café frontage into the square's flagstone system with deliberate, traversable edge transitions."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

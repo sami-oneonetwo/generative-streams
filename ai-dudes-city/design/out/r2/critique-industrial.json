@@ -1,0 +1,226 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The brick architecture, restrained ironwork and character costumes establish a convincing Industrial Age, but the clock tower replaces the required fountain and several transport, marker and landscape assets miss explicit bible requirements. Preserve the strong civic palette while correcting those assets, reducing surface noise and proving rail continuity and pavement clearance in the assembled scene.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Fine, bright grass speckling dominates both renders and competes with small characters and props.",
+        "Flowers and stones read as isolated blobs on flat discs rather than integrated meadow dressing."
+      ],
+      "fix": "Use broad, low-contrast patches of the three meadow colours instead of dense white flecks. Rework the 16 dressing parts into sparse angular grass, small wildflower clusters and gravel, concentrating cinders and sleeper offcuts near railway influence while leaving most ground healthy and open."
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Repeated pale rectangular strips read as painted traffic markings, despite the prohibition on road markings.",
+        "The high-frequency, strongly contrasting sett pattern creates visual chatter at stream distance.",
+        "A distinct narrow gutter is difficult to separate from the pavement edge."
+      ],
+      "fix": "Keep the 8 m sett carriageway and raised flagstone pavements, but replace the pale bars with irregular, subdued changes in the existing stone colour to suggest wheel polishing. Reduce sett contrast, articulate narrow kerb-side gutters and keep both tram rails visibly flush; retain the 24-part dressing budget and clear centre."
+    },
+    {
+      "id": "lot-sale",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The enamel board appears supported by two timber-coloured legs rather than the required single bolted iron post.",
+        "The empty ring reads well, but the support construction weakens the industrial fabrication language."
+      ],
+      "fix": "Retain the large ochre ring and cream enamel face. Mount it on one dark iron post near x 4.5, z 4.5 with a broad bracket and visible bolt heads, keeping the 14-part parcel open with sparse brick fragments, ballast and weeds."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The owner plate reads as blank at the supplied scale; neither the exact player name nor the filled household oval is clearly established.",
+        "The parcel interior is a flat green field, while the specified claimed-lot surface is brick."
+      ],
+      "fix": "Keep the low brick-and-iron boundary and open frontage. Within 34 parts, give the front post a brass-bordered enamel plate with clearly painted 'Ivy', exposed bolts and a filled oval, retaining the red cap; use brick as the claimed-lot base, with greenery confined to intentional garden areas."
+    },
+    {
+      "id": "street-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The height difference works, but smooth spherical crown lobes make the pair feel manufactured.",
+        "Plane and elm are distinguished more by height than by branching and crown structure."
+      ],
+      "fix": "Within 30 parts, retain the leaning plane and shorter elm but use angular, unequal foliage masses, exposed forks and off-centre gaps. Give the elm a distinctly uneven lateral spread, and size the root openings so a continuous usable pavement route passes behind them."
+    },
+    {
+      "id": "wild-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Repeated rounded foliage balls and clean trunks make the group look like enlarged ornamental trees.",
+        "The ash, mature elm and young birch need stronger structural differences beyond overall size."
+      ],
+      "fix": "Redistribute the 36 parts into a tall ash with an irregular high fork, a broad elm with unequal heavy limbs and a sparse, crooked birch with exposed pale trunk. Break crown outlines with gaps and varied angular masses rather than evenly rounded clusters."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the upright iron post and compact square gas lantern. Preserve a readable cage and small burner at gameplay scale, with glow confined to the flame or mantle rather than the glass."
+    },
+    {
+      "id": "centrepiece",
+      "score": 4,
+      "ok": false,
+      "problems": [
+        "This is a civic clock tower, not the required cast-iron fountain.",
+        "The broad basin, upper bowl, four spouts and visible blue water are absent.",
+        "The tall tower changes both the specified silhouette and the centrepiece's fountain purpose."
+      ],
+      "fix": "Replace the clock tower with the specified 52-part fountain: approximately 4.5 m across and 2.4 m high, with a stone plinth, broad dark-iron lower basin, short fluted column, shallow upper bowl and four modest brass spouts. Make the blue water clearly visible from above and non-emissive."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the warm timber slats and broad cast-iron end frames without adding filigree. Maintain a two-person width and approximately 0.45 m seat height relative to the resident figures."
+    },
+    {
+      "id": "market",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The wheels and handles correctly establish a movable barrow, but the merchandise mostly reads as undifferentiated bread-coloured lumps.",
+        "Tins, bundled newspapers and paper-wrapped goods are not separately readable.",
+        "The cover lacks a clear folding mechanism."
+      ],
+      "fix": "Within the 34-part, approximately 2.6 × 1.6 m envelope, retain the large iron-rimmed wheels and projecting handles. Add broad folding support arms and separate the stock into ochre loaves, metallic tins, a cream newspaper bundle and pale wrapped parcels, using colour blocks rather than tiny detail."
+    },
+    {
+      "id": "arrival",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The tram reads primarily as a uniform windowed passenger box with a chimney attached.",
+        "The short boiler compartment and large exposed wheels are not clearly expressed.",
+        "The stop's tram-wheel emblem and timetable case are not readable as distinct features."
+      ],
+      "fix": "Rebuild the 68-part arrival asset around a toy-compressed 5 m steam tram with a visibly separate short boiler, chimney, large exposed wheels and timber passenger cabin. Give the stop pole a bold enamel wheel emblem and separate timetable case, retaining a narrow canopy and an unobstructed pavement route."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The crossing reads as a timber deck with simple rails more than a riveted iron viaduct with shallow lattice girders.",
+        "Continuous bank-edge bars make the carriage approaches ambiguous.",
+        "Pier noses and river-edge details are too weak to establish the specified structural character."
+      ],
+      "fix": "Within 68 parts, add a few broad diagonal girder members and readable rivet bosses, keeping side rails low and open. Show the approximately 4 m-wide deck meeting clear bank approaches at z ±7, about 1 m above water, with no transverse lip blocking passage; articulate stone pier noses, mooring rings, gravel and sparse reeds."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The front marker reads as another rectangular signboard rather than the specified cast-iron public-works medallion.",
+        "The node graphic is present, but its central civic disc does not dominate clearly enough at stream distance."
+      ],
+      "fix": "Keep the four low brick corner plinths and open construction ground. Replace the front board with a broad cast-iron medallion carrying four clearly separated nodes around one larger civic disc, using restrained brass or enamel contrast within the 18-part budget."
+    },
+    {
+      "id": "camp",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Rails are present, but the short track sections visibly terminate inside the grass tile rather than continuing into an off-tile railway connection.",
+        "The parallel sections read more like display tracks than a coherent siding.",
+        "The carriages' luxury and distant-network identity are weaker than the locomotive and striped awning."
+      ],
+      "fix": "Rearrange the 88 parts around a coherent siding that visibly exits the camp tile, placing both shelter carriages on connected track. Preserve the locomotive, veranda and gathering area, while strengthening carriage panelling, a large railway crest, labelled trunks and coal baskets; restrict gaslight glow to the flames."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contrasting mechanic and clerk silhouettes, clean tailoring and restrained workwear. Preserve the flat cap, tool case, pinned hair, long skirt and ledger as broad readable shapes within the 48-part pair."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the tall black top hat, dark frock coat and oversized brass chain with its single broad medallion. Keep the rolled charter separate from the torso silhouette and avoid adding smaller competing office symbols."
+    },
+    {
+      "id": "leader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The upper costume reads predominantly brown rather than as the required cream travel coat.",
+        "The rolled document resembles the Alderman's ceremonial charter instead of a railway concession map.",
+        "The pocket-watch chain is not clearly distinguished from general chest ornament."
+      ],
+      "fix": "Within 40 parts, establish a broad cream travel-coat silhouette over a contrasting waistcoat, retaining the bowler and leather gloves. Use one clear pocket-watch chain and give the partly unrolled map a bold railway-line graphic, visually separating this traveller from the dark-coated civic head."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the brick-coloured massing, cream window surrounds, pitched dark roof and chimney. Keep masonry treatment broad and restrained so it remains legible without inheriting the ground textures' fine speckling."
+    },
+    {
+      "id": "cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The brick building and awnings are period-compatible, but the required enamel tea-room sign is not visible.",
+        "The lower frontage does not clearly establish the specified tiled tea room; its identity relies mainly on outdoor tables."
+      ],
+      "fix": "Add a large cream enamel 'TEA ROOM' fascia, a broad glazed-tile lower wall and a clearly framed timber shopfront. Retain the brick upper floor, chimney and restrained canvas awnings, keeping lettering and tile divisions readable from the gameplay camera."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped masonry silhouette, repeated commercial windows and substantial base. Keep iron framing dark and subordinate to the brick mass, and do not increase the rooftop ornament or introduce modern curtain-wall glazing."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the blocky hound silhouette, contrasting muzzle and paws, and simple period-compatible collar. Preserve separation between the legs and body when reduced to street-scene size."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the horse-drawn glazed timber cab, visible shafts and iron-rimmed wheels; this is a genuine age transformation rather than a recoloured motorcar. Keep the horse's legs, harness and cab wheels visually separated at gameplay distance."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The incorrect clock centrepiece and lane-like pale road strips remain dominant in the assembled scene.",
+        "Tram rails visibly terminate within the street rather than demonstrating a continuous transport route.",
+        "Tree guards and stop furniture do not demonstrate a clearly continuous usable pavement route past them.",
+        "Fine grass and sett noise compete with the very small residents and their role-defining props."
+      ],
+      "fix": "Reassemble with the corrected fountain, road and tram, extending rails to plausible scene connections. Maintain the 16 m parcels and 8 m carriageway, demonstrate a continuous clear walking route past fixtures, and use a 1.8 m resident beside the bench, lantern, barrow and tram to validate scale; simplify ground contrast rather than enlarging every prop."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

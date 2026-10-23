@@ -1,0 +1,210 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The ivory shells, dark apertures and restrained lighting establish a promising Future, but conventional road markings, ornamental trees and several weak functional silhouettes undermine age fidelity. The assembled view particularly exposes disappearing civic symbols and interfaces, so strengthen their silhouettes and contrast without increasing bloom.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The dressing repeats three similar oval pads with pastel pebble clusters rather than reading as diverse regenerated meadow.",
+        "Native flowers, fallen seed pods and the two ecological sensor caps are not distinguishable."
+      ],
+      "fix": "Redistribute the 16 dressing parts into irregular, unequal groupings of clover, angular flower tufts, stones and fallen pods. Give the two tiny sensor caps a distinct manufactured profile, remove the repeated oval bases, and keep most dressing below 0.35 m."
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Parallel cyan lines and centre dashes reproduce conventional lane-marking language on a slate-grey road.",
+        "The walking edge reads as a hard linear border; the required planted drainage seam is not evident."
+      ],
+      "fix": "Lighten the road to pale ceramic panels and replace the dashed centreline with sparse, flush guidance seams tied to panel joints. Add a narrow planted drainage slit, retain the 8 m unobstructed carriageway and 2 m walking edges, and resolve the kerb as a shallow 0.08 m accessible transition rather than a rail."
+    },
+    {
+      "id": "lot-sale",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The amber hexagon reads as a rigid frame on a thin signpost rather than a projected empty ring.",
+        "The dark pedestal and flat green discs do not communicate the specified ceramic projector and sparse reclaimed ecology."
+      ],
+      "fix": "Replace the upright stem with a low matte ceramic projector near the front corner and visibly separate the floating amber ring from its housing. Keep the ring hollow and below head height, with restrained emission, and replace the discs with sparse clover and aggregate chips."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The boundary reads as paired timber rails rather than woven biocomposite.",
+        "The owner tag resembles a miniature nameboard; the filled household emblem is not legible."
+      ],
+      "fix": "Give the warm rails a broad, readable woven construction while retaining their permeability, approximately 0.75 m height and open front. Use a rounded ceramic corner post with a solid #d9534f insert and a close-floating tag containing a filled household emblem and the exact name Ivy; only the tag should emit."
+    },
+    {
+      "id": "street-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The shade tree is a nearly straight pole topped with a compact cluster of rounded balls.",
+        "The flowering tree lacks a clearly dominant long lateral branch, so both trees read as conventional ornamental planting."
+      ],
+      "fix": "Reallocate the 32 parts into a tilted, branching shade-tree trunk with an offset broad crown and a smaller flowering tree with one unmistakably long lateral limb. Use unequal faceted foliage masses and open gaps instead of balanced ball clusters; keep bark and foliage unlit."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The pine is a vertical stack of rounded pads rather than a wind-shaped conifer.",
+        "The willow reads as a small mushroom-like cluster, and repeated rounded foliage weakens the distinction between species."
+      ],
+      "fix": "Within the 40-part budget, sweep the pine trunk and uneven needle tiers to one side, spread the oak through irregular branching and separated crown masses, and give the willow low arching stems with trailing foliage. Preserve natural materials and avoid adding technological glow to compensate."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the slim matte ivory pillar, dark emitter recess and compact cap. Keep emission confined to the recessed light source and preserve the clear walking route demonstrated in the assembled scene."
+    },
+    {
+      "id": "centrepiece",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Tall lavender supports dominate the composition and read as pylons rather than low ceramic emitter petals.",
+        "The tiny central emblem loses priority to the large orbit fragments and becomes difficult to identify in the street scene."
+      ],
+      "fix": "Lower and broaden the four emitter petals around a low dais approximately 4.5 m across. Enlarge the faceted seed emblem, shorten the orbit arcs, and keep the complete image below about 2.5 m; use dark emitter recesses for separation while leaving the physical structure matte."
+    },
+    {
+      "id": "bench",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The rectilinear back and sitting slab read as an ordinary park bench.",
+        "The docking puck and levitation gap are too concealed to establish the hover-seat function."
+      ],
+      "fix": "Form a continuous warm biocomposite sitting shell with a low back and clearly expose a discreet central docking puck beneath it. Establish a narrow continuous shadow gap and a small lift-status strip while retaining a two-person seat height of approximately 0.45 m."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the rounded physical shell, dark display recess, visible fruit and refill products, and projecting serving tray. Preserve the compact footprint and small hover gap, with emission limited to the interface and lift apertures."
+    },
+    {
+      "id": "arrival",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the wheel-free shuttle silhouette, dark glazing, visible passenger-door seam and thin physical shelter. Keep the vehicle around 5 m long, the four lift units recessed, and boarding flush with the pavement rather than introducing a raised landing platform."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The crossing reads as a pale opaque slab, with weak cyan-on-cyan separation from the water.",
+        "Safety rails nearly disappear, while repeated bank-side stone and reed arrangements look mechanically mirrored."
+      ],
+      "fix": "Make the continuous deck visibly translucent while preserving a readable walking surface through restrained guide strips and matte structural edges. Clarify the low transparent rails, retain physical anchors at z ±7 and the deck approximately 1 m above water, and vary reed, stone and erosion-rib placement without making the water emissive."
+    },
+    {
+      "id": "civic-lot",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The projected symbol collapses into another hollow loop; four nodes connected to a shared centre are not legible.",
+        "The continuous purple perimeter makes the community parcel resemble another claimed enclosure."
+      ],
+      "fix": "Prioritise four low ceramic anchor blocks and remove or recess the connecting perimeter strips so the parcel remains visually open. Use a low ceramic front projector displaying four distinct filled nodes connected to one larger shared centre, with only that projected symbol emitting."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the landed central pod, two hinged shelter wings, sealed capsules, compact rover and low shared light core. Preserve the three-zone shelter silhouette and dark entrance, with emission restricted to the core, docking indicators and rover sensor apertures."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the gardener's pale utility layers and seed capsule against the courier's darker wrap-tabard and contrasting parcel. Preserve their different head silhouettes, base-figure proportions and natural or ceramic surfaces without adding glowing skin or armour."
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The chest insignia reads as a small circular dial rather than an unmistakable shared-node emblem.",
+        "The pale administrative panels largely disappear against the square in the assembled view, weakening the symbol of office."
+      ],
+      "fix": "Simplify the chest emblem into bold connected nodes and give the three side panels darker, restrained frames with larger cyan graphic shapes. Strengthen the tailored mantle silhouette and organise the panels into a clear shoulder-side constellation without obscuring the face or adding more panels."
+    },
+    {
+      "id": "leader",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The oversized elevated orbital emblem dominates the figure and reads as a ceremonial staff.",
+        "Broad dark shoulder masses push the envoy toward an armoured guard, while the repaired panel, travel textiles and meteorite lose priority."
+      ],
+      "fix": "Remove the tall emblem mast and place a compact unfamiliar orbital-coordinate motif on the layered travel tabard. Expose an asymmetric ceramic faceplate, segmented hands and one visibly repaired shoulder panel; make the carried meteorite a clearly faceted, unlit stone rather than allowing it to merge into the dark outfit."
+    },
+    {
+      "id": "home",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Repeated spherical greenery makes the roof terraces read as stacked topiary rather than inhabited living architecture.",
+        "Foliage crowds the white terrace rims and obscures how the upper forms are supported and planted."
+      ],
+      "fix": "Retain the rounded habitat, dark windows and clear front entrance, but introduce readable recessed growing beds and fewer, more irregular plant masses. Reveal the supporting shell or ribs beneath each upper terrace and separate foliage from roof edges to eliminate ambiguous intersections."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the rounded pavilion, dark serving hatch, physical counter and visible refill products. Keep the outdoor seating subordinate to the serving entrance and preserve the restrained planted roof rather than covering the shell with luminous trim."
+    },
+    {
+      "id": "skyscraper",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Uniform concentric tiers read as a tapered office tower rather than an identifiable modular habitat.",
+        "Continuous dark bands and pebble-like planting provide little evidence of dwelling modules or usable shared terraces."
+      ],
+      "fix": "Break the taper into several staggered clusters of chunky dwelling modules, separated by ivory structural ribs and distinct dark windows. Create readable shared planted terraces with irregular greenery and retain a clear ground entrance within the existing footprint."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the living dog's recognisable blocky anatomy and the functional collar-and-hoverball adaptation. Keep the animal unlit and ensure the ball remains distinct from its restrained projected play rings."
+    },
+    {
+      "id": "car",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The large cyan front dome reads as an attached opaque ball rather than usable cabin glazing.",
+        "Its overlap with the dark canopy and ivory shell makes the passenger compartment and entry difficult to understand."
+      ],
+      "fix": "Reshape the cyan dome into faceted dark non-mirror glazing that follows the compact shell and joins the rear canopy cleanly. Add one broad readable passenger-door seam, retain the wheel-free lift units and small ground clearance, and limit emission to functional apertures."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

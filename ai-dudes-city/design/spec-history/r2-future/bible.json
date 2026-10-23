@@ -1,0 +1,127 @@
+{
+  "id": "future",
+  "name": "the Future",
+  "summary": "Ivory structures, living greenery and restrained light fields shape the Administrator's open town.",
+  "rules": {
+    "sidewalks": true,
+    "kerbs": true,
+    "roadMarkings": true,
+    "roads": "Use pale ceramic-composite road panels along x, 8 m wide within |z| <= 4, with sparse cyan guidance seams rather than painted asphalt lanes. Street dressing: 22 low parts below 1.2 m, including flush guide emitters, inset drainage slots, repair panels and low edge nodes. Only guide-light parts use glow=true. Keep the middle physically unobstructed; glowing surface lines are navigational graphics, not raised barriers. The glowgrid surface lights its lines only.",
+    "walkingEdge": "Broad matte tiles occupy |z| 4–6, with a shallow bevelled kerb about 0.08 m high and continuous accessible transitions. A narrow planted drainage seam separates walking from vehicle guidance. Trees and fixtures stand at z 5 without reducing the route to a maze of pods.",
+    "lotMarkers": "Free lot: 14 parts on a 16 m parcel, with a low ceramic projector near x 4.5, z 4.5 displaying a large empty amber ring below head height. The ring uses glow=true and remains the wordless available symbol; its projector is physical and unlit. Add sparse clover and a few reclaimed aggregate chips. Community lot: 18 parts, with four low anchor blocks and a front projector displaying four connected nodes around one shared centre; only the projected symbol uses glow=true. Keep the build area empty and distinguish public collaboration from private claiming.",
+    "boundaries": "Claimed lot: 30 parts including the owner marker. Use waist-low woven biocomposite rails between rounded ceramic posts along z -6 and x -6, approximately 0.75 m high and below 1.2 m. Leave the +z front open with a clear entrance gap. Boundaries are tangible and visually permeable, not opaque force walls or glowing cages.",
+    "ownerMarker": "A front-corner ceramic post has a solid owner-colour insert in #d9534f and projects a small filled household emblem with the exact player name. Only the floating tag uses glow=true; limit bloom so the lettering and red owner accent remain distinct. The tag stays close to its post rather than floating over the building.",
+    "lighting": "Street light: 12 parts at x 0, z 5, comprising a tapered ivory pillar, a recessed cyan-white emitter and a small directional cap. Only the emitter uses glow=true. Use a broad, calm light source, not a laser beam, giant holographic billboard or neon coating over the entire pillar.",
+    "centrepiece": "Use 46 parts for a civic hologram beacon on a low physical dais about 4.5 m across. Four ceramic emitter petals surround a floating, faceted seed-like town emblem, with short orbiting light arcs suggesting shared growth. Hologram and arc parts use glow=true; the dais and petals remain matte. Keep the image under about 2.5 m high and transparent enough that the square stays visible.",
+    "seating": "Use 10 parts for a stable two-person hover seat with a warm biocomposite sitting shell, low back and a discreet ground docking puck. Seat height stays about 0.45 m, including the small levitation gap. Only a narrow lift-status strip uses glow=true; avoid bobbing, inaccessible heights or a giant glowing cushion.",
+    "market": "Use 34 parts within about 2.6 × 1.6 m for a hovering vending pod with a tangible rounded shell, clear product windows, a fold-out serving tray and small stabiliser nodes. Show fruit, cultured-food packs and reusable refill capsules so its retail role is obvious. Only the small interface and lift emitters use glow=true; the entire pod must not become an unreadable light blob.",
+    "trees": "Street pair: 32 parts total at x -3 and x 3, z 5; use a tall regenerated shade tree with a tilted trunk and uneven broad crown, and a smaller flowering tree with one long lateral branch. Low root-monitor collars may have a single status pip using glow=true, but leaves and trunks remain natural and unlit. Wild group: 40 parts for a wind-shaped pine, a broad irregular oak and a young willow shrub. Countryside dressing: 16 low sparse parts of clover, native flowers, stones, fallen seed pods and two tiny ecological sensor caps, mostly below 0.35 m. Future ecology is diverse, not cloned topiary or a forest of crystals.",
+    "arrival": "Use 68 parts for a hover-shuttle stop and vehicle. At z 5 place a thin physical shelter, flush boarding marker and compact arrival glyph; only the glyph and guide strip use glow=true. At z 0, aligned along x, place a roughly 5 m hover shuttle with a rounded ceramic shell, dark windows, visible passenger-door seam and four recessed lift units. Lift emitters use glow=true, but the body does not. Keep boarding at pavement level and avoid a huge landing pad.",
+    "crossing": "Use 58 parts for a solid-light crossing along z, about 4 m wide, with a continuous shallow translucent deck between physical ceramic bank anchors. Deck light planes and slim guide strips use glow=true; anchors and structural edge pieces remain matte. The traversable deck meets banks about 1 m above water, with low transparent safety rails. Water flows along x across |z| <= 7; show its central 12 m in the river tile and place real bank anchors at z ±7 in the adjoining bank sections. Add native reeds, restored river stones and small erosion-control ribs; the water itself never glows.",
+    "camp": "Use 86 parts for an android delegation's landed pod with two unfolded shelter wings, making three sheltered zones in total, plus sealed cargo capsules, a compact survey rover and a low shared light core across the river. Only the light core, docking indicators and rover sensor apertures use glow=true. The separate android-envoy leader uses 42 parts including the base figure: an asymmetric ceramic faceplate, dark visor, layered travel tabard and segmented hands, carrying a faceted meteorite token. An unfamiliar orbital-coordinate emblem and a visibly repaired shoulder panel suggest a long journey rather than a local service robot.",
+    "people": "Use 50 parts total for two residents at x -0.6 and x 0.6, retaining the base figure proportions. One is a human gardener in textured utility knit, soft boots and a short asymmetric jacket, carrying a seed capsule; the other is an android courier with ceramic joints, a cloth wrap-tabard and a compact parcel. Give them different head and hair or visor silhouettes. Keep technological detail broad and functional, with no glowing skin or combat armour.",
+    "head": "The Administrator uses 46 parts including the base figure. Give them an ivory tailored civic mantle, a dark understated visor band, a large shared-node insignia and three small floating administrative panels arranged beside rather than in front of the face. Panel graphics and the insignia's light inset use glow=true. The controlled panel constellation is the symbol of office, replacing crowns, top hats and ceremonial scissors without turning the head into a military commander."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "meadow",
+      "base": "#9cbea0",
+      "accent": "#c6d6b3",
+      "accent2": "#6d9c8a",
+      "scale": 1.5
+    },
+    "road": {
+      "pattern": "glowgrid",
+      "base": "#d7e1e8",
+      "accent": "#66f2df",
+      "accent2": "#9aa9c4",
+      "scale": 2.5,
+      "glow": true
+    },
+    "pavement": {
+      "pattern": "tiles",
+      "base": "#f1e9e5",
+      "accent": "#c6bfd8",
+      "accent2": "#d9ddd9",
+      "scale": 1.4
+    },
+    "lotRough": {
+      "pattern": "gravel",
+      "base": "#bac2ca",
+      "accent": "#dce0dc",
+      "accent2": "#95a7a7",
+      "scale": 0.4
+    },
+    "lotClaimed": {
+      "pattern": "tiles",
+      "base": "#e9e2da",
+      "accent": "#c3d5ce",
+      "accent2": "#b7b3cb",
+      "scale": 1.5
+    },
+    "square": {
+      "pattern": "tiles",
+      "base": "#ece6fa",
+      "accent": "#c1b5dc",
+      "accent2": "#a0bec4",
+      "scale": 1.2
+    },
+    "bank": {
+      "pattern": "moss",
+      "base": "#739d97",
+      "accent": "#a1beb0",
+      "accent2": "#b8c4b1",
+      "scale": 1.3
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#55abc7",
+      "accent": "#91d6e4",
+      "accent2": "#468ba9",
+      "scale": 2.6
+    }
+  },
+  "light": {
+    "sky": "#c8dcf6",
+    "fog": "#dce5ef",
+    "sun": "#fff1df",
+    "sunIntensity": 2.2,
+    "hemiSky": "#dceaff",
+    "hemiGround": "#9baea6",
+    "hemiIntensity": 2.2
+  },
+  "palette": [
+    "#f1e9e5",
+    "#d7e1e8",
+    "#c1b5dc",
+    "#8c80b4",
+    "#36495e",
+    "#66f2df",
+    "#55abc7",
+    "#739d97",
+    "#c6d6b3",
+    "#bca783",
+    "#efbd66",
+    "#d9534f"
+  ],
+  "materials": [
+    "Matte ivory ceramic-composite shells",
+    "Warm woven biocomposite rails and seating",
+    "Pale modular paving with fine functional seams",
+    "Dark non-mirror glazing and visor panels",
+    "Restrained translucent solid-light planes",
+    "Recessed cyan-white emitters",
+    "Soft technical knit and layered travel textiles",
+    "Living bark, irregular foliage and restored river stone"
+  ],
+  "avoid": [
+    "Night-time cyberpunk darkness, heavy bloom and neon on every surface",
+    "Modern assets with nothing changed except luminous trim",
+    "Glowing water, emissive tree crowns and crystal forests",
+    "Perfectly symmetrical trees or sterile all-white landscaping",
+    "Opaque force-field boundaries and giant hovering signs",
+    "Wheel-based shuttle bodies, steam machinery and medieval office symbols",
+    "Combat robots, weaponised civic infrastructure and unreadable swarms of panels"
+  ],
+  "designDirection": "Create a bright, optimistic future through pale physical structures, living greenery, restrained luminous interfaces and new functional silhouettes, keeping the chunky toy style and 40° overhead readability. Preserve the 5×5 plan, 16 m parcels, four central community lots and delegation camp across the east river, with all transformations retaining their footprint and purpose. Every advanced object must still reveal its familiar service through a tangible base, entrance, seat, counter or crossing surface rather than becoming an arbitrary hologram. A skyscraper becomes a stepped modular habitat tower, a car becomes a compact hover pod, and a café becomes a rounded refill-and-cultured-tea pavilion with a physical serving hatch. Reserve emission for genuine light-giving parts, keep greenery irregular and use dark apertures to separate ivory forms clearly on stream."
+}

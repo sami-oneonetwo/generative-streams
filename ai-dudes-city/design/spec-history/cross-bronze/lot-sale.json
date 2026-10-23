@@ -1,0 +1,387 @@
+{
+  "name": "Unclaimed Lot with Limewashed Clay Claim Hoop",
+  "description": "An oversized open clay hoop, limewashed white with a red-ochre lower arc, hangs from a dark timber bracket above a swept-earth patch and bold roadside clutter.",
+  "notes": "Sun-dried clay, limewash, fibre suspension and rough timber establish Bronze Age craft, with a 2.2 m hoop and a compact support kept below the parcel's 3 m height limit.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        3.22,
+        1.47,
+        4.3
+      ],
+      "size": [
+        0.34,
+        2.94,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.27,
+        2.79,
+        4.3
+      ],
+      "size": [
+        2.46,
+        0.3,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0.04
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.93,
+        2.64,
+        4.48
+      ],
+      "size": [
+        0.09,
+        0.4,
+        0.09
+      ],
+      "rotation": [
+        -0.75,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.87,
+        2.67,
+        4.48
+      ],
+      "size": [
+        0.09,
+        0.46,
+        0.09
+      ],
+      "rotation": [
+        -0.7,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.4,
+        2.79,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.87,
+        2.664,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.523599
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.214,
+        2.32,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.047198
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.34,
+        1.85,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.570796
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.214,
+        1.38,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.094395
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.87,
+        1.036,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.617994
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.4,
+        0.91,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.93,
+        1.036,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        2.617994
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.586,
+        1.38,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        2.094395
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.46,
+        1.85,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.586,
+        2.32,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        1.047198
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.93,
+        2.664,
+        4.66
+      ],
+      "size": [
+        0.53,
+        0.32,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0.523599
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.15,
+        0.035,
+        4.6
+      ],
+      "size": [
+        2.9,
+        0.07,
+        2.05
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.48,
+        0.25,
+        5.24
+      ],
+      "size": [
+        0.74,
+        0.36,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.13,
+        0.34,
+        5.22
+      ],
+      "size": [
+        0.58,
+        0.54,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#dfcb8c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.31,
+        0.12,
+        5.34
+      ],
+      "size": [
+        0.58,
+        0.1,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.46,
+        0
+      ],
+      "color": "#8f4938"
+    }
+  ]
+}

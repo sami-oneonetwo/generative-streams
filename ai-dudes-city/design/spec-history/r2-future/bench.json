@@ -1,0 +1,198 @@
+{
+  "name": "Crescent-Shell Hover Seat",
+  "description": "A two-person biocomposite sitting shell floats 0.15 m above its exposed docking puck, with ivory end caps, a flowing low back and a front-facing lift-status strip.",
+  "notes": "The unsupported curved shell, contrasting ceramic underside and forward-revealed docking puck make the future technology readable from above while keeping the warm sitting surface at 0.45 m.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.05,
+        0.32
+      ],
+      "size": [
+        1.6,
+        0.1,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.1,
+        0.32
+      ],
+      "size": [
+        1.34,
+        0.06,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c1b5dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.34,
+        0
+      ],
+      "size": [
+        1.98,
+        0.12,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.42,
+        0.025
+      ],
+      "size": [
+        1.92,
+        0.06,
+        0.59
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.455,
+        -0.235
+      ],
+      "size": [
+        0.26,
+        1.92,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.57,
+        -0.335
+      ],
+      "size": [
+        1.98,
+        0.36,
+        0.16
+      ],
+      "rotation": [
+        -0.45,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.59,
+        -0.265
+      ],
+      "size": [
+        1.92,
+        0.32,
+        0.1
+      ],
+      "rotation": [
+        -0.45,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.01,
+        0.52,
+        -0.065
+      ],
+      "size": [
+        0.22,
+        0.48,
+        0.82
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.01,
+        0.52,
+        -0.065
+      ],
+      "size": [
+        0.22,
+        0.48,
+        0.82
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.42,
+        0.322
+      ],
+      "size": [
+        1.12,
+        0.06,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    }
+  ]
+}

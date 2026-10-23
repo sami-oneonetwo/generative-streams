@@ -34,10 +34,14 @@ export function harness(options: Partial<DudesOptions> & { reply?: (turn: AgentT
     agentLimit: options.agentLimit ?? 4,
     designLimit: options.designLimit ?? 3,
     allowance: options.allowance ?? 1000,
+    // The rolling budget is generous unless a test is about it.
+    agentPerHour: options.agentPerHour ?? 1_000_000,
+    designPerHour: options.designPerHour ?? 1_000_000,
     agentModel: 'test',
     designModel: 'test',
     turnGapMs: options.turnGapMs ?? 0,
     ...(options.listener ? { listener: options.listener } : {}),
+    ...(options.aide ? { aide: options.aide } : {}),
     ...(options.writeWishes ? { writeWishes: options.writeWishes } : {}),
   });
   let seed = 7;
@@ -45,6 +49,8 @@ export function harness(options: Partial<DudesOptions> & { reply?: (turn: AgentT
     now: 1_000_000,
     state: undefined as unknown as DudesState,
     logs: [] as string[],
+    /** What the Town Crier posted to chat. */
+    announced: [] as string[],
     turns,
     get peak() {
       return peak;
@@ -59,6 +65,7 @@ export function harness(options: Partial<DudesOptions> & { reply?: (turn: AgentT
     },
     log: (line) => void h.logs.push(line),
     say: () => {},
+    announce: (text) => void h.announced.push(text),
     enqueueTask: () => ({ id: '' }),
     queue: [],
     llm: { dialogue: async () => null, moderate: async () => ({ ok: true }) },

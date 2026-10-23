@@ -9,14 +9,18 @@ import { clampToGround, workSpots } from './placement';
 import { addEffect, awake, clearFootprint, inUse, isActive, overhear, parkObject, seatHeight } from './sim';
 import { altitudeOf, flies, rideable, setAltitude, startMoving } from './movers';
 import { abilitiesOf } from './blueprint';
-import { cityOf, freeSpotOn, gossip, lotsOf, placeById, placeOfObject, startPlaying, tell } from './city';
+import { ageOf, cityOf, freeSpotOn, stampAge, themed, gossip, headName, lotsOf, placeById, placeOfObject, startPlaying, tell } from './city';
+import { MODERN, ageStyle } from '../../shared/ages';
+import { outfitFor } from '../../shared/outfits';
 import { interactionOf } from './blueprint';
 import { plotAt, venueKindOf } from '../../shared/city';
 import type { SafehouseObject } from '../../shared/objectTypes';
 import { matchName } from './index';
-import { EMOTES, type DudeLook, type DudeView, type Emote, type MayorView } from '../../shared/dudesTypes';
+import { EMOTES, WEAPONS, type DudeLook, type DudeView, type Emote, type MayorView, type Weapon } from '../../shared/dudesTypes';
+import { armedBuild, fire, ram } from './weapons';
 import { LIMITS, nextId, pushFeed, pushLine, type DudesState, type Job, type Mayor } from './state';
 import { nudge } from './events';
+import { renewed } from './damage';
 
 export const MAYOR = {
   name: 'The Mayor',
@@ -43,17 +47,39 @@ export const MAYOR_LOOK: DudeLook = {
   build: 1.1,
 };
 
+/** What the streamer's character wears in this age: robes, a crown, a top hat; the Modern age is MAYOR_LOOK. */
+const headLook = (state: DudesState): DudeLook => {
+  // The theme-free sandbox: the Mayor as he is, no period costume.
+  const age = themed(state) ? ageOf(state) : MODERN;
+  const outfit = themed(state) ? outfitFor(age, 'mayor', 'head') : undefined;
+  // What the aide changed goes over the age's look; with the costume off, the colours underneath show.
+  const { costume, ...mine } = state.mayor?.look ?? {};
+  return { ...ageStyle(age).head.look, ...mine, ...(outfit && costume !== false ? { outfit } : {}) };
+};
+
 /** What the operator page sends, many times a second while it moves. */
 export type MayorInput =
   | { t: 'move'; x: number; z: number; facing: number; moving: boolean; running?: boolean; yaw?: number; half?: number; cx?: number; cz?: number; alt?: number; at?: number }
   | { t: 'say'; text: string }
   | { t: 'emote'; pose: string }
   | { t: 'follow'; on: boolean }
+  /** The stream camera's mode: on the Mayor, framing everyone, or on one person. */
+  | { t: 'camera'; mode: 'mayor' | 'everyone' | 'person'; target?: string }
   | { t: 'visible'; on: boolean }
   | { t: 'ride' }
   | { t: 'audio'; music: number; sfx: number }
   | { t: 'play' }
-  | { t: 'build'; what: string; at?: { x: number; z: number }; for?: string };
+  | { t: 'build'; what: string; at?: { x: number; z: number }; for?: string }
+  /** Rework a build he clicked: "give the castle a trebuchet". Anyone's build; it stays theirs. */
+  | { t: 'edit'; target: string; change: string }
+  /** Take a build down (he clicked it and pressed Delete). Anyone's. */
+  | { t: 'remove'; target: string }
+  /** A wish for the aide (aide.ts): "put me in a purple cape". Answered on a model call of its own. */
+  | { t: 'ask'; text: string }
+  /** Pick up a weapon (or put it away: none), fire it (at a point he clicked, or straight ahead), or drive into a build. */
+  | { t: 'arm'; weapon: string }
+  | { t: 'fire'; aim?: { x: number; z: number } }
+  | { t: 'ram'; target: string; speed: number };
 
 export function mayorOf(state: DudesState, now: number): Mayor {
   return (state.mayor ??= { position: { x: 0, z: 9 }, facing: Math.PI, moving: false, follow: true, cam: { yaw: 0.65, half: 14 }, lastInputAt: now - MAYOR.liveMs - 1 });
@@ -128,7 +154,20 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
     }
     case 'follow':
       m.follow = !!msg.on;
+      m.focus = undefined;
       break;
+    case 'camera': {
+      const target = String(msg.target ?? '');
+      const known = state.dudes.some((d) => d.id === target) || cityOf(state).townies.some((t) => t.id === target) || (state.npcs ?? []).some((n) => n.id === target);
+      if (msg.mode === 'person' && known) {
+        m.focus = target;
+        m.follow = false;
+      } else {
+        m.focus = undefined;
+        m.follow = msg.mode === 'mayor';
+      }
+      break;
+    }
     case 'ride':
       if (m.riding) getOff(state, m);
       else if (!getOn(state, m)) return undefined;
@@ -136,6 +175,20 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
     case 'build':
       mayorBuild(state, m, msg, now);
       break;
+    case 'edit':
+      mayorEdit(state, msg, now);
+      break;
+    case 'remove': {
+      const o = state.objects.find((x) => x.id === String(msg.target ?? ''));
+      if (!o) break;
+      state.objects = state.objects.filter((x) => x !== o);
+      state.jobs = state.jobs.filter((j) => j.targetId !== o.id);
+      state.worldRevision++;
+      pushFeed(state, now, `${headName(state)} took down ${o.blueprint.name}`);
+      const owner = o.owner ? state.dudes.find((d) => d.id === o.owner) : undefined;
+      if (owner) tell(state, owner, `${headName(state)} took down your ${o.blueprint.name}`, now, true);
+      break;
+    }
     case 'play':
       if (m.playing) stopPlaying(m);
       else if (!play(state, m, now)) return undefined;
@@ -143,6 +196,35 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
     case 'audio': {
       const level = (v: unknown) => Math.max(0, Math.min(1, Number(v) || 0));
       m.audio = { music: level(msg.music), sfx: level(msg.sfx) };
+      break;
+    }
+    case 'ask': {
+      const text = String(msg.text ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+      if (!text) return undefined;
+      if (m.ask) return undefined; // one wish at a time
+      m.ask = { text, at: now };
+      m.aide = { asked: text, reply: '', ok: true, at: now };
+      break;
+    }
+    case 'arm':
+      m.armed = (WEAPONS as readonly string[]).includes(msg.weapon) ? (msg.weapon as Weapon) : undefined;
+      break;
+    case 'fire': {
+      if (m.hidden) return undefined;
+      const vehicle = m.riding ? state.objects.find((o) => o.id === m.riding) : undefined;
+      const gun = vehicle && armedBuild(vehicle) ? 'cannon' : m.armed;
+      if (!gun) return undefined;
+      const aim = msg.aim && Number.isFinite(msg.aim.x) && Number.isFinite(msg.aim.z) ? { x: msg.aim.x, z: msg.aim.z } : undefined;
+      if (!fire(state, { id: 'mayor', name: headName(state), position: m.position, facing: m.facing, vehicle }, gun, aim, now)) return undefined;
+      if (!vehicle) {
+        m.emote = { pose: 'point', until: now + 500 };
+        if (m.playing) stopPlaying(m);
+      }
+      break;
+    }
+    case 'ram': {
+      const vehicle = m.riding ? state.objects.find((o) => o.id === m.riding) : undefined;
+      if (!vehicle || !ram(state, { id: 'mayor', name: headName(state), position: m.position, facing: m.facing, vehicle }, String(msg.target ?? ''), Number(msg.speed), now)) return undefined;
       break;
     }
     case 'visible':
@@ -161,9 +243,9 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
 /** The Mayor says something: the bubble, the characters in earshot, whoever is named, and the residents nearby. */
 function speak(state: DudesState, m: Mayor, text: string, now: number): void {
   m.say = { text, until: now + Math.max(4000, Math.min(16_000, 2500 + text.length * 65)) };
-  pushFeed(state, now, `${MAYOR.name}: ${text}`);
+  pushFeed(state, now, `${headName(state)}: ${text}`);
   // Overheard like anyone talking nearby (sim.ts `overhear` wants a speaker with an id).
-  overhear(state, { id: 'mayor', name: MAYOR.name, position: m.position }, text, now);
+  overhear(state, { id: 'mayor', name: headName(state), position: m.position }, text, now);
   // Anyone named, wherever they are in town, is told directly: their agent answers on a turn of its own.
   const named = new Set<string>();
   for (const word of text.split(/[\s,.!?]+/).filter((w) => w.length > 1)) {
@@ -249,7 +331,7 @@ function play(state: DudesState, m: Mayor, now: number): boolean {
   startPlaying(state, m, p, undefined, now, until);
   m.playing = { placeId: p.id, until, popAt: now + 2600 };
   m.moved = (m.moved ?? 0) + 1;
-  pushFeed(state, now, `${MAYOR.name} is having a go at ${p.name}`);
+  pushFeed(state, now, `${headName(state)} is having a go at ${p.name}`);
   return true;
 }
 function stopPlaying(m: Mayor): void {
@@ -273,7 +355,7 @@ export const MAYOR_BUILDER = {
 function mayorBuild(state: DudesState, m: Mayor, msg: Extract<MayorInput, { t: 'build' }>, now: number): void {
   const what = String(msg.what ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 300);
   if (!what) return;
-  if (state.jobs.filter((j) => j.dudeId === 'mayor' && isActive(j)).length >= 3) return void pushFeed(state, now, `${MAYOR.name} already has three things on the go`);
+  if (state.jobs.filter((j) => j.dudeId === 'mayor' && isActive(j)).length >= 3) return void pushFeed(state, now, `${headName(state)} already has three things on the go`);
   const forName = String(msg.for ?? '').replace(/^@/, '').trim();
   const forDude = forName ? matchName(forName, state.dudes, (d) => d.name) : undefined;
   const clicked = msg.at && Number.isFinite(msg.at.x) && Number.isFinite(msg.at.z) ? clampToGround(msg.at, 1) : undefined;
@@ -297,14 +379,52 @@ function mayorBuild(state: DudesState, m: Mayor, msg: Extract<MayorInput, { t: '
     ...(owner ? { gift: owner.id } : {}),
   };
   state.jobs.push(job);
-  pushFeed(state, now, `${MAYOR.name} is designing ${what.slice(0, 50)}${owner ? ` for ${owner.name}` : lot ? ` at ${lot.address}` : ''}`);
+  pushFeed(state, now, `${headName(state)} is designing ${what.slice(0, 50)}${owner ? ` for ${owner.name}` : lot ? ` at ${lot.address}` : ''}`);
   if (forName && !forDude) pushFeed(state, now, `(there is nobody called ${forName} in town; it goes where the Mayor is)`);
+}
+
+/**
+ * The Mayor reworks a build he clicked on the operator page: it is redesigned with his change and
+ * keeps everything else (the design call gets the current blueprint), then swaps in where it stands.
+ * Anyone's build; it stays its owner's, and the owner hears about it.
+ */
+function mayorEdit(state: DudesState, msg: Extract<MayorInput, { t: 'edit' }>, now: number): void {
+  const change = String(msg.change ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 300);
+  const target = state.objects.find((o) => o.id === String(msg.target ?? ''));
+  if (!change || !target) return;
+  if (state.jobs.some((j) => j.targetId === target.id && isActive(j))) return void pushFeed(state, now, `${target.blueprint.name} is already being worked on`);
+  if (state.jobs.filter((j) => j.dudeId === 'mayor' && isActive(j)).length >= 3) return void pushFeed(state, now, `${headName(state)} already has three things on the go`);
+  state.jobs.push({ id: nextId(state, 'j'), dudeId: 'mayor', kind: 'edit', request: `${target.blueprint.name}: ${change}`.slice(0, 300), targetId: target.id, anchor: { ...target.position }, status: 'queued', createdAt: now, ...(target.plot ? { plot: target.plot } : {}) });
+  pushFeed(state, now, `${headName(state)} is reworking ${target.blueprint.name}: ${change.slice(0, 60)}`);
 }
 
 /** The Mayor's designed builds rise on their own, a few seconds each, then stand. */
 export function tickMayorBuilds(state: DudesState, dt: number, now: number): void {
   for (const job of state.jobs) {
-    if (job.dudeId !== 'mayor') continue;
+    if (job.dudeId !== 'mayor' && job.dudeId !== 'town') continue;
+    // The town's remakes for a new age swap straight in, quietly (or are dropped if the age moved on again).
+    if (job.dudeId === 'town' && job.status === 'ready') {
+      const target = state.objects.find((o) => o.id === job.targetId);
+      job.status = target && job.blueprint && job.footprint && job.restyle === ageOf(state) && themed(state) ? 'done' : 'failed';
+      if (job.status === 'failed' || !target) continue;
+      target.revision++;
+      target.blueprint = job.blueprint!;
+      target.footprint = job.footprint!;
+      renewed(state, target);
+      if (job.position && (job.position.x !== job.anchor.x || job.position.z !== job.anchor.z)) target.position = job.position;
+      target.age = job.restyle;
+      delete target.free;
+      clearFootprint(state, target);
+      // A remake is not a build being done up: the caravan's "build or do up" asks don't count it.
+      const revs = cityOf(state).caravan?.revs;
+      if (revs && target.id in revs) revs[target.id] = target.revision;
+      // A puff of dust and a sparkle as the old one gives way to the new.
+      addEffect(state, { kind: 'burst', at: now, to: { ...target.position }, label: 'smoke' });
+      addEffect(state, { kind: 'burst', at: now, to: { ...target.position } });
+      state.worldRevision++;
+      continue;
+    }
+    if (job.dudeId === 'town') continue;
     if (job.status === 'ready') {
       job.status = 'building';
       job.workMs = 6000;
@@ -315,6 +435,25 @@ export function tickMayorBuilds(state: DudesState, dt: number, now: number): voi
     if (job.workedMs < (job.workMs ?? 6000)) continue;
     if (!job.blueprint || !job.position || !job.footprint) {
       job.status = 'failed';
+      continue;
+    }
+    if (job.kind === 'edit') {
+      // The rework swaps in where the build stands (moved only if the new shape no longer fits there).
+      const target = state.objects.find((o) => o.id === job.targetId);
+      job.status = target ? 'done' : 'failed';
+      if (!target) continue;
+      target.revision++;
+      target.blueprint = job.blueprint;
+      target.footprint = job.footprint;
+      renewed(state, target);
+      if (job.position.x !== job.anchor.x || job.position.z !== job.anchor.z) target.position = job.position;
+      target.editedBy = MAYOR.name;
+      stampAge(state, target);
+      clearFootprint(state, target);
+      state.worldRevision++;
+      pushFeed(state, now, `${headName(state)} reworked ${target.blueprint.name}`);
+      const owner = target.owner ? state.dudes.find((d) => d.id === target.owner) : undefined;
+      if (owner) tell(state, owner, `${headName(state)} reworked your ${target.blueprint.name}: ${job.request.slice(0, 120)}`, now, true);
       continue;
     }
     const owner = job.gift ? state.dudes.find((d) => d.id === job.gift) : undefined;
@@ -331,13 +470,14 @@ export function tickMayorBuilds(state: DudesState, dt: number, now: number): voi
       ...(job.plot ? { plot: job.plot } : {}),
       ...(job.venue ? { venue: job.venue } : {}),
     };
+    stampAge(state, object);
     startMoving(object, `${job.request} ${job.asked ?? ''}`);
     state.objects.push(object);
     clearFootprint(state, object);
     state.worldRevision++;
     job.status = 'done';
-    pushFeed(state, now, `${MAYOR.name} built ${object.blueprint.name}${owner ? ` for ${owner.name}` : ''}`);
-    if (owner) tell(state, owner, `The Mayor built you ${object.blueprint.name} on your lot, as a gift. It is yours now.`, now, true);
+    pushFeed(state, now, `${headName(state)} built ${object.blueprint.name}${owner ? ` for ${owner.name}` : ''}`);
+    if (owner) tell(state, owner, `${headName(state)} built you ${object.blueprint.name} on your lot, as a gift. It is yours now.`, now, true);
   }
 }
 
@@ -353,7 +493,7 @@ export function mayorBuildViews(state: DudesState): NonNullable<import('../../sh
       ...(j.site ? { site: j.site } : {}),
       progress: j.status === 'building' ? Math.min(1, (j.workedMs ?? 0) / (j.workMs ?? 6000)) : 0,
       ...(j.blueprint && j.position && j.footprint
-        ? { preview: { id: `preview-${j.id}`, revision: 1, blueprint: j.blueprint, position: j.position, footprint: j.footprint, createdBy: MAYOR.name, editedBy: MAYOR.name, createdAt: j.createdAt } }
+        ? { preview: { id: `preview-${j.id}`, revision: 1, blueprint: j.blueprint, position: j.position, footprint: j.footprint, createdBy: MAYOR.name, editedBy: MAYOR.name, createdAt: j.createdAt, age: ageOf(state) } }
         : {}),
     }));
 }
@@ -374,7 +514,7 @@ function getOn(state: DudesState, m: Mayor): boolean {
   m.emote = undefined;
   o.driven = { at, turn: m.facing, by: MAYOR.name, until: Number.MAX_SAFE_INTEGER };
   if (o.creature) o.creature.path = [];
-  pushFeed(state, Date.now(), `${MAYOR.name} ${o.blueprint.moves === 'drive' || (!o.blueprint.moves && o.blueprint.abilities?.includes('vehicle')) ? 'took' : 'hopped on'} ${o.blueprint.name}${o.createdBy !== MAYOR.name ? ` (${o.createdBy}'s)` : ''}`);
+  pushFeed(state, Date.now(), `${headName(state)} ${o.blueprint.moves === 'drive' || (!o.blueprint.moves && o.blueprint.abilities?.includes('vehicle')) ? 'took' : 'hopped on'} ${o.blueprint.name}${o.createdBy !== MAYOR.name ? ` (${o.createdBy}'s)` : ''}`);
   return true;
 }
 /** Off again, beside it; it stays where he left it (and a mover carries on from there, movers.ts). */
@@ -409,18 +549,24 @@ export function mayorView(state: DudesState, now: number): MayorView {
     ...(m.emote ? { emote: m.emote } : {}),
     cam: m.cam,
     follow: m.follow,
+    ...(m.focus ? { focus: m.focus } : {}),
     live: live(m, now),
     ...(m.hidden ? { hidden: true } : {}),
     ...(ridingView(state, m) ? { riding: ridingView(state, m) } : {}),
     ...(m.audio ? { audio: m.audio } : {}),
+    ...(m.armed ? { armed: m.armed } : {}),
     ...(m.moved ? { moved: m.moved } : {}),
+    ...(m.aide ? { aide: { asked: m.aide.asked, reply: m.aide.reply, ok: m.aide.ok, at: m.aide.at, thinking: !!m.ask } } : {}),
   };
 }
 function ridingView(state: DudesState, m: Mayor): MayorView['riding'] {
   const o = m.riding ? state.objects.find((x) => x.id === m.riding) : undefined;
-  if (!o) return undefined;
+  return o ? rideInfo(o) : undefined;
+}
+/** What a page steering a build needs to know about it: how it gets about, the seat, how high, how big, a gun. */
+export function rideInfo(o: SafehouseObject): NonNullable<MayorView['riding']> {
   const moves = o.blueprint.moves ?? (abilitiesOf(o.blueprint).has('flies') ? 'fly' : 'vehicle');
-  return { id: o.id, moves, seat: seatHeight(o, moves === 'drive' || moves === 'vehicle', false), altitude: altitudeOf(o), size: Math.max(o.footprint.width, o.footprint.depth) };
+  return { id: o.id, moves, seat: seatHeight(o, moves === 'drive' || moves === 'vehicle', false), altitude: altitudeOf(o), size: Math.max(o.footprint.width, o.footprint.depth), ...(armedBuild(o) ? { gun: true } : {}) };
 }
 
 /** The Mayor as a figure among the others (only while the operator page is open). */
@@ -431,15 +577,16 @@ export function mayorDudeView(state: DudesState, now: number): DudeView[] {
   return [
     {
       id: 'mayor',
-      name: MAYOR.name,
+      name: headName(state),
       mayor: true,
       position: m.position,
       facing: m.facing,
       activity: riding ? 'using' : m.moving ? 'walking' : m.emote ? 'emote' : 'idle',
-      look: m.hatGift && m.hatGift.until > now ? { ...MAYOR_LOOK, hat: m.hatGift.hat, hatColor: m.hatGift.color } : MAYOR_LOOK,
+      look: m.hatGift && m.hatGift.until > now ? { ...headLook(state), hat: m.hatGift.hat, hatColor: m.hatGift.color } : headLook(state),
       ...(riding ? { y: riding.seat + riding.altitude, riding: riding.id, emote: { pose: riding.moves === 'drive' || riding.moves === 'vehicle' ? 'drive' : 'sit', until: now + 60_000 } } : m.emote ? { emote: m.emote } : {}),
       ...(!riding && m.playing && m.y ? { y: m.y } : {}),
       ...(m.say ? { say: m.say } : {}),
+      ...(m.armed && !riding ? { armed: m.armed } : {}),
     },
   ];
 }
@@ -449,5 +596,5 @@ export function mayorLine(state: DudesState, at: { x: number; z: number }, now: 
   const m = state.mayor;
   if (!m || !live(m, now) || m.hidden) return undefined;
   const d = Math.round(Math.hypot(m.position.x - at.x, m.position.z - at.z));
-  return `The Mayor (the streamer, walking round town and talking to everyone) is ${d < 3 ? 'right next to you' : `${d} m away`}.`;
+  return `${headName(state)} (the Mayor: the streamer, walking round town and talking to everyone) is ${d < 3 ? 'right next to you' : `${d} m away`}.`;
 }

@@ -1,0 +1,214 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The characters, market props and timber buildings establish a convincing medieval identity, but the roads, planting and several construction details fall below the required standard. Rework the mechanically repeated surfaces, underdeveloped tree silhouettes and scene integration without weakening the existing world rules.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "High-frequency grass mottling overwhelms the small countryside details at stream distance.",
+        "The neatly rimmed oval puddle and rectangular deadwood look manufactured rather than naturally occurring."
+      ],
+      "fix": "Reduce grass texture contrast and use broader meadow patches. Redistribute the 14 dressing parts into asymmetric nettle clumps, readable flower clusters, mossy stones, irregular shallow puddles and genuinely split deadwood, mostly below 0.35 m."
+    },
+    {
+      "id": "street",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "Uniform oval cobbles in rigid rows read as a printed pattern rather than irregular, mud-jointed stone.",
+        "Repeated straight brown strokes make wheel wear look diagrammatic.",
+        "Sharp rectangular road edges and detached oval mud patches do not create the required thinning-cobble frontage."
+      ],
+      "fix": "Keep the 8 m carriageway but vary cobble size, spacing, rotation and exposed height. Introduce muddy joints and broad, softly interrupted cart wear; thin stones into irregular packed earth at |z| 4–6, with flush shallow gutters and the specified low dressing, leaving the centre unobstructed."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the small pegged timber marker, empty ochre ring and sparse discarded materials; preserve the ring's readability when revising the surrounding ground."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The boundary reads as straight stacked rails rather than woven wattle.",
+        "Evenly cut members and long squared footing strips undermine the rough, hand-built construction."
+      ],
+      "fix": "Rebuild the rear and side boundaries as visibly woven panels between irregular oak posts, using alternating chunky twig bands and occasional separate fieldstone footings. Keep heights at 0.7–1.0 m, preserve the open frontage and retain the subordinate red shield with Ivy's pale name strip."
+    },
+    {
+      "id": "street-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The pear crown is essentially a single flat slab with small attachments.",
+        "The pollarded lime has insufficient uneven regrowth to read as an old pollard.",
+        "Different heights alone do not compensate for the sparse, manufactured foliage silhouettes."
+      ],
+      "fix": "Within the 28-part budget, give the lime a substantial knuckled head and several unequal regrowth forks with offset foliage clusters. Give the smaller pear a visibly roadward lean, branching structure and an asymmetric crown made from several substantial masses rather than one plate."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The crooked oak dominates two tiny shrubs, so the required broad hawthorn does not register.",
+        "Foliage is concentrated into shallow stacked chunks rather than distinct branching crowns."
+      ],
+      "fix": "Redistribute the 36 parts into three clearly different silhouettes: a tall forked crooked oak, a lower but genuinely broad spreading hawthorn, and a compact irregular holly. Preserve gaps between foliage masses and vary branch direction rather than stacking crowns vertically."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the plain oak post, short bracket and compact capped lantern. Keep emission restricted to the internal flame and avoid multiplying these into continuous lamp rows."
+    },
+    {
+      "id": "centrepiece",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the low stepped market cross, baskets and notice tablet, maintaining the approximately 4.5 m base and 2.5 m overall height."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the thick backless plank and timber trestles; preserve visible pegs, the slightly uneven brace and the approximately 0.45 m seat height."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad red-and-cream stripes, compact timber counter and readable unpackaged goods. Keep produce and wool grouped into distinct colour masses."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The hanging emblem reads more like a star-shaped ornament than a wheel.",
+        "The pale cart cover reads as a rigid lid rather than cloth stretched over hoops."
+      ],
+      "fix": "Make the emblem an unmistakable open wooden rim with a hub and four chunky spokes. Rebuild the canopy with a bowed segmented profile, visible supporting hoops and a slightly hanging cloth edge, keeping the horse-cart assembly approximately 5 m long."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The continuous-looking deck does not clearly distinguish two fixed approaches from a short central lifting leaf.",
+        "The lifting mechanism and stone pier noses are insufficiently legible.",
+        "Repeated green cylindrical bank-edge pieces resemble manufactured edging."
+      ],
+      "fix": "Define the lowered central leaf with clear hinge gaps, a compact lifting frame and chains visibly terminating on that leaf. Expose squat stone piers with upstream noses, and replace the green edging with broken mossy bank profiles, irregular rocks and reed clusters while retaining the specified crossing dimensions."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The four corner markers are identical upright cuboids with contrasting caps, reading as manufactured parcel bollards rather than low fieldstones."
+      ],
+      "fix": "Replace each cuboid with a low, differently shaped fieldstone marker, varying tilt and exposed height. Retain the communal tablet and its four-dot arrangement, with a clearly painted central rosette rather than private heraldry."
+    },
+    {
+      "id": "camp",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The pavilions and banner rely on largely blank colour fields, leaving the travelling court without a readable heraldic identity.",
+        "The knight's shield and minstrel's lute disappear into small prop clusters."
+      ],
+      "fix": "Apply one bold unfamiliar court badge to the pavilion faces and banner. Reallocate detail within the 86-part budget to a broad shield silhouette and a clearly projecting lute body and neck; keep both cameos separated from luggage and the brazier."
+    },
+    {
+      "id": "resident",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the distinct tunic and dress silhouettes, coif, apron, mallet and loaf. Preserve these differences at the shared 1.8 m character scale."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad crown, blue tunic, red fur-edged cloak and short sceptre; the friendly blocky silhouette establishes royal rank immediately."
+    },
+    {
+      "id": "leader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The upright pointed cap reads too much like another crown rather than a three-point cloth jester cap.",
+        "The foreign badge and travel patches do not establish an unfamiliar court affiliation at scene distance."
+      ],
+      "fix": "Make three distinct cloth points bend outward and droop, each ending in a readable bell. Enlarge and simplify one foreign court badge, add two broad contrasting travel patches, and keep the fool's baton clearly separated from the torso."
+    },
+    {
+      "id": "home",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The dominant smooth ochre roof reads as a single manufactured sheet rather than constructed thatch or tiles.",
+        "Its roof treatment departs from the bible's slate-or-clay architectural direction."
+      ],
+      "fix": "Replace the smooth roof planes with broad, staggered clay-tile or slate courses, a chunky ridge and slightly uneven eaves. Preserve the successful timber frame, pale infill, footprint and domestic scale."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the open serving hatch, exposed bread, barrels, timber seating and external cooking structure; these successfully transform the café into a medieval cookshop."
+    },
+    {
+      "id": "skyscraper",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The upper floors read as one repeated straight-sided shaft, with too little stepped massing.",
+        "The smooth grey ground storey resembles a concrete plinth rather than rough medieval masonry."
+      ],
+      "fix": "Create two or three clearly offset or jettied storey masses within the existing maximum footprint. Build the lower storey from large irregular stone courses, and simplify upper framing into bold structural bays instead of relying on repeated small windows."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the chunky muzzle, hanging ears, sturdy legs and natural brown palette; preserve a clear dog silhouette at resident scale."
+    },
+    {
+      "id": "car",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the horse-drawn timber wagon, faceted hooped canopy, luggage and dark-rimmed wooden wheels. Preserve the visible shafts and harness without introducing a modern undercarriage."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The combination of dotted road texture, repeated oval mud patches and uniformly rectangular plaza stones makes the assembled town look procedurally stamped.",
+        "Character presentation discs and the residents' rectangular ground patch remain visibly pasted onto the shared town surfaces.",
+        "The road-to-frontage transition remains abrupt despite correctly avoiding raised sidewalks and kerbs."
+      ],
+      "fix": "Install characters directly on shared world surfaces, removing their sheet-presentation bases. Break up plaza flagstones with varied sizes, worn edges and restrained dirty joints, then connect road, packed-earth frontage and thresholds through irregular flush transitions; keep paving confined to the square rather than creating a sidewalk network."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

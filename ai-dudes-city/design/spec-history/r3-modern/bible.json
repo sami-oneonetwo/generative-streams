@@ -1,0 +1,126 @@
+{
+  "id": "modern",
+  "name": "the Modern Age",
+  "summary": "Asphalt, clear signage and leafy public space frame the Mayor's welcoming, everyday town.",
+  "rules": {
+    "sidewalks": true,
+    "kerbs": true,
+    "roadMarkings": true,
+    "roads": "Use smooth charcoal asphalt along x, 8 m wide within |z| <= 4. Street dressing: 26 low parts below 1.2 m, including flat white lane dashes, a short pedestrian crossing near a junction, flush drain grates, patched asphalt and simple margin bollards. Keep the central route free of raised obstructions; paint is surface-flat. Use crisp but sparse markings so the town remains readable.",
+    "walkingEdge": "Concrete slab pavements occupy |z| 4–6 with a consistent 0.12 m kerb, narrow gutters and lowered crossing points. Tree pits and fixtures sit at z 5 while leaving circulation around them. Use simple contemporary details, not Victorian railings or decorative cobbled frontage.",
+    "lotMarkers": "Free lot: 12 parts on a 16 m parcel, with a compact recycled panel on a square post near x 4.5, z 4.5. A large amber empty ring on a pale field provides the wordless available signal; optional small text must not carry the meaning. Add sparse grass and two gravel patches. Community lot: 16 parts, with four low corner blocks and a green municipal marker bearing four nodes around one shared centre, plus a simple building-hand pictogram. Keep the interior clear for collaborative construction.",
+    "boundaries": "Claimed lot: 28 parts including the owner marker. Use low horizontal timber slats between powder-coated metal posts along z -6 and x -6, around 0.85 m high and below 1.2 m. Leave the +z front open with a clear gate gap. Keep spacing open enough to see the build beyond.",
+    "ownerMarker": "Mount a clean, modest rectangular nameplate on the front post with an owner-colour strip in #d9534f and a filled circular household emblem. Print the exact player name in large, simple lettering. Avoid estate-agent branding, giant billboards or unnecessary illuminated screens.",
+    "lighting": "Street light: 12 parts at x 0, z 5. Use a slim powder-coated pole, short curved arm and flat LED head with a broad underside diffuser. Only the diffuser uses glow=true. The shape must read as contemporary street infrastructure rather than a gas lamp with a white bulb.",
+    "centrepiece": "Use 48 parts for a low circular civic fountain about 4.5 m across, with pale concrete coping, a shallow blue basin and three short water jets. Add a simple offset stone form rather than historic statuary. Recessed pool-light lenses use glow=true; water and jets do not. Keep the centre low, accessible and visibly distinct from the Industrial Age's tiered cast-iron fountain.",
+    "seating": "Use 12 parts for a two-person bench with broad timber slats, a simple aluminium frame and a shallow backrest. Seat height is about 0.45 m. Add one arm divider only if it does not reduce the clear two-person reading; avoid ornate iron ends.",
+    "market": "Use 32 parts within 2.6 × 1.6 m for a compact kiosk with a flat overhang, powder-coated panels, a glass display, a service hatch and visible fruit crates, pastries and refill bottles. Use clear blocks of colour and unbranded packaging. The stall is a little contemporary shop, not a medieval canopy with a cash register added.",
+    "trees": "Street pair: 30 parts total at x -3 and x 3, z 5; use a tall plane tree with a subtly bent trunk and a smaller maple with an uneven crown and one low branch. Place them in separate permeable tree pits, not matching circular planters. Wild group: 38 parts for a tall oak, a broad willow and a flowering shrub. Countryside dressing: 14 sparse low parts of meadow flowers, grass clumps, fallen twigs, rounded stones and occasional shallow rain puddles, mostly below 0.35 m. Municipal care never means identical trees.",
+    "arrival": "Use 64 parts for a bus stop and short city minibus. At z 5 place a narrow transparent shelter, small seat and pole with a large bus pictogram. At z 0, aligned along x, place a roughly 5 m minibus with a recognisable windscreen, side windows, rubber tyres and an opening-side door facing the stop. Keep the boarding route clear and do not let the shelter consume the full walking strip.",
+    "crossing": "Use 58 parts for a simple precast-concrete road bridge running along z, about 4 m wide, with shallow beams, modest concrete abutments and open metal rails. Its deck meets the banks about 1 m above water. Water runs along x across |z| <= 7; the river tile shows its central 12 m and the real bank landings continue to z ±7. Add natural reed pockets, stones and small rainwater outlets without litter or excessive civil-engineering clutter.",
+    "camp": "Use 82 parts for a tourist coach, two broad parasol shelters and one small check-in awning across the river. Include luggage, a cooler, folding tables, a route display and a portable gathering light whose diffuser uses glow=true. The separate tour-guide leader uses 36 parts including the base figure: a bright practical jacket, bucket hat, neck lanyard and walking shoes, carrying a folded map. A suitcase with distant destination stickers and a contrasting regional scarf communicate travel without stereotypes.",
+    "people": "Use 46 parts total for two residents at x -0.6 and x 0.6, retaining the base bodies. One wears a hoodie, cropped trousers, trainers and loose textured hair and carries a small potted plant; the other wears a work jacket, jeans, sturdy shoes and tied-back hair and carries a phone. Use distinct body-accessory silhouettes, everyday fabrics and no brand logos.",
+    "head": "The Mayor uses 38 parts including the base figure. Give them a smart contemporary suit, a broad civic sash, a simple town badge and distinctive neat hair. Carry oversized rounded ceremonial ribbon scissors beside a short ribbon loop. The sash and scissors establish the office; do not retain the Alderman's top hat or heavy brass chain."
+  },
+  "surfaces": {
+    "countryside": {
+      "pattern": "meadow",
+      "base": "#79a861",
+      "accent": "#a5c880",
+      "accent2": "#548a52",
+      "scale": 1.3
+    },
+    "road": {
+      "pattern": "asphalt",
+      "base": "#4c555e",
+      "accent": "#65717a",
+      "accent2": "#3c454f",
+      "scale": 0.4
+    },
+    "pavement": {
+      "pattern": "concrete",
+      "base": "#c5c9c7",
+      "accent": "#e1e3dc",
+      "accent2": "#a4aeaf",
+      "scale": 1.2
+    },
+    "lotRough": {
+      "pattern": "gravel",
+      "base": "#a6afa2",
+      "accent": "#cad0bd",
+      "accent2": "#7d8c7c",
+      "scale": 0.35
+    },
+    "lotClaimed": {
+      "pattern": "grass",
+      "base": "#79a762",
+      "accent": "#a1c47a",
+      "accent2": "#5e8e54",
+      "scale": 0.8
+    },
+    "square": {
+      "pattern": "tiles",
+      "base": "#d2d1c2",
+      "accent": "#eee9d8",
+      "accent2": "#abb9b5",
+      "scale": 1
+    },
+    "bank": {
+      "pattern": "grass",
+      "base": "#648f61",
+      "accent": "#92b77b",
+      "accent2": "#8b9a7e",
+      "scale": 1.2
+    },
+    "water": {
+      "pattern": "water",
+      "base": "#459fc0",
+      "accent": "#88d0dc",
+      "accent2": "#347fa5",
+      "scale": 2.5
+    }
+  },
+  "light": {
+    "sky": "#a9d9f3",
+    "fog": "#d1e7e8",
+    "sun": "#fff3d5",
+    "sunIntensity": 2.4,
+    "hemiSky": "#d4edff",
+    "hemiGround": "#8f9d78",
+    "hemiIntensity": 1.8
+  },
+  "palette": [
+    "#4c555e",
+    "#a4aeaf",
+    "#e1e3dc",
+    "#eee9d8",
+    "#b58b60",
+    "#548a52",
+    "#a5c880",
+    "#459fc0",
+    "#315e83",
+    "#68b4a0",
+    "#efb749",
+    "#d9534f"
+  ],
+  "materials": [
+    "Fine-grained asphalt and pale cast concrete",
+    "Large practical paving slabs",
+    "Powder-coated steel and brushed aluminium",
+    "Clear safety glass",
+    "Warm exterior timber slats",
+    "Recycled composite sign panels",
+    "Rubber tyres and restrained plastic fittings",
+    "Contemporary cotton, knitwear and weatherproof fabric"
+  ],
+  "avoid": [
+    "Gas lanterns, steam vehicles and Victorian civic ornament",
+    "Medieval market awnings reused without transformation",
+    "Bronze or Stone Age primitive markers",
+    "Hovering vehicles, holograms and emissive road grids",
+    "Brand logos, dense advertising and tiny unreadable text",
+    "Perfectly identical street trees and sterile all-concrete landscapes",
+    "Photorealistic cars, glass reflections or fine texture that fight the toy style"
+  ],
+  "designDirection": "Make a friendly present-day small town from clear contemporary forms, healthy planting and restrained civic graphics, rendered as bright low-poly toys from the 40° overhead camera. Preserve the 5×5 block plan, 16 m parcels, four community project lots and camp across the river beyond the east ring road, with every upgrade retaining its footprint and purpose. Replace industrial ornament with accessible public space, mass-produced components and recognisable everyday services rather than simply painting old assets white. A skyscraper becomes a stepped steel-and-concrete tower, a car becomes a compact hatchback, and a café becomes a glass-fronted espresso bar with a small service terrace. Keep traffic markings flat, colour accents purposeful and signs readable by silhouette before text."
+}

@@ -1,0 +1,281 @@
+{
+  "name": "Unclaimed Lot with Projected Availability Ring",
+  "description": "A low ceramic projector displays an empty amber ring near the front corner, with sparse clover and reclaimed aggregate chips leaving the parcel open for a newcomer.",
+  "notes": "The Future replaces the physical sale sign with a restrained floating availability symbol above an unlit, tangible ceramic projector.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        0.14,
+        4.5
+      ],
+      "size": [
+        0.84,
+        0.28,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        0.295,
+        4.5
+      ],
+      "size": [
+        0.56,
+        0.07,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.79,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.9525,
+        1.6025,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7854
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.14,
+        1.15,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.9525,
+        0.6975,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.51,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.0475,
+        0.6975,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.7854
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.86,
+        1.15,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        1.5708
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.0475,
+        1.6025,
+        4.5
+      ],
+      "size": [
+        0.55,
+        0.13,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0.7854
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.53,
+        0.065,
+        4.97
+      ],
+      "size": [
+        0.57,
+        0.13,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#739d97"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.81,
+        0.055,
+        5.08
+      ],
+      "size": [
+        0.4,
+        0.11,
+        0.36
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#c6d6b3"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.27,
+        0.06,
+        3.72
+      ],
+      "size": [
+        0.34,
+        0.12,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.43,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.85,
+        0.045,
+        -2.9
+      ],
+      "size": [
+        0.28,
+        0.09,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#dce0dc"
+    }
+  ]
+}

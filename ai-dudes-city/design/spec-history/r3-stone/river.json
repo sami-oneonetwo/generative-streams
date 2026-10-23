@@ -1,0 +1,805 @@
+{
+  "name": "Rootbound Fallen-Log Crossing",
+  "description": "Unequal, splayed fallen trunks connect rough bank rocks to three broad central stepping stones, with broken bark, exposed roots and scattered reeds.",
+  "notes": "Unworked timber and irregular mossy boulders form a continuous Stone Age foot crossing without decking, masonry or rails, meeting adjoining banks about one metre above the water.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        0
+      ],
+      "size": [
+        14,
+        0.12,
+        12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4d9495"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.5,
+        0.15,
+        -2.8
+      ],
+      "size": [
+        2.3,
+        0.06,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.12,
+        0
+      ],
+      "color": "#81b7a8"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.3,
+        0.15,
+        3.3
+      ],
+      "size": [
+        2.1,
+        0.06,
+        0.8
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#367477"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.64,
+        -6.45
+      ],
+      "size": [
+        1.55,
+        1,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.05,
+        0.52,
+        -6.25
+      ],
+      "size": [
+        1.35,
+        0.84,
+        1.15
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#72796e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.02,
+        0.47,
+        -6.31
+      ],
+      "size": [
+        1.16,
+        0.74,
+        1.05
+      ],
+      "rotation": [
+        0,
+        -0.21,
+        0
+      ],
+      "color": "#929484"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.08,
+        0.64,
+        6.45
+      ],
+      "size": [
+        1.6,
+        1,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.02,
+        0.46,
+        6.29
+      ],
+      "size": [
+        1.15,
+        0.72,
+        1.06
+      ],
+      "rotation": [
+        0,
+        0.23,
+        0
+      ],
+      "color": "#929484"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.12,
+        0.53,
+        6.23
+      ],
+      "size": [
+        1.3,
+        0.86,
+        1.19
+      ],
+      "rotation": [
+        0,
+        -0.17,
+        0
+      ],
+      "color": "#72796e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.16,
+        1.16,
+        -6.57
+      ],
+      "size": [
+        1.03,
+        0.08,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0.13,
+        0
+      ],
+      "color": "#687b46"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.22,
+        1.16,
+        6.58
+      ],
+      "size": [
+        1.12,
+        0.08,
+        0.64
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#687b46"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.63,
+        -1.18
+      ],
+      "size": [
+        1.4,
+        0.74,
+        1.32
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.59,
+        0
+      ],
+      "size": [
+        1.4,
+        0.82,
+        1.34
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#929484"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.61,
+        1.18
+      ],
+      "size": [
+        1.4,
+        0.78,
+        1.32
+      ],
+      "rotation": [
+        0,
+        0.02,
+        0
+      ],
+      "color": "#72796e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.32,
+        0.85,
+        -3.98
+      ],
+      "size": [
+        0.6,
+        5.2,
+        0.6
+      ],
+      "rotation": [
+        1.570796,
+        0.065,
+        0
+      ],
+      "color": "#654733"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.37,
+        0.925,
+        -3.92
+      ],
+      "size": [
+        0.45,
+        4.85,
+        0.45
+      ],
+      "rotation": [
+        1.570796,
+        -0.075,
+        0
+      ],
+      "color": "#876044"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.3,
+        0.925,
+        3.95
+      ],
+      "size": [
+        0.45,
+        5.05,
+        0.45
+      ],
+      "rotation": [
+        1.570796,
+        -0.09,
+        0
+      ],
+      "color": "#594333"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.39,
+        0.85,
+        4.02
+      ],
+      "size": [
+        0.6,
+        5.18,
+        0.6
+      ],
+      "rotation": [
+        1.570796,
+        0.045,
+        0
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.12,
+        0.42,
+        -1.95
+      ],
+      "size": [
+        2.12,
+        0.84,
+        1.13
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ],
+      "color": "#697269"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.08,
+        0.4,
+        1.98
+      ],
+      "size": [
+        2.18,
+        0.8,
+        1.18
+      ],
+      "rotation": [
+        0,
+        -0.19,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.22,
+        0.38,
+        -4.62
+      ],
+      "size": [
+        1.75,
+        0.76,
+        1.2
+      ],
+      "rotation": [
+        0,
+        0.28,
+        0
+      ],
+      "color": "#72796e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.22,
+        0.39,
+        4.58
+      ],
+      "size": [
+        1.9,
+        0.78,
+        1.15
+      ],
+      "rotation": [
+        0,
+        -0.23,
+        0
+      ],
+      "color": "#697269"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.49,
+        0.88,
+        -6.34
+      ],
+      "size": [
+        1.4,
+        1.25,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.09,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.46,
+        0.99,
+        -6.57
+      ],
+      "size": [
+        0.29,
+        0.21,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.15,
+        0.14
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.53,
+        0.99,
+        -6.31
+      ],
+      "size": [
+        0.23,
+        0.17,
+        0.44
+      ],
+      "rotation": [
+        0,
+        -0.13,
+        -0.12
+      ],
+      "color": "#594333"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.51,
+        1.02,
+        6.4
+      ],
+      "size": [
+        0.23,
+        0.18,
+        0.42
+      ],
+      "rotation": [
+        0,
+        -0.17,
+        0.1
+      ],
+      "color": "#876044"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.5,
+        0.98,
+        6.58
+      ],
+      "size": [
+        0.31,
+        0.23,
+        0.47
+      ],
+      "rotation": [
+        0,
+        0.12,
+        -0.16
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.76,
+        1.04,
+        4.83
+      ],
+      "size": [
+        0.25,
+        0.76,
+        0.25
+      ],
+      "rotation": [
+        0.25,
+        0,
+        -0.98
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -1.12,
+        0.87,
+        -6.32
+      ],
+      "size": [
+        0.19,
+        0.94,
+        0.19
+      ],
+      "rotation": [
+        0.12,
+        0,
+        1.25
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.87,
+        0.55,
+        -6.18
+      ],
+      "size": [
+        0.17,
+        0.79,
+        0.17
+      ],
+      "rotation": [
+        0.5,
+        0,
+        -0.78
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.12,
+        0.9,
+        6.27
+      ],
+      "size": [
+        0.21,
+        1.02,
+        0.21
+      ],
+      "rotation": [
+        -0.15,
+        0,
+        -1.28
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.97,
+        0.56,
+        6.08
+      ],
+      "size": [
+        0.18,
+        0.83,
+        0.18
+      ],
+      "rotation": [
+        -0.48,
+        0,
+        0.82
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.45,
+        1.23,
+        -6.15
+      ],
+      "size": [
+        0.44,
+        0.98,
+        0.39
+      ],
+      "rotation": [
+        0.13,
+        0,
+        0.15
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.4,
+        1.13,
+        -6.34
+      ],
+      "size": [
+        0.38,
+        0.92,
+        0.35
+      ],
+      "rotation": [
+        -0.1,
+        0,
+        -0.13
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.43,
+        1.12,
+        6.27
+      ],
+      "size": [
+        0.41,
+        0.94,
+        0.37
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0.17
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.49,
+        1.27,
+        6.13
+      ],
+      "size": [
+        0.44,
+        1.02,
+        0.39
+      ],
+      "rotation": [
+        -0.11,
+        0,
+        -0.14
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.48,
+        0.97,
+        -2.17
+      ],
+      "size": [
+        0.36,
+        1.05,
+        0.32
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0.17
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.49,
+        0.94,
+        2.24
+      ],
+      "size": [
+        0.4,
+        0.96,
+        0.35
+      ],
+      "rotation": [
+        -0.14,
+        0,
+        -0.16
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.47,
+        0.3,
+        -2.13
+      ],
+      "size": [
+        0.91,
+        0.6,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0.23,
+        0
+      ],
+      "color": "#72796e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.48,
+        0.31,
+        2.2
+      ],
+      "size": [
+        0.94,
+        0.62,
+        0.88
+      ],
+      "rotation": [
+        0,
+        -0.27,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.23,
+        1.31,
+        -6.29
+      ],
+      "size": [
+        0.24,
+        1.19,
+        0.23
+      ],
+      "rotation": [
+        -0.11,
+        0,
+        -0.12
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        1.28,
+        1.36,
+        6.31
+      ],
+      "size": [
+        0.25,
+        1.19,
+        0.23
+      ],
+      "rotation": [
+        0.1,
+        0,
+        0.13
+      ],
+      "color": "#526b40"
+    }
+  ]
+}

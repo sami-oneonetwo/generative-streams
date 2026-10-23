@@ -1,0 +1,312 @@
+{
+  "name": "Municipal Cast-Iron Gas Lamp",
+  "description": "A fluted iron post supports a square glazed gas lantern on a sandstone pavement slab, marking the street corner with a compact warm mantle.",
+  "notes": "Standardised cast iron, pale lantern glass and a brass gas burner establish a restrained late-19th-century civic fixture.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.88,
+        0.12,
+        0.88
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a7a397"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.21,
+        5
+      ],
+      "size": [
+        0.46,
+        0.18,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1.5,
+        5
+      ],
+      "size": [
+        0.18,
+        2.4,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.48,
+        5
+      ],
+      "size": [
+        0.24,
+        2.28,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.48,
+        5
+      ],
+      "size": [
+        0.08,
+        2.28,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.65,
+        5
+      ],
+      "size": [
+        0.32,
+        0.14,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.77,
+        5
+      ],
+      "size": [
+        0.7,
+        0.1,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.29,
+        3.14,
+        4.71
+      ],
+      "size": [
+        0.08,
+        0.64,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.29,
+        3.14,
+        4.71
+      ],
+      "size": [
+        0.08,
+        0.64,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.29,
+        3.14,
+        5.29
+      ],
+      "size": [
+        0.08,
+        0.64,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.29,
+        3.14,
+        5.29
+      ],
+      "size": [
+        0.08,
+        0.64,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.14,
+        4.71
+      ],
+      "size": [
+        0.5,
+        0.6,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c7dbe3"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.29,
+        3.14,
+        5
+      ],
+      "size": [
+        0.06,
+        0.6,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a9c6c8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.88,
+        5
+      ],
+      "size": [
+        0.2,
+        0.12,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        3.09,
+        5
+      ],
+      "size": [
+        0.16,
+        0.3,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2cf83",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.52,
+        5
+      ],
+      "size": [
+        0.84,
+        0.16,
+        0.84
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    }
+  ]
+}

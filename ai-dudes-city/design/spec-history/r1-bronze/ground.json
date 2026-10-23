@@ -1,0 +1,273 @@
+{
+  "name": "Dry Barley Field Margins",
+  "description": "Sparse dry grass, harvested barley stubble, pale limestone, fallen reeds and broken pottery scatter across the open countryside.",
+  "notes": "Harvest remnants and terracotta sherds suggest the Bronze Age river town's cultivated outskirts without paving or cluttering the meadow.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -4.55,
+        0.16,
+        -3.65
+      ],
+      "size": [
+        0.34,
+        0.32,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "color": "#b5a05e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.28,
+        0.12,
+        -3.52
+      ],
+      "size": [
+        0.27,
+        0.24,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#d2bc7a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.85,
+        0.145,
+        3.85
+      ],
+      "size": [
+        0.38,
+        0.29,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "color": "#b8a361"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.14,
+        0.105,
+        3.7
+      ],
+      "size": [
+        0.26,
+        0.21,
+        0.24
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#7f9252"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.85,
+        0.13,
+        2.65
+      ],
+      "size": [
+        0.09,
+        0.26,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0.12
+      ],
+      "color": "#d2bc7a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.61,
+        0.105,
+        2.78
+      ],
+      "size": [
+        0.08,
+        0.21,
+        0.09
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        -0.16
+      ],
+      "color": "#b89a53"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.43,
+        0.15,
+        2.52
+      ],
+      "size": [
+        0.1,
+        0.29,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0.12
+      ],
+      "color": "#d2bc7a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.85,
+        0.12,
+        -2.75
+      ],
+      "size": [
+        0.82,
+        0.24,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0.45,
+        0
+      ],
+      "color": "#d2bb87"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.43,
+        0.075,
+        -2.46
+      ],
+      "size": [
+        0.35,
+        0.15,
+        0.29
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#ead7aa"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.75,
+        0.085,
+        0.65
+      ],
+      "size": [
+        0.46,
+        0.17,
+        0.33
+      ],
+      "rotation": [
+        0,
+        0.7,
+        0
+      ],
+      "color": "#b8a37c"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.65,
+        0.045,
+        -4.25
+      ],
+      "size": [
+        0.08,
+        1.12,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0.5,
+        1.5708
+      ],
+      "color": "#bda363"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.02,
+        0.045,
+        -3.99
+      ],
+      "size": [
+        0.08,
+        0.73,
+        0.08
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        1.5708
+      ],
+      "color": "#d2bc7a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        0.05,
+        0.95
+      ],
+      "size": [
+        0.34,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0.55,
+        0.04
+      ],
+      "color": "#b7764f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.27,
+        0.04,
+        1.12
+      ],
+      "size": [
+        0.21,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        0,
+        -0.65,
+        -0.05
+      ],
+      "color": "#ce9464"
+    }
+  ]
+}

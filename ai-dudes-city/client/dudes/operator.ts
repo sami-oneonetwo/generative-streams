@@ -43,6 +43,65 @@ export interface OperatorHandles {
   scene(s: DudesScene, serverNow: number): void;
   /** Q/E turn the camera: how much this frame (radians). */
   turn(dt: number): number;
+  /** Rework a build (clicked in the inspect panel): redesigned with this change, swapped in where it stands. */
+  edit(target: string, change: string): void;
+  /** Take a build down (Delete in the inspect panel). */
+  remove(target: string): void;
+  /** A click on a person: with "Focus on…" armed, the stream camera goes to them (true: taken). */
+  pickPerson(id: string): boolean;
+  /** Put the stream camera on this person. */
+  focusOn(id: string): void;
+  /** The figure this page walks: the Mayor, or a player's own character (player.ts) once seated. */
+  self(): string | undefined;
+  /** Whether this page may rework or take down that build (the Mayor: any; a player: their own). */
+  canRework(objectId: string): boolean;
+  /** A click on the ground while carrying a weapon (or aboard something with a gun): fire at it (true: taken). */
+  fireAt(at: { x: number; z: number }): boolean;
+}
+
+/** A shot this page just fired, for the effects layer to draw at once (main.ts listens). */
+export const LOCAL_SHOT = 'dudes:local-shot';
+export interface LocalShot {
+  gun: 'blaster' | 'rocket' | 'cannon';
+  from: { x: number; z: number };
+  to: { x: number; z: number };
+  fromHeight: number;
+}
+/** What G steps through: nothing in hand, a blaster, a rocket launcher. */
+export const ARMS = [undefined, 'blaster', 'rocket'] as const;
+export type Arm = (typeof ARMS)[number];
+/** How often the page sends a shot (the server keeps its own cooldown too). */
+export const FIRE_MS = { blaster: 250, rocket: 1800, cannon: 1600 } as const;
+/**
+ * Fire: at a spot (a click), or straight ahead (Space/X), with whatever is in hand or the gun aboard.
+ * Turns the figure to face the spot. Returns the new facing, or undefined when nothing was sent.
+ */
+export function shoot(state: { armed: Arm; ride?: { gun?: boolean }; lastShot: number; x: number; z: number; facing: number }, send: (m: object) => void, at?: { x: number; z: number }): number | undefined {
+  const gun = state.ride?.gun ? 'cannon' : state.armed;
+  if (!gun) return undefined;
+  const now = performance.now();
+  if (now - state.lastShot < FIRE_MS[gun]) return undefined;
+  state.lastShot = now;
+  const facing = at && Math.hypot(at.x - state.x, at.z - state.z) > 0.6 && !state.ride ? Math.atan2(at.x - state.x, at.z - state.z) : state.facing;
+  send({ t: 'fire', ...(at ? { aim: at } : {}) });
+  // Drawn here at once (a muzzle flash, and a blaster's bolt), not half a second later off the snapshot.
+  const range = gun === 'blaster' ? 16 : gun === 'rocket' ? 22 : 26;
+  const d = at ? Math.hypot(at.x - state.x, at.z - state.z) : 0;
+  const aim = at && d > 0.6 ? Math.atan2(at.x - state.x, at.z - state.z) : facing;
+  const reach = gun === 'blaster' || !at ? range : Math.min(range, d);
+  const ahead = (m: number) => ({ x: state.x + Math.sin(aim) * m, z: state.z + Math.cos(aim) * m });
+  const detail: LocalShot = { gun, from: ahead(0.4), to: ahead(reach), fromHeight: state.ride ? 1.4 : 1.3 };
+  dispatchEvent(new CustomEvent<LocalShot>(LOCAL_SHOT, { detail }));
+  return facing;
+}
+/** Aboard something and pushing into a build: tell the server what it ran into, and how hard. */
+export function rammed(objects: DudesScene['objects'] | undefined, px: number, pz: number, radius: number, rideId: string): string | undefined {
+  for (const o of objects ?? []) {
+    if (o.passable || o.id === rideId || o.destroyedAt !== undefined) continue;
+    const at = o.driven?.at ?? o.position;
+    if (Math.abs(px - at.x) < o.footprint.width / 2 + radius && Math.abs(pz - at.z) < o.footprint.depth / 2 + radius) return o.id;
+  }
+  return undefined;
 }
 
 export function createOperator(el: (id: string) => HTMLElement, getState: () => DudesScene | undefined): OperatorHandles {
@@ -57,6 +116,15 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     lastMove = '';
   let ride: Ride | undefined;
   let speed = 0; // aboard: how fast it is going now
+  const arms = { armed: undefined as Arm, lastShot: 0, lastRam: 0 };
+  function fireNow(at?: { x: number; z: number }): boolean {
+    const turned = shoot({ ...arms, ride, x, z, facing }, send, at);
+    if (turned === undefined) return false;
+    arms.lastShot = performance.now();
+    facing = turned;
+    lastSent = 0; // the new facing goes out straight away
+    return true;
+  }
   // Flying: how high it is, and how high the keys want it (Space up, Z down). It takes off by itself.
   let alt = 0,
     altWant = 0;
@@ -64,6 +132,9 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     CEILING = 30,
     CLIMB = 5;
   const sound = { music: 0.5, sfx: 0.8 };
+  // The stream camera's mode: "mayor" (follow), "everyone" (frame them all) or "person" (focus).
+  let focusId: string | undefined,
+    choosing = false;
   let follow = true,
     visible = true,
     free = false,
@@ -92,7 +163,33 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   };
 
   // --- keys ---
-  const typing = () => ['op-say', 'op-build-what', 'op-build-for'].includes(document.activeElement?.id ?? '');
+  const typing = () => ['op-say', 'op-aide', 'op-build-what', 'op-build-for', 'inspect-rework-text'].includes(document.activeElement?.id ?? '');
+  // --- the aide: a wish in words, answered by the server on a model call of its own (aide.ts) ---
+  const asking = () => !el('op-aide-box').hidden;
+  function openAide() {
+    el('op-aide-box').hidden = false;
+    (el('op-aide') as HTMLInputElement).focus();
+  }
+  function closeAide() {
+    el('op-aide-box').hidden = true;
+    (el('op-aide') as HTMLInputElement).blur();
+  }
+  let aideShown = '';
+  let aideHideAt = 0;
+  function renderAide(aide: MayorView['aide']) {
+    const box = el('op-aide-reply');
+    if (!aide) return;
+    const key = `${aide.at}:${aide.thinking}:${aide.reply}`;
+    if (key !== aideShown) {
+      aideShown = key;
+      el('op-aide-text').textContent = aide.thinking ? `On it: “${aide.asked}”…` : aide.reply || 'Done.';
+      box.classList.toggle('bad', !aide.thinking && !aide.ok);
+      box.hidden = false;
+      aideHideAt = aide.thinking ? Infinity : Date.now() + 9000 + aide.reply.length * 40;
+    }
+    if (Date.now() > aideHideAt) box.hidden = true;
+  }
+  setInterval(() => renderAide(getState()?.mayor?.aide), 400);
   // --- the build box: what, for whom (their lot), and where (a click on the ground) ---
   let buildAt: { x: number; z: number } | undefined;
   const building = () => !el('op-build-box').hidden;
@@ -122,6 +219,15 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     closeBuild();
   }
   addEventListener('keydown', (e) => {
+    if (asking() && typing()) {
+      if (e.key === 'Enter') {
+        const text = (el('op-aide') as HTMLInputElement).value.trim();
+        if (text) send({ t: 'ask', text });
+        (el('op-aide') as HTMLInputElement).value = '';
+        closeAide();
+      } else if (e.key === 'Escape') closeAide();
+      return;
+    }
     if (building() && typing()) {
       if (e.key === 'Enter') submitBuild();
       else if (e.key === 'Escape') closeBuild();
@@ -150,12 +256,18 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     }
     if (k === 'c') {
       follow = !follow;
+      focusId = undefined;
       send({ t: 'follow', on: follow });
       renderFollow();
       return;
     }
     if (k === 'b') {
       openBuild();
+      e.preventDefault();
+      return;
+    }
+    if (k === 'i') {
+      openAide();
       e.preventDefault();
       return;
     }
@@ -177,6 +289,18 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     if (k === 'r') {
       // On or off whatever is nearest (the server decides what that is, and says so).
       send({ t: 'ride' });
+      return;
+    }
+    if (k === 'g') {
+      // Pick up a weapon, swap it, put it away.
+      arms.armed = ARMS[(ARMS.indexOf(arms.armed) + 1) % ARMS.length];
+      send({ t: 'arm', weapon: arms.armed ?? 'none' });
+      renderFollow();
+      return;
+    }
+    if (k === 'x' || (k === ' ' && ride?.moves !== 'fly')) {
+      fireNow();
+      e.preventDefault();
       return;
     }
     if (k === 'f') {
@@ -203,13 +327,32 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   });
   addEventListener('keyup', (e) => keys.delete(e.key.toLowerCase()));
   addEventListener('blur', () => keys.clear());
+  function setMode(mode: 'mayor' | 'everyone' | 'person', target?: string) {
+    choosing = false;
+    if (mode === 'person' && !target) {
+      // Arm it: the next click on a person picks them.
+      choosing = true;
+      renderFollow();
+      return;
+    }
+    follow = mode === 'mayor';
+    focusId = mode === 'person' ? target : undefined;
+    send({ t: 'camera', mode, ...(target ? { target } : {}) });
+    renderFollow();
+  }
+  for (const b of document.querySelectorAll<HTMLButtonElement>('#op-cam-modes button')) b.onclick = () => setMode(b.dataset.mode as 'mayor' | 'everyone' | 'person');
   function renderFollow() {
-    el('op-follow').textContent = follow ? 'following the Mayor' : 'framing everyone';
-    el('op-follow').className = follow ? 'ok' : 'warn';
+    const who = focusId ? (getState()?.dudes.find((d) => d.id === focusId)?.name ?? 'someone') : '';
+    el('op-follow').textContent = choosing ? 'click someone to focus on' : focusId ? `on ${who}` : follow ? 'following the Mayor' : 'framing everyone';
+    el('op-follow').className = choosing ? 'warn' : 'ok';
+    const mode = focusId ? 'person' : follow ? 'mayor' : 'everyone';
+    for (const b of document.querySelectorAll<HTMLButtonElement>('#op-cam-modes button')) b.classList.toggle('on', choosing ? b.dataset.mode === 'person' : b.dataset.mode === mode);
     el('op-visible').textContent = visible ? 'visible' : 'hidden';
     el('op-visible').className = visible ? 'ok' : 'warn';
     el('op-ride').textContent = ride ? `aboard ${getState()?.objects.find((o) => o.id === ride!.id)?.blueprint.name ?? 'something'} (R to get off)` : 'on foot (R near something to ride it)';
     el('op-ride').className = ride ? 'warn' : 'ok';
+    el('op-arms').textContent = ride?.gun ? 'its gun (click or X to fire)' : arms.armed ? `${arms.armed === 'rocket' ? 'rocket launcher' : 'blaster'} (click or X to fire · G to swap)` : 'nothing (G for a weapon)';
+    el('op-arms').className = arms.armed || ride?.gun ? 'warn' : 'ok';
     el('op-cam').textContent = free ? 'free (WASD moves the camera)' : 'on the Mayor';
     el('op-sound').textContent = `music ${Math.round(sound.music * 100)}% · effects ${sound.sfx > 0 ? 'on' : 'off'}`;
     el('op-sound').className = sound.music > 0 || sound.sfx > 0 ? 'ok' : 'warn';
@@ -227,7 +370,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     if (Math.hypot(px - SQUARE.fountain.x, pz - SQUARE.fountain.z) < SQUARE.fountain.r + radius) return true;
     if (Math.abs(px - SQUARE.market.x) < SQUARE.market.w / 2 + radius && Math.abs(pz - SQUARE.market.z) < SQUARE.market.d / 2 + radius) return true;
     for (const o of getState()?.objects ?? []) {
-      if (o.passable || o.id === ride?.id) continue;
+      if (o.passable || o.id === ride?.id || o.destroyedAt !== undefined) continue;
       const at = o.driven?.at ?? o.position;
       if (Math.abs(px - at.x) < o.footprint.width / 2 + radius && Math.abs(pz - at.z) < o.footprint.depth / 2 + radius) return true;
     }
@@ -286,7 +429,15 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
         } else if (!blocked(x, z + dz)) {
           z += dz;
           speed *= 0.6;
-        } else speed = 0; // into a wall: stopped
+        } else {
+          // Into a wall: stopped, and if it was going at a lick, the wall takes a knock.
+          const hit = speed > 2 ? rammed(getState()?.objects, x + dx, z + dz, Math.min(1.6, Math.max(RADIUS, ride.size / 3)), ride.id) : undefined;
+          if (hit && performance.now() - arms.lastRam > 450) {
+            arms.lastRam = performance.now();
+            send({ t: 'ram', target: hit, speed });
+          }
+          speed = 0;
+        }
       }
       const b = CITY_BOUNDS;
       x = Math.max(b.minX + 0.5, Math.min(b.maxX - 0.5, x));
@@ -324,6 +475,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   }
   let moved = -1;
   function mayor(view: MayorView | undefined) {
+    renderAide(view?.aide);
     // The server put him somewhere (onto the court): this page jumps there too.
     if (view && (view.moved ?? 0) !== moved) {
       if (moved >= 0) [x, z, facing] = [view.position.x, view.position.z, view.facing];
@@ -379,6 +531,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
         z = m.position.z;
         facing = m.facing;
         follow = m.follow;
+        focusId = m.focus;
         visible = !m.hidden;
         ride = m.riding;
         alt = altWant = m.riding?.altitude ?? 0;
@@ -441,5 +594,16 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
       clampCam();
     },
     turn: (dt) => (keys.has('q') ? 1 : 0) * dt * 1.6 - (keys.has('e') ? 1 : 0) * dt * 1.6,
+    edit: (target, change) => send({ t: 'edit', target, change }),
+    remove: (target) => send({ t: 'remove', target }),
+    pickPerson(id) {
+      if (!choosing) return false;
+      setMode('person', id);
+      return true;
+    },
+    focusOn: (id) => setMode('person', id),
+    self: () => 'mayor',
+    canRework: () => true,
+    fireAt: (at) => (arms.armed || ride?.gun ? (fireNow(at), true) : false),
   };
 }

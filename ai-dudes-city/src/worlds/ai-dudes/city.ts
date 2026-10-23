@@ -10,10 +10,13 @@ import { footprint } from '../../shared/layout';
 import type { GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import {
   BUS_STOP,
+  CITY,
+  LAYOUT,
   DISTRICT_NAMES,
   NEEDS,
   SQUARE,
   VENUES,
+  WONDER,
   allPlots,
   blockKey,
   civicPlots,
@@ -28,13 +31,17 @@ import {
   type VenueKind,
   type VenueSpec,
 } from '../../shared/city';
-import type { DudeView, Emote, HappeningView, TownView } from '../../shared/dudesTypes';
+import type { DudeLook, DudeView, Emote, HappeningView, TownView } from '../../shared/dudesTypes';
+import { MODERN, NO_AGE, SANDBOX_DESIGN, ageStyle, clampAge, dressFor, venueName } from '../../shared/ages';
+import { BRIDGE_ROAD, BRIDGE_SHIFT_MS, volunteer, bridgeHelped, bridgeOpen, bridgeProgress, bridgeSpot, caravanLine, caravanOf, caravanSaw, caravanView, daughterTitle, sceneView, tickCaravan } from './caravan';
+import { BRIDGE, FACING_TOWN } from '../../shared/scenes';
 import { blueprintBounds, fitBlueprint, interactionOf, measureBlueprint } from './blueprint';
 import { defaultLook, hashOf } from './agent';
 import { choosePlacement, clampToGround, route, workSpots } from './placement';
 import { addEffect, awake, endUse, face, reserved, step, walkTo } from './sim';
 import { moversNear } from './movers';
-import { LIMITS, nextId, pushFeed, pushLine, type City, type Dude, type DudesState, type Ledger, type Project, type Townie, type Visit } from './state';
+import { credit } from './crier';
+import { LIMITS, nextId, pushFeed, pushLine, type City, type Dude, type DudesState, type Ledger, type Project, type Tie, type Townie, type Visit } from './state';
 
 export const TOWN = {
   startCoins: 150,
@@ -59,6 +66,11 @@ export const TOWN = {
   partyMs: 75_000,
   /** How far someone walks to an outing of their own before picking somewhere nearer. */
   reach: 90,
+  /** A new look (hat, colours, clothes) from the tailor, after the first one; and the council's fine. Paid as far as they can. */
+  lookFee: 10,
+  fine: 15,
+  /** An empty lot whose owner has been away this many days (and has nothing standing anywhere) goes to the next newcomer (env DUDES_LOT_RECLAIM_DAYS). */
+  reclaimDays: Number(process.env.DUDES_LOT_RECLAIM_DAYS) > 0 ? Number(process.env.DUDES_LOT_RECLAIM_DAYS) : 14,
 };
 
 const TOWN_NAMES = ['Larkhaven', 'Puddleby', 'Little Hollow', 'New Bramley', 'Sunnymead', 'Kettlewick', 'Applecross', 'Fernley Green'];
@@ -70,16 +82,73 @@ const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v
 export function cityOf(state: DudesState): City {
   return (state.city ??= {
     name: TOWN_NAMES[hashOf(`town:${state.createdAt}`) % TOWN_NAMES.length],
+    layout: LAYOUT,
     plots: {},
     done: [],
     stats: {},
     townies: [],
     unmet: {},
     nextProjectId: 1,
+    age: 0,
   });
 }
 
+/** The age the town lives in (shared/ages.ts). A new town starts in the Stone Age; a save from before ages keeps the look it had, the Modern age. */
+export function ageOf(state: DudesState): number {
+  const c = cityOf(state);
+  return (c.age ??= state.objects.some((o) => !o.fixed) ? MODERN : 0);
+}
+/** Into another age at once (the operator's control; the wave comes later). Everything is drawn the new age's way from the next snapshot. */
+export function setAge(state: DudesState, age: number, now: number): void {
+  const c = cityOf(state);
+  const next = clampAge(age);
+  if (next === ageOf(state)) return;
+  c.age = next;
+  queueRestyles(state);
+  state.worldRevision++;
+  pushFeed(state, now, `${c.name} is in ${ageStyle(next).name} now`);
+}
+/** Every build not made in the town's age goes in the queue to be remade for it (the town's design pump takes them one at a time). */
+export function queueRestyles(state: DudesState): void {
+  const age = ageOf(state);
+  // The town's own landmarks keep the look of the age they were raised in: a Wonder (and any community
+  // project) is a piece of that age's history, so only people's builds are remade.
+  cityOf(state).restyle = { age, ids: state.objects.filter((o) => !o.wild && !o.civic && o.wonder === undefined && originOf(o) !== age).map((o) => o.id) };
+}
+
+/** What the streamer's character is called in this age: "The Chief". */
+/** The age themes are on (off: the theme-free sandbox world, admin). */
+export const themed = (state: DudesState) => state.ai.themes !== false;
+/** The age things are named in: the town's, or everyday names in the sandbox. */
+export const namingAge = (state: DudesState) => (themed(state) ? ageOf(state) : MODERN);
+/** A build's own age for the restyles: made in the sandbox is in none. */
+export const originOf = (o: SafehouseObject) => (o.free ? NO_AGE : (o.age ?? MODERN));
+/** Stamp a build (new or redesigned) with how it was made now: in the town's age, or in no age in the sandbox. */
+export function stampAge(state: DudesState, o: SafehouseObject): SafehouseObject {
+  if (themed(state)) {
+    o.age = ageOf(state);
+    delete o.free;
+  } else {
+    o.free = true;
+    delete o.age;
+  }
+  return o;
+}
+/** The design call's direction: how the town's age makes things, or the sandbox's anything-goes. */
+export const designDirection = (state: DudesState) => (themed(state) ? ageStyle(ageOf(state)).design : SANDBOX_DESIGN);
+/** What someone wears: the age's clothes over their own colours, or just their own in the sandbox. */
+export const dressed = (state: DudesState, look: DudeLook, who: Parameters<typeof dressFor>[2]): DudeLook => (themed(state) ? dressFor(look, ageOf(state), who) : look);
+export const headName = (state: DudesState): string => state.mayor?.title ?? `The ${ageStyle(namingAge(state)).head.title}`;
+
 export const coinsOf = (d: Dude) => d.coins ?? TOWN.startCoins;
+/** Coins that leave town (a fine, a new look): what they can pay of it, floated up in red over them. Returns what was paid. */
+export function spend(state: DudesState, d: Dude, amount: number, now: number): number {
+  const paid = Math.max(0, Math.min(Math.floor(amount), coinsOf(d)));
+  if (!paid) return 0;
+  d.coins = coinsOf(d) - paid;
+  addEffect(state, { kind: 'coins', at: now, to: { ...d.position }, amount: -paid });
+  return paid;
+}
 export function needsOf(d: Dude): Needs {
   return (d.needs ??= { hunger: 70, energy: 80, fun: 65, social: 60 });
 }
@@ -110,13 +179,38 @@ export const freeLots = (state: DudesState) => homePlots().filter((p) => !cityOf
 export function claimLot(state: DudesState, d: Dude, now: number): PlotInfo | undefined {
   const own = ownLot(state, d);
   if (own) return own;
-  const lot = freeLots(state)[0];
+  // An empty one first: anyone can build on a free lot, so some have builds on them already.
+  const free = freeLots(state);
+  const lot = free.find((l) => !state.objects.some((o) => o.plot === l.id)) ?? free[0] ?? reclaimLot(state, now);
   if (!lot) return undefined;
   cityOf(state).plots[lot.id] = { owner: d.id, coOwners: [], claimedAt: now };
   d.plot = lot.id;
   d.rentsAt = undefined;
   // The neighbours on the same block hear about it.
   for (const n of neighboursOf(state, lot)) tell(state, n, `${d.name} moved in next door, at ${lot.address}`, now);
+  return lot;
+}
+/**
+ * The town is full: an empty lot comes back from someone long gone. Its owner has been away at least
+ * `TOWN.reclaimDays` (or is no longer in town at all), has nothing standing anywhere, and nothing
+ * stands on the lot or is on its way there. The longest-gone first. Released here; undefined when none.
+ */
+export function reclaimLot(state: DudesState, now: number): PlotInfo | undefined {
+  const c = cityOf(state);
+  const cutoff = now - TOWN.reclaimDays * 24 * 60 * 60_000;
+  const gone = Object.entries(c.plots)
+    .map(([id, claim]) => ({ id, claim, owner: state.dudes.find((x) => x.id === claim.owner) }))
+    .filter(({ id, claim, owner }) => {
+      if (owner ? owner.lastHeardAt > cutoff : claim.claimedAt > cutoff) return false;
+      if (owner && state.objects.some((o) => o.owner === owner.id)) return false;
+      if (state.objects.some((o) => o.plot === id) || state.jobs.some((j) => j.plot === id && j.status !== 'done' && j.status !== 'failed')) return false;
+      return !!plotById(id) && !plotById(id)!.civic;
+    })
+    .sort((a, b) => (a.owner?.lastHeardAt ?? a.claim.claimedAt) - (b.owner?.lastHeardAt ?? b.claim.claimedAt))[0];
+  if (!gone) return undefined;
+  const lot = plotById(gone.id)!;
+  releaseLot(state, gone.id);
+  if (gone.owner) tell(state, gone.owner, `your empty lot at ${lot.address} went to a newcomer while you were away; you can still build on any lot with room (say where), or ask a friend to share theirs`, now);
   return lot;
 }
 /** Owners of the other lots on the same block. */
@@ -221,7 +315,9 @@ export function placeOfObject(state: DudesState, o: SafehouseObject): Place | un
   };
 }
 export function placesOf(state: DudesState): Place[] {
-  return [...TOWN_PLACES, ...state.objects.map((o) => placeOfObject(state, o)).filter((p): p is Place => !!p)];
+  // The age's Wonder stands where the centrepiece was: it is the place to sit by now.
+  const town = wonderOf(state) ? TOWN_PLACES.filter((p) => p.id !== 'town:fountain') : TOWN_PLACES;
+  return [...town, ...state.objects.map((o) => placeOfObject(state, o)).filter((p): p is Place => !!p)];
 }
 export const placeById = (state: DudesState, id: string | undefined): Place | undefined =>
   !id ? undefined : id.startsWith('town:') ? TOWN_PLACES.find((p) => p.id === id) : (() => {
@@ -230,8 +326,11 @@ export const placeById = (state: DudesState, id: string | undefined): Place | un
   })();
 export const townPlaceNames = () => TOWN_PLACES.map((p) => p.name);
 
-/** Their home: a home on their own lot, a flat they rent, a home on a lot they share, or nothing. */
+/** Their home: a home they built (on any lot), a home on a lot they own or share, a flat they rent, or nothing. */
 export function homeOf(state: DudesState, d: Dude): Place | undefined {
+  // A home they built wherever they built it (anyone can build on any lot), then one on their lots.
+  const own = state.objects.find((o) => o.venue === 'home' && o.owner === d.id);
+  if (own) return placeOfObject(state, own);
   const lots = lotsOf(state, d).map((l) => l.id);
   const mine = state.objects.filter((o) => (o.venue === 'home' || o.venue === 'apartments') && o.plot && lots.includes(o.plot));
   const pick = mine.find((o) => o.venue === 'home' && o.owner === d.id) ?? mine.find((o) => o.venue === 'home') ?? mine[0];
@@ -262,7 +361,8 @@ export function bestPlaceFor(state: DudesState, who: { id: string; position: Gro
     if (p.spec.price > who.coins) continue;
     const far = dist(p.at, who.position);
     if (far > TOWN.reach && p.kind !== 'home') continue;
-    const theirs = p.owner && p.owner !== who.id ? 1.35 : 1;
+    // Somebody else's, and more so a friend's (less so someone who keeps knocking your things about).
+    const theirs = p.owner && p.owner !== who.id ? 1.35 * (d ? 1 + clamp(warmth(d, p.owner), -5, 10) * 0.04 : 1) : 1;
     const busy = Math.min(5, recentVisits(state, p.id, now)) * 0.04; // a little pull toward what is popular
     const s = gives * theirs * (1 + busy) - far * 0.25 + rng() * 12 - (p.kind === 'town' ? 6 : 0);
     if (s > score) [best, score] = [p, s];
@@ -378,6 +478,7 @@ function finishVisit(state: DudesState, d: Dude, p: Place, v: Visit, now: number
     d.coins = coinsOf(d) + TOWN.wage;
     pushLine(d.history, { from: 'world', text: `you worked a shift at ${p.name} and earned §${TOWN.wage}`, at: now }, LIMITS.history);
     pushFeed(state, now, `${d.name} worked a shift at ${p.name}`);
+    if (p.kind !== 'town') caravanSaw(state, 'operate', now, p.kind, undefined, d.id);
     const needs = needsOf(d);
     needs.social = clamp(needs.social + 15, 0, 100);
     needs.energy = clamp(needs.energy - 8, 0, 100);
@@ -390,6 +491,7 @@ function finishVisit(state: DudesState, d: Dude, p: Place, v: Visit, now: number
     return;
   }
   const paid = pay(state, d.name, d, p, now);
+  if (p.owner && p.owner !== d.id) noteTie(state, d.id, p.owner, 'visit', now);
   const owed = p.owner === d.id ? 0 : p.spec.price;
   const scale = paid < owed ? 0.5 : 1; // broke: a glass of water, not dinner
   const needs = needsOf(d);
@@ -414,6 +516,7 @@ export function pay(state: DudesState, visitorName: string, visitor: Dude | unde
   const owner = p.owner ? state.dudes.find((x) => x.id === p.owner) : undefined;
   if (owner && owner !== visitor) owner.coins = coinsOf(owner) + paid;
   if (p.id.startsWith('town:')) return paid;
+  if (!visitor && p.kind !== 'town') caravanSaw(state, 'serve', now, p.kind, visitorName, owner?.id);
   const s = (c.stats[p.id] ??= { visits: 0, coins: 0, recent: [], lastVisitors: [] });
   if (owner === visitor) return paid; // using your own place is not business
   const lastAt = s.recent.at(-1) ?? 0;
@@ -467,7 +570,10 @@ export function autonomy(state: DudesState, d: Dude, now: number, rng: () => num
   if (state.ai.townLife === false) return false;
   const c = cityOf(state);
   const up = awake(d, now);
-  if (c.party && up && now < c.party.until - 8000 && dist(d.position, c.party.at) > 4) {
+  // A party or a grand opening: everyone about goes, and about half of those whose chatter is away
+  // turn up too (the same half all party long), so the square fills even when chat is quiet.
+  const joins = up || (hashOf(`${d.id}:${c.party?.until ?? 0}`) % 2 === 0 && dist(d.position, c.party?.at ?? d.position) < TOWN.reach);
+  if (c.party && joins && now < c.party.until - 8000 && dist(d.position, c.party.at) > 4) {
     const p = placeById(state, c.party.placeId) ?? { ...TOWN_PLACES[0], at: c.party.at };
     return !startVisit(state, d, p, 'party', now);
   }
@@ -500,12 +606,109 @@ export function autonomy(state: DudesState, d: Dude, now: number, rng: () => num
   return !startVisit(state, d, p, 'need', now, need);
 }
 
+const NEED_HEADING: Record<Need, string> = { hunger: 'hungry', energy: 'tired', fun: 'bored', social: 'lonely' };
+/** Why and where someone is walking, for the line under their name ("hungry → Sara's Bakery"); nothing when not on the way anywhere. */
+export function headingOf(state: DudesState, d: Dude): string | undefined {
+  const v = d.visit;
+  if (v?.phase === 'going') {
+    const p = placeById(state, v.placeId);
+    if (!p) return undefined;
+    const why = v.why === 'need' && v.need ? NEED_HEADING[v.need] : v.why === 'work' ? 'shift' : v.why === 'party' ? 'party' : undefined;
+    return `${why ? `${why} → ` : '→ '}${p.name}`.slice(0, 48);
+  }
+  if (d.labour?.phase === 'going') return d.labour.site === 'bridge' ? 'helping → the bridge' : `helping → ${projectOf(state)?.name ?? 'the project'}`.slice(0, 48);
+  return undefined;
+}
+
+/** At most this many characters whose chatter is away are out on an outing of their own at once. */
+const AWAY_OUT_MAX = 4;
+/**
+ * A character whose chatter is away, now and then (zero AI): a shift where the travellers asked for
+ * one, or round to somebody else's place, so the town does not empty between chat bursts. Never
+ * anything that costs more than they can easily spare. Returns true when they set off.
+ */
+export function awayOuting(state: DudesState, d: Dude, now: number, rng: () => number): boolean {
+  if (state.ai.townLife === false || d.visit || d.labour || awake(d, now)) return false;
+  if (state.dudes.filter((x) => x.visit && !awake(x, now)).length >= AWAY_OUT_MAX) return false;
+  const roll = rng();
+  const cv = cityOf(state).caravan;
+  const ask = cv && !cv.nextAt && !cv.stranded ? cv.asks.find((a) => a.kind === 'operate' && a.have < a.need) : undefined;
+  if (ask && roll < 0.2) {
+    const job = placesOf(state)
+      .filter((p) => p.kind !== 'town' && ask.venues?.includes(p.kind as VenueKind) && dist(p.at, d.position) < TOWN.reach)
+      .sort((a, b) => dist(a.at, d.position) - dist(b.at, d.position))[0];
+    if (job && !startVisit(state, d, job, 'work', now)) return true;
+  }
+  if (roll < 0.1 && coinsOf(d) >= 40) {
+    const needs = needsOf(d);
+    const need = NEEDS.filter((n) => n !== 'energy').reduce((a, b) => (needs[b] < needs[a] ? b : a));
+    const p = bestPlaceFor(state, { id: d.id, position: d.position, coins: Math.min(coinsOf(d) - 30, 15) }, need, now, rng, d);
+    if (p && p.owner && p.owner !== d.id && !startVisit(state, d, p, 'need', now, need)) return true;
+  }
+  return false;
+}
+
 /** Two characters greeted each other: both feel better for it. */
 export function socialised(a: Dude, b: Dude): void {
   for (const d of [a, b]) {
     const n = needsOf(d);
     n.social = clamp(n.social + 20, 0, 100);
   }
+}
+
+// ---- who has history with whom: a small ledger per pair (on each side), zero AI ---------------------
+/** At most this many people on one character's ledger; the stalest go first. */
+const TIES_MAX = 24;
+/** `d`'s side of their history with `other` (made on first use). */
+export function tieWith(d: Dude, otherId: string, now: number): Tie {
+  const ties = (d.ties ??= {});
+  let t = ties[otherId];
+  if (!t) {
+    const ids = Object.keys(ties);
+    if (ids.length >= TIES_MAX) delete ties[ids.sort((a, b) => ties[a].at - ties[b].at)[0]];
+    t = ties[otherId] = { came: 0, went: 0, gifts: 0, hits: 0, together: 0, at: now };
+  }
+  t.at = now;
+  return t;
+}
+/** Something passed between two characters: both sides of the ledger hear about it. */
+export function noteTie(state: DudesState, fromId: string, toId: string, what: 'visit' | 'gift' | 'hit' | 'together', now: number, amount = 1): void {
+  if (fromId === toId) return;
+  const from = state.dudes.find((x) => x.id === fromId),
+    to = state.dudes.find((x) => x.id === toId);
+  if (!from || !to) return;
+  const a = tieWith(from, toId, now),
+    b = tieWith(to, fromId, now);
+  if (what === 'visit') {
+    a.went++;
+    b.came++;
+  } else if (what === 'gift') b.gifts += amount;
+  else if (what === 'hit') b.hits++;
+  else {
+    a.together++;
+    b.together++;
+  }
+}
+/** How warmly `d` thinks of someone: visits and shared work count, hits count against. */
+export function warmth(d: Dude, otherId: string): number {
+  const t = d.ties?.[otherId];
+  if (!t) return 0;
+  return t.came + t.went + Math.min(10, t.gifts / 10) + t.together * 2 - t.hits * 2;
+}
+/** For the agent: who keeps coming to your places, who you get on with, and who has been at your things. */
+export function tiesForAgent(state: DudesState, d: Dude): { yourRegulars?: string[]; friends?: string[]; whoHasBeenAtYourStuff?: string[] } {
+  const name = (id: string) => state.dudes.find((x) => x.id === id)?.name;
+  const rows = Object.entries(d.ties ?? {})
+    .map(([id, t]) => ({ id, t, name: name(id) }))
+    .filter((r): r is { id: string; t: Tie; name: string } => !!r.name);
+  const regulars = rows.filter((r) => r.t.came >= 2).sort((a, b) => b.t.came - a.t.came).slice(0, 3).map((r) => `${r.name} (${r.t.came} visits${r.t.gifts ? `, gave you §${r.t.gifts}` : ''})`);
+  const friends = rows
+    .filter((r) => warmth(d, r.id) >= 3 && r.t.came < 2)
+    .sort((a, b) => warmth(d, b.id) - warmth(d, a.id))
+    .slice(0, 3)
+    .map((r) => `${r.name}${r.t.together ? ` (built ${r.t.together} thing${r.t.together === 1 ? '' : 's'} together)` : r.t.gifts ? ` (gave you §${r.t.gifts})` : ''}`);
+  const rough = rows.filter((r) => r.t.hits > 0).sort((a, b) => b.t.hits - a.t.hits).slice(0, 3).map((r) => `${r.name} (hit you or your things ${r.t.hits} time${r.t.hits === 1 ? '' : 's'})`);
+  return { ...(regulars.length ? { yourRegulars: regulars } : {}), ...(friends.length ? { friends } : {}), ...(rough.length ? { whoHasBeenAtYourStuff: rough } : {}) };
 }
 
 // ---- the ledger: what happened while you were away -------------------------------------------------
@@ -572,6 +775,59 @@ export function proposeProject(state: DudesState, d: Dude, what: string, now: nu
   return undefined;
 }
 
+/** The Wonder standing on its spot in the middle of the square, if one does. */
+export const wonderOf = (state: DudesState): SafehouseObject | undefined => state.objects.find((o) => o.plot === WONDER.plot);
+/** What a Wonder costs: it grows with the age, so the last ones are the town's biggest effort. */
+export function wonderCost(age: number, awakeCount: number): { coins: number; work: number } {
+  const k = 1 + 0.3 * Math.max(0, age);
+  return { coins: Math.round(clamp(100 + 25 * awakeCount, 150, 500) * k), work: Math.round(clamp(80 + 20 * awakeCount, 120, 400) * (1 + 0.2 * Math.max(0, age))) };
+}
+/**
+ * The caravan's leader proposes the age's Wonder (caravan.ts, the third visit). It goes on its own spot
+ * in the middle of the square, never a community lot, and only it can finish the Wonder ask. It waits
+ * while another project is under way. Shelved only after hours, not the usual 40 minutes.
+ */
+export function proposeWonder(state: DudesState, age: number, what: string, now: number): boolean {
+  const c = cityOf(state);
+  if (projectOf(state)) return false;
+  const cost = wonderCost(age, state.dudes.filter((x) => awake(x, now)).length);
+  c.project = {
+    id: `c${c.nextProjectId++}`,
+    what: what.slice(0, 300),
+    by: 'caravan',
+    plot: WONDER.plot,
+    status: 'designing',
+    coins: 0,
+    coinsNeed: cost.coins,
+    work: 0,
+    workNeed: cost.work,
+    contributors: {},
+    createdAt: now,
+    until: now + 6 * 3600_000,
+    wonder: age,
+  };
+  return true;
+}
+/** The new Wonder's ghost goes up on the spot: the last age's Wonder makes way. It moves to a free
+ * community lot as a keepsake when two or more are free; otherwise it is taken down. */
+function clearWonderSpot(state: DudesState, now: number): void {
+  const old = wonderOf(state);
+  if (!old) return;
+  const taken = civicTaken(state);
+  const free = civicPlots().filter((p) => !taken.has(p.id));
+  if (free.length >= 2) {
+    const lot = free[0];
+    old.plot = lot.id;
+    old.position = { ...lot.centre };
+    old.revision++;
+    pushFeed(state, now, `${old.blueprint.name} is moved to ${lot.address} to make way for the new Wonder`);
+  } else {
+    state.objects = state.objects.filter((o) => o !== old);
+    pushFeed(state, now, `${old.blueprint.name} is taken down to make way for the new Wonder`);
+  }
+  state.worldRevision++;
+}
+
 /** The design came back (or did not): the ghost goes up on the square and the gathering begins. */
 export function projectDesigned(state: DudesState, blueprint: Project['blueprint'] | undefined, now: number, why?: string): void {
   const c = cityOf(state);
@@ -593,14 +849,17 @@ export function projectDesigned(state: DudesState, blueprint: Project['blueprint
     p.position = { ...lot.centre };
     p.name = fitted.name;
     p.status = 'gathering';
+    if (p.plot === WONDER.plot) clearWonderSpot(state, now);
   } catch (e) {
     p.status = 'failed';
     c.project = undefined;
     if (proposer) tell(state, proposer, `the community project could not fit on the square: ${(e as Error).message}`, now);
     return;
   }
-  pushFeed(state, now, `COMMUNITY PROJECT: ${p.name} on the square (§${p.coinsNeed} and many hands needed)`);
-  for (const d of state.dudes) if (awake(d, now)) tell(state, d, `The town is building ${p.name} on the square (proposed by ${proposer?.name ?? 'someone'}). Chip in coins with "contribute" or help build it with "help".`, now, d.id !== p.by);
+  const wonder = p.wonder !== undefined;
+  pushFeed(state, now, `${wonder ? 'THE WONDER' : 'COMMUNITY PROJECT'}: ${p.name} on the square (§${p.coinsNeed} and many hands needed)`);
+  const by = proposer?.name ?? (wonder ? `${caravanOf(p.wonder!).leader} of the caravan` : 'someone');
+  for (const d of state.dudes) if (awake(d, now)) tell(state, d, `The town is building ${p.name}${wonder ? ", the age's Wonder, in the middle of the square" : ' on the square'} (proposed by ${by}). Chip in coins with "contribute" or help build it with "help".`, now, d.id !== p.by);
 }
 
 function contributor(p: Project, id: string) {
@@ -622,6 +881,21 @@ export function contribute(state: DudesState, d: Dude, amount: number, now: numb
   return undefined;
 }
 export function startLabour(state: DudesState, d: Dude, now: number): string | undefined {
+  // The travellers stuck at the river come first: out along the path to the bridge, a shift on it, and back.
+  if (bridgeOpen(state)) {
+    const helpers = cityOf(state).caravan?.helpers ?? [];
+    if (helpers.includes(d.id)) return 'you have already done your shift on the bridge; it needs other hands now';
+    if (d.labour?.site === 'bridge') return undefined; // already on the way, or at it
+    leaveVisit(d);
+    endUse(state, d, now);
+    if (!walkTo(state, d, BRIDGE_ROAD, 'job')) return 'you could not find a way to the bridge';
+    const at = bridgeSpot(state.dudes.filter((x) => x.labour?.site === 'bridge').length + helpers.length);
+    d.path.push({ x: at.x, z: at.z });
+    d.emote = undefined;
+    d.labour = { phase: 'going', at, until: now + 120_000, site: 'bridge' };
+    volunteer(state, d.id, now);
+    return undefined;
+  }
   const p = projectOf(state);
   if (!p) return 'there is no community project to help build right now; propose one';
   if (p.status === 'designing' || !p.position || !p.footprint) return 'the plans are still being drawn up; try again in a minute';
@@ -635,9 +909,47 @@ export function startLabour(state: DudesState, d: Dude, now: number): string | u
   d.labour = { phase: 'going', at: spot, until: now + 90_000 };
   return undefined;
 }
+/** Off the bridge path and back into town (the path is outside the town's ground, so it's laid by hand). */
+function leaveBridge(d: Dude): void {
+  d.labour = undefined;
+  if (d.emote?.pose === 'hammer') d.emote = undefined;
+  if (d.position.x > BRIDGE_ROAD.x + 0.5) {
+    d.path = [{ x: BRIDGE_ROAD.x, z: d.position.z }];
+    d.walkingFor = 'move';
+  }
+}
+function runBridgeLabour(state: DudesState, d: Dude, now: number): boolean {
+  const l = d.labour!;
+  // (Only the walk out can time out: a shift that has run its length is finished, below, however the ticks fall.)
+  const late = l.phase === 'going' && now > l.until;
+  if (late || !cityOf(state).caravan?.stranded) {
+    pushLine(d.history, { from: 'world', text: late ? 'you ran out of time to get to the bridge' : 'the bridge no longer needs you', at: now }, LIMITS.history);
+    leaveBridge(d);
+    return false;
+  }
+  if (l.phase === 'going') {
+    if (d.path.length) return true;
+    d.walkingFor = undefined;
+    l.phase = 'working';
+    l.until = now + BRIDGE_SHIFT_MS;
+    face(d, { x: BRIDGE.x, z: d.position.z });
+    d.emote = { pose: 'hammer', until: l.until };
+    pushLine(d.history, { from: 'world', text: 'you reached the bridge and set to work mending it', at: now }, LIMITS.history);
+    return true;
+  }
+  if (now >= l.until) {
+    leaveBridge(d);
+    pushLine(d.history, { from: 'world', text: 'you finished your shift on the bridge', at: now }, LIMITS.history);
+    bridgeHelped(state, d.id, now);
+    return false;
+  }
+  if (!d.emote || d.emote.pose !== 'hammer') d.emote = { pose: 'hammer', until: l.until };
+  return true;
+}
 export function runLabour(state: DudesState, d: Dude, dt: number, now: number): boolean {
   const l = d.labour;
   if (!l) return false;
+  if (l.site === 'bridge') return runBridgeLabour(state, d, now);
   const p = projectOf(state);
   if (!p || p.status !== 'gathering' || p.work >= p.workNeed || now > l.until) {
     d.labour = undefined;
@@ -697,9 +1009,11 @@ function completeProject(state: DudesState, p: Project, now: number): void {
     editedBy: proposer?.name ?? 'the town',
     createdAt: now,
     plot: p.plot,
-    venue: civicVenue(p),
+    venue: p.wonder !== undefined ? 'decor' : civicVenue(p),
     civic: true,
+    ...(p.wonder !== undefined ? { wonder: p.wonder } : {}),
   };
+  stampAge(state, object);
   state.objects.push(object);
   // Nobody stays inside the footprint of what just went up.
   const rect = footprint(object.position, object.footprint.width + 0.6, object.footprint.depth + 0.6);
@@ -712,6 +1026,14 @@ function completeProject(state: DudesState, p: Project, now: number): void {
   state.worldRevision++;
   p.status = 'done';
   c.done.push(p.name ?? p.what.slice(0, 60));
+  // Everyone who put something in gets the deed, more for more; before the caravan hears, since
+  // this may be the Wonder and the age's board is read when it turns.
+  for (const [id, put] of Object.entries(p.contributors)) credit(state, id, 'project', now, Math.min(15, Math.floor(put.coins / 25) + Math.floor(put.secs / 120)));
+  // Only the caravan's own Wonder finishes the Wonder ask; anything else the town builds is just a project.
+  if (p.wonder !== undefined) caravanSaw(state, 'project', now);
+  // Everyone who built it together has that in common now (a dozen of them at most, so it stays cheap).
+  const builders = Object.keys(p.contributors).slice(0, 12);
+  for (let i = 0; i < builders.length; i++) for (let j = i + 1; j < builders.length; j++) noteTie(state, builders[i], builders[j], 'together', now);
   if (c.done.length > 200) c.done.shift();
   const names: string[] = [];
   for (const id of Object.keys(p.contributors)) {
@@ -726,6 +1048,7 @@ function completeProject(state: DudesState, p: Project, now: number): void {
     (proposer.badges ??= []).push({ kind: 'host', at: now });
   }
   c.party = { title: `GRAND OPENING: ${(p.name ?? 'the project').toUpperCase()}`, at: object.position, placeId: object.id, until: now + TOWN.partyMs, host: proposer?.name };
+  callToParty(state, now);
   pushFeed(state, now, `${p.name} is open! Built by ${names.slice(0, 5).join(', ')}${names.length > 5 ? ` and ${names.length - 5} more` : ''}`);
 }
 const civicVenue = (p: Project): VenueKind => {
@@ -736,7 +1059,13 @@ const civicVenue = (p: Project): VenueKind => {
 // ---- parties -----------------------------------------------------------------------------------
 export function throwParty(state: DudesState, at: GroundPoint, title: string, now: number, placeId?: string, host?: string): void {
   cityOf(state).party = { title: title.slice(0, 80), at, ...(placeId ? { placeId } : {}), until: now + TOWN.partyMs, ...(host ? { host } : {}) };
+  callToParty(state, now);
   pushFeed(state, now, title.slice(0, 120));
+  caravanSaw(state, 'party', now, undefined, undefined, host ? state.dudes.find((d) => d.name === host)?.id : undefined);
+}
+/** Everyone free looks up at once (within a few seconds of each other), rather than at their next idle moment. */
+function callToParty(state: DudesState, now: number): void {
+  for (const d of state.dudes) if (!d.visit && !d.labour && !d.path.length) d.idleUntil = now + 500 + (hashOf(d.id) % 4000);
 }
 function tickParty(state: DudesState, now: number): void {
   const c = cityOf(state);
@@ -770,11 +1099,75 @@ function townieGo(state: DudesState, t: Townie, to: GroundPoint): boolean {
   return true;
 }
 
+// ---- the caravan's travellers: they wait on the square, and go to see what the town builds for them ----
+/** Where each traveller stands on the square: the leader by the centrepiece, the others beside them. */
+const TRAVELLER_SPOTS: GroundPoint[] = [
+  { x: 4.1, z: 4.1 },
+  { x: 6.2, z: 0.4 },
+  { x: 0.6, z: 7.6 },
+];
+function travellerSpot(state: DudesState, t: Townie): GroundPoint {
+  const i = Math.max(0, cityOf(state).caravan?.travellers.indexOf(t.id) ?? 0);
+  return TRAVELLER_SPOTS[i % TRAVELLER_SPOTS.length];
+}
+function tickTraveller(state: DudesState, t: Townie, now: number, rng: () => number): void {
+  const cv = cityOf(state).caravan;
+  // The age has turned and they have said goodbye: back at the camp across the river, facing the town.
+  if (cv?.turn?.left) {
+    t.facing = FACING_TOWN;
+    t.until = now + 5000;
+    return;
+  }
+  // Across the river, waiting: facing the town, fidgeting; the leader calls over now and then. Quiet while a scene plays.
+  if (cv?.stranded) {
+    t.facing = FACING_TOWN;
+    t.until = now + 4000 + rng() * 4000;
+    if (cityOf(state).scene) return;
+    const a = cv.asks[0];
+    if (t.leader && a && a.have < a.need && rng() < 0.1) {
+      const left = a.need - a.have;
+      t.say = { text: rng() < 0.5 ? `We're still here. The bridge needs ${left === 1 ? 'one more pair' : `${left} more pairs`} of hands.` : 'Is anyone coming? The little one is cold.', until: now + 7000 };
+    } else if (!t.leader && rng() < 0.14) {
+      const elder = cv.travellers.indexOf(t.id) === 2;
+      t.emote = elder ? { pose: 'sit', until: now + 20_000 } : { pose: (['think', 'shrug', 'point', 'wave'] as const)[Math.floor(rng() * 4)], until: now + 2500 };
+    }
+    return;
+  }
+  // Something the town built for them: the first traveller free goes to see it (and uses it, which counts).
+  if (cv && cv.asks.length && !cv.nextAt) {
+    const wanted = new Set(cv.asks.filter((a) => a.venues).flatMap((a) => a.venues!));
+    const seen = (cv.seen ??= []);
+    const fresh = placesOf(state).find((p) => p.kind !== 'town' && wanted.has(p.kind) && !seen.includes(p.id) && (state.objects.find((o) => o.id === p.id)?.createdAt ?? 0) >= cv.openedAt);
+    if (fresh) {
+      const spot = workSpots(fresh.at, fresh.footprint, t.position).find((s) => townieGo(state, t, s));
+      if (spot) {
+        seen.push(fresh.id);
+        if (seen.length > 30) seen.shift();
+        t.doing = 'going';
+        t.placeId = fresh.id;
+        t.say = { text: `Ah, ${fresh.name}! Let's see it.`, until: now + 5000 };
+        return;
+      }
+    }
+  }
+  const home = travellerSpot(state, t);
+  if (dist(t.position, home) > 1.2) {
+    if (townieGo(state, t, home)) return;
+  }
+  // Waiting on the square, facing the centrepiece; the leader reminds the town what is still needed.
+  t.facing = Math.atan2(-t.position.x, -t.position.z);
+  t.until = now + 3000 + rng() * 3000;
+  if (t.leader && cv && !cv.nextAt && cv.asks.length && rng() < 0.12) {
+    const left = cv.asks.filter((a) => a.have < a.need);
+    if (left.length) t.say = { text: `We still need: ${left.map((a) => `${a.label.replace(/\s*\(.*\)$/, '')} (${a.have}/${a.need})`).join('; ')}`.slice(0, 200), until: now + 9000 };
+  } else if (!t.leader && rng() < 0.15) t.emote = { pose: (['wave', 'point', 'think'] as const)[Math.floor(rng() * 3)], until: now + 2500 };
+}
+
 export function tickTownies(state: DudesState, dt: number, now: number, rng: () => number): void {
   const c = cityOf(state);
   const want = wantedTownies(state, now);
   // One newcomer at a time, off the bus.
-  if (c.townies.length < want && rng() < dt / 15_000) {
+  if (c.townies.filter((x) => !x.traveller).length < want && rng() < dt / 15_000) {
     const used = new Set(c.townies.map((t) => t.name));
     const name = TOWNIE_NAMES.find((n) => !used.has(n));
     if (name) {
@@ -817,14 +1210,25 @@ export function tickTownies(state: DudesState, dt: number, now: number, rng: () 
       t.last = t.placeId;
       // Out of a busy place with something to say about it, sometimes; then a good long stroll
       // before the next place, so a place gets custom without being besieged by the same faces.
+      if (t.traveller) {
+        // Back to the square, where the caravan waits.
+        townieGo(state, t, travellerSpot(state, t));
+        t.doing = 'stroll';
+        t.until = now + 4000;
+        continue;
+      }
       if (rng() < 0.35) t.say = { text: gossip(state, now, rng, p), until: now + 6000 };
       townieGo(state, t, streetSpotNear(t.position, rng, 26));
       t.doing = 'stroll';
       t.until = now + TOWNIE_REST_MS[0] + rng() * (TOWNIE_REST_MS[1] - TOWNIE_REST_MS[0]);
       continue;
     }
-    // Too many residents: one of them catches the bus home.
-    if (c.townies.length > want) {
+    if (t.traveller) {
+      tickTraveller(state, t, now, rng);
+      continue;
+    }
+    // Too many residents: one of them catches the bus home (never a caravan's specialist, ids "s…": they settled for good).
+    if (t.id.startsWith('t') && c.townies.filter((x) => !x.traveller).length > want) {
       c.townies = c.townies.filter((x) => x !== t);
       continue;
     }
@@ -865,6 +1269,7 @@ export function tickTownies(state: DudesState, dt: number, now: number, rng: () 
   }
 }
 export function townieViews(state: DudesState): DudeView[] {
+  const age = ageOf(state);
   return cityOf(state).townies.map((t) => ({
     id: t.id,
     name: t.name,
@@ -872,7 +1277,10 @@ export function townieViews(state: DudesState): DudeView[] {
     position: t.position,
     facing: t.facing,
     activity: t.path.length ? 'walking' : t.emote ? 'emote' : 'idle',
-    look: t.look,
+    look: dressed(state, t.look, { id: t.id, ...(t.leader ? { role: 'leader' as const } : t.daughter ? { role: 'daughter' as const } : {}) }),
+    ...(t.traveller ? { traveller: true, ...(t.leader ? { title: 'leader of the travellers' } : t.daughter ? { title: daughterTitle(age) } : {}) } : {}),
+    ...(t.scale && t.scale !== 1 ? { scale: t.scale } : {}),
+    ...(t.leader ? { leader: true, ...(caravanView(state)?.asks.some((a) => a.have < a.need) ? { asking: true } : {}) } : {}),
     ...(t.hidden ? { hidden: true } : {}),
     ...(t.emote ? { emote: t.emote } : {}),
     ...(t.say ? { say: t.say } : {}),
@@ -963,8 +1371,10 @@ export function tickCity(state: DudesState, dt: number, now: number, rng: () => 
   tickNeeds(state, dt, now);
   tickProject(state, now);
   tickParty(state, now);
-  if (state.ai.townLife !== false) tickTownies(state, dt, now, rng);
-  else cityOf(state).townies = [];
+  if (state.ai.townLife !== false) {
+    tickTownies(state, dt, now, rng);
+    tickCaravan(state, now);
+  } else cityOf(state).townies = [];
 }
 
 export function townView(state: DudesState, now: number): TownView {
@@ -972,6 +1382,12 @@ export function townView(state: DudesState, now: number): TownView {
   const p = projectOf(state);
   return {
     name: c.name,
+    age: ageOf(state),
+    ...(themed(state) ? {} : { sandbox: true }),
+    head: headName(state),
+    ...(caravanView(state) ? { caravan: caravanView(state) } : {}),
+    ...(sceneView(state) ? { scene: sceneView(state) } : {}),
+    ...(bridgeProgress(state) !== undefined ? { bridge: bridgeProgress(state) } : {}),
     lots: Object.entries(c.plots).map(([id, claim]) => {
       const owner = state.dudes.find((d) => d.id === claim.owner);
       return { id, owner: owner?.name ?? '?', shirt: owner?.look.shirt ?? '#8f8a82', away: !owner || !awake(owner, now) };
@@ -985,6 +1401,7 @@ export function townView(state: DudesState, now: number): TownView {
       .sort((a, b) => b.n - a.n)
       .slice(0, 3)
       .map((x) => x.id),
+    ...(wonderOf(state) || (p?.plot === WONDER.plot && p.status === 'gathering') ? { wonder: true } : {}),
     ...(p ? { project: { name: p.name ?? p.what.slice(0, 40), status: p.status, coins: p.coins, coinsNeed: p.coinsNeed, work: Math.round(p.work), workNeed: p.workNeed, plot: p.plot, ...(projectPreview(state) ? { preview: projectPreview(state)!.object } : {}) } } : {}),
     ...(c.party ? { party: { title: c.party.title, at: c.party.at, until: c.party.until } } : {}),
     places: Object.fromEntries(Object.entries(c.stats).filter(([id]) => state.objects.some((o) => o.id === id)).map(([id, st]) => [id, [st.visits, st.coins] as [number, number]])),
@@ -1014,7 +1431,7 @@ export function projectPreview(state: DudesState): { object: SafehouseObject; pr
   const p = projectOf(state);
   if (!p || p.status !== 'gathering' || !p.blueprint || !p.position || !p.footprint) return undefined;
   return {
-    object: { id: `project-${p.id}`, revision: 1, blueprint: p.blueprint, position: p.position, footprint: p.footprint, createdBy: 'the town', editedBy: 'the town', createdAt: p.createdAt, plot: p.plot },
+    object: { id: `project-${p.id}`, revision: 1, blueprint: p.blueprint, position: p.position, footprint: p.footprint, createdBy: 'the town', editedBy: 'the town', createdAt: p.createdAt, plot: p.plot, ...(themed(state) ? { age: ageOf(state) } : { free: true }) },
     progress: Math.min(p.coins / p.coinsNeed, p.work / p.workNeed),
   };
 }
@@ -1045,7 +1462,7 @@ export function townForAgent(state: DudesState, d: Dude, now: number) {
     .slice(0, 10)
     .map(({ p, m }) => ({
       name: p.name,
-      kind: p.kind === 'town' ? p.spec.label : VENUES[p.kind].label,
+      kind: p.kind === 'town' ? p.spec.label : venueName(namingAge(state), p.kind),
       ...(p.ownerName ? { owner: p.ownerName } : p.civic ? { owner: 'the town' } : {}),
       price: p.spec.price,
       metres: Math.round(m),
@@ -1053,19 +1470,23 @@ export function townForAgent(state: DudesState, d: Dude, now: number) {
       ...(recentVisits(state, p.id, now) >= 3 ? { busy: true } : {}),
     }));
   const project = projectOf(state);
+  const age = ageStyle(ageOf(state));
   return {
     town: c.name,
+    age: themed(state)
+      ? `${age.name[0].toUpperCase()}${age.name.slice(1)}. ${age.living} The streamer's character is the town's ${age.head.title} ("the ${age.head.title}", still "the Mayor" to the app).`
+      : 'None: the town is a theme-free sandbox right now, with no age. Build anything at all, in any style (everyday, fantasy, sci-fi, silly), exactly as your chatter asks; places have their everyday names. The streamer\'s character is the Mayor.',
     yourLot: lots[0]
       ? `${lots[0].address}${c.plots[lots[0].id]?.owner === d.id ? '' : ` (shared with you by ${ownerOfLot(state, lots[0].id)?.name ?? 'a friend'})`}, ${Math.round(dist(lots[0].centre, d.position))} m away; ${lotRoom(state, lots[0])}`
       : d.rentsAt
         ? `no lot of your own; you rent a flat in ${state.objects.find((o) => o.id === d.rentsAt)?.blueprint.name ?? 'an apartment block'}`
-        : 'no lot of your own: the town is full. Rent a flat in an apartment block, or ask a friend to share their lot.',
+        : 'no lot of your own: the town is full for now. You can still build on any lot with room (say where), rent a flat in an apartment block, or ask a friend to share their lot.',
     ...(lots.length > 1 ? { otherLots: lots.slice(1).map((l) => `${l.address} (shared by ${ownerOfLot(state, l.id)?.name ?? 'a friend'})`) } : {}),
     coins: coinsOf(d),
     feeling: feelings(d),
     yourPlaces: mine.map((o) => {
       const s = c.stats[o.id];
-      return { name: o.blueprint.name, kind: o.venue ? VENUES[o.venue].label : 'decoration', ...(s ? { visits: s.visits, earned: s.coins, lastVisitors: s.lastVisitors.slice(-3) } : {}) };
+      return { name: o.blueprint.name, kind: o.venue ? venueName(namingAge(state), o.venue) : venueName(namingAge(state), 'decor'), ...(s ? { visits: s.visits, earned: s.coins, lastVisitors: s.lastVisitors.slice(-3) } : {}) };
     }),
     placesNearby: near,
     squarePlaces: townPlaceNames(),
@@ -1074,14 +1495,18 @@ export function townForAgent(state: DudesState, d: Dude, now: number) {
     ...(c.done.length ? { builtTogether: c.done.slice(-5) } : {}),
     ...(c.party ? { partyNow: `${c.party.title} at the square` } : {}),
     townWants: wantsOf(state, now),
+    ...(caravanLine(state) ? { caravan: caravanLine(state) } : {}),
     districts: districtsOf(state).map((x) => x.name),
     neighbours: lots[0] ? neighboursOf(state, lots[0]).map((n) => n.name) : [],
+    ...tiesForAgent(state, d),
+    lotsWithRoomNearby: lotsNear(state, d),
     residents: c.townies.length,
   };
 }
 
 /** A design scaled to fit on a lot (a little in from its edges, and not a skyscraper). */
 export function fitToLot(blueprint: NonNullable<Project['blueprint']>, lot: PlotInfo): NonNullable<Project['blueprint']> {
+  if (lot.id === WONDER.plot) return fitBlueprint(blueprint, { width: WONDER.size, depth: WONDER.size, height: WONDER.height }).blueprint;
   return fitBlueprint(blueprint, { width: lot.rect.maxX - lot.rect.minX - 0.6, depth: lot.rect.maxZ - lot.rect.minZ - 0.6, height: lot.civic ? 22 : 18 }).blueprint;
 }
 
@@ -1122,27 +1547,63 @@ export function freeSpotOn(state: DudesState, lot: PlotInfo, exceptJob?: string)
 /** How much room is left on a lot, in words for the agent. */
 function lotRoom(state: DudesState, lot: PlotInfo): string {
   const side = freeSpaceOn(state, lot);
-  if (side >= 14) return 'empty, about 15 m square';
+  if (side >= CITY.plot - 2) return `empty, about ${CITY.plot - 1} m square`;
   if (side < 2.5) return 'full: to add something, edit one of your builds to include it (or remove one, if your chatter says so)';
   return `about ${Math.floor(side)} m × ${Math.floor(side)} m still free`;
 }
 /** What already stands on a lot, by name (for the designer and the agent). */
 export const onLot = (state: DudesState, lot: PlotInfo) => state.objects.filter((o) => o.plot === lot.id).map((o) => o.blueprint.name);
 
-/** Which lot a build request goes on: the one named, the one they stand on, or their own. */
-export function lotForBuild(state: DudesState, d: Dude, near: string | undefined): PlotInfo | undefined {
-  const lots = lotsOf(state, d);
-  if (!lots.length) return undefined;
-  const p = (near ?? '').toLowerCase();
+/** Room a lot needs left for one more build. */
+const ROOM_FOR_A_BUILD = 2.5;
+/** "7 Maple Street" → "maple street": the street a lot's address is on. */
+const streetOf = (l: PlotInfo) => l.address.toLowerCase().replace(/^\d+\s+/, '');
+/**
+ * Which lot a build request goes on. Anyone may build on any lot in town except the square's (those
+ * are for community projects): an address, a street, someone's lot, next to a build, "here" (the lot
+ * they stand on) or "a free lot". Said nowhere: their own lot, else the nearest free lot with room.
+ * A string back is why it cannot go there.
+ */
+export function lotForBuild(state: DudesState, d: Dude, near: string | undefined): PlotInfo | string {
+  const roomy = (l: PlotInfo) => freeSpaceOn(state, l) >= ROOM_FOR_A_BUILD;
+  const nearest = (ls: PlotInfo[]) => [...ls].sort((a, b) => dist(a.centre, d.position) - dist(b.centre, d.position)).find(roomy);
+  const one = (l: PlotInfo) => (roomy(l) ? l : `${l.address} is full; pick another lot`);
+  const homes = homePlots();
+  const p = (near ?? '').toLowerCase().trim();
   if (p) {
-    const named = lots.find((l) => p.includes(l.address.toLowerCase()) || l.address.toLowerCase().includes(p));
-    if (named) return named;
-    const friend = lots.find((l) => {
-      const o = ownerOfLot(state, l.id);
-      return o && o.id !== d.id && p.includes(o.name.toLowerCase());
-    });
-    if (friend) return friend;
+    if (/\b(square|fountain|plaza|town cent(re|er))\b/.test(p)) return 'the town square is kept for community projects; anywhere else in town is fine';
+    const named = homes.find((l) => p.includes(l.address.toLowerCase()));
+    if (named) return one(named);
+    if (/\b(here|this lot|where i am|where i'm standing)\b/.test(p)) {
+      const standing = plotAt(d.position);
+      if (standing?.civic) return 'you are standing on the town square, which is kept for community projects';
+      if (standing) return one(standing);
+    }
+    if (/\b(free|empty|vacant|unclaimed|new) (lot|plot|spot|space)\b/.test(p)) {
+      const empty = freeLots(state).filter((l) => !state.objects.some((o) => o.plot === l.id));
+      return nearest(empty) ?? nearest(freeLots(state)) ?? 'there are no free lots left; name a street or someone\'s lot';
+    }
+    const owner = state.dudes.find((o) => o.name.length >= 2 && new RegExp(`\\b${o.name.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(p));
+    const theirs = owner && ownLot(state, owner);
+    if (theirs) return one(theirs);
+    const build = state.objects.find((o) => o.plot && plotById(o.plot) && !plotById(o.plot)!.civic && o.blueprint.name.length >= 3 && p.includes(o.blueprint.name.toLowerCase()));
+    if (build) return one(plotById(build.plot)!);
+    const street = homes.filter((l) => p.includes(streetOf(l)) || p.includes(streetOf(l).split(' ')[0]));
+    if (street.length) return nearest(street) ?? `${street[0].address.replace(/^\d+\s+/, '')} has no room left`;
   }
-  const standing = plotAt(d.position);
-  return lots.find((l) => l.id === standing?.id) ?? lots[0];
+  // Said nowhere: their own lot, even when full (the build then says it did not fit, as ever),
+  // never someone else's by surprise. Without a lot, the nearest free one with room.
+  const mine = lotsOf(state, d);
+  if (mine.length) return mine.find(roomy) ?? mine[0];
+  return nearest(freeLots(state)) ?? 'there is no free lot with room left; say whose lot or which street to build on';
+}
+/** The lots near someone that still have room (where they could build next), for the agent. */
+export function lotsNear(state: DudesState, d: Dude, n = 4): string[] {
+  const c = cityOf(state);
+  return homePlots()
+    .map((l) => ({ l, m: dist(l.centre, d.position) }))
+    .sort((a, b) => a.m - b.m)
+    .filter(({ l }) => freeSpaceOn(state, l) >= ROOM_FOR_A_BUILD)
+    .slice(0, n)
+    .map(({ l, m }) => `${l.address} (${c.plots[l.id] ? `${ownerOfLot(state, l.id)?.name ?? 'someone'}'s` : 'free'}, ${Math.round(m)} m away, ${lotRoom(state, l)})`);
 }

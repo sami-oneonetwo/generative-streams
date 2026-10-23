@@ -1,0 +1,577 @@
+{
+  "name": "Town Project Lot",
+  "description": "Four low corner blocks reserve pale civic gravel for shared construction, with a clear entrance and an amber-bordered green marker showing four neighbours around a shared centre beside a building-in-hand pictogram.",
+  "notes": "Powder-coated signposts, simple concrete markers and bold municipal graphics establish a welcoming Modern Age community project site without obstructing its interior.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.04,
+        0
+      ],
+      "size": [
+        11.8,
+        0.08,
+        11.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#cad0bd"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.35,
+        -5.45
+      ],
+      "size": [
+        0.6,
+        0.54,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.68,
+        -5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.35,
+        -5.45
+      ],
+      "size": [
+        0.6,
+        0.54,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.68,
+        -5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.35,
+        5.45
+      ],
+      "size": [
+        0.6,
+        0.54,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.45,
+        0.68,
+        5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.35,
+        5.45
+      ],
+      "size": [
+        0.6,
+        0.54,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.45,
+        0.68,
+        5.45
+      ],
+      "size": [
+        0.66,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.6,
+        0.53,
+        5.45
+      ],
+      "size": [
+        0.22,
+        0.9,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.6,
+        0.53,
+        5.45
+      ],
+      "size": [
+        0.22,
+        0.9,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.525,
+        0.58,
+        5.45
+      ],
+      "size": [
+        0.12,
+        3.85,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.525,
+        0.58,
+        5.45
+      ],
+      "size": [
+        0.12,
+        3.85,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.85,
+        1.46,
+        4.57
+      ],
+      "size": [
+        0.18,
+        2.76,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.45,
+        1.46,
+        4.57
+      ],
+      "size": [
+        0.18,
+        2.76,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.65,
+        2.2,
+        4.7
+      ],
+      "size": [
+        2.4,
+        1.6,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.65,
+        2.2,
+        4.82
+      ],
+      "size": [
+        2.16,
+        1.36,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#386d49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.12,
+        2.2,
+        4.89
+      ],
+      "size": [
+        0.94,
+        0.09,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.846
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.12,
+        2.2,
+        4.89
+      ],
+      "size": [
+        0.94,
+        0.09,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.846
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.81,
+        2.55,
+        4.95
+      ],
+      "size": [
+        0.28,
+        0.1,
+        0.28
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.43,
+        2.55,
+        4.95
+      ],
+      "size": [
+        0.28,
+        0.1,
+        0.28
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.81,
+        1.85,
+        4.95
+      ],
+      "size": [
+        0.28,
+        0.1,
+        0.28
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.43,
+        1.85,
+        4.95
+      ],
+      "size": [
+        0.28,
+        0.1,
+        0.28
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.12,
+        2.2,
+        4.97
+      ],
+      "size": [
+        0.38,
+        0.12,
+        0.38
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.15,
+        2.3,
+        4.93
+      ],
+      "size": [
+        0.48,
+        0.4,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4,
+        2.6,
+        4.93
+      ],
+      "size": [
+        0.4,
+        0.14,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0.6
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.3,
+        2.6,
+        4.93
+      ],
+      "size": [
+        0.4,
+        0.14,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.6
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.13,
+        1.85,
+        4.94
+      ],
+      "size": [
+        0.63,
+        0.14,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.48,
+        1.99,
+        4.94
+      ],
+      "size": [
+        0.38,
+        0.14,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0.85
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.76,
+        1.85,
+        4.94
+      ],
+      "size": [
+        0.18,
+        0.24,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#68b4a0"
+    }
+  ]
+}

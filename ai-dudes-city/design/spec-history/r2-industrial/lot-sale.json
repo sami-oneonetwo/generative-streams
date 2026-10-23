@@ -1,0 +1,387 @@
+{
+  "name": "Unclaimed Building Plot with Auctioneer’s Enamel Board",
+  "description": "A broad cream auctioneer’s board on twin timber legs displays an empty ochre ring, while four ochre-tipped survey pegs outline a vacant plot with reclaimed brick rubble and sparse weeds.",
+  "notes": "Iron-framed enamel, substantial timber supports and surveyor’s pegs establish a Victorian building plot with a rectangular silhouette distinct from the community lot’s civic medallion.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        3.8,
+        1.1,
+        4.5
+      ],
+      "size": [
+        0.14,
+        2.2,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2,
+        1.1,
+        4.5
+      ],
+      "size": [
+        0.14,
+        2.2,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2.12,
+        4.5
+      ],
+      "size": [
+        2.32,
+        1.72,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2.12,
+        4.6
+      ],
+      "size": [
+        2.2,
+        1.6,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2e7cb"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        2.12,
+        4.67
+      ],
+      "size": [
+        1.4,
+        0.06,
+        1.4
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        2.12,
+        4.71
+      ],
+      "size": [
+        1.02,
+        0.06,
+        1.02
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#f2e7cb"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.175,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.35,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.425,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.15,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2cf83"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.6,
+        0.175,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.35,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.6,
+        0.425,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        0.15,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2cf83"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.175,
+        5.6
+      ],
+      "size": [
+        0.12,
+        0.35,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.425,
+        5.6
+      ],
+      "size": [
+        0.12,
+        0.15,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2cf83"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.6,
+        0.175,
+        5.6
+      ],
+      "size": [
+        0.12,
+        0.35,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6245"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.6,
+        0.425,
+        5.6
+      ],
+      "size": [
+        0.12,
+        0.15,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f2cf83"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.65,
+        0.15,
+        -4.7
+      ],
+      "size": [
+        1.2,
+        0.3,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d6a60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.95,
+        0.25,
+        -4.55
+      ],
+      "size": [
+        0.58,
+        0.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.16,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.38,
+        0.25,
+        -4.65
+      ],
+      "size": [
+        0.52,
+        0.2,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.24,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.65,
+        0.45,
+        -4.58
+      ],
+      "size": [
+        0.6,
+        0.2,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0.08,
+        0
+      ],
+      "color": "#a26048"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.85,
+        0.23,
+        -4.65
+      ],
+      "size": [
+        0.48,
+        0.46,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#596f52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        5.13,
+        0.16,
+        -4.52
+      ],
+      "size": [
+        0.38,
+        0.32,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "color": "#7d8c63"
+    }
+  ]
+}

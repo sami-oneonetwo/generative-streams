@@ -1,0 +1,274 @@
+{
+  "name": "High Oak Horn Lantern",
+  "description": "A tall oak post carries a broad, warm horn lantern above a cluster of pale fieldstones, with a sheltered oil flame beneath its pitched iron cap.",
+  "notes": "Hand-forged suspension, four bright horn panels and rough fieldstone footings mark a watched medieval street corner without modern paving or Victorian ornament.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -0.2,
+        0.15,
+        5
+      ],
+      "size": [
+        0.5,
+        0.3,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0.22,
+        0
+      ],
+      "color": "#a1a69b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.2,
+        0.13,
+        5.14
+      ],
+      "size": [
+        0.5,
+        0.26,
+        0.5
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#a1a69b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.12,
+        0.11,
+        4.74
+      ],
+      "size": [
+        0.42,
+        0.22,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#a1a69b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.7,
+        5
+      ],
+      "size": [
+        0.36,
+        3.4,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.42,
+        3.32,
+        5
+      ],
+      "size": [
+        1.2,
+        0.16,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        3.13,
+        5
+      ],
+      "size": [
+        0.08,
+        0.3,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        2.24,
+        5
+      ],
+      "size": [
+        0.64,
+        0.08,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        2.58,
+        4.73
+      ],
+      "size": [
+        0.6,
+        0.6,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f6dc96"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.85,
+        2.58,
+        5.27
+      ],
+      "size": [
+        0.6,
+        0.6,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f6dc96"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.58,
+        2.58,
+        5
+      ],
+      "size": [
+        0.06,
+        0.6,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f6dc96"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.12,
+        2.58,
+        5
+      ],
+      "size": [
+        0.06,
+        0.6,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f6dc96"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.85,
+        2.58,
+        5
+      ],
+      "size": [
+        0.3,
+        0.3,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffcf6a",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.69,
+        2.91,
+        5
+      ],
+      "size": [
+        0.38,
+        0.08,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0.48
+      ],
+      "color": "#343b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.01,
+        2.91,
+        5
+      ],
+      "size": [
+        0.38,
+        0.08,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.48
+      ],
+      "color": "#343b40"
+    }
+  ]
+}

@@ -1,0 +1,580 @@
+{
+  "name": "Claimed Household Wattle Boundary",
+  "description": "Low oak-and-wattle boundaries mark the back and inner side of the occupied lot, leaving the street frontage open beside a red household shield with a pale name strip.",
+  "notes": "Rough oak posts, woven hazel bands, a fieldstone footing and a painted wooden household shield establish a medieval boundary; the name strip is left blank because no owner name was supplied.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.49,
+        -6
+      ],
+      "size": [
+        0.24,
+        0.98,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2,
+        0.46,
+        -6
+      ],
+      "size": [
+        0.22,
+        0.92,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6b4931"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2,
+        0.48,
+        -6
+      ],
+      "size": [
+        0.25,
+        0.96,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        6,
+        0.45,
+        -6
+      ],
+      "size": [
+        0.24,
+        0.9,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6b4931"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.47,
+        -2
+      ],
+      "size": [
+        0.24,
+        0.94,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.45,
+        2
+      ],
+      "size": [
+        0.23,
+        0.9,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6b4931"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.5,
+        5.5
+      ],
+      "size": [
+        0.28,
+        1,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4,
+        0.46,
+        -6
+      ],
+      "size": [
+        3.78,
+        0.52,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#755335"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4,
+        0.36,
+        -5.9
+      ],
+      "size": [
+        0.1,
+        3.8,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        1.55
+      ],
+      "color": "#ad8555"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4,
+        0.63,
+        -5.91
+      ],
+      "size": [
+        0.11,
+        3.8,
+        0.11
+      ],
+      "rotation": [
+        0,
+        0,
+        1.59
+      ],
+      "color": "#927046"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.47,
+        -6
+      ],
+      "size": [
+        3.77,
+        0.54,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#7b5939"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.35,
+        -5.91
+      ],
+      "size": [
+        0.11,
+        3.8,
+        0.11
+      ],
+      "rotation": [
+        0,
+        0,
+        1.59
+      ],
+      "color": "#a58051"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.64,
+        -5.9
+      ],
+      "size": [
+        0.1,
+        3.8,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        1.55
+      ],
+      "color": "#b08a5b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4,
+        0.45,
+        -6
+      ],
+      "size": [
+        3.76,
+        0.5,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#755335"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4,
+        0.34,
+        -5.9
+      ],
+      "size": [
+        0.1,
+        3.8,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        1.55
+      ],
+      "color": "#b08a5b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4,
+        0.61,
+        -5.91
+      ],
+      "size": [
+        0.11,
+        3.8,
+        0.11
+      ],
+      "rotation": [
+        0,
+        0,
+        1.585
+      ],
+      "color": "#98754b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.47,
+        -4
+      ],
+      "size": [
+        0.12,
+        0.54,
+        3.77
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#7b5939"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.9,
+        0.35,
+        -4
+      ],
+      "size": [
+        0.11,
+        3.8,
+        0.11
+      ],
+      "rotation": [
+        1.55,
+        0,
+        0
+      ],
+      "color": "#a58051"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.91,
+        0.64,
+        -4
+      ],
+      "size": [
+        0.1,
+        3.8,
+        0.1
+      ],
+      "rotation": [
+        1.59,
+        0,
+        0
+      ],
+      "color": "#b08a5b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.45,
+        0
+      ],
+      "size": [
+        0.12,
+        0.5,
+        3.77
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#755335"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.91,
+        0.34,
+        0
+      ],
+      "size": [
+        0.1,
+        3.8,
+        0.1
+      ],
+      "rotation": [
+        1.59,
+        0,
+        0
+      ],
+      "color": "#b08a5b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.9,
+        0.61,
+        0
+      ],
+      "size": [
+        0.11,
+        3.8,
+        0.11
+      ],
+      "rotation": [
+        1.55,
+        0,
+        0
+      ],
+      "color": "#98754b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.46,
+        3.75
+      ],
+      "size": [
+        0.12,
+        0.52,
+        3.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#7b5939"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.9,
+        0.35,
+        3.75
+      ],
+      "size": [
+        0.11,
+        3.27,
+        0.11
+      ],
+      "rotation": [
+        1.55,
+        0,
+        0
+      ],
+      "color": "#ad8555"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.91,
+        0.63,
+        3.75
+      ],
+      "size": [
+        0.1,
+        3.27,
+        0.1
+      ],
+      "rotation": [
+        1.59,
+        0,
+        0
+      ],
+      "color": "#98754b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.66,
+        5.69
+      ],
+      "size": [
+        0.54,
+        0.4,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -6,
+        0.36,
+        5.69
+      ],
+      "size": [
+        0.54,
+        0.24,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        3.141593
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.75,
+        5.79
+      ],
+      "size": [
+        0.48,
+        0.12,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e5d8b6"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.53,
+        5.79
+      ],
+      "size": [
+        0.16,
+        0.16,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785398
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -6,
+        0.12,
+        -6
+      ],
+      "size": [
+        0.66,
+        0.24,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#7b827f"
+    }
+  ],
+  "checks": [
+    "6 parts reach outside the 13 m room"
+  ]
+}

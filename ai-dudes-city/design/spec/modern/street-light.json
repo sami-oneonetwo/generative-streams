@@ -1,0 +1,239 @@
+{
+  "name": "Curved-Arm LED Street Light",
+  "description": "A light-grey curved pole supports a flat LED head with a warm underside diffuser and visible luminous edges, without painted light pools.",
+  "notes": "Powder-coated metal, a dark base collar and a broad contemporary LED housing distinguish the Modern Age, with glow confined to the diffuser and its integrated edge strips.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.54,
+        0.12,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.4,
+        5
+      ],
+      "size": [
+        0.34,
+        0.56,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#315e83"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        2.25,
+        5
+      ],
+      "size": [
+        0.2,
+        3.4,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.41,
+        5.16
+      ],
+      "size": [
+        0.16,
+        0.28,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.06,
+        4.94
+      ],
+      "size": [
+        0.2,
+        0.38,
+        0.2
+      ],
+      "rotation": [
+        -0.359,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.325,
+        4.745
+      ],
+      "size": [
+        0.2,
+        0.38,
+        0.2
+      ],
+      "rotation": [
+        -0.91,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        4.45,
+        4.24
+      ],
+      "size": [
+        0.2,
+        0.78,
+        0.2
+      ],
+      "rotation": [
+        -1.517,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.5,
+        3.65
+      ],
+      "size": [
+        1.4,
+        0.2,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1e3dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.36,
+        3.65
+      ],
+      "size": [
+        1.4,
+        0.08,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.4,
+        3.345
+      ],
+      "size": [
+        1.52,
+        0.06,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.73,
+        4.4,
+        3.65
+      ],
+      "size": [
+        0.06,
+        0.06,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.73,
+        4.4,
+        3.65
+      ],
+      "size": [
+        0.06,
+        0.06,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#fff3d5",
+      "glow": true
+    }
+  ]
+}

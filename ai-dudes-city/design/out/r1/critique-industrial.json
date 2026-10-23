@@ -1,0 +1,206 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The civic palette, fountain, street furniture and office silhouettes establish a convincing Industrial Age foundation. Revision is needed for the tram's modern-looking road patch, disconnected railway camp, blobby trees, weak ownership identification and presentation bases left in the assembled scene.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Fine, mottled meadow texture dominates the image while the actual countryside dressing almost disappears.",
+        "The surface is visually busier than the chunky toy-like assets it supports."
+      ],
+      "fix": "Reduce high-frequency surface variation and use broader meadow colour patches. Redistribute the specified 16 dressing parts into sparse, readable grass tufts, gravel, wildflowers and a few railway offcuts without increasing coverage."
+    },
+    {
+      "id": "street",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the rectangular setts, raised pavements, margin bollards and clear carriageway. Use this same paving treatment beneath the tram rather than introducing a separate plain road material."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the cream enamel sign, ochre empty ring and open gravel centre. Preserve the ring's clear silhouette when tuning the scene's surface textures."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The low brick-and-iron boundary works, but the front marker reads principally as a red-topped post.",
+        "A brass-bordered owner nameplate and filled household oval are not distinguishable at the review scale."
+      ],
+      "fix": "Mount a broad cream enamel plate on the front gate post, with a brass border, the supplied exact player name and a clearly filled oval emblem. Keep the red cap, low rail panels and open frontage."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both crowns are assembled from similar rounded blobs and read as generic ornamental trees.",
+        "The required leaning plane tree and uneven, spreading elm do not have sufficiently distinct branching silhouettes."
+      ],
+      "fix": "Within the 30-part pair budget, give the plane an angled trunk and offset crown masses. Make the elm shorter and wider with an exposed branching fork, unequal lateral growth and gaps between foliage masses; retain the pavement openings and low iron guards."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Different heights help, but repeated ball-shaped foliage still makes the group look manufactured.",
+        "Species identity and irregular branch structure are weak.",
+        "The hard-edged square ground underlay reads as a pasted asset rather than continuous countryside."
+      ],
+      "fix": "Remove the separate ground patch. Reallocate the 36 parts into a tall irregular ash, a broad elm with unequal spreading limbs and a scrubby pale-trunked birch, using angular foliage clusters, exposed forks and uneven crown gaps."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the upright iron post and compact square lantern. Keep the glass non-emissive and confine glow to the small gas mantle; preserve clear walking space around its pavement base."
+    },
+    {
+      "id": "centrepiece",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad iron basin, stone plinth, short column, brass fittings and visible blue water. Preserve this restrained civic silhouette without adding gears or fine ornamental clutter."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the warm timber slats and broad dark iron end frames. Maintain the approximately 0.45 m seat height and two-person proportions when integrating it with residents."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the movable barrow silhouette, large iron-rimmed wheels, projecting handles and plain folding canvas cover. Keep the merchandise grouped into broad contrasting shapes rather than adding miniature clutter."
+    },
+    {
+      "id": "arrival",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "A plain dark slab replaces the sett street around the tram, creating an asphalt-like modern insert.",
+        "The passenger box dominates while the boiler and wheels are too small to establish a strong steam-tram silhouette.",
+        "The stop emblem and timetable are not clearly differentiated at stream distance."
+      ],
+      "fix": "Restore continuous granite setts and embed two flush grooved rails through the tile. Within 68 parts, enlarge the exposed wheels, separate a short cylindrical boiler from the timber cabin and give the stop a bold cream tram-wheel emblem with a distinct timetable case; retain only a tiny steam puff."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The side structure reads mainly as thin rails rather than load-bearing riveted lattice girders.",
+        "Stone supports and bank connections are too schematic to communicate a substantial civic viaduct."
+      ],
+      "fix": "Use broad, shallow iron girders with a few readable diagonal braces and rivet heads, keeping the upper rails low and open. Shape the stone piers with upstream noses and carry the timber deck onto clear gravel bank landings at z ±7, preserving the roughly 4 m width and 1 m water clearance."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the four low brick corner plinths, open construction ground and separate public-works medallion. Preserve the four-node civic symbol rather than replacing it with ownership text."
+    },
+    {
+      "id": "camp",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The visible siding ends inside the camp instead of establishing the required off-tile railway connection.",
+        "The awning and pale roofs conceal much of the carriage structure, weakening the reading of two luxurious railway shelters.",
+        "The gathering lamp and distant-network identity are not sufficiently legible."
+      ],
+      "fix": "Run continuous rails and sleepers beneath both carriages and the locomotive, visibly exiting the tile. Expose portions of both wheelsets and separate the carriage bodies with clear panel divisions; use the remaining 88-part budget for a readable table gas lantern, broad railway crests, labelled trunks and coal baskets."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contrasting worker and clerk clothing, flat cap, practical skirt and clean working appearance. Keep the tool case visibly thicker than the ledger so their roles remain distinct when reduced to stream scale."
+    },
+    {
+      "id": "head",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the dominant tall top hat, oversized brass civic chain, dark tailoring and rolled charter. Preserve the strong contrast with the railway leader's cream coat and bowler."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the cream travel coat, compact bowler, luggage and rolled concession map. Keep the pocket-watch chain subordinate to the Alderman's much larger civic chain."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the red masonry, pale window surrounds, chimney and dark pitched roof. Integrate its garden and entrance into the claimed parcel without carrying a separate presentation platform into the town."
+    },
+    {
+      "id": "cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The broad glazing and simple pavilion form remain too generic to establish a late-19th-century tea room.",
+        "The specified tiled treatment and enamel identity do not read at this scale."
+      ],
+      "fix": "Build a clear timber shopfront with substantial mullions, a contrasting tiled dado and a broad cream enamel tea-room sign. Add a restrained shop cornice and keep the outdoor furniture visibly timber or iron, preserving the existing footprint."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped brick-and-iron commercial massing and strong cornice bands. Keep the brick piers visually substantial so the large windows continue to read as framed industrial construction rather than a modern curtain wall."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the readable hound silhouette, contrasting muzzle and period-compatible collar fittings. Preserve its modest scale beside the 1.8 m residents."
+    },
+    {
+      "id": "car",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The glazed horse cab is the correct transformation, but solid dark wheel discs resemble modern tyres.",
+        "The shafts and harness connections are not clearly resolved, making the horse-to-cab attachment look crude."
+      ],
+      "fix": "Replace the discs with broad iron-rimmed carriage wheels using a few chunky spokes. Separate two shafts around the horse, add a readable breast harness and reins, and establish a small driver's perch without enlarging the vehicle footprint."
+    },
+    {
+      "id": "street-corner",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Rectangular presentation pads remain beneath residents and officials, interrupting the road and square surfaces.",
+        "Building lawn pads appear nested on top of the town parcels rather than integrated into them.",
+        "The tram's plain dark road patch breaks material continuity, while fine ground texture competes with small gameplay markers."
+      ],
+      "fix": "Remove character display pads and place feet directly on shared road or pavement surfaces. Merge building grounds into parcel geometry with only deliberate kerbs or garden edging, continue the sett road and tram rails through the assembled scene, and reduce texture noise before checking marker readability at stream resolution."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

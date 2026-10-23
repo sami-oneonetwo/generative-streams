@@ -1,0 +1,312 @@
+{
+  "name": "Municipal Cast-Iron Gas Lamp",
+  "description": "A stout fluted iron post supports a broad open lantern cage with pale glass inserts, a clearly visible golden gas mantle and a peaked cap.",
+  "notes": "The raised lantern, substantial cast-iron footing, brass burner and lamplighter’s ladder bar express late-19th-century civic gaslighting without concealing the mantle behind opaque glazing.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.88,
+        0.12,
+        0.88
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a7a397"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.25,
+        5
+      ],
+      "size": [
+        0.56,
+        0.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1.905,
+        5
+      ],
+      "size": [
+        0.28,
+        3.09,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.89,
+        5
+      ],
+      "size": [
+        0.35,
+        2.96,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#42494c"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.43,
+        5
+      ],
+      "size": [
+        0.42,
+        0.14,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.17,
+        5
+      ],
+      "size": [
+        0.9,
+        0.1,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.53,
+        5
+      ],
+      "size": [
+        0.8,
+        0.12,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.35,
+        3.94,
+        4.65
+      ],
+      "size": [
+        0.06,
+        0.72,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.35,
+        3.94,
+        4.65
+      ],
+      "size": [
+        0.06,
+        0.72,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.35,
+        3.94,
+        5.35
+      ],
+      "size": [
+        0.06,
+        0.72,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.35,
+        3.94,
+        5.35
+      ],
+      "size": [
+        0.06,
+        0.72,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#263f40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.35,
+        3.9,
+        5.23
+      ],
+      "size": [
+        0.06,
+        0.5,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#cfe0e3"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.35,
+        3.9,
+        5.23
+      ],
+      "size": [
+        0.06,
+        0.5,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#cfe0e3"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.63,
+        5
+      ],
+      "size": [
+        0.22,
+        0.16,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        3.9,
+        5
+      ],
+      "size": [
+        0.3,
+        0.45,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffd58a",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0,
+        4.46,
+        5
+      ],
+      "size": [
+        1.06,
+        0.32,
+        1.06
+      ],
+      "rotation": [
+        0,
+        0.785398,
+        0
+      ],
+      "color": "#263f40"
+    }
+  ]
+}

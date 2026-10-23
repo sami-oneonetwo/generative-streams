@@ -1,0 +1,121 @@
+{
+  "name": "Reed-Matted Limestone Sitting Slab",
+  "description": "A broad limestone slab rests on two squat rubble-and-mudbrick supports, with a reed sitting mat offering room for two at a height of 0.45 m.",
+  "notes": "Hand-cut limestone, irregular mudbrick supports and a simple reed mat give this communal seat a sun-baked Bronze Age character.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -0.78,
+        0.06,
+        0.02
+      ],
+      "size": [
+        0.52,
+        0.12,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.77,
+        0.175,
+        0
+      ],
+      "size": [
+        0.47,
+        0.11,
+        0.62
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#ae9568"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.77,
+        0.06,
+        -0.015
+      ],
+      "size": [
+        0.55,
+        0.12,
+        0.66
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.79,
+        0.175,
+        0.01
+      ],
+      "size": [
+        0.49,
+        0.11,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0.055,
+        0
+      ],
+      "color": "#bda677"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.31,
+        0
+      ],
+      "size": [
+        2.35,
+        0.16,
+        0.82
+      ],
+      "rotation": [
+        0,
+        0.012,
+        0
+      ],
+      "color": "#ead7aa"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.035,
+        0.42,
+        0.015
+      ],
+      "size": [
+        2.12,
+        0.06,
+        0.65
+      ],
+      "rotation": [
+        0,
+        -0.015,
+        0
+      ],
+      "color": "#b89b55"
+    }
+  ]
+}

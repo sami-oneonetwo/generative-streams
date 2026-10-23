@@ -1,0 +1,235 @@
+{
+  "name": "Unclaimed Lot with Oak Claim Board and Straw Wisp",
+  "description": "A broad, slightly crooked oak board bears a thick pale-ochre empty ring beneath a tall tied straw bundle, with grass, a fieldstone and discarded timber at its foot.",
+  "notes": "Pegged oak, a straw-wisp signal and a boldly painted empty ring announce an available medieval parcel without lettering or modern signage.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.425,
+        4.35
+      ],
+      "size": [
+        0.3,
+        2.85,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2.78,
+        4.4
+      ],
+      "size": [
+        1.2,
+        0.16,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0.1
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.5,
+        2.54,
+        4.59
+      ],
+      "size": [
+        0.86,
+        0.9,
+        0.66
+      ],
+      "rotation": [
+        3.141593,
+        0,
+        0
+      ],
+      "color": "#d6b25a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        2.25,
+        4.59
+      ],
+      "size": [
+        0.36,
+        0.14,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.15,
+        4.58
+      ],
+      "size": [
+        2.4,
+        1.8,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0.1
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.15,
+        4.69
+      ],
+      "size": [
+        1.4,
+        0.06,
+        1.4
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.15,
+        4.73
+      ],
+      "size": [
+        0.8,
+        0.06,
+        0.8
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.42,
+        1.94,
+        4.72
+      ],
+      "size": [
+        0.17,
+        0.16,
+        0.17
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.45,
+        0.09,
+        5.12
+      ],
+      "size": [
+        1.2,
+        0.18,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.58,
+        0.23,
+        5.1
+      ],
+      "size": [
+        0.85,
+        0.1,
+        0.19
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.22,
+        0.25,
+        4.99
+      ],
+      "size": [
+        0.8,
+        0.5,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.08,
+        0.23,
+        4.08
+      ],
+      "size": [
+        0.65,
+        0.46,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#416c48"
+    }
+  ]
+}

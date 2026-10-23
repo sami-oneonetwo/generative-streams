@@ -1,0 +1,501 @@
+{
+  "name": "Leaning Courtyard Fig and Young Date Palm",
+  "description": "A low, strongly leaning fig spreads over exposed forks beside a taller curved date palm, both rooted in shallow earth-walled watering basins on the street frontage.",
+  "notes": "Hand-packed irrigation hollows, spreading fruit-tree branches and unequal tapered palm fronds express Bronze Age tending without paving, kerbs or manufactured tree guards.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        -3,
+        0.04,
+        5
+      ],
+      "size": [
+        1.36,
+        0.08,
+        1.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#69563b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.03,
+        0.14,
+        5.69
+      ],
+      "size": [
+        1.65,
+        0.28,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.02,
+        0.115,
+        4.31
+      ],
+      "size": [
+        1.58,
+        0.23,
+        0.3
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.7,
+        0.13,
+        5
+      ],
+      "size": [
+        0.3,
+        0.26,
+        1.34
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.31,
+        0.105,
+        5.02
+      ],
+      "size": [
+        0.28,
+        0.21,
+        1.35
+      ],
+      "rotation": [
+        0,
+        0.055,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3,
+        0.04,
+        5
+      ],
+      "size": [
+        1.3,
+        0.08,
+        1.27
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#69563b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.99,
+        0.12,
+        5.68
+      ],
+      "size": [
+        1.56,
+        0.24,
+        0.29
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.03,
+        0.14,
+        4.33
+      ],
+      "size": [
+        1.6,
+        0.28,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0.04,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.32,
+        0.11,
+        5.01
+      ],
+      "size": [
+        0.29,
+        0.22,
+        1.32
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.68,
+        0.13,
+        4.99
+      ],
+      "size": [
+        0.3,
+        0.26,
+        1.34
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.31,
+        1.16,
+        5
+      ],
+      "size": [
+        0.66,
+        2.2,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0,
+        0.3
+      ],
+      "color": "#7a6a55"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.24,
+        2.38,
+        4.92
+      ],
+      "size": [
+        0.42,
+        2.04,
+        0.39
+      ],
+      "rotation": [
+        -0.08,
+        0,
+        0.86
+      ],
+      "color": "#7a6a55"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.91,
+        2.46,
+        4.51
+      ],
+      "size": [
+        0.34,
+        1.95,
+        0.32
+      ],
+      "rotation": [
+        -0.5,
+        0,
+        0.38
+      ],
+      "color": "#7a6a55"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.83,
+        3.32,
+        5.03
+      ],
+      "size": [
+        2.22,
+        0.86,
+        1.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4f6a3a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.65,
+        3.72,
+        4.8
+      ],
+      "size": [
+        2.32,
+        0.84,
+        1.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d824b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.54,
+        3.35,
+        4.56
+      ],
+      "size": [
+        2.08,
+        0.8,
+        1.67
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#6d824b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.96,
+        2.99,
+        4.13
+      ],
+      "size": [
+        1.86,
+        0.86,
+        1.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4f6a3a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.08,
+        0.88,
+        5
+      ],
+      "size": [
+        0.51,
+        1.64,
+        0.47
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.1
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.31,
+        2.45,
+        4.96
+      ],
+      "size": [
+        0.43,
+        1.65,
+        0.4
+      ],
+      "rotation": [
+        -0.05,
+        0,
+        -0.18
+      ],
+      "color": "#a17b48"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.62,
+        4.01,
+        4.86
+      ],
+      "size": [
+        0.35,
+        1.62,
+        0.33
+      ],
+      "rotation": [
+        -0.075,
+        0,
+        -0.21
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.73,
+        4.46,
+        4.8
+      ],
+      "size": [
+        0.65,
+        2.22,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.9
+      ],
+      "color": "#6d824b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.76,
+        5.08,
+        4.8
+      ],
+      "size": [
+        0.66,
+        2.08,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0,
+        1.3
+      ],
+      "color": "#6d824b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.75,
+        4.45,
+        3.86
+      ],
+      "size": [
+        0.62,
+        2,
+        0.4
+      ],
+      "rotation": [
+        -1.95,
+        0,
+        0
+      ],
+      "color": "#4f6a3a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.78,
+        4.99,
+        5.29
+      ],
+      "size": [
+        0.55,
+        1.1,
+        0.35
+      ],
+      "rotation": [
+        1.15,
+        0,
+        0
+      ],
+      "color": "#6d824b"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.24,
+        5.17,
+        4.41
+      ],
+      "size": [
+        0.49,
+        1.45,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0.65,
+        -0.95
+      ],
+      "color": "#8a9a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.22,
+        4.23,
+        4.82
+      ],
+      "size": [
+        0.48,
+        1.5,
+        0.33
+      ],
+      "rotation": [
+        0,
+        0,
+        2.4
+      ],
+      "color": "#4f6a3a"
+    }
+  ]
+}

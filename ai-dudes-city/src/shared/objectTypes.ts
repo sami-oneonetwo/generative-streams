@@ -54,7 +54,7 @@ export interface Interaction {
   /** A short shout floated up while doing it: "SWISH", "SPLASH". */
   pop?: string;
 }
-export const ABILITIES = ['floats', 'flies', 'vehicle', 'weapon', 'trap'] as const;
+export const ABILITIES = ['floats', 'flies', 'vehicle', 'weapon', 'trap', 'smash'] as const;
 export const MOVES = ['roam', 'drive', 'fly'] as const;
 export type Moves = (typeof MOVES)[number];
 export type Ability = (typeof ABILITIES)[number];
@@ -139,6 +139,8 @@ export interface CreatureState {
   freeMs?: number;
   /** Squaring up to a viewer's figure (a `fight` verb, crowd.ts): stands its ground facing them, no behaviour until this runs out. */
   busyMs?: number;
+  /** ai-dudes city, a monster on a rampage (movers.ts): resting after knocking a few down, for this long. */
+  restMs?: number;
   /** ai-dudes city, a car on the road grid: the intersection it is heading for, and the one it came from ("i,j"). */
   node?: string;
   prevNode?: string;
@@ -153,9 +155,17 @@ export interface SafehouseObject {
   editedBy: string;
   createdAt: number;
   role?: 'decoration' | 'barrier' | 'turret';
+  /** ai-dudes city: what is left of it (damage.ts); absent means whole. At 0 it has fallen (`destroyedAt`). */
   health?: number;
   maxHealth?: number;
+  /** How far it has crumbled, in steps (damage.ts): the blueprint is redrawn only when this changes. */
   damageRevision?: number;
+  /** Server time it was last hit: a ruin left alone this long puts itself back up. */
+  hitAt?: number;
+  /** ai-dudes city: server time this round of damage began (the first hit): it rebuilds a while after this, however often it is hit since. */
+  damagedAt?: number;
+  /** ai-dudes city: just put back up: hits only rattle it until this server time. */
+  guardUntil?: number;
   lifecycle?: number;
   destroyedAt?: number;
   nextShotAt?: number;
@@ -170,6 +180,12 @@ export interface SafehouseObject {
   plot?: string;
   venue?: import('./city').VenueKind;
   civic?: boolean;
+  /** ai-dudes city: the Wonder of this age (caravan.ts), standing on its own spot in the middle of the square. */
+  wonder?: number;
+  /** ai-dudes city: the age it was designed in (shared/ages.ts); absent means the Modern age. Shown in another age, its colours are swapped into that one's. */
+  age?: number;
+  /** Made in the theme-free sandbox: in no age. */
+  free?: boolean;
   /** ai-dudes: the landmark before the group reaches it, drawn as a dark shape in the mist. */
   silhouette?: boolean;
   /** What the piece is for (closed vocabulary); rules and idle behaviour find pieces by these. */

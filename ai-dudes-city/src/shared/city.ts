@@ -1,5 +1,6 @@
 // The city's ground, the same on the server and the page: a grid of blocks with roads between them,
-// every block split into four lots, and the town square in the middle. Everything here is a pure
+// every block three lots by three with a green courtyard in the middle cell (so every lot fronts a
+// road, and blocks are fewer, bigger and less alike), and the town square in the middle block. Everything here is a pure
 // function of the constants, so the page draws the very lots the server hands out, and an address
 // ("7 Maple Street") means the same thing to both. Zero AI.
 import type { Rect } from './layout';
@@ -7,21 +8,36 @@ import type { GroundPoint } from './objectTypes';
 
 export const CITY = {
   /** A lot is this many metres square. */
-  plot: 16,
-  sidewalk: 2,
-  road: 8,
+  plot: 12,
+  sidewalk: 1.5,
+  road: 6,
   /** Blocks out from the square in each direction: (2·rings+1)² blocks. */
-  rings: 2,
+  rings: 1,
+  /** A block is this many lots a side; the middle cell is the block's courtyard, not a lot. */
+  cells: 3,
+  /** The corner blocks are little parks, not lots: a cross of four home blocks round the square. */
+  parks: true,
 };
-/** Centre to centre of neighbouring blocks: two lots, two pavements, one road. */
-export const PITCH = 2 * CITY.plot + 2 * CITY.sidewalk + CITY.road; // 44
+/**
+ * Which layout a save was laid out on (state.city.layout): 1 was 5×5 blocks of four 16 m lots; 2 was
+ * 3×3 blocks of eight 22 m lots (64 lots, 242 m across); 3 is the same plan at 12 m lots with the
+ * corner blocks made parks (32 lots, 141 m across), small enough to read on a phone.
+ */
+export const LAYOUT = 3;
+/** Centre to centre of neighbouring blocks: three lots, two pavements, one road. */
+export const PITCH = CITY.cells * CITY.plot + 2 * CITY.sidewalk + CITY.road; // 45
 /** Half a block, pavement included: the road starts here. */
-export const BLOCK_HALF = CITY.plot + CITY.sidewalk; // 18
+export const BLOCK_HALF = (CITY.cells * CITY.plot) / 2 + CITY.sidewalk; // 19.5
 /** The walkable, buildable city: every block and the ring road round the outside. */
 export const CITY_BOUNDS: Rect = (() => {
   const e = CITY.rings * PITCH + BLOCK_HALF + CITY.road;
   return { minX: -e, maxX: e, minZ: -e, maxZ: e };
 })();
+/** A corner block left as a park (no lots). */
+export const isPark = (bx: number, bz: number): boolean => CITY.parks && bx !== 0 && bz !== 0;
+
+/** The river past the ring road on the east side (docs/ages.md): the caravans camp across it. Centre line and width, metres. */
+export const RIVER = { x: CITY_BOUNDS.maxX + 16, width: 14 };
 
 // Streets run between the blocks: avenues north–south (constant x), streets east–west (constant z).
 const AVENUES = ['Larch Avenue', 'First Avenue', 'Second Avenue', 'Third Avenue', 'Fourth Avenue', 'Fifth Avenue', 'Sixth Avenue', 'Seventh Avenue'];
@@ -36,12 +52,14 @@ export const avenueName = (k: number) => AVENUES[(k + CITY.rings + 1) % AVENUES.
 export const streetName = (k: number) => STREETS[(k + CITY.rings + 1) % STREETS.length];
 
 export interface PlotInfo {
-  id: string; // `p<bx>_<bz>_<q>`
+  id: string; // `q<bx>_<bz>_<sx>_<sz>`
   bx: number;
   bz: number;
-  /** Which corner of its block: x side and z side (−1 or 1). */
+  /** Which cell of its block: x side and z side (−1, 0 or 1; never both 0, that is the courtyard). The square's community lots are its four corners. */
   sx: number;
   sz: number;
+  /** The way to the road it fronts (and is addressed on): ±z a street, ±x an avenue. */
+  front: GroundPoint;
   centre: GroundPoint;
   rect: Rect;
   address: string;
@@ -54,62 +72,123 @@ export interface PlotInfo {
 }
 
 export function plotId(bx: number, bz: number, sx: number, sz: number): string {
-  return `p${bx}_${bz}_${(sx > 0 ? 1 : 0) + (sz > 0 ? 2 : 0)}`;
+  return `q${bx}_${bz}_${sx}_${sz}`;
 }
+/** The middle of a block's courtyard (every home block has one: grass and a tree or two). */
+export const courtyards = (): GroundPoint[] => {
+  const out: GroundPoint[] = [];
+  for (let bx = -CITY.rings; bx <= CITY.rings; bx++) for (let bz = -CITY.rings; bz <= CITY.rings; bz++) if ((bx || bz) && !isPark(bx, bz)) out.push({ x: bx * PITCH, z: bz * PITCH });
+  return out;
+};
+/** The middle of every corner park. */
+export const parks = (): GroundPoint[] => {
+  const out: GroundPoint[] = [];
+  for (let bx = -CITY.rings; bx <= CITY.rings; bx++) for (let bz = -CITY.rings; bz <= CITY.rings; bz++) if (isPark(bx, bz)) out.push({ x: bx * PITCH, z: bz * PITCH });
+  return out;
+};
 
 /** The town square: the middle block, a cross of paving with the fountain where the paths meet. */
 export const SQUARE = {
   /** Half the width of the paved cross. */
-  path: 3,
+  path: 2.5,
   fountain: { x: 0, z: 0, r: 2.2 },
-  market: { x: 0, z: 6.5, w: 2.6, d: 1.6 },
-  /** The four community lots round the cross: smaller than a home lot. */
+  market: { x: 0, z: 5.5, w: 2.6, d: 1.6 },
+  /** The four community lots round the cross. */
   site: 13,
 };
+/**
+ * The Wonder's own spot (docs/ages.md): where the paths cross, in place of the centrepiece. Each age's
+ * Wonder goes up here and replaces the last, so the four community lots stay for chat's projects and
+ * a six-age run never runs out of room. `size` is its footprint a side (it may lean a little into the
+ * lots' inner corners), `height` how tall it may stand.
+ */
+export const WONDER = { x: 0, z: 0, size: 6.4, height: 26, plot: 'wonder' };
+/** The Wonder's spot as a lot, for fitting and placing: never handed out, never in `allPlots`. */
+export const wonderLot = (): PlotInfo => {
+  const h = WONDER.size / 2;
+  return {
+    id: WONDER.plot,
+    bx: 0,
+    bz: 0,
+    sx: 0,
+    sz: 0,
+    front: { x: 0, z: 1 },
+    centre: { x: WONDER.x, z: WONDER.z },
+    rect: { minX: WONDER.x - h, maxX: WONDER.x + h, minZ: WONDER.z - h, maxZ: WONDER.z + h },
+    address: 'the middle of the Town Square',
+    sign: { x: WONDER.x, z: WONDER.z + h },
+    civic: true,
+    rank: -1,
+  };
+};
+
+/** The numbers a layout is drawn from (the current one is CITY and SQUARE; relayout.ts rebuilds older ones). */
+export interface LayoutSpec {
+  plot: number;
+  sidewalk: number;
+  road: number;
+  rings: number;
+  cells: number;
+  parks: boolean;
+  path: number;
+  site: number;
+}
+export const CURRENT_LAYOUT: LayoutSpec = { ...CITY, path: SQUARE.path, site: SQUARE.site };
 
 let PLOTS: PlotInfo[] | undefined;
 /** Every lot in the city, home lots and the square's community lots, in hand-out order. */
 export function allPlots(): PlotInfo[] {
-  if (PLOTS) return PLOTS;
+  return (PLOTS ??= layoutPlots(CURRENT_LAYOUT));
+}
+/** Every lot of a layout, in hand-out order. */
+export function layoutPlots(L: LayoutSpec): PlotInfo[] {
   const out: PlotInfo[] = [];
-  const R = CITY.rings,
-    half = CITY.plot / 2;
+  const R = L.rings,
+    half = L.plot / 2,
+    C = (L.cells - 1) / 2;
+  const pitch = L.cells * L.plot + 2 * L.sidewalk + L.road,
+    blockHalf = (L.cells * L.plot) / 2 + L.sidewalk;
   for (let bx = -R; bx <= R; bx++)
-    for (let bz = -R; bz <= R; bz++)
-      for (const sx of [-1, 1])
-        for (const sz of [-1, 1]) {
-          const civic = bx === 0 && bz === 0;
-          const cx = bx * PITCH + sx * (civic ? SQUARE.path + SQUARE.site / 2 : half),
-            cz = bz * PITCH + sz * (civic ? SQUARE.path + SQUARE.site / 2 : half);
-          const h = civic ? SQUARE.site / 2 : half;
-          // The lot faces the east–west street on its side of the block; numbers run west to east,
-          // odd on the north side of the street and even on the south.
-          const k = sz > 0 ? bz : bz - 1;
-          const n = (bx + R) * 2 + (sx < 0 ? 1 : 2);
-          const number = sz > 0 ? n * 2 - 1 : n * 2;
-          const corner = { x: cx + sx * (h + 0.6), z: bz * PITCH + sz * (BLOCK_HALF - 0.7) };
+    for (let bz = -R; bz <= R; bz++) {
+      if (L.parks && bx && bz) continue;
+      const civic = bx === 0 && bz === 0;
+      for (let sx = -C; sx <= C; sx++)
+        for (let sz = -C; sz <= C; sz++) {
+          if (civic ? !sx || !sz : !sx && !sz) continue;
+          const cx = bx * pitch + (civic ? sx * (L.path + L.site / 2) : sx * L.plot),
+            cz = bz * pitch + (civic ? sz * (L.path + L.site / 2) : sz * L.plot);
+          const h = civic ? L.site / 2 : half;
+          // A lot fronts the east–west street on its side of the block, or (the middle row) the
+          // north–south avenue. Numbers run west to east along a street (north to south along an
+          // avenue), odd on the north (east) side and even on the other.
+          const onStreet = sz !== 0;
+          const front = onStreet ? { x: 0, z: sz } : { x: sx, z: 0 };
+          const k = onStreet ? (sz > 0 ? bz : bz - 1) : sx > 0 ? bx : bx - 1;
+          const n = onStreet ? (bx + R) * L.cells + sx + C + 1 : (bz + R) * L.cells + sz + C + 1;
+          const number = (onStreet ? sz : sx) > 0 ? n * 2 - 1 : n * 2;
           out.push({
             id: plotId(bx, bz, sx, sz),
             bx,
             bz,
             sx,
             sz,
+            front,
             centre: { x: cx, z: cz },
             rect: { minX: cx - h, maxX: cx + h, minZ: cz - h, maxZ: cz + h },
-            address: civic ? `Town Square ${sz < 0 ? 'North' : 'South'}${sx < 0 ? 'west' : 'east'}` : `${number} ${streetName(k)}`,
-            sign: civic ? { x: cx - sx * (h - 0.6), z: cz - sz * (h - 0.6) } : { x: corner.x - sx * 1.4, z: corner.z },
+            address: civic ? `Town Square ${sz < 0 ? 'North' : 'South'}${sx < 0 ? 'west' : 'east'}` : `${number} ${onStreet ? streetName(k) : avenueName(k)}`,
+            sign: civic ? { x: cx - sx * (h - 0.6), z: cz - sz * (h - 0.6) } : onStreet ? { x: cx + sx * (h - 0.8), z: bz * pitch + sz * (blockHalf - 0.7) } : { x: bx * pitch + sx * (blockHalf - 0.7), z: cz },
             civic,
             rank: 0,
           });
         }
+    }
   // Nearest the square first; round each ring in turn so a block fills before the next one starts.
   const score = (p: PlotInfo) => Math.max(Math.abs(p.bx), Math.abs(p.bz)) * 1000 + Math.hypot(p.centre.x, p.centre.z) + Math.atan2(p.centre.z, p.centre.x) * 0.01;
   out.sort((a, b) => score(a) - score(b));
   out.forEach((p, i) => (p.rank = i));
-  PLOTS = out;
   return out;
 }
-export const plotById = (id: string | undefined) => (id ? allPlots().find((p) => p.id === id) : undefined);
+export const plotById = (id: string | undefined) => (!id ? undefined : id === WONDER.plot ? wonderLot() : allPlots().find((p) => p.id === id));
 export const homePlots = () => allPlots().filter((p) => !p.civic);
 export const civicPlots = () => allPlots().filter((p) => p.civic);
 /** The lot a point stands on, if any. */
@@ -153,17 +232,17 @@ export const VENUES: Record<VenueKind, VenueSpec> = {
   home: { label: 'home', gives: { energy: 70, fun: 10 }, price: 0, visit: 'enter', visitMs: 40_000, verb: 'had a rest at', group: 'living' },
   cafe: { label: 'café', gives: { hunger: 30, social: 25, energy: 15 }, price: 5, visit: 'sit', visitMs: 20_000, verb: 'had a coffee at', group: 'food' },
   restaurant: { label: 'restaurant', gives: { hunger: 65, social: 30 }, price: 12, visit: 'sit', visitMs: 28_000, verb: 'had dinner at', group: 'food' },
-  bakery: { label: 'bakery', gives: { hunger: 40, fun: 5 }, price: 4, visit: 'enter', visitMs: 12_000, verb: 'picked up a pastry from', group: 'food' },
+  bakery: { label: 'bakery', gives: { hunger: 40, fun: 5 }, price: 4, visit: 'look', visitMs: 12_000, verb: 'picked up a pastry from', group: 'food' },
   bar: { label: 'bar', gives: { social: 45, fun: 30 }, price: 8, visit: 'sit', visitMs: 24_000, verb: 'had a drink at', group: 'night' },
   club: { label: 'club', gives: { fun: 60, social: 35, energy: -10 }, price: 10, visit: 'dance', visitMs: 24_000, verb: 'danced at', group: 'night' },
-  shop: { label: 'shop', gives: { fun: 30 }, price: 7, visit: 'enter', visitMs: 14_000, verb: 'went shopping at', group: 'shops' },
+  shop: { label: 'shop', gives: { fun: 30 }, price: 7, visit: 'look', visitMs: 14_000, verb: 'went shopping at', group: 'shops' },
   market: { label: 'market', gives: { hunger: 25, fun: 20, social: 15 }, price: 5, visit: 'look', visitMs: 16_000, verb: 'browsed', group: 'shops' },
-  workshop: { label: 'workshop', gives: { fun: 45, social: 10 }, price: 9, visit: 'enter', visitMs: 22_000, verb: 'learned something at', group: 'shops' },
+  workshop: { label: 'workshop', gives: { fun: 45, social: 10 }, price: 9, visit: 'look', visitMs: 22_000, verb: 'learned something at', group: 'shops' },
   apartments: { label: 'apartments', gives: { energy: 55, social: 20 }, price: 3, visit: 'enter', visitMs: 30_000, verb: 'visited a flat in', group: 'living' },
   gym: { label: 'gym', gives: { fun: 35, energy: -15 }, price: 6, visit: 'enter', visitMs: 20_000, verb: 'worked out at', group: 'culture' },
   park: { label: 'park', gives: { fun: 35, social: 25, energy: 10 }, price: 0, visit: 'sit', visitMs: 22_000, verb: 'relaxed in', group: 'green' },
-  library: { label: 'library', gives: { fun: 35, energy: 10 }, price: 0, visit: 'enter', visitMs: 22_000, verb: 'read at', group: 'culture' },
-  florist: { label: 'florist', gives: { fun: 25, social: 10 }, price: 6, visit: 'enter', visitMs: 12_000, verb: 'bought flowers at', group: 'shops' },
+  library: { label: 'library', gives: { fun: 35, energy: 10 }, price: 0, visit: 'sit', visitMs: 22_000, verb: 'read at', group: 'culture' },
+  florist: { label: 'florist', gives: { fun: 25, social: 10 }, price: 6, visit: 'look', visitMs: 12_000, verb: 'bought flowers at', group: 'shops' },
   venue: { label: 'events venue', gives: { fun: 50, social: 45 }, price: 10, visit: 'dance', visitMs: 26_000, verb: 'went to a party at', group: 'culture' },
   decor: { label: 'decoration', gives: { fun: 10 }, price: 0, visit: 'look', visitMs: 8000, verb: 'admired' },
 };

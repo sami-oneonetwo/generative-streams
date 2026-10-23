@@ -1,0 +1,283 @@
+{
+  "name": "Unclaimed Lot with Low Amber Claim Halo",
+  "description": "A broad, empty amber halo hovers horizontally below head height above a dark ceramic projector, marking an open parcel framed by a subdued border and two broad clover patches.",
+  "notes": "The 14-part design uses a thin horizontal projection to reconcile a roughly 2.2 m marker width with a maximum height of 1.44 m; only the halo and its narrow projection link glow.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        0.125,
+        5.375
+      ],
+      "size": [
+        0.5,
+        0.25,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.755,
+        5.375
+      ],
+      "size": [
+        0.06,
+        1.01,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.35,
+        5.374686
+      ],
+      "size": [
+        1.09,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2575,
+        1.35,
+        4.937343
+      ],
+      "size": [
+        1.09,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        1.047198,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.2575,
+        1.35,
+        4.062657
+      ],
+      "size": [
+        1.09,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        -1.047198,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.35,
+        3.625314
+      ],
+      "size": [
+        1.09,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.7425,
+        1.35,
+        4.062657
+      ],
+      "size": [
+        1.09,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        1.047198,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.7425,
+        1.35,
+        4.937343
+      ],
+      "size": [
+        1.09,
+        0.18,
+        0.18
+      ],
+      "rotation": [
+        0,
+        -1.047198,
+        0
+      ],
+      "color": "#efbd66",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        -5.95
+      ],
+      "size": [
+        12,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        5.95
+      ],
+      "size": [
+        12,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.95,
+        0.03,
+        0
+      ],
+      "size": [
+        0.1,
+        0.06,
+        11.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.95,
+        0.03,
+        0
+      ],
+      "size": [
+        0.1,
+        0.06,
+        11.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.65,
+        0.1,
+        5.05
+      ],
+      "size": [
+        1.15,
+        0.2,
+        0.95
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#6d9c8a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.7,
+        0.09,
+        4.85
+      ],
+      "size": [
+        1.05,
+        0.18,
+        1.15
+      ],
+      "rotation": [
+        0,
+        -0.45,
+        0
+      ],
+      "color": "#739d97"
+    }
+  ],
+  "checks": [
+    "4 parts reach outside the 12 m room"
+  ]
+}

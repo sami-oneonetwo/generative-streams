@@ -1,0 +1,561 @@
+{
+  "name": "Shared Civic Ground",
+  "description": "Four white-capped mudbrick pillars and a dark swept-earth outline reserve an open communal parcel, announced by a raised white medallion showing four households around a shared bronze bowl.",
+  "notes": "Stepped sun-dried brickwork, limewash, impressed red-ochre dots and restrained turquoise bronze accents distinguish Bronze Age communal ground without modern signage or raised paving.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5.25,
+        0.21,
+        -5.25
+      ],
+      "size": [
+        1.1,
+        0.42,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.27,
+        0.62,
+        -5.23
+      ],
+      "size": [
+        0.88,
+        0.4,
+        0.88
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.25,
+        0.91,
+        -5.24
+      ],
+      "size": [
+        0.94,
+        0.18,
+        0.94
+      ],
+      "rotation": [
+        0,
+        0.02,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.25,
+        1.04,
+        -5.24
+      ],
+      "size": [
+        0.36,
+        0.26,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#429d9b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.25,
+        0.21,
+        -5.25
+      ],
+      "size": [
+        1.08,
+        0.42,
+        1.12
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.23,
+        0.62,
+        -5.27
+      ],
+      "size": [
+        0.9,
+        0.4,
+        0.86
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.24,
+        0.91,
+        -5.25
+      ],
+      "size": [
+        0.96,
+        0.18,
+        0.92
+      ],
+      "rotation": [
+        0,
+        -0.02,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.24,
+        1.04,
+        -5.25
+      ],
+      "size": [
+        0.36,
+        0.26,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#429d9b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.25,
+        0.21,
+        5.25
+      ],
+      "size": [
+        1.12,
+        0.42,
+        1.08
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.23,
+        0.62,
+        5.23
+      ],
+      "size": [
+        0.88,
+        0.4,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0.03,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.24,
+        0.91,
+        5.24
+      ],
+      "size": [
+        0.94,
+        0.18,
+        0.96
+      ],
+      "rotation": [
+        0,
+        -0.015,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.24,
+        1.04,
+        5.24
+      ],
+      "size": [
+        0.36,
+        0.26,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#429d9b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.25,
+        0.21,
+        5.25
+      ],
+      "size": [
+        1.1,
+        0.42,
+        1.1
+      ],
+      "rotation": [
+        0,
+        0.03,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.27,
+        0.62,
+        5.23
+      ],
+      "size": [
+        0.86,
+        0.4,
+        0.9
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.25,
+        0.91,
+        5.24
+      ],
+      "size": [
+        0.92,
+        0.18,
+        0.96
+      ],
+      "rotation": [
+        0,
+        0.015,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.25,
+        1.04,
+        5.24
+      ],
+      "size": [
+        0.36,
+        0.26,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#429d9b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.7,
+        5.12
+      ],
+      "size": [
+        1.02,
+        1.4,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3,
+        2.05,
+        5.18
+      ],
+      "size": [
+        1.6,
+        0.24,
+        1.6
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#f4ead2"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.52,
+        2.05,
+        5.3
+      ],
+      "size": [
+        0.35,
+        0.06,
+        0.35
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.48,
+        2.05,
+        5.3
+      ],
+      "size": [
+        0.35,
+        0.06,
+        0.35
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3,
+        2.57,
+        5.3
+      ],
+      "size": [
+        0.35,
+        0.06,
+        0.35
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3,
+        1.53,
+        5.3
+      ],
+      "size": [
+        0.35,
+        0.06,
+        0.35
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#8f4938"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3,
+        1.99,
+        5.48
+      ],
+      "size": [
+        0.6,
+        0.4,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b68942"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3,
+        2.165,
+        5.48
+      ],
+      "size": [
+        0.44,
+        0.06,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#3a2a1c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        -5.25
+      ],
+      "size": [
+        10.5,
+        0.06,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5774e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.25,
+        0.03,
+        0
+      ],
+      "size": [
+        0.3,
+        0.06,
+        10.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5774e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.25,
+        0.03,
+        0
+      ],
+      "size": [
+        0.3,
+        0.06,
+        10.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5774e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.325,
+        0.03,
+        5.25
+      ],
+      "size": [
+        3.85,
+        0.06,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5774e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.325,
+        0.03,
+        5.25
+      ],
+      "size": [
+        3.85,
+        0.06,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a5774e"
+    }
+  ],
+  "checks": [
+    "5 parts reach outside the 12 m room"
+  ]
+}

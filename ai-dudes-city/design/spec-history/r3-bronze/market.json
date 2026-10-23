@@ -1,0 +1,539 @@
+{
+  "name": "Reed-Mat Barter Stall",
+  "description": "Four forked timber posts carry a thin, ragged reed canopy above uneven mudbrick courses displaying grain, terracotta pottery, folded linen, bronze ingots and a trading weight.",
+  "notes": "Bound reed matting, exposed timber forks, staggered earthen masonry and clearly separated barter goods establish a Bronze Age river-town market within 28 parts.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -1.07,
+        1.175,
+        -0.58
+      ],
+      "size": [
+        0.14,
+        2.35,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0.04,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.07,
+        1.175,
+        -0.58
+      ],
+      "size": [
+        0.16,
+        2.35,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.06,
+        0
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.07,
+        1.055,
+        0.58
+      ],
+      "size": [
+        0.16,
+        2.11,
+        0.15
+      ],
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.07,
+        1.055,
+        0.58
+      ],
+      "size": [
+        0.14,
+        2.11,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.07,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.92,
+        2.19,
+        -0.58
+      ],
+      "size": [
+        0.12,
+        0.44,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.72
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.92,
+        2.19,
+        -0.58
+      ],
+      "size": [
+        0.13,
+        0.44,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0.72
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.92,
+        1.95,
+        0.58
+      ],
+      "size": [
+        0.13,
+        0.44,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.72
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.92,
+        1.95,
+        0.58
+      ],
+      "size": [
+        0.12,
+        0.44,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0.72
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.27,
+        0
+      ],
+      "size": [
+        2.6,
+        0.1,
+        1.54
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ],
+      "color": "#cbb578"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.443,
+        -0.505
+      ],
+      "size": [
+        2.58,
+        0.06,
+        0.07
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ],
+      "color": "#957547"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.237,
+        0.505
+      ],
+      "size": [
+        2.58,
+        0.06,
+        0.07
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0
+      ],
+      "color": "#957547"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.65,
+        2.085,
+        0.754
+      ],
+      "size": [
+        1.18,
+        0.13,
+        0.07
+      ],
+      "rotation": [
+        0.2,
+        0,
+        0.025
+      ],
+      "color": "#b99e60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.63,
+        2.1,
+        0.748
+      ],
+      "size": [
+        1.25,
+        0.1,
+        0.07
+      ],
+      "rotation": [
+        0.2,
+        0,
+        -0.018
+      ],
+      "color": "#d8c48b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.66,
+        0.19,
+        0.41
+      ],
+      "size": [
+        1.02,
+        0.38,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.015,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.52,
+        0.185,
+        0.42
+      ],
+      "size": [
+        1.3,
+        0.37,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.018,
+        0
+      ],
+      "color": "#c49561"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.4,
+        0.58,
+        0.4
+      ],
+      "size": [
+        1.54,
+        0.4,
+        0.73
+      ],
+      "rotation": [
+        0,
+        -0.012,
+        0
+      ],
+      "color": "#cda16b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.8,
+        0.575,
+        0.42
+      ],
+      "size": [
+        0.8,
+        0.39,
+        0.71
+      ],
+      "rotation": [
+        0,
+        0.022,
+        0
+      ],
+      "color": "#bc8756"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.81,
+        0.96,
+        0.45
+      ],
+      "size": [
+        0.58,
+        0.36,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#967442"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.81,
+        1.115,
+        0.45
+      ],
+      "size": [
+        0.45,
+        0.15,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e2b34b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.19,
+        1.035,
+        0.4
+      ],
+      "size": [
+        0.47,
+        0.54,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ba613e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.19,
+        1.305,
+        0.4
+      ],
+      "size": [
+        0.24,
+        0.19,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d18a58"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.19,
+        1.38,
+        0.4
+      ],
+      "size": [
+        0.13,
+        0.06,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#70442f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.36,
+        0.865,
+        0.43
+      ],
+      "size": [
+        0.45,
+        0.17,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0.06,
+        0
+      ],
+      "color": "#d5c69a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.35,
+        1.025,
+        0.43
+      ],
+      "size": [
+        0.42,
+        0.15,
+        0.44
+      ],
+      "rotation": [
+        0,
+        -0.07,
+        0
+      ],
+      "color": "#f0dfb4"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.89,
+        0.82,
+        0.49
+      ],
+      "size": [
+        0.34,
+        0.08,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0.12,
+        0
+      ],
+      "color": "#b68942"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.88,
+        0.9,
+        0.49
+      ],
+      "size": [
+        0.32,
+        0.08,
+        0.22
+      ],
+      "rotation": [
+        0,
+        -0.12,
+        0
+      ],
+      "color": "#b68942"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.9,
+        0.98,
+        0.48
+      ],
+      "size": [
+        0.3,
+        0.08,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0.08,
+        0
+      ],
+      "color": "#b68942"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.03,
+        0.88,
+        0.66
+      ],
+      "size": [
+        0.18,
+        0.2,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#625c48"
+    }
+  ]
+}

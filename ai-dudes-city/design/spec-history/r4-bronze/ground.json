@@ -1,0 +1,387 @@
+{
+  "name": "Bronze Age Harvest Margin",
+  "description": "Uneven straw clumps and dark barley stubble trail diagonally across open meadow, with pale fieldstones, fallen reeds and scattered terracotta fragments marking worked land.",
+  "notes": "Harvest residue, a low gathered-stone boundary and unglazed pottery suggest Bronze Age river-town farming without fences, paving or modern agricultural equipment.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.9,
+        0.03,
+        -3.45
+      ],
+      "size": [
+        1.2,
+        0.06,
+        0.8
+      ],
+      "rotation": [
+        0,
+        -0.48,
+        0
+      ],
+      "color": "#8f7a3a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.65,
+        0.03,
+        0.75
+      ],
+      "size": [
+        1.2,
+        0.06,
+        0.8
+      ],
+      "rotation": [
+        0,
+        -0.72,
+        0
+      ],
+      "color": "#8f7a3a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.12,
+        0.19,
+        -3.48
+      ],
+      "size": [
+        0.4,
+        0.3,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0.3,
+        -0.2
+      ],
+      "color": "#e0cc8a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -3.75,
+        0.155,
+        -3.31
+      ],
+      "size": [
+        0.3,
+        0.25,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0.18
+      ],
+      "color": "#d8bd72"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -2.24,
+        0.205,
+        -1.65
+      ],
+      "size": [
+        0.46,
+        0.32,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0.2
+      ],
+      "color": "#e0cc8a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -1.91,
+        0.12,
+        -1.49
+      ],
+      "size": [
+        0.34,
+        0.2,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.45,
+        -0.12
+      ],
+      "color": "#c8aa62"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.43,
+        0.195,
+        0.72
+      ],
+      "size": [
+        0.42,
+        0.31,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0.15,
+        -0.18
+      ],
+      "color": "#e0cc8a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.8,
+        0.15,
+        0.88
+      ],
+      "size": [
+        0.34,
+        0.25,
+        0.15
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0.12
+      ],
+      "color": "#d8bd72"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.45,
+        0.18,
+        3.08
+      ],
+      "size": [
+        0.46,
+        0.27,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0.18
+      ],
+      "color": "#e0cc8a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.08,
+        0.14,
+        3.28
+      ],
+      "size": [
+        0.32,
+        0.23,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0.65,
+        -0.15
+      ],
+      "color": "#c8aa62"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.6,
+        0.2,
+        1.35
+      ],
+      "size": [
+        1.08,
+        0.4,
+        0.78
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#e6dcc0"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.8,
+        0.18,
+        -2.65
+      ],
+      "size": [
+        0.9,
+        0.36,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0.55,
+        0
+      ],
+      "color": "#e6dcc0"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.55,
+        0.13,
+        4.83
+      ],
+      "size": [
+        1.05,
+        0.26,
+        0.68
+      ],
+      "rotation": [
+        0,
+        -0.38,
+        0
+      ],
+      "color": "#d2bb87"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.13,
+        0.105,
+        4.49
+      ],
+      "size": [
+        0.67,
+        0.21,
+        0.51
+      ],
+      "rotation": [
+        0,
+        0.65,
+        0
+      ],
+      "color": "#e6dcc0"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.83,
+        0.26,
+        4.77
+      ],
+      "size": [
+        0.54,
+        0.18,
+        0.43
+      ],
+      "rotation": [
+        0,
+        -0.7,
+        0
+      ],
+      "color": "#ae9568"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.8,
+        0.08,
+        3.85
+      ],
+      "size": [
+        0.16,
+        1.6,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.28,
+        1.5707963268
+      ],
+      "color": "#d8bd72"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.7,
+        0.07,
+        4.06
+      ],
+      "size": [
+        0.14,
+        1.25,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0.16,
+        1.5707963268
+      ],
+      "color": "#a48848"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.83,
+        0.1,
+        3.97
+      ],
+      "size": [
+        0.12,
+        0.2,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.23,
+        0
+      ],
+      "color": "#6d4c32"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.9,
+        0.06,
+        -4.48
+      ],
+      "size": [
+        0.61,
+        0.12,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0.62,
+        0
+      ],
+      "color": "#b8734d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.46,
+        0.045,
+        -4.17
+      ],
+      "size": [
+        0.35,
+        0.09,
+        0.24
+      ],
+      "rotation": [
+        0,
+        -0.42,
+        0
+      ],
+      "color": "#b8734d"
+    }
+  ]
+}

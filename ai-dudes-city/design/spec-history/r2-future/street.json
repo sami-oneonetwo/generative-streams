@@ -1,0 +1,430 @@
+{
+  "name": "Slate Ceramic Guidance Street",
+  "description": "Cool slate road panels, broad cyan navigation lines and green drainage seams clearly separate the open carriageway from warm ivory pavements.",
+  "notes": "Matte ceramic paving, nearly flush guidance emitters and low paired drainage nodes express the Future without raised light barriers or glowing street furniture.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5,
+        0.03,
+        0
+      ],
+      "size": [
+        1.94,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9fb1c2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.03,
+        0
+      ],
+      "size": [
+        1.94,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9fb1c2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1,
+        0.03,
+        0
+      ],
+      "size": [
+        1.94,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9fb1c2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1,
+        0.03,
+        0
+      ],
+      "size": [
+        1.94,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9fb1c2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        0.03,
+        0
+      ],
+      "size": [
+        1.94,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9fb1c2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5,
+        0.03,
+        0
+      ],
+      "size": [
+        1.94,
+        0.06,
+        8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9fb1c2"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        -5
+      ],
+      "size": [
+        12,
+        0.06,
+        2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.03,
+        5
+      ],
+      "size": [
+        12,
+        0.06,
+        2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.04,
+        -4.1
+      ],
+      "size": [
+        12,
+        0.08,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.04,
+        4.1
+      ],
+      "size": [
+        12,
+        0.08,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.045,
+        -4.38
+      ],
+      "size": [
+        12,
+        0.09,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#56865e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.045,
+        4.38
+      ],
+      "size": [
+        12,
+        0.09,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#56865e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.035,
+        -1.8
+      ],
+      "size": [
+        12,
+        0.07,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.035,
+        1.8
+      ],
+      "size": [
+        12,
+        0.07,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.65,
+        0.04,
+        -3.94
+      ],
+      "size": [
+        1.6,
+        0.08,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.65,
+        0.04,
+        -3.94
+      ],
+      "size": [
+        1.6,
+        0.08,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.65,
+        0.04,
+        3.94
+      ],
+      "size": [
+        1.6,
+        0.08,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.65,
+        0.04,
+        3.94
+      ],
+      "size": [
+        1.6,
+        0.08,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.65,
+        0.21,
+        -5
+      ],
+      "size": [
+        0.62,
+        0.3,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.65,
+        0.21,
+        -5
+      ],
+      "size": [
+        0.62,
+        0.3,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.65,
+        0.21,
+        5
+      ],
+      "size": [
+        0.62,
+        0.3,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.65,
+        0.21,
+        5
+      ],
+      "size": [
+        0.62,
+        0.3,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    }
+  ],
+  "checks": [
+    "12 parts reach outside the 12 m room"
+  ]
+}

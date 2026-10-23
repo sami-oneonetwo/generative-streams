@@ -193,7 +193,8 @@ export function createInstancedBoxes(
 }
 
 /** Pure geometry for one generated-blueprint primitive; caller owns the material. */
-export function primitiveGeometry(part: Primitive): THREE.BufferGeometry {
+/** `low`: fewer segments on round shapes, for scenery drawn hundreds of times (design-board pieces). */
+export function primitiveGeometry(part: Primitive, low = false): THREE.BufferGeometry {
   // `size` is uniformly [width, height, depth] across every shape (the
   // shared validator's contract): build each shape at a canonical unit size,
   // then scale the geometry itself so size behaves as a literal bounding box
@@ -204,13 +205,13 @@ export function primitiveGeometry(part: Primitive): THREE.BufferGeometry {
   let geometry: THREE.BufferGeometry;
   switch (part.shape) {
     case 'cylinder':
-      geometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 12);
+      geometry = new THREE.CylinderGeometry(0.5, 0.5, 1, low ? 8 : 12);
       break;
     case 'sphere':
-      geometry = new THREE.SphereGeometry(0.5, 14, 10);
+      geometry = low ? new THREE.SphereGeometry(0.5, 8, 6) : new THREE.SphereGeometry(0.5, 14, 10);
       break;
     case 'cone':
-      geometry = new THREE.ConeGeometry(0.5, 1, 12);
+      geometry = new THREE.ConeGeometry(0.5, 1, low ? 8 : 12);
       break;
     case 'box':
     default:

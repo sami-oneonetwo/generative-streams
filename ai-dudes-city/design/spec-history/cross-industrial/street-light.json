@@ -1,0 +1,392 @@
+{
+  "name": "Brass-Collared Municipal Gas Lamp",
+  "description": "A tall fluted iron post carries a warm four-sided gas lantern with a compact roof, brass collars and a small brass finial.",
+  "notes": "Cast iron, warm lantern glazing, a brass gas burner and a lamplighter’s ladder bar establish late-19th-century municipal gaslighting with a bright, readable silhouette.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        5
+      ],
+      "size": [
+        0.88,
+        0.12,
+        0.88
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a7a397"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.25,
+        5
+      ],
+      "size": [
+        0.56,
+        0.26,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1.98,
+        5
+      ],
+      "size": [
+        0.28,
+        3.24,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.98,
+        5
+      ],
+      "size": [
+        0.35,
+        3.12,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#426061"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        1,
+        5
+      ],
+      "size": [
+        0.38,
+        0.14,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.53,
+        5
+      ],
+      "size": [
+        0.43,
+        0.16,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.24,
+        5
+      ],
+      "size": [
+        0.9,
+        0.1,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        3.64,
+        5
+      ],
+      "size": [
+        0.8,
+        0.12,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.34,
+        4.03,
+        4.66
+      ],
+      "size": [
+        0.08,
+        0.66,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.34,
+        4.03,
+        4.66
+      ],
+      "size": [
+        0.08,
+        0.66,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.34,
+        4.03,
+        5.34
+      ],
+      "size": [
+        0.08,
+        0.66,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.34,
+        4.03,
+        5.34
+      ],
+      "size": [
+        0.08,
+        0.66,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.03,
+        4.67
+      ],
+      "size": [
+        0.55,
+        0.6,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffe7a8",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.03,
+        5.33
+      ],
+      "size": [
+        0.55,
+        0.6,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffe7a8",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.33,
+        4.03,
+        5
+      ],
+      "size": [
+        0.06,
+        0.6,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffe7a8",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.33,
+        4.03,
+        5
+      ],
+      "size": [
+        0.06,
+        0.6,
+        0.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffe7a8",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        3.76,
+        5
+      ],
+      "size": [
+        0.22,
+        0.12,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        4.045,
+        5
+      ],
+      "size": [
+        0.45,
+        0.45,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#ffd58a",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0,
+        4.485,
+        5
+      ],
+      "size": [
+        0.85,
+        0.25,
+        0.85
+      ],
+      "rotation": [
+        0,
+        0.785398,
+        0
+      ],
+      "color": "#30494a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0,
+        4.65,
+        5
+      ],
+      "size": [
+        0.14,
+        0.18,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b8914e"
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "name": "Tall Forked Resin Torch",
+  "description": "A thick crooked stake raises a wide wooden fork, a pale-bound resin bundle and broad golden flames above the walking edge.",
+  "notes": "Dark unpeeled wood contrasts with mud and moss, while exposed pale fork branches and chunky hide lashings identify a hand-tended Stone Age torch.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.13,
+        1.03,
+        5
+      ],
+      "size": [
+        0.44,
+        2,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.08
+      ],
+      "color": "#3b2a22"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.035,
+        2.16,
+        5.02
+      ],
+      "size": [
+        0.42,
+        0.84,
+        0.42
+      ],
+      "rotation": [
+        -0.04,
+        0,
+        0.12
+      ],
+      "color": "#3b2a22"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.27,
+        2.72,
+        5.04
+      ],
+      "size": [
+        0.32,
+        1.05,
+        0.34
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0.48
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.23,
+        2.69,
+        5.02
+      ],
+      "size": [
+        0.34,
+        1,
+        0.32
+      ],
+      "rotation": [
+        -0.06,
+        0,
+        -0.53
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.015,
+        3.03,
+        5.03
+      ],
+      "size": [
+        0.64,
+        0.5,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0.18,
+        -0.07
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.005,
+        2.89,
+        5.03
+      ],
+      "size": [
+        0.69,
+        0.12,
+        0.67
+      ],
+      "rotation": [
+        0,
+        0.18,
+        -0.07
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.025,
+        3.13,
+        5.03
+      ],
+      "size": [
+        0.69,
+        0.12,
+        0.67
+      ],
+      "rotation": [
+        0,
+        0.18,
+        -0.07
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -0.12,
+        3.97,
+        5.06
+      ],
+      "size": [
+        1.105,
+        1.69,
+        0.988
+      ],
+      "rotation": [
+        0.07,
+        0.12,
+        0.16
+      ],
+      "color": "#f07835",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.32,
+        3.87,
+        5.03
+      ],
+      "size": [
+        0.728,
+        1.456,
+        0.741
+      ],
+      "rotation": [
+        -0.08,
+        0.15,
+        -0.23
+      ],
+      "color": "#e9b04c",
+      "glow": true
+    },
+    {
+      "shape": "cone",
+      "position": [
+        0.01,
+        3.82,
+        4.77
+      ],
+      "size": [
+        0.572,
+        1.326,
+        0.546
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        0.06
+      ],
+      "color": "#ffd075",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.025,
+        3.38,
+        4.94
+      ],
+      "size": [
+        0.65,
+        0.4,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ],
+      "color": "#ffd075",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.4,
+        0.2,
+        4.91
+      ],
+      "size": [
+        0.46,
+        0.4,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.22,
+        0.16,
+        4.83
+      ],
+      "size": [
+        0.43,
+        0.32,
+        0.39
+      ],
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "color": "#a7a698"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.04,
+        0.18,
+        5.29
+      ],
+      "size": [
+        0.48,
+        0.36,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.46,
+        0
+      ],
+      "color": "#74796f"
+    }
+  ]
+}

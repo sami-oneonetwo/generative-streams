@@ -1,0 +1,16 @@
+// The /play front door: "Login with Kick", then everything else proxied to the town (the Node
+// server on the streamer's machine, through the ngrok tunnel). Secrets (wrangler secret put):
+// KICK_CLIENT_ID, KICK_CLIENT_SECRET, PLAY_SECRET (the same as PLAY_SECRET in ../.env).
+{
+  "name": "ai-dudes-play",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "account_id": "fdaeae7a45ca8ea1d3bcda1b842a97c9",
+  // Served only on the custom domain; the public *.workers.dev address is off.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "stream-play.kick-product.com", "custom_domain": true }],
+  "vars": {
+    "ORIGIN_URL": "https://multilobular-hastier-paloma.ngrok-free.dev"
+  }
+}

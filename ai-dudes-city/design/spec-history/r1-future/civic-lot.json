@@ -1,0 +1,358 @@
+{
+  "name": "Shared Futures Ground",
+  "description": "Four low ceramic anchors reserve an empty community plot, while a front projector displays four connected households around one shared civic centre.",
+  "notes": "Matte ceramic hardware and a restrained floating shared-node emblem replace the municipal sign without occupying the communal build area.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5.5,
+        0.14,
+        -5.5
+      ],
+      "size": [
+        0.76,
+        0.28,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.5,
+        0.14,
+        -5.5
+      ],
+      "size": [
+        0.76,
+        0.28,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.5,
+        0.14,
+        5.5
+      ],
+      "size": [
+        0.76,
+        0.28,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.5,
+        0.14,
+        5.5
+      ],
+      "size": [
+        0.76,
+        0.28,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.9,
+        0.09,
+        5.1
+      ],
+      "size": [
+        1.12,
+        0.18,
+        0.92
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c1b5dc"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.9,
+        0.28,
+        5.1
+      ],
+      "size": [
+        0.98,
+        0.2,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.9,
+        0.38,
+        5.1
+      ],
+      "size": [
+        0.48,
+        0.08,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.9,
+        1.15,
+        5.1
+      ],
+      "size": [
+        0.32,
+        0.32,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c6d6b3",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.43,
+        1.15,
+        5.1
+      ],
+      "size": [
+        0.24,
+        0.24,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.37,
+        1.15,
+        5.1
+      ],
+      "size": [
+        0.24,
+        0.24,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.9,
+        1.62,
+        5.1
+      ],
+      "size": [
+        0.24,
+        0.24,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.9,
+        0.68,
+        5.1
+      ],
+      "size": [
+        0.24,
+        0.24,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.665,
+        1.15,
+        5.1
+      ],
+      "size": [
+        0.34,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.135,
+        1.15,
+        5.1
+      ],
+      "size": [
+        0.34,
+        0.08,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.9,
+        1.385,
+        5.1
+      ],
+      "size": [
+        0.08,
+        0.34,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.9,
+        0.915,
+        5.1
+      ],
+      "size": [
+        0.08,
+        0.34,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.08,
+        0.04,
+        -5.62
+      ],
+      "size": [
+        0.22,
+        0.08,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#dce0dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.64,
+        0.05,
+        -4.99
+      ],
+      "size": [
+        0.18,
+        0.1,
+        0.28
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#95a7a7"
+    }
+  ]
+}

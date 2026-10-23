@@ -1,0 +1,311 @@
+{
+  "name": "Splayed-Trestle Oak Market Bench",
+  "description": "Two uneven oak seat planks rest on splayed timber trestles, with pale wooden pegs and a small clay cup left at one end.",
+  "notes": "Exposed pegged joinery, an off-centre tilted brace and rough, backless construction give this two-person seat a medieval market-square character.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.39,
+        -0.16
+      ],
+      "size": [
+        2.2,
+        0.12,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.03,
+        0.42,
+        0.16
+      ],
+      "size": [
+        2.14,
+        0.12,
+        0.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a0784c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.76,
+        0.219,
+        -0.14
+      ],
+      "size": [
+        0.12,
+        0.42,
+        0.12
+      ],
+      "rotation": [
+        0.35,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.76,
+        0.219,
+        0.14
+      ],
+      "size": [
+        0.12,
+        0.42,
+        0.12
+      ],
+      "rotation": [
+        -0.35,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.76,
+        0.219,
+        -0.14
+      ],
+      "size": [
+        0.12,
+        0.42,
+        0.12
+      ],
+      "rotation": [
+        0.35,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.76,
+        0.219,
+        0.14
+      ],
+      "size": [
+        0.12,
+        0.42,
+        0.12
+      ],
+      "rotation": [
+        -0.35,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.76,
+        0.345,
+        0
+      ],
+      "size": [
+        0.2,
+        0.12,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#745236"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.76,
+        0.345,
+        0
+      ],
+      "size": [
+        0.2,
+        0.12,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#745236"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.05,
+        0.205,
+        0.05
+      ],
+      "size": [
+        1.68,
+        0.12,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0.06
+      ],
+      "color": "#785237"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.76,
+        0.425,
+        -0.16
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d5b783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.76,
+        0.425,
+        -0.16
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d5b783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.76,
+        0.455,
+        0.16
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d5b783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.76,
+        0.455,
+        0.16
+      ],
+      "size": [
+        0.1,
+        0.06,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d5b783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.94,
+        0.51,
+        0.15
+      ],
+      "size": [
+        0.19,
+        0.06,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#975b3f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.94,
+        0.58,
+        0.15
+      ],
+      "size": [
+        0.24,
+        0.16,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bc8055"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.94,
+        0.631,
+        0.15
+      ],
+      "size": [
+        0.16,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#493326"
+    }
+  ]
+}

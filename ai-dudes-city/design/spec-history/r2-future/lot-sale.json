@@ -1,0 +1,404 @@
+{
+  "name": "Unclaimed Lot with Projected Amber Claim Ring",
+  "description": "A bold floating amber ring rises above a ceramic projector, with a broad ground-level availability band and three reclaimed aggregate chips marking the otherwise empty parcel.",
+  "notes": "The Future replaces a sale board with a saturated, twelve-segment projected symbol and a dark-housed ground guide, keeping the ceramic hardware matte and the entire marker below 3 m.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        4.5,
+        0.25,
+        4.5
+      ],
+      "size": [
+        0.95,
+        0.5,
+        0.95
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        0.52,
+        4.5
+      ],
+      "size": [
+        0.65,
+        0.16,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.5,
+        0.76,
+        4.5
+      ],
+      "size": [
+        0.36,
+        0.32,
+        0.18
+      ],
+      "rotation": [
+        3.141593,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        2.86,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.03,
+        2.718,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.523599
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.418,
+        2.33,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.047198
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.56,
+        1.8,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.570796
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.418,
+        1.27,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.094395
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.03,
+        0.882,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -2.617994
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.74,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        0.882,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        2.617994
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.582,
+        1.27,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        2.094395
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.44,
+        1.8,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.582,
+        2.33,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        1.047198
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.97,
+        2.718,
+        4.5
+      ],
+      "size": [
+        0.6,
+        0.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0.523599
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.075,
+        5.45
+      ],
+      "size": [
+        3,
+        0.15,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.1,
+        5.45
+      ],
+      "size": [
+        2.8,
+        0.15,
+        0.45
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.12,
+        0.1,
+        3.6
+      ],
+      "size": [
+        0.6,
+        0.2,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0.45,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.35,
+        0.075,
+        3.35
+      ],
+      "size": [
+        0.48,
+        0.15,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.55,
+        0
+      ],
+      "color": "#95a7a7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.85,
+        0.09,
+        -2.9
+      ],
+      "size": [
+        0.56,
+        0.18,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0.7,
+        0
+      ],
+      "color": "#95a7a7"
+    }
+  ],
+  "checks": [
+    "2 parts reach outside the 12 m room"
+  ]
+}

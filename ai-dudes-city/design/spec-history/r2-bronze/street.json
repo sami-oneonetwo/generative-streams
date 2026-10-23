@@ -1,0 +1,314 @@
+{
+  "name": "Swept-Earth Cart Street",
+  "description": "Flat compressed wheel tracks cross an ochre-earth street, bordered by irregular swept frontage, scattered reed mats and doorstep stones, and a shallow open clay drain.",
+  "notes": "Asymmetric earth patches interrupt the pale frontage without kerbs, while reed matting, rough limestone and unglazed terracotta establish Bronze Age craft around a clear central walking route.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.01,
+        -0.8
+      ],
+      "size": [
+        12,
+        0.02,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.01,
+        0.8
+      ],
+      "size": [
+        12,
+        0.02,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.05,
+        0.02,
+        4.55
+      ],
+      "size": [
+        5.65,
+        0.04,
+        2.75
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.7,
+        0.02,
+        4.65
+      ],
+      "size": [
+        5.8,
+        0.04,
+        2.55
+      ],
+      "rotation": [
+        0,
+        -0.045,
+        0
+      ],
+      "color": "#b98450"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.8,
+        0.02,
+        -4.65
+      ],
+      "size": [
+        6,
+        0.04,
+        2.55
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#b98450"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.15,
+        0.02,
+        -4.5
+      ],
+      "size": [
+        5.35,
+        0.04,
+        2.8
+      ],
+      "rotation": [
+        0,
+        0.045,
+        0
+      ],
+      "color": "#b17a49"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.3,
+        0.06,
+        5.08
+      ],
+      "size": [
+        1.2,
+        0.04,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ],
+      "color": "#c5aa64"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.35,
+        0.06,
+        5.28
+      ],
+      "size": [
+        1.2,
+        0.04,
+        0.8
+      ],
+      "rotation": [
+        0,
+        -0.19,
+        0
+      ],
+      "color": "#c5aa64"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.9,
+        0.06,
+        -5.17
+      ],
+      "size": [
+        1.2,
+        0.04,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0.09,
+        0
+      ],
+      "color": "#c5aa64"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.05,
+        0.07,
+        5.37
+      ],
+      "size": [
+        1.32,
+        0.1,
+        0.82
+      ],
+      "rotation": [
+        0,
+        -0.27,
+        0
+      ],
+      "color": "#bda575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.65,
+        0.07,
+        4.95
+      ],
+      "size": [
+        1.18,
+        0.06,
+        0.87
+      ],
+      "rotation": [
+        0,
+        0.31,
+        0
+      ],
+      "color": "#c7af7f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.45,
+        0.07,
+        -5.12
+      ],
+      "size": [
+        1.48,
+        0.1,
+        0.94
+      ],
+      "rotation": [
+        0,
+        0.22,
+        0
+      ],
+      "color": "#b49a6c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.45,
+        0.025,
+        -3.82
+      ],
+      "size": [
+        1.65,
+        0.05,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#795239"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.42,
+        0.075,
+        -4.04
+      ],
+      "size": [
+        1.59,
+        0.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#ae7951"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.58,
+        0.075,
+        -3.6
+      ],
+      "size": [
+        1.32,
+        0.1,
+        0.08
+      ],
+      "rotation": [
+        0,
+        -0.03,
+        0
+      ],
+      "color": "#a46d48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.25,
+        0.015,
+        -3.22
+      ],
+      "size": [
+        1.5,
+        0.03,
+        1.2
+      ],
+      "rotation": [
+        0,
+        -0.23,
+        0
+      ],
+      "color": "#327c84"
+    }
+  ],
+  "checks": [
+    "6 parts reach outside the 12 m room"
+  ]
+}

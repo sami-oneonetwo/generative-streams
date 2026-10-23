@@ -8,6 +8,7 @@ import { listenerSchema } from './listener';
 import { ACCESSORIES, ATTACKS, BIT_BURSTS, BIT_PROPS, EMOTES, HATS, USE_HOWS, type BitBurst, type BitProp, type AttackWith, type FieldEffect, type Hat, type DudeLook, type Emote, type FeedItem, type JobKind, type JobStatus, type UseHow } from '../../shared/dudesTypes';
 import type { GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import { NEEDS, VENUE_KINDS, type Needs, type VenueKind } from '../../shared/city';
+import { SCENE_IDS, type SceneId } from '../../shared/scenes';
 
 export const STATE_VERSION = 1;
 
@@ -59,8 +60,19 @@ export const objectSchema: z.ZodType<SafehouseObject> = z.object({
   plot: z.string().max(20).optional(), // the lot it stands on (a home lot, or a community lot for a town project)
   venue: z.enum(VENUE_KINDS).optional(), // what it is for: a home, a café, a club … (city.ts runs the visits)
   civic: z.boolean().optional(), // the town's: a finished community project
+  wonder: z.number().int().min(0).max(5).optional(), // the Wonder of that age, on its own spot in the middle of the square
+  age: z.number().int().min(0).max(5).optional(), // the age it was designed in (shared/ages.ts); absent: the Modern age
+  free: z.boolean().optional(), // made in the theme-free sandbox: in no age, so any age restyles it
   passable: z.boolean().optional(), // never blocks a path or a build (anything that moves about on its own)
   altitude: z.number().min(0).max(40).optional(), // a flying build in the air while someone flies it
+  // Damage (damage.ts): what is left of it, how far it has crumbled, when it came down and was last hit.
+  health: z.number().min(0).max(100_000).optional(),
+  maxHealth: z.number().positive().max(100_000).optional(),
+  damageRevision: z.number().int().min(0).max(100).optional(),
+  destroyedAt: z.number().optional(),
+  hitAt: z.number().optional(),
+  damagedAt: z.number().optional(),
+  guardUntil: z.number().optional(),
   // Goes about town on its own (movers.ts): where it is heading and how; the app's numbers only.
   creature: z
     .object({
@@ -142,7 +154,7 @@ export interface Dude {
   /** Out at a place: walking there, then in it (or at it), then the visit does them good and is paid for. */
   visit?: Visit;
   /** Putting in labour on the town's community project. */
-  labour?: { phase: 'going' | 'working'; at: GroundPoint; until: number };
+  labour?: { phase: 'going' | 'working'; at: GroundPoint; until: number; site?: 'bridge' };
   /** Acting something out that no other action covers (a bit): over to whoever it is about, then the poses. */
   bit?: Bit;
   /** Not before this can they teleport again. */
@@ -155,6 +167,18 @@ export interface Dude {
   badgesOpenUntil?: number;
   /** Manning a weapon build (`use … fire`): the next shot is not before this. */
   nextShotAt?: number;
+  /** Who this character has history with (city.ts `tieWith`), by the other dude's id: a small capped ledger. */
+  ties?: Record<string, Tie>;
+}
+
+/** One side of two characters' history: they came to your places, you went to theirs, gifts, hits, projects built together. */
+export interface Tie {
+  came: number;
+  went: number;
+  gifts: number;
+  hits: number;
+  together: number;
+  at: number;
 }
 
 export interface AttackTask {
@@ -166,6 +190,9 @@ export interface AttackTask {
   bombAt?: GroundPoint;
   fuseUntil?: number;
   giveUpAt: number;
+  /** At a build: blows still to land (one per beat), and not before `nextAt`. */
+  left?: number;
+  nextAt?: number;
 }
 
 export interface UseTask {
@@ -225,6 +252,8 @@ const dudeSchema: z.ZodType<Dude> = z.object({
       bombAt: point.optional(),
       fuseUntil: z.number().optional(),
       giveUpAt: z.number(),
+      left: z.number().int().min(0).max(50).optional(),
+      nextAt: z.number().optional(),
     })
     .optional(),
   riding: z.string().optional(),
@@ -238,13 +267,19 @@ const dudeSchema: z.ZodType<Dude> = z.object({
   plot: z.string().max(20).optional(),
   rentsAt: z.string().max(40).optional(),
   visit: z.lazy(() => visitSchema).optional(),
-  labour: z.object({ phase: z.enum(['going', 'working']), at: point, until: z.number() }).optional(),
+  labour: z.object({ phase: z.enum(['going', 'working']), at: point, until: z.number(), site: z.literal('bridge').optional() }).optional(),
   bit: z.lazy(() => bitSchema).optional(),
   teleportAt: z.number().optional(),
   ledger: z.lazy(() => ledgerSchema).optional(),
   badges: z.array(z.object({ kind: z.string().max(40), at: z.number() })).max(500).optional(),
   badgesOpenUntil: z.number().optional(),
   nextShotAt: z.number().optional(),
+  ties: z
+    .record(
+      z.string().max(80),
+      z.object({ came: z.number().min(0), went: z.number().min(0), gifts: z.number().min(0), hits: z.number().min(0), together: z.number().min(0), at: z.number() }),
+    )
+    .optional(),
 });
 
 /** A build in flight for one dude: designed (in parallel with everyone else's), walked to, put up. */
@@ -252,6 +287,8 @@ export interface Job {
   id: string;
   dudeId: string;
   kind: JobKind;
+  /** A build being remade for the town's new age (the town's own job, dudeId "town"): the age it is for. */
+  restyle?: number;
   /** What the agent asked for, in its words ("a crooked lighthouse with a red stripe"). */
   request: string;
   targetId?: string; // edit/remove: the dude's own build
@@ -278,6 +315,7 @@ export interface Job {
 const jobSchema: z.ZodType<Job> = z.object({
   id: z.string(),
   dudeId: z.string().max(80),
+  restyle: z.number().int().min(0).max(5).optional(),
   kind: z.enum(['build', 'edit', 'remove']),
   request: z.string().max(300),
   targetId: z.string().optional(),
@@ -305,10 +343,24 @@ export interface AiSettings {
   events?: boolean;
   /** The town lives on its own: residents walk about, and characters go out when they need to (city.ts). */
   townLife?: boolean;
+  /** Builds take damage and fall down (damage.ts). Off: shots and stomps only rattle them. */
+  destruction?: boolean;
+  /** The caravan game runs (caravan.ts): travellers, their asks, the age moving on. Off is sandbox: build anything. */
+  caravan?: boolean;
+  /** The age themes apply (shared/ages.ts): builds made and drawn the age's way, period names and clothes. Off is the theme-free sandbox world. */
+  themes?: boolean;
   paused: boolean;
+  /** The rolling budget applies (budget.ts). Off: calls are still counted, never refused. */
   enforced: boolean;
+  /** Legacy one-off allowance counter; no longer gates anything (kept so older saves load). */
   callsRemaining: number;
   callsUsed: number;
+  /** The rolling budget, set from /admin: calls per hour. Absent: the configured defaults. */
+  agentPerHour?: number;
+  designPerHour?: number;
+  /** What the budget has left right now (refilled continuously), and calls per minute over the last hour for the spend readout. */
+  bucket?: { agent: number; design: number; at: number };
+  minutes?: [minute: number, agent: number, design: number][];
 }
 
 export interface DudesState {
@@ -327,7 +379,7 @@ export interface DudesState {
   happening?: Happening;
   nextHappeningAt?: number;
   /** What a troublemaker did to a build, so `use … fix` can put it back: object id → the design before. */
-  vandalised?: Record<string, { by: string; kind: 'painted' | 'squashed' | 'wrecked'; original: z.infer<typeof blueprintSchema> }>;
+  vandalised?: Record<string, { by: string; kind: 'painted' | 'squashed' | 'wrecked' | 'damaged'; original: z.infer<typeof blueprintSchema> }>;
   /** Stolen hats waiting in a pile build: pile object id → owner dude id → the hat. */
   hatPiles?: Record<string, Record<string, { hat: Hat; color: string }>>;
   /** Brief happenings for the page (a kicked build rattles, a shot, a bomb); the last few seconds' worth. */
@@ -390,10 +442,14 @@ export interface Mayor {
   emote?: { pose: Emote; until: number };
   cam: { yaw: number; half: number; x?: number; z?: number };
   follow: boolean;
+  /** The stream camera's third mode: on one person (a chatter's character, a resident, a traveller), by id. */
+  focus?: string;
   /** Hidden: not drawn, not heard; the operator's camera goes on without him. */
   hidden?: boolean;
   /** Aboard a build (riding the donkey, driving the car): its id. */
   riding?: string;
+  /** Carrying a weapon (weapons.ts); not saved. */
+  armed?: import('../../shared/dudesTypes').Weapon;
   /** The stream's sound, as the operator set it (0..1 each). */
   audio?: { music: number; sfx: number };
   /** Doing a build's thing (shooting hoops): where, until when, the next shout; and how high he stands. */
@@ -403,8 +459,29 @@ export interface Mayor {
   moved?: number;
   /** A hat a chatter put on him (a bit), worn until this time. */
   hatGift?: { hat: Hat; color: string; by: string; until: number };
+  /** What the aide changed about how he looks (aide.ts), over the age's own look; `costume: false` takes the age's costume off. */
+  look?: MayorLook;
+  /** What the name tag calls him instead of the age's title ("The Grand Duke"). */
+  title?: string;
+  /** A wish typed to the aide on the operator page, waiting for (or in) its model call; and the aide's last answer. */
+  ask?: { text: string; at: number; sent?: boolean };
+  aide?: { asked: string; reply: string; ok: boolean; at: number };
   lastInputAt: number;
 }
+export const mayorLookSchema = z.object({
+  skin: hex.optional(),
+  shirt: hex.optional(),
+  pants: hex.optional(),
+  hair: hex.optional(),
+  hat: z.enum(HATS).optional(),
+  hatColor: hex.optional(),
+  accessory: z.enum(ACCESSORIES).optional(),
+  accessoryColor: hex.optional(),
+  height: z.number().optional(),
+  build: z.number().optional(),
+  costume: z.boolean().optional(),
+});
+export type MayorLook = z.infer<typeof mayorLookSchema>;
 const mayorSchema: z.ZodType<Mayor> = z.object({
   position: point,
   facing: z.number().finite(),
@@ -414,6 +491,7 @@ const mayorSchema: z.ZodType<Mayor> = z.object({
   emote: z.object({ pose: z.enum(EMOTES), until: z.number() }).optional(),
   cam: z.object({ yaw: z.number().finite(), half: z.number().finite(), x: z.number().finite().optional(), z: z.number().finite().optional() }),
   follow: z.boolean(),
+  focus: z.string().max(80).optional(),
   hidden: z.boolean().optional(),
   riding: z.string().max(40).optional(),
   audio: z.object({ music: z.number().min(0).max(1), sfx: z.number().min(0).max(1) }).optional(),
@@ -421,6 +499,10 @@ const mayorSchema: z.ZodType<Mayor> = z.object({
   y: z.number().min(0).max(10).optional(),
   moved: z.number().int().nonnegative().optional(),
   hatGift: z.object({ hat: z.enum(HATS), color: hex, by: z.string().max(40), until: z.number() }).optional(),
+  look: mayorLookSchema.optional(),
+  title: z.string().max(40).optional(),
+  ask: z.object({ text: z.string().max(400), at: z.number(), sent: z.boolean().optional() }).optional(),
+  aide: z.object({ asked: z.string().max(400), reply: z.string().max(600), ok: z.boolean(), at: z.number() }).optional(),
   lastInputAt: z.number(),
 });
 
@@ -496,6 +578,8 @@ export interface Project {
   createdAt: number;
   /** Ran out of interest: after this it is shelved (coins go back). */
   until: number;
+  /** The caravan's Wonder for this age (proposed by its leader): it alone completes the Wonder ask, and it goes up in the middle of the square. */
+  wonder?: number;
 }
 const projectSchema: z.ZodType<Project> = z.object({
   id: z.string().max(20),
@@ -514,6 +598,7 @@ const projectSchema: z.ZodType<Project> = z.object({
   contributors: z.record(z.string(), z.object({ coins: z.number().int().nonnegative(), secs: z.number().nonnegative() })),
   createdAt: z.number(),
   until: z.number(),
+  wonder: z.number().int().min(0).max(5).optional(),
 });
 
 /** One of the town's own residents: no agent, no chat; they go about, use people's places, and gossip. */
@@ -535,6 +620,13 @@ export interface Townie {
   hidden?: boolean;
   say?: { text: string; until: number };
   emote?: { pose: Emote; until: number };
+  /** One of the age's caravan, in town from their camp (caravan.ts); the leader brings the asks. */
+  traveller?: boolean;
+  leader?: boolean;
+  /** The leader's daughter, who grows up age by age (caravan.ts). */
+  daughter?: boolean;
+  /** Drawn this much bigger or smaller (the daughter is a small child in the Stone Age). */
+  scale?: number;
 }
 const townieSchema: z.ZodType<Townie> = z.object({
   id: z.string().max(20),
@@ -551,6 +643,25 @@ const townieSchema: z.ZodType<Townie> = z.object({
   hidden: z.boolean().optional(),
   say: z.object({ text: z.string().max(LIMITS.say), until: z.number() }).optional(),
   emote: z.object({ pose: z.enum(EMOTES), until: z.number() }).optional(),
+  traveller: z.boolean().optional(),
+  leader: z.boolean().optional(),
+  daughter: z.boolean().optional(),
+  scale: z.number().min(0.3).max(3).optional(),
+});
+const caravanSchema = z.object({
+  age: z.number().int().min(0).max(5),
+  visit: z.number().int().min(0).max(3),
+  openedAt: z.number(),
+  asks: z.array(z.object({ id: z.string().max(20), kind: z.enum(['build', 'serve', 'operate', 'party', 'project', 'bridge']), venues: z.array(z.enum(VENUE_KINDS)).optional(), label: z.string().max(200), need: z.number().int().min(0), have: z.number().int().min(0) })).max(8),
+  travellers: z.array(z.string().max(20)).max(6),
+  trimmed: z.boolean().optional(),
+  nextAt: z.number().optional(),
+  seen: z.array(z.string().max(60)).max(40).optional(),
+  stranded: z.boolean().optional(),
+  helpers: z.array(z.string().max(80)).max(40).optional(),
+  volunteers: z.array(z.object({ id: z.string().max(80), until: z.number(), nudged: z.number().optional() })).max(20).optional(),
+  turn: z.object({ at: z.number(), arriveAt: z.number().optional(), final: z.boolean().optional(), left: z.boolean().optional() }).optional(),
+  revs: z.record(z.string(), z.number()).optional(),
 });
 
 /** A place's takings: visits and coins ever, and the times of recent visits (what is popular right now). */
@@ -579,6 +690,8 @@ export interface Party {
 
 export interface City {
   name: string;
+  /** The street layout it was laid out on (shared/city.ts LAYOUT); absent: the first (5×5 blocks of four 16 m lots). */
+  layout?: number;
   plots: Record<string, PlotClaim>;
   project?: Project;
   /** Finished community projects, oldest first (names), for agents and the history. */
@@ -590,21 +703,57 @@ export interface City {
   party?: Party;
   nextGossipAt?: number;
   nextProjectId: number;
+  /** The age the town lives in (shared/ages.ts): 0 the Stone Age … 5 the Future. Absent on saves from before ages: see `ageOf`. */
+  age?: number;
+  /** The age's caravan across the river and the asks it brought (caravan.ts). */
+  caravan?: import('./caravan').Caravan;
+  /** Builds still to be remade for the town's age, one design at a time when nothing else waits. */
+  restyle?: { age: number; ids: string[] };
   /** The last minute odd-jobs money was paid for. */
   paidMinute?: number;
+  /** The Town Crier's tally of deeds this age and the lines waiting for Kick chat (crier.ts). */
+  crier?: import('./crier').Crier;
+  /** A cutscene playing (shared/scenes.ts, caravan.ts). */
+  scene?: import('./caravan').SceneState;
+  /** The caravan daughter's name, the same through every age (caravan.ts DAUGHTER otherwise). */
+  daughter?: string;
+  /** Each finished age's top three on the Crier's board (names), for the finale's roll call. */
+  heroes?: { age: number; names: string[] }[];
 }
 export const citySchema: z.ZodType<City> = z.object({
+  layout: z.number().int().optional(),
   name: z.string().max(40),
   plots: z.record(z.string(), z.object({ owner: z.string().max(80), coOwners: z.array(z.string().max(80)).max(6), claimedAt: z.number() })),
   project: projectSchema.optional(),
   done: z.array(z.string().max(80)).max(200),
   stats: z.record(z.string(), statsSchema),
-  townies: z.array(townieSchema).max(16),
+  townies: z.array(townieSchema).max(24),
   unmet: z.record(z.string(), z.number().nonnegative()) as unknown as z.ZodType<City['unmet']>,
   party: z.object({ title: z.string().max(80), at: point, placeId: z.string().max(60).optional(), until: z.number(), host: z.string().max(40).optional() }).optional(),
   nextGossipAt: z.number().optional(),
   nextProjectId: z.number().int().nonnegative(),
+  age: z.number().int().min(0).max(5).optional(),
+  caravan: caravanSchema.optional(),
+  restyle: z.object({ age: z.number().int().min(0).max(5), ids: z.array(z.string().max(40)).max(1000) }).optional(),
   paidMinute: z.number().optional(),
+  scene: z.object({ id: z.enum(SCENE_IDS as [SceneId, ...SceneId[]]), at: z.number(), beat: z.number().int().min(0), vars: z.record(z.string(), z.string().max(160)).optional() }).optional(),
+  daughter: z.string().max(40).optional(),
+  heroes: z.array(z.object({ age: z.number().int().min(0).max(5), names: z.array(z.string().max(40)).max(3) })).max(6).optional(),
+  crier: z
+    .object({
+      age: z.number().int().min(0).max(5),
+      tally: z.record(z.string(), z.number().nonnegative()),
+      visit: z.record(z.string(), z.number().nonnegative()),
+      builds: z.array(z.string().max(60)).max(40),
+      leader: z.string().max(80).optional(),
+      leaderAt: z.number().optional(),
+      nudgeAt: z.number().optional(),
+      deedAt: z.number().optional(),
+      spot: z.array(z.string().max(60)).max(8).optional(),
+      spotAt: z.number().optional(),
+      out: z.array(z.string().max(500)).max(6),
+    })
+    .optional(),
 });
 
 export const stateSchema: z.ZodType<DudesState> = z.object({
@@ -618,10 +767,17 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
     idleLife: z.boolean().optional(),
     events: z.boolean().optional(),
     townLife: z.boolean().optional(),
+    destruction: z.boolean().optional(),
+    caravan: z.boolean().optional(),
+    themes: z.boolean().optional(),
     paused: z.boolean(),
     enforced: z.boolean(),
     callsRemaining: z.number().int().nonnegative(),
     callsUsed: z.number().int().nonnegative(),
+    agentPerHour: z.number().int().nonnegative().optional(),
+    designPerHour: z.number().int().nonnegative().optional(),
+    bucket: z.object({ agent: z.number(), design: z.number(), at: z.number() }).optional(),
+    minutes: z.array(z.tuple([z.number(), z.number(), z.number()])).max(120).optional(),
   }),
   worldRevision: z.number().int().nonnegative(),
   nextId: z.number().int().nonnegative(),
@@ -629,7 +785,7 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
     .array(
       z.object({
         id: z.number(),
-        kind: z.enum(['shake', 'shot', 'throw', 'bomb', 'boom', 'ko', 'splash', 'slam', 'coins', 'pop', 'burst']),
+        kind: z.enum(['shake', 'shot', 'throw', 'bomb', 'boom', 'ko', 'splash', 'slam', 'coins', 'pop', 'burst', 'shell', 'hit', 'collapse']),
         at: z.number(),
         objectId: z.string().optional(),
         dudeId: z.string().optional(),
@@ -640,6 +796,8 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
         amount: z.number().optional(),
         label: z.string().max(14).optional(),
         pose: z.string().max(12).optional(),
+        height: z.number().optional(),
+        fromHeight: z.number().optional(),
       }),
     )
     .max(80)
@@ -649,7 +807,7 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
   npcs: z.array(z.lazy(() => npcSchema)).max(6).optional(),
   happening: z.lazy(() => happeningSchema).optional(),
   nextHappeningAt: z.number().optional(),
-  vandalised: z.record(z.string(), z.object({ by: z.string().max(40), kind: z.enum(['painted', 'squashed', 'wrecked']), original: blueprintSchema })).optional(),
+  vandalised: z.record(z.string(), z.object({ by: z.string().max(40), kind: z.enum(['painted', 'squashed', 'wrecked', 'damaged']), original: blueprintSchema })).optional(),
   hatPiles: z.record(z.string(), z.record(z.string(), z.object({ hat: z.enum(HATS), color: hex }))).optional(),
   city: z.lazy(() => citySchema).optional(),
   mayor: z.lazy(() => mayorSchema).optional(),

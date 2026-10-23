@@ -12,9 +12,10 @@ const ICONS: Record<string, string> = {
   project: svg('<path d="M3 13.5l6.5-6.5" stroke="#8a6440" stroke-width="2.2" stroke-linecap="round"/><path d="M7.5 3.5l5 5-2 2-5-5z" fill="#9aa3ad" stroke="#3b3f44" stroke-width=".9"/>'),
   host: svg('<circle cx="8" cy="6" r="4.2" fill="#f2c94c" stroke="#6d5413"/><path d="M5.5 9.5L4 14.5l4-2 4 2-1.5-5" fill="#c94a3a" stroke="#6d2a20" stroke-width=".8"/><circle cx="8" cy="6" r="1.8" fill="#fff3c4"/>'),
   star: svg('<path d="M8 1.5l1.9 4.1 4.4.5-3.3 3 .9 4.4L8 11.3 4.1 13.5l.9-4.4-3.3-3 4.4-.5z" fill="#f2c94c" stroke="#6d5413"/>'),
+  hero: svg('<path d="M8 14C4 12.5 2.2 9.5 2.5 5.5M8 14c4-1.5 5.8-4.5 5.5-8.5" fill="none" stroke="#5f8a3a" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="3.2" cy="7.4" rx="1.1" ry="1.9" fill="#7fb04c" transform="rotate(-25 3.2 7.4)"/><ellipse cx="4.6" cy="10.6" rx="1.1" ry="1.9" fill="#7fb04c" transform="rotate(-50 4.6 10.6)"/><ellipse cx="12.8" cy="7.4" rx="1.1" ry="1.9" fill="#7fb04c" transform="rotate(25 12.8 7.4)"/><ellipse cx="11.4" cy="10.6" rx="1.1" ry="1.9" fill="#7fb04c" transform="rotate(50 11.4 10.6)"/><circle cx="8" cy="5" r="2.3" fill="#f2c94c" stroke="#6d5413" stroke-width=".8"/>'),
   other: svg('<circle cx="8" cy="8" r="5.5" fill="#c9b37a" stroke="#5d4c22"/>'),
 };
-export const iconOf = (kind: string) => ICONS[kind] ?? (kind.startsWith('arrived') ? ICONS.star : kind.startsWith('boss:') ? ICONS['boss:moss-troll'] : ICONS.other);
+export const iconOf = (kind: string) => ICONS[kind] ?? (kind.startsWith('arrived') ? ICONS.star : kind.startsWith('hero:') ? ICONS.hero : kind.startsWith('boss:') ? ICONS['boss:moss-troll'] : ICONS.other);
 
 /** Shown at most this many kinds unless opened; beyond that, the newest few and a count. */
 const COLLAPSE_AT = 4,

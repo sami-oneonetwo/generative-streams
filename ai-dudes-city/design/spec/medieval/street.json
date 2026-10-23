@@ -1,0 +1,390 @@
+{
+  "name": "Rutted Mud-Jointed Market Lane",
+  "description": "Joined muddy wheel ruts cross warm, irregular cobbles, with shallow pooled gutters and ragged earth margins spilling into grass without kerbs or stepping-slab edging.",
+  "notes": "Render the underlying road as irregular rounded cobbles in mixed #918574, #a5997b and #746e60 over broad visible #594733 mud joints, thinning into the ruts and grassy margins rather than using uniform grey paving; these twenty low parts provide continuous wear, replacement stones and broken drainage hollows without a raised walking edge.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -2.25,
+        0.035,
+        -1.15
+      ],
+      "size": [
+        7.4,
+        0.07,
+        0.88
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#66513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.3,
+        0.035,
+        -1.22
+      ],
+      "size": [
+        7.3,
+        0.07,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        0
+      ],
+      "color": "#66513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.35,
+        0.035,
+        1.12
+      ],
+      "size": [
+        7.2,
+        0.07,
+        0.7
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#70583f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.25,
+        0.035,
+        1.24
+      ],
+      "size": [
+        7.4,
+        0.07,
+        0.98
+      ],
+      "rotation": [
+        0,
+        0.02,
+        0
+      ],
+      "color": "#70583f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.5,
+        0.03,
+        -3.94
+      ],
+      "size": [
+        4.5,
+        0.06,
+        1.2
+      ],
+      "rotation": [
+        0,
+        -0.09,
+        0
+      ],
+      "color": "#786044"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.8,
+        0.03,
+        -4.04
+      ],
+      "size": [
+        5.3,
+        0.06,
+        0.96
+      ],
+      "rotation": [
+        0,
+        0.07,
+        0
+      ],
+      "color": "#80694b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.7,
+        0.03,
+        4.03
+      ],
+      "size": [
+        5.8,
+        0.06,
+        1.28
+      ],
+      "rotation": [
+        0,
+        0.085,
+        0
+      ],
+      "color": "#80694b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.55,
+        0.03,
+        3.88
+      ],
+      "size": [
+        4.4,
+        0.06,
+        1.08
+      ],
+      "rotation": [
+        0,
+        -0.12,
+        0
+      ],
+      "color": "#786044"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.45,
+        0.065,
+        -1.57
+      ],
+      "size": [
+        0.74,
+        0.13,
+        0.53
+      ],
+      "rotation": [
+        0,
+        0.38,
+        0
+      ],
+      "color": "#a5997b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.87,
+        0.055,
+        -1.48
+      ],
+      "size": [
+        0.52,
+        0.11,
+        0.44
+      ],
+      "rotation": [
+        0,
+        -0.23,
+        0
+      ],
+      "color": "#847a66"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.86,
+        0.06,
+        1.66
+      ],
+      "size": [
+        0.64,
+        0.12,
+        0.48
+      ],
+      "rotation": [
+        0,
+        -0.46,
+        0
+      ],
+      "color": "#918574"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.39,
+        0.05,
+        1.61
+      ],
+      "size": [
+        0.43,
+        0.1,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0.31,
+        0
+      ],
+      "color": "#ab9a79"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.54,
+        0.055,
+        3.99
+      ],
+      "size": [
+        0.69,
+        0.11,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0.58,
+        0
+      ],
+      "color": "#8e826c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.84,
+        0.055,
+        -3.96
+      ],
+      "size": [
+        0.59,
+        0.11,
+        0.76
+      ],
+      "rotation": [
+        0,
+        -0.34,
+        0
+      ],
+      "color": "#9c9076"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.22,
+        0.075,
+        1.26
+      ],
+      "size": [
+        2.9,
+        0.06,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#56594b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.56,
+        0.065,
+        -3.98
+      ],
+      "size": [
+        2.85,
+        0.06,
+        0.4
+      ],
+      "rotation": [
+        0,
+        -0.09,
+        0
+      ],
+      "color": "#56594b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.12,
+        0.23,
+        5.05
+      ],
+      "size": [
+        0.78,
+        0.46,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0.34,
+        0
+      ],
+      "color": "#817761"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.93,
+        0.26,
+        -5.16
+      ],
+      "size": [
+        0.85,
+        0.52,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.46,
+        0
+      ],
+      "color": "#91836b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.38,
+        0.04,
+        -1.2
+      ],
+      "size": [
+        2.7,
+        0.08,
+        0.64
+      ],
+      "rotation": [
+        0,
+        -0.02,
+        0
+      ],
+      "color": "#66513b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.26,
+        0.04,
+        1.19
+      ],
+      "size": [
+        2.8,
+        0.08,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0.035,
+        0
+      ],
+      "color": "#70583f"
+    }
+  ],
+  "checks": [
+    "2 parts reach outside the 12 m room"
+  ]
+}

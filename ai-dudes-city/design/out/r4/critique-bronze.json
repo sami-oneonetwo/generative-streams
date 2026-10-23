@@ -1,0 +1,210 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The buildings, barter setting and animal-drawn transport establish a convincing Bronze Age town rather than a recoloured modern one. The vegetation, repetitive road dressing, crossing connections and several civic silhouettes need revision before the complete set meets the bible and reads reliably on stream.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The rectangular pads beneath some stubble clusters read as little manufactured tiles rather than countryside.",
+        "Grass and barley silhouettes are too weak to distinguish from scattered debris at stream distance."
+      ],
+      "fix": "Within the 14-part budget, remove rectangular cluster bases and group unequal stalks directly into the ground. Keep the sparse distribution and low height, but distinguish straw-coloured stubble, dry grass, limestone and terracotta through broader silhouettes."
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The wheel ruts read as rigid strips laid onto the road rather than shallow compressed impressions.",
+        "Identical round patches and straight tracks repeat conspicuously across the assembled scene."
+      ],
+      "fix": "Keep the 8 m ochre-earth road and flush frontage. Rework the 16 dressing parts into interrupted, shallow ruts, irregular compressed routes, inset stone patches and flatter organic puddles; vary their positions between modules while leaving the central walking route clear."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the pale clay ring, visibly open centre and forked timber support. Preserve its strong contrast and keep the parcel interior empty."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The long, regular boundary sections read more like rail fencing than short woven panels on imperfect mudbrick courses.",
+        "No readable gameplay name is anchored to the gate tablet; the sheet caption does not fulfil that requirement."
+      ],
+      "fix": "Rebuild the 28-part boundary with staggered mudbrick footing and broad reed or wattle infill, keeping it 0.7–0.95 m high and the frontage open. Make the cord-hung clay tablet and filled household seal explicit, retain the #d9534f post band, and anchor the exact player name 'Ivy' to the tablet as a gameplay label."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The fig remains a narrow trunk topped with a few rounded blobs rather than a broad, leaning crown.",
+        "The palm fronds resemble stiff radial boards, and the watering basins are not clearly expressed as earth depressions."
+      ],
+      "fix": "Redistribute the 26 parts into an offset fig crown supported by visible asymmetric branches and a younger palm with unequal, bent fronds. Replace the small collar-like bases with shallow irregular earthen watering basins."
+    },
+    {
+      "id": "wild-tree",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The tamarisk reads as a bundle of upright spears with matching hanging tips, not an irregular tree.",
+        "The carob has a stacked, pancake-like canopy on a central stump.",
+        "The thorn bush is too fragmentary to establish a useful silhouette."
+      ],
+      "fix": "Use the 34 parts for unequal branching and clustered foliage: a tall, broken-outline tamarisk, a low-forked carob with a broad off-centre crown, and a compact thorn bush with a few projecting branches. Avoid repeated terminal shapes and evenly spaced limbs."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the ceramic bowl, timber fork and short masonry pedestal. Keep glow restricted to the flame and place these at attended civic corners rather than as a uniform street-light network."
+    },
+    {
+      "id": "centrepiece",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The continuous raised octagonal perimeter makes the court resemble an enclosed ornamental basin.",
+        "There is no clear walk-in opening to the communal well and its collection basins."
+      ],
+      "fix": "Keep the limestone wellhead, rope beam, bucket and restrained sun emblem, but open the perimeter on two sides or bring it flush with the court. Within 38 parts, arrange four jars and shallow collection basins around an obvious accessible working space about 4.5 m across."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad pale slab, two low supports and thin sitting mat. Preserve the approximately 0.45 m seat height and two-person capacity."
+    },
+    {
+      "id": "market",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The roof reads as several broad wooden panels rather than a sloping reed mat.",
+        "The smooth rectangular display front looks like a timber counter; its mudbrick construction is unclear."
+      ],
+      "fix": "Within 28 parts and the existing footprint, give the roof bundled reed edges, a slight sag and visible fibre ties on forked uprights. Break the display ledge into a few irregular mudbrick courses while preserving the readable jars, baskets, textiles and bronze goods."
+    },
+    {
+      "id": "arrival",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the ground-level tether point, shade and wheel emblem, with the horse and two-wheeled rig aligned along the road. Preserve the compact overall length and avoid adding a raised platform or modern harness hardware."
+    },
+    {
+      "id": "river",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The visible bridge ends sit on pads at the water rather than demonstrating continuous connections to true bank landings.",
+        "Several short corbelled openings are not clearly legible beneath the deck.",
+        "The near terminal lip appears to close across the walking route."
+      ],
+      "fix": "Rebuild the 54-part crossing with distinct squat piers and stepped corbels that leave visible water openings. Keep the deck 4 m wide and about 1 m above water, open both ends, and show walkable bank connections at z ±7 in the continuation tiles rather than terminating within the central river tile."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the four low corner markers and clear project interior. Keep the front communal medallion distinct from the free-lot ring, with its four impressions and central bowl readable from above."
+    },
+    {
+      "id": "camp",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The barge awnings read as broad plank roofs rather than reed coverings.",
+        "The narrow turquoise pads beneath the boats make the mooring read as an isolated display rather than part of a continuous far riverbank.",
+        "Hull profiles and separate cargo loads are weak at stream distance."
+      ],
+      "fix": "Stage both barges against one continuous river continuation, with clear hull waterlines and visible shore moorings. Within 80 parts, give the awnings bundled reed edges and lashings, distinguish the shallow hull ends, and separate jar, sack and textile cargo into bold clusters around the shore shelter."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The field tender's thick rectangular tool head reads as a mallet rather than a bronze-bladed hoe."
+      ],
+      "fix": "Within the 46-part pair, reshape the tool head into a broad, thin bronze blade angled across the wooden shaft. Offset it from the headcloth so the hoe silhouette remains visible from above; retain the layered clothing and pottery carrier."
+    },
+    {
+      "id": "head",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both sun emblems read as toothed cogwheels rather than simple hammered-bronze discs.",
+        "The oversized chest emblem obscures the mantle, weakening the required ochre-and-turquoise woven costume."
+      ],
+      "fix": "Within 40 parts, replace the gear-like outlines with simple faceted bronze discs carrying restrained radial impressions. Reduce the chest disc enough to expose broad ochre and turquoise mantle panels, strengthen the overlapping headcloth wraps, and retain the tall wooden staff as the primary office silhouette."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the striped mantle, wrapped headcloth, lapis-coloured collar and balance. Keep the balance subordinate to the figure and preserve clear separation between its suspended pans."
+    },
+    {
+      "id": "home",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the mudbrick masses, accessible roof, deep openings, reed shade and domestic pottery. Use this restrained material hierarchy as the reference for the smaller civic assets."
+    },
+    {
+      "id": "cafe",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the shaded food court, pottery service and simple mudbrick enclosure. Preserve the open gathering space and avoid introducing modern counters, printed menus or café furniture."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped mudbrick lodging-and-storehouse interpretation, exterior stairs and shaded terraces. Keep the openings small and the upper masses subordinate to the substantial base."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact hound silhouette and contrasting muzzle and feet. Preserve its believable scale beside the residents and avoid modern pet accessories."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the donkey-drawn two-wheel cart, wooden construction and pottery load. Keep the shafts and leather harness visually separate from the animal, without introducing an industrial chassis."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Repeated circular road patches and uninterrupted straight rut strips expose the modular construction immediately.",
+        "The large uniform flagstone field overwhelms the civic objects and makes the distinction between square, frontage and ordinary parcel surfaces unclear."
+      ],
+      "fix": "Vary road dressing across adjacent modules and soften their joins. Keep flagstone within the defined civic square, explicitly preserve the flush swept-earth street edge, and retain earth surfaces for ordinary parcels so the assembled corner reads as a mudbrick river town rather than a broad paved plaza."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

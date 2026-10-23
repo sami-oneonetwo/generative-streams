@@ -1,0 +1,333 @@
+{
+  "elements": [
+    {
+      "id": "street",
+      "problems": [
+        "Road panels, pavement and guidance seams merge into a pale field in the assembled scene.",
+        "Long pale edge strips read as raised rails rather than clearly flush guidance; the planted drainage separation is difficult to identify.",
+        "Road panel #d7e1e8 is nearly the same value as the ivory pavement; in the vignette the street merges with the square into one pale slab",
+        "Cyan guidance seams are 0.06–0.08 m and basically invisible",
+        "Dark navy rectangles along the kerb read as drains or potholes; the lone lilac and grey square 'repair panels' look like random stains",
+        "4 parts reach outside the 12 m room",
+        "The road (#d7e1e8) and pavement (#f1e9e5) are almost the same lightness, so the road edge only shows as a faint tile pattern",
+        "The cyan guide seams are hair-thin and read as faint scratches; the glow does nothing on the pale ground",
+        "The only marks that read are small dark navy drain slots, which look like random dashes",
+        "There is no visible kerb line",
+        "4 parts reach outside the 12 m room",
+        "World rule: Contrast: road #d7e1e8, pavement #f1e9e5, square #ece6fa and claimed lot #e9e2da are all near-white, so in the street-corner scene the whole town reads as one bleached slab on stream. Set the road to a mid slate ceramic (around #9fb1c2), keep the pavement ivory, push the square to a stronger lilac (#d6cbef) and require guidance seams of at least 0.2 m.",
+        "World rule: Surfaces: road #d7e1e8, pavement #f1e9e5, square #ece6fa, lotRough #bac2ca and lotClaimed #e9e2da are all near the same lightness, so the town is one white sheet on stream. Make the road a clearly darker mid-tone (e.g. #8e9cad with #2fd8c4 seams), keep the pavement light, give the square a distinct warm stone (#e6d8c4), and give the rough lot an earthier ground (#b7a98c) so lots, street and square separate at a glance."
+      ],
+      "fix": "Separate cool ceramic roadway from warmer matte pavement through stronger value contrast. Recess cyan guidance into the road, retain only the shallow 0.08 m kerb, and make the narrow planted drainage seam visibly green without introducing raised obstacles inside the 8 m carriageway. / Recolour the road panels mid slate ceramic (#9fb1c2) with visible 0.04 m-deep panel seams every 2 m. Widen the cyan glow guide seams to 0.2 m: continuous at both lane edges, dashed 1.5 m on the centreline. Replace the two odd square patches with a consistent row of hex inset modules, or remove them. Shorten the navy slots to 0.6 m and recolour them #36495e at kerb-face height so they read as inlets. Keep everything within ±6 m. / Lay a continuous 0.2 m-wide dark kerb strip (#36495e top, 0.08 m high) along z ±4. Thicken the guide seams to 0.25 m wide in saturated #2fd8c4 and run them as two continuous lane lines at z ±1.8, not short broken dashes. Make the drain slots longer (1.6 m) and pair each with a pale edge node. Keep every part within |x| ≤ 6. The road surface itself needs to be darker; see bibleChanges."
+    },
+    {
+      "id": "lot-claimed",
+      "problems": [
+        "The boundary reads as ordinary thin horizontal fencing rather than woven biocomposite between rounded ceramic posts.",
+        "Owner identity collapses to a red speck; neither the household emblem nor the exact name Ivy is readable.",
+        "Owner marker is a tiny 0.24×0.42 m red block, and the floating 'IVY' name is built from 0.06 m strokes. Both are invisible in the cell and in the vignette",
+        "Rails are flat tan planks on round posts and read as an ordinary modern wooden guard fence, not woven biocomposite",
+        "12 parts reach outside the 13 m room",
+        "The owner marker is a tiny red speck at the front-left corner; the red insert is barely visible",
+        "The name tag is drawn with 0.06–0.07 m glowing strokes about 0.2 m tall, so nobody can read the name on stream",
+        "The rails are thin tan lines on pale tiles and read like a drawn line, not a fence",
+        "12 parts reach outside the 13 m room (tag at z 6.14 plus rail ends)",
+        "World rule: Contrast: road #d7e1e8, pavement #f1e9e5, square #ece6fa and claimed lot #e9e2da are all near-white, so in the street-corner scene the whole town reads as one bleached slab on stream. Set the road to a mid slate ceramic (around #9fb1c2), keep the pavement ivory, push the square to a stronger lilac (#d6cbef) and require guidance seams of at least 0.2 m.",
+        "World rule: Glow visibility: in daylight, glow parts thinner than about 0.15 m vanish (street-light emitter, owner tag, centrepiece arcs). Add a rule that every glow element is at least 0.15 m thick/wide and visible from the 40° overhead camera, not facing away or tucked underneath.",
+        "World rule: Glow rule: in this bright daylight, pale glow colours (#66f2df, #b7fff0, #bcefe8) on ivory read as nothing. Require every emitter to sit in a dark #36495e housing or backing at least 0.1 m larger all round, set a minimum glow-part thickness of 0.15 m, and use saturated glow tones (#2fd8c4, #f29b1e).",
+        "World rule: Owner tag: set a minimum letter height of 0.3 m on a dark backing panel so the player name is legible on stream."
+      ],
+      "fix": "Use broad, open woven rail modules between visibly rounded posts at approximately 0.75 m height, retaining the open front. Enlarge the solid #d9534f insert on the front-corner post and place a compact, legible projected household tag reading Ivy immediately beside it. / Make the owner post 1.1 m tall with a full-height 0.3 m-wide #d9534f insert band. Float a 1.4 × 0.5 m tag plate at 1.5 m directly above the post, with a filled house emblem and name strokes ≥ 0.12 m thick (glow). Replace each plank pair with two twisted/crossed rounded cylinders (#bca783 and #c6b698) forming an open lattice. Give the posts rounded dome caps, and pull every part inside ±6.4 m. / Make the owner post 0.35 × 1.1 × 0.35 m with a full-height #d9534f stripe 0.25 m wide on its street (+z) face and a red cap. Above it, at about 1.6 m and hugging the post, mount a 1.2 × 0.45 m dark #36495e tag panel with the name in glowing letters at least 0.3 m tall. Thicken the rails to 0.14 m and darken them to #8a7650, and make the posts 0.22 m with dark caps. Pull every part inside |x|,|z| ≤ 6.4."
+    },
+    {
+      "id": "street-tree",
+      "problems": [
+        "Both crowns rely on similarly sized rounded blobs, producing a managed topiary appearance.",
+        "The tall tree's tilted structure and the flowering tree's long lateral branch are insufficiently expressed.",
+        "Crowns are stacked sphere-puffs on near-straight trunks, very close to today's generic lollipop street tree",
+        "The flowering tree shows almost no blossom, and its 'long lateral branch' is not visible",
+        "Root-monitor collars are tiny cyan discs, lost under the shadow",
+        "Both crowns are tight clusters of spheres balanced on a thin trunk, which reads as lollipops and mushrooms rather than a broad shade tree and a flowering tree",
+        "The small tree has no visible blossom, so 'flowering' does not read",
+        "The foliage is pale mint and blends into the pale meadow beyond the pavement",
+        "The tilt is barely noticeable"
+      ],
+      "fix": "Rebuild the tall tree around a visibly leaning trunk with unequal branching and a broad, uneven crown. Give the smaller tree one clearly extended lateral bough and clustered blossoms, varying foliage mass sizes while keeping both collars clear of the walking route. / Tall tree: tilt the trunk 10°, make the crown a broad flat asymmetric canopy (3.5 m wide, offset 0.8 m to the road side) from 5–6 overlapping flattened spheres. Flowering tree: add one 1.5 m lateral branch (box rotated 50°) carrying its own crown clump, and dot 8–10 pink/white blossom spheres (0.25 m) over both clumps. Make the collar a visible 0.9 m ivory ring, 0.15 m tall, with one 0.12 m cyan glow pip. / Shade tree: 0.35 m trunk tilted 10–12° toward the road, a second limb off to one side, and a crown of 3 off-centre masses spread about 4 m wide and only 2.2 m deep, in #4f8a5b and #2f6b4f. Flowering tree: one long lateral branch 2 m out to +x carrying 5–6 blossom clusters in #e79ab8 and #f4c6d6 over darker leaves. Make the root collars dark #36495e rings 0.9 m wide so the bases read."
+    },
+    {
+      "id": "wild-tree",
+      "problems": [
+        "The pine reads as stacked cones and the oak as a compact ball cluster.",
+        "The young willow reads as another rounded shrub rather than a distinct drooping species.",
+        "The pine is a regular stack of centred cones, still fairly symmetrical",
+        "The 'young willow shrub' reads as a mushroom or broccoli blob, with no drooping willow form",
+        "Root monitors are not visible",
+        "The oak is a symmetrical broccoli head of spheres on a straight trunk",
+        "The 'young willow' is a pale mint blob of spheres with no drooping form, so it reads as a bush or a cloud",
+        "The pine is decent, but the foliage is pale and low-contrast against the meadow"
+      ],
+      "fix": "Use a bent pine trunk with unequal wind-swept branch shelves, a forked oak with offset canopy masses and open gaps, and a low willow with long descending branch clusters. Allocate the existing parts to structural irregularity rather than repeated foliage primitives. / Pine: lean the trunk 8°, offset each cone tier sideways, make the windward side thinner and add one bare dead branch. Willow: short trunk, with 8–10 slim pendulous cones/boxes hanging down around a domed top (strands reaching 0.3 m off the ground) in #6d9c8a/#c6d6b3. Add one visible 0.3 m ivory root-monitor cap with a cyan pip at the oak's base. / Pine: lean it about 8°, use 4 uneven cone tiers with one bare side, in #2f5e4a. Oak: wider than it is tall (5 m wide, 6 m tall), a thick split trunk with 2 limbs, 3–4 crown masses at different heights in #4f7d4a. Willow: a short trunk with 8–10 hanging strand boxes (0.15 × 1.5 m, tilted outward) in #8fb36a, down to 0.4 m above the ground."
+    },
+    {
+      "id": "street-light",
+      "problems": [
+        "The segmented white shaft reads as a generic post rather than a tapered civic light.",
+        "The emitter and directional cap disappear against the pale street in the assembled view.",
+        "Reads as a stacked white bollard or pedestal, not a street light",
+        "The 0.4 × 0.48 m emitter faces the road and cannot be seen from the 40° camera, so no light is visible at all",
+        "Same colour as the pavement, so it nearly vanishes in the vignette",
+        "A plain ivory pillar on pale paving with no dark accents; it nearly vanishes, and its shadow is the most visible thing about it",
+        "The only glow part (0.4 × 0.48 m) sits on the -z face, away from the camera, so no light is visible in the cell or the vignette",
+        "At 3.7 m it does not read as a street light; it looks like a bollard or totem",
+        "World rule: Glow visibility: in daylight, glow parts thinner than about 0.15 m vanish (street-light emitter, owner tag, centrepiece arcs). Add a rule that every glow element is at least 0.15 m thick/wide and visible from the 40° overhead camera, not facing away or tucked underneath.",
+        "World rule: Glow rule: in this bright daylight, pale glow colours (#66f2df, #b7fff0, #bcefe8) on ivory read as nothing. Require every emitter to sit in a dark #36495e housing or backing at least 0.1 m larger all round, set a minimum glow-part thickness of 0.15 m, and use saturated glow tones (#2fd8c4, #f29b1e).",
+        "World rule: Emitters must face the camera (+z, +x or up). The street light's emitter on the -z face is invisible from the board and game camera."
+      ],
+      "fix": "Give the pillar a clear taper, a dark recessed emitter pocket and a short directional cap. Make the cyan-white emitting face broad enough to identify from the overhead camera, while keeping the pillar and cap matte. / Make it a 4.5 m tapered pillar (0.5 m base to 0.25 m top) with a 1.4 m-wide horizontal light blade or halo ring cantilevered 0.6 m out over the walk at 4.2 m. Its glowing cyan-white underside and top edge (≥ 0.15 m thick) must be visible from above. Add a slim #36495e seam down the pillar so it separates from the pavement, and keep the pillar matte. / Raise it to 4.5 m. Wrap the emitter so it shows on the +z and +x faces (or use a 0.6 m glowing ring band near the top) in #66f2df, set into a dark #36495e housing 0.12 m larger all round. Add a 1.2 m-wide ivory canopy disc at the top with a glowing underside disc. Add two dark #36495e bands on the shaft and a dark base plinth so the silhouette separates from the pavement."
+    },
+    {
+      "id": "centrepiece",
+      "problems": [
+        "The seed emblem and orbit arcs are too pale and delicate to remain the square's focal point at stream distance.",
+        "The physical assembly reads more strongly as a small mechanical platform than as four ceramic emitter petals supporting a shared-growth symbol.",
+        "From stream distance it is a flat round basin with four spouts and a dark central disc: the fountain silhouette recoloured",
+        "Most of its visual mass sits under 0.6 m; the 'seed' emblem and orbit arcs are thin and faint, barely visible over the tiles",
+        "It does not command the square the way a centrepiece should",
+        "About 4.5 m across but only 2.46 m tall; on the 10 m square it reads as a white plate, and in the vignette as a small disc",
+        "24 glow parts, but they are 0.07–0.1 m sticks and thin pale arcs that wash out to nearly nothing; the 'seed emblem' does not read, and a dark navy disc is the strongest mark",
+        "The dais and petals are the same ivory and lavender as the paving",
+        "World rule: Contrast: road #d7e1e8, pavement #f1e9e5, square #ece6fa and claimed lot #e9e2da are all near-white, so in the street-corner scene the whole town reads as one bleached slab on stream. Set the road to a mid slate ceramic (around #9fb1c2), keep the pavement ivory, push the square to a stronger lilac (#d6cbef) and require guidance seams of at least 0.2 m.",
+        "World rule: Glow visibility: in daylight, glow parts thinner than about 0.15 m vanish (street-light emitter, owner tag, centrepiece arcs). Add a rule that every glow element is at least 0.15 m thick/wide and visible from the 40° overhead camera, not facing away or tucked underneath.",
+        "World rule: Centrepiece: require 3–4 m of vertical presence with the emblem floating at 2.5 m or higher, and explicitly forbid a round basin or pool reading so it cannot fall back into a recoloured fountain. The current rule caps the image at about 2.5 m, and the result reads flat.",
+        "World rule: Glow rule: in this bright daylight, pale glow colours (#66f2df, #b7fff0, #bcefe8) on ivory read as nothing. Require every emitter to sit in a dark #36495e housing or backing at least 0.1 m larger all round, set a minimum glow-part thickness of 0.15 m, and use saturated glow tones (#2fd8c4, #f29b1e).",
+        "World rule: Centrepiece height cap 'under about 2.5 m' is too small to anchor the square on stream; allow 4–5 m with a solid emblem at least 1 m across."
+      ],
+      "fix": "Consolidate the hologram into one bold faceted seed with a readable translucent cyan silhouette and a few short, thicker orbit arcs. Clearly separate four matte petals around the low 4.5 m dais, keeping the complete beacon below approximately 2.5 m and preserving views through it. / Remove the dark #36495e central pool disc and anything basin-like. Raise the four petals into 1.6 m ivory blades curving outward (rotated 20° away from the centre). Float a 1.2 m faceted seed (two rotated boxes or an octahedron) at 2.6 m, in mint/cyan glow. Add a 0.6 m-wide translucent light column from the dais to the seed, and 2–3 orbit arcs 0.12 m thick at 3 m. Total height 3.5–4 m. / Raise the beacon to about 4.5 m. Float a solid faceted seed emblem 1.2 m tall at 3 m (two stacked cones or an octahedron), saturated #2fd8c4 with an amber #efbd66 core. Make the 4 petals 1.4 m tall and angled outward, with dark #36495e inner faces and glowing slots. Make the orbit arcs 0.18 m thick and 2.4 m across, in 2 tilted rings. Edge the dais with a dark #8c80b4 band 0.25 m high."
+    },
+    {
+      "id": "bench",
+      "problems": [
+        "The silhouette is essentially a contemporary beige bench.",
+        "The docking puck, levitation gap and lift-status strip do not communicate the Future transformation.",
+        "Reads as an ordinary tan wooden park bench or sofa resting on the tiles",
+        "The hover gap, docking puck and glowing lift strip are all hidden under the seat; nothing future is visible from above",
+        "The seat slab and back are separate boxes, like a stock bench",
+        "Reads as a plain tan park bench. The hover idea is invisible: there is no visible gap, and the docking puck and lift-strip glow do not show",
+        "The single colour block has no end caps or detail and looks blobby"
+      ],
+      "fix": "Shape the seat and low back as one warm biocomposite shell, remove conventional-looking supports, and reveal a discreet recessed docking puck beneath it. Establish a small shadowed levitation gap and one narrow status strip while keeping the sitting surface at approximately 0.45 m. / Make the shell one continuous curved form: seat and back flowing together, rounded ends, tan #bca783 top and ivory #f1e9e5 underside. Show a clear 0.15 m gap. Widen the docking puck to 1.6 × 0.8 m so it sticks out past the seat footprint, with a 0.1 m cyan glow ring around its edge visible from above. Move the status strip to the top front lip of the seat. / Lift the shell to leave a clear 0.15 m gap above a dark #36495e docking puck 1.0 m wide. Put a 0.12 m-wide glowing #66f2df ring on the puck's rim. Add ivory end caps and a thin dark seam between seat and back so the form reads as two pieces."
+    },
+    {
+      "id": "arrival",
+      "problems": [
+        "The vehicle reads as a present-day boxy minibus with futuristic fittings rather than a hover shuttle.",
+        "Its lift system is not clearly identifiable, and the shelter retains the silhouette of an ordinary bus stop.",
+        "The shuttle reads as a camper van or minibus: boxy upper body, round 'headlight' ends, red tail lights",
+        "The 0.66 m dark #36495e corner cylinders read as black wheels, and the 4.4 m dark undercarriage box makes it sit on the road; the bible forbids wheel-based bodies",
+        "The shelter is a standard modern bus shelter: flat roof, rectangular ad-style panel, plain bench",
+        "11 parts reach outside the 12 m room",
+        "The shuttle reads as a white van or RV on dark wheels. The lift units look like tyres, and there is no hover gap",
+        "The white shuttle and white shelter both sit on a pale road and pavement",
+        "11 parts reach outside the 12 m room",
+        "World rule: Add a vehicles rule covering car and shuttle: no wheels or wheel-like corner cylinders, no bumpers, grilles, paired headlamps or tail-light boxes, a visible clear hover gap of at least 0.3 m, glowing lift pads, and rounded capsule/teardrop bodies.",
+        "World rule: Vehicles (shuttle, car, rover): ban wheel-like corner cylinders and require a visible 0.3–0.4 m hover gap with glowing lift pads. The builder prompt should get this rule too, since the car example came out as a wheeled jeep."
+      ],
+      "fix": "Rebuild the roughly 5 m vehicle as a rounded ceramic passenger capsule with dark continuous glazing, a strong door seam and four recessed downward-facing lift units. Retain a thin physical shelter, but integrate a flush boarding marker, compact arrival glyph and pavement-level door threshold into one coherent stop. / Delete the dark undercarriage box. Raise the body to leave a 0.4 m clear gap, and replace the dark cylinders with flat 0.12 m-thick glowing cyan lift discs 0.8 m wide. Reshape the body as a capsule: rounded spherical nose and tail, one continuous dark window band and a single sliding-door seam. Remove the red/white light boxes. Shelter: a curved ivory shell canopy with a planted roof and an open woven back instead of the flat glass panel. Enlarge the arrival glyph to 0.9 m. Keep all parts within ±6 m. / Replace the wheel-like discs with 4 flat glowing #66f2df lift pads under a body raised 0.4 m. Round the nose and tail with sloped boxes. Add a bold #8c80b4 or #efbd66 belt line 0.3 m high along the side. Give the shelter roof a dark #36495e edge. Shorten the shuttle and pull all parts inside |x|,|z| ≤ 6."
+    },
+    {
+      "id": "river",
+      "problems": [
+        "The crossing deck appears almost opaque, making it read as a conventional white footbridge rather than a translucent solid-light crossing.",
+        "Long straight bands on the water resemble guidance graphics rather than river flow.",
+        "Bank sections are long straight 1.1 m-high teal concrete blocks, which contradicts the bible's 'restored' banks of reeds and river stone",
+        "Long straight light-blue/dark-blue stripes on the water read as painted pool lane lines",
+        "8 parts reach outside the 14 m room",
+        "The deck reads as a flat white slab; the 'solid-light' guide strips are invisible",
+        "The railings are hair-thin",
+        "The bank anchors are long plain teal box walls; the reeds and stones are specks",
+        "8 parts reach outside the 14 m room",
+        "World rule: Riverbanks: the crossing rule should forbid straight concrete retaining walls; banks must be stepped, irregular, restored earth and stone with reeds, and ceramic only at the bridge anchors."
+      ],
+      "fix": "Make the shallow continuous deck visibly translucent, with water discernible beneath it, and separate its luminous planes from matte structural edges and bank anchors. Keep readable low transparent rails, anchor at z ±7, and replace straight water bands with restrained non-emissive flow ripples. / Break each bank into 3–4 stepped irregular tiers (earth #739d97, stone #95a7a7, varying heights 0.6–1.1 m) with 3 reed clusters per side. Keep the ceramic anchors only at the bridge ends. Replace the water stripes with 6–8 short, varied ripple marks (0.6–1.8 m, slightly rotated). Keep the solid-light deck and rails as they are. Trim to ±7 m. / Edge the deck with 0.18 m glowing #2fd8c4 strips along both sides. Make the rail posts 0.12 m and the top rails 0.1 m. Make the abutments 2 m wide with dark #36495e faces. Add reed clumps of 5–7 blades at 1 m tall and 4–5 river stones 0.5–0.8 m wide on each bank. Keep everything inside |x|,|z| ≤ 7."
+    },
+    {
+      "id": "civic-lot",
+      "problems": [
+        "The projected collaboration symbol reads as a tiny pale spark rather than four connected nodes around a shared centre.",
+        "The public-lot identity depends too heavily on four widely separated blocks that disappear at stream distance.",
+        "The projected symbol is a cyan plus sign and reads as a medical or pharmacy cross, not 'four connected households around a shared centre'",
+        "The four anchor blocks are 0.28 m white cubes that read as litter or crates",
+        "It is hard to tell apart from the free lot at stream distance",
+        "The 'four connected nodes' symbol is a roughly 0.8 m glowing cross that reads as a tiny plus sign or a medical cross",
+        "The corner anchors are small pale cubes, almost invisible on pale gravel",
+        "It looks the same as the free lot except for the symbol, so the public/private difference does not read",
+        "World rule: Civic-lot symbol: specify that the four nodes are house-shaped glyphs, not dots on a cross, so it can't read as a medical plus sign.",
+        "World rule: Surfaces: road #d7e1e8, pavement #f1e9e5, square #ece6fa, lotRough #bac2ca and lotClaimed #e9e2da are all near the same lightness, so the town is one white sheet on stream. Make the road a clearly darker mid-tone (e.g. #8e9cad with #2fd8c4 seams), keep the pavement light, give the square a distinct warm stone (#e6d8c4), and give the rough lot an earthier ground (#b7a98c) so lots, street and square separate at a glance.",
+        "World rule: Lot markers 'below head height' make the free-lot ring and community symbol specks; allow 2.0–2.8 m tall and at least 2 m wide, with a flat ground ring or band so they read from above."
+      ],
+      "fix": "Enlarge the projected node diagram below head height and use thicker connecting strokes with five clearly separated node masses. Keep the projector and four anchors low, matte and physical, leaving the entire build area empty. / Replace the cross with a flat-facing 1.6 m emblem at 1.8 m: four small house glyphs (box plus rotated roof box, 0.35 m, cyan glow) around a central mint circle, linked by 0.08 m lines. Make the anchors 0.9 m rounded ceramic posts with lilac #c1b5dc caps and a cyan pip. Add a 0.3 m lilac paved border band at the front edge. / Make the anchors 0.6 × 0.8 × 0.6 m with dark #36495e bodies and civic-green #739d97 caps. Join them with a flat 0.3 m-wide green ground band around the parcel. Build the symbol 2 m wide at 2 m high: 4 spheres 0.35 m across in #2fd8c4 around a 0.5 m centre sphere, linked by 0.12 m bars, on a 1.2 m projector post."
+    },
+    {
+      "id": "camp",
+      "problems": [
+        "The central structure and side canopies resemble a bungalow with verandas rather than a landed delegation pod.",
+        "The shelter wings lack readable deployment joints, while cargo and the shared light core are subordinate to the house-like roof.",
+        "The 'landed pod' reads as a flat-roofed modern bungalow on columns, with no craft cues (no hull curve, landing legs, ramp or touchdown marks)",
+        "The shelter wings are flat roofs on posts, not unfolded wings",
+        "The shared light core is small and barely glows; the camp is not readable as an android delegation from far away",
+        "The pod reads as a white modern bungalow with porches; nothing says it landed (no hull curvature, legs or thrusters)",
+        "The light core is a small cyan sphere that does not glow visibly",
+        "The cargo capsules read as benches; the rover is a toy car",
+        "World rule: Vehicles (shuttle, car, rover): ban wheel-like corner cylinders and require a visible 0.3–0.4 m hover gap with glowing lift pads. The builder prompt should get this rule too, since the car example came out as a wheeled jeep."
+      ],
+      "fix": "Give the central pod a compact transport hull, a visible entry hatch and landing supports. Attach two clearly hinged unfolded shelter wings to create three sheltered zones, then group sealed cargo capsules, the rover and the low shared light core around a readable communal clearing. / Make the central pod a 4 m rounded ellipsoid hull (spheres or capsule) on 4 splayed landing legs, with a lowered ramp and an orbital emblem on its flank. Make the wings angled ceramic or fabric panels sloping from the hull to the ground at 25°, each sheltering a zone. Add a 3 m scorched/flattened grass ring. Make the light core a 1 m glowing cylinder on a ceramic plinth. Keep the rover and capsules. / Make the central hull a capsule: a flattened cylinder 4 m across with a domed top. Stand it on 4 angled landing legs with glowing foot pads, and keep the wings as angled panels. Paint a large orbital emblem (ring plus dot, 1.5 m, #8c80b4) on the roof. Lay the cargo out as 3 cylinders 1.2 m long with dark end bands. Make the light core a 1.5 m pylon with a glowing 0.5 m top."
+    },
+    {
+      "id": "head",
+      "problems": [
+        "The chest insignia reads as a generic circular badge rather than the required shared-node emblem.",
+        "The clothing reads more as a pale jacket than a distinctive tailored civic mantle, leaving the floating screens to carry nearly all the office identity.",
+        "The floating panels are dark opaque slabs that read as phones or clipboards, and one sits in front of the chest",
+        "The shared-node insignia is small, and the ivory mantle is short, so the figure reads like a lab-coat doctor",
+        "Silhouette is too close to the residents",
+        "The navy peaked cap and visor read as police or security, not as an Administrator",
+        "The four floating panels are dark navy with tiny glow insets; they read as phones",
+        "The ivory mantle merges with the pale disc beneath",
+        "World rule: Figures: forbid ground plates or mats under people (the envoy has a 2.4 m teal slab). Require the leader's silhouette to differ from the resident android (tabard, backpack/antenna, large held token)."
+      ],
+      "fix": "Create a broader, clearly layered ivory mantle and a large central-plus-four-node insignia with a restrained light inset. Keep the three administrative panels beside the body and face, using simple readable graphics rather than miniature monitor detail. / Make the three panels translucent cyan-glow planes (0.45 × 0.3 m) in an arc beside and behind the shoulders at head height, none in front. Lengthen the mantle to the knees with a lilac #8c80b4 trim band and raised shoulder collar. Make the chest insignia 0.35 m (four nodes around a centre, glow). / Remove the cap; use an ivory hair or hood shape with a thin glowing circlet. Make the panels 0.4 × 0.28 m, ivory-framed, with a full glowing #66f2df face, and arrange 3 in an arc beside the head at 1.9–2.2 m. Lengthen the mantle to the knees with a #8c80b4 lining and shoulder flare. Make the chest insignia 0.25 m with an amber centre."
+    },
+    {
+      "id": "leader",
+      "problems": [
+        "The orbital emblem, meteorite token and repaired shoulder do not read as distinct evidence of a long journey.",
+        "Blocky shoulder fittings overpower the travel clothing.",
+        "The large teal rectangular presentation base remains visible in the assembled scene as an unexplained ground patch.",
+        "Zero glow parts, so the visor, emblem and meteorite are all inert",
+        "A 2.4 × 2.2 m teal mat under the figure is unexplained and reads as a rug or a sign",
+        "The repaired shoulder and orbital emblem aren't legible; the meteorite token is a small yellow speck",
+        "A 2.4 × 2.2 m teal box (#739d97) sits under the figure like a floor mat or plinth",
+        "White knee and elbow discs on dark legs read as polka dots",
+        "The meteorite token (about 0.2 m box) is invisible, and nothing else in the silhouette says 'from far away'",
+        "At the same height and build as the resident android it is hard to tell apart",
+        "World rule: Figures: forbid ground plates or mats under people (the envoy has a 2.4 m teal slab). Require the leader's silhouette to differ from the resident android (tabard, backpack/antenna, large held token)."
+      ],
+      "fix": "Remove the baked presentation plane from the town asset. Emphasise an asymmetric faceplate, layered cloth tabard, visibly patched shoulder panel and a clearly held faceted meteorite; use one bold unfamiliar orbital-coordinate emblem instead of several competing chest details. / Remove the teal mat, or replace it with a 1.2 m round ceramic landing disc. Add an orbital-coordinate emblem (ring plus 3 dots, 0.3 m, glow) on the chest. Give one shoulder a contrasting #8c80b4 patch plate with 3 visible rivets. Make the meteorite 0.35 m, dark faceted with amber glow veins, held out in front. Add a short back antenna or travel pack. / Delete the teal ground plate. Add a knee-length layered travel tabard in #8c80b4 over #bca783, and a backpack with a 0.7 m antenna mast tipped with a glowing #66f2df tip. Hold a 0.4 m dark faceted meteorite (#36495e with amber chips) in both hands at chest height. Make the repaired shoulder a contrasting amber patch. Remove the white knee discs."
+    },
+    {
+      "id": "home",
+      "problems": [
+        "The house reads as a contemporary flat-roof villa with rooftop solar panels and an ordinary porch.",
+        "Its Future identity comes primarily from the shared ivory palette rather than a transformed habitat silhouette.",
+        "This is today's modern house: flat roof, two rooftop solar panels, rooftop AC box, timber porch posts, concrete steps, mailbox post, park bench",
+        "Zero glow parts; nothing future in the silhouette",
+        "Exactly the bible's 'Modern assets with nothing changed except trim', but without even the trim",
+        "World rule: Add a buildings rule for player builds (home, café, skyscraper): rounded or capsule ceramic shells, living roofs instead of rooftop solar panels or AC boxes, no mailboxes, porch steps or square ribbon-window office blocks, and at least one restrained glow element at the entrance. The life pieces currently have zero glow and come out as today's buildings.",
+        "World rule: Example builds (home, café) still look like modern assets. Add a rule that future builds use rounded rooflines, dark aperture bands and one glowing entry or serving element, and that every service building shows a visible door or hatch."
+      ],
+      "fix": "Preserve the footprint and domestic entrance but rebuild the house as interlocking ceramic habitat modules with softened faceted corners, recessed dark apertures and an integrated planted environmental canopy. Replace the bolt-on rooftop panels and conventional porch with architectural systems designed into the shell. / Rebuild it as 2–3 interlocking rounded ivory capsule pods at different heights, with a continuous curved dark window band. Replace the solar panels and AC box with a living green roof (sage mounds plus a small tree). Give it a rounded entrance arch with a 0.1 m cyan glow strip and a tiny hover-pod dock pad. Remove the mailbox, steps and wooden porch posts, and replace the bench with the age's hover seat."
+    },
+    {
+      "id": "cafe",
+      "problems": [
+        "The rounded pavilion is appropriate, but its physical serving hatch is not clearly readable.",
+        "Tables and cups establish a café, while the refill-and-cultured-tea function remains visually unspecified.",
+        "A generic modern drum pavilion with a flat glass canopy; the octagonal drum also reads as a water tank",
+        "The 'physical serving hatch' and cup emblem are not visible from the camera",
+        "Zero glow, no refill dispensers",
+        "The main drum is a blank ivory cylinder with no door, hatch, windows or sign; it reads as a water tank or bunker",
+        "The canopy and tables carry the 'café' reading alone",
+        "World rule: Add a buildings rule for player builds (home, café, skyscraper): rounded or capsule ceramic shells, living roofs instead of rooftop solar panels or AC boxes, no mailboxes, porch steps or square ribbon-window office blocks, and at least one restrained glow element at the entrance. The life pieces currently have zero glow and come out as today's buildings.",
+        "World rule: Example builds (home, café) still look like modern assets. Add a rule that future builds use rounded rooflines, dark aperture bands and one glowing entry or serving element, and that every service building shows a visible door or hatch."
+      ],
+      "fix": "Cut a broad dark serving hatch beneath the canopy and add a tangible counter with two chunky refill dispensers, reusable capsules and a recognisable tea vessel. Retain the rounded shell and accessible seating, avoiding extra roof decoration. / Turn the drum into a low dome with a rounded skylight. Cut a 2 m serving hatch with a counter lip and a 0.6 m cup emblem (glow) facing the street/camera. Reshape the canopy as a curved leaf-shaped shell on one leaning stem. Add 2–3 refill dispenser columns with small cyan glow windows. / Cut a dark #36495e serving hatch 1.6 m wide with a counter ledge, and a door on the +z face. Run a dark window band around the drum at 1.2–2.0 m. Put a 1 m cup sign on the roof rim in #efbd66. Tint the canopy #739d97."
+    },
+    {
+      "id": "car",
+      "problems": [
+        "The stepped bonnet, roof and windscreen retain the silhouette of a contemporary SUV.",
+        "Exposed cylindrical corner units read as wheels or support feet rather than recessed hover hardware.",
+        "Boxy SUV silhouette with front bumper, paired headlights, red tail lights, flat bonnet and roof",
+        "Grey skid rails sit at y 0, so it rests on the ground with no hover gap",
+        "Four ivory corner cylinders read as wheels, and the 'lift pods' have no glow",
+        "The bible says a car becomes a compact hover pod; this ignores it",
+        "Four 0.6 m corner cylinders at axle height read as wheels and fenders, so it looks like a boxy wheeled jeep, not a hover pod",
+        "No glow and no hover gap",
+        "Ivory on a pale road loses its outline",
+        "World rule: Add a vehicles rule covering car and shuttle: no wheels or wheel-like corner cylinders, no bumpers, grilles, paired headlamps or tail-light boxes, a visible clear hover gap of at least 0.3 m, glowing lift pads, and rounded capsule/teardrop bodies.",
+        "World rule: Vehicles (shuttle, car, rover): ban wheel-like corner cylinders and require a visible 0.3–0.4 m hover gap with glowing lift pads. The builder prompt should get this rule too, since the car example came out as a wheeled jeep."
+      ],
+      "fix": "Replace the conventional car profile with a compact rounded passenger capsule, wraparound dark glazing and a clear door seam. Recess lift units beneath the body, remove wheel-like corner cylinders, and show a small consistent hovering gap with a grounded shadow. / Make it a teardrop/capsule two-seat pod about 3 m long: a rounded nose and a single wraparound dark canopy. Delete the skids, bumper, headlight pair and tail lights. Leave a 0.35 m ground gap with 4 flat 0.6 m glowing cyan lift discs underneath, and add a thin glow light strip wrapping the nose and tail. / Remove the corner cylinders. Round the body ends with sloped boxes and raise the body 0.35 m off the ground on 4 flat glowing #66f2df lift pads. Add a 0.2 m dark #36495e skirt line around the base and a coloured belt stripe (#8c80b4) so it separates from the road."
+    },
+    {
+      "id": "ground",
+      "problems": [
+        "Almost empty: 16 tiny parts (most under 0.3 m) are invisible at stream scale, so the meadow reads as plain flat green",
+        "White ecological sensor caps read as golf balls or litter, not stewardship",
+        "Nothing distinguishes it from the modern countryside except those specks",
+        "16 parts are specks about 0.1–0.3 m wide, scattered evenly across 12 m. At cell size they look like dust and they will vanish entirely at game scale",
+        "Stones and sensor caps are pale teal or grey (#9cbea0-ish) on a pale meadow (#9cbea0/#c6d6b3), so there is almost no contrast",
+        "No clustering or variety in size, so it reads as noise rather than restored countryside"
+      ],
+      "fix": "Group the dressing into 3 clusters. Each cluster: 2–3 native flower clumps 0.4–0.6 m wide (lilac #8c80b4 and amber #efbd66 sphere tops on sage bases), one restored stone 0.6–0.8 m (#95a7a7), and a clover patch 1.2 m wide. Recolour the sensor caps sage #739d97 with a single 0.12 m cyan glow pip, and raise them to 0.25 m with a slim 0.08 m stem so they read as instruments. / Group the scatter into 4–5 clusters. Add 2–3 restored boulders 0.8–1.2 m wide in a darker stone (#6f7d78). Add clover patches as flat 1.2–1.8 m discs in deep green #4f7f5e. Add 2 flower clusters of 5–7 flowers in #efbd66 and #8c80b4 on 0.3 m stems. Add one fallen seed-pod log 1.4 m long in #bca783. Make the two sensor caps 0.3 m wide with a dark #36495e top. Delete the single-pebble specks."
+    },
+    {
+      "id": "lot-sale",
+      "problems": [
+        "Amber ring is small (about 1.3 m across, built from 8 boxes) and reads as a lifebuoy or octagon lying by the kerb at stream scale",
+        "Nothing shows it is projected: the projector is a flat puck with no beam",
+        "The 'available' symbol is right for the age, but it is too subdued to read as a sale marker",
+        "The availability ring is about 1.3 m across, built from 8 bars 0.13 m thick and centred at 1.15 m high. In the cell it is a small yellow loop in the bottom corner and would be a speck in the town",
+        "Amber #efbd66 on pale grey gravel has weak contrast, and the glow adds nothing in daylight",
+        "The projector base is a tiny dark nub; the rest of the clutter is invisible",
+        "World rule: Surfaces: road #d7e1e8, pavement #f1e9e5, square #ece6fa, lotRough #bac2ca and lotClaimed #e9e2da are all near the same lightness, so the town is one white sheet on stream. Make the road a clearly darker mid-tone (e.g. #8e9cad with #2fd8c4 seams), keep the pavement light, give the square a distinct warm stone (#e6d8c4), and give the rough lot an earthier ground (#b7a98c) so lots, street and square separate at a glance.",
+        "World rule: Glow rule: in this bright daylight, pale glow colours (#66f2df, #b7fff0, #bcefe8) on ivory read as nothing. Require every emitter to sit in a dark #36495e housing or backing at least 0.1 m larger all round, set a minimum glow-part thickness of 0.15 m, and use saturated glow tones (#2fd8c4, #f29b1e).",
+        "World rule: Lot markers 'below head height' make the free-lot ring and community symbol specks; allow 2.0–2.8 m tall and at least 2 m wide, with a flat ground ring or band so they read from above."
+      ],
+      "fix": "Enlarge the ring to 2.0 m diameter (12–16 segments, 0.15 m thick) centred at 2.2 m height, facing the street. Raise the projector to a 0.5 m ceramic cone with a dark #36495e lens on top. Add a faint translucent amber glow cone or 3 thin vertical light lines (0.06 m, glow) from lens to ring so it reads as projected light. / Enlarge the ring to 2.4 m across, use 12 segments 0.25 m thick in saturated #f29b1e, and centre it at 2.0 m. Stand it on a 0.6 × 0.9 m ivory projector pillar with a dark #36495e face and an amber band. Add a flat amber ground ring 3 m across around the projector (0.03 m high) so the marker also reads from above. Add 3–4 aggregate chips 0.4–0.6 m wide in #95a7a7."
+    },
+    {
+      "id": "market",
+      "problems": [
+        "Reads as a white fridge cart or ice-cream kiosk sitting on a small teal block; you cannot see that it hovers",
+        "Lift emitters are hidden under the body",
+        "The produce display is small",
+        "Its role is legible, but the white shell on lavender-white paving has little contrast",
+        "The goods are small, and only a few coloured dots read",
+        "The hover stabilisers are hidden"
+      ],
+      "fix": "Raise the pod so its belly is 0.45 m above the ground, with 4 visible 0.5 m glowing lift pads at the corners underneath. Remove the central teal pedestal block. Add a short curved ivory awning fin over the tray and enlarge the produce: 6–8 fruit spheres 0.2 m plus coloured cultured-food packs. Keep the screen glow small. / Add a coloured roof band or awning lip in #efbd66 or #739d97 across the top 0.3 m. Make the produce crates bigger (0.4 m boxes) in red, orange and green, stepping up the serving tray. Give it a dark #36495e lower skirt with 2 glowing lift pads and a visible 0.25 m gap to the ground."
+    },
+    {
+      "id": "resident",
+      "problems": [
+        "The human gardener reads as today's park worker in a teal coverall and flat cap",
+        "The seed capsule is a small dark blob, and the asymmetric jacket and knit texture are not legible",
+        "The android courier is good, but its parcel is a plain box",
+        "World rule: Figures: forbid ground plates or mats under people (the envoy has a 2.4 m teal slab). Require the leader's silhouette to differ from the resident android (tabard, backpack/antenna, large held token)."
+      ],
+      "fix": "Gardener: a two-tone asymmetric jacket (one side sage, one lilac, a diagonal hem), a wide soft-brim hat or hood, and a 0.3 m clear capsule with a glowing green seedling inside. Courier: a parcel with a cyan seal strip and a carry-handle loop, plus a visor slit glow."
+    },
+    {
+      "id": "skyscraper",
+      "problems": [
+        "Reads as an 80s wedding-cake office block: square setbacks with horizontal dark ribbon windows",
+        "The 'planted terraces' are a few flat shrub pads, not sky gardens",
+        "Zero glow; the crown is a plain teal box",
+        "World rule: Add a buildings rule for player builds (home, café, skyscraper): rounded or capsule ceramic shells, living roofs instead of rooftop solar panels or AC boxes, no mailboxes, porch steps or square ribbon-window office blocks, and at least one restrained glow element at the entrance. The life pieces currently have zero glow and come out as today's buildings."
+      ],
+      "fix": "Make the tiers rounded or chamfered modules, each rotated 15–20° from the one below, with 2 cantilevered pods sticking out. Put real trees (trunk plus canopy) on each terrace edge, and run a vertical cyan glow seam up one corner. Crown it with a slim tapered spire or ring halo (glow) instead of the teal box."
+    },
+    {
+      "id": "dog",
+      "problems": [
+        "1.75 m tall, as tall as a 1.8 m resident: horse scale",
+        "A padded riding saddle turns it into a mount",
+        "The only future cue is a mint collar; otherwise it is a plain white blocky dog",
+        "Wrong scale: back at about 1.2 m and head top at 1.75 m, so it stands as tall as a 1.8 m person. The head box is 0.64 m wide, nearly twice a person's head",
+        "The tail sticks straight up like a post",
+        "World rule: Add an animals rule: dogs 0.5–0.7 m at the shoulder (never near human height) and no saddles; either a real dog with a glowing collar or a clearly robotic dog."
+      ],
+      "fix": "Scale it to 0.6–0.7 m at the shoulder and about 1 m nose to tail. Remove the saddle. Either keep a real dog (cream/brown fur) with a slim glowing cyan collar and a small hovering ball toy, or make a ceramic robo-dog with segmented legs, a dark visor face strip and a cyan eye line. Pick one and commit. / Scale the whole dog to about 0.5: back at 0.6 m, head top at about 0.9 m, body 0.6 m long. Angle the tail back 45°. Keep the mint saddle; add a small glowing collar."
+    }
+  ]
+}

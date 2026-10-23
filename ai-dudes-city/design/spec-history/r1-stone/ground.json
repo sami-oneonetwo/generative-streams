@@ -1,0 +1,273 @@
+{
+  "name": "Wild Woodland Ground",
+  "description": "Sparse grass tussocks, scattered flint, moss, broken branches and shallow puddles interrupt the open meadow beyond town.",
+  "notes": "Untended vegetation and loose gathered-material debris evoke Stone Age wilderness without paths, planting beds or engineered edges.",
+  "parts": [
+    {
+      "shape": "cone",
+      "position": [
+        -4.65,
+        0.15,
+        -3.8
+      ],
+      "size": [
+        0.46,
+        0.3,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.3,
+        0.11,
+        -3.65
+      ],
+      "size": [
+        0.35,
+        0.22,
+        0.42
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.8,
+        0.17,
+        3.95
+      ],
+      "size": [
+        0.5,
+        0.34,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.7,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.14,
+        0.12,
+        3.77
+      ],
+      "size": [
+        0.34,
+        0.24,
+        0.45
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.8,
+        0.11,
+        -4.45
+      ],
+      "size": [
+        0.55,
+        0.22,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.3,
+        0.09,
+        -4.16
+      ],
+      "size": [
+        0.32,
+        0.18,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0.8,
+        0
+      ],
+      "color": "#b0aea0"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.8,
+        0.08,
+        4.5
+      ],
+      "size": [
+        0.35,
+        0.16,
+        0.46
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.43,
+        0.035,
+        -3.76
+      ],
+      "size": [
+        1.15,
+        0.07,
+        0.83
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#687b46"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.55,
+        0.04,
+        1.95
+      ],
+      "size": [
+        0.95,
+        0.08,
+        0.64
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.65,
+        0.035,
+        1.08
+      ],
+      "size": [
+        0.76,
+        0.07,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0.8,
+        0
+      ],
+      "color": "#919457"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.5,
+        0.1,
+        2.7
+      ],
+      "size": [
+        0.18,
+        1.45,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0.38,
+        1.570796
+      ],
+      "color": "#79563b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.45,
+        0.08,
+        -0.9
+      ],
+      "size": [
+        0.14,
+        1.05,
+        0.14
+      ],
+      "rotation": [
+        0,
+        -0.72,
+        1.570796
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.95,
+        0.03,
+        -2.5
+      ],
+      "size": [
+        1.45,
+        0.06,
+        0.85
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#4d9495"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.15,
+        0.03,
+        -2.25
+      ],
+      "size": [
+        0.79,
+        0.06,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0.45,
+        0
+      ],
+      "color": "#4d9495"
+    }
+  ]
+}

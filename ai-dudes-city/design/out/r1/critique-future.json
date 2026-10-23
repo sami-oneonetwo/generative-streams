@@ -1,0 +1,214 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The restrained ivory-and-green palette establishes an optimistic Future, but the assembled corner loses important silhouettes and gameplay symbols against similarly pale surfaces. Contemporary-looking transport and housing, generic tree crowns, weak ownership cues and an insufficiently distinctive delegation need redesign rather than additional luminous trim.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the sparse, low ecological dressing and unobtrusive sensor caps; keep the meadow matte and avoid increasing detail density."
+    },
+    {
+      "id": "street",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Road panels, pavement and guidance seams merge into a pale field in the assembled scene.",
+        "Long pale edge strips read as raised rails rather than clearly flush guidance; the planted drainage separation is difficult to identify."
+      ],
+      "fix": "Separate cool ceramic roadway from warmer matte pavement through stronger value contrast. Recess cyan guidance into the road, retain only the shallow 0.08 m kerb, and make the narrow planted drainage seam visibly green without introducing raised obstacles inside the 8 m carriageway."
+    },
+    {
+      "id": "lot-sale",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the empty amber ring, small physical projector and uncluttered parcel. Preserve the ring's readable silhouette below head height without adding a signboard or lighting the projector body."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The boundary reads as ordinary thin horizontal fencing rather than woven biocomposite between rounded ceramic posts.",
+        "Owner identity collapses to a red speck; neither the household emblem nor the exact name Ivy is readable."
+      ],
+      "fix": "Use broad, open woven rail modules between visibly rounded posts at approximately 0.75 m height, retaining the open front. Enlarge the solid #d9534f insert on the front-corner post and place a compact, legible projected household tag reading Ivy immediately beside it."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both crowns rely on similarly sized rounded blobs, producing a managed topiary appearance.",
+        "The tall tree's tilted structure and the flowering tree's long lateral branch are insufficiently expressed."
+      ],
+      "fix": "Rebuild the tall tree around a visibly leaning trunk with unequal branching and a broad, uneven crown. Give the smaller tree one clearly extended lateral bough and clustered blossoms, varying foliage mass sizes while keeping both collars clear of the walking route."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The pine reads as stacked cones and the oak as a compact ball cluster.",
+        "The young willow reads as another rounded shrub rather than a distinct drooping species."
+      ],
+      "fix": "Use a bent pine trunk with unequal wind-swept branch shelves, a forked oak with offset canopy masses and open gaps, and a low willow with long descending branch clusters. Allocate the existing parts to structural irregularity rather than repeated foliage primitives."
+    },
+    {
+      "id": "street-light",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The segmented white shaft reads as a generic post rather than a tapered civic light.",
+        "The emitter and directional cap disappear against the pale street in the assembled view."
+      ],
+      "fix": "Give the pillar a clear taper, a dark recessed emitter pocket and a short directional cap. Make the cyan-white emitting face broad enough to identify from the overhead camera, while keeping the pillar and cap matte."
+    },
+    {
+      "id": "centrepiece",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The seed emblem and orbit arcs are too pale and delicate to remain the square's focal point at stream distance.",
+        "The physical assembly reads more strongly as a small mechanical platform than as four ceramic emitter petals supporting a shared-growth symbol."
+      ],
+      "fix": "Consolidate the hologram into one bold faceted seed with a readable translucent cyan silhouette and a few short, thicker orbit arcs. Clearly separate four matte petals around the low 4.5 m dais, keeping the complete beacon below approximately 2.5 m and preserving views through it."
+    },
+    {
+      "id": "bench",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The silhouette is essentially a contemporary beige bench.",
+        "The docking puck, levitation gap and lift-status strip do not communicate the Future transformation."
+      ],
+      "fix": "Shape the seat and low back as one warm biocomposite shell, remove conventional-looking supports, and reveal a discreet recessed docking puck beneath it. Establish a small shadowed levitation gap and one narrow status strip while keeping the sitting surface at approximately 0.45 m."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the tangible pod shell, visible fruit and refill products, serving tray and small lift nodes. Preserve dark separation around the product opening and keep emission confined to the interface and lift emitters."
+    },
+    {
+      "id": "arrival",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The vehicle reads as a present-day boxy minibus with futuristic fittings rather than a hover shuttle.",
+        "Its lift system is not clearly identifiable, and the shelter retains the silhouette of an ordinary bus stop."
+      ],
+      "fix": "Rebuild the roughly 5 m vehicle as a rounded ceramic passenger capsule with dark continuous glazing, a strong door seam and four recessed downward-facing lift units. Retain a thin physical shelter, but integrate a flush boarding marker, compact arrival glyph and pavement-level door threshold into one coherent stop."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The crossing deck appears almost opaque, making it read as a conventional white footbridge rather than a translucent solid-light crossing.",
+        "Long straight bands on the water resemble guidance graphics rather than river flow."
+      ],
+      "fix": "Make the shallow continuous deck visibly translucent, with water discernible beneath it, and separate its luminous planes from matte structural edges and bank anchors. Keep readable low transparent rails, anchor at z ±7, and replace straight water bands with restrained non-emissive flow ripples."
+    },
+    {
+      "id": "civic-lot",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The projected collaboration symbol reads as a tiny pale spark rather than four connected nodes around a shared centre.",
+        "The public-lot identity depends too heavily on four widely separated blocks that disappear at stream distance."
+      ],
+      "fix": "Enlarge the projected node diagram below head height and use thicker connecting strokes with five clearly separated node masses. Keep the projector and four anchors low, matte and physical, leaving the entire build area empty."
+    },
+    {
+      "id": "camp",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The central structure and side canopies resemble a bungalow with verandas rather than a landed delegation pod.",
+        "The shelter wings lack readable deployment joints, while cargo and the shared light core are subordinate to the house-like roof."
+      ],
+      "fix": "Give the central pod a compact transport hull, a visible entry hatch and landing supports. Attach two clearly hinged unfolded shelter wings to create three sheltered zones, then group sealed cargo capsules, the rover and the low shared light core around a readable communal clearing."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the distinct human and android head silhouettes, seed capsule and compact parcel. Preserve broad matte clothing shapes and the base figure proportions rather than adding fine technological decoration."
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The chest insignia reads as a generic circular badge rather than the required shared-node emblem.",
+        "The clothing reads more as a pale jacket than a distinctive tailored civic mantle, leaving the floating screens to carry nearly all the office identity."
+      ],
+      "fix": "Create a broader, clearly layered ivory mantle and a large central-plus-four-node insignia with a restrained light inset. Keep the three administrative panels beside the body and face, using simple readable graphics rather than miniature monitor detail."
+    },
+    {
+      "id": "leader",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The orbital emblem, meteorite token and repaired shoulder do not read as distinct evidence of a long journey.",
+        "Blocky shoulder fittings overpower the travel clothing.",
+        "The large teal rectangular presentation base remains visible in the assembled scene as an unexplained ground patch."
+      ],
+      "fix": "Remove the baked presentation plane from the town asset. Emphasise an asymmetric faceplate, layered cloth tabard, visibly patched shoulder panel and a clearly held faceted meteorite; use one bold unfamiliar orbital-coordinate emblem instead of several competing chest details."
+    },
+    {
+      "id": "home",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The house reads as a contemporary flat-roof villa with rooftop solar panels and an ordinary porch.",
+        "Its Future identity comes primarily from the shared ivory palette rather than a transformed habitat silhouette."
+      ],
+      "fix": "Preserve the footprint and domestic entrance but rebuild the house as interlocking ceramic habitat modules with softened faceted corners, recessed dark apertures and an integrated planted environmental canopy. Replace the bolt-on rooftop panels and conventional porch with architectural systems designed into the shell."
+    },
+    {
+      "id": "cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The rounded pavilion is appropriate, but its physical serving hatch is not clearly readable.",
+        "Tables and cups establish a café, while the refill-and-cultured-tea function remains visually unspecified."
+      ],
+      "fix": "Cut a broad dark serving hatch beneath the canopy and add a tangible counter with two chunky refill dispensers, reusable capsules and a recognisable tea vessel. Retain the rounded shell and accessible seating, avoiding extra roof decoration."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped modular habitat silhouette, deep dark window bands and planted terraces. Keep vegetation subordinate to the tower's clear massing and avoid converting the ceramic tiers into emissive trim."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the clear canine silhouette, articulated ceramic body, dark ears and readable muzzle. Keep the companion non-militarised and preserve its modest scale beside the residents."
+    },
+    {
+      "id": "car",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The stepped bonnet, roof and windscreen retain the silhouette of a contemporary SUV.",
+        "Exposed cylindrical corner units read as wheels or support feet rather than recessed hover hardware."
+      ],
+      "fix": "Replace the conventional car profile with a compact rounded passenger capsule, wraparound dark glazing and a clear door seam. Recess lift units beneath the body, remove wheel-like corner cylinders, and show a small consistent hovering gap with a grounded shadow."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

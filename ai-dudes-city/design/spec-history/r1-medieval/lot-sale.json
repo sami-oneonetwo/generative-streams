@@ -1,0 +1,235 @@
+{
+  "name": "Unclaimed Lot with Oak Availability Tablet",
+  "description": "A pegged oak post carries an uneven wooden tablet painted with a large empty ochre ring, leaving the rough lot open for a newcomer.",
+  "notes": "Rough timber, a wooden peg and a simple hand-painted availability mark suit the medieval town without modern signage or raised pavement.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        0.98,
+        4.39
+      ],
+      "size": [
+        0.19,
+        1.96,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.47,
+        4.5
+      ],
+      "size": [
+        1.15,
+        0.98,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0.035
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.88,
+        4.6
+      ],
+      "size": [
+        0.12,
+        0.12,
+        0.12
+      ],
+      "rotation": [
+        1.5708,
+        0,
+        0
+      ],
+      "color": "#c0aa80"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.782,
+        4.61
+      ],
+      "size": [
+        0.4,
+        0.085,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e2c77e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.77,
+        1.626,
+        4.61
+      ],
+      "size": [
+        0.4,
+        0.085,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.0472
+      ],
+      "color": "#e2c77e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.77,
+        1.314,
+        4.61
+      ],
+      "size": [
+        0.4,
+        0.085,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        1.0472
+      ],
+      "color": "#e2c77e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.158,
+        4.61
+      ],
+      "size": [
+        0.4,
+        0.085,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e2c77e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.23,
+        1.314,
+        4.61
+      ],
+      "size": [
+        0.4,
+        0.085,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.0472
+      ],
+      "color": "#e2c77e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.23,
+        1.626,
+        4.61
+      ],
+      "size": [
+        0.4,
+        0.085,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        1.0472
+      ],
+      "color": "#e2c77e"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.1,
+        0.18,
+        4.23
+      ],
+      "size": [
+        0.43,
+        0.36,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#63864c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.94,
+        0.12,
+        4.72
+      ],
+      "size": [
+        0.46,
+        0.24,
+        0.35
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#7b827f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.62,
+        0.055,
+        4.95
+      ],
+      "size": [
+        0.61,
+        0.11,
+        0.18
+      ],
+      "rotation": [
+        0,
+        -0.43,
+        0
+      ],
+      "color": "#a17b50"
+    }
+  ]
+}

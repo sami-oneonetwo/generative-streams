@@ -1,0 +1,311 @@
+{
+  "name": "Sun-Baked Cart Street",
+  "description": "Shallow cart ruts, hoof impressions and broken terracotta runoff channels dress an ochre-earth street with an open walking centre and unkerbed, swept-earth margins.",
+  "notes": "Hand-cut limestone patches and open clay drainage fragments suggest Bronze Age civic craft without introducing paving, road markings or raised sidewalks.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.7,
+        0.03,
+        2.15
+      ],
+      "size": [
+        3.8,
+        0.06,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.55,
+        0.03,
+        2.95
+      ],
+      "size": [
+        4.1,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#95683f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.75,
+        0.03,
+        -2.2
+      ],
+      "size": [
+        4.6,
+        0.06,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#8b603d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.9,
+        0.03,
+        -3.05
+      ],
+      "size": [
+        4.2,
+        0.06,
+        0.17
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#95683f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.65,
+        0.03,
+        2.55
+      ],
+      "size": [
+        0.22,
+        0.06,
+        0.28
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#805b3b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.05,
+        0.03,
+        2.8
+      ],
+      "size": [
+        0.21,
+        0.06,
+        0.25
+      ],
+      "rotation": [
+        0,
+        -0.15,
+        0
+      ],
+      "color": "#805b3b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.65,
+        0.04,
+        3.45
+      ],
+      "size": [
+        0.82,
+        0.08,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0.35,
+        0
+      ],
+      "color": "#d2bb87"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        1.8,
+        0.045,
+        4.85
+      ],
+      "size": [
+        1.05,
+        0.09,
+        0.74
+      ],
+      "rotation": [
+        0,
+        -0.22,
+        0
+      ],
+      "color": "#ae9568"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.65,
+        0.03,
+        -3.25
+      ],
+      "size": [
+        1.25,
+        0.06,
+        0.68
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#6c8980"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.85,
+        0.03,
+        -4.65
+      ],
+      "size": [
+        2.1,
+        0.06,
+        0.92
+      ],
+      "rotation": [
+        0,
+        0.12,
+        0
+      ],
+      "color": "#d1ad73"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.65,
+        0.04,
+        3.85
+      ],
+      "size": [
+        1.65,
+        0.08,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a85f3c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.65,
+        0.13,
+        3.68
+      ],
+      "size": [
+        1.65,
+        0.18,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c57c4b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.83,
+        0.13,
+        4.02
+      ],
+      "size": [
+        1.29,
+        0.18,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bd7045"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.45,
+        0.04,
+        -3.85
+      ],
+      "size": [
+        1.25,
+        0.08,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a85f3c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.45,
+        0.14,
+        -4.03
+      ],
+      "size": [
+        1.25,
+        0.2,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c57c4b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.62,
+        0.12,
+        -3.67
+      ],
+      "size": [
+        0.91,
+        0.16,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#bd7045"
+    }
+  ]
+}

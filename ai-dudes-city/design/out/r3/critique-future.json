@@ -1,0 +1,210 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The ivory shells, dark glazing and planted habitats establish a coherent optimistic future, with the market, residents and hover car already reading well. Revision is needed because several civic assets still resemble contemporary objects with luminous trim, projected and hovering functions are unclear, and the assembled street loses too much contrast.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "street",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Road and pavement collapse into almost the same value in the assembled scene, weakening the vehicle-versus-walking distinction.",
+        "Repeated long edge strips read as raised rails rather than a clear combination of inset drainage, planted seam and shallow accessible kerb.",
+        "Guidance seams are barely readable at stream distance."
+      ],
+      "fix": "Within the 22-part dressing budget, distinguish the ceramic carriageway from the warmer matte pavement through restrained value contrast. Recess drainage slots, make the narrow planted seam visibly green, and resolve the kerb as a roughly 0.08 m bevel with continuous accessible transitions. Strengthen a few flush cyan guidance seams through local contrast rather than bloom."
+    },
+    {
+      "id": "lot-sale",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The thick amber hoop reads more like a solid freestanding object than a projected availability symbol.",
+        "In the assembled scene, the ring and its elevation appear too tall relative to the nearby residents for the below-head-height requirement."
+      ],
+      "fix": "Keep the clear wordless amber ring, but thin its section and establish visible separation from a matte, unlit ceramic projector. Check against a 1.8 m resident and keep the complete projection below approximately 1.6 m, retaining the 14-part budget and empty parcel."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The boundary reads as an ordinary twin-rail fence; woven biocomposite construction does not resolve.",
+        "The owner marker's red accent is visible, but the filled household emblem and exact player name are not legible."
+      ],
+      "fix": "Use the 30 parts to create broad, visibly interlaced biocomposite bands between rounded ceramic posts, with open gaps and an approximately 0.75 m overall height. Preserve the open front. Give the front-corner post a distinct #d9534f insert and a compact nearby projected tag displaying a filled household emblem and the exact name Ivy, with enough contrast to read without heavy bloom."
+    },
+    {
+      "id": "street-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The taller tree has a nearly straight pole trunk and a compact cluster of rounded lobes rather than a tilted trunk supporting an uneven broad shade crown.",
+        "The smaller tree's long lateral branch works, but its tiny blossom dots lose their flowering identity at street distance."
+      ],
+      "fix": "Redistribute the existing 32 parts into a visibly tilted main trunk, unequal branching and a wider, off-centre shade crown with gaps between faceted foliage masses. Preserve the smaller tree's long branch and consolidate its blossoms into a few readable clusters; keep foliage unlit."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The oak crown is a near-round cluster of similarly sized blobs, making it feel manufactured rather than irregular.",
+        "The willow resembles a cap with straight dangling spokes instead of a young shrub with bending, trailing growth.",
+        "The pine's isolated spike and stacked foliage masses do not establish a convincing wind-shaped branch structure."
+      ],
+      "fix": "Within 40 parts, give the pine a leaning trunk and swept, unequal branch tiers; split the oak into offset major limbs with asymmetrical crown masses and visible sky gaps. Rebuild the willow from several bent stems and uneven drooping foliage groups rather than parallel hanging rods."
+    },
+    {
+      "id": "street-light",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The asset reads as a blank ivory post in both views.",
+        "The recessed emitter and directional cap do not resolve, so its lighting function and future identity disappear."
+      ],
+      "fix": "Use the 12 parts to make a broad recessed cyan-white emitter clearly visible from the overhead camera, framed by a dark shallow recess and a small directional cap. Keep the tapered pillar matte and restrict emission to the emitter; do not solve readability by making the entire post glow."
+    },
+    {
+      "id": "centrepiece",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The composition reads as a small ornamental fountain or planter assembly rather than a civic hologram beacon.",
+        "The town emblem appears as a flat mint polygon instead of a floating faceted seed.",
+        "The pale surrounding arcs resemble a physical cage and lose their light-field identity in the assembled scene."
+      ],
+      "fix": "Retain a matte dais about 4.5 m across and four clearly separated ceramic emitter petals. Within 46 parts, build a vertically legible faceted seed with a visible air gap and restrained translucent emission, accompanied by a few short disconnected luminous arcs. Keep the complete beacon below about 2.5 m and preserve views through it."
+    },
+    {
+      "id": "bench",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The silhouette is a conventional park bench with pale end supports.",
+        "The levitation gap and ground docking puck are not readable, leaving luminous trim as the main future cue."
+      ],
+      "fix": "Rebuild the 10-part seat around a continuous warm biocomposite sitting shell and low back. Lift the shell slightly above a discreet central docking puck, exposing a clear shadow gap without ground-reaching end supports. Keep the sitting surface approximately 0.45 m high overall and allow only a narrow lift-status strip to glow."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "arrival",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The vehicle reads primarily as a short contemporary bus with ceramic colouring and cyan trim.",
+        "Four recessed lift units and a convincing levitation gap do not resolve.",
+        "The separate stop slab and vehicle threshold leave pavement-level boarding visually ambiguous."
+      ],
+      "fix": "Within the 68-part allocation, reshape the roughly 5 m shuttle into a rounded capsule with a clearly exposed underside, four dark recessed lift wells and small luminous emitters. Preserve the dark passenger windows and strengthen the door seam. Integrate the thin shelter and flush boarding marker into the pavement, with a visibly level route to the passenger threshold rather than a raised stop platform."
+    },
+    {
+      "id": "river",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The crossing is dominated by an opaque white slab and conventional pale railings, reading as a contemporary pedestrian bridge.",
+        "A translucent solid-light deck and low transparent safety rails are not apparent; cyan edge trim alone does not satisfy the crossing concept."
+      ],
+      "fix": "Rework the 58 parts into a continuous shallow translucent light deck about 4 m wide, with slim luminous guide strips and low transparent safety rails. Retain matte ceramic structural edges and real bank anchors at z ±7, meeting the banks approximately 1 m above the water. Keep the central 12 m of river visible, preserve reeds and restored stones, and leave the water non-emissive."
+    },
+    {
+      "id": "civic-lot",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "camp",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The central cylinder and two flat post-supported roofs resemble a utility kiosk with patio shelters rather than a landed interplanetary pod.",
+        "The shelter wings have no readable unfolding or attachment mechanism.",
+        "The shared light core is visually subordinate to the repeated small canisters, weakening the camp's communal focus."
+      ],
+      "fix": "Use the 86 parts to establish a landed ceramic capsule with a clear entrance, landing supports and two visibly hinged shelter wings. Give the wings folded edge profiles and attachment joints while retaining three sheltered zones. Group sealed cargo capsules separately from the compact survey rover, and make the low shared light core a distinct gathering point without turning the camp into a neon installation."
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The dark torso and rigid lavender side shapes dominate over the required ivory tailored civic mantle.",
+        "The chest insignia reads as a gold cross or flower rather than a shared-node network with a light inset."
+      ],
+      "fix": "Within 46 parts, make the ivory mantle the dominant garment silhouette, with a clear tailored overlap and restrained dark underlayer. Replace the cross-like badge with a large connected-node insignia containing a small luminous inset. Retain exactly three administrative panels beside the face, but reduce their heavy monitor-like framing so the controlled constellation remains the symbol of office."
+    },
+    {
+      "id": "leader",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Rigid shoulder and torso blocks make the envoy read as an armoured robot rather than a long-distance traveller in layered textiles.",
+        "The carried object reads as an open ring or tool rather than a faceted meteorite.",
+        "The unfamiliar orbital-coordinate emblem, repaired shoulder panel and facial asymmetry do not resolve clearly."
+      ],
+      "fix": "Reallocate the 42 parts to a visibly layered travel tabard, segmented hands and an asymmetric ceramic faceplate around the dark visor. Give one shoulder a broad contrasting repair patch with a simple visible seam, add a readable orbital-coordinate emblem, and place a solid irregular faceted meteorite token in the hands. Remove armour-like shoulder bulk rather than adding more tiny technical details."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "car",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

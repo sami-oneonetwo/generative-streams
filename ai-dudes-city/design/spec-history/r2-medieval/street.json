@@ -1,0 +1,390 @@
+{
+  "name": "Mud-Jointed Market Lane",
+  "description": "Broken wheel-polished tracks, shallow muddy gutters and scattered threshold stones soften a medieval cobbled lane into shared packed-earth frontage.",
+  "notes": "Use the supplied road surface with a warm #867c6c base, prominent #5a4a36 muddy joints and irregularly spaced, staggered 0.25–0.5 m rounded cobbles rather than repeated dots; these twenty low dressing parts supply interrupted wear and unkerbed earth margins, not a replacement surface texture.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -3.12,
+        0.03,
+        -3.8
+      ],
+      "size": [
+        5.55,
+        0.06,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.025,
+        0
+      ],
+      "color": "#605545"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.78,
+        0.03,
+        -3.85
+      ],
+      "size": [
+        5.85,
+        0.06,
+        0.34
+      ],
+      "rotation": [
+        0,
+        -0.018,
+        0
+      ],
+      "color": "#5a4a36"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.43,
+        0.03,
+        3.81
+      ],
+      "size": [
+        4.75,
+        0.06,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#5a4a36"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.36,
+        0.03,
+        3.83
+      ],
+      "size": [
+        6.5,
+        0.06,
+        0.46
+      ],
+      "rotation": [
+        0,
+        0.022,
+        0
+      ],
+      "color": "#605545"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.57,
+        0.03,
+        -1.19
+      ],
+      "size": [
+        3.65,
+        0.06,
+        0.29
+      ],
+      "rotation": [
+        0,
+        0.028,
+        0
+      ],
+      "color": "#6a6152"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.72,
+        0.03,
+        -1.25
+      ],
+      "size": [
+        4.15,
+        0.06,
+        0.35
+      ],
+      "rotation": [
+        0,
+        -0.019,
+        0
+      ],
+      "color": "#756b5b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.82,
+        0.03,
+        1.22
+      ],
+      "size": [
+        4.5,
+        0.06,
+        0.33
+      ],
+      "rotation": [
+        0,
+        0.018,
+        0
+      ],
+      "color": "#716757"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.08,
+        0.03,
+        1.17
+      ],
+      "size": [
+        3.45,
+        0.06,
+        0.27
+      ],
+      "rotation": [
+        0,
+        -0.035,
+        0
+      ],
+      "color": "#6a6152"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.08,
+        0.03,
+        -4.53
+      ],
+      "size": [
+        3.35,
+        0.06,
+        2.2
+      ],
+      "rotation": [
+        0,
+        -0.19,
+        0
+      ],
+      "color": "#8a7556"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.72,
+        0.03,
+        -4.54
+      ],
+      "size": [
+        4.55,
+        0.06,
+        2.35
+      ],
+      "rotation": [
+        0,
+        0.12,
+        0
+      ],
+      "color": "#927d5d"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.78,
+        0.03,
+        4.57
+      ],
+      "size": [
+        4.9,
+        0.06,
+        2.25
+      ],
+      "rotation": [
+        0,
+        -0.11,
+        0
+      ],
+      "color": "#8a7556"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.96,
+        0.03,
+        4.49
+      ],
+      "size": [
+        3.45,
+        0.06,
+        2.05
+      ],
+      "rotation": [
+        0,
+        0.23,
+        0
+      ],
+      "color": "#998261"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.44,
+        0.09,
+        -4.08
+      ],
+      "size": [
+        0.49,
+        0.12,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.43,
+        0
+      ],
+      "color": "#9c927c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.24,
+        0.085,
+        4.21
+      ],
+      "size": [
+        0.32,
+        0.11,
+        0.45
+      ],
+      "rotation": [
+        0,
+        -0.31,
+        0
+      ],
+      "color": "#807867"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.92,
+        0.08,
+        5.25
+      ],
+      "size": [
+        1.22,
+        0.1,
+        0.78
+      ],
+      "rotation": [
+        0,
+        -0.17,
+        0
+      ],
+      "color": "#b0a387"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.37,
+        0.085,
+        -5.18
+      ],
+      "size": [
+        1.43,
+        0.11,
+        0.83
+      ],
+      "rotation": [
+        0,
+        0.21,
+        0
+      ],
+      "color": "#b9ac91"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.06,
+        0.25,
+        5.11
+      ],
+      "size": [
+        0.78,
+        0.5,
+        0.69
+      ],
+      "rotation": [
+        0,
+        0.32,
+        0
+      ],
+      "color": "#817967"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.84,
+        0.265,
+        -5.03
+      ],
+      "size": [
+        0.87,
+        0.53,
+        0.72
+      ],
+      "rotation": [
+        0,
+        -0.38,
+        0
+      ],
+      "color": "#90836b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.78,
+        0.035,
+        -3.73
+      ],
+      "size": [
+        1.75,
+        0.07,
+        0.78
+      ],
+      "rotation": [
+        0,
+        -0.22,
+        0
+      ],
+      "color": "#5c4a35"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.61,
+        0.065,
+        -3.77
+      ],
+      "size": [
+        0.98,
+        0.06,
+        0.42
+      ],
+      "rotation": [
+        0,
+        -0.32,
+        0
+      ],
+      "color": "#493d2e"
+    }
+  ],
+  "checks": [
+    "4 parts reach outside the 12 m room"
+  ]
+}

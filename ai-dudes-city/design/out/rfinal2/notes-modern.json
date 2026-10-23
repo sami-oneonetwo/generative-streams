@@ -1,0 +1,18 @@
+{
+ "elements": [
+  {
+   "id": "river",
+   "problems": [
+    "In the town the crossing's deck ends in mid-air above the banks: there are no landings, ramps or steps down to the bank path (the bank ground is at about y 0 just beyond |z| 7)."
+   ],
+   "fix": "Add a clear landing at each end: ramps, steps or an abutment that brings the deck down to bank level at z = \u00b17 and a little beyond (to |z| 7.6). The water itself is drawn by the town under the piece: no water slabs of your own. Keep everything within |x| \u2264 7."
+  },
+  {
+   "id": "street",
+   "problems": [
+    "This piece repeats every 12 m along every road, so its zebra crossing appears three times per block side, mid-block."
+   ],
+   "fix": "Remove the zebra crossing entirely; keep the lane dashes, drains and manhole covers."
+  }
+ ]
+}

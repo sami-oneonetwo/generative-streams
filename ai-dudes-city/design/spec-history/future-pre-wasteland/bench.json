@@ -1,0 +1,198 @@
+{
+  "name": "Civic Crescent Hover Bench",
+  "description": "A two-metre ivory bench with a broad lavender cushion and a substantial curved backrest hovers 0.15 m above a navy docking base with a restrained cyan status ring.",
+  "notes": "The tangible biocomposite shell preserves an unmistakable two-person bench silhouette, while its unsupported seat and recessed docking light establish future levitation.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "size": [
+        1.32,
+        0.07,
+        0.78
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.065,
+        0
+      ],
+      "size": [
+        1.18,
+        0.06,
+        0.68
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#66f2df",
+      "glow": true
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.07,
+        0
+      ],
+      "size": [
+        1.06,
+        0.06,
+        0.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.69,
+        0.32,
+        0.065
+      ],
+      "size": [
+        0.57,
+        0.14,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.32,
+        0
+      ],
+      "size": [
+        0.94,
+        0.14,
+        0.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.69,
+        0.32,
+        0.065
+      ],
+      "size": [
+        0.57,
+        0.14,
+        0.66
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.743,
+        0.64,
+        -0.225
+      ],
+      "size": [
+        0.59,
+        0.54,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.64,
+        -0.295
+      ],
+      "size": [
+        0.96,
+        0.54,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.743,
+        0.64,
+        -0.225
+      ],
+      "size": [
+        0.59,
+        0.54,
+        0.16
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.42,
+        0.07
+      ],
+      "size": [
+        1.72,
+        0.06,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c1b5dc"
+    }
+  ]
+}

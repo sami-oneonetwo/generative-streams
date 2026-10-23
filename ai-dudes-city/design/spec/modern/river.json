@@ -1,0 +1,1112 @@
+{
+  "name": "Mayor's Bank-Ramp Concrete Crossing",
+  "description": "A low concrete road bridge crosses the river on shallow beams, with open metal rails and asphalt ramps descending to grounded bank landings at both ends.",
+  "notes": "Precast concrete, powder-coated safety rails and practical drainage establish the Modern Age, while landings extend to z ±7.6 and the town supplies all river water.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.07,
+        0
+      ],
+      "size": [
+        4,
+        0.1,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#e1e3dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        1.15,
+        0
+      ],
+      "size": [
+        4,
+        0.06,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.57733,
+        5.66051
+      ],
+      "size": [
+        4,
+        0.1,
+        2.78568
+      ],
+      "rotation": [
+        0.367174,
+        0,
+        0
+      ],
+      "color": "#e1e3dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.652,
+        5.68923
+      ],
+      "size": [
+        4,
+        0.06,
+        2.78568
+      ],
+      "rotation": [
+        0.367174,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.57733,
+        -5.66051
+      ],
+      "size": [
+        4,
+        0.1,
+        2.78568
+      ],
+      "rotation": [
+        -0.367174,
+        0,
+        0
+      ],
+      "color": "#e1e3dc"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.652,
+        -5.68923
+      ],
+      "size": [
+        4,
+        0.06,
+        2.78568
+      ],
+      "rotation": [
+        -0.367174,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        7.25
+      ],
+      "size": [
+        4,
+        0.12,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.15,
+        7.25
+      ],
+      "size": [
+        4,
+        0.06,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.06,
+        -7.25
+      ],
+      "size": [
+        4,
+        0.12,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.15,
+        -7.25
+      ],
+      "size": [
+        4,
+        0.06,
+        0.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#4c555e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.32,
+        0.88,
+        0
+      ],
+      "size": [
+        0.38,
+        0.28,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.32,
+        0.88,
+        0
+      ],
+      "size": [
+        0.38,
+        0.28,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.35,
+        -2.5
+      ],
+      "size": [
+        1.05,
+        0.7,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8a9496"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.35,
+        2.5
+      ],
+      "size": [
+        1.05,
+        0.7,
+        0.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8a9496"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.73,
+        -2.5
+      ],
+      "size": [
+        3.4,
+        0.18,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.73,
+        2.5
+      ],
+      "size": [
+        3.4,
+        0.18,
+        0.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.51,
+        -4.15
+      ],
+      "size": [
+        3.9,
+        1.02,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.51,
+        4.15
+      ],
+      "size": [
+        3.9,
+        1.02,
+        0.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.24,
+        0
+      ],
+      "size": [
+        0.28,
+        0.12,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.24,
+        0
+      ],
+      "size": [
+        0.28,
+        0.12,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        0.736,
+        5.72154
+      ],
+      "size": [
+        0.28,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        0.367174,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        0.736,
+        5.72154
+      ],
+      "size": [
+        0.28,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        0.367174,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        0.736,
+        -5.72154
+      ],
+      "size": [
+        0.28,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        -0.367174,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        0.736,
+        -5.72154
+      ],
+      "size": [
+        0.28,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        -0.367174,
+        0,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.74,
+        -4.2
+      ],
+      "size": [
+        0.14,
+        1.04,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.74,
+        0
+      ],
+      "size": [
+        0.14,
+        1.04,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.74,
+        4.2
+      ],
+      "size": [
+        0.14,
+        1.04,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.74,
+        -4.2
+      ],
+      "size": [
+        0.14,
+        1.04,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.74,
+        0
+      ],
+      "size": [
+        0.14,
+        1.04,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.74,
+        4.2
+      ],
+      "size": [
+        0.14,
+        1.04,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.72,
+        0
+      ],
+      "size": [
+        0.12,
+        0.12,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        2.2,
+        0
+      ],
+      "size": [
+        0.16,
+        0.12,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.72,
+        0
+      ],
+      "size": [
+        0.12,
+        0.12,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        2.2,
+        0
+      ],
+      "size": [
+        0.16,
+        0.12,
+        8.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        0.79,
+        -6.9
+      ],
+      "size": [
+        0.14,
+        1.02,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        0.79,
+        -6.9
+      ],
+      "size": [
+        0.14,
+        1.02,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        0.79,
+        6.9
+      ],
+      "size": [
+        0.14,
+        1.02,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        0.79,
+        6.9
+      ],
+      "size": [
+        0.14,
+        1.02,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#65717a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.7,
+        -5.7
+      ],
+      "size": [
+        0.16,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        -0.367174,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.7,
+        -5.7
+      ],
+      "size": [
+        0.16,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        -0.367174,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.86,
+        1.7,
+        5.7
+      ],
+      "size": [
+        0.16,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        0.367174,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.86,
+        1.7,
+        5.7
+      ],
+      "size": [
+        0.16,
+        0.12,
+        2.78568
+      ],
+      "rotation": [
+        0.367174,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.06,
+        0.99,
+        -3.7
+      ],
+      "size": [
+        0.24,
+        0.4,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.27,
+        0.99,
+        -3.7
+      ],
+      "size": [
+        0.16,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.06,
+        0.99,
+        3.7
+      ],
+      "size": [
+        0.24,
+        0.4,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.27,
+        0.99,
+        3.7
+      ],
+      "size": [
+        0.16,
+        0.06,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        1.570796
+      ],
+      "color": "#3c454f"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.15,
+        0.28,
+        -6.78
+      ],
+      "size": [
+        1.18,
+        0.56,
+        0.9
+      ],
+      "rotation": [
+        0,
+        0.27,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.92,
+        0.16,
+        -6.9
+      ],
+      "size": [
+        0.66,
+        0.32,
+        0.58
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        5.45,
+        0.3,
+        6.85
+      ],
+      "size": [
+        1.42,
+        0.6,
+        1.02
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.58,
+        0.17,
+        7.12
+      ],
+      "size": [
+        0.8,
+        0.34,
+        0.58
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "color": "#c5c9c7"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.2,
+        0.07,
+        -7.12
+      ],
+      "size": [
+        1.7,
+        0.14,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#648f61"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.15,
+        0.07,
+        7.12
+      ],
+      "size": [
+        1.35,
+        0.14,
+        0.65
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#648f61"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.68,
+        0.43,
+        -7.08
+      ],
+      "size": [
+        0.18,
+        0.72,
+        0.18
+      ],
+      "rotation": [
+        0.12,
+        0,
+        -0.24
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.24,
+        0.67,
+        -7.19
+      ],
+      "size": [
+        0.14,
+        1.2,
+        0.16
+      ],
+      "rotation": [
+        -0.08,
+        0,
+        -0.09
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.8,
+        0.53,
+        -7.02
+      ],
+      "size": [
+        0.18,
+        0.92,
+        0.18
+      ],
+      "rotation": [
+        0.18,
+        0,
+        0.15
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.8,
+        0.47,
+        7.1
+      ],
+      "size": [
+        0.16,
+        0.8,
+        0.18
+      ],
+      "rotation": [
+        -0.1,
+        0,
+        -0.19
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.17,
+        0.69,
+        7.18
+      ],
+      "size": [
+        0.14,
+        1.24,
+        0.16
+      ],
+      "rotation": [
+        0.08,
+        0,
+        0.08
+      ],
+      "color": "#a5c880"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.55,
+        0.39,
+        7.02
+      ],
+      "size": [
+        0.18,
+        0.64,
+        0.18
+      ],
+      "rotation": [
+        -0.18,
+        0,
+        0.26
+      ],
+      "color": "#548a52"
+    }
+  ],
+  "checks": [
+    "10 parts reach outside the 14 m room"
+  ]
+}

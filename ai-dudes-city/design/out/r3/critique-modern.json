@@ -1,0 +1,211 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The buildings, kiosk and tourist transport establish a convincing contemporary toy town, but the fountain, lot symbols and vegetation miss explicit bible requirements. Revise those assets and the street assembly before approval; exact part budgets and glow flags still require source validation.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Flowers read as isolated oversized coloured discs rather than meadow clusters.",
+        "Grass clumps are difficult to distinguish from the uniform lawn texture."
+      ],
+      "fix": "Within 14 dressing parts, replace the large flower discs with small irregular flower-and-leaf clusters, add clearly silhouetted low grass tufts, and keep puddles flush and most dressing below 0.35 m."
+    },
+    {
+      "id": "street",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the charcoal asphalt, flat markings, slab pavements and lowered crossing treatment. Control crossing repetition when assembling adjacent tiles."
+    },
+    {
+      "id": "lot-sale",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The marker uses a house-plus graphic instead of the required amber empty ring.",
+        "Two separate gravel patches do not register against the uniform parcel surface."
+      ],
+      "fix": "Rebuild the 12-part dressing with a compact recycled panel on a square post near x 4.5, z 4.5. Make a thick amber empty ring dominate a pale field, remove the house-plus symbol, and distinguish two irregular gravel patches alongside sparse grass."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the open timber-slat boundary, metal posts and modest Ivy nameplate. Preserve the red owner strip, filled household emblem and unobstructed front opening."
+    },
+    {
+      "id": "street-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Both crowns are assembled from conspicuously smooth balls rather than branching, faceted foliage masses.",
+        "The maple reads as stacked coloured scoops, and its required low branch is not legible.",
+        "The plane tree lacks enough crown structure to distinguish it beyond being the taller green tree."
+      ],
+      "fix": "Redistribute the 30 parts into a visibly bent plane trunk with unequal branch forks and a smaller maple with one exposed low branch. Use angular, differently sized crown masses with gaps and uneven spread; retain separate permeable pits."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The oak has a compact ball-cluster crown with little visible branching hierarchy.",
+        "The willow resembles a rounded cap with hanging green rods rather than a broad, irregular weeping canopy."
+      ],
+      "fix": "Within 38 parts, give the oak an off-centre fork and unequal spreading limbs. Widen the willow and replace repeated dangling rods with staggered tapered foliage masses at different heights; keep the flowering shrub low and asymmetrical."
+    },
+    {
+      "id": "street-light",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The head sits on a tiny angular bracket rather than the specified short curved arm.",
+        "The LED head reads as a dark paddle without a clearly differentiated diffuser edge."
+      ],
+      "fix": "Use the 12 parts to create a short segmented curved arm and a flat housing with a broad pale underside diffuser visible at its edge. Set glow=true only on the diffuser and retain the slim powder-coated pole."
+    },
+    {
+      "id": "centrepiece",
+      "score": 4,
+      "ok": false,
+      "problems": [
+        "The tall blue architectural arch directly contradicts the required low fountain and simple offset stone form.",
+        "The basin reads grey rather than shallow blue, and the coping lacks the specified pale concrete character.",
+        "Numerous thin uprights resemble a railing rather than three readable water jets."
+      ],
+      "fix": "Replace the arch composition with a 48-part circular fountain about 4.5 m across: low pale concrete coping, a visibly blue shallow basin, exactly three short non-glowing jets and one low offset stone form. Restrict glow to recessed pool-light lenses and maintain accessible surrounding space."
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the broad timber slats, restrained aluminium supports and shallow backrest. Maintain an approximately 0.45 m seat height and clear two-person width."
+    },
+    {
+      "id": "market",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the flat overhang, contemporary panel construction and readable blocks of produce and bottles. Keep the glass display edge distinct without adding reflective noise or branding."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The stop sign reads as a tiny bordered colour tile rather than a large, unmistakable bus pictogram."
+      ],
+      "fix": "Within the 64-part budget, enlarge the pictogram within the existing sign face: use a bold pale bus-front silhouette with a clear windscreen and two wheels on dark blue. Preserve the narrow shelter, recognisable minibus and unobstructed route from the pavement to its door."
+    },
+    {
+      "id": "river",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The approaches do not clearly demonstrate flush road connections; exposed deck ends and grassy bank lips read as abrupt thresholds.",
+        "Reed and stone accents feel mechanically paired rather than naturally distributed."
+      ],
+      "fix": "Carry the bridge approaches continuously onto the real bank landings at z ±7, with shallow concrete beams and modest abutments visibly supporting a deck about 1 m above water. Resolve grass-to-road thresholds and stagger reed pockets and stones while preserving the 4 m bridge width and 58-part budget."
+    },
+    {
+      "id": "civic-lot",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The municipal marker reads as a white cross with an amber centre, not four nodes around one shared centre.",
+        "The required building-hand pictogram is not independently legible."
+      ],
+      "fix": "Rework the 16-part lot dressing so the green sign carries four bold outer nodes connected to one shared centre, plus a separate simple hand-supporting-building silhouette. Retain the four low corner blocks and clear construction interior."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the luggage-bearing coach, two broad parasols, small check-in awning and portable gathering equipment. Keep the route display wordless and ensure only the gathering light's diffuser emits."
+    },
+    {
+      "id": "resident",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The hoodie resident's hair reads as a solid helmet-like cap rather than loose textured hair.",
+        "The cropped-trouser break is not clear.",
+        "The carried plant reads as a green ball on a pot rather than a leafy silhouette."
+      ],
+      "fix": "Redistribute the 46 parts without altering the base bodies: break the loose hair into a few uneven chunks, expose a clear ankle or sock band above the trainers, and give the plant two or three unequal leaf masses. Preserve the second resident's tied-back hair, workwear and visible phone."
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The scissors have long rigid blades that dominate the figure instead of a rounded ceremonial profile.",
+        "The ribbon reads as a bulky red bow rather than a short open loop."
+      ],
+      "fix": "Within 38 parts, retain the suit, civic sash, badge and neat hair, but shorten and round the scissor blades while keeping oversized circular handles and a clear pivot. Reduce the ribbon to a short readable loop separated from the sash."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the practical bright jacket, bucket hat, lanyard, folded map and stickered suitcase. Keep the flag secondary to the figure and preserve the contrasting travel scarf."
+    },
+    {
+      "id": "home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contemporary two-storey massing, broad glazing, restrained roof forms and welcoming entrance. Preserve the parcel footprint and keep planting clear of the entrance path."
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the glass-fronted espresso-bar identity, flat roof and compact service terrace. Keep the cup landmark unbranded and avoid adding further rooftop clutter."
+    },
+    {
+      "id": "skyscraper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped steel-and-concrete silhouette, strong floor bands and restrained blue glazing. Keep setbacks and planting readable without introducing dense window detail."
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the blocky muzzle, contrasting paws, floppy ears and contemporary harness. Preserve a believable large-dog scale beside the 1.8 m residents."
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the compact toy-car proportions, contrasting glazing and rubber tyres. Keep the rear hatch readable and resist realistic trim or reflective detailing."
+    },
+    {
+      "id": "street-corner",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The minibus overlaps the right-hand pedestrian crossing.",
+        "Zebra crossings repeat with the road modules instead of forming a sparse, deliberate junction-led layout.",
+        "The civic side becomes a nearly uninterrupted paved apron, weakening the bible's leafy public-space identity."
+      ],
+      "fix": "Move the bus stopping position clear of the crossing and align its door with an unobstructed boarding area. Remove redundant crossings, coordinate dropped kerbs at the retained crossing, and reuse redesigned trees and low planting along the plaza perimeter without changing parcel footprints or blocking circulation; verify all source part budgets and glow assignments before re-rendering."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

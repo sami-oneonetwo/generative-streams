@@ -1,0 +1,463 @@
+{
+  "name": "Wild Birch and Crooked Pine",
+  "description": "A tall, wind-leaning birch with a torn crown stands beside a shorter pine whose heavy branches reach unevenly over the muddy walking edge.",
+  "notes": "Crooked trunks, exposed roots, sparse birch foliage and lopsided pine boughs depict surviving wild woodland rather than deliberately planted street trees.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.2,
+        0.13,
+        5.05
+      ],
+      "size": [
+        1.15,
+        0.22,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0.28,
+        0.08
+      ],
+      "color": "#79563b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.94,
+        0.12,
+        4.79
+      ],
+      "size": [
+        0.34,
+        0.2,
+        0.94
+      ],
+      "rotation": [
+        0,
+        -0.42,
+        0
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.16,
+        1.49,
+        5
+      ],
+      "size": [
+        0.52,
+        2.95,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0.13
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.55,
+        3.68,
+        5.02
+      ],
+      "size": [
+        0.36,
+        1.64,
+        0.34
+      ],
+      "rotation": [
+        0.03,
+        0,
+        0.25
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.2,
+        1.05,
+        4.753
+      ],
+      "size": [
+        0.33,
+        0.16,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        0.13
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.42,
+        2.61,
+        4.79
+      ],
+      "size": [
+        0.27,
+        0.22,
+        0.08
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.12
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4.03,
+        3.51,
+        5.02
+      ],
+      "size": [
+        0.23,
+        1.48,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        0.98
+      ],
+      "color": "#c3a575"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.01,
+        3.96,
+        4.91
+      ],
+      "size": [
+        0.2,
+        1.43,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.92
+      ],
+      "color": "#e1d3ae"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.89,
+        4.62,
+        5.03
+      ],
+      "size": [
+        0.16,
+        0.8,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0.38
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.45,
+        4.13,
+        5.01
+      ],
+      "size": [
+        1.64,
+        1.13,
+        1.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.78,
+        4.88,
+        5.04
+      ],
+      "size": [
+        1.48,
+        1.4,
+        1.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a8ad68"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.48,
+        4.46,
+        4.9
+      ],
+      "size": [
+        1.49,
+        0.98,
+        1.42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.91,
+        3.91,
+        4.95
+      ],
+      "size": [
+        0.84,
+        0.65,
+        1.04
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.05,
+        0.14,
+        5.01
+      ],
+      "size": [
+        1.12,
+        0.24,
+        0.42
+      ],
+      "rotation": [
+        0,
+        -0.34,
+        -0.04
+      ],
+      "color": "#79563b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.17,
+        1.13,
+        5
+      ],
+      "size": [
+        0.58,
+        2.2,
+        0.52
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.16
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.22,
+        2.81,
+        5.03
+      ],
+      "size": [
+        0.36,
+        1.45,
+        0.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0.2
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.97,
+        1.92,
+        5
+      ],
+      "size": [
+        0.27,
+        1.57,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.13
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        3.82,
+        2.75,
+        5.02
+      ],
+      "size": [
+        0.21,
+        1.25,
+        0.2
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.03
+      ],
+      "color": "#76513b"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        2.75,
+        2.63,
+        4.95
+      ],
+      "size": [
+        0.19,
+        0.91,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        1.04
+      ],
+      "color": "#987052"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.42,
+        2.33,
+        5
+      ],
+      "size": [
+        2.13,
+        1.62,
+        1.72
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        4.01,
+        3.18,
+        5.04
+      ],
+      "size": [
+        1.7,
+        1.47,
+        1.56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#526b40"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        2.55,
+        2.97,
+        4.95
+      ],
+      "size": [
+        1.26,
+        1.12,
+        1.34
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.08,
+        3.78,
+        5.03
+      ],
+      "size": [
+        1.12,
+        1.62,
+        1.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0.13
+      ],
+      "color": "#7c9254"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.61,
+        0.13,
+        5.35
+      ],
+      "size": [
+        1.06,
+        0.25,
+        0.87
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#526b40"
+    }
+  ]
+}

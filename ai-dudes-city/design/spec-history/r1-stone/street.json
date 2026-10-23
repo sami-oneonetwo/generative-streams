@@ -1,0 +1,273 @@
+{
+  "name": "Trampled Woodland Mud Track",
+  "description": "Shallow drag scars, footprints and muddy puddles cross an open earth track, with embedded flint and snapped branches scattered near its margins.",
+  "notes": "Unpaired hauling grooves and irregular natural debris suggest Stone Age foot traffic and dragged loads without wheels, paving or constructed walking edges.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3.9,
+        0.015,
+        -2.55
+      ],
+      "size": [
+        2.3,
+        0.03,
+        0.13
+      ],
+      "rotation": [
+        0,
+        0.08,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -1.95,
+        0.015,
+        -2.66
+      ],
+      "size": [
+        1.25,
+        0.03,
+        0.17
+      ],
+      "rotation": [
+        0,
+        -0.05,
+        0
+      ],
+      "color": "#65503b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.5,
+        0.015,
+        2.48
+      ],
+      "size": [
+        2.35,
+        0.03,
+        0.16
+      ],
+      "rotation": [
+        0,
+        -0.12,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.35,
+        0.015,
+        0.72
+      ],
+      "size": [
+        0.37,
+        0.03,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0.14,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.74,
+        0.015,
+        1.02
+      ],
+      "size": [
+        0.35,
+        0.03,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.16,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -0.12,
+        0.015,
+        0.68
+      ],
+      "size": [
+        0.38,
+        0.03,
+        0.19
+      ],
+      "rotation": [
+        0,
+        0.09,
+        0
+      ],
+      "color": "#65503b"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        0.52,
+        0.015,
+        0.97
+      ],
+      "size": [
+        0.34,
+        0.03,
+        0.2
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "color": "#533d30"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.82,
+        0.025,
+        -2.9
+      ],
+      "size": [
+        1.65,
+        0.05,
+        0.91
+      ],
+      "rotation": [
+        0,
+        0.26,
+        0
+      ],
+      "color": "#567e73"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.7,
+        0.02,
+        2.91
+      ],
+      "size": [
+        1.12,
+        0.04,
+        0.68
+      ],
+      "rotation": [
+        0,
+        -0.35,
+        0
+      ],
+      "color": "#667e70"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -5.05,
+        0.13,
+        3.64
+      ],
+      "size": [
+        0.73,
+        0.26,
+        0.51
+      ],
+      "rotation": [
+        0,
+        0.43,
+        0
+      ],
+      "color": "#81847a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.98,
+        0.16,
+        -3.59
+      ],
+      "size": [
+        0.82,
+        0.32,
+        0.57
+      ],
+      "rotation": [
+        0,
+        -0.31,
+        0
+      ],
+      "color": "#979586"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        4.83,
+        0.095,
+        3.44
+      ],
+      "size": [
+        0.47,
+        0.19,
+        0.36
+      ],
+      "rotation": [
+        0,
+        0.62,
+        0
+      ],
+      "color": "#686f69"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.62,
+        0.065,
+        -3.57
+      ],
+      "size": [
+        1.05,
+        0.13,
+        0.14
+      ],
+      "rotation": [
+        0,
+        0.38,
+        0
+      ],
+      "color": "#79563b"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.13,
+        0.05,
+        3.68
+      ],
+      "size": [
+        0.78,
+        0.1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        -0.57,
+        0
+      ],
+      "color": "#987052"
+    }
+  ]
+}

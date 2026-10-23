@@ -1,0 +1,237 @@
+{
+  "name": "Civic Lightblade Pillar",
+  "description": "A tall tapered ceramic pillar carries a broad cyan lightblade in a dark housing, with an exposed luminous upper face and a short matte directional cap.",
+  "notes": "The continuous taper, integrated cantilever and restrained saturated emitters establish a future civic light, while dark backing and a shaft seam preserve its silhouette against pale paving.",
+  "parts": [
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.1,
+        5
+      ],
+      "size": [
+        0.76,
+        0.2,
+        0.76
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.15,
+        5
+      ],
+      "size": [
+        0.25,
+        3.9,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.1575,
+        2.15,
+        5
+      ],
+      "size": [
+        0.06,
+        3.9,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0.032
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.1575,
+        2.15,
+        5
+      ],
+      "size": [
+        0.06,
+        3.9,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.032
+      ],
+      "color": "#d7e1e8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.15,
+        5.1575
+      ],
+      "size": [
+        0.38,
+        3.9,
+        0.06
+      ],
+      "rotation": [
+        -0.032,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        2.15,
+        4.8425
+      ],
+      "size": [
+        0.38,
+        3.9,
+        0.06
+      ],
+      "rotation": [
+        0.032,
+        0,
+        0
+      ],
+      "color": "#d7e1e8"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.08,
+        2.15,
+        5.2075
+      ],
+      "size": [
+        0.07,
+        3.82,
+        0.06
+      ],
+      "rotation": [
+        -0.032,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.13,
+        5.2
+      ],
+      "size": [
+        1.4,
+        0.42,
+        0.92
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.34,
+        5.2
+      ],
+      "size": [
+        1.12,
+        0.16,
+        0.64
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.13,
+        5.65
+      ],
+      "size": [
+        1.12,
+        0.18,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        4.46,
+        4.85
+      ],
+      "size": [
+        1.5,
+        0.08,
+        0.26
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.29,
+        5
+      ],
+      "size": [
+        0.54,
+        0.18,
+        0.54
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#739d97"
+    }
+  ]
+}

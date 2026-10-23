@@ -1,0 +1,390 @@
+{
+  "name": "Unclaimed Lot with Amber Survey Flags",
+  "description": "Four amber survey flags and a low front tape outline the available parcel, while a large amber-ring marker on twin posts welcomes a newcomer.",
+  "notes": "Amber-and-white recycled panels, square metal posts and survey tape distinguish this Modern Age free lot from green municipal community markers.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.5,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.39,
+        0.86,
+        -5.6
+      ],
+      "size": [
+        0.3,
+        0.2,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.6,
+        0.5,
+        -5.6
+      ],
+      "size": [
+        0.12,
+        1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.39,
+        0.86,
+        -5.6
+      ],
+      "size": [
+        0.3,
+        0.2,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.6,
+        0.5,
+        5.6
+      ],
+      "size": [
+        0.12,
+        1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.39,
+        0.86,
+        5.6
+      ],
+      "size": [
+        0.3,
+        0.2,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.6,
+        0.5,
+        5.6
+      ],
+      "size": [
+        0.12,
+        1,
+        0.12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.39,
+        0.86,
+        5.6
+      ],
+      "size": [
+        0.3,
+        0.2,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.8,
+        5.6
+      ],
+      "size": [
+        11.2,
+        0.06,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.7,
+        1.2,
+        4.42
+      ],
+      "size": [
+        0.16,
+        2.4,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        5.3,
+        1.2,
+        4.42
+      ],
+      "size": [
+        0.16,
+        2.4,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.8,
+        4.5
+      ],
+      "size": [
+        2,
+        1.6,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "box",
+      "position": [
+        4.5,
+        1.8,
+        4.6
+      ],
+      "size": [
+        1.88,
+        1.48,
+        0.06
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.8,
+        4.67
+      ],
+      "size": [
+        1.4,
+        0.08,
+        1.4
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#efb749"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4.5,
+        1.8,
+        4.72
+      ],
+      "size": [
+        0.9,
+        0.06,
+        0.9
+      ],
+      "rotation": [
+        1.570796,
+        0,
+        0
+      ],
+      "color": "#eee9d8"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        3.04,
+        0.25,
+        4.12
+      ],
+      "size": [
+        0.42,
+        0.5,
+        0.38
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.24,
+        0.25,
+        -3.2
+      ],
+      "size": [
+        0.46,
+        0.5,
+        0.38
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "cone",
+      "position": [
+        -4.63,
+        0.19,
+        -2.95
+      ],
+      "size": [
+        0.34,
+        0.38,
+        0.42
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "color": "#548a52"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.68,
+        0.02,
+        -3.35
+      ],
+      "size": [
+        0.88,
+        0.04,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0.22,
+        0
+      ],
+      "color": "#e0e3d4"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.13,
+        0.02,
+        -3.22
+      ],
+      "size": [
+        0.65,
+        0.04,
+        0.48
+      ],
+      "rotation": [
+        0,
+        -0.31,
+        0
+      ],
+      "color": "#cad0bd"
+    }
+  ],
+  "checks": [
+    "1 parts reach outside the 12 m room"
+  ]
+}

@@ -1,14 +1,22 @@
 // The town. The layout comes from src/shared/city.ts, the same functions the server hands lots out
-// with, so the lot drawn here is the lot a character owns and builds on. Roads with dashed centre
-// lines run between the blocks; every block has a pavement round it, street trees and lamps at its
-// corners, and four lots: rough grass with a FOR SALE sign until someone moves in, then a mown lawn
-// with a low hedge and a sign with their name. The middle block is the town square: a paved cross,
-// the fountain, the market stall and four community lots. Beyond the ring road is countryside.
-// Static geometry is instanced and built once; only the lots and their signs change with the snapshot.
+// with, so the lot drawn here is the lot a character owns and builds on. What everything looks like
+// comes from the town's age (docs/ages.md): the age's world rules (src/shared/ageBibles.json: ground
+// surfaces, whether there are pavements and kerbs, light) and its pieces, designed on the design board
+// (client/dudes/agePieces.json: road details, lot markers and boundaries, street trees, lights, the
+// square's centrepiece, seating and stall, the arrival point, the river crossing, the caravan camp,
+// the countryside's trees). Mud tracks and a bonfire in the Stone Age, cobbles and a market cross in
+// the Middle Ages, setts and gas lamps in the Industrial, a fire barrel in the Wasteland.
+// Pieces used many times are instanced (pieces.ts); only the lots change with the snapshot. A new age
+// throws the scenery away and builds it again (`setAge`); the builds and people on top stay.
 // The sun's shadow box follows the camera's framing (`frame`), so shadows stay crisp at any zoom.
 
 import * as THREE from 'three';
-import { BLOCK_HALF, CITY, CITY_BOUNDS, PITCH, SQUARE, BUS_STOP, allPlots, avenueName, roadLines, streetName, type PlotInfo } from '../../src/shared/city';
+import { BLOCK_HALF, CITY, CITY_BOUNDS, PITCH, RIVER, SQUARE, BUS_STOP, allPlots, avenueName, courtyards, parks, roadLines, streetName, type PlotInfo } from '../../src/shared/city';
+import { AGE_IDS, MODERN } from '../../src/shared/ages';
+import BIBLES from '../../src/shared/ageBibles.json';
+import PIECES from './agePieces.json';
+import { ground, isShared, seeded, vary, type Surface } from './surfaces';
+import { OWNER_COLOUR, PIECE_MATERIALS, disposePiece, instancePiece, mergePiece, placePiece, placementMatrix, type MergedPiece, type Piece, type Placement } from './pieces';
 import type { TownView } from './types';
 
 export interface EnvironmentHandles {
@@ -18,91 +26,56 @@ export interface EnvironmentHandles {
   /** Who owns which lot, the districts, the party: from every applied snapshot. */
   town(view: TownView | undefined): void;
   update(now: number, reducedMotion: boolean): void;
+  /** The town's age from the snapshot: a different age rebuilds the scenery in its style. */
+  setAge(age: number): void;
 }
 
-const GRASS = 0x6f8f4e,
-  ROUGH = 0x8b9a5a,
-  LAWN = 0x5f9a45,
-  ASPHALT = 0x4a4d52,
-  KERB = 0xb9b6ac,
-  PAVEMENT = 0xa9a69c,
-  PAVING = 0xc9bfa6,
-  LINE = 0xe8e2c8,
-  SKY = 0xbfd2dd,
-  WATER = 0x58a6d6,
-  STONE = 0xb7b1a2;
-const LEAVES = [0x4f7a3f, 0x5e8a4a, 0x6a9550, 0x557f43];
+interface Bible {
+  id: string;
+  name: string;
+  rules?: { sidewalks?: boolean; kerbs?: boolean };
+  surfaces: Record<'countryside' | 'road' | 'lotRough' | 'lotClaimed' | 'square' | 'bank' | 'water', Surface> & { pavement?: Surface | null };
+  light?: { sky?: string; fog?: string; sun?: string; sunIntensity?: number; hemiSky?: string; hemiGround?: string; hemiIntensity?: number };
+  palette?: string[];
+}
+const AGE_BIBLES = BIBLES as unknown as Bible[];
+const AGE_PIECES = PIECES as unknown as Record<string, Record<string, Piece | undefined>>;
+
 const SUN_DIR = new THREE.Vector3(-15, 28, 10).normalize();
+/** The stream camera's usual turn (main.ts): name plates face it. */
+const CAMERA_YAW = 0.65;
+/** The stream camera stands 12× further back than it used to (main.ts CAM_FAR); fog is measured from it, so it starts that much further away. */
+const FOG_SHIFT = Math.hypot(43, 36) * (12 - 1);
 const SHADOW_MAP = 2048;
+/** The road's centre lines, and where the road is between them (junctions are a road wide). */
+const ROAD_HALF = CITY.road / 2;
+/** Where the camp and the path to it are, across the river. */
+const CAMP = { x: RIVER.x + RIVER.width / 2 + 22, z: 0 };
 
-const unitBox = new THREE.BoxGeometry(1, 1, 1);
-const GEO = {
-  box: unitBox,
-  cyl: new THREE.CylinderGeometry(0.5, 0.5, 1, 10),
-  blob: new THREE.IcosahedronGeometry(1, 1),
-  cone: new THREE.ConeGeometry(1, 1, 7),
-};
-const white = () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
+const colour = (hex: string | undefined, fallback: string) => new THREE.Color(/^#[0-9a-f]{6}$/i.test(hex ?? '') ? hex! : fallback);
 
-/** Instanced copies of one geometry with a colour each. */
-function instanced(geo: THREE.BufferGeometry, count: number, parent: THREE.Object3D, castShadow: boolean, material: THREE.Material = white()) {
-  const inst = new THREE.InstancedMesh(geo, material, Math.max(1, count));
-  inst.castShadow = castShadow;
-  inst.receiveShadow = true;
-  inst.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(Math.max(1, count) * 3), 3);
-  parent.add(inst);
-  const c = new THREE.Color();
-  let n = 0;
-  return {
-    inst,
-    place(m: THREE.Matrix4, color: number) {
-      if (n >= count) return;
-      inst.setMatrixAt(n, m);
-      inst.setColorAt(n, c.set(color));
-      n++;
-    },
-    finish() {
-      inst.count = n;
-      inst.instanceMatrix.needsUpdate = true;
-      if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
-      inst.computeBoundingSphere();
-    },
-  };
-}
-
-/** mulberry32, for scenery that must look the same on every reload. */
-function seeded(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/** A sign's face: a name (or FOR SALE) painted on a board, as a texture. */
-function signTexture(lines: string[], bg: string, fg: string, w = 256, h = 128): THREE.CanvasTexture {
+/** A sign's face: a name painted on a board, as a texture. */
+function signTexture(lines: string[], bg: string, fg: string, w = 256, h = 96): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
   const g = canvas.getContext('2d')!;
   g.fillStyle = bg;
-  g.fillRect(0, 0, w, h);
+  g.beginPath();
+  g.roundRect(0, 0, w, h, 14);
+  g.fill();
   g.strokeStyle = fg;
-  g.lineWidth = 6;
-  g.strokeRect(6, 6, w - 12, h - 12);
+  g.lineWidth = 5;
+  g.beginPath();
+  g.roundRect(5, 5, w - 10, h - 10, 10);
+  g.stroke();
   g.fillStyle = fg;
   g.textAlign = 'center';
   g.textBaseline = 'middle';
-  const sizes = lines.length === 1 ? [44] : [34, 24];
   lines.forEach((line, i) => {
-    let size = sizes[i] ?? 22;
+    let size = Math.round((lines.length === 1 ? 44 : i ? 24 : 38) * (h / 96));
     g.font = `700 ${size}px 'Trebuchet MS', sans-serif`;
-    while (g.measureText(line).width > w - 28 && size > 12) {
-      size -= 2;
-      g.font = `700 ${size}px 'Trebuchet MS', sans-serif`;
-    }
+    while (g.measureText(line).width > w - 26 && size > 12) g.font = `700 ${(size -= 2)}px 'Trebuchet MS', sans-serif`;
     g.fillText(line, w / 2, lines.length === 1 ? h / 2 : h * (0.36 + i * 0.34));
   });
   const tex = new THREE.CanvasTexture(canvas);
@@ -111,8 +84,8 @@ function signTexture(lines: string[], bg: string, fg: string, w = 256, h = 128):
   return tex;
 }
 
-/** A floating label (district names, street names), always facing the camera. */
-function label(text: string, colour: string, scale: number): THREE.Sprite {
+/** A floating label (street names), always facing the camera. */
+function label(text: string, colourCss: string, scale: number): THREE.Sprite {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 96;
@@ -123,7 +96,7 @@ function label(text: string, colour: string, scale: number): THREE.Sprite {
   g.lineWidth = 10;
   g.strokeStyle = 'rgba(20,32,26,0.85)';
   g.strokeText(text, 256, 48);
-  g.fillStyle = colour;
+  g.fillStyle = colourCss;
   g.fillText(text, 256, 48);
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -133,148 +106,221 @@ function label(text: string, colour: string, scale: number): THREE.Sprite {
   return sprite;
 }
 
+/** The town in one age: everything static, the lots, the lights. `dispose` takes it all away again. */
+interface Scenery {
+  frame(x: number, z: number, half: number): void;
+  town(view: TownView | undefined): void;
+  update(now: number, reducedMotion: boolean): void;
+  dispose(): void;
+}
+
 export function buildEnvironment(scene: THREE.Scene): EnvironmentHandles {
   const world = new THREE.Group();
   scene.add(world);
-  const m4 = new THREE.Matrix4(),
-    q = new THREE.Quaternion(),
-    e = new THREE.Euler(),
-    p = new THREE.Vector3(),
-    s = new THREE.Vector3();
-  const compose = (x: number, y: number, z: number, sx: number, sy: number, sz: number, ry = 0) => m4.compose(p.set(x, y, z), q.setFromEuler(e.set(0, ry, 0)), s.set(sx, sy, sz));
+  let age = -1,
+    current: Scenery | undefined,
+    lastView: TownView | undefined,
+    lastFrame: [number, number, number] = [0, 0, 40];
+  function setAge(next: number): void {
+    if (next === age) return;
+    age = next;
+    current?.dispose();
+    current = buildScenery(scene, world, next);
+    current.frame(...lastFrame);
+    current.town(lastView);
+  }
+  setAge(MODERN);
+  return {
+    world,
+    frame(x, z, half) {
+      lastFrame = [x, z, half];
+      current!.frame(x, z, half);
+    },
+    town(view) {
+      if (view) lastView = view;
+      current!.town(view);
+    },
+    update: (now, reducedMotion) => current!.update(now, reducedMotion),
+    setAge,
+  };
+}
 
-  // --- the ground: countryside, then the town's asphalt, then blocks on top ---
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(900, 900), new THREE.MeshStandardMaterial({ color: GRASS, roughness: 1 }));
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.16;
-  floor.receiveShadow = true;
-  world.add(floor);
+/** Turn about y that points a piece's own +z the way (dx, dz). */
+const facing = (dx: number, dz: number) => Math.atan2(dx, dz);
 
+function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number): Scenery {
+  const ageId = AGE_IDS[ageIndex] ?? AGE_IDS[MODERN];
+  const bible = AGE_BIBLES.find((b) => b.id === ageId) ?? AGE_BIBLES[MODERN];
+  const pieces = AGE_PIECES[ageId] ?? {};
+  const S = bible.surfaces;
+  const pavement = bible.rules?.sidewalks === false ? null : (S.pavement ?? null);
+  const world = new THREE.Group();
+  parent.add(world);
+  const merged = new Map<string, MergedPiece>();
+  const piece = (id: string, recolour?: (hex: string) => string, key = id): MergedPiece => {
+    let m = merged.get(key);
+    if (!m) merged.set(key, (m = mergePiece(pieces[id], recolour)));
+    return m;
+  };
   const b = CITY_BOUNDS;
-  const flat = instanced(unitBox, 2 + 25 * 3 + 200, world, false);
-  // Asphalt under the whole town.
-  flat.place(compose((b.minX + b.maxX) / 2, -0.12, (b.minZ + b.maxZ) / 2, b.maxX - b.minX, 0.06, b.maxZ - b.minZ), ASPHALT);
   const R = CITY.rings;
+  const r = seeded(20261020 + ageIndex);
+  const lines = roadLines();
+
+  // --- the ground: countryside (with a gap where the river runs), the roads, then every block on top ---
+  const rx0 = RIVER.x - RIVER.width / 2,
+    rx1 = RIVER.x + RIVER.width / 2;
+  ground(world, S.countryside, -450, rx0 - 2.4, -450, 450, -0.16);
+  ground(world, S.countryside, rx1 + 2.4, 450, -450, 450, -0.16);
+  // Roads as strips, so a pattern with a grain (ruts, setts, planks) runs along each one; avenues sit a hair higher where they cross.
+  for (const k of lines) {
+    ground(world, S.road, b.minX, b.maxX, k - ROAD_HALF, k + ROAD_HALF, -0.12);
+    ground(world, S.road, k - ROAD_HALF, k + ROAD_HALF, b.minZ, b.maxZ, -0.118, true);
+  }
+  const kerbs: THREE.Matrix4[] = [];
+  const raised = !!pavement && bible.rules?.kerbs !== false;
+  /** Lots and the square sit here; builds and people stand on 0. */
+  const LOT_Y = -0.02;
   for (let bx = -R; bx <= R; bx++)
     for (let bz = -R; bz <= R; bz++) {
       const cx = bx * PITCH,
         cz = bz * PITCH;
-      // Kerb, then pavement, a touch higher than the road.
-      flat.place(compose(cx, -0.07, cz, BLOCK_HALF * 2 + 0.3, 0.1, BLOCK_HALF * 2 + 0.3), KERB);
-      flat.place(compose(cx, -0.05, cz, BLOCK_HALF * 2, 0.1, BLOCK_HALF * 2), bx === 0 && bz === 0 ? PAVING : PAVEMENT);
-    }
-  // The square's paved cross is the pavement; its community lots are gravel until something goes up.
-  flat.finish();
-
-  // Dashed centre lines and zebra crossings by the square.
-  const marks = instanced(unitBox, 1400, world, false);
-  for (const k of roadLines()) {
-    for (let t = b.minZ + 2; t < b.maxZ - 2; t += 4) {
-      // Not across the junctions.
-      if (roadLines().some((r) => Math.abs(t - r) < CITY.road / 2 + 1)) continue;
-      marks.place(compose(k, -0.085, t, 0.18, 0.02, 1.8), LINE);
-      marks.place(compose(t, -0.085, k, 1.8, 0.02, 0.18), LINE);
-    }
-  }
-  for (const side of [-1, 1])
-    for (let i = -3; i <= 3; i++) {
-      // Zebra crossings on the roads round the square, in line with its paths.
-      const r = (side * PITCH) / 2;
-      marks.place(compose(i * 0.9, -0.08, r, 0.5, 0.02, CITY.road - 1.4), LINE);
-      marks.place(compose(r, -0.08, i * 0.9, CITY.road - 1.4, 0.02, 0.5), LINE);
-    }
-  marks.finish();
-
-  // --- street furniture: trees along the pavements, lamps at the corners ---
-  const r = seeded(20261017);
-  const trunks = instanced(GEO.cyl, 400, world, true),
-    crowns = instanced(GEO.blob, 800, world, true),
-    poles = instanced(GEO.cyl, 200, world, true),
-    lamps = instanced(GEO.box, 200, world, false, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4, emissive: 0xffe2a0, emissiveIntensity: 0.35 }));
-  const tree = (x: number, z: number, k: number) => {
-    compose(x, 1.1 * k, z, 0.22 * k, 2.2 * k, 0.22 * k);
-    trunks.place(m4, 0x6b5640);
-    for (let j = 0; j < 2; j++) {
-      const rad = (1.05 - j * 0.25) * k;
-      compose(x + (j ? 0.25 : 0) * k, (2.5 + j * 0.6) * k, z, rad, rad * 0.9, rad, r() * 3);
-      crowns.place(m4, LEAVES[Math.floor(r() * LEAVES.length)]);
-    }
-  };
-  for (let bx = -R; bx <= R; bx++)
-    for (let bz = -R; bz <= R; bz++) {
-      const cx = bx * PITCH,
-        cz = bz * PITCH,
-        edge = BLOCK_HALF - 1;
-      if (bx === 0 && bz === 0) continue;
-      // Two trees along each side of the block, clear of the lot signs at the corners.
-      for (const t of [-6, 6]) {
-        tree(cx + t, cz - edge, 0.85 + r() * 0.2);
-        tree(cx + t, cz + edge, 0.85 + r() * 0.2);
-        tree(cx - edge, cz + t, 0.85 + r() * 0.2);
-        tree(cx + edge, cz + t, 0.85 + r() * 0.2);
+      if (bx === 0 && bz === 0) {
+        ground(world, S.square, cx - BLOCK_HALF, cx + BLOCK_HALF, cz - BLOCK_HALF, cz + BLOCK_HALF, LOT_Y);
+        continue;
       }
-      for (const sx of [-1, 1])
-        for (const sz of [-1, 1]) {
-          compose(cx + sx * (BLOCK_HALF - 0.5), 1.8, cz + sz * (BLOCK_HALF - 0.5), 0.12, 3.6, 0.12);
-          poles.place(m4, 0x3b3f44);
-          compose(cx + sx * (BLOCK_HALF - 0.5), 3.65, cz + sz * (BLOCK_HALF - 0.5), 0.45, 0.22, 0.45);
-          lamps.place(m4, 0xfff1c9);
-        }
+      // The walking edge: a 2 m ring round the block. A pavement (raised behind a kerb when the age
+      // has kerbs), or, before pavements, the trampled ground of the lots running down to the road.
+      // The lots inside it are drawn per claim (town()).
+      const edge = pavement ?? S.lotRough;
+      const y = raised ? 0.02 : -0.08;
+      const inner = BLOCK_HALF - CITY.sidewalk;
+      ground(world, edge, cx - BLOCK_HALF, cx + BLOCK_HALF, cz + inner, cz + BLOCK_HALF, y);
+      ground(world, edge, cx - BLOCK_HALF, cx + BLOCK_HALF, cz - BLOCK_HALF, cz - inner, y);
+      ground(world, edge, cx - BLOCK_HALF, cx - inner, cz - inner, cz + inner, y, true);
+      ground(world, edge, cx + inner, cx + BLOCK_HALF, cz - inner, cz + inner, y, true);
+      if (raised)
+        for (const [w, d, ox, oz] of [
+          [BLOCK_HALF * 2 + 0.3, 0.3, 0, BLOCK_HALF],
+          [BLOCK_HALF * 2 + 0.3, 0.3, 0, -BLOCK_HALF],
+          [0.3, BLOCK_HALF * 2, BLOCK_HALF, 0],
+          [0.3, BLOCK_HALF * 2, -BLOCK_HALF, 0],
+        ])
+          kerbs.push(new THREE.Matrix4().compose(new THREE.Vector3(cx + ox, -0.04, cz + oz), new THREE.Quaternion(), new THREE.Vector3(w, 0.16, d)));
     }
-  // The countryside: scattered trees beyond the ring road.
-  for (let i = 0; i < 260; i++) {
-    const a = r() * Math.PI * 2,
-      d = b.maxX + 8 + Math.pow(r(), 0.7) * 90;
-    tree(Math.cos(a) * d * (1 + r() * 0.1), Math.sin(a) * d, 1 + r() * 0.7);
+  if (kerbs.length && pavement) {
+    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: colour(vary(pavement.accent ?? pavement.base, -0.05), '#9a958a'), roughness: 0.9 }), kerbs.length);
+    kerbs.forEach((m, i) => inst.setMatrixAt(i, m));
+    inst.receiveShadow = true;
+    world.add(inst);
   }
-  for (const x of [trunks, crowns, poles, lamps]) x.finish();
 
-  // --- the town square: fountain, market stall, bus stop ---
+  // --- every home block's courtyard: the middle cell, left green, with a tree or two ---
+  const yard: Placement[] = [];
+  const YARD = CITY.plot / 2 - 0.4;
+  for (const c of courtyards()) {
+    ground(world, S.countryside, c.x - YARD, c.x + YARD, c.z - YARD, c.z + YARD, LOT_Y);
+    // One tree, now and then two: the town reads clearer with less in it (Sami 2026-10-23).
+    const n = r() < 0.7 ? 1 : 2;
+    for (let i = 0; i < n; i++) yard.push({ x: c.x + (r() - 0.5) * YARD * 1.2, z: c.z + (r() - 0.5) * YARD * 1.2, turn: r() * Math.PI * 2, scale: 0.7 + r() * 0.4, mirror: r() < 0.5 });
+  }
+  // --- the corner blocks: little parks, green inside their pavement, a few trees ---
+  const PARK = BLOCK_HALF - CITY.sidewalk;
+  for (const c of parks()) {
+    ground(world, S.countryside, c.x - PARK, c.x + PARK, c.z - PARK, c.z + PARK, LOT_Y);
+    const placed: { x: number; z: number }[] = [];
+    for (let i = 0; i < 40 && placed.length < 4; i++) {
+      const x = c.x + (r() - 0.5) * PARK * 1.7,
+        z = c.z + (r() - 0.5) * PARK * 1.7;
+      if (placed.every((p) => Math.hypot(p.x - x, p.z - z) > 4.5)) placed.push({ x, z });
+    }
+    for (const p of placed) yard.push({ ...p, turn: r() * Math.PI * 2, scale: 0.75 + r() * 0.45, mirror: r() < 0.5 });
+  }
+
+  // --- the river east of the ring road, its banks, and the path out to the camp across it ---
+  ground(world, S.water, rx0, rx1, -450, 450, -0.38);
+  ground(world, S.bank, rx0 - 2.4, rx0, -450, 450, -0.13);
+  ground(world, S.bank, rx1, rx1 + 2.4, -450, 450, -0.13);
+  for (const x of [rx0, rx1]) {
+    const wall = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 900), new THREE.MeshStandardMaterial({ color: colour(S.bank.accent ?? S.bank.base, '#8a7a58'), roughness: 1 }));
+    wall.position.set(x, -0.265, 0);
+    world.add(wall);
+  }
+  ground(world, S.lotRough, b.maxX, rx0 - 2.4, -2.2, 2.2, -0.11);
+  ground(world, S.lotRough, rx1 + 2.4, CAMP.x - 6, -2.2, 2.2, -0.11);
+
+  // No street details, street trees or lamp posts: a detail every 12 m down every road, a tree at
+  // every lot and a light per block read as clutter on a phone (Sami 2026-10-23). The parks and
+  // courtyards carry the green.
+
+  // --- the countryside: wild trees and the ground's own bits, clear of the river, the path and the camp ---
+  const wild: Placement[] = [],
+    bits: Placement[] = [];
+  const clear = (x: number, z: number, pad: number) =>
+    Math.max(Math.abs(x), Math.abs(z)) > b.maxX + pad && !(x > rx0 - pad - 3 && x < rx1 + pad + 3) && !(Math.hypot(x - CAMP.x, z - CAMP.z) < 16 + pad) && !(x > b.maxX && Math.abs(z) < 3 + pad);
+  for (let i = 0; i < 520 && wild.length < 60; i++) {
+    const a = r() * Math.PI * 2,
+      d = b.maxX + 14 + Math.pow(r(), 0.7) * 110;
+    const x = Math.cos(a) * d * (1 + r() * 0.1),
+      z = Math.sin(a) * d;
+    if (clear(x, z, 7) && wild.every((w) => Math.hypot(w.x - x, w.z - z) > 14)) wild.push({ x, z, turn: r() * Math.PI * 2, scale: 0.75 + r() * 0.55, mirror: r() < 0.5 });
+  }
+  for (let i = 0; i < 400 && bits.length < 40; i++) {
+    const a = r() * Math.PI * 2,
+      d = b.maxX + 6 + r() * 120;
+    const x = Math.cos(a) * d,
+      z = Math.sin(a) * d;
+    if (clear(x, z, 4)) bits.push({ x, z, turn: r() * Math.PI * 2, scale: 0.9 + r() * 0.3 });
+  }
+  instancePiece(piece('wild-tree'), [...wild, ...yard], world);
+  // The ground's bits blended most of the way into the grass, so people and builds stand out.
+  const into = (base: string, k: number) => (hex: string) => `#${new THREE.Color(hex).lerp(new THREE.Color(base), k).getHexString()}`;
+  instancePiece(piece('ground', into(S.countryside.base, 0.4)), bits, world, false);
+
+  // --- the square: the centrepiece, seating, the stall, and where newcomers arrive ---
   const square = new THREE.Group();
   world.add(square);
-  const mat = (color: number, extra: Partial<THREE.MeshStandardMaterialParameters> = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.9, ...extra });
-  const put = (geo: THREE.BufferGeometry, material: THREE.Material, x: number, y: number, z: number, sx: number, sy: number, sz: number, parent: THREE.Object3D = square) => {
-    const m = new THREE.Mesh(geo, material);
-    m.position.set(x, y, z);
-    m.scale.set(sx, sy, sz);
-    m.castShadow = true;
-    m.receiveShadow = true;
-    parent.add(m);
-    return m;
-  };
-  const f = SQUARE.fountain;
-  put(GEO.cyl, mat(STONE), f.x, 0.25, f.z, f.r * 2, 0.5, f.r * 2);
-  const water = put(GEO.cyl, mat(WATER, { roughness: 0.2, metalness: 0.1 }), f.x, 0.48, f.z, f.r * 1.8, 0.06, f.r * 1.8);
-  water.castShadow = false;
-  put(GEO.cyl, mat(STONE), f.x, 1.0, f.z, 0.5, 1.6, 0.5);
-  put(GEO.cyl, mat(STONE), f.x, 1.8, f.z, 1.3, 0.18, 1.3);
-  const spout = put(GEO.blob, mat(0xdff1fb, { roughness: 0.1, transparent: true, opacity: 0.75 }), f.x, 2.15, f.z, 0.28, 0.4, 0.28);
-  spout.castShadow = false;
-  const mk = SQUARE.market;
-  put(GEO.box, mat(0x8a6440), mk.x, 0.5, mk.z, mk.w, 1, mk.d);
-  for (const sx of [-1, 1]) for (const sz of [-1, 1]) put(GEO.box, mat(0x6b4b30), mk.x + sx * (mk.w / 2 - 0.1), 1.2, mk.z + sz * (mk.d / 2 - 0.1), 0.1, 2.4, 0.1);
-  for (let i = 0; i < 6; i++) put(GEO.box, mat(i % 2 ? 0xf2ede0 : 0xc94a3a), mk.x - mk.w / 2 + (i + 0.5) * (mk.w / 6), 2.45, mk.z, mk.w / 6, 0.12, mk.d + 0.5);
-  for (let i = 0; i < 5; i++) put(GEO.blob, mat([0xd9a23a, 0xc4402f, 0x4f8a4b, 0xe07a4a, 0x9a5fb0][i]), mk.x - 1 + i * 0.5, 1.12, mk.z + 0.3, 0.16, 0.14, 0.16);
-  // The bus stop where everyone arrives.
-  put(GEO.box, mat(0x3f6fb0), BUS_STOP.x + 1.6, 1.1, BUS_STOP.z + 0.3, 0.1, 2.2, 0.1);
-  const busSign = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.5), new THREE.MeshBasicMaterial({ map: signTexture(['BUS'], '#3f6fb0', '#f3eedc', 128, 64) }));
-  busSign.position.set(BUS_STOP.x + 1.6, 2.2, BUS_STOP.z + 0.36);
-  square.add(busSign);
-  // Benches round the fountain.
-  for (const [x, z, ry] of [[3.6, 0, Math.PI / 2], [-3.6, 0, Math.PI / 2], [0, -3.6, 0]] as const) {
-    const bench = new THREE.Group();
-    put(GEO.box, mat(0x8a6440), 0, 0.42, 0, 1.6, 0.08, 0.45, bench);
-    put(GEO.box, mat(0x8a6440), 0, 0.72, -0.2, 1.6, 0.4, 0.06, bench);
-    for (const sx of [-0.65, 0.65]) put(GEO.box, mat(0x3b3f44), sx, 0.2, 0, 0.08, 0.4, 0.4, bench);
-    bench.position.set(x, 0, z);
-    bench.rotation.y = ry;
-    square.add(bench);
+  // It makes way for the age's Wonder, which goes up on the same spot (town.wonder).
+  const centrepiece = placePiece(piece('centrepiece'), { x: SQUARE.fountain.x, z: SQUARE.fountain.z }, square);
+  for (const [x, z, turn] of [
+    [3.8, 0, -Math.PI / 2],
+    [-3.8, 0, Math.PI / 2],
+    [0, -3.8, 0],
+  ] as const)
+    placePiece(piece('bench'), { x, z, turn }, square);
+  placePiece(piece('market'), { x: SQUARE.market.x, z: SQUARE.market.z }, square);
+  // The arrival point: its stop on the square's walking edge, what brings newcomers on the road.
+  placePiece(piece('arrival'), { x: BUS_STOP.x, z: PITCH / 2, turn: Math.PI }, square);
+  // The crossing over the river and the camp beyond it.
+  // The bridge is its own group: while the travellers are stuck (town.bridge), its deck is gone, a log
+  // or two floats in the water, and the deck comes back part by part as people mend it, town side first.
+  const bridgeGroup = new THREE.Group();
+  world.add(bridgeGroup);
+  let bridgeKey = '';
+  function drawBridge(progress: number | undefined): void {
+    const parts = pieces['river']?.parts ?? [];
+    const span = Math.max(1, ...parts.map((p) => Math.abs(p.position[2])));
+    // The deck: what stands above the water out over the river, not the landings on either bank.
+    const deck = parts.filter((p) => Math.abs(p.position[2]) < span * 0.62 && p.position[1] > 0.55).sort((a, b) => a.position[2] - b.position[2]);
+    const back = progress === undefined ? deck.length : Math.floor(Math.min(1, progress) * deck.length + 1e-6);
+    const key = `${back}/${deck.length}`;
+    if (key === bridgeKey) return;
+    bridgeKey = key;
+    bridgeGroup.clear();
+    const gone = new Set(deck.slice(back));
+    const debris = progress !== undefined && progress < 1 ? [...gone].slice(0, 2).map((p, i) => ({ ...p, position: [p.position[0] + (i ? -3.4 : 3.1), -0.16, p.position[2] * 0.6 + (i ? 1.4 : -0.8)] as [number, number, number], rotation: [p.rotation[0] + (i ? 0.12 : -0.1), p.rotation[1] + (i ? 0.7 : -0.5), p.rotation[2] + 0.2] as [number, number, number] })) : [];
+    const id = `river:${key}`;
+    let m = merged.get(id);
+    if (!m) merged.set(id, (m = mergePiece({ ...pieces['river']!, parts: [...parts.filter((p) => !gone.has(p)), ...debris] })));
+    placePiece(m, { x: RIVER.x, z: 0, turn: Math.PI / 2 }, bridgeGroup);
   }
+  drawBridge(undefined);
+  placePiece(piece('camp'), { x: CAMP.x, z: CAMP.z, turn: -Math.PI / 2 }, world);
 
   // Street names floating over the junctions near the square, so "7 Maple Street" means something.
   const names = new THREE.Group();
   world.add(names);
-  roadLines().forEach((k, i) => {
+  lines.forEach((k, i) => {
     const kk = i - CITY.rings - 1;
     const st = label(streetName(kk).toUpperCase(), '#efe6c8', 1.4);
     st.position.set(b.minX + 6, 1.6, k);
@@ -284,66 +330,80 @@ export function buildEnvironment(scene: THREE.Scene): EnvironmentHandles {
     names.add(av);
   });
 
-  // --- lots: rough grass and a FOR SALE sign, or a lawn, a hedge and the owner's sign ---
+  // --- lots: free ground with the age's free-lot marker, or a claimed lot's boundary and the owner's name ---
   const lotGroup = new THREE.Group();
   world.add(lotGroup);
   const lots = new Map<string, { key: string; group: THREE.Group }>();
-  const signMats = new Map<string, THREE.MeshBasicMaterial>();
-  const signMat = (lines: string[], bg: string, fg: string) => {
-    const k = `${lines.join('|')}|${bg}|${fg}`;
-    let m = signMats.get(k);
-    if (!m) signMats.set(k, (m = new THREE.MeshBasicMaterial({ map: signTexture(lines, bg, fg) })));
-    return m;
-  };
-  const LOT_GRASS = mat(ROUGH),
-    LOT_LAWN = mat(LAWN),
-    GRAVEL = mat(0xb5a88a),
-    POST = mat(0x6b4b30);
+  const plateBg = bible.palette?.find((p) => new THREE.Color(p).getHSL({ h: 0, s: 0, l: 0 }).l > 0.75) ?? '#f3eedc';
+  const plateFg = bible.palette?.find((p) => new THREE.Color(p).getHSL({ h: 0, s: 0, l: 0 }).l < 0.25) ?? '#2b3a2f';
+  // Where the claimed-lot piece's owner marker stood (its parts in OWNER_COLOUR), and the piece without
+  // that marker and anything standing within a metre of it.
+  const claimedFull = pieces['lot-claimed'];
+  const ownerParts = claimedFull?.parts.filter((p) => p.color.toLowerCase() === OWNER_COLOUR) ?? [];
+  const claimedMarker = ownerParts.length
+    ? new THREE.Vector3(
+        ownerParts.reduce((a, p) => a + p.position[0], 0) / ownerParts.length,
+        Math.max(...ownerParts.map((p) => p.position[1] + p.size[1] / 2)),
+        ownerParts.reduce((a, p) => a + p.position[2], 0) / ownerParts.length,
+      )
+    : undefined;
+  /** A home lot is CITY.plot m; the board designed lot pieces in a 13 m room with the street at +z and the block's middle at −x. */
+  function lotPlacement(plot: PlotInfo, room: number): Placement {
+    const half = (plot.rect.maxX - plot.rect.minX) / 2;
+    // The piece's +z to the road the lot fronts.
+    const turn = facing(plot.front.x, plot.front.z);
+    // Turned, the piece's −x points (−cos, sin): mirror it whenever that is away from the block's middle.
+    const toMiddle = -Math.cos(turn) * -plot.sx + Math.sin(turn) * -plot.sz;
+    return { x: plot.centre.x, z: plot.centre.z, turn, scale: half / room, scaleY: 1, mirror: toMiddle < -0.1 };
+  }
   function drawLot(plot: PlotInfo, claim: TownView['lots'][number] | undefined, project: boolean): THREE.Group {
     const g = new THREE.Group();
-    const w = plot.rect.maxX - plot.rect.minX,
-      d = plot.rect.maxZ - plot.rect.minZ;
-    const ground = put(unitBox, plot.civic ? GRAVEL : claim ? LOT_LAWN : LOT_GRASS, plot.centre.x, -0.02, plot.centre.z, w, 0.06, d, g);
-    ground.castShadow = false;
-    if (claim) {
-      // A low hedge round three sides, open to the street; dimmed while its owner is away.
-      const hedge = mat(claim.away ? 0x4f6a40 : 0x3f7a35);
-      const t = 0.35,
-        hh = 0.45;
-      put(unitBox, hedge, plot.centre.x, hh / 2, plot.centre.z - plot.sz * (d / 2 - t / 2), w, hh, t, g); // the back, by the block's middle
-      put(unitBox, hedge, plot.centre.x - plot.sx * (w / 2 - t / 2), hh / 2, plot.centre.z, t, hh, d, g); // the inner side
-      // The front path and gate post in the owner's colour.
-      put(unitBox, mat(new THREE.Color(claim.shirt).getHex()), plot.centre.x + plot.sx * (w / 2 - 0.2), 0.5, plot.centre.z + plot.sz * (d / 2 - 0.2), 0.25, 1, 0.25, g);
+    const { minX, maxX, minZ, maxZ } = plot.rect;
+    ground(g, plot.civic ? S.lotRough : claim ? S.lotClaimed : S.lotRough, minX, maxX, minZ, maxZ, LOT_Y + 0.002);
+    if (plot.civic) {
+      // Facing the square's middle; mirrored like a home lot so all four markers sit the same way round.
+      // An empty community lot is just its ground: no marker (Sami 2026-10-23, fewer signs about).
+      void project;
+      return g;
     }
-    // The sign by the pavement.
-    const [line1, line2, bg, fg] = plot.civic
-      ? project
-        ? ['COMMUNITY', 'PROJECT', '#2f5d3a', '#f3eedc']
-        : ['TOWN LOT', 'propose something', '#2f5d3a', '#f3eedc']
-      : claim
-        ? [claim.owner, plot.address, '#f3eedc', '#2b3a2f']
-        : ['FOR SALE', plot.address, '#c4402f', '#f3eedc'];
-    const sx = plot.sign.x,
-      sz = plot.sign.z;
-    put(GEO.cyl, POST, sx, 0.6, sz, 0.09, 1.2, 0.09, g);
-    const board = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.75), signMat([line1, line2], bg, fg));
-    board.position.set(sx, 1.35, sz);
-    // Facing the street (the sign stands on the lot's street side).
-    board.rotation.y = plot.civic ? (plot.sz > 0 ? Math.PI : 0) : plot.sz > 0 ? 0 : Math.PI;
-    const back = board.clone();
-    back.rotation.y += Math.PI;
-    back.position.z += plot.sz > 0 ? -0.01 : 0.01;
-    g.add(board, back);
+    // A free lot is just its rough ground: no for-sale marker on every empty one (Sami 2026-10-23).
+    if (!claim) return g;
+    // The boundary without its owner's marker (a post with a sign on it read as a letterbox on every lot,
+    // Sami 2026-10-23): the floating name plate says whose lot it is.
+    // Nor its boundary posts: the lot's own ground colour and the plate say whose it is (Sami 2026-10-23).
+    const place = lotPlacement(plot, 6.6);
+    // The owner's name on a plate over their marker, nudged into their own lot along the street (the
+    // neighbour's marker stands at the same corner) and turned to the stream's camera so it reads.
+    const top = (claimedMarker ?? new THREE.Vector3(-5.5, 1.2, 5.7)).clone().applyMatrix4(placementMatrix(place));
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 1.45), new THREE.MeshBasicMaterial({ map: signTexture([claim.owner, plot.address], plateBg, plateFg, 384, 146), side: THREE.DoubleSide }));
+    plate.position.set(top.x + (plot.front.z ? plot.sx * 1.6 : 0), Math.max(2.2, top.y + 1.0), top.z + (plot.front.x ? plot.sz * 1.6 : 0));
+    plate.rotation.y = CAMERA_YAW;
+    g.add(plate);
     return g;
   }
   let townKey = '';
-  const districtGroup = new THREE.Group();
-  world.add(districtGroup);
-  let districtKey = '';
   let party: TownView['party'];
-  const confetti = instanced(unitBox, 160, world, false, new THREE.MeshBasicMaterial({ color: 0xffffff }));
-  confetti.inst.count = 0;
+  const confettiGeo = new THREE.BoxGeometry(1, 1, 1);
+  const confetti = new THREE.InstancedMesh(confettiGeo, new THREE.MeshBasicMaterial({ color: 0xffffff }), 160);
+  confetti.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(160 * 3), 3);
+  confetti.count = 0;
+  world.add(confetti);
 
+  function dropLot(id: string): void {
+    const cur = lots.get(id);
+    if (!cur) return;
+    lotGroup.remove(cur.group);
+    // Pieces are shared between lots (and freed with the scenery); the ground plane and the name plate are this lot's own.
+    cur.group.traverse((o) => {
+      if (!(o instanceof THREE.Mesh) || PIECE_MATERIALS.includes(o.material as never)) return;
+      o.geometry.dispose();
+      if (isShared(o.material)) return;
+      const mat = o.material as THREE.MeshBasicMaterial;
+      mat.map?.dispose();
+      mat.dispose();
+    });
+    lots.delete(id);
+  }
   function town(view: TownView | undefined): void {
     if (!view) return;
     const byId = new Map(view.lots.map((l) => [l.id, l]));
@@ -353,39 +413,27 @@ export function buildEnvironment(scene: THREE.Scene): EnvironmentHandles {
       for (const plot of allPlots()) {
         const claim = byId.get(plot.id);
         const k = `${claim ? `${claim.owner}|${claim.shirt}|${claim.away}` : ''}|${view.project?.plot === plot.id}`;
-        const cur = lots.get(plot.id);
-        if (cur?.key === k) continue;
-        if (cur) {
-          lotGroup.remove(cur.group);
-          cur.group.traverse((o) => o instanceof THREE.Mesh && o.geometry !== unitBox && o.geometry !== GEO.cyl && o.geometry.dispose());
-        }
+        if (lots.get(plot.id)?.key === k) continue;
+        dropLot(plot.id);
         const group = drawLot(plot, claim, view.project?.plot === plot.id);
         lotGroup.add(group);
         lots.set(plot.id, { key: k, group });
       }
     }
-    const dk = JSON.stringify(view.districts);
-    if (dk !== districtKey) {
-      districtKey = dk;
-      for (const c of [...districtGroup.children]) {
-        districtGroup.remove(c);
-        ((c as THREE.Sprite).material as THREE.SpriteMaterial).map?.dispose();
-      }
-      for (const d of view.districts) {
-        const sprite = label(d.name.toUpperCase(), '#ffd98a', 2.2);
-        sprite.position.set(d.at.x, 9, d.at.z);
-        districtGroup.add(sprite);
-      }
-    }
+    // District names used to float over their streets here; dropped (Sami 2026-10-22: not needed).
+    drawBridge(view.bridge);
+    centrepiece.visible = !view.wonder;
     party = view.party;
   }
 
-  // --- daylight: a bright sky, a warm sun with shadows that follow the framing ---
-  scene.background = new THREE.Color(SKY);
-  scene.fog = new THREE.Fog(SKY, 160, 380);
-  const hemi = new THREE.HemisphereLight(0xe3ecf2, 0x6b7a4f, 2.2);
+  // --- the age's light: its sky and fog, a hemisphere, and a sun with shadows that follow the framing ---
+  const L = bible.light ?? {};
+  const sky = colour(L.sky, '#bfd2dd');
+  scene.background = sky;
+  scene.fog = new THREE.Fog(colour(L.fog, `#${sky.getHexString()}`), 170 + FOG_SHIFT, 420 + FOG_SHIFT);
+  const hemi = new THREE.HemisphereLight(colour(L.hemiSky, '#e3ecf2'), colour(L.hemiGround, '#6b7a4f'), Math.max(0.8, Math.min(3.2, L.hemiIntensity ?? 2.2)));
   scene.add(hemi);
-  const sun = new THREE.DirectionalLight(0xfff0d8, 2.4);
+  const sun = new THREE.DirectionalLight(colour(L.sun, '#fff0d8'), Math.max(0.8, Math.min(3.2, L.sunIntensity ?? 2.4)));
   sun.castShadow = true;
   sun.shadow.mapSize.set(SHADOW_MAP, SHADOW_MAP);
   sun.shadow.normalBias = 0.03;
@@ -415,29 +463,50 @@ export function buildEnvironment(scene: THREE.Scene): EnvironmentHandles {
   frame(0, 0, 40);
 
   const confettiColours = [0xe0523f, 0xe9c23c, 0x57d64a, 0x5fb3e8, 0xb07ad9, 0xf2ede0];
+  const m4 = new THREE.Matrix4(),
+    p = new THREE.Vector3(),
+    q = new THREE.Quaternion(),
+    e = new THREE.Euler(),
+    s = new THREE.Vector3();
   function update(now: number, reducedMotion: boolean): void {
     if (reducedMotion) return;
-    // The fountain plays.
-    spout.scale.y = 0.4 + Math.sin(now * 3.1) * 0.06;
-    spout.position.y = 2.15 + Math.sin(now * 3.1) * 0.03;
-    water.rotation.y = now * 0.2;
     // A party: confetti drifting down over it.
     if (party && party.until > Date.now()) {
       const c = new THREE.Color();
-      confetti.inst.count = 160;
+      confetti.count = 160;
       for (let i = 0; i < 160; i++) {
         const a = i * 2.39996,
           rad = 1 + ((i * 37) % 70) / 10;
         const fall = ((now * (0.6 + (i % 7) * 0.08) + i * 0.37) % 1) * 9;
-        compose(party.at.x + Math.cos(a + now * 0.3) * rad, 9.5 - fall, party.at.z + Math.sin(a + now * 0.3) * rad, 0.14, 0.02, 0.09, now * 3 + i);
-        confetti.inst.setMatrixAt(i, m4);
-        confetti.inst.setColorAt(i, c.setHex(confettiColours[i % confettiColours.length]));
+        m4.compose(p.set(party.at.x + Math.cos(a + now * 0.3) * rad, 9.5 - fall, party.at.z + Math.sin(a + now * 0.3) * rad), q.setFromEuler(e.set(0, now * 3 + i, 0)), s.set(0.14, 0.02, 0.09));
+        confetti.setMatrixAt(i, m4);
+        confetti.setColorAt(i, c.setHex(confettiColours[i % confettiColours.length]));
       }
-      confetti.inst.instanceMatrix.needsUpdate = true;
-      if (confetti.inst.instanceColor) confetti.inst.instanceColor.needsUpdate = true;
-      confetti.inst.computeBoundingSphere();
-    } else confetti.inst.count = 0;
+      confetti.instanceMatrix.needsUpdate = true;
+      if (confetti.instanceColor) confetti.instanceColor.needsUpdate = true;
+      confetti.computeBoundingSphere();
+    } else confetti.count = 0;
   }
 
-  return { world, frame, town, update };
+  function dispose(): void {
+    for (const id of [...lots.keys()]) dropLot(id);
+    world.traverse((o) => {
+      if (o instanceof THREE.Mesh || o instanceof THREE.InstancedMesh || o instanceof THREE.Sprite) {
+        const mats = [o.material].flat() as (THREE.Material & { map?: THREE.Texture | null })[];
+        for (const mat of mats) {
+          if (isShared(mat) || PIECE_MATERIALS.includes(mat as never)) continue;
+          if (mat.map && !isShared(mat.map)) mat.map.dispose();
+          mat.dispose();
+        }
+        if (!(o instanceof THREE.Sprite)) o.geometry.dispose();
+        if (o instanceof THREE.InstancedMesh) o.dispose();
+      }
+    });
+    for (const m of merged.values()) disposePiece(m);
+    parent.remove(world);
+    sun.shadow.map?.dispose();
+    scene.remove(hemi, sun, sun.target);
+  }
+
+  return { frame, town, update, dispose };
 }

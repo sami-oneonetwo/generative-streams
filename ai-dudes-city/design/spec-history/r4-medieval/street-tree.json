@@ -1,0 +1,539 @@
+{
+  "name": "Broom-Pollarded Lime and Road-Leaning Pear",
+  "description": "A tall lime lifts six widely separated leafy shoots from a dark knuckled pollard head beside a smaller, strongly road-leaning pear with a narrow, lopsided golden-fruited crown.",
+  "notes": "Exposed pollarding cuts and an informally tended fruit tree express medieval shared frontage without paving pits, tree guards, kerbs or sidewalks.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.8,
+        5
+      ],
+      "size": [
+        0.67,
+        1.5,
+        0.63
+      ],
+      "rotation": [
+        0,
+        0,
+        0.08
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.09,
+        2.22,
+        4.94
+      ],
+      "size": [
+        0.59,
+        1.55,
+        0.57
+      ],
+      "rotation": [
+        -0.08,
+        0,
+        -0.04
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.12,
+        3.02,
+        4.83
+      ],
+      "size": [
+        0.84,
+        0.55,
+        0.71
+      ],
+      "rotation": [
+        0.12,
+        0.23,
+        -0.13
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.49,
+        3.12,
+        4.87
+      ],
+      "size": [
+        0.53,
+        0.57,
+        0.56
+      ],
+      "rotation": [
+        -0.14,
+        -0.2,
+        0.28
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.78,
+        3.16,
+        4.68
+      ],
+      "size": [
+        0.56,
+        0.5,
+        0.54
+      ],
+      "rotation": [
+        0.19,
+        0.35,
+        -0.23
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.89,
+        3.91,
+        4.68
+      ],
+      "size": [
+        0.12,
+        1.65,
+        0.12
+      ],
+      "rotation": [
+        -0.19,
+        0,
+        0.48
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.43,
+        4.27,
+        5.08
+      ],
+      "size": [
+        0.12,
+        2.2,
+        0.12
+      ],
+      "rotation": [
+        0.19,
+        0,
+        -0.05
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -3.24,
+        3.98,
+        4.25
+      ],
+      "size": [
+        0.12,
+        1.9,
+        0.12
+      ],
+      "rotation": [
+        -0.57,
+        0,
+        0.1
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.38,
+        4.1,
+        4.55
+      ],
+      "size": [
+        0.12,
+        2.05,
+        0.12
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        -0.38
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.23,
+        3.82,
+        4.08
+      ],
+      "size": [
+        0.12,
+        1.8,
+        0.12
+      ],
+      "rotation": [
+        -0.53,
+        0,
+        -0.61
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -2.77,
+        4.19,
+        5.02
+      ],
+      "size": [
+        0.12,
+        1.95,
+        0.12
+      ],
+      "rotation": [
+        0.26,
+        0,
+        -0.08
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.28,
+        4.63,
+        4.54
+      ],
+      "size": [
+        0.89,
+        0.43,
+        0.67
+      ],
+      "rotation": [
+        0.13,
+        0.32,
+        -0.22
+      ],
+      "color": "#416c48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.37,
+        5.34,
+        5.29
+      ],
+      "size": [
+        0.69,
+        0.51,
+        0.82
+      ],
+      "rotation": [
+        0.1,
+        -0.23,
+        0.13
+      ],
+      "color": "#5f8a45"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.34,
+        4.77,
+        3.75
+      ],
+      "size": [
+        0.83,
+        0.38,
+        0.63
+      ],
+      "rotation": [
+        -0.12,
+        0.4,
+        0.15
+      ],
+      "color": "#416c48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.99,
+        5.04,
+        4.43
+      ],
+      "size": [
+        0.9,
+        0.47,
+        0.69
+      ],
+      "rotation": [
+        0.12,
+        -0.3,
+        -0.17
+      ],
+      "color": "#5f8a45"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -1.7,
+        4.45,
+        3.71
+      ],
+      "size": [
+        0.74,
+        0.35,
+        0.87
+      ],
+      "rotation": [
+        0.14,
+        0.3,
+        -0.13
+      ],
+      "color": "#416c48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.68,
+        5.12,
+        5.27
+      ],
+      "size": [
+        0.62,
+        0.39,
+        0.68
+      ],
+      "rotation": [
+        -0.12,
+        0.15,
+        0.24
+      ],
+      "color": "#5f8a45"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        1.31,
+        4.61
+      ],
+      "size": [
+        0.48,
+        2.6,
+        0.45
+      ],
+      "rotation": [
+        -0.3,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.76,
+        2.55,
+        4.01
+      ],
+      "size": [
+        0.26,
+        1.05,
+        0.28
+      ],
+      "rotation": [
+        -0.47,
+        0,
+        0.47
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.68,
+        3.06,
+        3.72
+      ],
+      "size": [
+        1.19,
+        2.02,
+        1.12
+      ],
+      "rotation": [
+        -0.2,
+        0,
+        0.17
+      ],
+      "color": "#9cb35a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.35,
+        2.76,
+        3.57
+      ],
+      "size": [
+        1.05,
+        1.53,
+        0.99
+      ],
+      "rotation": [
+        -0.3,
+        0,
+        -0.32
+      ],
+      "color": "#79964c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.04,
+        2.58,
+        3.45
+      ],
+      "size": [
+        0.82,
+        1.13,
+        0.87
+      ],
+      "rotation": [
+        -0.25,
+        0,
+        0.35
+      ],
+      "color": "#b0bb62"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.38,
+        3.53,
+        3.22
+      ],
+      "size": [
+        0.4,
+        0.46,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0.15
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.57,
+        2.98,
+        3.16
+      ],
+      "size": [
+        0.4,
+        0.47,
+        0.4
+      ],
+      "rotation": [
+        -0.12,
+        0,
+        -0.18
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.81,
+        2.67,
+        3.12
+      ],
+      "size": [
+        0.4,
+        0.45,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0.22
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.87,
+        2.37,
+        3.19
+      ],
+      "size": [
+        0.4,
+        0.46,
+        0.4
+      ],
+      "rotation": [
+        0.12,
+        0,
+        -0.12
+      ],
+      "color": "#d6af55"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.13,
+        0.14,
+        5.01
+      ],
+      "size": [
+        0.79,
+        0.22,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0.28,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.68,
+        0.19,
+        4.79
+      ],
+      "size": [
+        0.4,
+        0.36,
+        0.43
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "color": "#b9a14f"
+    }
+  ]
+}

@@ -1,0 +1,586 @@
+{
+  "name": "Ivy's Woven Biocomposite Lot Boundary",
+  "description": "Rounded ceramic posts and broad crossed biocomposite rails enclose two sides of Ivy's lot, leaving the frontage open beside a red-striped owner post and readable household projection.",
+  "notes": "Physical woven rails, a full-height red ownership insert and saturated projected lettering against a dark backing distinguish this Future boundary while keeping every part inside ±6.4 m.",
+  "parts": [
+    {
+      "shape": "sphere",
+      "position": [
+        -6,
+        0.425,
+        -6
+      ],
+      "size": [
+        0.44,
+        0.85,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2,
+        0.425,
+        -6
+      ],
+      "size": [
+        0.44,
+        0.85,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2,
+        0.425,
+        -6
+      ],
+      "size": [
+        0.44,
+        0.85,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        6,
+        0.425,
+        -6
+      ],
+      "size": [
+        0.44,
+        0.85,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -6,
+        0.425,
+        -2
+      ],
+      "size": [
+        0.44,
+        0.85,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -6,
+        0.425,
+        2
+      ],
+      "size": [
+        0.44,
+        0.85,
+        0.44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -6,
+        0.55,
+        5.85
+      ],
+      "size": [
+        0.48,
+        1.1,
+        0.48
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f1e9e5"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4,
+        0.43,
+        -6.035
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        1.48
+      ],
+      "color": "#8a7650"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -4,
+        0.43,
+        -5.965
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.48
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.43,
+        -6.035
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        1.48
+      ],
+      "color": "#8a7650"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0,
+        0.43,
+        -5.965
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.48
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4,
+        0.43,
+        -6.035
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        1.48
+      ],
+      "color": "#8a7650"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        4,
+        0.43,
+        -5.965
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        0,
+        0,
+        -1.48
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -6.035,
+        0.43,
+        -4
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        1.48,
+        0,
+        0
+      ],
+      "color": "#8a7650"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.965,
+        0.43,
+        -4
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        -1.48,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -6.035,
+        0.43,
+        0
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        1.48,
+        0,
+        0
+      ],
+      "color": "#8a7650"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.965,
+        0.43,
+        0
+      ],
+      "size": [
+        0.22,
+        3.7,
+        0.22
+      ],
+      "rotation": [
+        -1.48,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -6.035,
+        0.43,
+        3.925
+      ],
+      "size": [
+        0.22,
+        3.55,
+        0.22
+      ],
+      "rotation": [
+        1.48,
+        0,
+        0
+      ],
+      "color": "#8a7650"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -5.965,
+        0.43,
+        3.925
+      ],
+      "size": [
+        0.22,
+        3.55,
+        0.22
+      ],
+      "rotation": [
+        -1.48,
+        0,
+        0
+      ],
+      "color": "#bca783"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -6,
+        0.55,
+        6.04
+      ],
+      "size": [
+        0.3,
+        1.1,
+        0.16
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d9534f"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.95,
+        1.55,
+        5.8
+      ],
+      "size": [
+        2.5,
+        0.95,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#36495e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.84,
+        1.48,
+        5.98
+      ],
+      "size": [
+        0.36,
+        0.32,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.84,
+        1.67,
+        5.98
+      ],
+      "size": [
+        0.32,
+        0.32,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0.785398
+      ],
+      "color": "#f29b1e",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.31,
+        1.55,
+        5.98
+      ],
+      "size": [
+        0.15,
+        0.52,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.31,
+        1.81,
+        5.98
+      ],
+      "size": [
+        0.33,
+        0.15,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -5.31,
+        1.29,
+        5.98
+      ],
+      "size": [
+        0.33,
+        0.15,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.87,
+        1.5,
+        5.98
+      ],
+      "size": [
+        0.15,
+        0.48,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0.4
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.69,
+        1.5,
+        5.98
+      ],
+      "size": [
+        0.15,
+        0.48,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.4
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.32,
+        1.59,
+        5.98
+      ],
+      "size": [
+        0.15,
+        0.32,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        0.55
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    },
+    {
+      "shape": "box",
+      "position": [
+        -4.15,
+        1.46,
+        5.98
+      ],
+      "size": [
+        0.15,
+        0.61,
+        0.15
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.43
+      ],
+      "color": "#2fd8c4",
+      "glow": true
+    }
+  ]
+}

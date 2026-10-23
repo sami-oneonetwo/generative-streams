@@ -1,0 +1,121 @@
+{
+  "name": "Reed-Banded Limestone Sitting Slab",
+  "description": "A heavy, uneven limestone seat rests on two exposed mudbrick-and-rubble feet, with short, staggered reed bands providing seating for two about 0.45 m above the square.",
+  "notes": "Dark irregular supports, overlapping hand-cut limestone masses and subdued reed bands distinguish this Bronze Age communal seat from a machined bench or cushioned plinth.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -1.03,
+        0.105,
+        0.035
+      ],
+      "size": [
+        0.56,
+        0.21,
+        0.87
+      ],
+      "rotation": [
+        0,
+        0.065,
+        0
+      ],
+      "color": "#8a663d"
+    },
+    {
+      "shape": "box",
+      "position": [
+        1.025,
+        0.115,
+        -0.025
+      ],
+      "size": [
+        0.59,
+        0.23,
+        0.81
+      ],
+      "rotation": [
+        0,
+        -0.075,
+        0
+      ],
+      "color": "#80603e"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.035,
+        0.282,
+        0.075
+      ],
+      "size": [
+        2.26,
+        0.2,
+        0.75
+      ],
+      "rotation": [
+        0,
+        -0.025,
+        -0.012
+      ],
+      "color": "#b79d70"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.025,
+        0.294,
+        -0.025
+      ],
+      "size": [
+        2.3,
+        0.2,
+        0.78
+      ],
+      "rotation": [
+        0,
+        0.018,
+        0.012
+      ],
+      "color": "#d2bb87"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.075,
+        0.424,
+        -0.165
+      ],
+      "size": [
+        1.82,
+        0.06,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.018,
+        0.012
+      ],
+      "color": "#b9a065"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.025,
+        0.424,
+        0.085
+      ],
+      "size": [
+        1.68,
+        0.06,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0.018,
+        0.012
+      ],
+      "color": "#9c8959"
+    }
+  ]
+}

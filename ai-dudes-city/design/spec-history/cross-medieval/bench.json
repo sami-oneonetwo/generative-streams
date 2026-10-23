@@ -1,0 +1,159 @@
+{
+  "name": "Splayed Oak Market Bench",
+  "description": "A light oak plank seats two above dark, broad-footed A-trestles that project beyond its ends, with exposed wooden pegs and a slightly uneven diagonal brace.",
+  "notes": "Backless construction, stout oak trestles and pegged joinery suit a medieval market square without modern metal fittings.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.39,
+        0
+      ],
+      "size": [
+        1.8,
+        0.12,
+        0.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a87a4c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.9395,
+        0.2117,
+        0
+      ],
+      "size": [
+        0.12,
+        0.406,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0.261799
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.712,
+        0.2117,
+        0
+      ],
+      "size": [
+        0.12,
+        0.406,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.261799
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.712,
+        0.2117,
+        0
+      ],
+      "size": [
+        0.12,
+        0.406,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        0.261799
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.9395,
+        0.2117,
+        0
+      ],
+      "size": [
+        0.12,
+        0.406,
+        0.32
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.261799
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.215,
+        0
+      ],
+      "size": [
+        1.54,
+        0.09,
+        0.1
+      ],
+      "rotation": [
+        0,
+        0,
+        0.12
+      ],
+      "color": "#745236"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        -0.825,
+        0.421,
+        0
+      ],
+      "size": [
+        0.09,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d5b783"
+    },
+    {
+      "shape": "cylinder",
+      "position": [
+        0.825,
+        0.421,
+        0
+      ],
+      "size": [
+        0.09,
+        0.06,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#d5b783"
+    }
+  ]
+}

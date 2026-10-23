@@ -1,0 +1,235 @@
+{
+  "name": "Timber-and-Aluminium Park Bench",
+  "description": "A welcoming two-person bench with broad timber seat slats, a shallow reclining backrest and a clean aluminium frame sits 0.45 m above the square.",
+  "notes": "Straight brushed-aluminium supports and warm, simple timber panels replace ornate cast-iron ends with practical contemporary park furniture.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -0.78,
+        0.16,
+        -0.19
+      ],
+      "size": [
+        0.09,
+        0.32,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.78,
+        0.16,
+        0.19
+      ],
+      "size": [
+        0.09,
+        0.32,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.78,
+        0.16,
+        -0.19
+      ],
+      "size": [
+        0.09,
+        0.32,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.78,
+        0.16,
+        0.19
+      ],
+      "size": [
+        0.09,
+        0.32,
+        0.09
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.78,
+        0.34,
+        0
+      ],
+      "size": [
+        0.1,
+        0.08,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.78,
+        0.34,
+        0
+      ],
+      "size": [
+        0.1,
+        0.08,
+        0.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.405,
+        -0.2
+      ],
+      "size": [
+        2,
+        0.09,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.405,
+        0
+      ],
+      "size": [
+        2,
+        0.09,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#c99c6c"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.405,
+        0.2
+      ],
+      "size": [
+        2,
+        0.09,
+        0.18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -0.78,
+        0.6,
+        0.32
+      ],
+      "size": [
+        0.08,
+        0.65,
+        0.08
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0.78,
+        0.6,
+        0.32
+      ],
+      "size": [
+        0.08,
+        0.65,
+        0.08
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0
+      ],
+      "color": "#a4aeaf"
+    },
+    {
+      "shape": "box",
+      "position": [
+        0,
+        0.79,
+        0.295
+      ],
+      "size": [
+        2,
+        0.28,
+        0.08
+      ],
+      "rotation": [
+        0.12,
+        0,
+        0
+      ],
+      "color": "#b58b60"
+    }
+  ]
+}

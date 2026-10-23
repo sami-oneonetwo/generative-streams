@@ -1,10 +1,14 @@
 import type { Scene } from './sceneTypes';
 
 export type ServerMsg =
-  | { t: 'hello'; protocol: 1; worldId: string; serverTime: number }
-  | { t: 'state'; rev: number; serverTime: number; scene: Scene }
+  /** `epoch` is new on every server start: a page that saw another one drops the build geometry it kept. */
+  | { t: 'hello'; protocol: 1; worldId: string; serverTime: number; epoch?: string }
+  /** `play`: the /play site's address and its seats, when it is set up and open. */
+  | { t: 'state'; rev: number; serverTime: number; scene: Scene; play?: { url: string; used: number; cap: number } }
   /** Between snapshots: the Mayor moved, spoke or posed (sent the moment the operator page says so). */
-  | { t: 'mayor'; serverTime: number; mayor: import('./dudesTypes').MayorView };
+  | { t: 'mayor'; serverTime: number; mayor: import('./dudesTypes').MayorView }
+  /** Between snapshots: a player walking their own character (the /play page). */
+  | { t: 'dude'; serverTime: number; dude: { id: string; position: { x: number; z: number }; facing: number; moving: boolean; running?: boolean; ride?: { id: string; y: number; altitude: number } } };
 
 export interface ClassificationRecord {
   ts: number;
@@ -20,6 +24,7 @@ export interface AdminStatus {
   worldName: string;
   flags: {
     kickRepliesEnabled: boolean;
+    crierEnabled: boolean;
     devTimeScale: number;
   };
   kick: {

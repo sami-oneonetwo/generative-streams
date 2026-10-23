@@ -1,0 +1,202 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The communal well, mudbrick buildings and river-trader camp establish a convincing Bronze Age town rather than a recoloured modern settlement. Approval is blocked by lane-marking-like road details, rail-like boundaries, municipal-looking community markers, generic vegetation and insufficiently readable reed and cloth construction.",
+  "elements": [
+    {
+      "id": "ground",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "street",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Wheel ruts read as discrete raised brown bars, with spacing that resembles dashed lane markings.",
+        "The assembled scene repeats the same rut and hoof-print arrangement conspicuously, making wear look manufactured."
+      ],
+      "fix": "Recess the wheel tracks into the ochre surface and give them irregular lengths, broken edges and darker compressed interiors. Redistribute the existing 16 dressing parts into uneven cart tracks and scattered hoof impressions, preserving the clear central walking route."
+    },
+    {
+      "id": "lot-sale",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The segmented yellow ring reads more like a bronze wheel than a pale, sun-dried clay availability marker.",
+        "Stacked blocks dominate the dressing; the required dry grass and stone weight are not clearly readable."
+      ],
+      "fix": "Keep the open-centred symbol but make it a matte pale-ochre clay annulus with slightly irregular edges, visibly suspended from the forked post. Within the 12-part budget, replace excess stacked blocks with a distinct stone weight, dry grass and terracotta fragments."
+    },
+    {
+      "id": "lot-claimed",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Long straight caps and dark horizontal bands read as rail fencing rather than woven reed panels on hand-formed mudbrick.",
+        "The exact owner name is not legible as a gameplay label anchored to a hanging clay tablet."
+      ],
+      "fix": "Rebuild the two boundary runs as uneven low mudbrick courses carrying short, visibly woven panels, staying within the specified height and 28-part budget. Retain the red owner band, hang an incised clay tablet on visible fibre cord, add a filled household seal and anchor the exact label \"Ivy\" to that tablet."
+    },
+    {
+      "id": "street-tree",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The fig canopy reads as a few clipped boxes rather than a broad, leaning crown.",
+        "The palm's sparse, nearly radial fronds produce a pinwheel silhouette rather than a convincing young date palm."
+      ],
+      "fix": "Redistribute the 26 parts into a broad off-axis fig crown with varied faceted masses and visible branching. Offset the palm crown and vary frond length, elevation and droop; retain the earthen watering basins."
+    },
+    {
+      "id": "wild-tree",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Repeated rounded foliage blobs make the tamarisk and carob look like generic versions of the same tree.",
+        "The tamarisk lacks its tall, irregular, drooping silhouette, and the thorn bush reads as a miniature leafy tree."
+      ],
+      "fix": "Use the 34 parts to differentiate three silhouettes: a tall crooked tamarisk with descending foliage sprays, a broad low-forked carob with uneven crown weight, and a low thorn bush with exposed angular twigs. Replace repeated spheres with varied faceted foliage clusters."
+    },
+    {
+      "id": "street-light",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "centrepiece",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "bench",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "market",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The canopy reads as a smooth rigid sheet rather than reed matting.",
+        "The upright-to-roof connections do not clearly communicate forked timber supports or lashings."
+      ],
+      "fix": "Within 28 parts, construct the sloping canopy from several broad reed bundles with an uneven fringe and two visible binding bands. Give the four uprights readable forks supporting the roof rails, and separate the existing goods into clear basket, jar, linen and bronze-ingot groups."
+    },
+    {
+      "id": "arrival",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The shade roof reads as solid rectangular panels rather than reed construction.",
+        "The tether stone and clay wheel emblem do not establish a clear arrival-point identity at scene distance."
+      ],
+      "fix": "Replace the roof panels with bundled reed strips on lashed forked supports. Reallocate detail within the 58-part budget to a clearly carved tether stone with rope and a broad matte-clay wheel emblem facing the street, retaining the horse and two-wheeled chariot on the earth road."
+    },
+    {
+      "id": "river",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "civic-lot",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The four turquoise-capped square posts read as painted municipal bollards, not low mudbrick corner markers.",
+        "The turquoise-rimmed medallion reads as a wheel-like badge; the shared central bowl is not sufficiently distinct."
+      ],
+      "fix": "Replace the capped posts with squat, irregular mudbrick markers without coloured top plates. Make the front marker an unglazed clay medallion with four broad impressed dots around an unmistakable bowl-shaped centre, keeping the parcel interior clear and the total at 16 parts."
+    },
+    {
+      "id": "camp",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "resident",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "head",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The mantle reads as rigid gold shoulder armour, with turquoise largely confined to the neck.",
+        "The robe's stacked block divisions weaken the long woven-cloth silhouette."
+      ],
+      "fix": "Retain the base figure, chest sun disc and tall staff, but use the 40-part budget to form a continuous cream outer robe with a few overlapping hem panels. Replace the gold shoulder slabs with a visibly draped ochre mantle carrying a broad turquoise woven border; reserve metallic bronze for the sun emblems."
+    },
+    {
+      "id": "leader",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "home",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "skyscraper",
+      "score": 9,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "car",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": ""
+    },
+    {
+      "id": "street-corner",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Featureless pale frontage bands read like continuous sidewalks from the stream camera, despite being flush.",
+        "Repeated mats, doorstep stones and road-detail arrangements expose the tile rhythm instead of suggesting a lived-in earth street."
+      ],
+      "fix": "Keep the specified road and frontage widths, but carry dusty earth texture across their boundaries and soften the straight colour seams. Vary dressing placement between adjoining modules, use mats only at selected entrances and retain flagstone paving within the civic square rather than extending that visual treatment into the frontage."
+    }
+  ],
+  "bible": {
+    "ok": true,
+    "changes": []
+  }
+}

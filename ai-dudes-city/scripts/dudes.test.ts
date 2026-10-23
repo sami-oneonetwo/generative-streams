@@ -8,7 +8,7 @@ import { normalizeAgentReply, type AgentFn, type AgentReply, type AgentTurn } fr
 import type { DesignFn } from '../src/worlds/ai-dudes/design';
 import { fixtureDesign } from '../src/worlds/ai-dudes/fixtures';
 import { stateSchema, type DudesState } from '../src/worlds/ai-dudes/state';
-import { startHappening, wearing } from '../src/worlds/ai-dudes/events';
+import { startHappening, troublemakerName, wearing } from '../src/worlds/ai-dudes/events';
 import { applyReading, wishesMarkdown, type ListenerFn } from '../src/worlds/ai-dudes/listener';
 import { validateDesign } from '../src/worlds/ai-dudes/blueprint';
 import { plotById } from '../src/shared/city';
@@ -154,18 +154,49 @@ test('a dude walks to another dude by name', async () => {
   assert.ok(Math.hypot(near.position.x - 20, near.position.z - 20) < 2.5, `ended at ${JSON.stringify(near.position)}`);
 });
 
-test('the allowance stops new calls when enforced, and messages wait rather than vanish', async () => {
-  const { h, say, tick } = harness({ allowance: 2 });
+test('the rolling budget holds calls back when enforced, messages wait rather than vanish, and it refills', async () => {
+  // 8 an hour: a burst of 2, then one every 7.5 minutes.
+  const { h, say, tick } = harness({ agentPerHour: 8 });
   await say('a', 'one');
   await say('b', 'two');
   await say('c', 'three');
   await tick(2000);
   assert.equal(h.turns.length, 2);
-  assert.equal(h.state.ai.callsRemaining, 0);
   assert.deepEqual(h.state.dudes.find((d) => d.name === 'c')!.inbox.map((l) => l.text), ['three']);
+  await tick(460_000, 5000);
+  assert.equal(h.turns.length, 3, 'the window refilled');
+  // Off: counted, never refused.
   h.state.ai.enforced = false;
+  await say('a', 'four');
+  await say('b', 'five');
   await tick(1000);
-  assert.equal(h.turns.length, 3);
+  assert.equal(h.turns.length, 5);
+  assert.equal(h.state.ai.callsUsed, 5);
+  // Back on with nothing left: calls slow to the rate rather than stopping.
+  h.state.ai.enforced = true;
+  await say('c', 'six');
+  await tick(1000);
+  assert.equal(h.turns.length, 5);
+  await tick(460_000, 5000);
+  assert.equal(h.turns.length, 6);
+});
+
+test('designs draw on a budget of their own', async () => {
+  let designs = 0;
+  const { h, say, tick } = harness({
+    designPerHour: 4, // a burst of one
+    reply: () => ({ actions: [{ do: 'build', what: 'a little hut' }] }),
+    design: (input, signal) => {
+      designs++;
+      return fixtureDesign(input, signal);
+    },
+  });
+  await say('a', 'build me a hut');
+  await say('b', 'build me a hut too');
+  await tick(5000);
+  assert.equal(h.turns.length, 2, 'agent turns are not held back by the design budget');
+  assert.equal(designs, 1);
+  assert.equal(h.state.jobs.filter((j) => j.status === 'queued').length, 1);
 });
 
 test('agent output is normalised piece by piece: junk is dropped, never the turn', () => {
@@ -230,7 +261,7 @@ test('sitting on top, going inside, kicking: on the build, hidden, rattled', asy
   await tick(60_000);
   script = [{ do: 'use', target: 'tower', how: 'stand' }];
   await say('b', 'stand on the tower');
-  await tick(25_000); // across town from the bus stop to a's lot
+  await tick(45_000); // across town from the bus stop to a's lot
   const b = h.state.dudes.find((d) => d.name === 'b')!;
   assert.ok((b.y ?? 0) > 3, `on top (${b.y})`);
   script = [{ do: 'use', target: 'tower', how: 'enter' }];
@@ -240,7 +271,7 @@ test('sitting on top, going inside, kicking: on the build, hidden, rattled', asy
   assert.equal(b.y, undefined, 'climbed down to go in');
   script = [{ do: 'use', target: 'tower', how: 'kick' }];
   await say('c', 'kick it');
-  await tick(35_000); // from the bus stop, across town
+  await tick(60_000); // from the bus stop, across town
   assert.ok(h.state.effects?.some((e) => e.kind === 'shake') || h.state.dudes.find((d) => d.name === 'c')!.use === undefined);
   await tick(30_000);
   assert.equal(b.hidden, undefined, 'came back out');
@@ -267,7 +298,8 @@ test('Gary the Painter repaints builds, their owners react on their own, and "fi
   assert.ok(h.state.vandalised?.[tower.id]);
   assert.ok(h.turns.length > turnsBefore, 'the owner reacted without anyone in chat saying anything');
   const reaction = h.turns.at(-1)!;
-  assert.match(reaction.content, /Gary the Painter painted your build/);
+  // Gary the Painter, or whoever paints builds in the town's age.
+  assert.match(reaction.content, new RegExp(`${troublemakerName(h.state, 'painter')} painted your build`));
   script = [{ do: 'use', target: 'tower', how: 'fix' }];
   await say('owner', 'fix it');
   await tick(20_000);
@@ -392,9 +424,9 @@ test('fights: a shot knocks someone out and they get back up; a bomb blows up ev
   victim.position = { x: tower.position.x + tower.footprint.width / 2 + 1, z: tower.position.z };
   script = [{ do: 'attack', target: 'tower', with: 'bomb' }];
   await say('bomber', 'bomb the tower');
-  await tick(40_000);
+  await tick(70_000);
   assert.ok(h.state.effects?.some((e) => e.kind === 'boom') || h.state.vandalised?.[tower.id], 'it went off');
-  assert.equal(h.state.vandalised?.[tower.id]?.kind, 'wrecked');
+  assert.ok(['damaged', 'wrecked'].includes(h.state.vandalised?.[tower.id]?.kind ?? ''), 'the bomb took a chunk out of it');
   assert.notEqual(JSON.stringify(tower.blueprint), before);
   assert.ok((h.state.scores?.['dev:victim']?.downs ?? 0) >= 2, 'the victim standing next to it went down too');
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success);
@@ -445,11 +477,11 @@ test('driving through people runs them over, and beating up a troublemaker chase
   // He hangs about rather than finishing his round first: the glade is small and he is quick.
   h.state.npcs![0].plan.splice(1, 0, { do: 'wait', ms: 120_000 });
   await tick(3000);
-  script = [{ do: 'attack', target: 'gary', with: 'punch' }];
+  script = [{ do: 'attack', target: troublemakerName(h.state, 'painter'), with: 'punch' }];
   let chased = false;
   for (let tries = 0; tries < 6 && !chased; tries++) {
     await say('driver', 'punch gary');
-    for (let i = 0; i < 40 && !chased; i++) {
+    for (let i = 0; i < 80 && !chased; i++) {
       await tick(500);
       chased = !!h.state.npcs?.[0]?.ko;
     }
@@ -519,4 +551,59 @@ test('an oversized or hairline design is scaled and thickened, not thrown away',
   ] } }, false);
   assert.equal(big.action, 'build');
   if (big.action === 'build') assert.ok(big.blueprint.parts.every((p) => p.size.every((v) => v >= 0.01 && v <= 40)));
+});
+
+test('a line repeated while the first is still waiting is not queued twice; a retry after the answer is', async () => {
+  const { h, say, tick } = harness({ turnGapMs: 10_000 });
+  await say('a', 'hello there');
+  await tick(500);
+  assert.equal(h.turns.length, 1);
+  await say('a', 'build a big red barn');
+  await say('a', 'Build a big red barn!!!');
+  await say('a', 'build a big red barn please');
+  const a = h.state.dudes.find((d) => d.name === 'a')!;
+  assert.deepEqual(a.inbox.map((l) => l.text), ['build a big red barn']);
+  await tick(11_000);
+  assert.equal(h.turns.length, 2);
+  await say('a', 'build a big red barn');
+  assert.equal(a.inbox.length, 1, 'asked again after the answer: a retry');
+});
+
+test('the gap between one chatter’s turns grows with how many are talking', async () => {
+  const { h, say, tick } = harness({ turnGapMs: 1000, agentLimit: 32 });
+  const names = Array.from({ length: 12 }, (_, i) => `c${i}`);
+  for (const n of names) await say(n, `hi from ${n}`);
+  await tick(500);
+  assert.equal(h.turns.length, 12);
+  // Twelve talking: a 2 s gap, not 1 s.
+  await say('c0', 'and another thing');
+  await tick(1000);
+  assert.equal(h.turns.length, 12);
+  await tick(1500);
+  assert.equal(h.turns.length, 13);
+});
+
+test('show tools: cancel designs without pausing the AI, clear a bubble, send a dude home', async () => {
+  const { world, ctx, h, say, tick } = harness({
+    reply: () => ({ actions: [{ do: 'build', what: 'a little hut' }] }),
+    design: (_input, signal) => new Promise((_, reject) => signal?.addEventListener('abort', () => reject(new Error('aborted')))),
+  });
+  const run = (id: string, value?: string) => world.adminActions!.find((a) => a.id === id)!.run(ctx, value as never);
+  await say('a', 'build me a hut');
+  await tick(1000);
+  assert.ok(h.state.jobs.some((j) => j.status === 'designing'));
+  assert.equal(run('designs-cancel'), undefined);
+  assert.equal(h.state.jobs.length, 0);
+  assert.equal(h.state.ai.paused, false);
+  const a = h.state.dudes[0];
+  a.say = { text: 'something regrettable', until: h.now + 60_000 };
+  run('clear-say', 'a');
+  assert.equal(a.say, undefined);
+  a.position = { x: 30, z: 30 };
+  a.path = [];
+  a.follow = { dudeId: 'nobody', until: h.now + 1e9 };
+  run('send-home', 'a');
+  assert.equal(a.follow, undefined);
+  assert.ok(a.path.length > 0 || Math.hypot(a.position.x - 30, a.position.z - 30) > 1, 'on its way home');
+  assert.equal(typeof run('send-home', 'nobody'), 'string', 'an unknown name is refused');
 });

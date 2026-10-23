@@ -20,6 +20,8 @@ export interface DudeLook {
   accessoryColor: string;
   height: number; // 0.85–1.15
   build: number; // 0.85–1.2: shoulders and body width
+  /** The age's garment kit drawn over the figure (src/shared/outfits.ts), e.g. "stone:2". Set for the view, never saved. */
+  outfit?: string;
 }
 export const LOOK_LIMITS = { height: [0.85, 1.15] as const, build: [0.85, 1.2] as const };
 
@@ -70,6 +72,10 @@ export interface DudeView {
   npc?: boolean;
   /** One of the town's own residents (city.ts): no chatter behind them; a quieter tag, no mood. */
   resident?: boolean;
+  /** One of the age's caravan (their leader brings the asks); `asking` while the leader has asks open. */
+  traveller?: boolean;
+  leader?: boolean;
+  asking?: boolean;
   /** The streamer's own figure (mayor.ts): moved from the operator page, drawn with a gold tag. */
   mayor?: boolean;
   /** How they are doing, 0..100 (the average of their needs): the diamond over their head. */
@@ -80,16 +86,24 @@ export interface DudeView {
   needs?: { hunger: number; energy: number; fun: number; social: number };
   /** Their lot's address (or "rents a flat"), for the inspect panel. */
   address?: string;
+  /** Off somewhere on an errand of their own, why and where, for under the name: "hungry → Sara's Bakery". */
+  heading?: string;
   /** Acting something out (a bit): what is going on, for under the name, and what they are holding. */
   bit?: { caption: string; prop?: BitProp };
   /** Drawn this many times bigger (a boss). */
   scale?: number;
   /** Its agent is mid-turn right now: the page shows a thought bubble. */
   thinking?: boolean;
+  /** Its chatter has said something its agent hasn't got to yet (waiting for a free slot): a dim marker on the tag. */
+  queued?: boolean;
   /** Spoke within the last couple of seconds: the page waves an arm. */
   heardAt?: number;
   /** The chatter has been quiet a while: the dude naps where it is (or sleepwalks after the group), dimmed. */
   away?: boolean;
+  /** Walked by its chatter in person from the /play page: its own messages carry it between snapshots. */
+  piloted?: boolean;
+  /** Carrying a weapon (the Mayor's or a player's page, weapons.ts): drawn in hand. */
+  armed?: Weapon;
   /** Collectables, grouped: [kind, how many], oldest kind first. */
   badges?: [string, number][];
   /** Show every badge (the chatter asked to see them) rather than the newest few. */
@@ -123,15 +137,20 @@ export type BitBurst = (typeof BIT_BURSTS)[number];
 /** Ways to attack (the agent's `attack` action). Cartoon violence: a knocked-out character gets back up. */
 export const ATTACKS = ['shove', 'punch', 'kick', 'shoot', 'throw', 'bomb'] as const;
 export type AttackWith = (typeof ATTACKS)[number];
+/** What the Mayor or a player can carry and fire from their own page (weapons.ts). `cannon` is a weapon build's own gun, fired while aboard. */
+export const WEAPONS = ['blaster', 'rocket'] as const;
+export type Weapon = (typeof WEAPONS)[number];
 
 /**
  * Something brief for the page to show, played once per id: a build rattled (`shake`), a shot or a
  * thrown thing flying from one point to another (`shot`, `throw`), a lit bomb sitting on the ground
- * until it goes off (`bomb`, `until`), the explosion (`boom`, `radius`), a character knocked out (`ko`).
+ * until it goes off (`bomb`, `until`), the explosion (`boom`, `radius`), a character knocked out (`ko`),
+ * a rocket or a cannon shell flying from one point to another and going off where it lands (`shell`, `radius`),
+ * a build taking a hit (`hit`: dust and chips at `to`, `height` up), and a build coming down (`collapse`, `radius`).
  */
 export interface FieldEffect {
   id: number;
-  kind: 'shake' | 'shot' | 'throw' | 'bomb' | 'boom' | 'ko' | 'splash' | 'slam' | 'coins' | 'pop' | 'burst';
+  kind: 'shake' | 'shot' | 'throw' | 'bomb' | 'boom' | 'ko' | 'splash' | 'slam' | 'coins' | 'pop' | 'burst' | 'shell' | 'hit' | 'collapse';
   at: number; // server time
   objectId?: string;
   dudeId?: string;
@@ -145,6 +164,9 @@ export interface FieldEffect {
    * `burst`: which (sparkles, smoke, confetti, hearts). */
   label?: string;
   pose?: string;
+  /** `hit`, `shot`, `shell`: how high (metres) it lands or leaves from. */
+  height?: number;
+  fromHeight?: number;
 }
 
 /** What a troublemaker is up to, for a banner across the top while it lasts. */
@@ -182,21 +204,40 @@ export interface MayorView {
   cam: { yaw: number; half: number; x?: number; z?: number };
   /** The stream view follows the Mayor's camera (otherwise it frames everyone, as before). */
   follow: boolean;
+  /** The stream camera is on this person instead (their id), chosen on the operator page. */
+  focus?: string;
   /** The operator page is open and sending. */
   live: boolean;
   /** The operator has hidden the Mayor: the camera still follows where he is, but nobody sees him. */
   hidden?: boolean;
-  /** Aboard a build: which, how it gets about (and so how fast he can take it), where he sits, how high a flyer is. */
-  riding?: { id: string; moves: 'roam' | 'drive' | 'fly' | 'vehicle'; seat: number; altitude: number; size: number };
+  /** Aboard a build: which, how it gets about (and so how fast he can take it), where he sits, how high a flyer is, and whether it has a gun. */
+  riding?: { id: string; moves: 'roam' | 'drive' | 'fly' | 'vehicle'; seat: number; altitude: number; size: number; gun?: boolean };
+  /** What he is carrying (weapons.ts). */
+  armed?: Weapon;
   /** The stream's sound as the operator set it (0..1): music, and everything else. */
   audio?: { music: number; sfx: number };
   /** Bumped each time the server puts him somewhere (onto a court): the operator page jumps there too. */
   moved?: number;
+  /** The aide's last wish and answer, for the operator page; `thinking` while its model call is out. */
+  aide?: { asked: string; reply: string; ok: boolean; at: number; thinking: boolean };
 }
 
 /** The town for the page: who has which lot, named districts, what is popular, the project, a party. */
 export interface TownView {
   name: string;
+  /** The age the town lives in (shared/ages.ts), and what the streamer's character is called in it. */
+  age: number;
+  /** The theme-free sandbox world: no age is drawn (plain ground, builds in their own colours). */
+  sandbox?: boolean;
+  head: string;
+  /** The age's caravan and what its leader asks of the town (caravan.ts), for the board on screen. */
+  caravan?: { name: string; leader: string; visit: number; of: number; problem: string; asks: { label: string; have: number; need: number }[]; between?: boolean; stranded?: boolean };
+  /** A cutscene playing (shared/scenes.ts): which, and when it started (server time). */
+  scene?: { id: import('./scenes').SceneId; at: number; leader?: string; vars?: Record<string, string> };
+  /** A Wonder stands (or is going up) on its spot in the middle of the square: the centrepiece makes way. */
+  wonder?: boolean;
+  /** The river bridge is down: how far it has been mended (0..1). Absent when it stands whole. */
+  bridge?: number;
   lots: { id: string; owner: string; shirt: string; away: boolean }[];
   districts: { name: string; at: GroundPoint }[];
   /** What the town is missing, most pressing first. */
@@ -237,6 +278,9 @@ export interface DudesScene {
     designing: number; // design calls in flight
     idleLife: boolean; // quiet characters take a turn of their own now and then
     events: boolean; // troublemakers come by
+    townLife: boolean; // residents walk about and characters go out on their own
+    caravan?: boolean; // the caravan game runs; off is sandbox mode
+    themes?: boolean; // the age themes apply; off is the theme-free sandbox world
   };
   counts: { dudes: number; awake: number; builds: number };
   worldRevision: number;
@@ -245,7 +289,27 @@ export interface DudesScene {
 export interface DudesAdminStatus {
   fixture: boolean;
   models: { agent: string; design: string; listener: string };
-  ai: DudesScene['ai'] & { agentLimit: number; designLimit: number; waiting: number };
+  ai: DudesScene['ai'] & {
+    agentLimit: number;
+    designLimit: number;
+    waiting: number;
+    /** The rolling budget (worlds/ai-dudes/budget.ts) and a rough spend estimate. */
+    budget?: {
+      agentPerHour: number;
+      designPerHour: number;
+      agentLeft: number;
+      designLeft: number;
+      agentHour: number;
+      designHour: number;
+      agent5m: number;
+      design5m: number;
+      /** Rough US dollars per call of each kind (config), and what the last hour and the last five minutes' pace come to. */
+      agentUsd: number;
+      designUsd: number;
+      usdLastHour: number;
+      usdPerHourNow: number;
+    };
+  };
   dudes: {
     id: string;
     name: string;
@@ -256,6 +320,9 @@ export interface DudesAdminStatus {
     builds: number;
     inbox: number;
     lastHeardAt: number;
+    /** Heard from recently enough to be up and about (not napping). */
+    awake: boolean;
+    coins: number;
     muted: boolean;
     lastError?: string;
   }[];

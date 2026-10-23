@@ -1,0 +1,539 @@
+{
+  "name": "Knuckled Pollard Lime and Leaning Orchard Pear",
+  "description": "A broad, densely regrown lime rises to 5.5 metres beside a smaller road-leaning pear with spreading forks, pale fruit and an uneven 4.5-metre crown.",
+  "notes": "Exposed pruning knuckles express medieval pollarding without pavement or tree guards; every crown uses substantial branch boxes carrying several overlapping, flattened foliage masses rather than isolated balls on bare trunks.",
+  "parts": [
+    {
+      "shape": "box",
+      "position": [
+        -3,
+        0.7,
+        5
+      ],
+      "size": [
+        0.65,
+        1.3,
+        0.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0.06
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.09,
+        1.92,
+        4.94
+      ],
+      "size": [
+        0.61,
+        1.3,
+        0.59
+      ],
+      "rotation": [
+        -0.08,
+        0,
+        0.08
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.37,
+        2.56,
+        4.75
+      ],
+      "size": [
+        0.79,
+        0.58,
+        0.73
+      ],
+      "rotation": [
+        0.08,
+        0.18,
+        0.15
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.92,
+        2.65,
+        4.9
+      ],
+      "size": [
+        0.67,
+        0.56,
+        0.65
+      ],
+      "rotation": [
+        -0.1,
+        -0.16,
+        -0.16
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.85,
+        3.15,
+        4.53
+      ],
+      "size": [
+        0.34,
+        1.64,
+        0.33
+      ],
+      "rotation": [
+        -0.19,
+        0,
+        0.55
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.35,
+        3.55,
+        4.96
+      ],
+      "size": [
+        0.32,
+        2.05,
+        0.31
+      ],
+      "rotation": [
+        0.04,
+        0,
+        0.06
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -2.58,
+        3.22,
+        4.72
+      ],
+      "size": [
+        0.36,
+        1.47,
+        0.34
+      ],
+      "rotation": [
+        -0.2,
+        0,
+        -0.44
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        -3.18,
+        3.27,
+        4.24
+      ],
+      "size": [
+        0.31,
+        1.65,
+        0.32
+      ],
+      "rotation": [
+        -0.62,
+        0,
+        -0.06
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.38,
+        3.81,
+        4.43
+      ],
+      "size": [
+        2.05,
+        1.4,
+        1.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#416c48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.94,
+        4.55,
+        4.66
+      ],
+      "size": [
+        1.85,
+        1.55,
+        1.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5f8c4a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.27,
+        4.65,
+        5.03
+      ],
+      "size": [
+        1.65,
+        1.7,
+        1.78
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5f8c4a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.48,
+        4.05,
+        4.8
+      ],
+      "size": [
+        1.92,
+        1.45,
+        1.96
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#416c48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -2.79,
+        4.66,
+        4.34
+      ],
+      "size": [
+        1.63,
+        1.3,
+        1.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5f8c4a"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -3.29,
+        3.65,
+        3.72
+      ],
+      "size": [
+        1.9,
+        1.2,
+        1.58
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#416c48"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        -4.03,
+        4.24,
+        3.64
+      ],
+      "size": [
+        1.78,
+        1.23,
+        1.52
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#5f8c4a"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3,
+        1.38,
+        4.72
+      ],
+      "size": [
+        0.52,
+        2.7,
+        0.49
+      ],
+      "rotation": [
+        -0.209,
+        0,
+        0
+      ],
+      "color": "#5c4030"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.5,
+        2.91,
+        4.3
+      ],
+      "size": [
+        0.35,
+        1.65,
+        0.34
+      ],
+      "rotation": [
+        -0.15,
+        0,
+        0.76
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "box",
+      "position": [
+        3.44,
+        3.02,
+        4.27
+      ],
+      "size": [
+        0.3,
+        1.57,
+        0.31
+      ],
+      "rotation": [
+        -0.17,
+        0,
+        -0.58
+      ],
+      "color": "#6b4a32"
+    },
+    {
+      "shape": "box",
+      "position": [
+        2.96,
+        3.08,
+        3.98
+      ],
+      "size": [
+        0.29,
+        1.42,
+        0.28
+      ],
+      "rotation": [
+        -0.53,
+        0,
+        0.08
+      ],
+      "color": "#8b6240"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.98,
+        3.43,
+        4.14
+      ],
+      "size": [
+        1.68,
+        1.03,
+        1.62
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8eaa62"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.62,
+        3.88,
+        4.42
+      ],
+      "size": [
+        1.78,
+        1.24,
+        1.8
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#9eB573"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.66,
+        3.53,
+        4.2
+      ],
+      "size": [
+        1.48,
+        1.12,
+        1.66
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8eaa62"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.1,
+        3.39,
+        3.52
+      ],
+      "size": [
+        1.64,
+        1.07,
+        1.43
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#79964c"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.47,
+        3.59,
+        3.63
+      ],
+      "size": [
+        1.5,
+        1.12,
+        1.36
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": "#8eaa62"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        1.7,
+        3.32,
+        3.48
+      ],
+      "size": [
+        0.23,
+        0.32,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0.12
+      ],
+      "color": "#c6d590"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        3.94,
+        3.38,
+        3.54
+      ],
+      "size": [
+        0.24,
+        0.33,
+        0.24
+      ],
+      "rotation": [
+        0,
+        0,
+        -0.14
+      ],
+      "color": "#c6d590"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.89,
+        3.14,
+        2.91
+      ],
+      "size": [
+        0.23,
+        0.3,
+        0.23
+      ],
+      "rotation": [
+        0,
+        0,
+        0.08
+      ],
+      "color": "#c6d590"
+    },
+    {
+      "shape": "sphere",
+      "position": [
+        2.16,
+        4.02,
+        3.79
+      ],
+      "size": [
+        0.3,
+        0.13,
+        0.27
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "color": "#fff0d6"
+    }
+  ]
+}

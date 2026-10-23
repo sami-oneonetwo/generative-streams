@@ -31,6 +31,12 @@ const YELLOW = 0xffe27a,
   BOMB = 0x222226,
   FUSE = 0xc9b48a;
 const DEBRIS = [0x8a7a62, 0x9a9488, 0x6f6658, 0xb7ab92];
+const BOLT = 0x8ff3ff,
+  DUST = 0xb9ae98,
+  SHELL = 0x3b3f36;
+const SHELL_SPEED = 38; // metres a second: a rocket or a shell takes a moment to get there
+/** At most this many effect meshes at once: past it, new sparks and puffs are skipped (ten players firing must not sink the stream's frame rate). */
+const MAX_LIVE = 300;
 
 interface Running {
   /** Advance to page time `now`; false when finished (its meshes are then freed). */
@@ -46,12 +52,14 @@ interface Bomb {
 }
 
 export interface EffectsHandles {
-  /** A new effect the drawn clock has just reached: play it once. */
-  play(e: FieldEffect, now: number, reduced: boolean): void;
+  /** A new effect the drawn clock has just reached: play it once. `colour` is the build's own, for chips off it. */
+  play(e: FieldEffect, now: number, reduced: boolean, colour?: number): void;
   /** Every effect in the applied snapshot: keeps the lit bombs on the ground. */
   syncBombs(effects: FieldEffect[]): void;
   /** Per frame, before the render. */
   update(now: number, serverNow: number, reduced: boolean): void;
+  /** This page's own shot, drawn at once: a muzzle flash, and a blaster's bolt (the server's copy is skipped). */
+  local(shot: { gun: string; from: GroundPoint; to: GroundPoint; fromHeight: number }, now: number): void;
   /** How far to nudge the camera this frame (metres), from recent booms near `focus`. */
   shake(now: number, focus: GroundPoint): { x: number; z: number };
   dispose(): void;
@@ -93,11 +101,16 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
     }
   }
   const v3 = (p: GroundPoint, y: number) => new THREE.Vector3(p.x, y, p.z);
+  const full = () => root.children.length >= MAX_LIVE;
+  const nothing: Running = { meshes: [], step: () => false };
 
   /** A little burst of sparks (bright cubes flung out and fading) at `at`. */
   function sparks(at: THREE.Vector3, now: number, count: number, colour: number, speed: number): Running {
+    if (full()) return nothing;
+    // One material for the whole burst: they fade together.
+    const material = glow(colour);
     const bits = Array.from({ length: count }, (_, i) => {
-      const m = add(cube, glow(colour));
+      const m = add(cube, material);
       m.scale.setScalar(0.05);
       m.position.copy(at);
       const a = (i / count) * Math.PI * 2 + Math.random() * 0.6;
@@ -114,16 +127,18 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
         for (const b of bits) {
           b.m.position.copy(at).addScaledVector(b.v, s);
           b.m.position.y -= 4.9 * s * s;
-          (b.m.material as THREE.MeshBasicMaterial).opacity = 1 - u;
         }
+        material.opacity = 1 - u;
         return true;
       },
     };
   }
   /** A soft grey puff of smoke: a few spheres swelling and fading. */
   function puff(at: THREE.Vector3, now: number, size: number, ms = PUFF_MS): Running {
+    if (full()) return nothing;
+    const material = glow(SMOKE, 0.8);
     const balls = Array.from({ length: 4 }, (_, i) => {
-      const m = add(unit, glow(SMOKE, 0.8));
+      const m = add(unit, material);
       const a = (i / 4) * Math.PI * 2;
       return { m, dx: Math.cos(a) * size * 0.35, dz: Math.sin(a) * size * 0.35 };
     });
@@ -136,8 +151,8 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
         for (const b of balls) {
           b.m.position.set(at.x + b.dx * (0.5 + u), at.y + u * size * 0.6, at.z + b.dz * (0.5 + u));
           b.m.scale.setScalar(size * (0.4 + 0.8 * u));
-          (b.m.material as THREE.MeshBasicMaterial).opacity = 0.8 * (1 - u);
         }
+        material.opacity = 0.8 * (1 - u);
         return true;
       },
     };
@@ -145,15 +160,16 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
 
   function shot(e: FieldEffect, now: number) {
     if (!e.from || !e.to) return;
-    const a = v3(e.from, CHEST),
-      b = v3(e.to, CHEST);
+    const a = v3(e.from, e.fromHeight ?? CHEST),
+      b = v3(e.to, e.height ?? CHEST);
     const dir = b.clone().sub(a);
     const len = dir.length();
     if (len < 0.05) return;
     dir.normalize();
     // The streak: a thin bright box a metre and a bit long, flying the whole way in 0.15 s.
     const streakLen = Math.min(1.4, len);
-    const tracer = add(new THREE.BoxGeometry(0.05, 0.05, streakLen), glow(YELLOW));
+    const blaster = e.label === 'blaster';
+    const tracer = add(new THREE.BoxGeometry(blaster ? 0.09 : 0.05, blaster ? 0.09 : 0.05, streakLen), glow(blaster ? BOLT : YELLOW));
     tracer.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), dir);
     const flash = add(unit, glow(ORANGE));
     flash.position.copy(a).addScaledVector(dir, 0.3);
@@ -230,8 +246,10 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
     const core = add(unit, glow(ORANGE));
     const ring = add(ringGeometry, glow(SMOKE, 0.7));
     ring.rotation.x = Math.PI / 2;
+    // One material a colour for the debris (they fade together).
+    const chips = DEBRIS.map((c) => lit(c));
     const debris = Array.from({ length: 10 }, (_, i) => {
-      const m = add(cube, lit(DEBRIS[i % DEBRIS.length]));
+      const m = add(cube, chips[i % chips.length]);
       m.castShadow = true;
       m.scale.setScalar(0.12 + Math.random() * 0.12);
       const a = (i / 10) * Math.PI * 2 + Math.random() * 0.5;
@@ -269,12 +287,72 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
         for (const b of debris) {
           b.m.position.set(at.x + b.v.x * s * 0.6, Math.max(0.06, 0.3 + b.v.y * s - 9.8 * s * s), at.z + b.v.z * s * 0.6);
           if (b.m.position.y > 0.07) b.m.rotation.set(b.spin.x * s, b.spin.y * s, b.spin.z * s);
-          (b.m.material as THREE.MeshStandardMaterial).opacity = d < 0.7 ? 1 : 1 - (d - 0.7) / 0.3;
         }
+        for (const c of chips) c.opacity = d < 0.7 ? 1 : 1 - (d - 0.7) / 0.3;
         return ms < Math.max(BOOM_RING_MS, DEBRIS_MS);
       },
     });
     running.push(puff(at.clone().setY(0.8), now, radius * 0.9, 1100));
+  }
+
+  /** A rocket or a cannon shell: a dark slug with a smoke trail, flying a shallow arc, going off where it lands. */
+  function shell(e: FieldEffect, now: number) {
+    if (!e.from || !e.to) return;
+    const a = v3(e.from, e.fromHeight ?? HAND),
+      b = v3(e.to, 0.6);
+    const dist = a.distanceTo(b);
+    const ms = Math.max(120, (dist / SHELL_SPEED) * 1000);
+    const arc = 0.3 + dist * 0.05;
+    const slug = add(unit, lit(SHELL));
+    slug.scale.set(0.22, 0.22, 0.5);
+    const flash = add(unit, glow(ORANGE));
+    flash.position.copy(a);
+    const start = now;
+    let trailAt = now,
+      landed = false;
+    const prev = a.clone();
+    running.push({
+      meshes: [slug, flash],
+      step(t) {
+        const u = Math.min(1, (t - start) / ms);
+        const f = Math.min(1, (t - start) / 140);
+        flash.scale.setScalar(0.6 * (1 - f) + 0.05);
+        (flash.material as THREE.MeshBasicMaterial).opacity = 1 - f;
+        slug.position.lerpVectors(a, b, u);
+        slug.position.y += arc * 4 * u * (1 - u);
+        slug.lookAt(prev);
+        prev.copy(slug.position);
+        if (t - trailAt > 35 && u < 1) {
+          trailAt = t;
+          running.push(puff(slug.position.clone(), t, 0.35, 500));
+        }
+        if (u >= 1 && !landed) {
+          landed = true;
+          boom({ ...e, from: e.to, radius: e.radius ?? 3 }, t);
+        }
+        slug.visible = u < 1;
+        return u < 1 || t - start < 160;
+      },
+    });
+  }
+  /** A build taking a hit: chips of it and a puff of dust where it landed. */
+  function hit(e: FieldEffect, now: number, colour: number) {
+    if (!e.to) return;
+    const at = v3(e.to, e.height ?? 1.2);
+    running.push(sparks(at, now, 8, colour, 2.4), sparks(at, now, 4, DUST, 1.6), puff(at, now, 0.6));
+  }
+  /** A build coming down: a great cloud of dust rolling out from its foot, chunks thrown about, and a shudder. */
+  function collapse(e: FieldEffect, now: number, colour: number) {
+    if (!e.from) return;
+    const r = Math.max(1.5, Math.min(14, e.radius ?? 4));
+    quakes.push({ at: now, x: e.from.x, z: e.from.z, radius: r * 0.9 });
+    for (let i = 0; i < 6; i++) {
+      const a = (i / 6) * Math.PI * 2;
+      running.push(puff(new THREE.Vector3(e.from.x + Math.cos(a) * r * 0.6, 0.6 + (i % 2) * r * 0.3, e.from.z + Math.sin(a) * r * 0.6), now, r * 0.9, 1800 + i * 120));
+    }
+    running.push(puff(v3(e.from, r * 0.5), now, r * 1.3, 2200));
+    const at = v3(e.from, r * 0.4);
+    running.push(sparks(at, now, 14, colour, r * 0.9), sparks(at, now, 10, DUST, r * 0.7), sparks(at, now, 8, DEBRIS[1], r));
   }
 
   function newBomb(e: FieldEffect): Bomb {
@@ -301,7 +379,9 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
   /** Money changing hands: "+§5" floating up over the place and fading. */
   function coins(e: FieldEffect, now: number) {
     if (!e.to || !e.amount) return;
-    floatText(e.to, `+§${e.amount}`, '#ffd34d', now);
+    // Spent (a fine, a fee, a new hat): down in red; earned: up in gold.
+    if (e.amount < 0) floatText(e.to, `-§${-e.amount}`, '#ff8a6a', now);
+    else floatText(e.to, `+§${e.amount}`, '#ffd34d', now);
   }
   /** Someone doing a build's thing: its shout ("SWISH") floating up over them. */
   function pop(e: FieldEffect, now: number) {
@@ -348,9 +428,40 @@ export function createEffectsLayer(parent: THREE.Object3D): EffectsHandles {
     });
   }
 
+  /** A muzzle flash: a quick orange pop and a few sparks where the shot leaves. */
+  function muzzle(from: GroundPoint, to: GroundPoint, height: number, now: number, big: boolean) {
+    const a = v3(from, height);
+    const dir = v3(to, height).sub(a).normalize();
+    const flash = add(unit, glow(ORANGE));
+    flash.position.copy(a).addScaledVector(dir, 0.3);
+    const start = now;
+    running.push(
+      {
+        meshes: [flash],
+        step(t) {
+          const f = Math.min(1, (t - start) / (big ? 160 : FLASH_MS));
+          flash.scale.setScalar((big ? 0.7 : 0.35) * (1 - f) + 0.05);
+          (flash.material as THREE.MeshBasicMaterial).opacity = 1 - f;
+          return f < 1;
+        },
+      },
+      sparks(a.clone().addScaledVector(dir, 0.35), now, big ? 6 : 3, YELLOW, 1.4),
+    );
+  }
+
   return {
-    play(e, now) {
+    local(s, now) {
+      if (full()) return;
+      if (s.gun === 'blaster') shot({ id: -1, kind: 'shot', at: 0, from: s.from, to: s.to, fromHeight: s.fromHeight, height: 1.2, label: 'blaster' }, now);
+      else muzzle(s.from, s.to, s.fromHeight, now, true);
+    },
+    play(e, now, _reduced, colour) {
+      // Too much going on at once: the newest small things are skipped rather than the frame rate.
+      if (full() && e.kind !== 'collapse' && e.kind !== 'coins') return;
       if (e.kind === 'coins') coins(e, now);
+      else if (e.kind === 'shell') shell(e, now);
+      else if (e.kind === 'hit') hit(e, now, colour ?? DEBRIS[0]);
+      else if (e.kind === 'collapse') collapse(e, now, colour ?? DEBRIS[0]);
       else if (e.kind === 'pop') pop(e, now);
       else if (e.kind === 'burst' && e.to) {
         // A bit's flourish: a puff of smoke (a teleport), sparkles, confetti, hearts.
