@@ -61,6 +61,8 @@ export interface AudioOptions {
   /**
    * Default: a new AudioContext. An OfflineAudioContext renders whatever is scheduled before it
    * starts, so it counts as running, with no timer and no wake-up listeners: ahead() is its clock.
+   * A render that measures levels plays after the buses and the limiter settle (they glide from 1
+   * to their levels for about a second): ctx.suspend(2), then play the cue, then ctx.resume().
    */
   ctx?: AudioContext | OfflineAudioContext;
   /** Every random choice: the reverb, the noise, the music, the birds, the blips (default Math.random). */
@@ -68,6 +70,8 @@ export interface AudioOptions {
   /**
    * The page's clock in ms, for the throttles (default performance.now). A render passes its own: it
    * schedules faster than real time, and a page a moment old would still be inside the fanfare's 4 s.
+   * Start it at least 6000 in (1e4, say): every throttle starts from 0, so below the bray's 6 s gap
+   * the first call of a throttled cue is dropped.
    */
   now?: () => number;
 }
@@ -80,7 +84,10 @@ export interface Cue {
   bus: Bus;
   /** Whether `at` matters: a placed sound fades with distance from where the camera looks. */
   placed: boolean;
-  /** Plays it once on `a` (at `at` if it is placed); a bed holds until `a.beds(0, 0)`. */
+  /**
+   * Plays it once on `a` (at `at` if it is placed) from the context's time now; a bed holds until
+   * `a.beds(0, 0)`. Offline, play it once the context has settled (see AudioOptions.ctx).
+   */
   play(a: AudioHandles, at?: At): void;
 }
 
