@@ -11,7 +11,8 @@
 // Then the travellers walk over and the first visit opens. A daughter travels with every caravan and
 // grows up age by age: the story's through-line. With Finders Keepers' Story switch on, the band is
 // the cast (story/cast.ts): the same five in every age, spared when travellers go home.
-import { BUS_STOP, CITY_BOUNDS, PITCH, VENUES, type VenueKind } from '../../shared/city';
+import { BUS_STOP, LANDING, PITCH, VENUES, type VenueKind } from '../../shared/city';
+import { contains } from '../../shared/layout';
 import { BRIDGE, FACING_TOWN, SCENES, STEP_FORWARD, STRANDED, type SceneId } from '../../shared/scenes';
 import { LAST_AGE, ageStyle, venueName } from '../../shared/ages';
 import type { DudeLook } from '../../shared/dudesTypes';
@@ -329,7 +330,7 @@ export function startCaravan(state: DudesState, now: number, strand = ageOf(stat
   openVisit(state, cv, now);
   return cv;
 }
-/** From the camp over the bridge in file, then into town (the walk is outside the town's ground, so it's laid by hand). */
+/** From the camp over the bridge in file and up the bank (laid by hand, so they cross in file); tickTraveller takes them on into town. */
 function walkOver(state: DudesState, cv: Caravan, now: number): void {
   const city = cityOf(state);
   cv.travellers.forEach((id, i) => {
@@ -401,12 +402,37 @@ function openBridge(state: DudesState, cv: Caravan, now: number): void {
   crierBridgeOpened(state, cv, need, now);
   for (const d of state.dudes) if (awake(d, now)) tell(state, d, `${c.leader} of ${c.name} is stuck across the river with ${leaderHis(state, cv.age)} people: the bridge is broken. ${need} of the town need to help mend it ("help" goes to the bridge). Once they cross, they will have more to ask.`, now, false);
 }
-/** A traveller to the bridge site: where a helper stands on the town bank, spread out along it. */
+/** A helper at the bridge site: where they stand on the town bank by the water, spread out along it. */
 export function bridgeSpot(i: number): { x: number; z: number } {
   return { x: BRIDGE.near - 1.4, z: [-0.9, 0.9, -2, 2, 0, -3, 3, -1.5][i % 8] };
 }
-/** The edge of the town on the path to the bridge: helpers walk out from here and back to it. */
-export const BRIDGE_ROAD = { x: CITY_BOUNDS.maxX - 3, z: 0 };
+/** The town end of the bridge, up the bank from the water (FK-078): the band walks off the deck to here and back from it, and helpers step back to it after a shift, clear of the deck. */
+export const BRIDGE_ROAD = { x: BRIDGE.near - 6, z: 0 };
+/**
+ * At start (FK-078): a band saved waiting across the river where it used to run (layout A+ moved it east)
+ * would stand on the new town bank. Whoever of it isn't on the landing goes back on their mark there,
+ * facing the town, and anyone on their way to the old bridge (or mending it) is let go: still a volunteer,
+ * they are sent to the new one (keepVolunteers). How many of the band moved.
+ */
+export function bandAcrossRiver(state: DudesState): number {
+  const city = state.city;
+  const cv = city?.caravan;
+  if (!city || !cv || !(cv.stranded || cv.turn?.left)) return 0;
+  let moved = 0;
+  cv.travellers.forEach((id, i) => {
+    const t = city.townies.find((x) => x.id === id);
+    if (!t || contains(LANDING, t.position)) return;
+    Object.assign(t, { position: { ...STRANDED[i % STRANDED.length] }, facing: FACING_TOWN, path: [] });
+    moved++;
+  });
+  for (const d of state.dudes) {
+    if (d.labour?.site !== 'bridge' || d.labour.at.x >= BRIDGE.near - 3) continue;
+    d.labour = undefined;
+    if (d.emote?.pose === 'hammer') d.emote = undefined;
+    if (d.walkingFor === 'job') [d.path, d.walkingFor] = [[], undefined];
+  }
+  return moved;
+}
 /** Is the bridge asking for hands right now? */
 export function bridgeOpen(state: DudesState): boolean {
   const cv = cityOf(state).caravan;

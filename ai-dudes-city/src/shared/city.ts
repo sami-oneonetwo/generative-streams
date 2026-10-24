@@ -36,8 +36,22 @@ export const CITY_BOUNDS: Rect = (() => {
 /** A corner block left as a park (no lots). */
 export const isPark = (bx: number, bz: number): boolean => CITY.parks && bx !== 0 && bz !== 0;
 
-/** The river past the ring road on the east side (docs/ages.md): the caravans camp across it. Centre line and width, metres. */
-export const RIVER = { x: CITY_BOUNDS.maxX + 16, width: 14 };
+/**
+ * The river east of the town (docs/ages.md): the caravans camp across it. Centre line and width, metres.
+ * Layout A+ (FK-078, Sami 2026-10-24) moved it out from x = 86.5 to 116, so a 36 m River Bank lies
+ * between the ring road (70.5) and the top of the bank (106.6), and the water runs from 109 to 123.
+ */
+export const RIVER = { x: CITY_BOUNDS.maxX + 45.5, width: 14 };
+/**
+ * Where people walk on the town's side of the river: the blocks, the ring road and the River Bank, down to
+ * the water's edge (FK-078). CITY_BOUNDS is still the town itself, its lots and roads.
+ */
+export const TOWN_GROUND: Rect = { minX: CITY_BOUNDS.minX, maxX: RIVER.x - RIVER.width / 2, minZ: CITY_BOUNDS.minZ, maxZ: CITY_BOUNDS.maxZ };
+/**
+ * The landing on the far bank, at the bridge's far end (FK-078): where the band waits while the bridge is
+ * down and steps off it when they cross. 14 m deep, 24 m along the bank; the far bank past it is backdrop.
+ */
+export const LANDING: Rect = { minX: RIVER.x + RIVER.width / 2, maxX: RIVER.x + RIVER.width / 2 + 14, minZ: -12, maxZ: 12 };
 
 // Streets run between the blocks: avenues north–south (constant x), streets east–west (constant z).
 // No Oak Street: Oak is one of the cast (FK-128), so that one is Alder Street.

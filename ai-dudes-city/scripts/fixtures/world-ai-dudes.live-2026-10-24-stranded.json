@@ -1,0 +1,1901 @@
+{
+  "version": 1,
+  "createdAt": 1792822379350,
+  "dudes": [
+    {
+      "id": "kick:28683256",
+      "name": "Sami",
+      "createdAt": 1792828172456,
+      "lastHeardAt": 1792828172456,
+      "lastTurnAt": 1792829012434,
+      "turns": 5,
+      "persona": "Sami is practical and straightforward, someone who gets things done without fuss. They arrived in Kettlewick ready to build, and waste no time on hesitation. They have a calm, grounded presence and a dry sense of humour.",
+      "title": "the settler",
+      "look": {
+        "skin": "#d8a07a",
+        "shirt": "#e2d8c3",
+        "pants": "#6a5a43",
+        "hair": "#d9c27a",
+        "hat": "none",
+        "hatColor": "#b04a7a",
+        "accessory": "none",
+        "accessoryColor": "#c4402f",
+        "height": 0.92,
+        "build": 1
+      },
+      "memory": [
+        "just arrived in Kettlewick",
+        "building a stone house on Oak Street",
+        "bridge needs mending to let travellers cross",
+        "town needs food places and a park",
+        "market stall and fountain are in the square",
+        "0 out of 1 shifts done on bridge—needs doing soon",
+        "townWants: food places and a park",
+        "Mammoth Herders waiting: Toma, Ama, and their people"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "you just arrived in Kettlewick and got a lot of your own at 17 Oak Street; it is empty",
+          "at": 1792828172456
+        },
+        {
+          "from": "chatter",
+          "text": "build a house",
+          "at": 1792828172456
+        },
+        {
+          "from": "world",
+          "text": "you finished building Sami’s Boulder Hearth",
+          "at": 1792828234512
+        },
+        {
+          "from": "dude",
+          "text": "Alright, let me see what this town has got. Heard there's a bridge that needs mending and people stuck on the other side. Might as well have a look around first, get my bearings.",
+          "at": 1792828395846
+        },
+        {
+          "from": "world",
+          "text": "you had a rest at Sami’s Boulder Hearth",
+          "at": 1792828520338
+        },
+        {
+          "from": "dude",
+          "text": "Bridge needs mending and there's people waiting on the other side. Makes sense to get the lay of the land first—see what this town's got and what it needs. Heard there's a market stall and a fountain around here somewhere.",
+          "at": 1792828590517
+        },
+        {
+          "from": "world",
+          "text": "you had a rest at Sami’s Boulder Hearth",
+          "at": 1792828742094
+        },
+        {
+          "from": "dude",
+          "text": "Right then. Town's quiet but there's work to be done. These Mammoth Herders aren't getting across that bridge by themselves, and the town's missing a place to eat. Let me get a proper look at what we're working with here.",
+          "at": 1792828815327
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792828981371
+        },
+        {
+          "from": "dude",
+          "text": "Bridge won't mend itself, and those people aren't getting across without help. But first things first—let me see what the town's actually got. Market stall and a fountain, the world said. Not much to work with yet.",
+          "at": 1792829012434
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792829195661
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": 56,
+        "z": 15
+      },
+      "facing": 1.5707963267948966,
+      "path": [],
+      "idleUntil": 1792830135333.4749,
+      "coins": 161,
+      "needs": {
+        "hunger": 83.18991333334134,
+        "energy": 94.1022880000048,
+        "fun": 61.82789599999667,
+        "social": 92.5089046666687
+      },
+      "plot": "q1_0_1_1",
+      "ledger": {
+        "since": 1792829420874,
+        "visits": 0,
+        "coins": 0,
+        "visitors": [],
+        "notes": [
+          "test-kev moved in next door, at 18 Elm Street",
+          "test-dana moved in next door, at 15 Alder Street",
+          "test-nia moved in next door, at 16 Elm Street"
+        ]
+      }
+    },
+    {
+      "id": "dev:test-kev",
+      "name": "test-kev",
+      "createdAt": 1792829420874,
+      "lastHeardAt": 1792829420874,
+      "lastTurnAt": 1792830057032,
+      "turns": 4,
+      "persona": "Kev is easygoing and social, the kind of person who moves to a new place and immediately wants to meet the neighbours. They're curious about how things work and what people are building, and they're not one to sit idle for long. Quick to recognize what the community needs and eager to pitch in.",
+      "look": {
+        "skin": "#f5d6c0",
+        "shirt": "#e07a4a",
+        "pants": "#2f3236",
+        "hair": "#5a3a22",
+        "hat": "none",
+        "hatColor": "#b04a7a",
+        "accessory": "backpack",
+        "accessoryColor": "#3f6fb0",
+        "height": 1,
+        "build": 1
+      },
+      "memory": [
+        "Just moved to Kettlewick on Elm Street",
+        "Neighbours: Dana on Alder Street, Nia on Elm Street, Sami nearby",
+        "Market stall is 48m away, has good food",
+        "Travellers stuck across broken bridge",
+        "Nia wants to build a bakery after eating",
+        "Dana is thinking about helping mend the bridge",
+        "The travellers need the bridge fixed to cross"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "you just arrived in Kettlewick and got a lot of your own at 18 Elm Street; it is empty",
+          "at": 1792829420874
+        },
+        {
+          "from": "chatter",
+          "text": "hi everyone, just moved in!",
+          "at": 1792829420874
+        },
+        {
+          "from": "world",
+          "text": "test-dana moved in next door, at 15 Alder Street",
+          "at": 1792829421179
+        },
+        {
+          "from": "world",
+          "text": "test-nia moved in next door, at 16 Elm Street",
+          "at": 1792829421419
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792829493082
+        },
+        {
+          "from": "dude",
+          "text": "Hey Dana, Nia! Looks like we all just got here. Pretty nice spot, this Kettlewick. Have you two checked out the market stall yet?",
+          "at": 1792829656166
+        },
+        {
+          "from": "dude",
+          "text": "Dana! The market stall's got a good spread—I grabbed some food earlier and it was solid. As for what the town needs, I reckon we should figure that out together once we all get settled. How's your lot looking?",
+          "at": 1792829850918
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792829923108
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792829939123
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": 55.5,
+        "z": 15.5
+      },
+      "facing": -3.0419240010986313,
+      "path": [],
+      "coins": 157,
+      "needs": {
+        "hunger": 81.10590000000039,
+        "energy": 78.2635399999986,
+        "fun": 66.5270800000015,
+        "social": 98.16439333333325
+      },
+      "plot": "q1_0_1_-1",
+      "idleUntil": 1792830108825.594,
+      "title": "the friendly newcomer"
+    },
+    {
+      "id": "dev:test-dana",
+      "name": "test-dana",
+      "createdAt": 1792829421179,
+      "lastHeardAt": 1792829421179,
+      "lastTurnAt": 1792830103245,
+      "turns": 4,
+      "persona": "Dana is a friendly newcomer to Kettlewick, eager to meet neighbours and get a feel for the place. They're observant and curious, picking up on what the community needs rather than rushing ahead with plans.",
+      "look": {
+        "skin": "#f5d6c0",
+        "shirt": "#7d4fa3",
+        "pants": "#3a4a5e",
+        "hair": "#5a3a22",
+        "hat": "none",
+        "hatColor": "#5a6b7a",
+        "accessory": "none",
+        "accessoryColor": "#e07a4a",
+        "height": 0.9600000000000001,
+        "build": 1
+      },
+      "memory": [
+        "just moved to 15 Alder Street",
+        "neighbours are Sami and test-kev",
+        "town needs somewhere to eat and a park or garden",
+        "test-kev and test-nia just moved in too",
+        "Kev mentioned the market stall",
+        "bridge is broken, travellers stuck across river",
+        "Sami has the Boulder Hearth nearby",
+        "keen to help with the bridge soon",
+        "market stall has food"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "you just arrived in Kettlewick and got a lot of your own at 15 Alder Street; it is empty",
+          "at": 1792829421179
+        },
+        {
+          "from": "chatter",
+          "text": "hi everyone, just moved in!",
+          "at": 1792829421179
+        },
+        {
+          "from": "world",
+          "text": "test-nia moved in next door, at 16 Elm Street",
+          "at": 1792829421419
+        },
+        {
+          "from": "dude",
+          "text": "Hey Kev, Nia! Yeah, I just got the keys to the lot. I haven't been to the market stall yet—what's good there? And I've been wondering what this place really needs.",
+          "at": 1792829686180
+        },
+        {
+          "from": "dude",
+          "text": "It's great to meet you both properly! I'm still getting my bearings, but I've heard there's a bridge that needs mending with travellers stuck on the other side. That feels like something worth helping with—I could head over there and put in",
+          "at": 1792829888693
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792830042755
+        },
+        {
+          "from": "dude",
+          "text": "Hey Sami! I've heard good things about your hearth. Mind if I have a look around?",
+          "at": 1792830103245
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": 45.85807001007031,
+        "z": 4.5
+      },
+      "facing": 1.5707963267948966,
+      "path": [
+        {
+          "x": 51,
+          "z": 4.5
+        },
+        {
+          "x": 51,
+          "z": 15
+        },
+        {
+          "x": 55.5,
+          "z": 15
+        }
+      ],
+      "coins": 157,
+      "needs": {
+        "hunger": 86.12256666666705,
+        "energy": 61.273539999999485,
+        "fun": 54.54708000000306,
+        "social": 97.6321399999999
+      },
+      "plot": "q1_0_0_1",
+      "walkingFor": "move",
+      "idleUntil": 1792830148245,
+      "say": {
+        "text": "Hey Sami! I've heard good things about your hearth. Mind if I have a look around?",
+        "until": 1792830111010
+      },
+      "title": "the new settler",
+      "emote": {
+        "pose": "wave",
+        "until": 1792830108245
+      }
+    },
+    {
+      "id": "dev:test-nia",
+      "name": "test-nia",
+      "createdAt": 1792829421419,
+      "lastHeardAt": 1792829421419,
+      "lastTurnAt": 1792829933424,
+      "turns": 3,
+      "persona": "Nia is a friendly newcomer to Kettlewick with a warm energy and genuine curiosity about the people around her. She's the kind of person who lights up when meeting neighbours and settles into new places quickly, eager to build something meaningful and be part of the community.",
+      "look": {
+        "skin": "#f1c9a5",
+        "shirt": "#b04a7a",
+        "pants": "#6a5a43",
+        "hair": "#d9c27a",
+        "hat": "none",
+        "hatColor": "#4f8a4b",
+        "accessory": "none",
+        "accessoryColor": "#d9a23a",
+        "height": 1.04,
+        "build": 1
+      },
+      "memory": [
+        "Kev and Dana are neighbours, also just arrived",
+        "Kev mentioned the market stall",
+        "Town needs: somewhere to eat, somewhere to go out at night, a park or garden",
+        "Nobody's built a bakery yet—opportunity there",
+        "Peckish, need to eat at the market stall"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "you just arrived in Kettlewick and got a lot of your own at 16 Elm Street; it is empty",
+          "at": 1792829421419
+        },
+        {
+          "from": "chatter",
+          "text": "hi everyone, just moved in!",
+          "at": 1792829421419
+        },
+        {
+          "from": "dude",
+          "text": "Hey Kev! Dana! I'm so glad to see friendly faces already. This place has such a nice feel to it—I'm really excited to settle in and see what we can build together.",
+          "at": 1792829735924
+        },
+        {
+          "from": "dude",
+          "text": "No bakery yet? Well, that's something I could fix. I've always loved baking—there's something special about it. But first, I'm starving; let me grab a bite and then I'll think about what to build.",
+          "at": 1792829933424
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792829943628
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792830093822
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": -4,
+        "z": 0.8448000000000001
+      },
+      "facing": 3.141592653589793,
+      "path": [
+        {
+          "x": -4,
+          "z": -4.5
+        }
+      ],
+      "coins": 157,
+      "needs": {
+        "hunger": 83.12256666666705,
+        "energy": 76.2735399999986,
+        "fun": 72.54708000000255,
+        "social": 99.50463333333333
+      },
+      "plot": "q1_0_0_-1",
+      "walkingFor": "wander",
+      "idleUntil": 1792830117755.1802,
+      "title": "the friendly settler"
+    }
+  ],
+  "objects": [
+    {
+      "id": "b2",
+      "revision": 1,
+      "blueprint": {
+        "name": "Sami’s Boulder Hearth",
+        "description": "A circular boulder hut with timber reinforcement, an open flat-stone doorway, and a lashed branch-and-hide roof surrounding a smoke hole.",
+        "parts": [
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.1,
+              -0.19572333007617404
+            ],
+            "size": [
+              6.5,
+              0.2,
+              6.5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#a38a60"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              0.72,
+              1.864276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              0.63,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              0.72,
+              0.594276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              1.26,
+              0
+            ],
+            "color": "#a7a18e"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              0.72,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              1.88,
+              0
+            ],
+            "color": "#888b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              0.72,
+              -2.255723330076174
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              2.51,
+              0
+            ],
+            "color": "#aaa28c"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.72,
+              -2.745723330076174
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#94968a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              0.72,
+              -2.255723330076174
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -2.51,
+              0
+            ],
+            "color": "#a7a18e"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              0.72,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -1.88,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              0.72,
+              0.594276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -1.26,
+              0
+            ],
+            "color": "#aaa28c"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              0.72,
+              1.864276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -0.63,
+              0
+            ],
+            "color": "#888b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              1.82,
+              1.864276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              0.56,
+              0
+            ],
+            "color": "#aaa593"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              1.82,
+              0.594276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              1.3,
+              0
+            ],
+            "color": "#8d9083"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              1.82,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              1.8,
+              0
+            ],
+            "color": "#a09b89"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              1.82,
+              -2.255723330076174
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              2.6,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              1.82,
+              -2.745723330076174
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#b0a892"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              1.82,
+              -2.255723330076174
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -2.6,
+              0
+            ],
+            "color": "#8d9083"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              1.82,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -1.8,
+              0
+            ],
+            "color": "#aaa593"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              1.82,
+              0.594276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -1.3,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              1.82,
+              1.864276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -0.56,
+              0
+            ],
+            "color": "#a09b89"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -0.79,
+              0.95,
+              2.474276669923826
+            ],
+            "size": [
+              0.48,
+              1.7,
+              0.9
+            ],
+            "rotation": [
+              0,
+              0,
+              0.06
+            ],
+            "color": "#b9ad91"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0.79,
+              0.95,
+              2.474276669923826
+            ],
+            "size": [
+              0.48,
+              1.7,
+              0.9
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.06
+            ],
+            "color": "#a79f8b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              1.88,
+              2.474276669923826
+            ],
+            "size": [
+              2.12,
+              0.42,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#c3b69b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              2.4,
+              1.45,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.3,
+              2.7,
+              0.3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.4,
+              1.45,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.3,
+              2.7,
+              0.3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              1.45,
+              -2.595723330076174
+            ],
+            "size": [
+              0.32,
+              2.7,
+              0.32
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#68472d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              1.03,
+              1.45,
+              2.034276669923826
+            ],
+            "size": [
+              0.28,
+              2.7,
+              0.28
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -1.03,
+              1.45,
+              2.034276669923826
+            ],
+            "size": [
+              0.28,
+              2.7,
+              0.28
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.03,
+              1.804276669923826
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              0,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.03,
+              1.2182766699238259
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              0.7854,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2,
+              3.03,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              1.5708,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.03,
+              -1.609723330076174
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              2.3562,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.03,
+              -2.195723330076174
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              3.1416,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.03,
+              -1.609723330076174
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              -2.3562,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2,
+              3.03,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              -1.5708,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.03,
+              1.2182766699238259
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              -0.7854,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.2,
+              1.804276669923826
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              0,
+              0
+            ],
+            "color": "#cf9854"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.22,
+              1.2182766699238259
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              0.7854,
+              0
+            ],
+            "color": "#b87b42"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2,
+              3.2,
+              -0.19572333007617404
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              1.5708,
+              0
+            ],
+            "color": "#dfb270"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.22,
+              -1.609723330076174
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              2.3562,
+              0
+            ],
+            "color": "#c78b4c"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.2,
+              -2.195723330076174
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              3.1416,
+              0
+            ],
+            "color": "#cf9854"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.22,
+              -1.609723330076174
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              -2.3562,
+              0
+            ],
+            "color": "#b87b42"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2,
+              3.2,
+              -0.19572333007617404
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              -1.5708,
+              0
+            ],
+            "color": "#dfb270"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.22,
+              1.2182766699238259
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              -0.7854,
+              0
+            ],
+            "color": "#c78b4c"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.31,
+              1.804276669923826
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              0,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2,
+              3.31,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              1.5708,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.31,
+              -2.195723330076174
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              3.1416,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2,
+              3.31,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              -1.5708,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.27,
+              -0.19572333007617404
+            ],
+            "size": [
+              1.1,
+              0.24,
+              1.1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#68645a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.4,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.65,
+              0.15,
+              0.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#dc7836"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.5,
+              0.29,
+              -0.895723330076174
+            ],
+            "size": [
+              1.1,
+              0.18,
+              1.9
+            ],
+            "rotation": [
+              0,
+              -0.18,
+              0
+            ],
+            "color": "#ba864e"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.18,
+              3.354276669923826
+            ],
+            "size": [
+              1.35,
+              0.28,
+              0.75
+            ],
+            "rotation": [
+              0,
+              0.12,
+              0
+            ],
+            "color": "#a9a08a"
+          }
+        ]
+      },
+      "position": {
+        "x": 55,
+        "z": 10.5
+      },
+      "footprint": {
+        "width": 7.350000918278676,
+        "depth": 7.614771296578093
+      },
+      "createdBy": "Sami",
+      "editedBy": "Sami",
+      "createdAt": 1792828234512,
+      "owner": "kick:28683256",
+      "plot": "q1_0_1_1",
+      "venue": "home",
+      "age": 0
+    }
+  ],
+  "jobs": [],
+  "feed": [
+    {
+      "at": 1792822389686,
+      "text": "The Mammoth Herders are stuck across the river: the bridge is down"
+    },
+    {
+      "at": 1792822424012,
+      "text": "Toma of the Mammoth Herders: \"The bridge is gone. We can't cross. Can you mend it?\""
+    },
+    {
+      "at": 1792828172456,
+      "text": "Sami moved into 17 Oak Street"
+    },
+    {
+      "at": 1792828176607,
+      "text": "Sami is designing a home: a sturdy stone age dwelling made of large rounded boulders s"
+    },
+    {
+      "at": 1792828234512,
+      "text": "Sami built Sami’s Boulder Hearth"
+    },
+    {
+      "at": 1792829420874,
+      "text": "test-kev moved into 18 Elm Street"
+    },
+    {
+      "at": 1792829421179,
+      "text": "test-dana moved into 15 Alder Street"
+    },
+    {
+      "at": 1792829421419,
+      "text": "test-nia moved into 16 Elm Street"
+    }
+  ],
+  "ai": {
+    "paused": false,
+    "enforced": true,
+    "callsRemaining": 500,
+    "callsUsed": 34,
+    "bucket": {
+      "agent": 300,
+      "design": 22.5,
+      "at": 1792830107332
+    },
+    "minutes": [
+      [
+        29880469,
+        1,
+        1
+      ],
+      [
+        29880473,
+        1,
+        0
+      ],
+      [
+        29880476,
+        1,
+        0
+      ],
+      [
+        29880480,
+        1,
+        0
+      ],
+      [
+        29880483,
+        1,
+        0
+      ],
+      [
+        29880490,
+        4,
+        0
+      ],
+      [
+        29880494,
+        2,
+        0
+      ],
+      [
+        29880495,
+        1,
+        0
+      ],
+      [
+        29880497,
+        1,
+        0
+      ],
+      [
+        29880498,
+        2,
+        0
+      ],
+      [
+        29880500,
+        1,
+        0
+      ],
+      [
+        29880501,
+        1,
+        0
+      ]
+    ],
+    "story": true
+  },
+  "worldRevision": 4,
+  "nextId": 3,
+  "listener": {
+    "backfilled": true,
+    "buffer": [],
+    "wishes": [
+      {
+        "id": "build-vegetable-garden",
+        "wish": "A garden with tomatoes and vegetables",
+        "status": "works-now",
+        "count": 1,
+        "askers": [
+          "Sami"
+        ],
+        "examples": [
+          "build a garden with tomatoes and stuff"
+        ],
+        "how": "Use build on your own lot with kind park (or decor) and a description like 'vegetable garden with tomato plants, raised beds, a watering can and a little fence'; use emotes like chop or hammer to act out tending it.",
+        "firstAt": 1792829427131,
+        "lastAt": 1792829427131
+      },
+      {
+        "id": "build-house",
+        "wish": "Build a house",
+        "status": "works-now",
+        "count": 1,
+        "askers": [
+          "Sami"
+        ],
+        "examples": [
+          "build a house"
+        ],
+        "how": "Use build on your own lot with kind home and a short description of the style; you can edit it later to add rooms or details.",
+        "firstAt": 1792829427131,
+        "lastAt": 1792829427131
+      }
+    ],
+    "tips": [
+      "When chat asks for something to be built, build it on your own lot right away with the closest kind (home, park, decor, etc.) and a vivid description that includes every detail they named.",
+      "For gardens or farms, use kind park or decor and list the specific plants asked for (tomatoes, flowers, veggies), then act out gardening with emotes like chop, hammer or sit.",
+      "After building, invite a neighbour or the Mayor over to show it off. Visiting and inviting make builds feel lived in."
+    ],
+    "lastRunAt": 1792829427131,
+    "runs": 1
+  },
+  "nextHappeningAt": 1792830111305,
+  "city": {
+    "layout": 3,
+    "name": "Kettlewick",
+    "plots": {
+      "q1_0_1_1": {
+        "owner": "kick:28683256",
+        "coOwners": [],
+        "claimedAt": 1792828172456
+      },
+      "q1_0_1_-1": {
+        "owner": "dev:test-kev",
+        "coOwners": [],
+        "claimedAt": 1792829420874
+      },
+      "q1_0_0_1": {
+        "owner": "dev:test-dana",
+        "coOwners": [],
+        "claimedAt": 1792829421179
+      },
+      "q1_0_0_-1": {
+        "owner": "dev:test-nia",
+        "coOwners": [],
+        "claimedAt": 1792829421419
+      }
+    },
+    "done": [],
+    "stats": {
+      "b2": {
+        "visits": 0,
+        "coins": 0,
+        "recent": [],
+        "lastVisitors": []
+      }
+    },
+    "townies": [
+      {
+        "id": "t1n2424p",
+        "name": "Mrs Okafor",
+        "look": {
+          "skin": "#e0ac85",
+          "shirt": "#e2d8c3",
+          "pants": "#38503e",
+          "hair": "#5a3a22",
+          "hat": "none",
+          "hatColor": "#d9a23a",
+          "accessory": "none",
+          "accessoryColor": "#2f8f8a",
+          "height": 1.04,
+          "build": 1
+        },
+        "position": {
+          "x": -1.6701190324035613,
+          "z": 3.566638322087825
+        },
+        "facing": 1.588612839906605,
+        "path": [
+          {
+            "x": 20.808826380850867,
+            "z": 3.1660995147355155
+          }
+        ],
+        "doing": "stroll",
+        "placeId": "town:market",
+        "until": 1792830152494.8809,
+        "last": "town:market"
+      },
+      {
+        "id": "t1hvm93i",
+        "name": "Old Tom",
+        "look": {
+          "skin": "#f5d6c0",
+          "shirt": "#d9a23a",
+          "pants": "#6a5a43",
+          "hair": "#5a3a22",
+          "hat": "bucket",
+          "hatColor": "#7d4fa3",
+          "accessory": "none",
+          "accessoryColor": "#b04a7a",
+          "height": 1.08,
+          "build": 1
+        },
+        "position": {
+          "x": 13.357896145108043,
+          "z": -18.616632386679136
+        },
+        "facing": 2.313022453866743,
+        "path": [],
+        "doing": "stroll",
+        "placeId": "town:fountain",
+        "until": 1792830123284.481,
+        "last": "town:fountain"
+      },
+      {
+        "id": "tg71boc",
+        "name": "Dev",
+        "look": {
+          "skin": "#7a4b2a",
+          "shirt": "#e2d8c3",
+          "pants": "#4b4038",
+          "hair": "#a8743a",
+          "hat": "none",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#e07a4a",
+          "height": 0.9600000000000001,
+          "build": 1
+        },
+        "position": {
+          "x": -2.81994268756005,
+          "z": 20.46933897282136
+        },
+        "facing": 3.009958046123413,
+        "path": [
+          {
+            "x": -1.670631218140973,
+            "z": 11.788753268626593
+          }
+        ],
+        "doing": "chat",
+        "placeId": "town:market",
+        "until": 1792830114330,
+        "last": "town:market",
+        "emote": {
+          "pose": "wave",
+          "until": 1792830107830
+        },
+        "say": {
+          "text": "This town could do with somewhere to eat.",
+          "until": 1792830111830
+        }
+      },
+      {
+        "id": "t7690ps",
+        "name": "Nana Rose",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#b04a7a",
+          "pants": "#3a4a5e",
+          "hair": "#1d1d1d",
+          "hat": "tophat",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#5a6b7a",
+          "height": 0.9600000000000001,
+          "build": 1
+        },
+        "position": {
+          "x": -1.5,
+          "z": 10.5
+        },
+        "facing": 0,
+        "path": [],
+        "doing": "stroll",
+        "placeId": "town:fountain",
+        "until": 1792830144298.879,
+        "last": "town:fountain"
+      },
+      {
+        "id": "cast-ash",
+        "name": "Ash",
+        "role": "ash",
+        "look": {
+          "skin": "#c68b5f",
+          "shirt": "#6b5a48",
+          "pants": "#4b4038",
+          "hair": "#6E7680",
+          "hat": "none",
+          "hatColor": "#6E7680",
+          "accessory": "none",
+          "accessoryColor": "#6E7680",
+          "height": 1.12,
+          "build": 0.88
+        },
+        "position": {
+          "x": 95.8,
+          "z": 0.55
+        },
+        "facing": -1.5707963267948966,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792830108837.3235,
+        "traveller": true,
+        "leader": true,
+        "scale": 1.15
+      },
+      {
+        "id": "cast-wren",
+        "name": "Wren",
+        "role": "wren",
+        "look": {
+          "skin": "#e0ac85",
+          "shirt": "#B3262E",
+          "pants": "#5a3e2b",
+          "hair": "#2b2018",
+          "hat": "headband",
+          "hatColor": "#B3262E",
+          "accessory": "scarf",
+          "accessoryColor": "#B3262E",
+          "height": 1,
+          "build": 0.9
+        },
+        "position": {
+          "x": 96.5,
+          "z": -0.65
+        },
+        "facing": -1.5707963267948966,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792830112929.8008,
+        "traveller": true,
+        "daughter": true,
+        "scale": 0.82
+      },
+      {
+        "id": "cast-moss",
+        "name": "Moss",
+        "role": "moss",
+        "look": {
+          "skin": "#d8a07a",
+          "shirt": "#4E8A3A",
+          "pants": "#4b4038",
+          "hair": "#c9c4ba",
+          "hat": "none",
+          "hatColor": "#4E8A3A",
+          "accessory": "scarf",
+          "accessoryColor": "#4E8A3A",
+          "height": 0.9,
+          "build": 1
+        },
+        "position": {
+          "x": 99.1,
+          "z": 2.3
+        },
+        "facing": -1.5707963267948966,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792830108537.5535,
+        "traveller": true,
+        "emote": {
+          "pose": "sit",
+          "until": 1792830115824
+        }
+      },
+      {
+        "id": "cast-oak",
+        "name": "Oak",
+        "role": "oak",
+        "look": {
+          "skin": "#a26a42",
+          "shirt": "#E8762B",
+          "pants": "#4b4038",
+          "hair": "#2b2018",
+          "hat": "none",
+          "hatColor": "#E8762B",
+          "accessory": "toolbelt",
+          "accessoryColor": "#6a4a2a",
+          "height": 1.1,
+          "build": 1.2
+        },
+        "position": {
+          "x": 99.7,
+          "z": -1.9
+        },
+        "facing": -1.5707963267948966,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792830109945.1157,
+        "traveller": true,
+        "scale": 1.25
+      },
+      {
+        "id": "cast-kit",
+        "name": "Kit",
+        "role": "kit",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#2F6FD0",
+          "pants": "#2F6FD0",
+          "hair": "#5a3a22",
+          "hat": "none",
+          "hatColor": "#2F6FD0",
+          "accessory": "none",
+          "accessoryColor": "#FFC633",
+          "height": 0.95,
+          "build": 0.9
+        },
+        "position": {
+          "x": 101.1,
+          "z": 0.6
+        },
+        "facing": -1.5707963267948966,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792830114224.8513,
+        "traveller": true,
+        "scale": 0.7
+      }
+    ],
+    "unmet": {},
+    "nextProjectId": 1,
+    "age": 0,
+    "caravan": {
+      "age": 0,
+      "visit": 0,
+      "openedAt": 1792822424012,
+      "asks": [
+        {
+          "id": "bridge",
+          "kind": "bridge",
+          "label": "Mend the bridge: one of you lend a hand (tell your character to help at the bridge)",
+          "need": 1,
+          "have": 0
+        }
+      ],
+      "travellers": [
+        "cast-ash",
+        "cast-wren",
+        "cast-moss",
+        "cast-oak",
+        "cast-kit"
+      ],
+      "trimmed": true,
+      "stranded": true,
+      "helpers": []
+    },
+    "paidMinute": 29880501,
+    "crier": {
+      "age": 0,
+      "tally": {},
+      "visit": {},
+      "builds": [],
+      "nudgeAt": 1792829626755,
+      "spot": [
+        "b2"
+      ],
+      "spotAt": 1792830759086.937,
+      "out": []
+    }
+  }
+}

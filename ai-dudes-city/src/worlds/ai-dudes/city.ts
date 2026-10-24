@@ -37,7 +37,7 @@ import { BRIDGE_ROAD, BRIDGE_SHIFT_MS, RENAMED_TRAVELLERS, volunteer, bridgeHelp
 import { BRIDGE, FACING_TOWN } from '../../shared/scenes';
 import { blueprintBounds, fitBlueprint, interactionOf, measureBlueprint } from './blueprint';
 import { defaultLook, hashOf } from './agent';
-import { choosePlacement, clampToGround, route, workSpots } from './placement';
+import { bridgeStands, choosePlacement, clampToGround, route, workSpots } from './placement';
 import { addEffect, awake, endUse, face, reserved, step, walkTo } from './sim';
 import { moversNear } from './movers';
 import { credit } from './crier';
@@ -887,16 +887,15 @@ export function contribute(state: DudesState, d: Dude, amount: number, now: numb
   return undefined;
 }
 export function startLabour(state: DudesState, d: Dude, now: number): string | undefined {
-  // The travellers stuck at the river come first: out along the path to the bridge, a shift on it, and back.
+  // The travellers stuck at the river come first: down the River Bank to the bridge, a shift on it, and back up the bank.
   if (bridgeOpen(state)) {
     const helpers = cityOf(state).caravan?.helpers ?? [];
     if (helpers.includes(d.id)) return 'you have already done your shift on the bridge; it needs other hands now';
     if (d.labour?.site === 'bridge') return undefined; // already on the way, or at it
     leaveVisit(d);
     endUse(state, d, now);
-    if (!walkTo(state, d, BRIDGE_ROAD, 'job')) return 'you could not find a way to the bridge';
     const at = bridgeSpot(state.dudes.filter((x) => x.labour?.site === 'bridge').length + helpers.length);
-    d.path.push({ x: at.x, z: at.z });
+    if (!walkTo(state, d, at, 'job')) return 'you could not find a way to the bridge';
     d.emote = undefined;
     d.labour = { phase: 'going', at, until: now + 120_000, site: 'bridge' };
     volunteer(state, d.id, now);
@@ -915,14 +914,12 @@ export function startLabour(state: DudesState, d: Dude, now: number): string | u
   d.labour = { phase: 'going', at: spot, until: now + 90_000 };
   return undefined;
 }
-/** Off the bridge path and back into town (the path is outside the town's ground, so it's laid by hand). */
-function leaveBridge(d: Dude): void {
+/** Done at the bridge: back up the bank, clear of the deck the band will cross. */
+function leaveBridge(state: DudesState, d: Dude): void {
   d.labour = undefined;
   if (d.emote?.pose === 'hammer') d.emote = undefined;
-  if (d.position.x > BRIDGE_ROAD.x + 0.5) {
-    d.path = [{ x: BRIDGE_ROAD.x, z: d.position.z }];
-    d.walkingFor = 'move';
-  }
+  if (d.walkingFor === 'job') [d.path, d.walkingFor] = [[], undefined];
+  if (d.position.x > BRIDGE_ROAD.x + 0.5) walkTo(state, d, { x: BRIDGE_ROAD.x, z: d.position.z }, 'move');
 }
 function runBridgeLabour(state: DudesState, d: Dude, now: number): boolean {
   const l = d.labour!;
@@ -930,7 +927,7 @@ function runBridgeLabour(state: DudesState, d: Dude, now: number): boolean {
   const late = l.phase === 'going' && now > l.until;
   if (late || !cityOf(state).caravan?.stranded) {
     pushLine(d.history, { from: 'world', text: late ? 'you ran out of time to get to the bridge' : 'the bridge no longer needs you', at: now }, LIMITS.history);
-    leaveBridge(d);
+    leaveBridge(state, d);
     return false;
   }
   if (l.phase === 'going') {
@@ -944,7 +941,7 @@ function runBridgeLabour(state: DudesState, d: Dude, now: number): boolean {
     return true;
   }
   if (now >= l.until) {
-    leaveBridge(d);
+    leaveBridge(state, d);
     pushLine(d.history, { from: 'world', text: 'you finished your shift on the bridge', at: now }, LIMITS.history);
     bridgeHelped(state, d.id, now);
     return false;
@@ -1408,6 +1405,8 @@ export function districtsOf(state: DudesState): { key: string; name: string; at:
 // ---- the tick, the scene, the agents' view ---------------------------------------------------------
 export function tickCity(state: DudesState, dt: number, now: number, rng: () => number): void {
   const c = cityOf(state);
+  // The river can be walked over on the bridge only while it stands, as the page draws it (FK-078).
+  bridgeStands(bridgeProgress(state) === undefined);
   // Takings for builds that are gone go with them.
   if (rng() < dt / 30_000) for (const id of Object.keys(c.stats)) if (!state.objects.some((o) => o.id === id)) delete c.stats[id];
   tickNeeds(state, dt, now);

@@ -7,7 +7,6 @@ import { cityOf } from '../src/worlds/ai-dudes/city';
 import { onGround } from '../src/worlds/ai-dudes/placement';
 import { stateSchema } from '../src/worlds/ai-dudes/state';
 import { BRIDGE, SCENES } from '../src/shared/scenes';
-import { CITY_BOUNDS } from '../src/shared/city';
 import type { AgentReply } from '../src/worlds/ai-dudes/agent';
 
 test('the opening: stuck at the river, the scene, the bridge mended by a share of the chatters, the crossing', async () => {
@@ -77,8 +76,8 @@ test('the opening: stuck at the river, the scene, the bridge mended by a share o
   await tick(SCENES.crossing.ms + 6000);
   assert.ok(view().caravan?.asks.length, 'the first visit opened');
   assert.ok(band.every((t) => t.position.x < BRIDGE.near), 'everyone has crossed');
-  for (let i = 0; i < 20 && h.state.dudes.some((d) => d.position.x > CITY_BOUNDS.maxX); i++) await tick(2000);
-  assert.ok(h.state.dudes.every((d) => onGround(d.position)), 'the helpers are back in town');
+  // The River Bank is the town's ground now (FK-078): the helpers are on it, on the town side of the water.
+  assert.ok(h.state.dudes.every((d) => onGround(d.position) && d.position.x < BRIDGE.near), 'the helpers are back on the town bank');
 
   run('name-daughter', 'Nell');
   assert.ok(cityOf(h.state).townies.some((t) => t.daughter && t.name === 'Nell'), 'the daughter renamed');

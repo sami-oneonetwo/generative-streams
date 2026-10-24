@@ -69,6 +69,7 @@ import {
 import { AGES, MODERN, ageStyle, dressFor, parseAge, venueName } from '../../shared/ages';
 import { bridgeOpen, nameDaughter, playScene, resumeCaravan, skipVisit, startCaravan } from './caravan';
 import { daughterLocked } from './caravan'; // hook FK-128
+import { bandAcrossRiver } from './caravan'; // hook FK-078
 import { crierCommand, crierSays, isCrierCommand, takeCrierLines, tickCrierAnswers, tickSpotlight } from './crier';
 import { emoteNames, emoteOnly } from '../../shared/emotes';
 import { cleanVoiceOf } from './voice';
@@ -2073,6 +2074,8 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       live = ctx;
       // A save laid out on an older street plan moves onto this one first (relayout.ts).
       if (ctx.state.city && relayout(ctx.state)) ctx.log(`town moved onto street layout ${cityOf(ctx.state).layout}`);
+      const banked = bandAcrossRiver(ctx.state); // hook FK-078: a band saved where the river used to run waits across the new one
+      if (banked) ctx.log(`river bank: ${banked} of the band back on their marks across the river`); // hook FK-078
       cityOf(ctx.state);
       // Tips from before the town (the forest walk, the Mayor as a troublemaker) mislead every agent: gone.
       const l = ctx.state.listener;

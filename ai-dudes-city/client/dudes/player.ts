@@ -8,7 +8,7 @@
 // phone a thumb stick walks and buttons fire, ride, fix, say and build. Knocked out, the figure
 // lies still and sees stars until it is back up.
 import type { DudesScene, Emote, MayorView } from './types';
-import { CITY_BOUNDS, SQUARE } from './types';
+import { SQUARE, TOWN_GROUND } from './types'; // hook FK-078: walk the River Bank too (was CITY_BOUNDS)
 import { ARMS, rammed, shoot, type Arm, type OperatorHandles } from './operator';
 
 const WALK = 3.4,
@@ -351,7 +351,7 @@ export function createPlayer(el: (id: string) => HTMLElement, getState: () => Du
   // --- walking into things (as operator.ts) ---
   const radius = () => (ride ? Math.min(1.6, Math.max(RADIUS, ride.size / 3)) : RADIUS);
   function blocked(px: number, pz: number): boolean {
-    const b = CITY_BOUNDS;
+    const b = TOWN_GROUND; // hook FK-078
     if (px < b.minX + 0.5 || px > b.maxX - 0.5 || pz < b.minZ + 0.5 || pz > b.maxZ - 0.5) return true;
     if (ride?.moves === 'fly') return false; // over everything
     const RADIUS = radius();
@@ -433,7 +433,7 @@ export function createPlayer(el: (id: string) => HTMLElement, getState: () => Du
       } else if (!blocked(x + dx, z)) x += dx;
       else if (!blocked(x, z + dz)) z += dz;
     }
-    const b = CITY_BOUNDS;
+    const b = TOWN_GROUND; // hook FK-078
     x = Math.max(b.minX + 0.5, Math.min(b.maxX - 0.5, x));
     z = Math.max(b.minZ + 0.5, Math.min(b.maxZ - 0.5, z));
     const now = performance.now();

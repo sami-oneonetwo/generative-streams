@@ -20,7 +20,7 @@ import { feedLines, fitWords } from './feed';
 import { createStats } from './stats'; // hook FK-065
 import { setStoryLook, storyLook } from './sticker';
 import { boardFor, createBoard, fitUnder, liftUnder, reserved } from './board';
-import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
+import { TOWN_GROUND, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
 import { PITCH_DEFAULT, SCENES, fillLine, sceneLine, scenePose, type CamPose } from '../../src/shared/scenes';
@@ -315,8 +315,8 @@ function start() {
     focus.x += -Math.sin(yaw) * ((dy * perPx) / SIN_ELEVATION);
     focus.z += -Math.cos(yaw) * ((dy * perPx) / SIN_ELEVATION);
     // Never wander off into the countryside.
-    focus.x = Math.max(CITY_BOUNDS.minX - 20, Math.min(CITY_BOUNDS.maxX + 20, focus.x));
-    focus.z = Math.max(CITY_BOUNDS.minZ - 20, Math.min(CITY_BOUNDS.maxZ + 20, focus.z));
+    focus.x = Math.max(TOWN_GROUND.minX - 20, Math.min(TOWN_GROUND.maxX + 20, focus.x)); // hook FK-078: out over the River Bank and the water
+    focus.z = Math.max(TOWN_GROUND.minZ - 20, Math.min(TOWN_GROUND.maxZ + 20, focus.z)); // hook FK-078
   }
   const pointers = new Map<number, { x: number; y: number }>();
   let drag:

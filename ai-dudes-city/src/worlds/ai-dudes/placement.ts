@@ -4,29 +4,57 @@
 // half-metre grid search round whatever has been built.
 import { contains, footprint, inflate, overlaps, type Rect } from '../../shared/layout';
 import type { GroundPoint, SafehouseObject } from '../../shared/objectTypes';
-import { CITY_BOUNDS, SQUARE } from '../../shared/city';
+import { LANDING, RIVER, SQUARE, TOWN_GROUND } from '../../shared/city';
+
+/** Half the bridge's deck, across the river on z = 0: three logs side by side, about 3.4 m wide (client/dudes/agePieces.json). */
+const DECK_HALF = 1.7;
+/** The river where the bridge crosses it, between the town's ground and the landing on the far bank. */
+const CROSSING: Rect = { minX: RIVER.x - RIVER.width / 2, maxX: RIVER.x + RIVER.width / 2, minZ: LANDING.minZ, maxZ: LANDING.maxZ };
+/** The river at the crossing, but for the bridge's deck while the bridge stands. */
+const riverWater = (deck: boolean): Rect[] => (deck ? [{ ...CROSSING, maxZ: -DECK_HALF }, { ...CROSSING, minZ: DECK_HALF }] : [{ ...CROSSING }]);
 
 /**
- * The ground: the whole town, and what on it blocks walking that is not a build (the fountain and
- * the market stall on the square). Fixed; `blocks` is here so tests can add to it.
+ * The ground (layout A+, FK-078): the town and the River Bank down to the water (`bounds`), the way over
+ * the river to the landing on the far bank (`over`), and what on it blocks walking that is not a build: the
+ * fountain and the market stall on the square, and the river at the crossing (`water`), all of it but the
+ * bridge's deck while the bridge stands (bridgeStands). `blocks` is here so tests can add to it.
  */
-export const GROUND: { bounds: Rect; blocks: Rect[]; water: Rect[] } = {
-  bounds: { ...CITY_BOUNDS },
+export const GROUND: { bounds: Rect; over: Rect; blocks: Rect[]; water: Rect[] } = {
+  bounds: { ...TOWN_GROUND },
+  over: { minX: TOWN_GROUND.maxX, maxX: LANDING.maxX, minZ: LANDING.minZ, maxZ: LANDING.maxZ },
   blocks: [
     footprint(SQUARE.fountain, SQUARE.fountain.r * 2, SQUARE.fountain.r * 2),
     footprint(SQUARE.market, SQUARE.market.w, SQUARE.market.d),
   ],
-  water: [],
+  water: riverWater(true),
 };
-/** Inside the town, `margin` metres in from its edge. */
-export function onGround(p: GroundPoint, margin = 0): boolean {
-  const b = GROUND.bounds;
-  return !(p.x < b.minX + margin || p.x > b.maxX - margin || p.z < b.minZ + margin || p.z > b.maxZ - margin);
+let deckOpen = true;
+/** The bridge stands or not (as the page draws it: city.ts townView's `bridge`): the river can be walked over only on its deck. */
+export function bridgeStands(whole: boolean): void {
+  if (whole !== deckOpen) [deckOpen, GROUND.water] = [whole, riverWater(whole)];
 }
-/** A point pulled inside the town, `margin` metres in from its edge. */
+const inWater = (p: GroundPoint) => GROUND.water.some((r) => contains(r, p));
+/** On the ground, `margin` metres in from its edge: in the town, or on the way over and the landing (water or not: that is route's). */
+export function onGround(p: GroundPoint, margin = 0): boolean {
+  const b = GROUND.bounds,
+    o = GROUND.over;
+  if (!(p.x < b.minX + margin || p.x > b.maxX - margin || p.z < b.minZ + margin || p.z > b.maxZ - margin)) return true;
+  // The way over meets the town at the water's edge: no margin on that side.
+  return !(p.x < o.minX - margin || p.x > o.maxX - margin || p.z < o.minZ + margin || p.z > o.maxZ - margin);
+}
+/** A point pulled onto the ground, `margin` metres in from its edge: where it is on the bridge or the landing, else inside the town (out of the river too). */
 export function clampToGround(p: GroundPoint, margin = 1): GroundPoint {
+  if (p.x > GROUND.bounds.maxX - margin && onGround(p, margin) && !inWater(p)) return { x: p.x, z: p.z };
   const b = GROUND.bounds;
   return { x: Math.max(b.minX + margin, Math.min(b.maxX - margin, p.x)), z: Math.max(b.minZ + margin, Math.min(b.maxZ - margin, p.z)) };
+}
+/**
+ * The river cuts `a` off from `b`: the bridge is down and they are on opposite banks (one of them on the
+ * landing), so there is no searching the whole town to find that out. Someone standing in it can still wade out.
+ */
+function cutOff(a: GroundPoint, b: GroundPoint): boolean {
+  const o = GROUND.over;
+  return GROUND.water.some((w) => w.minZ <= o.minZ && w.maxZ >= o.maxZ && !contains(w, a) && !contains(w, b) && (a.x < w.minX) !== (b.x < w.minX));
 }
 
 const STEP = 0.5,
@@ -61,6 +89,7 @@ export function walkableSegment(a: GroundPoint, b: GroundPoint, objects: Safehou
 /** A path from `from` to `to` round every build, or null when `to` is blocked or unreachable. */
 export function route(from: GroundPoint, to: GroundPoint, objects: SafehouseObject[], reserved: Rect[] = [], overWater = false): GroundPoint[] | null {
   if (walkableSegment(from, to, objects, reserved, overWater)) return [from, to];
+  if (!overWater && cutOff(from, to)) return null;
   // As above: anything the walker is standing inside does not count, so they can always get out.
   const blocked = obstacles(objects, undefined, reserved, overWater)
     .map((r) => inflate(r, margin))

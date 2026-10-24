@@ -30,3 +30,4 @@ export type {
   JobStatus as DudeJobStatus,
 } from '../../src/shared/dudesTypes';
 export { CITY_BOUNDS, SQUARE } from '../../src/shared/city';
+export { TOWN_GROUND } from '../../src/shared/city'; // hook FK-078: the town's side of the river, River Bank and all

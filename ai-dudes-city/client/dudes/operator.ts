@@ -8,7 +8,7 @@
 // At a story Call the server puts him on his mark (`lock`, FK-020): WASD, riding, weapons, playing
 // and the free camera wait for the release; the camera still turns and zooms, and he still talks.
 import type { DudeView, DudesScene, Emote, MayorView } from './types';
-import { CITY_BOUNDS, SQUARE } from './types';
+import { SQUARE, TOWN_GROUND } from './types'; // hook FK-078: walk and look over the River Bank too (was CITY_BOUNDS)
 
 const WALK = 3.4,
   RUN = 7;
@@ -384,7 +384,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
 
   // --- walking into things: builds, the fountain, the market stall, the edge of town ---
   function blocked(px: number, pz: number): boolean {
-    const b = CITY_BOUNDS;
+    const b = TOWN_GROUND; // hook FK-078
     if (px < b.minX + 0.5 || px > b.maxX - 0.5 || pz < b.minZ + 0.5 || pz > b.maxZ - 0.5) return true;
     if (ride?.moves === 'fly') return false; // over everything
     // Aboard something, the something has to fit through too (roughly: half its length round him).
@@ -461,7 +461,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
           speed = 0;
         }
       }
-      const b = CITY_BOUNDS;
+      const b = TOWN_GROUND; // hook FK-078
       x = Math.max(b.minX + 0.5, Math.min(b.maxX - 0.5, x));
       z = Math.max(b.minZ + 0.5, Math.min(b.maxZ - 0.5, z));
       moving = speed > 0.15;
@@ -481,7 +481,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
         z += dz;
       } else if (!blocked(x + dx, z)) x += dx;
       else if (!blocked(x, z + dz)) z += dz;
-      const b = CITY_BOUNDS;
+      const b = TOWN_GROUND; // hook FK-078
       x = Math.max(b.minX + 0.5, Math.min(b.maxX - 0.5, x));
       z = Math.max(b.minZ + 0.5, Math.min(b.maxZ - 0.5, z));
     }
@@ -546,7 +546,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     renderFollow();
   }
   function clampCam() {
-    const b = CITY_BOUNDS;
+    const b = TOWN_GROUND; // hook FK-078
     cx = Math.max(b.minX - 20, Math.min(b.maxX + 20, cx));
     cz = Math.max(b.minZ - 20, Math.min(b.maxZ + 20, cz));
   }
