@@ -8,6 +8,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { createAudio, type AudioHandles, type AudioLevels } from '../client/dudes/audio';
@@ -367,6 +368,12 @@ function rows(r: Rig, evs: Ev[], t0: number): Val[][] {
 // moved to, to make sure this copy is still the real one.
 const SEED_OF = 'const seedOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);';
 const seedOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+// And how main.ts feeds speech(), found the same way (main.ts:796 and :778/:792 on 2026-10-24): every
+// new line a dude says, in their own voice, emotes read as words, where they stand, the head low; and
+// the stream's sfx level the figures here assume (LEVELS.sfx), and the operator's slider on top of it.
+const SPEECH = 'if (text && text !== lastSaid.get(d.id)) audio.speech(seedOf(d.id), emoteNames(text), d.position, d.mayor);';
+const SFX_OPERATOR = "sfx: a.sfx * level('sfx', 0.8) * 1.25";
+const MAIN_TS = path.join(import.meta.dirname, '..', 'client', 'dudes', 'main.ts');
 
 // --- what is pinned ---
 
@@ -380,6 +387,10 @@ const LINES: { who: string; text: string; at: XZ; low?: boolean }[] = [
   { who: 'dev:test-bo', text: 'please build me a big house by the river', at: { x: 10, z: 3 } }, // nine words, seven syllables
   { who: 'mayor', text: 'Hello! Welcome to my town!', at: { x: 10, z: -2 }, low: true }, // the head's low voice
 ];
+/** A long chat line (211 characters, 43 words): still seven syllables, not cut or dropped. */
+const LONG =
+  'ok so i just got here and this town is honestly the best thing on kick right now, can someone ask the mayor to fix the bridge ' +
+  'so the travellers can get across before the rain comes back and floods the market lol';
 const FAR = spot(500);
 /** The throttle, step by step: [ms since the step before, speaker, where (omitted: heard everywhere), plays?, why]. */
 const THROTTLE: [number, number, XZ | undefined, boolean, string][] = [
@@ -455,7 +466,15 @@ function golden() {
   });
   return { chain, pitch, syllables, extremes, throttle: throttle(rig()), falloff, lines, seedOf: LINES.map((l) => [l.who, seedOf(l.who)]) };
 }
-const voiceHash = () => createHash('sha256').update(JSON.stringify(golden())).digest('hex');
+const hashOf = (record: unknown) => createHash('sha256').update(JSON.stringify(record)).digest('hex');
+/** A record as JSON with a row a line, so two of them diff well. */
+function lined(x: unknown, pad = ''): string {
+  if (x === null || typeof x !== 'object' || (Array.isArray(x) && !x.some((v) => v !== null && typeof v === 'object'))) return JSON.stringify(x);
+  const inner = `${pad} `;
+  const items = Array.isArray(x) ? x.map((v) => inner + lined(v, inner)) : Object.entries(x).map(([k, v]) => `${inner}${JSON.stringify(k)}: ${lined(v, inner)}`);
+  const [open, shut] = Array.isArray(x) ? '[]' : '{}';
+  return `${open}\n${items.join(',\n')}\n${pad}${shut}`;
+}
 
 const APPROVED = path.join(import.meta.dirname, '..', 'client', 'dudes', 'audio-approved.json');
 interface Approved {
@@ -486,6 +505,7 @@ pin('a syllable a word, never fewer than 2 or more than 7; an emote counts as a 
     ['one two three four five six seven', 7],
     ['please build me a big house by the river', 7],
     [emoteNames('lol [emote:37226:KEKW] nice'), 3],
+    [LONG, 7], // a long line is still heard: nothing caps or mutes by length
   ];
   for (const [text, n] of cases) {
     later(r, 1000);
@@ -614,7 +634,7 @@ pin(
 );
 
 pin('seedOf: each speaker keeps their voice (this copy is still the line in main.ts)', () => {
-  const main = fs.readFileSync(path.join(import.meta.dirname, '..', 'client', 'dudes', 'main.ts'), 'utf8');
+  const main = fs.readFileSync(MAIN_TS, 'utf8');
   assert.ok(
     main.split('\n').some((l) => l.trim() === SEED_OF),
     'client/dudes/main.ts no longer has this exact seedOf: a changed seedOf changes every speaker\'s voice',
@@ -628,14 +648,37 @@ pin('seedOf: each speaker keeps their voice (this copy is still the line in main
   });
 });
 
+pin("main.ts feeds speech() every new line in the speaker's own voice, the head's low, at the stream's sfx level", () => {
+  const lines = fs.readFileSync(MAIN_TS, 'utf8').split('\n');
+  assert.ok(
+    lines.some((l) => l.trim() === SPEECH),
+    "client/dudes/main.ts no longer has this exact call: a changed seed, text, place or low voice changes how speakers sound",
+  );
+  assert.equal(lines.filter((l) => l.includes('audio.speech(')).length, 1, 'main.ts calls speech() from that one line only');
+  // A fragment ends at its own `,` or ` }`, so `* 1.25 * 0.5` or `0.85` doesn't pass for it.
+  const has = (l: string, frag: string) => l.includes(`${frag},`) || l.includes(`${frag} }`);
+  const made = lines.filter((l) => l.includes('createAudio(') && !l.includes('import'));
+  assert.equal(made.length, 1, 'main.ts makes its audio once');
+  assert.ok(has(made[0], `sfx: level('sfx', ${LEVELS.sfx})`), `the stream page starts the sfx bus at ${LEVELS.sfx}, as LEVELS here says`);
+  const operator = lines.filter((l) => l.includes('audio.levels(') && l.includes('sfx'));
+  assert.ok(operator.length > 0 && operator.every((l) => has(l, SFX_OPERATOR)), `the operator's slider sets the sfx bus as ${SFX_OPERATOR}`);
+});
+
 pin('the blips are the ones Sami approved (client/dudes/audio-approved.json)', () => {
   const approved = JSON.parse(fs.readFileSync(APPROVED, 'utf8')) as Approved;
   assert.match(approved.voice.hash, /^[0-9a-f]{64}$/, 'audio-approved.json has a voice hash');
-  const hash = voiceHash();
-  assert.equal(voiceHash(), hash, 'the record comes out the same every time');
+  const record = golden(),
+    hash = hashOf(record);
+  assert.equal(hashOf(golden()), hash, 'the record comes out the same every time');
+  // The record, written down so a change can be diffed: to AUDIO_VOICE_RECORD whenever it names a file
+  // (run it so on main for the approved one), and otherwise to a temp file when the hash has moved.
+  const out = process.env.AUDIO_VOICE_RECORD || (hash === approved.voice.hash ? '' : path.join(os.tmpdir(), `audio-voice-${hash.slice(0, 12)}.json`));
+  if (out) fs.writeFileSync(out, `${lined(record)}\n`);
   assert.equal(
     hash,
     approved.voice.hash,
-    `The speech blips changed: they hash to ${hash}, and Sami approved ${approved.voice.hash} (${approved.voice.by}, ${approved.voice.date}). The tests above say what changed.`,
+    `The speech blips changed: they hash to ${hash}, and Sami approved ${approved.voice.hash} (${approved.voice.by}, ${approved.voice.date}). ` +
+      "The tests above say what changed; if this is the only one failing, it is something they don't spell out (a detune, another parameter, a new node). " +
+      `This record is in ${out}: write the approved one with AUDIO_VOICE_RECORD=/tmp/audio-voice-approved.json npx tsx --test scripts/audio-voice.test.ts in a checkout of main, and diff the two.`,
   );
 });
