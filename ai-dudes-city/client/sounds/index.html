@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sound board · AI Dudes: the town</title>
+<style>
+/* The sound board (FK-159), in the Sticker Toy kit (board/design-system.md): Fredoka for display, Nunito 800 for text, served from /fonts
+   (scripts/build-client.mjs copies them for the stream page, FK-009); ink outlines, hard shadows, cream cards, pills. Bus colours are the cast's. */
+@font-face{font-family:Fredoka;font-weight:600;font-display:swap;src:url(/fonts/fredoka-600-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Fredoka;font-weight:600;font-display:swap;src:url(/fonts/fredoka-600-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Fredoka;font-weight:700;font-display:swap;src:url(/fonts/fredoka-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Fredoka;font-weight:700;font-display:swap;src:url(/fonts/fredoka-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:Nunito;font-weight:800;font-display:swap;src:url(/fonts/nunito-800-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Nunito;font-weight:800;font-display:swap;src:url(/fonts/nunito-800-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+:root{--red:#B3262E;--gold:#FFC633;--gold-deep:#A86E00;--ink:#1E1914;--cream:#FFF6E0;--dust:#7A7366;--moss:#4E8A3A;--oak:#E8762B;--kit:#2F6FD0;--ash:#6E7680;--sky:#BFD2DD;
+  --font-display:Fredoka,'Trebuchet MS',sans-serif;--font-text:Nunito,'Segoe UI',sans-serif;--drop:0 6px 0 #0006;--sfx:var(--oak);--music:var(--kit);--ambience:var(--moss);--voice:var(--gold)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;min-height:100vh;background:var(--sky);color:var(--ink);font:800 15px/1.35 var(--font-text)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:4px solid var(--kit);outline-offset:3px}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:16px 28px;flex-wrap:wrap;padding:22px 32px 4px}
+h1{margin:0;font:700 46px/1 var(--font-display);letter-spacing:.01em}
+header p{margin:6px 0 0;color:#38464c;font-size:15px}
+.go{display:flex;align-items:center;gap:16px}
+#status{background:var(--cream);border:3px solid var(--ink);border-radius:999px;padding:6px 14px;font-size:14px;box-shadow:0 4px 0 #0005;white-space:nowrap}
+#status::before{content:'';display:inline-block;width:.7em;height:.7em;border-radius:50%;margin-right:.5em;background:var(--ash);vertical-align:-.02em}
+body.on #status::before{background:var(--moss)}
+#start{font:700 30px/1 var(--font-display);background:var(--gold);border:4px solid var(--ink);border-radius:999px;padding:16px 36px;box-shadow:var(--drop)}
+#start:active,.tile:active,.pill:active{transform:translateY(3px);box-shadow:0 2px 0 #0005}
+body.on #start{background:var(--cream);font-size:24px;padding:12px 28px}
+
+main{display:grid;gap:22px;padding:18px 32px 32px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,.86fr);grid-template-areas:"cues speech out" "cues crowd music";align-items:start}
+#cues-card{grid-area:cues}#speech-card{grid-area:speech}#crowd-card{grid-area:crowd}#music-card{grid-area:music}#out-card{grid-area:out}
+main[inert] :is(button,input,.ring){opacity:.55}
+.card{background:var(--cream);border:4px solid var(--ink);border-radius:24px;box-shadow:var(--drop);padding:16px 22px 20px}
+h2{margin:0;font:700 27px/1.1 var(--font-display)}
+h3{margin:16px 0 8px;font:700 15px/1 var(--font-display);letter-spacing:.09em;text-transform:uppercase}
+h3 small{margin-left:.6em;font:800 13px var(--font-text);letter-spacing:0;text-transform:none;color:var(--dust)}
+.note{margin:3px 0 12px;color:var(--dust);font-size:13.5px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* Cue tiles: the bus as a stripe down the left edge, a dot in the corner when the sound is placed. */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{position:relative;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:8px 12px 9px 17px;box-shadow:0 4px 0 #0005;font-size:17px;line-height:1.1;overflow:hidden}
+.tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--bus,var(--sfx))}
+.tile small{display:block;margin-top:3px;font-size:12.5px;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.placed::after{content:'';position:absolute;right:9px;top:10px;width:8px;height:8px;border-radius:50%;border:2px solid var(--ink)}
+.tile[aria-pressed=true]{background:var(--gold)}
+.tile.pop,.pill.pop{animation:pop .3s ease-out}
+@keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.06)}100%{transform:none}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:2px 0 4px;font-size:13px;color:var(--dust)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;border:2px solid var(--ink);margin-right:5px;vertical-align:-2px;background:var(--c)}
+.legend i.dot{border-radius:50%;background:none}
+
+/* Pills: voices, segments, toggles and the long buttons. */
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:.4em;min-height:44px;padding:6px 18px;background:#fff;border:3px solid var(--ink);border-radius:999px;box-shadow:0 4px 0 #0005;font-size:16px;white-space:nowrap}
+.pill[aria-pressed=true]{background:var(--gold)}
+.pill.wide{width:100%;margin-top:14px;font-size:17px}
+.pill .sw{flex:none;width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);background:var(--c)}
+#voices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+#voices .pill{padding:6px 8px}
+#voices .pill.mayor{grid-column:span 2}
+.seg{display:flex;border:3px solid var(--ink);border-radius:999px;overflow:hidden;box-shadow:0 4px 0 #0005;background:#fff}
+.seg button{flex:1;min-height:42px;padding:4px 8px;border:0;border-left:3px solid var(--ink);background:none;line-height:1.05}
+.seg button:first-child{border-left:0}
+.seg button small{display:block;font-size:11.5px;color:var(--dust)}
+.seg button[aria-pressed=true]{background:var(--gold)}
+.seg button[aria-pressed=true] small{color:var(--ink)}
+input[type=text]{width:100%;min-height:44px;padding:8px 14px;background:#fff;border:3px solid var(--ink);border-radius:14px}
+label.field{display:block;margin-bottom:12px;font-size:13.5px;color:var(--dust)}
+label.field input{margin-top:5px;font-size:17px;color:var(--ink)}
+.seed{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:9px;align-items:end;margin-top:14px}
+.seed label.field{margin:0}
+.check{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:15px}
+.check input{width:20px;height:20px;accent-color:var(--ink)}
+#seed-is{grid-column:1/-1;font-size:13px;color:var(--dust);min-height:1.3em}
+
+/* The crowd: who stands where round the camera; a talker lights up as they speak. */
+.crowd{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:18px;align-items:center}
+.crowd .seg{margin-top:12px}
+.ring{position:relative;width:200px;height:200px;border:3px dashed #1e191433;border-radius:50%;background:radial-gradient(circle,#fff8 0 30%,transparent 31%)}
+.ring .cam{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;transform:rotate(45deg);background:var(--ink);border-radius:3px}
+.ring .who{position:absolute;width:28px;height:28px;margin:-14px;border-radius:50%;background:var(--c);border:3px solid var(--ink);color:var(--cream);font:700 13px/22px var(--font-display);text-align:center;transition:transform .12s}
+.ring .who.talk{transform:scale(1.35);box-shadow:0 0 0 4px var(--gold)}
+#crowd-stat{margin:14px 0 0;font-size:14px}
+#crowd-last{margin:4px 0 0;font-size:13.5px;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1.35em}
+
+/* Music: the tune and the ambience, and the stream's three levels. */
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lv{display:grid;grid-template-columns:7.2em minmax(0,1fr) 2.6em;gap:10px;align-items:center;margin-top:8px;font-size:14.5px}
+.lv output{text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
+
+/* The meter: peak and RMS in dBFS, −60 to 0; the peak's hold is the ink tick. */
+.meter{display:grid;grid-template-columns:3.2em minmax(0,1fr) 4.4em;gap:6px 10px;align-items:center;margin-top:10px}
+.meter b{font-size:14px}
+.bar{position:relative;height:26px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden}
+.bar i{position:absolute;inset:0;background:linear-gradient(90deg,var(--moss) 0 70%,var(--gold) 70% 90%,var(--red) 90%);clip-path:inset(0 calc(100% - var(--w,0%)) 0 0)}
+.bar u{position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--ink);left:0}
+.meter output{text-align:right;font-variant-numeric:tabular-nums;font-size:15px}
+.scale{grid-column:2;display:flex;justify-content:space-between;font-size:11px;color:var(--dust);margin-top:-2px}
+#play-read{margin:10px 0 0;font-size:14px}
+#clip{display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;background:var(--red);color:var(--cream);font-size:12px;visibility:hidden}
+#clip.on{visibility:visible}
+.out-part{margin-top:18px;padding-top:14px;border-top:3px dashed #1e191426}
+#phone{width:100%;justify-content:space-between;min-height:52px;font-size:18px}
+#phone em{font-style:normal;padding:2px 12px;border-radius:999px;background:var(--ink);color:var(--cream);font-size:14px}
+#phone[aria-pressed=true] em{background:var(--red)}
+
+@media (max-width:1499px){main{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"cues out" "cues music" "speech crowd"}}
+@media (max-width:899px){header{padding:16px 16px 2px}h1{font-size:36px}main{padding:14px 16px 24px;grid-template-columns:minmax(0,1fr);grid-template-areas:"out" "cues" "speech" "crowd" "music"}#start{font-size:24px;padding:12px 26px}.crowd{grid-template-columns:minmax(0,1fr)}.ring{margin:0 auto}}
+@media (prefers-reduced-motion:reduce){.tile.pop,.pill.pop{animation:none}.ring .who{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Sound board</h1>
+    <p>AI Dudes: the town · every cue, every voice and a crowd, at the stream's levels. Nothing here talks to the server.</p>
+  </div>
+  <div class="go">
+    <span id="status" role="status">Sound off</span>
+    <button id="start" type="button">Start sound</button>
+  </div>
+</header>
+<main id="board" inert>
+  <section id="cues-card" class="card" aria-labelledby="cues-h">
+    <h2 id="cues-h">Cues</h2>
+    <p class="note">Every sound the stream plays, from audio.ts. A click always plays, past the stream's rests between repeats.</p>
+    <div class="legend"><span><i style="--c:var(--sfx)"></i>effects bus</span><span><i style="--c:var(--ambience)"></i>ambience bus</span><span><i class="dot"></i>placed: fades with distance (Where it plays)</span></div>
+    <div id="cues"></div>
+    <button id="cues-all" class="pill wide" type="button" aria-pressed="false">Play every cue</button>
+  </section>
+
+  <section id="speech-card" class="card" aria-labelledby="speech-h">
+    <h2 id="speech-h">Speech</h2>
+    <p class="note">The blips: a syllable a word (2 to 7), in a speaker's own voice, on the voice bus.</p>
+    <label class="field">Line<input id="line" type="text" value="Hello! Welcome to my town!" maxlength="300" autocomplete="off" spellcheck="false"></label>
+    <div id="voices"></div>
+    <button id="voices-all" class="pill wide" type="button" aria-pressed="false">All ten in turn</button>
+    <div class="seed">
+      <label class="field">Seed or speaker id<input id="seed" type="text" value="dev:test-kev" autocomplete="off" spellcheck="false"></label>
+      <label class="check"><input id="seed-low" type="checkbox">low</label>
+      <button id="seed-play" class="pill" type="button">Say it</button>
+      <span id="seed-is"></span>
+    </div>
+  </section>
+
+  <section id="crowd-card" class="card" aria-labelledby="crowd-h">
+    <h2 id="crowd-h">Crowd</h2>
+    <p class="note">Test chatters round the camera, 5 to 11 m out; lines land on the stream's 500 ms snapshots.</p>
+    <div class="crowd">
+      <div>
+        <div class="row">
+          <button id="crowd-6" class="pill" type="button" aria-pressed="false">6 talkers</button>
+          <button id="crowd-15" class="pill" type="button" aria-pressed="false">15 talkers</button>
+        </div>
+        <div id="rates" class="seg" role="group" aria-label="How often each talker speaks"></div>
+        <p id="crowd-stat">Nobody talking.</p>
+        <p id="crowd-last"></p>
+      </div>
+      <div id="ring" class="ring" aria-hidden="true"><span class="cam"></span></div>
+    </div>
+  </section>
+
+  <section id="music-card" class="card" aria-labelledby="music-h">
+    <h2 id="music-h">Music</h2>
+    <p class="note">The town tune and the ambience at the stream's default levels. The ages and the mix states join here later.</p>
+    <div class="toggles">
+      <button id="tune" class="tile" type="button" aria-pressed="false" style="--bus:var(--music)">Town tune<small>86 BPM, jazzy chords</small></button>
+      <button id="amb" class="tile" type="button" aria-pressed="false" style="--bus:var(--ambience)">Birds and hum<small>the ambience bed</small></button>
+    </div>
+    <div class="lv"><label for="lv-music">Music</label><input id="lv-music" type="range" min="0" max="1" step="0.05" value="0.5"><output id="lv-music-v">0.50</output></div>
+    <div class="lv"><label for="lv-sfx">Effects, voices</label><input id="lv-sfx" type="range" min="0" max="1" step="0.05" value="0.8"><output id="lv-sfx-v">0.80</output></div>
+    <div class="lv"><label for="lv-ambience">Ambience</label><input id="lv-ambience" type="range" min="0" max="1" step="0.05" value="0.6"><output id="lv-ambience-v">0.60</output></div>
+    <button id="lv-stream" class="pill wide" type="button">Stream levels: 0.5 · 0.8 · 0.6</button>
+  </section>
+
+  <section id="out-card" class="card" aria-labelledby="meter-h">
+    <h2 id="meter-h">Meter</h2>
+    <p class="note">On the master, as it leaves for the speakers.</p>
+    <div class="meter">
+      <b>Peak</b><div class="bar"><i id="peak-bar"></i><u id="peak-hold"></u></div><output id="peak-v">—</output>
+      <b>RMS</b><div class="bar"><i id="rms-bar"></i></div><output id="rms-v">—</output>
+      <div class="scale"><span>−60</span><span>−48</span><span>−36</span><span>−24</span><span>−12</span><span>0 dBFS</span></div>
+    </div>
+    <p id="play-read">Last play: <span id="play-v">—</span><span id="clip">CLIP</span></p>
+    <div class="out-part">
+      <h2 id="phone-h">Phone speaker</h2>
+      <p class="note">How a phone hears the stream: 300 Hz to 8 kHz, in mono.</p>
+      <button id="phone" class="pill" type="button" aria-pressed="false" aria-describedby="phone-h">Phone filter <em>off</em></button>
+    </div>
+    <div class="out-part">
+      <h2 id="where-h">Where it plays</h2>
+      <p class="note">The placed cues and the speech tester.</p>
+      <div id="where" class="seg" role="group" aria-labelledby="where-h"></div>
+    </div>
+  </section>
+</main>
+<script src="/sounds/main.js"></script>
+</body>
+</html>
