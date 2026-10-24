@@ -14,6 +14,10 @@ const WALK = 3.4,
   RUN = 7;
 const SEND_MS = 50; // twenty a second while moving
 const BEAT_MS = 2000; // and a heartbeat standing still, so the stream knows the Mayor is still here
+// With Story on, a quicker one: its reply is how a Call (or the release) made while he stands still
+// reaches this page and the stream, so he lands on his mark within half a second, not two.
+const STORY_BEAT_MS = 500;
+const H_HEARD_MS = 1000; // after H, how long a view from the server may still be from before it heard
 const POSES: Emote[] = ['wave', 'cheer', 'point', 'laugh', 'dance', 'think', 'bow', 'sit'];
 const RADIUS = 0.35;
 /** How fast the Mayor takes what he is riding (the server's MOVERS.ridden, plus plain vehicles). */
@@ -143,8 +147,10 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     cx = 0,
     cz = 9;
   // On his mark for a scene (the server's `lock`), and whether the stream sees him (`visible` is H's own say).
+  // `hAt`: when H was last pressed; for a moment after, a view the server sent before it heard H still says the old.
   let lock: MayorView['lock'],
-    shown = true;
+    shown = true,
+    hAt = -Infinity;
 
   // --- the socket to the server: the Mayor's moves, words and poses ---
   let socket: WebSocket | undefined;
@@ -253,7 +259,8 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
       return;
     }
     const k = e.key.toLowerCase();
-    if (k === 'enter' && visible) {
+    // Whenever the stream sees him: on his mark even if H hid him; not while the show hides him.
+    if (k === 'enter' && shown) {
       el('op-say-box').hidden = false;
       (el('op-say') as HTMLInputElement).focus();
       e.preventDefault();
@@ -321,6 +328,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     }
     if (k === 'h') {
       visible = !visible;
+      hAt = performance.now();
       if (!lock) shown = visible; // the server agrees a moment later (unless the show has him hidden)
       send({ t: 'visible', on: visible });
       renderFollow();
@@ -465,7 +473,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
       facing = Math.atan2(dx, dz);
       // Slide along whatever is in the way; standing inside something (it went up round us) never traps.
       // Hidden, he is only a camera: straight through anything, still inside the town.
-      const stuck = insideNow() || !visible;
+      const stuck = insideNow() || !shown;
       if (stuck || !blocked(x + dx, z + dz)) {
         x += dx;
         z += dz;
@@ -479,7 +487,8 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     if (!free) [cx, cz] = [x, z];
     const now = performance.now();
     const key = `${x.toFixed(2)},${z.toFixed(2)},${facing.toFixed(2)},${moving},${yaw.toFixed(2)},${half.toFixed(1)},${cx.toFixed(2)},${cz.toFixed(2)},${alt.toFixed(2)}`;
-    if (placed && ((key !== lastMove && now - lastSent > SEND_MS) || now - lastSent > BEAT_MS)) {
+    const beat = getState()?.town?.story ? STORY_BEAT_MS : BEAT_MS;
+    if (placed && ((key !== lastMove && now - lastSent > SEND_MS) || now - lastSent > beat)) {
       send({ t: 'move', x, z, facing, moving, running: keys.has('shift'), yaw, half, cx, cz, ...(ride?.moves === 'fly' ? { alt } : {}), at: Date.now() });
       lastSent = now;
       lastMove = key;
@@ -515,7 +524,8 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   function onMark(view: MayorView) {
     const was = lock;
     lock = view.lock;
-    const seen = !view.hidden;
+    // Just after H, a view sent before the server heard it still has the old say: the page's own stands.
+    const seen = !lock && performance.now() - hAt < H_HEARD_MS ? visible : !view.hidden;
     if (!!was === !!lock && seen === shown) return;
     if (lock && !was) {
       free = false;

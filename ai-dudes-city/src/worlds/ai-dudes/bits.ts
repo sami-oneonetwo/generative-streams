@@ -11,7 +11,7 @@ import { HATS, type BitBurst, type BitProp, type Emote, type Hat } from '../../s
 import { ageOf, cityOf, homeOf, leaveVisit, lotsOf, namingAge } from './city';
 import { ageStyle } from '../../shared/ages';
 import { matchName } from './index';
-import { MAYOR } from './mayor';
+import { MAYOR, headHidden } from './mayor'; // hook FK-020: out of sight as the stream sees it (the show's word over H)
 import { clampToGround } from './placement';
 import { addEffect, endUse, face, overhear, walkTo } from './sim';
 import { LIMITS, pushFeed, pushLine, type Bit, type BitStep, type Dude, type DudesState } from './state';
@@ -50,7 +50,7 @@ function targetOf(state: DudesState, d: Dude, phrase: string | undefined, now: n
   const head = ageStyle(namingAge(state)).head.title.toLowerCase();
   if ((/\bmayor\b/.test(p) || new RegExp(`\\b${head}\\b`).test(p)) && !/'s|’s/.test(p)) {
     const m = state.mayor;
-    if (!m || m.hidden || now - m.lastInputAt > MAYOR.liveMs) return 'the Mayor is not out and about right now';
+    if (!m || headHidden(state, m) || now - m.lastInputAt > MAYOR.liveMs) return 'the Mayor is not out and about right now'; // hook FK-020
     return { kind: 'mayor', at: { ...m.position } };
   }
   if (/^(home|my home|my house|my lot|my place)$/.test(p)) {
@@ -248,5 +248,5 @@ export function hatOf(raw: unknown): Hat | undefined {
 /** The Mayor's spot, if he is out and about (for "move to the Mayor"). */
 export function mayorSpot(state: DudesState, now: number): GroundPoint | undefined {
   const m = state.mayor;
-  return m && !m.hidden && now - m.lastInputAt < MAYOR.liveMs ? { ...m.position } : undefined;
+  return m && !headHidden(state, m) && now - m.lastInputAt < MAYOR.liveMs ? { ...m.position } : undefined; // hook FK-020
 }

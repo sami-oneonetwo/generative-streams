@@ -7,6 +7,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { STORY_SITES } from '../src/shared/storyMap';
 import { MAYOR, forceHeadHidden, headHidden, mayorDudeView, mayorInput, mayorView, prepareHead, releaseHead, tickMayor } from '../src/worlds/ai-dudes/mayor';
+import { mayorSpot } from '../src/worlds/ai-dudes/bits';
+import { stateSchema } from '../src/worlds/ai-dudes/state';
 import { releaseShow } from '../src/worlds/ai-dudes/story/show';
 import { harness } from './harness';
 
@@ -148,4 +150,32 @@ test('a lock the show never lets go of times out, and his WASD comes back', asyn
   assert.ok(m.lock, 'held through the longest scene');
   tickMayor(h.state, h.now + MAYOR.lockMs + 1000);
   assert.equal(m.lock, undefined, 'then let go');
+});
+
+test('a face that isn’t a number keeps the way he faces, so the save still loads; a mark that isn’t a place is refused', async () => {
+  const { h, m } = await outRiding();
+  h.state.ai.story = true;
+  const facing = m.facing;
+  assert.equal(prepareHead(h.state, MARK.at, Number.NaN, h.now), true);
+  assert.equal(m.facing, facing);
+  assert.equal(m.lock?.facing, facing);
+  assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success, 'the save loads');
+  releaseHead(h.state);
+  const before = structuredClone(m);
+  assert.equal(prepareHead(h.state, { x: Number.NaN, z: 0 }, MARK.facing, h.now), false);
+  assert.deepEqual(h.state.mayor, before, 'nothing touched');
+});
+
+test('chatters’ bits see him as the stream does: on his mark though H hid him, not during the flashback; Story OFF as today', async () => {
+  const { h, m } = await outRiding();
+  assert.equal(mayorSpot(h.state, h.now), undefined, 'Story OFF: hidden with H is out of sight');
+  h.state.ai.story = true;
+  prepareHead(h.state, MARK.at, MARK.facing, h.now);
+  assert.ok(m.hidden, 'H still says hidden');
+  assert.ok(near(mayorSpot(h.state, h.now)!, MARK.at), 'but the stream shows him on his mark: "go to the Mayor" goes there');
+  releaseHead(h.state);
+  mayorInput(h.state, { t: 'visible', on: true }, h.now);
+  assert.ok(mayorSpot(h.state, h.now), 'out and about');
+  forceHeadHidden(h.state, true, h.now);
+  assert.equal(mayorSpot(h.state, h.now), undefined, 'the flashback hides him from bits too');
 });

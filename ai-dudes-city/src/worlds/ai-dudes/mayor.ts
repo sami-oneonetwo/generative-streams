@@ -584,11 +584,13 @@ export function headHidden(state: DudesState, m: Mayor): boolean {
  * The Call: he is shown (whatever H says), off whatever he was riding (left parked where it stood),
  * the weapon put away, out of a game or a pose, and snapped onto `mark` facing `face`; the operator
  * page jumps there too (`moved`), its free camera goes off, and its WASD waits for `releaseHead`.
- * FK-061 walks him there instead of the snap. False, and nothing touched, while Story is off.
+ * FK-061 walks him there instead of the snap. False, and nothing touched, while Story is off or the
+ * mark isn't a place; a `face` that isn't a number keeps the way he faces (a NaN would spoil the save).
  */
 export function prepareHead(state: DudesState, mark: GroundPoint, face: number, now: number): boolean {
-  if (!storyOn(state)) return false;
+  if (!storyOn(state) || !Number.isFinite(mark.x) || !Number.isFinite(mark.z)) return false;
   const m = mayorOf(state, now);
+  if (!Number.isFinite(face)) face = m.facing;
   if (m.riding) getOff(state, m);
   if (m.playing) stopPlaying(m);
   m.armed = undefined;
