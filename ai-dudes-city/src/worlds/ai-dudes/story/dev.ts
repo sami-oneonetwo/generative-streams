@@ -50,6 +50,7 @@ const playToday =
     if (why) return why;
     // Cutting another scene short would skip what follows it (the bridge ask after the opening, the age after the turn).
     if (city.scene && city.scene.id !== id) return `The ${city.scene.id} scene is playing: let it finish first`;
+    if (city.story?.scene) return `The ${city.story.scene.id} scene is playing: Stop it first`;
     playScene(s, id, ctx.now);
     ctx.log(`story: today's ${id} is playing (admin, Story (dev))`);
   };
@@ -68,6 +69,8 @@ const resetTheCast: Run = (ctx) => {
   const cv = city.caravan!;
   if (city.scene) return `The ${city.scene.id} scene is playing: let it finish first`;
   if (city.story?.scene) return `The ${city.story.scene.id} scene is playing: Stop it first`;
+  // After the last age's finale the turn stays for good: no caravan comes after it.
+  if (cv.turn?.final) return 'The journey is over (the last age has had its finale): no cast to reset';
   if (cv.turn) return 'The age is turning (the band is heading home): reset the cast once the next caravan is here';
   resetCast(s, cv, ctx.now);
   ctx.log(`story: the cast reset, on their marks ${cv.stranded ? 'across the river' : 'at the town gate'} (admin, Story (dev))`);
@@ -162,6 +165,9 @@ const PIECES: Piece[] = [
     hint: 'Ends the scene, lets everyone go, gives the head his WASD back',
     run: (ctx) => {
       const n = letGo(ctx.state);
+      // Today's opening, arrival, age turn and finale play on (letGo), so say which one is, not just "nothing".
+      const today = cityOf(ctx.state).scene;
+      if (!n && today) return `Nothing to stop: today's ${today.id} scene plays on to its end (Stop cuts only what Story (dev) starts)`;
       if (!n) return 'Nothing to stop: no scene playing, nobody gathered, the head free';
       ctx.log(`story: stopped (admin, panic exit): let go of ${things(n)}`, 'alert');
     },

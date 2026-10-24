@@ -119,10 +119,16 @@ test("Play: Crossing plays today's Crossing; Stop and Story OFF cut it; the open
   // so neither Play: Crossing nor Stop cuts it short.
   t.run('scene-opening');
   assert.match(t.run('story-play', 'crossing') ?? 'ran', /^The opening scene is playing/);
-  assert.match(t.run('story-stop') ?? 'ran', /^Nothing to stop/);
+  assert.match(t.run('story-stop') ?? 'ran', /^Nothing to stop: today's opening scene plays on to its end/, 'Stop names what it leaves playing');
   assert.equal(t.view().town?.scene?.id, 'opening');
   await t.tick(SCENES.opening.ms + 1000);
   assert.ok(t.view().town?.caravan?.asks.length, 'the bridge ask opened as usual');
+
+  // A story scene playing (FK-017's runtime) has the stage: Stop it before a Crossing goes on top.
+  cityOf(t.h.state).story = { scene: { id: 'test', at: t.h.now, shift: 0, beat: 0, vars: {} } };
+  assert.match(t.run('story-play', 'crossing') ?? 'ran', /^The test scene is playing: Stop it first/);
+  assert.equal(t.view().town?.scene, undefined, 'no Crossing on top');
+  t.run('story-stop');
 
   // What today's Crossing needs, it still needs.
   t.h.state.ai.caravan = false;
@@ -200,6 +206,9 @@ test('Reset the cast: the band as new, back on its marks (Kit too, if gone); not
   // The age turning: they are walking home.
   city.caravan!.turn = { at: t.h.now };
   assert.match(t.run('cast-reset') ?? 'ran', /^The age is turning/);
+  // After the last age's finale nobody comes: say so, not "once the next caravan is here".
+  city.caravan!.turn = { at: t.h.now, final: true };
+  assert.match(t.run('cast-reset') ?? 'ran', /^The journey is over/);
   city.caravan!.turn = undefined;
   // Once they've crossed, their marks are at the town gate, as a caravan arriving by road stands.
   city.caravan!.stranded = undefined;
