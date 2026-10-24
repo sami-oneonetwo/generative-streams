@@ -15,6 +15,7 @@ import {
   DISTRICT_NAMES,
   NEEDS,
   SQUARE,
+  TOWN_GROUND,
   VENUES,
   WONDER,
   allPlots,
@@ -1403,10 +1404,22 @@ export function districtsOf(state: DudesState): { key: string; name: string; at:
 }
 
 // ---- the tick, the scene, the agents' view ---------------------------------------------------------
+/**
+ * The river can be walked over on the bridge only while it stands, as the page draws it (FK-078). With it
+ * down, anyone caught across it (a chatter or a resident who went over while it stood) is put back ashore
+ * on the town bank: the river would keep them out of town for good. The band waits over there by design.
+ */
+function keepRiver(state: DudesState, c: City): void {
+  const whole = bridgeProgress(state) === undefined;
+  bridgeStands(whole);
+  if (whole) return;
+  const ashore = (p: GroundPoint) => clampToGround({ x: TOWN_GROUND.maxX - 1.5, z: p.z }, 1.5);
+  for (const d of state.dudes) if (d.position.x > TOWN_GROUND.maxX) Object.assign(d, { position: ashore(d.position), path: [], walkingFor: undefined });
+  for (const t of c.townies) if (!t.traveller && t.position.x > TOWN_GROUND.maxX) Object.assign(t, { position: ashore(t.position), path: [] });
+}
 export function tickCity(state: DudesState, dt: number, now: number, rng: () => number): void {
   const c = cityOf(state);
-  // The river can be walked over on the bridge only while it stands, as the page draws it (FK-078).
-  bridgeStands(bridgeProgress(state) === undefined);
+  keepRiver(state, c);
   // Takings for builds that are gone go with them.
   if (rng() < dt / 30_000) for (const id of Object.keys(c.stats)) if (!state.objects.some((o) => o.id === id)) delete c.stats[id];
   tickNeeds(state, dt, now);

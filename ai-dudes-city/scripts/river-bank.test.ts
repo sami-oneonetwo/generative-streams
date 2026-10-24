@@ -111,6 +111,17 @@ test('dudes walk the new bank; the helpers mend the bridge from the water’s ed
   await tick(SCENES.crossing.ms + 6000);
   assert.ok(band.every((t) => t.position.x < BRIDGE.near), 'the band crossed into town');
   assert.ok(h.state.dudes.every((d) => onGround(d.position) && !inWater(d.position)), 'everyone on the ground');
+
+  // With the bridge standing a chatter can walk over to the landing; if it goes down behind her, she is put back ashore.
+  assert.ok(sendDude(h.state, kim, { x: 129, z: 5 }), 'kim heads over the bridge');
+  assert.ok(samples([kim.position, ...kim.path]).every((p) => !inWater(p)), 'over the deck, not through the water');
+  for (let i = 0; i < 40 && kim.path.length; i++) await tick(1000);
+  assert.ok(contains(LANDING, kim.position), `kim is on the far bank: ${JSON.stringify(kim.position)}`);
+  run('scene-opening'); // the Stone caravan again: stuck across the river, the bridge down
+  await tick(1000);
+  assert.equal(GROUND.water.length, 1, 'the bridge is down');
+  assert.ok(kim.position.x < BRIDGE.near && onGround(kim.position), `kim is back ashore on the town bank: ${JSON.stringify(kim.position)}`);
+  assert.ok(cityOf(h.state).townies.filter((t) => t.traveller).every((t) => contains(LANDING, t.position)), 'the band waits across the river');
 });
 
 test('a band saved waiting where the river used to run boots across the new river; a helper bound for the old bridge goes to the new one', async () => {
