@@ -4,12 +4,15 @@
 // can ride or drive one (a chatter's `use … ride/drive`, the Mayor's R key): while someone is
 // aboard it goes where they take it, and when they get off it carries on from there. They never
 // block anyone's way and never count as a place to visit. Zero AI: the app owns the routes and speeds.
+// With the Story switch on, a chatter's small roamer is their pet instead: it trails them (PETS below).
 import type { GroundPoint, Moves, SafehouseObject } from '../../shared/objectTypes';
 import { CITY_BOUNDS, roadLines } from '../../shared/city';
-import { abilitiesOf, movesFromRequest } from './blueprint';
-import { onGround, route } from './placement';
-import { addEffect, step } from './sim';
-import type { DudesState } from './state';
+import { contains, footprint, inflate } from '../../shared/layout';
+import { abilitiesOf, movesFromRequest, petSized } from './blueprint';
+import { GROUND, onGround, route } from './placement';
+import { WALK_SPEED, addEffect, awake, step } from './sim';
+import { homeOf, lotsOf } from './city';
+import { storyOn, type Dude, type DudesState } from './state';
 import { breakable, damageBuild, ruined } from './damage';
 import { smashes } from './weapons';
 import { knockOut, knockedOut } from './combat';
@@ -45,6 +48,36 @@ export const RAMPAGE = {
   splash: 1.6,
   /** At most this many monsters go on the rampage in town at once (the oldest), one per owner; the rest just wander. */
   maxLoose: 2,
+};
+
+/**
+ * Pets (Finders Keepers, Story ON only): a chatter's first small roamer (blueprint.ts `petSized`)
+ * trails them round town instead of wandering. It goes the way they went (their breadcrumbs, no
+ * path search) to a spot behind their left shoulder, a little quicker than they go; it sits when
+ * they stop, and sleeps on their lot while their chatter is away or they are indoors. With Story
+ * OFF it roams as it always has. (board/motion-budget.md, Pets.)
+ */
+export const PETS = {
+  /** Where it keeps to: this far from its owner (metres), this far round from straight behind them to their left (radians). */
+  gap: 1.2,
+  side: Math.PI / 4,
+  /** Its pace against its owner's on the move; never slower than a trot (m/s) nor quicker than a dash. */
+  pace: 1.2,
+  minSpeed: 1.4,
+  maxSpeed: 9,
+  /** Further than this from its owner (metres): it is with them again in a puff of smoke. */
+  teleport: 30,
+  /** The owner's way: a crumb at least this far (metres) from the last, the newest this many kept. */
+  crumb: 0.5,
+  crumbs: 80,
+  /** Within this of one of the crumbs (metres), it is on its owner's trail. */
+  onTrail: 1.5,
+  /** The owner has stood still this long (ms): it sits. */
+  sitMs: 1000,
+  /** The owner has been indoors this long away from home (ms): it stops waiting by the door and goes home to bed. */
+  doorMs: 30_000,
+  /** The owner went indoors this close to its bed (metres): it goes straight to bed. */
+  homeNear: 14,
 };
 
 /** The monsters allowed to smash things right now: the oldest few, no more than one each owner. */
@@ -146,11 +179,256 @@ function flyLeg(o: SafehouseObject, rng: () => number): GroundPoint[] {
   return [{ x: b.minX + 6 + rng() * (b.maxX - b.minX - 12), z: b.minZ + 6 + rng() * (b.maxZ - b.minZ - 12) }];
 }
 
+// ---- pets (Finders Keepers) ---------------------------------------------------------------------
+/** What a pet keeps of its owner between ticks. Not saved: after a restart it picks them up afresh. */
+interface Trail {
+  owner: string;
+  /** The way they went, oldest first, ending where they are. */
+  crumbs: GroundPoint[];
+  /** Where they were last tick, and the waypoint they were heading for (passed since: the corner they turned). */
+  last: GroundPoint;
+  next?: GroundPoint;
+  /** Their pace on the move (m/s, smoothed); how long they have stood still and been indoors (ms). */
+  speed: number;
+  still: number;
+  indoors: number;
+  /** Following them; sitting by the door they went in at; or off home to bed (and where that is). */
+  mode: 'follow' | 'door' | 'home';
+  bed?: GroundPoint;
+}
+const trails = new WeakMap<DudesState, Map<string, Trail>>();
+/** The world revision each town's pets were last handed out at. */
+const adoptedAt = new WeakMap<DudesState, number>();
+const dist = (a: GroundPoint, b: GroundPoint) => Math.hypot(a.x - b.x, a.z - b.z);
+
+/** Each chatter's first small roamer (the oldest) becomes their pet; any more roam as before. */
+export function adoptPets(state: DudesState): void {
+  const has = new Set<string>();
+  for (const o of state.objects) if (o.creature?.follows) has.add(o.creature.follows);
+  const small = state.objects
+    .filter((o) => o.creature && !o.creature.follows && o.owner && !has.has(o.owner) && !ruined(o) && petSized(o.blueprint))
+    .sort((a, b) => a.createdAt - b.createdAt);
+  for (const o of small) {
+    if (has.has(o.owner!) || !state.dudes.some((d) => d.id === o.owner)) continue;
+    o.creature!.follows = o.owner;
+    has.add(o.owner!);
+  }
+}
+
+/** Open ground a pet can stand on: in town, out of the water, clear of every standing build. */
+function clearAt(state: DudesState, p: GroundPoint): boolean {
+  if (!onGround(p, 0.5) || GROUND.water.some((r) => contains(r, p)) || GROUND.blocks.some((r) => contains(inflate(r, 0.2), p))) return false;
+  return !state.objects.some((o) => !o.passable && o.destroyedAt === undefined && contains(footprint(o.position, o.footprint.width + 0.4, o.footprint.depth + 0.4), p));
+}
+
+/** Its place at heel: behind its owner's left shoulder, or the nearest of behind, behind-right, either side that is open. */
+export function heelOf(state: DudesState, owner: Pick<Dude, 'position' | 'facing'>): GroundPoint {
+  const f = owner.facing;
+  for (const a of [PETS.side, 0, -PETS.side, Math.PI / 2, -Math.PI / 2]) {
+    // Behind them is −(sin f, cos f); their left is (cos f, −sin f) (facing +z, the left hand is at +x).
+    const p = { x: owner.position.x - Math.sin(f) * Math.cos(a) * PETS.gap + Math.cos(f) * Math.sin(a) * PETS.gap, z: owner.position.z - Math.cos(f) * Math.cos(a) * PETS.gap - Math.sin(f) * Math.sin(a) * PETS.gap };
+    if (clearAt(state, p)) return p;
+  }
+  return { ...owner.position };
+}
+
+/** Where a pet sleeps: at the front of its owner's lot, off to one side (builds go toward the back); else beside their home; else where it is. */
+export function bedOf(state: DudesState, owner: Dude, from: GroundPoint): GroundPoint {
+  const lot = lotsOf(state, owner)[0];
+  if (lot) {
+    const f = lot.front,
+      s = { x: -f.z, z: f.x };
+    const half = (f.x ? lot.rect.maxX - lot.rect.minX : lot.rect.maxZ - lot.rect.minZ) / 2;
+    for (const [out, along] of [[half - 1.4, 2.8], [half - 1.4, -2.8], [half - 1.4, 0], [half - 3, 4], [half - 3, -4]]) {
+      const p = { x: lot.centre.x + f.x * out + s.x * along, z: lot.centre.z + f.z * out + s.z * along };
+      if (clearAt(state, p)) return p;
+    }
+  }
+  const home = homeOf(state, owner);
+  if (home) {
+    const r = footprint(home.at, home.footprint.width + 1.6, home.footprint.depth + 1.6);
+    const beside = [{ x: home.at.x, z: r.maxZ }, { x: r.maxX, z: home.at.z }, { x: r.minX, z: home.at.z }, { x: home.at.x, z: r.minZ }].find((p) => clearAt(state, p));
+    if (beside) return beside;
+  }
+  return { ...from };
+}
+
+/** Gone from here and there in a puff of smoke (both ends), like a teleport bit. */
+function puff(state: DudesState, o: SafehouseObject, to: GroundPoint, now: number): void {
+  addEffect(state, { kind: 'burst', at: now, to: { ...o.position }, label: 'smoke' });
+  o.position = { ...to };
+  addEffect(state, { kind: 'burst', at: now, to: { ...to }, label: 'smoke' });
+  o.creature!.path = [];
+}
+
+/** A crumb onto the owner's trail, if they have gone far enough from the last one. */
+function drop(t: Trail, p: GroundPoint): void {
+  const last = t.crumbs[t.crumbs.length - 1];
+  if (last && dist(last, p) < PETS.crumb) return;
+  t.crumbs.push({ x: p.x, z: p.z });
+  if (t.crumbs.length > PETS.crumbs) t.crumbs.splice(0, t.crumbs.length - PETS.crumbs);
+}
+
+/** This tick's news of the owner: where they went (and the corner they turned getting there), how fast, whether they stopped or went in. */
+function watch(t: Trail, owner: Dude, dt: number): void {
+  const moved = dist(owner.position, t.last);
+  if (moved > 0.02 || owner.path.length) t.still = 0;
+  else t.still += dt;
+  if (moved > 0.02) {
+    const turned = t.next && !(owner.path[0] && owner.path[0].x === t.next.x && owner.path[0].z === t.next.z);
+    if (moved > PETS.teleport) t.crumbs = []; // they jumped (a teleport): no trail across the gap
+    else {
+      if (turned && dist(t.last, t.next!) + dist(t.next!, owner.position) < moved + 1) drop(t, t.next!);
+      if (dt > 0) t.speed += (Math.min(PETS.maxSpeed, moved / (dt / 1000)) - t.speed) * 0.5;
+    }
+  }
+  drop(t, owner.position);
+  t.last = { ...owner.position };
+  t.next = owner.path[0] ? { ...owner.path[0] } : undefined;
+  t.indoors = owner.hidden ? t.indoors + dt : 0;
+}
+
+/**
+ * One tick of a pet with its owner. False when the owner is not in town (it roams as before).
+ * `was` is how it was resting last tick (a sitting pet stays sat while its owner only shuffles).
+ */
+function followOwner(state: DudesState, o: SafehouseObject, was: 'sit' | 'sleep' | undefined, dt: number, now: number): boolean {
+  const c = o.creature!;
+  const owner = state.dudes.find((d) => d.id === c.follows);
+  if (!owner) return false;
+  let mine = trails.get(state);
+  if (!mine) trails.set(state, (mine = new Map()));
+  let t = mine.get(o.id);
+  if (!t || t.owner !== owner.id) mine.set(o.id, (t = { owner: owner.id, crumbs: [], last: { ...owner.position }, speed: WALK_SPEED, still: 0, indoors: 0, mode: 'follow' }));
+  watch(t, owner, dt);
+
+  // Away (their chatter has gone quiet) or indoors: off home to bed; or, if they went in somewhere else, a wait by the door first.
+  const away = !awake(owner, now);
+  if (away || owner.hidden) {
+    if (t.mode === 'follow') {
+      t.bed = bedOf(state, owner, o.position);
+      t.mode = away || dist(owner.position, t.bed) < PETS.homeNear ? 'home' : 'door';
+      c.path = [];
+    }
+    if (t.mode === 'door' && t.indoors < PETS.doorMs) {
+      c.moving = false;
+      c.rest = 'sit';
+      return true;
+    }
+    if (t.mode === 'door') {
+      t.mode = 'home';
+      c.path = [];
+    }
+    // Something has gone up on its bed since: a new one.
+    if (!clearAt(state, t.bed!)) {
+      t.bed = bedOf(state, owner, o.position);
+      c.path = [];
+    }
+    goToBed(state, o, t.bed!, now, dt);
+    return true;
+  }
+  // Back with them (up from bed, or they came out): the trail starts again from here.
+  if (t.mode !== 'follow') {
+    t.mode = 'follow';
+    t.bed = undefined;
+    t.crumbs = [{ ...owner.position }];
+    c.path = [];
+  }
+
+  // Where they will be once the town has walked them on this tick (people move after the movers): it keeps to heel there.
+  const lead = { path: owner.path.slice(0, 4), position: { ...owner.position }, facing: owner.facing, walkingFor: owner.walkingFor };
+  if (lead.path.length) step(lead, dt);
+  const heel = heelOf(state, lead);
+  if (dist(o.position, lead.position) > PETS.teleport) {
+    puff(state, o, heel, now);
+    c.facing = owner.facing;
+    c.moving = false;
+    return true;
+  }
+  // Sat down already and they have only shuffled about: it stays sat.
+  if (was === 'sit' && t.still >= PETS.sitMs && dist(o.position, heel) < 0.8) {
+    c.moving = false;
+    c.rest = 'sit';
+    return true;
+  }
+  // On their trail: the way they went from the newest crumb it is near (short of their heels), then its spot.
+  // Off it (just up from bed, or they set off from somewhere it never was): round to them once the short way.
+  let on = -1;
+  for (let i = t.crumbs.length - 1; i >= 0; i--)
+    if (dist(t.crumbs[i], o.position) <= PETS.onTrail) {
+      on = i;
+      break;
+    }
+  let way: GroundPoint[];
+  if (on >= 0) {
+    c.path = [];
+    way = [...t.crumbs.slice(on + 1).filter((p) => dist(p, lead.position) > PETS.gap), heel];
+  } else {
+    if (!c.path.length) c.path = route(o.position, heel, state.objects)?.slice(1) ?? [heel];
+    way = c.path;
+  }
+  const from = { ...o.position };
+  const walker = { path: way, position: o.position, facing: c.facing };
+  step(walker, dt, Math.min(PETS.maxSpeed, Math.max(PETS.minSpeed, PETS.pace * t.speed)));
+  o.position = walker.position;
+  c.facing = walker.facing;
+  if (on < 0) c.path = walker.path;
+  c.moving = dist(from, o.position) > 1e-3;
+  if (!c.moving && t.still >= PETS.sitMs) {
+    c.facing = owner.facing;
+    c.rest = 'sit';
+  }
+  return true;
+}
+
+/** Home to its bed at a trot, the way round what is built; a long way off, or no way there, it goes in a puff. Then it sleeps. */
+function goToBed(state: DudesState, o: SafehouseObject, bed: GroundPoint, now: number, dt: number): void {
+  const c = o.creature!;
+  if (dist(o.position, bed) < 0.05) {
+    c.moving = false;
+    c.path = [];
+    c.rest = 'sleep';
+    return;
+  }
+  if (!c.path.length) {
+    const way = dist(o.position, bed) <= PETS.teleport ? route(o.position, bed, state.objects) : null;
+    if (!way) {
+      puff(state, o, bed, now);
+      c.moving = false;
+      c.rest = 'sleep';
+      return;
+    }
+    c.path = [...way.slice(1, -1), bed];
+  }
+  const walker = { path: c.path, position: o.position, facing: c.facing };
+  step(walker, dt, MOVERS.speed.roam);
+  o.position = walker.position;
+  c.facing = walker.facing;
+  c.path = walker.path;
+  c.moving = true;
+}
+
 export function tickMovers(state: DudesState, dt: number, now: number, rng: () => number): void {
   let loose: Set<string> | undefined;
+  // Story ON: whenever something has gone up or changed, the chatters without a pet get their first small roamer as one.
+  const story = storyOn(state);
+  if (story && adoptedAt.get(state) !== state.worldRevision) {
+    adoptPets(state);
+    adoptedAt.set(state, state.worldRevision);
+    // Trails of pets that are gone (taken down, or no longer anyone's) are let go.
+    const mine = trails.get(state);
+    if (mine) {
+      const pets = new Set(state.objects.filter((o) => o.creature?.follows).map((o) => o.id));
+      for (const id of mine.keys()) if (!pets.has(id)) mine.delete(id);
+    }
+  }
   for (const o of state.objects) {
-    const moves = movesOf(o);
     const c = o.creature;
+    // A pet's rest is worked out afresh each tick (followOwner); anything else it was doing, it is up.
+    const was = c?.rest;
+    if (c && was) c.rest = undefined;
+    // A pet keeps trotting after its owner even if a redesign forgot to say it goes about.
+    const moves = movesOf(o) ?? (story && c?.follows ? 'roam' : undefined);
     if (!moves || !c) continue;
     if (ruined(o)) {
       c.moving = false; // knocked down itself: it lies where it fell until it is put back up
@@ -177,6 +455,8 @@ export function tickMovers(state: DudesState, dt: number, now: number, rng: () =
       c.replanMs = rand(rng, MOVERS.pause[moves]);
       state.worldRevision++;
     }
+    // A pet goes with its owner (Story ON; when they are not in town it wanders like anything else).
+    if (story && c.follows && followOwner(state, o, was, dt, now)) continue;
     // A monster goes after the town's builds (between rests); otherwise it wanders like anything else.
     if (smashes(o) && (loose ??= looseMonsters(state)).has(o.id) && rampage(state, o, dt, now, rng)) continue;
     // Back to cruising height, up or down, at a climb (left high by the Mayor, it sinks gently).

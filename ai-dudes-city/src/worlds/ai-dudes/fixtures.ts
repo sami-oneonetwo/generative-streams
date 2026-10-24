@@ -1,7 +1,7 @@
 // Fixture mode (`DUDES_FIXTURES=1`, `npm run demo`): a deterministic agent and designer so the
 // field can be run, smoke-tested and demoed without a key or a bill. It reads plain keywords; it is
 // a test aid, not a stand-in for the real agent, and the page labels it.
-import type { Primitive } from '../../shared/objectTypes';
+import type { PartAnimation, Primitive } from '../../shared/objectTypes';
 import { EMOTES, HATS, type Emote } from '../../shared/dudesTypes';
 import { hashOf, type AgentAction, type AgentFn, type AgentReply } from './agent';
 import { validateDesign } from './blueprint';
@@ -30,6 +30,8 @@ export const fixtureAgent: AgentFn = async (turn) => {
     reply.remember = [`${turn.name} first said: ${said.slice(0, 80)}`];
   }
   const build = /\b(?:build|make|create)\s+(?:me\s+)?(.+)$/i.exec(said);
+  // A pet without the word "build" ("get me a pet dog"): the designer below makes it a small roamer.
+  const pet = petAsk(said);
   const edit = /\b(?:paint|make)\s+my\s+(.+?)\s+(red|blue|green|pink|yellow|purple|orange|black|white|gold)\b/i.exec(said);
   const remove = /\b(?:remove|delete|demolish)\s+my\s+(.+)$/i.exec(said);
   const go = /\b(?:walk to|hang out with|find)\s+(@?\w+)/i.exec(said);
@@ -79,20 +81,69 @@ export const fixtureAgent: AgentFn = async (turn) => {
   else if (edit) actions.push({ do: 'edit', target: edit[1], change: `paint it ${edit[2]}` });
   else if (remove) actions.push({ do: 'remove', target: remove[1] });
   else if (build && !propose && !actions.some((a) => a.do === 'help')) actions.push({ do: 'build', what: build[1].slice(0, 200) });
+  else if (pet && !propose && !actions.some((a) => a.do === 'help')) actions.push({ do: 'build', what: pet });
   if (go) actions.push({ do: 'move', to: go[1].replace(/^@/, '') });
   if (pose && !fight && !ride && !actions.length) actions.push({ do: 'emote', pose });
   actions.splice(3);
   reply.say = actions.length
     ? build
       ? `on it. one ${build[1].slice(0, 40)} coming up`
-      : edit
-        ? 'fresh coat of paint, coming up'
-        : remove
-          ? 'gone. it was ugly anyway'
-          : 'ok!'
+      : pet && actions.some((a) => a.do === 'build')
+        ? `a ${pet}! back in a tick`
+        : edit
+          ? 'fresh coat of paint, coming up'
+          : remove
+            ? 'gone. it was ugly anyway'
+            : 'ok!'
     : HELLOS[(h + said.length) % HELLOS.length];
   return reply;
 };
+
+/** Fixture pets (FK-027): any line with one of these words, so a demo server can make a pet. */
+const PET = /\b(pet|dog|cat|goat)\b/i;
+const ANIMAL = /\b(dog|cat|goat)\b/i;
+/** "get me a pet dog" → "pet dog"; "I want a pet" → "pet"; undefined when no pet is asked for. */
+const petAsk = (said: string): string | undefined => {
+  if (!PET.test(said)) return undefined;
+  const animal = ANIMAL.exec(said)?.[1].toLowerCase();
+  return animal ? `pet ${animal}` : 'pet';
+};
+
+/** A place for pets is a build, not a pet. */
+const NOT_A_PET = /\b(house|kennel|shop|store|caf[eé]|statue|park|groomers?|salon|vet|hotel|show)\b/;
+/**
+ * A fixture pet: a 0.6 m toy-like creature facing +z (board/design-system.md §7): a big head, stubby
+ * legs, one hero feature (floppy ears, pointy ears, horns), a cream collar and a wagging tail.
+ */
+function fixturePet(words: string, colour: string | undefined): { parts: Primitive[]; animations: PartAnimation[] } {
+  const kind = /\bcat\b/.test(words) ? 'cat' : /\bgoat\b/.test(words) ? 'goat' : 'dog';
+  const coat = colour ?? { dog: '#b9824f', cat: '#e08a3c', goat: '#eee6d6' }[kind];
+  const dark = { dog: '#6b4426', cat: '#9a5523', goat: '#8f8a82' }[kind];
+  const ink = '#1e1914',
+    cream = '#fff6e0';
+  const tilted = (p: Primitive, x: number, z = 0): Primitive => ({ ...p, rotation: [x, 0, z] });
+  const parts: Primitive[] = [
+    ...[-0.12, 0.12].flatMap((x) => [-0.15, 0.15].map((z) => part('cylinder', [x, 0.09, z], [0.1, 0.18, 0.1], coat))),
+    part('box', [0, 0.27, 0], [0.32, 0.22, 0.44], coat), // body
+    part('box', [0, 0.45, 0.32], [0.34, 0.3, 0.28], coat), // head: at least 40% of the body
+    part('box', [0, 0.39, 0.5], [0.18, 0.12, 0.1], kind === 'goat' ? '#d9cfbd' : coat), // snout
+    part('box', [0, 0.43, 0.56], [0.08, 0.06, 0.03], ink), // nose
+    part('sphere', [-0.09, 0.5, 0.465], [0.08, 0.08, 0.03], ink), // eyes
+    part('sphere', [0.09, 0.5, 0.465], [0.08, 0.08, 0.03], ink),
+    part('box', [0, 0.4, 0.155], [0.3, 0.08, 0.06], cream), // collar (the owner's side colour comes with FK-051)
+  ];
+  if (kind === 'dog') parts.push(tilted(part('box', [-0.19, 0.48, 0.3], [0.06, 0.2, 0.13], dark), 0, 0.2), tilted(part('box', [0.19, 0.48, 0.3], [0.06, 0.2, 0.13], dark), 0, -0.2));
+  if (kind === 'cat') parts.push(part('cone', [-0.1, 0.65, 0.3], [0.1, 0.12, 0.08], coat), part('cone', [0.1, 0.65, 0.3], [0.1, 0.12, 0.08], coat));
+  if (kind === 'goat')
+    parts.push(
+      tilted(part('cone', [-0.09, 0.66, 0.27], [0.06, 0.16, 0.06], dark), -0.5),
+      tilted(part('cone', [0.09, 0.66, 0.27], [0.06, 0.16, 0.06], dark), -0.5),
+      part('box', [0, 0.3, 0.5], [0.06, 0.1, 0.04], cream), // beard
+    );
+  const tail = parts.length;
+  parts.push(kind === 'cat' ? tilted(part('cylinder', [0, 0.5, -0.24], [0.05, 0.32, 0.05], dark), -0.25) : tilted(part('cylinder', [0, 0.4, -0.27], [0.05, 0.2, 0.05], kind === 'goat' ? coat : dark), -0.7));
+  return { parts, animations: [{ part: tail, kind: 'sway', axis: 'z', speed: kind === 'cat' ? 0.5 : 1.6, amplitude: 0.35 }] };
+}
 
 const COLOURS: Record<string, string> = {
   red: '#c4402f', blue: '#3f6fb0', green: '#4f8a4b', pink: '#e07aa8', yellow: '#e2c14a', purple: '#7d4fa3',
@@ -114,6 +165,13 @@ export const fixtureDesign: DesignFn = async (input) => {
     return validateDesign({ action: 'edit', reply: 'repainted', blueprint: { ...input.target, parts } }, true);
   }
   const name = input.request.replace(/^(a|an|the)\s+/i, '').split(/[,.]/)[0].slice(0, 40) || 'thing';
+  if (PET.test(words) && !NOT_A_PET.test(words)) {
+    const pet = fixturePet(words, colour === '#8f8a82' ? undefined : colour);
+    return validateDesign(
+      { action: 'build', reply: 'a new friend', blueprint: { name: name[0].toUpperCase() + name.slice(1), description: `Fixture: ${input.request.slice(0, 120)}`, ...pet, moves: 'roam' } },
+      false,
+    );
+  }
   let parts: Primitive[];
   if (/tower|lighthouse|castle/.test(words))
     parts = [

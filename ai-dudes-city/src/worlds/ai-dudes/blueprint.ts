@@ -327,6 +327,16 @@ export function movesFromRequest(request: string): Moves | undefined {
   if (/\b(car|truck|bus|van|kart|taxi|tractor|bike|motorbike|scooter|train|tram|tank|drives?|driving|cruis)/.test(t)) return 'drive';
   return 'roam';
 }
+/** The most a pet may be (metres): a companion trots at its owner's heels, below face height (board/motion-budget.md). */
+export const PET_SIZE = { tall: 0.9, long: 1.4 };
+/** Small enough to be someone's pet (Finders Keepers, movers.ts): it roams, fits PET_SIZE, and is no vehicle and no monster. */
+export function petSized(b: Blueprint): boolean {
+  if (b.moves !== 'roam' || !b.parts.length) return false;
+  const can = abilitiesOf(b);
+  if (can.has('vehicle') || can.has('smash')) return false;
+  const { minX, maxX, maxY, minZ, maxZ } = blueprintBounds(b);
+  return maxY <= PET_SIZE.tall + 1e-6 && Math.max(maxX - minX, maxZ - minZ) <= PET_SIZE.long + 1e-6;
+}
 
 // ---- abilities: what a build can do on the journey ----------------------
 const ABILITY_WORDS: [RegExp, Ability][] = [

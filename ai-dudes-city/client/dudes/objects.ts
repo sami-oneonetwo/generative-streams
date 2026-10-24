@@ -36,7 +36,7 @@ interface Entry {
   shade: number; // 0.45 rubble … 1 pristine: applied when the parts land, then per snapshot
   destroyed: boolean;
   /** A living build: how it carries itself. Where it is comes from its track (motion.ts), per frame. */
-  creature?: { behaviour: string; destroyed: boolean; flying: boolean; perched: boolean };
+  creature?: { behaviour: string; destroyed: boolean; flying: boolean; perched: boolean; rest?: 'sit' | 'sleep' };
   /** Part motion as data (PartAnimation), applied every frame to the filled group's children. */
   animations?: PartAnimation[];
   /** On a run under a viewer (`!drive`): drawn from its track like a creature, snapped back to its true spot when it stops. */
@@ -55,6 +55,11 @@ interface Entry {
   fellAt?: number;
   /** How tall it stands (metres), measured when its parts land: where the smoke comes from and the bar sits. */
   top?: number;
+  /** Nose to tail (metres) and how far forward its front feet are, measured with `top`: how a pet sits down. */
+  long?: number;
+  front?: number;
+  /** A pet settling (0 up … 1 down): sitting, and curled up asleep; eased each frame from `at`. */
+  rest?: { sit: number; nap: number; at: number };
   /** The health bar over it, made the first time it is hit; and when it last puffed smoke. */
   bar?: { sprite: THREE.Sprite; canvas: HTMLCanvasElement; tex: THREE.CanvasTexture; drawn: number };
   smokeAt?: number;
@@ -328,6 +333,8 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     shadeGroup(entry.group, entry.shade);
     recordBases(entry.group);
     entry.top = parts.reduce((m, p) => Math.max(m, p.position[1] + p.size[1] / 2), 0.5) * (entry.destroyed ? 0.5 : 1);
+    entry.front = parts.reduce((m, p) => Math.max(m, p.position[2] + p.size[2] / 2), 0);
+    entry.long = entry.front - parts.reduce((m, p) => Math.min(m, p.position[2] - p.size[2] / 2), 0);
     entry.filled = true;
     entry.drawnFor = townAge;
   }
@@ -365,6 +372,7 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
           destroyed,
           flying: !!obj.creature.flying,
           perched: !!obj.creature.goal?.perched,
+          ...(obj.creature.rest ? { rest: obj.creature.rest } : {}),
         }
       : undefined;
 
@@ -537,12 +545,12 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     }
     damage(now, renderTime, reducedMotion);
     for (const [id, entry] of committed) {
-      // Part motion as data: a canopy drifting, a chain swaying, a wheel turning. Rubble lies still.
+      const c = entry.creature;
+      // Part motion as data: a canopy drifting, a chain swaying, a wheel turning. Rubble lies still, and so does a pet asleep.
       if (entry.animations && entry.filled && !entry.destroyed) {
-        if (reducedMotion) restBases(entry.group, entry.animations);
+        if (reducedMotion || c?.rest === 'sleep') restBases(entry.group, entry.animations);
         else animateParts(entry.group, entry.animations, t);
       }
-      const c = entry.creature;
       entry.moving = false;
       // A living build follows its creature; a piece on a run (`!drive`) follows `driven`; the
       // operator's own ride follows the Mayor. Nothing else moves.
@@ -572,7 +580,43 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
             : 0;
       g.position.y = pose.y + bob;
       g.rotation.z = flying && !still ? Math.sin(now * 0.0025) * 0.08 : 0;
+      settle(entry, g, pose.facing, now, reducedMotion);
     }
+  }
+
+  /**
+   * A pet at rest (the server's movers.ts, Story ON): sitting, it tips back on its front feet so its
+   * back end goes down to the ground; asleep, it curls up low, leaning a little. Eased in and out
+   * over a quarter of a second; anything else stands as it always has.
+   */
+  function settle(entry: Entry, g: THREE.Group, facing: number, now: number, reducedMotion: boolean): void {
+    const want = entry.creature?.rest;
+    if (!want && !entry.rest) {
+      if (g.rotation.x) g.rotation.x = 0;
+      return;
+    }
+    const r = (entry.rest ??= { sit: 0, nap: 0, at: now });
+    const k = reducedMotion ? 1 : 1 - Math.exp(-Math.max(0, now - r.at) / 90);
+    r.at = now;
+    r.sit += ((want === 'sit' ? 1 : 0) - r.sit) * k;
+    r.nap += ((want === 'sleep' ? 1 : 0) - r.nap) * k;
+    if (!want && r.sit < 0.01 && r.nap < 0.01) {
+      entry.rest = undefined;
+      g.rotation.x = 0;
+      return;
+    }
+    const top = entry.top ?? 0.6,
+      long = Math.max(0.3, entry.long ?? 1),
+      front = entry.front ?? long / 2;
+    // Tipped back about the front feet far enough that the back end sinks about 40% of its height.
+    const tilt = -Math.min(0.38, Math.asin(Math.min(0.9, (0.4 * top) / long))) * r.sit;
+    const slide = front * (1 - Math.cos(tilt));
+    if (g.rotation.order !== 'YXZ') g.rotation.order = 'YXZ'; // pitch and lean about its own axes, after the turn
+    g.rotation.x = tilt;
+    g.rotation.z = 0.14 * r.nap;
+    g.position.x += Math.sin(facing) * slide;
+    g.position.z += Math.cos(facing) * slide;
+    g.position.y += front * Math.sin(tilt) - 0.32 * top * r.nap;
   }
 
   // ---- damage: smoke from a battered build, flames on one nearly down, dust over rubble, the bar ----
