@@ -81,9 +81,10 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   // Which card builds which piece (BOARD.md): each wires its own button in story/dev.ts.
   const cardOf = (action: string, value?: string | number) => unbuilt.find((b) => b.action === action && (value === undefined || b.value === value))?.card;
   assert.deepEqual(
-    [cardOf('story-play', 'unveil'), cardOf('story-play', 'rally'), cardOf('story-play', 'intro'), cardOf('story-play', 'ageTurn'), cardOf('story-play', 'test')],
-    ['FK-025', 'FK-026', 'FK-043', 'FK-127', 'FK-017'],
+    [cardOf('story-play', 'unveil'), cardOf('story-play', 'rally'), cardOf('story-play', 'intro'), cardOf('story-play', 'ageTurn')],
+    ['FK-025', 'FK-026', 'FK-043', 'FK-127'],
   );
+  assert.equal(cardOf('story-play', 'test'), undefined, 'Play: test runs (FK-017: scripts/story-show.test.ts)');
   assert.deepEqual(
     ['side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
     ['FK-012', 'FK-049', 'FK-056'],
@@ -127,7 +128,7 @@ test("Play: Crossing plays today's Crossing; Stop and Story OFF cut it; the open
   // A story scene playing (FK-017's runtime) has the stage: Stop it before a Crossing goes on top.
   cityOf(t.h.state).story = { scene: { id: 'test', at: t.h.now, shift: 0, beat: 0, vars: {} } };
   assert.match(t.run('story-play', 'crossing') ?? 'ran', /^The test scene is playing: Stop it first/);
-  assert.equal(t.view().town?.scene, undefined, 'no Crossing on top');
+  assert.equal(t.view().town?.scene?.id, 'test', 'no Crossing on top: the test scene has the page');
   t.run('story-stop');
 
   // What today's Crossing needs, it still needs.

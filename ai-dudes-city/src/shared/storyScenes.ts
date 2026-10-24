@@ -19,6 +19,10 @@ export const STORY_SCENES: Record<string, Scene> = {
       { at: 7000, move: 3000, pose: { focus: [folly.x, 0, folly.z + 6], yaw: YAW_DEFAULT, pitch: PITCH_DEFAULT, half: 24 } },
     ],
     lines: [{ at: 1500, ms: 6000, who: 'Test', text: 'The story runtime is playing.' }],
-    beats: [],
+    // hook FK-017: the runtime's beats: the age's leader waves, then the next of the cast cheers (if they're in town).
+    beats: [
+      { at: 1000, do: 'emote', who: 0, pose: 'wave', ms: 2500 },
+      { at: 6000, do: 'emote', who: 1, pose: 'cheer', ms: 2500 },
+    ],
   },
 };

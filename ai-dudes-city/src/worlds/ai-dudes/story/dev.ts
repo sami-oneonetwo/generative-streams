@@ -14,7 +14,7 @@ import { caravanOn, playScene, resetCast } from '../caravan';
 import { ageOf, cityOf } from '../city';
 import { prepareHead } from '../mayor'; // hook FK-020
 import { storyOn, type DudesState } from '../state';
-import { releaseShow } from './show';
+import { playShow, releaseShow } from './show';
 import { FOLLY_DEV } from './folly'; // hook FK-023
 
 type Ctx = WorldCtx<DudesState>;
@@ -59,6 +59,21 @@ const playToday =
   };
 
 /**
+ * A story scene, through the show runtime (story/show.ts) from its first beat: it needs nothing else,
+ * not the caravan, not town life, not anyone awake. Not over today's scene (its camera would vanish
+ * under this one's), and not over another story scene (Stop it first).
+ */
+const playStory =
+  (id: string): Run =>
+  (ctx) => {
+    const today = cityOf(ctx.state).scene;
+    if (today) return `Today's ${today.id} scene is playing: let it finish first`;
+    const why = playShow(ctx.state, id, ctx.now);
+    if (why) return why;
+    ctx.log(`story: the ${id} scene is playing (admin, Story (dev))`);
+  };
+
+/**
  * Reset the cast (FK-014's band): the age's cast as new and back on their marks, as a new caravan brings
  * them: across the river while the bridge is down, else at the town gate; anyone missing comes back. Not
  * mid-scene (scenes move the band by its place in the caravan) and not while the age turns (they're
@@ -87,8 +102,8 @@ export const STORY_PLAYS: Play[] = [
   { id: 'rally', label: 'Rally', card: 'FK-026' },
   { id: 'unveil', label: 'Unveiling', card: 'FK-025' },
   { id: 'ageTurn', label: 'Age turn', card: 'FK-127' },
-  // FK-001's test scene: the runtime and the page end to end.
-  { id: 'test', label: 'test', card: 'FK-017' },
+  // FK-001's test scene: the runtime (FK-017) and the page (FK-124) end to end.
+  { id: 'test', label: 'test', run: playStory('test') },
 ];
 
 /**
@@ -167,12 +182,15 @@ const PIECES: Piece[] = [
     danger: true,
     hint: 'Ends the scene, lets everyone go, gives the head his WASD back',
     run: (ctx) => {
+      const city = cityOf(ctx.state);
+      // The scene it cuts, for the log: a story scene (the show runtime's), or today's Crossing.
+      const cut = city.story?.scene?.id ?? (city.scene?.id === 'crossing' ? 'crossing' : undefined);
       const n = letGo(ctx.state);
       // Today's opening, arrival, age turn and finale play on (letGo), so say which one is, not just "nothing".
-      const today = cityOf(ctx.state).scene;
+      const today = city.scene;
       if (!n && today) return `Nothing to stop: today's ${today.id} scene plays on to its end (Stop cuts only what Story (dev) starts)`;
       if (!n) return 'Nothing to stop: no scene playing, nobody gathered, the head free';
-      ctx.log(`story: stopped (admin, panic exit): let go of ${things(n)}`, 'alert');
+      ctx.log(`story: stopped${cut ? ` the ${cut} scene` : ''} (admin, panic exit): let go of ${things(n)}`, 'alert');
     },
   },
   {

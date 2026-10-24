@@ -98,13 +98,14 @@ import {
   pushLine,
   resetState,
   stateSchema,
+  storyOn,
   trimStory,
   type Dude,
   type DudesState,
   type Job,
 } from './state';
 import { storyDevActions, storyDevButtons } from './story/dev';
-import { releaseShow } from './story/show';
+import { releaseShow, tickShow } from './story/show';
 import { storyDudeView } from './story/view';
 
 export interface DudesOptions {
@@ -2067,6 +2068,9 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
     tickMs: 500,
     tick(ctx, dt) {
       const now = ctx.now;
+      // Story scenes first, whatever the caravan and town life are doing: nothing later in the tick can
+      // hold a scene up, and the show never throws (its watchdog ends the scene instead).
+      if (storyOn(ctx.state)) tickShow(ctx.state, now, ctx.log);
       tickCity(ctx.state, dt, now, ctx.rng);
       tickSpotlight(ctx.state, now, ctx.rng);
       tickCrierAnswers(ctx.state, now);

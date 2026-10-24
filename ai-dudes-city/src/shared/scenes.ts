@@ -53,9 +53,12 @@ export interface Line {
 /** Something the server does at a moment: the leader steps forward, someone waves or sits. */
 export interface Beat {
   at: number;
-  /** `age`: the town turns into the next age now (the wave); `leave`: the old caravan heads back to camp; `launch`: the finale's fireworks. */
+  /**
+   * `age`: the town turns into the next age now (the wave); `leave`: the old caravan heads back to camp; `launch`: the finale's fireworks.
+   * A story scene's beats are played by the show runtime (story/show.ts SHOW_BEATS), which knows `step` and `emote` so far.
+   */
   do: 'step' | 'emote' | 'age' | 'leave' | 'launch';
-  /** The traveller's place in the caravan (0 the leader, 1 the daughter …). */
+  /** The traveller's place in the caravan (0 the leader, 1 the daughter …); in a story scene, the age's cast in that order (story/cast.ts castIn). */
   who: number;
   pose?: 'wave' | 'sit' | 'point' | 'shrug' | 'think' | 'cheer';
   ms?: number;
@@ -67,7 +70,16 @@ export interface Scene {
   shots: Shot[];
   lines: Line[];
   beats: Beat[];
+  /** A story scene's hard lock cap (LOCK_CAPS): the longest it may hold the town, holds included. Absent: `ms` + LOCK_SLACK_MS. */
+  lockMs?: number;
 }
+/**
+ * The longest a story scene may hold the town, from its start, holds and all (bible §5). Past it the show
+ * runtime cuts the scene as a panic exit (story/show.ts). The walk is the Call's gathering (FK-019).
+ */
+export const LOCK_CAPS = { walk: 25_000, rally: 60_000, unveiling: 120_000, lastLight: 150_000, rising: 240_000 } as const;
+/** A story scene that names no cap may run this much past its own length (only holds can make it). */
+export const LOCK_SLACK_MS = 15_000;
 /** The caravan's scenes. Saved in `city.scene`, so this list never gains or loses one: story scenes have their own ids and save. */
 export type SceneId = 'opening' | 'crossing' | 'ageTurn' | 'arrival' | 'finale';
 export const SCENE_IDS: SceneId[] = ['opening', 'crossing', 'ageTurn', 'arrival', 'finale'];
