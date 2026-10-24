@@ -13,8 +13,12 @@
 //
 // Browsers only start sound after a click or a key (OBS's browser source does not wait); until
 // then everything here is silently skipped.
+//
+// The caller may hand in the context, the random and the clock (FK-158): an OfflineAudioContext, a
+// seeded random and a clock of its own play the same sound every time, for the sound board (/sounds),
+// the offline render and level check, and the fingerprints Sami approves. CUES lists every sound.
 
-type Bus = 'music' | 'sfx' | 'ambience';
+export type Bus = 'music' | 'sfx' | 'ambience';
 export interface AudioLevels {
   music: number; // 0..1
   sfx: number;
@@ -44,6 +48,40 @@ export interface AudioHandles {
   burst(kind: string | undefined, at?: { x: number; z: number }): void;
   /** Per frame: how loud the cars are (0..1, nearest moving ones) and how near the fountain is (0..1). */
   beds(engines: number, fountain: number): void;
+  /**
+   * The clock in one go: the bars of music and the birds that start in the next `seconds` from the
+   * context's time, scheduled now just as the page's timer would have (a tick every 100 ms, each
+   * looking 0.4 s ahead). An offline render needs it: its clock stands still until it renders, so it
+   * asks once for the whole length. `only` runs one of the two, for a cue of its own.
+   */
+  ahead(seconds: number, only?: 'music' | 'birds'): void;
+}
+/** What createAudio plays into, where its random choices come from, and its clock. */
+export interface AudioOptions {
+  /**
+   * Default: a new AudioContext. An OfflineAudioContext renders whatever is scheduled before it
+   * starts, so it counts as running, with no timer and no wake-up listeners: ahead() is its clock.
+   */
+  ctx?: AudioContext | OfflineAudioContext;
+  /** Every random choice: the reverb, the noise, the music, the birds, the blips (default Math.random). */
+  rand?: () => number;
+  /**
+   * The page's clock in ms, for the throttles (default performance.now). A render passes its own: it
+   * schedules faster than real time, and a page a moment old would still be inside the fanfare's 4 s.
+   */
+  now?: () => number;
+}
+type At = { x: number; z: number };
+/** One of the town's sounds as the stream plays it: for /sounds (FK-159), the offline render (FK-161) and the fingerprints (FK-160). */
+export interface Cue {
+  /** The handle it calls, with the pose, kind or bed after a colon ('play:strum', 'beds:fountain'); the clock's two parts are 'music' and 'birds'. */
+  name: string;
+  /** The bus it is heard on (a reverb send skips the bus: see tone()). */
+  bus: Bus;
+  /** Whether `at` matters: a placed sound fades with distance from where the camera looks. */
+  placed: boolean;
+  /** Plays it once on `a` (at `at` if it is placed); a bed holds until `a.beds(0, 0)`. */
+  play(a: AudioHandles, at?: At): void;
 }
 
 const NOTE = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
@@ -61,11 +99,20 @@ const PROGRESSIONS: Chord[][] = [
   [[2, [3, 7, 10, 14]], [7, [4, 7, 10, 13]], [0, [4, 7, 11, 14]], [0, [4, 7, 9, 14]]],
 ];
 const SCALE = [0, 2, 4, 7, 9, 12, 14, 16]; // major pentatonic, for the vibraphone line
+const BPM = 86;
 
-export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandles {
-  const Ctx = (window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext) as typeof AudioContext | undefined;
-  if (!enabled || !Ctx) return silent();
-  const ctx = new Ctx();
+export function createAudio(enabled: boolean, initial: AudioLevels, opts: AudioOptions = {}): AudioHandles {
+  const ctx = enabled ? (opts.ctx ?? live()) : undefined;
+  return ctx ? town(ctx, initial, opts) : silent();
+}
+
+/** The town's sound on `ctx`. */
+function town(ctx: AudioContext | OfflineAudioContext, initial: AudioLevels, opts: AudioOptions): AudioHandles {
+  // Looked up at each call by default, as Math.random and performance.now always were; seeded, two
+  // runs are one sound.
+  const rand = opts.rand ?? (() => Math.random());
+  const pageNow = opts.now ?? (() => performance.now());
+  const offline = 'startRendering' in ctx; // an OfflineAudioContext: see AudioOptions.ctx
   const master = ctx.createGain();
   master.gain.value = 0.9;
   // A gentle limiter so a busy moment never clips the stream's audio.
@@ -89,7 +136,7 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
       buf = ctx.createBuffer(2, len, ctx.sampleRate);
     for (let ch = 0; ch < 2; ch++) {
       const d = buf.getChannelData(ch);
-      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
+      for (let i = 0; i < len; i++) d[i] = (rand() * 2 - 1) * Math.pow(1 - i / len, 2.6);
     }
     reverb.buffer = buf;
   }
@@ -100,14 +147,16 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
     const len = ctx.sampleRate * 2,
       buf = ctx.createBuffer(1, len, ctx.sampleRate),
       d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    for (let i = 0; i < len; i++) d[i] = rand() * 2 - 1;
     return buf;
   })();
-  const running = () => ctx.state === 'running';
-  // Sound needs a gesture in a normal browser; OBS starts it straight away.
-  const wake = () => void ctx.resume().catch(() => {});
-  for (const ev of ['pointerdown', 'keydown']) addEventListener(ev, wake, { once: false, passive: true });
-  wake();
+  const running = () => offline || ctx.state === 'running';
+  if (!offline) {
+    // Sound needs a gesture in a normal browser; OBS starts it straight away.
+    const wake = () => void ctx.resume().catch(() => {});
+    for (const ev of ['pointerdown', 'keydown']) addEventListener(ev, wake, { once: false, passive: true });
+    wake();
+  }
 
   // --- the camera, for distance ---
   let lx = 0,
@@ -151,7 +200,7 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
   function hiss(t: number, dur: number, opts: { freq: number; q?: number; gain?: number; bus?: Bus; type?: BiquadFilterType; attack?: number }) {
     const s = ctx.createBufferSource();
     s.buffer = noise;
-    s.playbackRate.value = 0.8 + Math.random() * 0.4;
+    s.playbackRate.value = 0.8 + rand() * 0.4;
     const f = ctx.createBiquadFilter();
     f.type = opts.type ?? 'bandpass';
     f.frequency.value = opts.freq;
@@ -161,12 +210,11 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
     g.gain.exponentialRampToValueAtTime(opts.gain ?? 0.2, t + (opts.attack ?? 0.005));
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     s.connect(f).connect(g).connect(buses[opts.bus ?? 'sfx']);
-    s.start(t, Math.random());
+    s.start(t, rand());
     s.stop(t + dur + 0.05);
   }
 
   // --- music: a scheduler a little ahead of the clock ---
-  const BPM = 86;
   const beat = 60 / BPM;
   let key = 53 - 12; // F
   let prog = PROGRESSIONS[0];
@@ -181,17 +229,17 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
   }
   function scheduleBar(t: number) {
     if (bar % 16 === 0 && bar > 0) {
-      prog = PROGRESSIONS[Math.floor(Math.random() * PROGRESSIONS.length)];
-      if (Math.random() < 0.35) key = 48 + [0, 2, 5, 7, 3][Math.floor(Math.random() * 5)] - 7;
+      prog = PROGRESSIONS[Math.floor(rand() * PROGRESSIONS.length)];
+      if (rand() < 0.35) key = 48 + [0, 2, 5, 7, 3][Math.floor(rand() * 5)] - 7;
     }
     const [root, tones] = prog[bar % prog.length];
     // Chords: on the one and, lazily, the "and" of two, a little late (swing feel).
     const voicing = tones.map((s) => key + 12 + root + s).map((m) => (m > key + 31 ? m - 12 : m));
     for (const [i, m] of voicing.entries()) epiano(m, t + i * 0.012, beat * 2.6, 0.05);
-    if (Math.random() < 0.7) for (const m of voicing.slice(1)) epiano(m, t + beat * 1.66, beat * 1.2, 0.03);
+    if (rand() < 0.7) for (const m of voicing.slice(1)) epiano(m, t + beat * 1.66, beat * 1.2, 0.03);
     // Walking bass: root, a passing note, the fifth, a lead-in to the next chord.
     const next = prog[(bar + 1) % prog.length][0];
-    const walk = [root, root + (Math.random() < 0.5 ? 2 : 4), root + 7, next + (Math.random() < 0.5 ? -1 : 1)];
+    const walk = [root, root + (rand() < 0.5 ? 2 : 4), root + 7, next + (rand() < 0.5 ? -1 : 1)];
     walk.forEach((s, i) => tone(NOTE(key - 12 + s), t + i * beat, beat * 0.9, { type: 'triangle', gain: 0.16, attack: 0.02, bus: 'music' }));
     // Brushes: a soft kick on one and three, a swish on every beat, swung hats.
     for (let i = 0; i < 4; i++) {
@@ -201,10 +249,10 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
       hiss(bt + beat * 0.66, 0.05, { freq: 8000, q: 1.2, gain: 0.025, bus: 'music', type: 'highpass' });
     }
     // Now and then a vibraphone line wanders over the top.
-    if (bar % 8 >= 4 && Math.random() < 0.8)
+    if (bar % 8 >= 4 && rand() < 0.8)
       for (let i = 0; i < 4; i++) {
-        if (Math.random() < 0.35) continue;
-        melodyNote = Math.max(0, Math.min(SCALE.length - 1, melodyNote + Math.round((Math.random() - 0.5) * 3)));
+        if (rand() < 0.35) continue;
+        melodyNote = Math.max(0, Math.min(SCALE.length - 1, melodyNote + Math.round((rand() - 0.5) * 3)));
         const m = key + 24 + SCALE[melodyNote];
         const bt = t + i * beat + (i % 2 ? beat * 0.16 : 0);
         tone(NOTE(m), bt, beat * 1.6, { type: 'sine', gain: 0.05, attack: 0.005, bus: 'music', send: 0.5 });
@@ -216,10 +264,10 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
   // --- ambience: birds now and then, a hum underneath, the fountain when near ---
   let nextBirdAt = 0;
   function bird(t: number) {
-    const base = 2400 + Math.random() * 1800,
-      n = 2 + Math.floor(Math.random() * 4),
-      pan = Math.random() * 1.4 - 0.7;
-    for (let i = 0; i < n; i++) tone(base * (1 + Math.random() * 0.25), t + i * 0.11, 0.08, { type: 'sine', gain: 0.03, attack: 0.005, bus: 'ambience', glideTo: base * (0.75 + Math.random() * 0.6), pan });
+    const base = 2400 + rand() * 1800,
+      n = 2 + Math.floor(rand() * 4),
+      pan = rand() * 1.4 - 0.7;
+    for (let i = 0; i < n; i++) tone(base * (1 + rand() * 0.25), t + i * 0.11, 0.08, { type: 'sine', gain: 0.03, attack: 0.005, bus: 'ambience', glideTo: base * (0.75 + rand() * 0.6), pan });
   }
   const bed = (freq: number, q: number, type: BiquadFilterType) => {
     const s = ctx.createBufferSource();
@@ -252,25 +300,29 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
   engine.connect(engineFilter).connect(engineGain).connect(buses.sfx);
   engine.start();
 
-  // The clock: a quarter of a second ahead, checked ten times a second.
-  setInterval(() => {
-    if (!running()) return;
-    const now = ctx.currentTime;
-    if (nextBarAt < now) nextBarAt = now + 0.1;
-    while (nextBarAt < now + 0.4) {
-      scheduleBar(nextBarAt);
-      nextBarAt += beat * 4;
+  // The clock: a quarter of a second ahead, checked ten times a second (offline: by ahead()).
+  function tick(now: number, only?: 'music' | 'birds') {
+    if (only !== 'birds') {
+      if (nextBarAt < now) nextBarAt = now + 0.1;
+      while (nextBarAt < now + 0.4) {
+        scheduleBar(nextBarAt);
+        nextBarAt += beat * 4;
+      }
     }
-    if (now > nextBirdAt) {
+    if (only !== 'music' && now > nextBirdAt) {
       bird(now + 0.05);
-      nextBirdAt = now + 2 + Math.random() * 6;
+      nextBirdAt = now + 2 + rand() * 6;
     }
-  }, 100);
+  }
+  if (!offline)
+    setInterval(() => {
+      if (running()) tick(ctx.currentTime);
+    }, 100);
 
   // Effects within a burst of each other are thinned (a crowd talking is not a wall of blips).
   const last = new Map<string, number>();
   const gap = (kind: string, ms: number) => {
-    const t = performance.now();
+    const t = pageNow();
     if ((last.get(kind) ?? 0) > t - ms) return false;
     last.set(kind, t);
     return true;
@@ -282,9 +334,13 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
       return running();
     },
     listen(x, z, half) {
-      lx = x;
-      lz = z;
-      lhalf = half;
+      // A camera mid-change can hand over a NaN (a perspective one, say), and a NaN gain throws:
+      // keep the last good place and size instead.
+      if (Number.isFinite(x) && Number.isFinite(z)) {
+        lx = x;
+        lz = z;
+      }
+      if (Number.isFinite(half)) lhalf = half;
     },
     levels(next) {
       Object.assign(levels, next);
@@ -298,11 +354,11 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
       const words = Math.min(7, Math.max(2, text.split(/\s+/).length));
       let t = when();
       for (let i = 0; i < words; i++) {
-        const f = base * (0.85 + Math.random() * 0.45);
-        const d = 0.07 + Math.random() * 0.06;
-        tone(f, t, d, { type: 'triangle', gain: 0.07 * v, attack: 0.01, glideTo: f * (Math.random() < 0.5 ? 1.25 : 0.82) });
+        const f = base * (0.85 + rand() * 0.45);
+        const d = 0.07 + rand() * 0.06;
+        tone(f, t, d, { type: 'triangle', gain: 0.07 * v, attack: 0.01, glideTo: f * (rand() < 0.5 ? 1.25 : 0.82) });
         tone(f * 2, t, d * 0.8, { type: 'sine', gain: 0.025 * v, attack: 0.01 });
-        t += d + 0.03 + Math.random() * 0.05;
+        t += d + 0.03 + rand() * 0.05;
       }
     },
     coins(at) {
@@ -434,11 +490,47 @@ export function createAudio(enabled: boolean, initial: AudioLevels): AudioHandle
       engine.frequency.setTargetAtTime(48 + engines * 30, t, 0.4);
       fountainBed.gain.setTargetAtTime(fountain * 0.07, t, 0.4);
     },
+    ahead(seconds, only) {
+      if (!running() || !Number.isFinite(seconds)) return;
+      const now = ctx.currentTime;
+      for (let i = 0; i / 10 + 0.4 < seconds; i++) tick(now + i / 10, only);
+    },
   };
 }
+
+/** The page's own context: a new AudioContext, if the browser has Web Audio. */
+function live(): AudioContext | undefined {
+  const Ctx = (window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext) as typeof AudioContext | undefined;
+  return Ctx && new Ctx();
+}
+
+const placed = (name: string, play: (a: AudioHandles, at?: At) => void): Cue => ({ name, bus: 'sfx', placed: true, play });
+/** Every sound but the blips (speech() is pinned on its own, scripts/audio-voice.test.ts), as main.ts calls them. */
+export const CUES: readonly Cue[] = [
+  { name: 'doorbell', bus: 'sfx', placed: false, play: (a) => a.doorbell() },
+  { name: 'fanfare', bus: 'sfx', placed: false, play: (a) => a.fanfare() },
+  { name: 'sting', bus: 'sfx', placed: false, play: (a) => a.sting() },
+  placed('built', (a, at) => a.built(at)),
+  placed('hammer', (a, at) => a.hammer(at)),
+  placed('coins', (a, at) => a.coins(at)),
+  placed('boom', (a, at) => a.boom(at)),
+  placed('pew', (a, at) => a.pew(at)),
+  placed('bonk', (a, at) => a.bonk(at)),
+  placed('thud', (a, at) => a.thud(at)),
+  placed('bray', (a, at) => a.bray(at)),
+  // Each pose play() has a sound for, then the chime every other pose gets.
+  ...['shoot', 'swim', 'strum', 'jump', 'swing', 'kick', 'punch', 'lift'].map((pose) => placed(`play:${pose}`, (a, at) => a.play(pose, at))),
+  placed('play:other', (a, at) => a.play(undefined, at)),
+  ...['smoke', 'confetti', 'hearts', 'sparkles'].map((kind) => placed(`burst:${kind}`, (a, at) => a.burst(kind, at))),
+  { name: 'beds:engines', bus: 'sfx', placed: false, play: (a) => a.beds(1, 0) },
+  { name: 'beds:fountain', bus: 'ambience', placed: false, play: (a) => a.beds(0, 1) },
+  // The clock: 32 bars of the town tune (89 s), and a minute of birds (one call every 2–8 s).
+  { name: 'music', bus: 'music', placed: false, play: (a) => a.ahead((32 * 4 * 60) / BPM, 'music') },
+  { name: 'birds', bus: 'ambience', placed: false, play: (a) => a.ahead(60, 'birds') },
+];
 
 /** No sound at all (switched off, or no Web Audio). */
 function silent(): AudioHandles {
   const nothing = () => {};
-  return { on: false, burst: nothing, play: nothing, listen: nothing, levels: nothing, speech: nothing, coins: nothing, hammer: nothing, built: nothing, doorbell: nothing, fanfare: nothing, sting: nothing, boom: nothing, pew: nothing, bonk: nothing, thud: nothing, bray: nothing, beds: nothing };
+  return { on: false, burst: nothing, play: nothing, listen: nothing, levels: nothing, speech: nothing, coins: nothing, hammer: nothing, built: nothing, doorbell: nothing, fanfare: nothing, sting: nothing, boom: nothing, pew: nothing, bonk: nothing, thud: nothing, bray: nothing, beds: nothing, ahead: nothing };
 }
