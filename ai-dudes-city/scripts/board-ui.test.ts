@@ -12,12 +12,16 @@ import {
   TICKER_MS,
   TickerClock,
   boardFor,
+  checkBoard,
   demoBoard,
+  fitBar,
   fitUnder,
+  goldCount,
   goldFill,
   goldText,
   knotAt,
   liftUnder,
+  redCount,
   redFill,
   redText,
   reserved,
@@ -57,6 +61,49 @@ test('the bars: "BIG HUT 35%" on gold, "BRIDGE 3/8" on red, "BRIDGE · soon" bef
   assert.equal(goldText(board({ gold: { word: 'BIG HUT', pct: -3 } })), 'BIG HUT 0%');
   assert.equal(goldText(board({ gold: { word: 'BIG HUT', pct: 41.6 } })), 'BIG HUT 42%');
   assert.equal(goldText(board({ gold: { word: 'BIG HUT', pct: Number.NaN } })), 'BIG HUT 0%');
+});
+
+test('a long bar word is cut, never its number: "HEALER\'S… 2/4", not "HEALER\'S HUT…"', () => {
+  // A stand-in for the bar's width test: so many characters fit.
+  const room = (n: number) => (t: string) => [...t].length <= n;
+  assert.equal(fitBar('BIG HUT', '35%', room(16)), 'BIG HUT 35%', 'fits: as it is');
+  // The story bible's later jobs that measured too long at 54 px (Fredoka 700, 1920×1080).
+  assert.equal(fitBar("HEALER'S HUT", '2/4', room(14)), "HEALER'S… 2/4");
+  assert.equal(fitBar('ROYAL MOAT', '100%', room(14)), 'ROYAL… 100%');
+  assert.equal(fitBar('GOLF COURSE', '100%', room(14)), 'GOLF… 100%');
+  assert.equal(fitBar("ASH'S CAIRN", '12/20', room(14)), "ASH'S… 12/20");
+  assert.equal(fitBar('SCRAP ROCKET', '3/8', room(14)), 'SCRAP… 3/8');
+  assert.equal(fitBar('BIG OLD HUT', '35%', room(13)), 'BIG OLD… 35%', 'as many whole words as fit');
+  assert.equal(fitBar('BRIDGE', '· soon', room(8)), 'BRIDGE · soon', 'one word too long stays whole (CSS clips it), never an empty bar');
+  // The numbers are the bar texts' tails.
+  const b = board();
+  assert.equal(goldText(b), `${b.gold.word} ${goldCount(b)}`);
+  assert.equal(redText(b), `${b.red.word} ${redCount(b)}`);
+  assert.equal(redCount(board({ red: { word: 'BRIDGE' } })), '· soon');
+});
+
+test('a malformed board from the server blanks the strip at worst, never throws in apply()', () => {
+  const b = board({ now: 'NOW: fix the bridge' });
+  assert.deepEqual(checkBoard(b), b, 'a whole board as it is');
+  assert.equal(checkBoard(undefined), undefined);
+  // Missing parts: nobody on a side, no ticker line.
+  const bare = checkBoard({ gold: { word: 'BIG HUT', pct: 35 }, red: { word: 'BRIDGE' } } as BoardView);
+  assert.ok(bare);
+  assert.deepEqual(bare.tally, { red: 0, gold: 0 });
+  assert.deepEqual(bare.ticker, []);
+  assert.equal(knotAt(bare.tally), 0.5);
+  assert.equal(goldText(bare), 'BIG HUT 35%');
+  assert.equal(redText(bare), 'BRIDGE · soon');
+  assert.deepEqual(checkBoard({ ...b, tally: { gold: 3 } } as unknown as BoardView)?.tally, { red: 0, gold: 3 });
+  // No bars: no board.
+  assert.equal(checkBoard({ red: { word: 'BRIDGE' }, tally: { red: 1, gold: 1 }, ticker: [] } as unknown as BoardView), undefined);
+  assert.equal(checkBoard({ gold: { word: 'BIG HUT', pct: 35 } } as unknown as BoardView), undefined);
+  // Odd ticker entries and a non-string NOW are dropped; a missing word reads as none.
+  const odd = checkBoard({ ...b, ticker: ['a', 7, '', null, 'b'], now: 3 } as unknown as BoardView);
+  assert.deepEqual(odd?.ticker, ['a', 'b']);
+  assert.equal(odd?.now, undefined);
+  assert.equal(checkBoard({ ...b, gold: { pct: 10 } } as unknown as BoardView)?.gold.word, '');
+  assert.equal(new TickerClock().pick(bare.ticker, 0, bare.now), undefined, 'no line, no throw');
 });
 
 test('the tug line: the rope is gold up to the knot, which sits at gold’s share of everyone on a side', () => {
@@ -279,6 +326,22 @@ test('scenes: the strip fades out with the rest of the HUD; reduced motion: no s
   // The troublemaker banner and the stream's knockout board drop under the strip while it shows.
   assert.equal(decl('body.board #happening-wrap', 'top'), 'calc(var(--board-b,0px) + 12px)');
   assert.equal(decl('body.stream.board #side', 'top'), 'calc((var(--board-b,0px) + 12px) / var(--ui-scale,1))', '#side is zoomed on the stream');
+  // On narrow pages the banner never sits higher than today's (118 px, 100 px on a phone), clear of the header.
+  const banner = RULES.filter((r) => r.sel === 'body.board #happening-wrap').map((r) => r.decls.top);
+  assert.deepEqual(banner, ['calc(var(--board-b,0px) + 12px)', 'max(118px,calc(var(--board-b,0px) + 12px))', 'max(100px,calc(var(--board-b,0px) + 12px))']);
+  assert.ok(CSS.includes('@media(max-width:650px){body.board #happening-wrap{top:max(100px,'), 'the phone clamp in the phone query');
+  // In a scene the banner and the Board have faded, so the tags and bubbles have the top of the frame back.
+  assert.match(MAIN, /reserve: document\.body\.classList\.contains\('cinema'\) \? undefined : reserved\(bannerRect, boardUi\?\.rect\(\)\)/);
+});
+
+test('a new strip shows the knot in its place: --knot is set before anything measures the strip', () => {
+  const BOARD_TS = readFileSync('client/dudes/board.ts', 'utf8');
+  const body = BOARD_TS.slice(BOARD_TS.indexOf('function update('), BOARD_TS.indexOf('function rect('));
+  const knotSet = body.indexOf("rope.style.setProperty('--knot'");
+  assert.ok(knotSet > 0);
+  assert.ok(knotSet < body.indexOf('setBar('), 'before the words are fitted (that reads the layout)');
+  assert.ok(knotSet < body.indexOf('setLine('), 'and before the ticker is sized');
+  assert.ok(body.indexOf('checkBoard(') < body.indexOf('if (!board)'), 'the board is checked first');
 });
 
 test('Story OFF: no #board in the markup, and the caravan panel comes back when the board goes', () => {
@@ -288,7 +351,6 @@ test('Story OFF: no #board in the markup, and the caravan panel comes back when 
   assert.match(MAIN, /const boardUi = !operatorMode && !playerMode \? createBoard\(document, reduced\) : undefined;/);
   assert.match(MAIN, /const board = boardFor\(next\.town, next\.dudes, location\.search, msg\.play\);/);
   assert.match(MAIN, /renderCaravan\(board && boardUi \? undefined : next\.town\?\.caravan, next\.town\?\.age\);/);
-  assert.match(MAIN, /reserve: reserved\(bannerRect, boardUi\?\.rect\(\)\)/);
   // The only renderCaravan call is that one.
   assert.equal([...MAIN.matchAll(/renderCaravan\(/g)].length, 2, 'the definition and the one call');
 });

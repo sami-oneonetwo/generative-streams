@@ -1234,7 +1234,8 @@ function start() {
       hovered,
       selected: selected?.kind === 'dude' ? selected.id : undefined,
       uiScale,
-      reserve: reserved(bannerRect, boardUi?.rect()),
+      // In a scene the banner and the Board have faded out, so the tags and bubbles may use the top again.
+      reserve: document.body.classList.contains('cinema') ? undefined : reserved(bannerRect, boardUi?.rect()),
     });
     countdown();
     if (selected && now - lastInspectAt > 500) {

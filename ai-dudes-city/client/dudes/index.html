@@ -99,6 +99,7 @@ body.story{--letterbox:7vh}body.stream.story :is(#feed,.invite,#caravan){display
 #board .ticker{display:grid;justify-items:center;max-width:calc(1840 * var(--px));overflow:hidden;transition:width .6s ease}#board .ticker[hidden]{display:none}
 #board .ticker .line{grid-area:1/1;white-space:nowrap;transition:opacity .3s ease-in}#board .ticker .out{opacity:0}#board .ticker .in{animation:ticker-in .3s ease-out .3s both}@keyframes ticker-in{from{opacity:0}}
 body.board #happening-wrap{top:calc(var(--board-b,0px) + 12px)}body.stream.board #side{top:calc((var(--board-b,0px) + 12px) / var(--ui-scale,1))}
+@media(max-width:1000px){body.board #happening-wrap{top:max(118px,calc(var(--board-b,0px) + 12px))}}@media(max-width:650px){body.board #happening-wrap{top:max(100px,calc(var(--board-b,0px) + 12px))}}
 @media(prefers-reduced-motion:reduce){#board,#board *{transition:none}#board .ticker .in{animation:none}}
 </style></head><body><main id="world" aria-label="Live field of chat characters"></main>
 <header><div class="invite">Say anything in chat: you move in and get a lot. Build a home, open a café, chip in for the town.<small class="cmds">!help · !town · !top · !me · !play</small><span id="play-line" hidden>Walk your character: <b id="play-url"></b> <span id="play-seats"></span></span></div></header>

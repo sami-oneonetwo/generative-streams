@@ -42,7 +42,11 @@ const count = (n: number) => (Number.isFinite(n) ? Math.max(0, Math.round(n)) : 
 
 /** The gold bar: "BIG HUT 35%". */
 export function goldText(b: BoardView): string {
-  return `${b.gold.word} ${Math.round(goldFill(b) * 100)}%`;
+  return `${b.gold.word} ${goldCount(b)}`;
+}
+/** The gold bar's number: "35%". */
+export function goldCount(b: BoardView): string {
+  return `${Math.round(goldFill(b) * 100)}%`;
 }
 /** How full the gold bar is (0..1). */
 export function goldFill(b: BoardView): number {
@@ -50,9 +54,21 @@ export function goldFill(b: BoardView): number {
 }
 /** The red bar: "BRIDGE 3/8", or "BRIDGE · soon" while the ask has no count yet (before the opening). */
 export function redText(b: BoardView): string {
-  const { word, have, need } = b.red;
-  if (!need || have === undefined) return `${word} · soon`;
-  return `${word} ${Math.min(count(have), count(need))}/${count(need)}`;
+  return `${b.red.word} ${redCount(b)}`;
+}
+/** The red bar's number: "3/8", or "· soon". */
+export function redCount(b: BoardView): string {
+  const { have, need } = b.red;
+  if (!need || have === undefined) return '· soon';
+  return `${Math.min(count(have), count(need))}/${count(need)}`;
+}
+/**
+ * A bar's word and number as they fit (`fits` measures): the number always whole, only the word cut at
+ * a word ("HEALER'S… 2/4"), because the number is what the bar is there to show.
+ */
+export function fitBar(word: string, num: string, fits: (t: string) => boolean): string {
+  const join = (w: string) => `${w} ${num}`;
+  return join(fitWords(word, (w) => fits(join(w))));
 }
 /** How full the red bar is (0..1); empty until the ask has a count. */
 export function redFill(b: BoardView): number {
@@ -67,6 +83,24 @@ export function knotAt(tally: BoardView['tally']): number {
     red = count(tally.red);
   const share = gold + red ? gold / (gold + red) : 0.5;
   return KNOT_END + share * (1 - 2 * KNOT_END);
+}
+
+/**
+ * The board with its parts checked, since the server's data is new (FK-011): a missing tally counts
+ * nobody, a missing ticker shows no line, and a board without its two bars is no board. So a malformed
+ * board blanks the strip at worst, never throws in apply() ahead of the dudes and the builds.
+ */
+export function checkBoard(b: BoardView | undefined): BoardView | undefined {
+  if (!b?.gold || !b.red) return undefined;
+  const ticker = Array.isArray(b.ticker) ? b.ticker.filter((l) => typeof l === 'string' && l) : [];
+  return {
+    ...b,
+    gold: { word: String(b.gold.word ?? ''), pct: b.gold.pct },
+    red: { ...b.red, word: String(b.red.word ?? '') },
+    tally: { red: b.tally?.red ?? 0, gold: b.tally?.gold ?? 0 },
+    ticker,
+    now: typeof b.now === 'string' && b.now ? b.now : undefined,
+  };
 }
 
 // --- the demo -------------------------------------------------------------------------------------
@@ -177,7 +211,7 @@ export interface BoardUi {
   rect(): Rect | undefined;
 }
 
-type Bar = { root: HTMLElement; fill: HTMLElement; words: HTMLElement[]; text: string; fill01: number };
+type Bar = { root: HTMLElement; fill: HTMLElement; words: HTMLElement[]; word: string; num: string; fill01: number };
 
 const make = <K extends keyof HTMLElementTagNameMap>(doc: Document, tag: K, cls?: string, text?: string) => {
   const e = doc.createElement(tag);
@@ -214,7 +248,7 @@ export function createBoard(doc: Document = document, reduced = matchMedia('(pre
     const fill = face('face fill');
     fill.setAttribute('aria-hidden', 'true');
     box.append(face('face'), fill);
-    return { root: box, fill, words, text: '', fill01: -1 };
+    return { root: box, fill, words, word: '', num: '', fill01: -1 };
   }
 
   function build(): HTMLElement {
@@ -242,25 +276,27 @@ export function createBoard(doc: Document = document, reduced = matchMedia('(pre
     return el;
   }
 
-  /** The word at 64 px, smaller for a long one (never under 54), cut at a word if even that won't fit. */
+  /** The word at 64 px, smaller for a long one (never under 54); if even that won't fit, the word is cut at a word and the number stays whole. */
   function fit(b: Bar) {
     const [probe] = b.words;
+    const text = `${b.word} ${b.num}`;
     for (const w of b.words) {
       w.style.fontSize = '';
-      w.textContent = b.text;
+      w.textContent = text;
     }
     const room = probe.clientWidth;
     if (!room || probe.scrollWidth <= room) return;
     const size = Math.max(WORD_MIN_PX, Math.floor((WORD_PX * room) / probe.scrollWidth));
     for (const w of b.words) w.style.fontSize = `calc(${size} * var(--px))`;
     if (probe.scrollWidth <= probe.clientWidth) return;
-    const text = fitWords(b.text, (t) => ((probe.textContent = t), probe.scrollWidth <= probe.clientWidth));
-    for (const w of b.words) w.textContent = text;
+    const cut = fitBar(b.word, b.num, (t) => ((probe.textContent = t), probe.scrollWidth <= probe.clientWidth));
+    for (const w of b.words) w.textContent = cut;
   }
-  function setBar(b: Bar, text: string, fill01: number, from: 'left' | 'right') {
-    if (text !== b.text) {
-      b.text = text;
-      b.root.setAttribute('aria-label', text);
+  function setBar(b: Bar, word: string, num: string, fill01: number, from: 'left' | 'right') {
+    if (word !== b.word || num !== b.num) {
+      b.word = word;
+      b.num = num;
+      b.root.setAttribute('aria-label', `${word} ${num}`);
       fit(b);
       measured = false;
     }
@@ -313,7 +349,8 @@ export function createBoard(doc: Document = document, reduced = matchMedia('(pre
   win.addEventListener('resize', refit);
   doc.fonts?.addEventListener('loadingdone', refit);
 
-  function update(board: BoardView | undefined, now: number) {
+  function update(given: BoardView | undefined, now: number) {
+    const board = checkBoard(given);
     if (!board) {
       if (!root) return;
       root.remove();
@@ -329,17 +366,19 @@ export function createBoard(doc: Document = document, reduced = matchMedia('(pre
       root = build();
       doc.body.classList.add('board');
     }
-    setBar(gold, goldText(board), goldFill(board), 'left');
-    setBar(red, redText(board), redFill(board), 'right');
-    const g = String(count(board.tally.gold)),
-      r = String(count(board.tally.red));
-    if (goldN.textContent !== g) goldN.textContent = g;
-    if (redN.textContent !== r) redN.textContent = r;
+    // The knot first: on a new strip it is set before anything measures (fitting the words does), so
+    // the rope's first style already has it and the knot appears in its place, not sliding from the middle.
     const k = knotAt(board.tally);
     if (k !== knot) {
       knot = k;
       rope.style.setProperty('--knot', `${(k * 100).toFixed(2)}%`);
     }
+    setBar(gold, board.gold.word, goldCount(board), goldFill(board), 'left');
+    setBar(red, board.red.word, redCount(board), redFill(board), 'right');
+    const g = String(count(board.tally.gold)),
+      r = String(count(board.tally.red));
+    if (goldN.textContent !== g) goldN.textContent = g;
+    if (redN.textContent !== r) redN.textContent = r;
     setLine(clock.pick(board.ticker, now, board.now));
     if (!measured) rect(); // so the troublemaker banner, measured next, already sits under the strip
   }
