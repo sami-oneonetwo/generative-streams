@@ -10,6 +10,7 @@ import { test } from 'node:test';
 import { harness } from './harness';
 import { cityOf, setAge } from '../src/worlds/ai-dudes/city';
 import { damageBuild } from '../src/worlds/ai-dudes/damage';
+import { startHappening } from '../src/worlds/ai-dudes/events';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
 import { placeJob, reserved } from '../src/worlds/ai-dudes/sim';
 import { FOLLY, FOLLY_DEV, follyOf, raiseFolly, unveilFolly } from '../src/worlds/ai-dudes/story/folly';
@@ -209,6 +210,18 @@ test("under wraps or unveiled, a chatter's weapon does no damage to the Folly", 
   assert.equal(dev('folly-retarp'), undefined);
   assert.ok(o.silhouette, 'under wraps again');
   assert.match(String(dev('folly-retarp')), /already under wraps/);
+});
+
+test('no troublemaker repaints, squashes or tows the Folly', async () => {
+  const { h, ctx, dev } = await storyTown();
+  dev('folly-raise');
+  const o = follyOf(h.state)!;
+  for (const kind of ['painter', 'squasher', 'tow'] as const) {
+    h.state.happening = undefined;
+    h.state.npcs = [];
+    startHappening(h.state, h.now, ctx.rng, kind);
+    assert.ok(!(h.state.npcs ?? []).some((n) => n.plan.some((s) => 'objectId' in s && s.objectId === o.id)), `${kind}: not on its list`);
+  }
 });
 
 test("an age turn keeps the Folly as it was built; the next age's goes up in its place (one plot in M1)", async () => {

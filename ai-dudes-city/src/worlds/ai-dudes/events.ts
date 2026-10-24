@@ -162,7 +162,7 @@ export function wearing(look: DudeLook, colour: string): boolean {
 export function startHappening(state: DudesState, now: number, rng: () => number, kind?: NpcKind): string | undefined {
   if (state.happening) return 'something is already happening';
   const awakeDudes = state.dudes.filter((d) => awake(d, now) && !d.muted);
-  const builds = state.objects.filter((o) => !state.hatPiles?.[o.id] && !inUse(state, o.id));
+  const builds = state.objects.filter((o) => !state.hatPiles?.[o.id] && !inUse(state, o.id) && !o.folly); // hook FK-023: never the head's Folly (no repaint, squash or tow of the evidence)
   // Pick a kind that has something to do; prefer builds whose chatters are here to see it.
   const options: NpcKind[] = [];
   if (builds.length) options.push('painter', 'squasher', 'tow');
