@@ -176,7 +176,7 @@ export function ownerOfLot(state: DudesState, plotId: string | undefined): Dude 
 }
 export const freeLots = (state: DudesState) => homePlots().filter((p) => !cityOf(state).plots[p.id]);
 
-/** Hand a newcomer the next free lot (nearest the square first). Undefined when the town is full. */
+/** Hand a newcomer the next free lot (block by block from the bridge, shared/city.ts BLOCK_ORDER). Undefined when the town is full. */ // hook FK-075
 export function claimLot(state: DudesState, d: Dude, now: number): PlotInfo | undefined {
   const own = ownLot(state, d);
   if (own) return own;

@@ -1,6 +1,6 @@
 // Moving a town onto a new street layout (shared/city.ts LAYOUT). A lot that is still there keeps its
-// place; any other old lot is matched with a spare new lot in the order lots are handed out (nearest
-// the square first), so the town keeps its shape: whoever lived next to the square still does. Builds move with their lot, keeping
+// place; any other old lot is matched with a spare new lot, both in the order lots are handed out (now block
+// by block from the bridge, shared/city.ts BLOCK_ORDER; hook FK-075), so the first lots stay together. Builds move with their lot, keeping
 // where they stood on it; anything else, and everyone walking about, is scaled onto the new town.
 // Runs once at start on a save from an older layout. Zero AI.
 import { CITY_BOUNDS, LAYOUT, allPlots, homePlots, civicPlots, layoutPlots, type PlotInfo } from '../../shared/city';
@@ -47,7 +47,7 @@ const EDGE2 = 78 + 35 + 8;
 
 /**
  * Old lot id → new lot. A lot that is still there (same block, same cell) keeps its place; the rest
- * go, nearest the square first, to the new lots nobody was given.
+ * go, in hand-out order (block by block from the bridge; hook FK-075), to the new lots nobody was given.
  */
 function lotMap(from: number): Map<string, { old: OldLot; lot: PlotInfo | undefined }> {
   const old = from === 1 ? layout1() : layout2();
