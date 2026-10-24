@@ -330,8 +330,9 @@ test('scenes: the strip fades out with the rest of the HUD; reduced motion: no s
   const banner = RULES.filter((r) => r.sel === 'body.board #happening-wrap').map((r) => r.decls.top);
   assert.deepEqual(banner, ['calc(var(--board-b,0px) + 12px)', 'max(118px,calc(var(--board-b,0px) + 12px))', 'max(100px,calc(var(--board-b,0px) + 12px))']);
   assert.ok(CSS.includes('@media(max-width:650px){body.board #happening-wrap{top:max(100px,'), 'the phone clamp in the phone query');
-  // In a scene the banner and the Board have faded, so the tags and bubbles have the top of the frame back.
-  assert.match(MAIN, /reserve: document\.body\.classList\.contains\('cinema'\) \? undefined : reserved\(bannerRect, boardUi\?\.rect\(\)\)/);
+  // In a scene the banners and the Board have faded, so the tags and bubbles have the top of the frame back
+  // (FK-021: the GATHER banner holds the strip during a Call, so the tags keep out of it too).
+  assert.match(MAIN, /reserve: document\.body\.classList\.contains\('cinema'\) \? undefined : reserved\(bannerRect, reserved\(boardUi\?\.rect\(\), showUi\?\.rect\(\)\)\)/);
 });
 
 test('a new strip shows the knot in its place: --knot is set before anything measures the strip', () => {

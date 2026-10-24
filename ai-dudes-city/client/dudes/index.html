@@ -101,6 +101,34 @@ body.story{--letterbox:7vh}body.stream.story :is(#feed,.invite,#caravan){display
 body.board #happening-wrap{top:calc(var(--board-b,0px) + 12px)}body.stream.board #side{top:calc((var(--board-b,0px) + 12px) / var(--ui-scale,1))}
 @media(max-width:1000px){body.board #happening-wrap{top:max(118px,calc(var(--board-b,0px) + 12px))}}@media(max-width:650px){body.board #happening-wrap{top:max(100px,calc(var(--board-b,0px) + 12px))}}
 @media(prefers-reduced-motion:reduce){#board,#board *{transition:none}#board .ticker .in{animation:none}}
+/* The show (FK-021, client/dudes/show.ts; the FK-005 mock's Call, reveal, hero shot and NOW frames). show.ts builds each piece the first time it shows and takes
+   them all off when the page leaves the story look, so none of this reaches a Story OFF page. The GATHER banner (title 72, premise 54, clock 64) holds the top strip in place of the
+   Board during a Call; the NOW card (word 96, chip 64) sits centre-lower; in a scene the title card (140 caps: a 20 px stroke painted under the fill shows
+   10 px of ink) and the subtitle (58, one line) with its 54 px speaker chip in the bottom bar. A piece shows with .up; the Board steps aside while the banner
+   or the NOW card is up; in the story look the HUD fades with the letterbox (0.9 s). */
+:is(#show-banner,#show-now,#show-title,#show-sub){position:fixed;z-index:3;pointer-events:none;opacity:0;visibility:hidden}:is(#show-banner,#show-now,#show-title,#show-sub).up{opacity:1;visibility:visible}
+body.story :is(header,#side,#corner,#feed,#caravan,#happening-wrap,#people,#fixture,#board){transition-duration:.9s}body:is(.show-call,.show-now) #board{opacity:0}
+#show-banner{top:calc(14 * var(--px));left:0;right:0;margin:0 auto;width:calc(1240 * var(--px));z-index:2;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:calc(24 * var(--px));row-gap:calc(2 * var(--px));padding:calc(18 * var(--px)) calc(26 * var(--px)) calc(22 * var(--px)) calc(22 * var(--px));transition:opacity .9s,visibility 0s .9s}
+#show-banner.up{transition:opacity .9s}body.cinema #show-banner{opacity:0}
+:is(#show-banner,#show-now,#show-sub) .seal{flex:none;display:grid;place-items:center;border-radius:50%;background:var(--cream);border:var(--outline)}:is(#show-banner,#show-now,#show-sub) svg{display:block;width:100%;height:100%;overflow:visible}
+#show-banner .seal{grid-row:span 2;width:calc(104 * var(--px));height:calc(104 * var(--px));padding:calc(12 * var(--px));background:var(--gold)}
+#show-banner .title{min-width:0;overflow:hidden;white-space:nowrap;font:700 calc(72 * var(--px))/1.05 var(--font-display)}
+#show-banner .clock{grid-row:span 2;min-width:calc(190 * var(--px));height:calc(92 * var(--px));padding:0 calc(34 * var(--px));font:700 calc(64 * var(--px))/1 var(--font-display);font-variant-numeric:tabular-nums}
+#show-banner .premise{min-width:0;overflow:hidden;white-space:nowrap;font:800 calc(54 * var(--px))/1.1 var(--font-text)}
+#show-now{left:0;right:0;top:calc(612 * var(--px));width:max-content;max-width:calc(1760 * var(--px));margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:calc(22 * var(--px));padding:calc(42 * var(--px)) calc(64 * var(--px)) calc(40 * var(--px));transition:opacity .6s,visibility 0s .6s}#show-now.up{transition:opacity .6s}
+#show-now .tab{position:absolute;left:calc(-30 * var(--px));top:calc(-40 * var(--px));rotate:-7deg;height:calc(78 * var(--px));padding:0 calc(30 * var(--px));font:700 calc(54 * var(--px))/1 var(--font-display)}
+#show-now .word{max-width:calc(1600 * var(--px));font:700 calc(96 * var(--px))/1.05 var(--font-display);text-align:center;text-wrap:balance}
+#show-now .chip{height:calc(92 * var(--px));padding:0 calc(38 * var(--px));gap:calc(16 * var(--px));font:700 calc(64 * var(--px))/1 var(--font-display)}#show-now .chip svg{width:calc(62 * var(--px));height:calc(62 * var(--px));margin-left:calc(-10 * var(--px))}
+#show-title{left:0;right:0;top:calc(var(--letterbox) + 42 * var(--px));z-index:4;padding:0 calc(60 * var(--px));text-align:center;white-space:nowrap;font:700 calc(140 * var(--px))/1.1 var(--font-display);letter-spacing:.015em;text-transform:uppercase;color:var(--gold);-webkit-text-stroke:calc(20 * var(--px)) var(--ink);paint-order:stroke fill;text-shadow:0 calc(10 * var(--px)) 0 #0006;transition:opacity .3s,visibility 0s .3s}
+#show-title.up{transition:opacity .3s}#show-title.cream{color:var(--cream)}#show-title.wrap{white-space:normal;text-wrap:balance}
+#show-sub{left:0;right:0;bottom:0;height:var(--letterbox);z-index:21;display:flex;align-items:center;justify-content:center;gap:calc(22 * var(--px));padding:0 calc(40 * var(--px));transition:opacity .3s,visibility 0s .3s}#show-sub.up{transition:opacity .3s}
+#show-sub .who{flex:none;height:calc(66 * var(--px));padding:0 calc(26 * var(--px));gap:calc(10 * var(--px));box-shadow:none;font:700 calc(54 * var(--px))/1 var(--font-display);text-transform:uppercase}
+#show-sub .who .seal{width:calc(54 * var(--px));height:calc(54 * var(--px));margin-left:calc(-18 * var(--px));padding:calc(6 * var(--px));border-width:calc(4 * var(--px))}
+#show-sub .who.moss{background:var(--moss);color:var(--cream)}#show-sub .who.oak{background:var(--oak);color:var(--ink)}#show-sub .who.kit{background:var(--kit);color:var(--cream)}#show-sub .who.ash{background:var(--ash);color:var(--cream)}
+#show-sub .line{min-width:0;overflow:hidden;white-space:nowrap;font:800 calc(58 * var(--px))/1.2 var(--font-text);color:var(--cream)}#show-sub .line.in{animation:show-in .3s ease-out}@keyframes show-in{from{opacity:0}}
+body.show-call #happening-wrap{top:calc(max(var(--board-b,0px),var(--show-b,0px)) + 12px)}body.stream.show-call #side{top:calc((max(var(--board-b,0px),var(--show-b,0px)) + 12px) / var(--ui-scale,1))}
+@media(max-width:1000px){body.show-call #happening-wrap{top:max(118px,calc(max(var(--board-b,0px),var(--show-b,0px)) + 12px))}}@media(max-width:650px){body.show-call #happening-wrap{top:max(100px,calc(max(var(--board-b,0px),var(--show-b,0px)) + 12px))}}
+@media(prefers-reduced-motion:reduce){:is(#show-banner,#show-now,#show-title,#show-sub),:is(#show-banner,#show-now,#show-title,#show-sub).up{transition:none}#show-sub .line.in{animation:none}}
 </style></head><body><main id="world" aria-label="Live field of chat characters"></main>
 <header><div class="invite">Say anything in chat: you move in and get a lot. Build a home, open a café, chip in for the town.<small class="cmds">!help · !town · !top · !me · !play</small><span id="play-line" hidden>Walk your character: <b id="play-url"></b> <span id="play-seats"></span></span></div></header>
 <div id="caravan" hidden aria-live="polite"><small id="caravan-age"></small><span id="caravan-steps" aria-hidden="true"></span><strong id="caravan-title"></strong><q id="caravan-say"></q><div id="caravan-asks"></div><em id="caravan-note"></em></div>

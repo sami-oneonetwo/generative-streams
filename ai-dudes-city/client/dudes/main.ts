@@ -21,6 +21,7 @@ import { createStats } from './stats'; // hook FK-065
 import { createStoryProps } from './storyProps'; // hook FK-024
 import { setStoryLook, storyLook } from './sticker';
 import { boardFor, createBoard, fitUnder, liftUnder, reserved } from './board';
+import { DEMO_SCENE, createShow, type SceneSay } from './show';
 import { TOWN_GROUND, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
@@ -261,8 +262,8 @@ function start() {
     // Room for tags and bubbles above the heads, and for the HUD at the top and bottom.
     const needH = ((maxU - minU) / 2) * 1.12 + 2.5,
       needW = ((maxR - minR) / 2) * 1.06 + 2;
-    // With the Board up, everyone stays in the view below it (its share of the height, plus a margin).
-    const strip = boardUi?.rect();
+    // With the Board (or the GATHER banner) up, everyone stays in the view below it (its share of the height, plus a margin).
+    const strip = reserved(boardUi?.rect(), showUi?.rect());
     const top = strip ? (strip.b + 12) / innerHeight : 0;
     const fit = Math.max(fitUnder(top, needH), needW / a) / zoomBias;
     const half = Math.max(AUTO_MIN, Math.min(AUTO_MAX, fit));
@@ -738,14 +739,18 @@ function start() {
   // --- cutscenes (shared/scenes.ts): the server says which and since when; the script does the rest ---
   let sceneFrom: { key: string; pose: CamPose } | undefined;
   let subtitleKey = '';
+  /** The scene's line for the show (show.ts) to draw, in the story look on the viewer page. */
+  let sceneSays: SceneSay | undefined;
   function cinema(serverNow: number): void {
-    const sc = state?.town?.scene;
-    const scene = sc && SCENES[sc.id];
+    // `?demo=show` plays its own short scene while the server plays none.
+    const sc = state?.town?.scene ?? showUi?.demoScene(serverNow);
+    const scene = sc && (sc.id === DEMO_SCENE.id ? DEMO_SCENE : SCENES[sc.id]);
     const t = sc ? serverNow - sc.at : 0;
     const on = !!scene && t >= 0 && t < scene.ms;
     document.body.classList.toggle('cinema', on);
     if (!on || !scene || !sc) {
       sceneFrom = undefined;
+      sceneSays = undefined;
       if (subtitleKey) {
         subtitleKey = '';
         el('subtitle').hidden = true;
@@ -766,15 +771,19 @@ function start() {
     half = pose.half;
     const vars = { leader: sc.leader ?? '', ...sc.vars };
     const line = sceneLine(scene, t, vars);
-    const lk = line ? `${sc.at}:${line.at}:${line.text}` : '';
+    // In the story look the show draws the line (show.ts): in the bottom bar with the speaker's chip, or as the title card.
+    const story = !!showUi && document.body.classList.contains('story');
+    sceneSays = story && line ? { who: fillLine(line.who, vars), text: fillLine(line.text, vars), title: !!line.title, k: (t - line.at) / line.ms, key: `${sc.at}:${line.at}` } : undefined;
+    const today = story ? undefined : line;
+    const lk = today ? `${sc.at}:${today.at}:${today.text}` : '';
     if (lk !== subtitleKey) {
       subtitleKey = lk;
       const box = el('subtitle');
-      box.hidden = !line;
-      box.classList.toggle('title', !!line?.title);
-      if (line) {
-        el('subtitle-who').textContent = fillLine(line.who, vars);
-        el('subtitle-text').textContent = fillLine(line.text, vars);
+      box.hidden = !today;
+      box.classList.toggle('title', !!today?.title);
+      if (today) {
+        el('subtitle-who').textContent = fillLine(today.who, vars);
+        el('subtitle-text').textContent = fillLine(today.text, vars);
       }
     }
   }
@@ -886,6 +895,8 @@ function start() {
   // Finders Keepers: the Board (board.ts), on the viewer page only (the stream and the plain page);
   // /mayor gets its own strip and /play keeps today's panels. Where it shows, it replaces the caravan's.
   const boardUi = !operatorMode && !playerMode ? createBoard(document, reduced) : undefined;
+  // And the show (show.ts): the GATHER banner, the NOW card, and in the story look the title card and subtitles.
+  const showUi = !operatorMode && !playerMode ? createShow(document, reduced) : undefined;
   // The caravan's board (bottom right): who is camped across the river and what their leader asks.
   let caravanKey = '';
   /** What to type for the first ask still open, as an example a viewer can copy. */
@@ -985,6 +996,7 @@ function start() {
     // The Board while Story is ON (or `?demo=board`) instead of the caravan's panel; Story OFF brings it back.
     const board = boardFor(next.town, next.dudes, location.search, msg.play);
     boardUi?.update(board, serverClock());
+    showUi?.update(next.town?.show, next.town);
     renderCaravan(board && boardUi ? undefined : next.town?.caravan, next.town?.age);
     playLine(msg.play);
     objects.syncCommitted(next.objects);
@@ -1218,6 +1230,7 @@ function start() {
     }
     // A cutscene has the camera, the letterbox and the subtitles, on every page (the operator's too).
     cinema(serverNow);
+    showUi?.frame(serverNow, document.body.classList.contains('cinema'), sceneSays);
     applyCamera();
     const g = centreOnGround();
     environment.frame(g.x, g.z, half * Math.max(1, innerWidth / innerHeight) * 1.1);
@@ -1242,8 +1255,8 @@ function start() {
       hovered,
       selected: selected?.kind === 'dude' ? selected.id : undefined,
       uiScale,
-      // In a scene the banner and the Board have faded out, so the tags and bubbles may use the top again.
-      reserve: document.body.classList.contains('cinema') ? undefined : reserved(bannerRect, boardUi?.rect()),
+      // In a scene the banners and the Board have faded out, so the tags and bubbles may use the top again.
+      reserve: document.body.classList.contains('cinema') ? undefined : reserved(bannerRect, reserved(boardUi?.rect(), showUi?.rect())),
     });
     countdown();
     if (selected && now - lastInspectAt > 500) {
