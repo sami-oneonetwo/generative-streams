@@ -1,0 +1,105 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The chunky rigs, exaggerated headwear and broad age progression are promising, but the shipped wardrobe breaks story-colour ownership and several roles depend on captions rather than silhouettes. Wasteland needs stronger evidence of scavenged construction, and this crowded sheet does not preserve kit differences at phone size.",
+  "problems": [
+    "Everyday residents repeatedly wear dominant story-like red, especially from the Middle Ages onward; reserve the locked red for Wren's side and remove it from ordinary player-colour choices.",
+    "Wasteland everyday clothing still looks largely clean, coordinated and regularly cut; introduce substantial repairs, mismatched salvaged panels and visibly worn construction.",
+    "The caravan column does not establish a consistent Wren-led travelling band, and the Industrial railway baron reads more like a uniformed attendant.",
+    "At 390 px wide, kit names and most garment distinctions disappear; provide separate age cards and larger individual kit comparisons.",
+    "The medieval Young Messenger's pointed helmet and crossed torso equipment read as a guard rather than a civilian courier.",
+    "Several heads borrow red that belongs to the opposing side, while the Overseer's brown-on-brown costume loses authority and silhouette separation.",
+    "Bronze everyday pairs often communicate different skin tones more strongly than different wearer-owned garment colours.",
+    "Stone everyday pairs have the same colour-ownership weakness, with small belts and trims carrying too much of the distinction."
+  ],
+  "elements": [
+    {
+      "id": "everyday-colour-system",
+      "score": 4,
+      "problems": [
+        "Large red garments recur across unrelated everyday roles, undermining the exclusive meaning of Wren's red.",
+        "Wearer colours spill into material identity: the medieval messenger's vivid violet helmet reads as dyed costume armour rather than a coherent metal object.",
+        "Several later outfits combine numerous competing garment and accessory colours."
+      ],
+      "fix": "Reserve #B3262E and #FFC633 in the character palette system. Give each kit one large wearer-colour textile region, keep material colours fixed, and consolidate clothing and props into no more than four main colour families."
+    },
+    {
+      "id": "wasteland-everyday-kits",
+      "score": 5,
+      "problems": [
+        "The muted setting is appropriate, but most garments retain clean rectangular hems, matched construction and tidy colour blocking.",
+        "The four jobs rely heavily on small handheld tools rather than visibly different scavenged clothing.",
+        "Dark garments and boots merge with the brown ground and shadows."
+      ],
+      "fix": "Rebuild each kit around one large salvage feature: a patched work apron, an uneven water-carrying harness, a repaired blanket mantle and a short reinforced runner vest. Add broad faded panels, offset hems and mismatched fasteners, with lighter dusty cloth separating bodies from the ground."
+    },
+    {
+      "id": "caravan-leader-lineup",
+      "score": 5,
+      "problems": [
+        "The six leaders read as unrelated occupational characters rather than a recognisable travelling-band leader changing with the ages.",
+        "Red identification is inconsistent between ages; the medieval jester is predominantly green and yellow.",
+        "The railway baron's pale uniform and cap suggest railway staff rather than a wealthy visiting magnate.",
+        "The jester's yellow costume competes with the head's gold visual territory."
+      ],
+      "fix": "Carry a recognisable Wren face, hair treatment and substantial locked-red textile through all six transformations. Use bone, green and charcoal for the jester's secondary colours; give the railway baron a period travelling coat, waistcoat and conspicuous luggage instead of an attendant-like uniform."
+    },
+    {
+      "id": "review-sheet",
+      "score": 6,
+      "problems": [
+        "Ten figures across each row become too small for garment evaluation at 390 px width.",
+        "Long captions become unreadable, leaving similarly shaped everyday kits difficult to identify.",
+        "The Industrial brick pattern adds unnecessary visual competition.",
+        "Several roles differ principally through tiny props that will disappear at stream distance."
+      ],
+      "fix": "Supply one age per review card with paired kits arranged in two columns, plus a separate head-and-caravan panel. Use calm neutral grounds and include actual 390 px colour and greyscale proofs; enlarge each role's defining garment shape rather than its accessory count."
+    },
+    {
+      "id": "medieval-young-messenger",
+      "score": 6,
+      "problems": [
+        "The pointed helmet, shoulder mass and crossed torso equipment produce a military silhouette.",
+        "The two versions change apparent armour material as well as wearer colour.",
+        "No large courier-specific feature explains the role without its caption."
+      ],
+      "fix": "Replace the helmet with a cloth hood or soft cap, reduce the shoulder bulk and add one oversized leather dispatch satchel. Keep leather and any metal neutral while applying wearer colour to the tunic."
+    },
+    {
+      "id": "town-head-lineup",
+      "score": 6,
+      "problems": [
+        "The King's red crown cushion and cape and the Mayor's red handheld ribbon introduce the opposing side's colour into the head's presentation.",
+        "The Overseer's dark brown outfit merges with the ground and lacks a clear surviving gold authority cue.",
+        "The Chief's antlers and High Priest's stacked headwear provide good comic silhouettes, but later heads are less consistently distinctive."
+      ],
+      "fix": "Replace head-owned red with ivory, navy or charcoal and retain gold as the authority accent. Give the Overseer a battered oversized gold office medallion over a lighter patched chest panel, preserving the joke of ceremonial vanity after collapse."
+    },
+    {
+      "id": "bronze-everyday-kits",
+      "score": 7,
+      "problems": [
+        "Most paired garments remain nearly identical cream wraps; tiny belt changes do not demonstrate wearer-owned colours clearly.",
+        "Some apparent pair variation comes from exposed skin rather than the garment itself.",
+        "At small scale, Water Carrier and Field Tender depend mainly on carried objects."
+      ],
+      "fix": "Add a broad, muted wearer-colour woven band or shoulder cloth to each kit while preserving undyed linen as the base. Differentiate the carrier with a clear supporting sling and the field tender with a shorter working wrap, keeping both recognisably Bronze Age."
+    },
+    {
+      "id": "stone-everyday-kits",
+      "score": 7,
+      "problems": [
+        "The hide, grass and bone vocabulary fits the age, but paired outfits scarcely expose the advertised wearer-colour system.",
+        "Narrow belts and small trims are insufficient at phone scale.",
+        "Several hide garments share very regular rectangular lower silhouettes."
+      ],
+      "fix": "Use one broad muted pigment-marked hide panel or naturally dyed fibre binding per kit to carry wearer colour. Introduce distinct overlapping hide edges and uneven tied lengths without changing the shared rig or adding modern tailored seams."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": false,
+    "storyColours": false,
+    "funny": true
+  }
+}

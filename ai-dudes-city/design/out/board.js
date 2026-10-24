@@ -11233,15 +11233,15 @@
   var COMPLETION_STATUS_KHR = 37297;
   var programIdCount = 0;
   function handleSource(string, errorLine) {
-    const lines = string.split("\n");
-    const lines2 = [];
+    const lines2 = string.split("\n");
+    const lines22 = [];
     const from = Math.max(errorLine - 6, 0);
-    const to = Math.min(errorLine + 6, lines.length);
+    const to = Math.min(errorLine + 6, lines2.length);
     for (let i = from; i < to; i++) {
       const line = i + 1;
-      lines2.push(`${line === errorLine ? ">" : " "} ${line}: ${lines[i]}`);
+      lines22.push(`${line === errorLine ? ">" : " "} ${line}: ${lines2[i]}`);
     }
-    return lines2.join("\n");
+    return lines22.join("\n");
   }
   function getEncodingComponents(colorSpace) {
     const workingPrimaries = ColorManagement.getPrimaries(ColorManagement.workingColorSpace);
@@ -20221,6 +20221,54 @@
   var col2 = new Color();
   var target = new Float32Array(CHANNELS);
 
+  // design/board/people.ts
+  var SAMPLES = [
+    { skin: "#e0b08a", shirt: "#c4402f", pants: "#3f5f8a", hair: "#3a2a1e", hat: "cap", hatColor: "#e0c040", accessory: "none", accessoryColor: "#5d6f7a", height: 1.05, build: 1.05 },
+    { skin: "#8a5a3c", shirt: "#4f9a5a", pants: "#d9c49a", hair: "#1a1410", hat: "none", hatColor: "#8a5a44", accessory: "scarf", accessoryColor: "#7a3fa0", height: 0.92, build: 0.9 }
+  ];
+  var kitLabel = (name) => (name ?? "").split(/\s+[—–-]\s+/)[0].trim();
+  function townsfolk(o, age, kits = o.kits.slice(0, 2)) {
+    return SAMPLES.map((look2, i) => ({ look: dressFor(look2, age), outfit: kits.length ? kits[i % kits.length] : void 0, x: (i - 0.5) * 1 }));
+  }
+  var headFigure = (o, age) => ({ look: AGES[age].head.look, outfit: o.head, x: 0 });
+  var leaderFigure = (o, age) => ({ look: dressFor(SAMPLES[0], age), outfit: o.leader, x: 0 });
+  var headLabel = (o, age) => kitLabel(o.head?.name) || `the ${AGES[age].head.title}`;
+  var leaderLabel = (o) => kitLabel(o.leader?.name) || "the caravan leader";
+  function boardPeople(id, age, o) {
+    switch (id) {
+      case "resident":
+        return { figures: townsfolk(o, age), caption: o.kits.slice(0, 2).map((k) => kitLabel(k.name)).join(" \xB7 ") || "townsfolk" };
+      case "head":
+        return { figures: [headFigure(o, age)], caption: headLabel(o, age) };
+      case "leader":
+        return { figures: [leaderFigure(o, age)], caption: leaderLabel(o) };
+      default:
+        return void 0;
+    }
+  }
+  var PAIR = 2.2;
+  var ONE = 2;
+  var APART = 0.95;
+  function lineUp(o, age) {
+    const groups = [
+      ...o.kits.map((k) => ({ role: "kit", label: kitLabel(k.name), people: SAMPLES.map((look2) => ({ look: dressFor(look2, age), outfit: k })) })),
+      { role: "head", label: headLabel(o, age), people: [headFigure(o, age)] },
+      { role: "leader", label: leaderLabel(o), people: [leaderFigure(o, age)] }
+    ];
+    const width = groups.reduce((w, g) => w + (g.people.length > 1 ? PAIR : ONE), 0);
+    const figures = [];
+    const slots = [];
+    let left = -width / 2;
+    for (const g of groups) {
+      const w = g.people.length > 1 ? PAIR : ONE;
+      const x = left + w / 2;
+      g.people.forEach((p, i) => figures.push({ ...p, x: x + (i - (g.people.length - 1) / 2) * APART }));
+      slots.push({ role: g.role, label: g.label, x, width: w });
+      left += w;
+    }
+    return { figures, slots, width };
+  }
+
   // design/board/main.ts
   var CAM_BACK = 43;
   var CAM_UP = 36;
@@ -20271,6 +20319,21 @@
     if (spec?.parts?.length) placePiece(mergePiece(spec), { x: 0, z: 0 }, g);
     return g;
   }
+  function figuresGroup(figures) {
+    const g = new Group();
+    for (const f of figures) {
+      const p = figureGroup(f.look, f.outfit);
+      p.position.x = f.x;
+      g.add(p);
+    }
+    return g;
+  }
+  var peopleOf = (age, id) => age.people && age.index !== void 0 ? boardPeople(id, age.index, age.people) : void 0;
+  function pieceGroup(age, id) {
+    const people = peopleOf(age, id);
+    return people ? figuresGroup(people.figures) : partsGroup(age.elements[id]);
+  }
+  var caption = (age, id) => peopleOf(age, id)?.caption ?? age.elements[id]?.name ?? "(missing)";
   var renderer = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(1);
   renderer.shadowMap.enabled = true;
@@ -20343,8 +20406,7 @@
   var CELL_H = 320;
   function renderCell(age, e2, w = CELL_W, h = CELL_H) {
     const scene = new Scene();
-    const spec = age.elements[e2.id];
-    const parts = partsGroup(spec);
+    const parts = pieceGroup(age, e2.id);
     let box;
     if (e2.tile === "none") {
       const pb = new Box3().setFromObject(parts);
@@ -20377,9 +20439,9 @@
     disc.receiveShadow = true;
     scene.add(disc);
   }
-  function place(scene, spec, x, z, ry = 0, fit) {
-    if (!spec) return;
-    const g = partsGroup(spec);
+  function place(scene, age, id, x, z, ry = 0, fit) {
+    if (!age.elements[id] && !peopleOf(age, id)) return;
+    const g = pieceGroup(age, id);
     if (fit) {
       const b = new Box3().setFromObject(g);
       const size = Math.max(b.max.x - b.min.x, b.max.z - b.min.z);
@@ -20391,7 +20453,7 @@
   }
   function renderVignette(age, w = 1280, h = 760) {
     const scene = new Scene();
-    const b = age.bible, S = b.surfaces, el = age.elements;
+    const b = age.bible, S = b.surfaces;
     const pave = b.rules?.sidewalks === false ? null : S.pavement;
     ground(scene, S.countryside, -60, 60, -60, 60, -0.01);
     ground(scene, S.lotClaimed, -19, -1, -24, -6, 2e-3);
@@ -20400,23 +20462,23 @@
     ground(scene, pave ?? S.lotRough, -24, 24, -6, -4, 6e-3);
     if (!pave) ground(scene, S.lotRough, -24, 24, 4, 6, 6e-3);
     street(scene, b, -24, 24, 0);
-    for (const x of [-12, 0, 12]) place(scene, el.street, x, 0);
-    place(scene, el["lot-claimed"], -10, -14.5);
-    place(scene, el.home, -10, -15.5, 0, 11);
-    place(scene, el["lot-sale"], 10, -14.5);
-    place(scene, el["street-tree"], -16, -10);
-    place(scene, el["street-light"], 2, -10);
-    place(scene, el["street-light"], -20, 0);
-    place(scene, el.centrepiece, 0, 16);
-    place(scene, el.bench, -6, 13, 0.3);
-    place(scene, el.bench, 6, 19.5, Math.PI + 0.2);
-    place(scene, el.market, 8, 11, -0.2);
-    place(scene, el.arrival, 14, 0);
-    place(scene, el.cafe, -16, 18, 0, 9);
-    place(scene, el.resident, -4, 2.5, 0.4);
-    place(scene, el.head, -2, 10, 0.6);
-    place(scene, el.leader, 3, 9, -0.5);
-    place(scene, el.dog, -7, 1.8, 1.2, 1.6);
+    for (const x of [-12, 0, 12]) place(scene, age, "street", x, 0);
+    place(scene, age, "lot-claimed", -10, -14.5);
+    place(scene, age, "home", -10, -15.5, 0, 11);
+    place(scene, age, "lot-sale", 10, -14.5);
+    place(scene, age, "street-tree", -16, -10);
+    place(scene, age, "street-light", 2, -10);
+    place(scene, age, "street-light", -20, 0);
+    place(scene, age, "centrepiece", 0, 16);
+    place(scene, age, "bench", -6, 13, 0.3);
+    place(scene, age, "bench", 6, 19.5, Math.PI + 0.2);
+    place(scene, age, "market", 8, 11, -0.2);
+    place(scene, age, "arrival", 14, 0);
+    place(scene, age, "cafe", -16, 18, 0, 9);
+    place(scene, age, "resident", -4, 2.5, 0.4);
+    place(scene, age, "head", -2, 10, 0.6);
+    place(scene, age, "leader", 3, 9, -0.5);
+    place(scene, age, "dog", -7, 1.8, 1.2, 1.6);
     lit(scene, b, 40);
     const box = new Box3(new Vector3(-22, 0, -22), new Vector3(22, 6, 24));
     const out = snapshot(scene, camera(box, w, h, 0.92), w, h);
@@ -20431,7 +20493,7 @@
     if (max) while (g.measureText(t).width > max && t.length > 4) t = t.slice(0, -2);
     g.fillText(t === s ? s : `${t}\u2026`, x, y);
   }
-  function wrap(g, s, x, y, size, colour2, max, lines = 4) {
+  function wrap(g, s, x, y, size, colour2, max, lines2 = 4) {
     g.font = `400 ${size}px ${FONT}`;
     g.fillStyle = colour2;
     g.textBaseline = "top";
@@ -20440,7 +20502,7 @@
     for (const w of words) {
       if (g.measureText(`${line} ${w}`).width > max && line) {
         g.fillText(line, x, y + n * size * 1.25);
-        if (++n >= lines) return;
+        if (++n >= lines2) return;
         line = w;
       } else line = line ? `${line} ${w}` : w;
     }
@@ -20449,6 +20511,46 @@
   var INK = "#1d2421";
   var PAPER = "#f4efe2";
   var MUTED = "#6b6a60";
+  function lines(g, s, size, weight, max) {
+    g.font = `${weight} ${size}px ${FONT}`;
+    const out = [];
+    let line = "";
+    for (const w of s.split(/\s+/).filter(Boolean)) {
+      if (line && g.measureText(`${line} ${w}`).width > max) {
+        out.push(line);
+        line = w;
+      } else line = line ? `${line} ${w}` : w;
+    }
+    if (line) out.push(line);
+    return out;
+  }
+  var MEASURE = document.createElement("canvas").getContext("2d");
+  var NOTE_HEAD = 26;
+  var NOTE_SIZE = 21;
+  function noteBlock(note, width, g, y = 0) {
+    if (!note?.trim()) return 0;
+    const max = Math.min(width - 32, 1500);
+    if (g) {
+      g.fillStyle = INK;
+      g.fillRect(16, y + 4, width - 32, 3);
+    }
+    let h = 22;
+    note.trim().split("\n").forEach((row, i) => {
+      if (!row.trim()) return void (h += NOTE_SIZE * 0.6);
+      const size = i ? NOTE_SIZE : NOTE_HEAD, weight = !i ? 800 : /^[^.]{1,40}:$/.test(row.trim()) ? 700 : 400;
+      for (const l of lines(g ?? MEASURE, row.trim(), size, weight, max)) {
+        if (g) text(g, l, 16, y + h, size, INK, weight);
+        h += size * 1.32;
+      }
+    });
+    return h + 18;
+  }
+  function heading(g, title, subtitle, width) {
+    text(g, title, 16, 14, 40, INK, 800, width - 32);
+    if (!subtitle) return 70;
+    text(g, subtitle, 16, 64, 20, MUTED, 400, width - 32);
+    return 100;
+  }
   function sheet(age, cells, elements) {
     const cols = 6, labelH = 46, headH = 110, rows = Math.ceil((elements.length + 1) / cols);
     const c = document.createElement("canvas");
@@ -20463,7 +20565,7 @@
       const x2 = 12 + i2 % cols * (CELL_W + 12), y2 = headH + Math.floor(i2 / cols) * (CELL_H + labelH + 12);
       g.drawImage(cells.get(e2.id), x2, y2);
       text(g, `${e2.label}`, x2 + 2, y2 + CELL_H + 4, 19, INK, 800, CELL_W - 4);
-      text(g, age.elements[e2.id]?.name ?? "(missing)", x2 + 2, y2 + CELL_H + 25, 16, MUTED, 400, CELL_W - 4);
+      text(g, caption(age, e2.id), x2 + 2, y2 + CELL_H + 25, 16, MUTED, 400, CELL_W - 4);
     });
     const i = elements.length, x = 12 + i % cols * (CELL_W + 12), y = headH + Math.floor(i / cols) * (CELL_H + labelH + 12);
     text(g, "Palette", x, y, 19, INK, 800);
@@ -20473,15 +20575,18 @@
     });
     return c;
   }
-  function board(title, ages, elements, cellsOf, cw, ch) {
-    const labelW = 300, headH = 120, gap = 8, capH = 40;
+  function board(t, ages, elements, cellsOf, cw, ch) {
+    const labelW = 300, gap = 8, capH = 48;
+    const width = labelW + elements.length * (cw + gap) + gap;
+    const headH = (t.subtitle ? 100 : 70) + 50;
+    const rowsH = headH + ages.length * (ch + capH + gap) + gap;
     const c = document.createElement("canvas");
-    c.width = labelW + elements.length * (cw + gap) + gap;
-    c.height = headH + ages.length * (ch + capH + gap) + gap;
+    c.width = width;
+    c.height = rowsH + noteBlock(t.note, width);
     const g = c.getContext("2d");
     g.fillStyle = PAPER;
     g.fillRect(0, 0, c.width, c.height);
-    text(g, title, 16, 14, 40, INK, 800);
+    heading(g, t.title, t.subtitle, width);
     elements.forEach((e2, k) => text(g, e2.label, labelW + k * (cw + gap) + 4, headH - 34, 20, INK, 800, cw - 6));
     ages.forEach((a, r) => {
       const y = headH + r * (ch + capH + gap);
@@ -20490,29 +20595,39 @@
       elements.forEach((e2, k) => {
         const x = labelW + k * (cw + gap);
         g.drawImage(cellsOf(a.id, e2.id), x, y, cw, ch);
-        text(g, a.elements[e2.id]?.name ?? "(missing)", x + 2, y + ch + 6, 15, MUTED, 400, cw - 4);
+        wrap(g, caption(a, e2.id), x + 2, y + ch + 6, 15, MUTED, cw - 4, 2);
       });
     });
+    noteBlock(t.note, width, g, rowsH);
     return c;
   }
-  function vignetteBoard(ages, vignettes) {
+  function vignetteBoard(t, ages, vignettes) {
     const w = 960, h = 570, capH = 60, gap = 14;
+    const width = 2 * w + 3 * gap;
+    const top = (t.subtitle ? 100 : 70) + 20;
+    const rowsH = top + 3 * (h + capH + gap);
     const c = document.createElement("canvas");
-    c.width = 2 * w + 3 * gap;
-    c.height = 90 + 3 * (h + capH + gap);
+    c.width = width;
+    c.height = rowsH + noteBlock(t.note, width);
     const g = c.getContext("2d");
     g.fillStyle = PAPER;
     g.fillRect(0, 0, c.width, c.height);
-    text(g, "A street corner in every age", 16, 18, 40, INK, 800);
+    heading(g, t.title, t.subtitle, width);
     ages.forEach((a, i) => {
-      const x = gap + i % 2 * (w + gap), y = 90 + Math.floor(i / 2) * (h + capH + gap);
+      const x = gap + i % 2 * (w + gap), y = top + Math.floor(i / 2) * (h + capH + gap);
       g.drawImage(vignettes.get(a.id), x, y, w, h);
       text(g, a.name.toUpperCase(), x, y + h + 6, 24, INK, 800);
       wrap(g, a.bible.summary ?? "", x, y + h + 34, 16, MUTED, w, 1);
     });
+    noteBlock(t.note, width, g, rowsH);
     return c;
   }
   var frame = () => new Promise((r) => requestAnimationFrame(() => r(void 0)));
+  var SHIPPED = {
+    "board-fabric.png": "the town's pieces and ground as the game draws them today",
+    "board-life.png": "people in the game's garment kits, drawn as the town draws them; the example builds are samples from the game's design prompt",
+    "board-vignettes.png": "the town's pieces and people as the game has them today; the home, caf\xE9 and dog are samples from the game's design prompt"
+  };
   async function renderBoard(data) {
     const out = {};
     const cells = /* @__PURE__ */ new Map();
@@ -20534,68 +20649,75 @@
     }
     const get = (a, id) => cells.get(`${a}-${id}`);
     const fabric = data.elements.filter((e2) => e2.board === "fabric"), life = data.elements.filter((e2) => e2.board === "life");
-    out["board-fabric.png"] = board(`${data.title}: the town's fabric through the ages`, data.ages, fabric, get, 280, 213).toDataURL("image/png");
-    out["board-life.png"] = board(`${data.title}: people and example builds through the ages`, data.ages, life, get, 300, 228).toDataURL("image/png");
-    out["board-vignettes.png"] = vignetteBoard(data.ages, vignettes).toDataURL("image/png");
+    const t = (name, title) => ({ title, subtitle: data.label && `${data.label} \xB7 ${data.shipped ? `as shipped: ${SHIPPED[name]}` : "from design/spec"}`, note: data.notes?.[name] });
+    out["board-fabric.png"] = board(t("board-fabric.png", `${data.title}: the town's fabric through the ages`), data.ages, fabric, get, 280, 213).toDataURL("image/png");
+    out["board-life.png"] = board(t("board-life.png", `${data.title}: people and example builds through the ages`), data.ages, life, get, 300, 228).toDataURL("image/png");
+    out["board-vignettes.png"] = vignetteBoard(t("board-vignettes.png", "A street corner in every age"), data.ages, vignettes).toDataURL("image/png");
     return out;
   }
-  var SAMPLES = [
-    { skin: "#e0b08a", shirt: "#c4402f", pants: "#3f5f8a", hair: "#3a2a1e", hat: "cap", hatColor: "#e0c040", accessory: "none", accessoryColor: "#5d6f7a", height: 1.05, build: 1.05 },
-    { skin: "#8a5a3c", shirt: "#4f9a5a", pants: "#d9c49a", hair: "#1a1410", hat: "none", hatColor: "#8a5a44", accessory: "scarf", accessoryColor: "#7a3fa0", height: 0.92, build: 0.9 }
-  ];
-  function renderOutfitRow(a, w = 1800, h = 560) {
+  function renderOutfitRow(a, w = 1800, h = 480) {
     const scene = new Scene();
-    const o = a.outfits ?? {};
-    const people = [];
-    (o.kits ?? []).forEach((k) => SAMPLES.forEach((look2, i) => people.push({ look: dressFor(look2, a.index), outfit: k, label: i ? "" : k.name })));
-    people.push({ look: AGES[a.index].head.look, outfit: o.head, label: o.head?.name ?? "head" });
-    people.push({ look: dressFor(SAMPLES[0], a.index), outfit: o.leader, label: o.leader?.name ?? "leader" });
-    const row = new Group();
+    const { figures, slots, width } = lineUp(a.outfits ?? { kits: [] }, a.index);
+    const row = figuresGroup(figures);
     scene.add(row);
-    const gap = 0.95;
-    const x0 = -((people.length - 1) * gap + Math.floor((people.length - 1) / 2) * 0.3) / 2;
-    people.forEach((p, i) => {
-      const g = figureGroup(p.look, p.outfit);
-      g.position.set(x0 + i * gap + Math.floor(i / 2) * 0.3, 0, 0);
-      row.add(g);
-    });
-    ground(row, a.bible.surfaces.lotClaimed ?? a.bible.surfaces.countryside, -9, 9, -1.6, 1.6, 0);
-    lit(scene, a.bible, 12);
+    ground(row, a.bible.surfaces.lotClaimed ?? a.bible.surfaces.countryside, -width / 2 - 3, width / 2 + 3, -16, 4, 0);
+    lit(scene, a.bible, width / 2 + 6);
     row.updateMatrixWorld(true);
     const figs = new Box3();
     row.children.forEach((c) => c instanceof Group && figs.expandByObject(c));
-    const box = figs.expandByVector(new Vector3(0.2, 0.1, 0.2));
-    const out = snapshot(scene, camera(box, w, h, 1.04, 0), w, h);
+    const box = new Box3(new Vector3(-width / 2, figs.min.y, figs.min.z - 0.2), new Vector3(width / 2, figs.max.y + 0.1, figs.max.z + 0.2));
+    const cam = camera(box, w, h, 1.02, 0);
+    const picture = snapshot(scene, cam, w, h);
     dispose(scene);
-    const g2 = out.getContext("2d");
-    g2.fillStyle = "rgba(244,239,226,0.9)";
-    g2.fillRect(0, h - 40, w, 40);
-    const labels = people.map((p) => p.label).filter(Boolean);
-    labels.forEach((l, i) => text(g2, l, 10 + i * (w - 20) / labels.length, h - 32, 17, INK, 700, (w - 20) / labels.length - 8));
-    return out;
+    const px = (x) => (new Vector3(x, 0, 0).project(cam).x + 1) / 2 * w;
+    return { picture, slots: slots.map((s) => ({ ...s, px: px(s.x), pw: px(s.x + s.width / 2) - px(s.x - s.width / 2) })) };
   }
-  async function renderOutfits(data) {
-    const out = {};
-    const rows = [];
-    for (const a of data.ages) {
-      const c2 = renderOutfitRow(a);
-      rows.push(c2);
-      out[`outfits-${a.id}.png`] = c2.toDataURL("image/png");
-      await frame();
-    }
-    const capH = 52;
+  var ROLE = { kit: "EVERYDAY", head: "THE HEAD", leader: "CARAVAN LEADER" };
+  function outfitPanel(row, scale) {
+    const roleSize = Math.round(18 * scale), nameSize = Math.round(22 * scale);
+    const bandH = Math.round(roleSize * 1.3 + 2 * nameSize * 1.25 + 14 * scale);
     const c = document.createElement("canvas");
-    c.width = rows[0].width / 2 + 24;
-    c.height = 90 + rows.length * (rows[0].height / 2 + capH);
+    c.width = Math.round(row.picture.width * scale);
+    c.height = Math.round(row.picture.height * scale) + bandH;
     const g = c.getContext("2d");
     g.fillStyle = PAPER;
     g.fillRect(0, 0, c.width, c.height);
-    text(g, "What people wear in every age", 16, 18, 40, INK, 800);
+    g.drawImage(row.picture, 0, 0, c.width, c.height - bandH);
+    const top = c.height - bandH + 6 * scale;
+    for (const s of row.slots) {
+      const x = (s.px - s.pw / 2) * scale + 6 * scale, max = s.pw * scale - 12 * scale;
+      text(g, ROLE[s.role], x, top, roleSize, MUTED, 700, max);
+      const name = lines(g, s.label, nameSize, 700, max);
+      name.slice(0, 2).forEach((l, i) => text(g, i === 1 && name.length > 2 ? `${l}\u2026` : l, x, top + roleSize * 1.3 + i * nameSize * 1.25, nameSize, INK, 700, max));
+    }
+    return c;
+  }
+  async function renderOutfits(data) {
+    const out = {};
+    const panels = [];
+    for (const a of data.ages) {
+      const row = renderOutfitRow(a);
+      out[`outfits-${a.id}.png`] = outfitPanel(row, 1).toDataURL("image/png");
+      panels.push(outfitPanel(row, 2 / 3));
+      await frame();
+    }
+    const capH = 44, gap = 16, width = panels[0].width + 24;
+    const top = (data.subtitle ? 100 : 70) + 10;
+    const rowsH = top + panels.reduce((h, p) => h + capH + p.height + gap, 0);
+    const c = document.createElement("canvas");
+    c.width = width;
+    c.height = rowsH + noteBlock(data.note, width);
+    const g = c.getContext("2d");
+    g.fillStyle = PAPER;
+    g.fillRect(0, 0, c.width, c.height);
+    heading(g, "What people wear in every age", data.subtitle, width);
+    let y = top;
     data.ages.forEach((a, i) => {
-      const y = 90 + i * (rows[0].height / 2 + capH);
-      text(g, a.name.toUpperCase(), 12, y + 8, 24, INK, 800);
-      g.drawImage(rows[i], 12, y + capH - 8, rows[i].width / 2, rows[i].height / 2);
+      text(g, a.name.replace(/^the /, "").toUpperCase(), 12, y + 8, 26, INK, 800);
+      g.drawImage(panels[i], 12, y + capH);
+      y += capH + panels[i].height + gap;
     });
+    noteBlock(data.note, width, g, rowsH);
     out["outfits-board.png"] = c.toDataURL("image/png");
     return out;
   }

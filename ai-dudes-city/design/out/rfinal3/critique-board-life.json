@@ -1,0 +1,101 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The chunky silhouettes and most age-specific building substitutions work, but faction colours are inconsistent and the Wasteland reads too much like tidy brown construction rather than a rebuilt modern ruin. This board also fails as a 390 px review image and cannot certify unshown roads, lot signs, square centrepieces, wild trees or consistent in-game scale.",
+  "problems": [
+    "Restore the caravan's identity across all six ages: retain Wren's recognisable features and reserved red, while making the age-specific caravan role unmistakable.",
+    "Remove faction-like red from ordinary resident kits and simplify the busiest garments to four main colours.",
+    "Change the Modern hatchback's dominant red body to a non-story colour; reserve red vehicles for explicitly identified members of Wren's side.",
+    "Rebuild the Wasteland café as a visibly salvaged version of the Modern café, not a clean brown timber cookshop.",
+    "Rebuild the Wasteland home around recognisable remains of the Modern home, with structural damage and irregular repairs rather than neat decorative roof patches.",
+    "Give the Wasteland tower a surviving modern structural core, visibly interrupted floors and substantial scrap repairs; its current regular stack is too orderly.",
+    "Simplify and structurally resolve the Stone tower: the repeated little platforms and rock stack merge into visual noise at small size.",
+    "Make the Chief, King and Overseer carry the same readable gold authority cue as the other heads, without relying on tiny accessories or captions."
+  ],
+  "elements": [
+    {
+      "id": "caravan-leader-kits",
+      "score": 5,
+      "problems": [
+        "The figures read as unrelated occupational characters rather than a continuing travelling band led by Wren.",
+        "Red identity is inconsistent, especially on the Stone herder and green Middle Ages jester.",
+        "The Industrial railway baron reads more like a worker with a tool than a railway magnate."
+      ],
+      "fix": "Keep a common face, hair silhouette and substantial #B3262E cloth marker through all six kits. Layer age-specific equipment over that identity: herding gear, river-trade goods, court costume, a tailored railway coat and pocket watch, tourist-guide equipment, then weathered convoy gear. Keep the marker distinct from the head's gold."
+    },
+    {
+      "id": "resident-garment-kits",
+      "score": 5,
+      "problems": [
+        "The Middle Ages carpenter and Modern jacketed resident use prominent red without an established allegiance.",
+        "The Middle Ages green resident combines green, purple, blue, cream, brown and skin tones, weakening the four-colour discipline.",
+        "Small coloured garment divisions do not survive reduction well."
+      ],
+      "fix": "Move unaffiliated red garments to slate, muted teal or undyed cloth. Limit each figure to four main colour families, including skin and equipment, and replace small contrasting strips with larger garment panels that distinguish the everyday jobs."
+    },
+    {
+      "id": "modern-hatchback",
+      "score": 5,
+      "problems": [
+        "The dominant red body makes an ordinary sample car look faction-coded.",
+        "Nothing in the presentation identifies it as belonging to Wren's side."
+      ],
+      "fix": "Use a muted blue or sage body, dark glazing and tyres, and pale lights. Keep the strong existing hatchback silhouette; use story red only if this becomes an explicitly assigned faction vehicle."
+    },
+    {
+      "id": "wasteland-cantina",
+      "score": 5,
+      "problems": [
+        "The broad intact roof, straight frontage and neatly arranged benches suggest a new rustic café.",
+        "Its silhouette loses the Modern café's recognisable structure rather than showing that building transformed.",
+        "Brown surfaces merge with the ground in greyscale."
+      ],
+      "fix": "Retain the Modern café's slab, frontage and service position. Salvage its rooftop cup into a crooked sign, replace one missing wall with corrugated scrap, and add a clearly supported patchwork canopy and fire barrel. Separate pale dusty ground, mid-value walls and dark openings."
+    },
+    {
+      "id": "wasteland-family-home",
+      "score": 6,
+      "problems": [
+        "The roof and walls are mostly straight, complete and clean; the patches read as decoration.",
+        "There is little visible connection to the preceding Modern family home.",
+        "The porch, walls and base collapse into similar brown values."
+      ],
+      "fix": "Preserve the Modern home's footprint and an identifiable porch or wall section. Break one roof plane, expose a few large rafters, and bridge the damage with overlapping, uneven salvage sheets. Use pale retained masonry against dark openings and restrained rust."
+    },
+    {
+      "id": "wasteland-tower",
+      "score": 6,
+      "problems": [
+        "Repeated intact floor frames create a regular wooden scaffold rather than a damaged modern skyscraper.",
+        "Fine rails and dark brown floor divisions merge at stream distance."
+      ],
+      "fix": "Retain a recognisable portion of the Modern tower's concrete core and window grid. Remove selected facade sections, vary the damage by floor, and add two or three broad, visibly anchored scrap braces. Keep the original footprint and make the main silhouette readable without fine rails."
+    },
+    {
+      "id": "stone-lodging-tower",
+      "score": 6,
+      "problems": [
+        "Numerous little decks and repeated supports obscure the intended inhabited-rock silhouette.",
+        "The load-bearing relationship between the stacked rocks and timber platforms is difficult to read.",
+        "Small platform details disappear well before phone size."
+      ],
+      "fix": "Use one irregular rock outcrop with two or three large occupied ledges, substantial timber supports and visible lashings. Give each ledge a clear shelter opening and one readable access route. Include a 1.8 m figure and 12 m lot outline in the review render, then test an individual asset crop at gameplay scale and in greyscale."
+    },
+    {
+      "id": "head-garment-kits",
+      "score": 6,
+      "problems": [
+        "The Chief is predominantly ordinary hide brown, the King reads chiefly blue and red, and the Overseer merges into the residents' salvage palette.",
+        "Authority depends unevenly on small crowns, chains or caption text.",
+        "The King's red cape competes with the travelling band's reserved colour."
+      ],
+      "fix": "Give every head one broad #FFC633 authority shape: an ochre-gold hide panel for the Chief, a gold mantle for the King and a battered gold office plate or sash for the Overseer. Remove the King's red cape, retain each age's distinct silhouette, and keep ordinary construction brass and rust visually separate from story gold."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": false,
+    "storyColours": false,
+    "funny": true
+  }
+}

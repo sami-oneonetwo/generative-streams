@@ -1,0 +1,7 @@
+Design review, 24 Oct 2026: crisp, playful, consistent?
+Crisp: in four ages of six. The kits are chunky and every age has its own silhouettes (hides and spears, linen and jars, hoods and aprons, caps and a top hat), but the Stone and Wasteland rows are brown people on brown ground and lose their edges at phone size, and the Overseer melts into his own townsfolk. Playful: yes: the antler headdress, the jester's motley, the Alderman's top hat and chain, the tour guide's flag. Consistent: the step from age to age holds, but the head breaks the side colours (the King's cape is red; the Chief and the Overseer have no gold to say who they are), and the caravan leader is a different stranger in every age, where the story needs one band. Astra's critique: revise, 6/10 (critique-outfits-board.json). The red on some everyday people is the sample chatter's own shirt, which the kits take on.
+
+Top 3 fixes:
+1. The head wears gold, never red: a gold sash in every age, the King out of red, the hat ladder ×1.0 to ×2.0. → FK-064
+2. An ink outline on people, pets and the cast, so Stone and Wasteland people stand out from the mud. → FK-063
+3. With Story ON the leader's place is the band (Ash, then Wren in her locked red), dressed by the cast cards: FK-006 (Stone), FK-086 (Bronze), FK-100 to FK-103. The generic leaders stay as they are, so Story OFF is today's game. → FK-006

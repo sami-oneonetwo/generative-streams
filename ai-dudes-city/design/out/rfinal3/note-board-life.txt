@@ -1,0 +1,7 @@
+Design review, 24 Oct 2026: crisp, playful, consistent?
+Crisp: mostly. Every build has a chunky silhouette that reads at this size, but the Stone and Wasteland rows go brown on brown: their people sink into the mud, and the Wasteland home, ration cantina and tower merge with their ground in greyscale. Playful: yes. The antlered Chief, the wolf-dog sledge "car", the mammoth herder's shell cowl and the patched-up block runner each have their funny detail. Consistent: not yet. Each age is unmistakable and different from its neighbours, but the story colours leak (the King's cape is red, the Modern hatchback is red, and the Chief and the Overseer carry no gold to say who they are), and the Wasteland builds read as new rustic timber, not the Modern town patched up from its ruins. Astra's critique: revise, 6/10 (critique-board-life.json). The red shirts on the townsfolk are the sample chatter's own colour, not the kits.
+
+Top 3 fixes:
+1. The head wears gold, never red: a gold sash in every age, the King out of red, the hat ladder ×1.0 to ×2.0. → FK-064
+2. An ink outline on people, pets and the cast, so Stone and Wasteland people stand out from the mud. → FK-063
+3. The in-game design prompt: a 25% lightness gap between roof and walls, and no story red or gold as a main colour (the red hatchback); put Wasteland builds in its A/B so they come out as the Modern town rebuilt from scrap. → FK-070

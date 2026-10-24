@@ -2,14 +2,16 @@
 // builder (client/dudes/primitives.ts) and camera angle, on ground laid from the age's surfaces.
 // design/render.mjs hands it the specs (window.renderBoard) and saves what comes back: a sheet per age,
 // a street-corner scene per age, every cell on its own, and the three boards with the ages in rows.
+// With --shipped the specs are the game's own (design/shipped.ts) and the people columns are the
+// town's figures in the shipped kits (./people.ts). Every board carries its round and date, and the
+// audit note beside it (note-<board>.txt in the round's folder) is printed underneath (FK-004).
 import * as THREE from 'three';
 import { PATCH, col, ground, isShared, paint, type Surface } from '../../client/dudes/surfaces';
 import { PIECE_MATERIALS, mergePiece, placePiece } from '../../client/dudes/pieces';
 import { figureGroup } from '../../client/dudes/dudes';
-import { AGES as AGE_STYLES, dressFor } from '../../src/shared/ages';
-import type { Outfit } from '../../src/shared/outfits';
-import type { DudeLook } from '../../src/shared/dudesTypes';
+import type { AgeOutfits } from '../../src/shared/outfits';
 import type { Primitive } from '../../src/shared/objectTypes';
+import { boardPeople, lineUp, type Figure, type Slot } from './people';
 
 interface Bible {
   id: string;
@@ -40,9 +42,18 @@ interface AgeData {
   name: string;
   bible: Bible;
   elements: Record<string, Spec | undefined>;
+  /** The shipped garment kits and the age's index: the people columns are drawn as the town's figures. */
+  index?: number;
+  people?: AgeOutfits;
 }
 interface BoardData {
   title: string;
+  /** The round and the date, for the label under each board's title. */
+  label?: string;
+  /** The specs are the game's own (design/shipped.ts): the label says so, board by board. */
+  shipped?: boolean;
+  /** Audit notes by board file ("board-life.png"), printed under that board. */
+  notes?: Record<string, string>;
   ages: AgeData[];
   elements: ElementInfo[];
 }
@@ -101,6 +112,25 @@ function partsGroup(spec: Spec | undefined): THREE.Group {
   if (spec?.parts?.length) placePiece(mergePiece(spec), { x: 0, z: 0 }, g);
   return g;
 }
+/** People in a row along x, drawn with the town's own figure builder. */
+function figuresGroup(figures: Figure[]): THREE.Group {
+  const g = new THREE.Group();
+  for (const f of figures) {
+    const p = figureGroup(f.look, f.outfit);
+    p.position.x = f.x;
+    g.add(p);
+  }
+  return g;
+}
+/** A people column on a board drawn from the shipped kits: the town's figures and their caption; undefined otherwise. */
+const peopleOf = (age: AgeData, id: string) => (age.people && age.index !== undefined ? boardPeople(id, age.index, age.people) : undefined);
+/** A column's piece in an age: the town's figures for a people column of a shipped board, else the spec's parts. */
+function pieceGroup(age: AgeData, id: string): THREE.Group {
+  const people = peopleOf(age, id);
+  return people ? figuresGroup(people.figures) : partsGroup(age.elements[id]);
+}
+/** The name under a cell. */
+const caption = (age: AgeData, id: string): string => peopleOf(age, id)?.caption ?? age.elements[id]?.name ?? '(missing)';
 
 // ---- rendering --------------------------------------------------------------------------------------
 const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
@@ -185,8 +215,7 @@ const CELL_W = 420,
   CELL_H = 320;
 function renderCell(age: AgeData, e: ElementInfo, w = CELL_W, h = CELL_H): HTMLCanvasElement {
   const scene = new THREE.Scene();
-  const spec = age.elements[e.id];
-  const parts = partsGroup(spec);
+  const parts = pieceGroup(age, e.id);
   // Builds and people are framed to themselves; tiles to their room.
   let box: THREE.Box3;
   if (e.tile === 'none') {
@@ -223,9 +252,9 @@ function tileDisc(scene: THREE.Scene, b: Bible, x: number, z: number, r: number)
 }
 
 // ---- the street corner: the age's pieces put together --------------------------------------------------
-function place(scene: THREE.Scene, spec: Spec | undefined, x: number, z: number, ry = 0, fit?: number): void {
-  if (!spec) return;
-  const g = partsGroup(spec);
+function place(scene: THREE.Scene, age: AgeData, id: string, x: number, z: number, ry = 0, fit?: number): void {
+  if (!age.elements[id] && !peopleOf(age, id)) return;
+  const g = pieceGroup(age, id);
   if (fit) {
     const b = new THREE.Box3().setFromObject(g);
     const size = Math.max(b.max.x - b.min.x, b.max.z - b.min.z);
@@ -238,8 +267,7 @@ function place(scene: THREE.Scene, spec: Spec | undefined, x: number, z: number,
 function renderVignette(age: AgeData, w = 1280, h = 760): HTMLCanvasElement {
   const scene = new THREE.Scene();
   const b = age.bible,
-    S = b.surfaces,
-    el = age.elements;
+    S = b.surfaces;
   const pave = b.rules?.sidewalks === false ? null : S.pavement;
   ground(scene, S.countryside, -60, 60, -60, 60, -0.01);
   // North of the street: a claimed lot and a free one. South: the square.
@@ -250,27 +278,27 @@ function renderVignette(age: AgeData, w = 1280, h = 760): HTMLCanvasElement {
   if (!pave) ground(scene, S.lotRough, -24, 24, 4, 6, 0.006);
   street(scene, b, -24, 24, 0);
   // The street's own details, along it.
-  for (const x of [-12, 0, 12]) place(scene, el.street, x, 0);
+  for (const x of [-12, 0, 12]) place(scene, age, 'street', x, 0);
   // The lots (pieces designed with the street at their +z).
-  place(scene, el['lot-claimed'], -10, -14.5);
-  place(scene, el.home, -10, -15.5, 0, 11);
-  place(scene, el['lot-sale'], 10, -14.5);
+  place(scene, age, 'lot-claimed', -10, -14.5);
+  place(scene, age, 'home', -10, -15.5, 0, 11);
+  place(scene, age, 'lot-sale', 10, -14.5);
   // Street furniture on the walking edge.
-  place(scene, el['street-tree'], -16, -10);
-  place(scene, el['street-light'], 2, -10);
-  place(scene, el['street-light'], -20, 0);
+  place(scene, age, 'street-tree', -16, -10);
+  place(scene, age, 'street-light', 2, -10);
+  place(scene, age, 'street-light', -20, 0);
   // The square.
-  place(scene, el.centrepiece, 0, 16);
-  place(scene, el.bench, -6, 13, 0.3);
-  place(scene, el.bench, 6, 19.5, Math.PI + 0.2);
-  place(scene, el.market, 8, 11, -0.2);
-  place(scene, el.arrival, 14, 0);
-  place(scene, el.cafe, -16, 18, 0, 9);
+  place(scene, age, 'centrepiece', 0, 16);
+  place(scene, age, 'bench', -6, 13, 0.3);
+  place(scene, age, 'bench', 6, 19.5, Math.PI + 0.2);
+  place(scene, age, 'market', 8, 11, -0.2);
+  place(scene, age, 'arrival', 14, 0);
+  place(scene, age, 'cafe', -16, 18, 0, 9);
   // People about.
-  place(scene, el.resident, -4, 2.5, 0.4);
-  place(scene, el.head, -2, 10, 0.6);
-  place(scene, el.leader, 3, 9, -0.5);
-  place(scene, el.dog, -7, 1.8, 1.2, 1.6);
+  place(scene, age, 'resident', -4, 2.5, 0.4);
+  place(scene, age, 'head', -2, 10, 0.6);
+  place(scene, age, 'leader', 3, 9, -0.5);
+  place(scene, age, 'dog', -7, 1.8, 1.2, 1.6);
   lit(scene, b, 40);
   const box = new THREE.Box3(new THREE.Vector3(-22, 0, -22), new THREE.Vector3(22, 6, 24));
   const out = snapshot(scene, camera(box, w, h, 0.92), w, h);
@@ -307,6 +335,58 @@ const INK = '#1d2421',
   PAPER = '#f4efe2',
   MUTED = '#6b6a60';
 
+/** Wrapped lines of text at a size and weight, so a block can be measured before it is drawn. */
+function lines(g: CanvasRenderingContext2D, s: string, size: number, weight: number, max: number): string[] {
+  g.font = `${weight} ${size}px ${FONT}`;
+  const out: string[] = [];
+  let line = '';
+  for (const w of s.split(/\s+/).filter(Boolean)) {
+    if (line && g.measureText(`${line} ${w}`).width > max) {
+      out.push(line);
+      line = w;
+    } else line = line ? `${line} ${w}` : w;
+  }
+  if (line) out.push(line);
+  return out;
+}
+const MEASURE = document.createElement('canvas').getContext('2d')!;
+const NOTE_HEAD = 26,
+  NOTE_SIZE = 21;
+/**
+ * The audit note under a board (note-<board>.txt beside it): the first line is its heading, a short
+ * line ending in a colon ("Top 3 fixes:") is bold, the rest wraps, a blank line is a small gap. In a column no wider than 1500 px so it reads on a wide
+ * board. Draws it at y when given a context; returns the height it takes either way.
+ */
+function noteBlock(note: string | undefined, width: number, g?: CanvasRenderingContext2D, y = 0): number {
+  if (!note?.trim()) return 0;
+  const max = Math.min(width - 32, 1500);
+  if (g) {
+    g.fillStyle = INK;
+    g.fillRect(16, y + 4, width - 32, 3);
+  }
+  let h = 22;
+  note
+    .trim()
+    .split('\n')
+    .forEach((row, i) => {
+      if (!row.trim()) return void (h += NOTE_SIZE * 0.6);
+      const size = i ? NOTE_SIZE : NOTE_HEAD,
+        weight = !i ? 800 : /^[^.]{1,40}:$/.test(row.trim()) ? 700 : 400;
+      for (const l of lines(g ?? MEASURE, row.trim(), size, weight, max)) {
+        if (g) text(g, l, 16, y + h, size, INK, weight);
+        h += size * 1.32;
+      }
+    });
+  return h + 18;
+}
+/** The board's title and the label under it; returns where the board's own content starts. */
+function heading(g: CanvasRenderingContext2D, title: string, subtitle: string | undefined, width: number): number {
+  text(g, title, 16, 14, 40, INK, 800, width - 32);
+  if (!subtitle) return 70;
+  text(g, subtitle, 16, 64, 20, MUTED, 400, width - 32);
+  return 100;
+}
+
 function sheet(age: AgeData, cells: Map<string, HTMLCanvasElement>, elements: ElementInfo[]): HTMLCanvasElement {
   const cols = 6,
     labelH = 46,
@@ -325,7 +405,7 @@ function sheet(age: AgeData, cells: Map<string, HTMLCanvasElement>, elements: El
       y = headH + Math.floor(i / cols) * (CELL_H + labelH + 12);
     g.drawImage(cells.get(e.id)!, x, y);
     text(g, `${e.label}`, x + 2, y + CELL_H + 4, 19, INK, 800, CELL_W - 4);
-    text(g, age.elements[e.id]?.name ?? '(missing)', x + 2, y + CELL_H + 25, 16, MUTED, 400, CELL_W - 4);
+    text(g, caption(age, e.id), x + 2, y + CELL_H + 25, 16, MUTED, 400, CELL_W - 4);
   });
   // The last slot: the age's palette.
   const i = elements.length,
@@ -339,18 +419,25 @@ function sheet(age: AgeData, cells: Map<string, HTMLCanvasElement>, elements: El
   return c;
 }
 
-function board(title: string, ages: AgeData[], elements: ElementInfo[], cellsOf: (age: string, id: string) => HTMLCanvasElement, cw: number, ch: number): HTMLCanvasElement {
+interface BoardText {
+  title: string;
+  subtitle?: string;
+  note?: string;
+}
+function board(t: BoardText, ages: AgeData[], elements: ElementInfo[], cellsOf: (age: string, id: string) => HTMLCanvasElement, cw: number, ch: number): HTMLCanvasElement {
   const labelW = 300,
-    headH = 120,
     gap = 8,
-    capH = 40;
+    capH = 48; // two lines of caption
+  const width = labelW + elements.length * (cw + gap) + gap;
+  const headH = (t.subtitle ? 100 : 70) + 50;
+  const rowsH = headH + ages.length * (ch + capH + gap) + gap;
   const c = document.createElement('canvas');
-  c.width = labelW + elements.length * (cw + gap) + gap;
-  c.height = headH + ages.length * (ch + capH + gap) + gap;
+  c.width = width;
+  c.height = rowsH + noteBlock(t.note, width);
   const g = c.getContext('2d')!;
   g.fillStyle = PAPER;
   g.fillRect(0, 0, c.width, c.height);
-  text(g, title, 16, 14, 40, INK, 800);
+  heading(g, t.title, t.subtitle, width);
   elements.forEach((e, k) => text(g, e.label, labelW + k * (cw + gap) + 4, headH - 34, 20, INK, 800, cw - 6));
   ages.forEach((a, r) => {
     const y = headH + r * (ch + capH + gap);
@@ -359,35 +446,46 @@ function board(title: string, ages: AgeData[], elements: ElementInfo[], cellsOf:
     elements.forEach((e, k) => {
       const x = labelW + k * (cw + gap);
       g.drawImage(cellsOf(a.id, e.id), x, y, cw, ch);
-      text(g, a.elements[e.id]?.name ?? '(missing)', x + 2, y + ch + 6, 15, MUTED, 400, cw - 4);
+      wrap(g, caption(a, e.id), x + 2, y + ch + 6, 15, MUTED, cw - 4, 2);
     });
   });
+  noteBlock(t.note, width, g, rowsH);
   return c;
 }
 
-function vignetteBoard(ages: AgeData[], vignettes: Map<string, HTMLCanvasElement>): HTMLCanvasElement {
+function vignetteBoard(t: BoardText, ages: AgeData[], vignettes: Map<string, HTMLCanvasElement>): HTMLCanvasElement {
   const w = 960,
     h = 570,
     capH = 60,
     gap = 14;
+  const width = 2 * w + 3 * gap;
+  const top = (t.subtitle ? 100 : 70) + 20;
+  const rowsH = top + 3 * (h + capH + gap);
   const c = document.createElement('canvas');
-  c.width = 2 * w + 3 * gap;
-  c.height = 90 + 3 * (h + capH + gap);
+  c.width = width;
+  c.height = rowsH + noteBlock(t.note, width);
   const g = c.getContext('2d')!;
   g.fillStyle = PAPER;
   g.fillRect(0, 0, c.width, c.height);
-  text(g, 'A street corner in every age', 16, 18, 40, INK, 800);
+  heading(g, t.title, t.subtitle, width);
   ages.forEach((a, i) => {
     const x = gap + (i % 2) * (w + gap),
-      y = 90 + Math.floor(i / 2) * (h + capH + gap);
+      y = top + Math.floor(i / 2) * (h + capH + gap);
     g.drawImage(vignettes.get(a.id)!, x, y, w, h);
     text(g, a.name.toUpperCase(), x, y + h + 6, 24, INK, 800);
     wrap(g, a.bible.summary ?? '', x, y + h + 34, 16, MUTED, w, 1);
   });
+  noteBlock(t.note, width, g, rowsH);
   return c;
 }
 
 const frame = () => new Promise((r) => requestAnimationFrame(() => r(undefined)));
+/** What each board shows when it is drawn from the shipped kits, for its label. */
+const SHIPPED = {
+  'board-fabric.png': "the town's pieces and ground as the game draws them today",
+  'board-life.png': "people in the game's garment kits, drawn as the town draws them; the example builds are samples from the game's design prompt",
+  'board-vignettes.png': "the town's pieces and people as the game has them today; the home, café and dog are samples from the game's design prompt",
+};
 
 async function renderBoard(data: BoardData): Promise<Record<string, string>> {
   const out: Record<string, string> = {};
@@ -411,76 +509,97 @@ async function renderBoard(data: BoardData): Promise<Record<string, string>> {
   const get = (a: string, id: string) => cells.get(`${a}-${id}`)!;
   const fabric = data.elements.filter((e) => e.board === 'fabric'),
     life = data.elements.filter((e) => e.board === 'life');
-  out['board-fabric.png'] = board(`${data.title}: the town's fabric through the ages`, data.ages, fabric, get, 280, 213).toDataURL('image/png');
-  out['board-life.png'] = board(`${data.title}: people and example builds through the ages`, data.ages, life, get, 300, 228).toDataURL('image/png');
-  out['board-vignettes.png'] = vignetteBoard(data.ages, vignettes).toDataURL('image/png');
+  const t = (name: keyof typeof SHIPPED, title: string): BoardText => ({ title, subtitle: data.label && `${data.label} · ${data.shipped ? `as shipped: ${SHIPPED[name]}` : 'from design/spec'}`, note: data.notes?.[name] });
+  out['board-fabric.png'] = board(t('board-fabric.png', `${data.title}: the town's fabric through the ages`), data.ages, fabric, get, 280, 213).toDataURL('image/png');
+  out['board-life.png'] = board(t('board-life.png', `${data.title}: people and example builds through the ages`), data.ages, life, get, 300, 228).toDataURL('image/png');
+  out['board-vignettes.png'] = vignetteBoard(t('board-vignettes.png', 'A street corner in every age'), data.ages, vignettes).toDataURL('image/png');
   return out;
 }
 
 // ---- outfits: the age's garment kits on real rigged figures ------------------------------------------
 interface OutfitData {
-  ages: { id: string; name: string; index: number; bible: Bible; outfits?: { kits?: Outfit[]; head?: Outfit; leader?: Outfit } }[];
+  subtitle?: string;
+  /** The audit note printed under outfits-board.png. */
+  note?: string;
+  ages: { id: string; name: string; index: number; bible: Bible; outfits?: AgeOutfits }[];
 }
-/** Two people who look nothing alike, so a kit shows how it takes each wearer's own colours. */
-const SAMPLES: DudeLook[] = [
-  { skin: '#e0b08a', shirt: '#c4402f', pants: '#3f5f8a', hair: '#3a2a1e', hat: 'cap', hatColor: '#e0c040', accessory: 'none', accessoryColor: '#5d6f7a', height: 1.05, build: 1.05 },
-  { skin: '#8a5a3c', shirt: '#4f9a5a', pants: '#d9c49a', hair: '#1a1410', hat: 'none', hatColor: '#8a5a44', accessory: 'scarf', accessoryColor: '#7a3fa0', height: 0.92, build: 0.9 },
-];
-function renderOutfitRow(a: OutfitData['ages'][number], w = 1800, h = 560): HTMLCanvasElement {
+/** A slot of the line-up in the row picture's pixels: where its label goes. */
+interface SlotPx extends Slot {
+  px: number;
+  pw: number;
+}
+/** The line-up (./people.ts lineUp) seen head-on from the stream camera's height, and where each slot's label goes. */
+function renderOutfitRow(a: OutfitData['ages'][number], w = 1800, h = 480): { picture: HTMLCanvasElement; slots: SlotPx[] } {
   const scene = new THREE.Scene();
-  const o = a.outfits ?? {};
-  const people: { look: DudeLook; outfit?: Outfit; label: string }[] = [];
-  (o.kits ?? []).forEach((k) => SAMPLES.forEach((look, i) => people.push({ look: dressFor(look, a.index), outfit: k, label: i ? '' : k.name })));
-  people.push({ look: AGE_STYLES[a.index].head.look, outfit: o.head, label: o.head?.name ?? 'head' });
-  people.push({ look: dressFor(SAMPLES[0], a.index), outfit: o.leader, label: o.leader?.name ?? 'leader' });
-  // A line-up seen head-on from the stream camera's height (turning doesn't matter for people facing it).
-  const row = new THREE.Group();
+  const { figures, slots, width } = lineUp(a.outfits ?? { kits: [] }, a.index);
+  const row = figuresGroup(figures);
   scene.add(row);
-  const gap = 0.95;
-  const x0 = -((people.length - 1) * gap + Math.floor((people.length - 1) / 2) * 0.3) / 2;
-  people.forEach((p, i) => {
-    const g = figureGroup(p.look, p.outfit);
-    g.position.set(x0 + i * gap + Math.floor(i / 2) * 0.3, 0, 0);
-    row.add(g);
-  });
-  ground(row, a.bible.surfaces.lotClaimed ?? a.bible.surfaces.countryside, -9, 9, -1.6, 1.6, 0);
-  lit(scene, a.bible, 12);
+  // Deep enough that no row shows sky, whatever its tallest hat: every row reads the same.
+  ground(row, a.bible.surfaces.lotClaimed ?? a.bible.surfaces.countryside, -width / 2 - 3, width / 2 + 3, -16, 4, 0);
+  lit(scene, a.bible, width / 2 + 6);
   row.updateMatrixWorld(true);
   const figs = new THREE.Box3();
   row.children.forEach((c) => c instanceof THREE.Group && figs.expandByObject(c));
-  const box = figs.expandByVector(new THREE.Vector3(0.2, 0.1, 0.2));
-  const out = snapshot(scene, camera(box, w, h, 1.04, 0), w, h);
+  // Framed to the slots across, so every label has its room, and to the tallest hat up.
+  const box = new THREE.Box3(new THREE.Vector3(-width / 2, figs.min.y, figs.min.z - 0.2), new THREE.Vector3(width / 2, figs.max.y + 0.1, figs.max.z + 0.2));
+  const cam = camera(box, w, h, 1.02, 0);
+  const picture = snapshot(scene, cam, w, h);
   dispose(scene);
-  // Kit names under each pair.
-  const g2 = out.getContext('2d')!;
-  g2.fillStyle = 'rgba(244,239,226,0.9)';
-  g2.fillRect(0, h - 40, w, 40);
-  const labels = people.map((p) => p.label).filter(Boolean);
-  labels.forEach((l, i) => text(g2, l, 10 + (i * (w - 20)) / labels.length, h - 32, 17, INK, 700, (w - 20) / labels.length - 8));
-  return out;
+  const px = (x: number) => ((new THREE.Vector3(x, 0, 0).project(cam).x + 1) / 2) * w;
+  return { picture, slots: slots.map((s) => ({ ...s, px: px(s.x), pw: px(s.x + s.width / 2) - px(s.x - s.width / 2) })) };
 }
-async function renderOutfits(data: OutfitData): Promise<Record<string, string>> {
-  const out: Record<string, string> = {};
-  const rows: HTMLCanvasElement[] = [];
-  for (const a of data.ages) {
-    const c = renderOutfitRow(a);
-    rows.push(c);
-    out[`outfits-${a.id}.png`] = c.toDataURL('image/png');
-    await frame();
-  }
-  const capH = 52;
+const ROLE: Record<Slot['role'], string> = { kit: 'EVERYDAY', head: 'THE HEAD', leader: 'CARAVAN LEADER' };
+/** A row picture at a scale with each slot's role and kit name under it (two lines at most); used alone and on the board. */
+function outfitPanel(row: { picture: HTMLCanvasElement; slots: SlotPx[] }, scale: number): HTMLCanvasElement {
+  const roleSize = Math.round(18 * scale),
+    nameSize = Math.round(22 * scale);
+  const bandH = Math.round(roleSize * 1.3 + 2 * nameSize * 1.25 + 14 * scale);
   const c = document.createElement('canvas');
-  c.width = rows[0].width / 2 + 24;
-  c.height = 90 + rows.length * (rows[0].height / 2 + capH);
+  c.width = Math.round(row.picture.width * scale);
+  c.height = Math.round(row.picture.height * scale) + bandH;
   const g = c.getContext('2d')!;
   g.fillStyle = PAPER;
   g.fillRect(0, 0, c.width, c.height);
-  text(g, 'What people wear in every age', 16, 18, 40, INK, 800);
+  g.drawImage(row.picture, 0, 0, c.width, c.height - bandH);
+  const top = c.height - bandH + 6 * scale;
+  for (const s of row.slots) {
+    const x = (s.px - s.pw / 2) * scale + 6 * scale,
+      max = s.pw * scale - 12 * scale;
+    text(g, ROLE[s.role], x, top, roleSize, MUTED, 700, max);
+    const name = lines(g, s.label, nameSize, 700, max);
+    name.slice(0, 2).forEach((l, i) => text(g, i === 1 && name.length > 2 ? `${l}…` : l, x, top + roleSize * 1.3 + i * nameSize * 1.25, nameSize, INK, 700, max));
+  }
+  return c;
+}
+async function renderOutfits(data: OutfitData): Promise<Record<string, string>> {
+  const out: Record<string, string> = {};
+  const panels: HTMLCanvasElement[] = [];
+  for (const a of data.ages) {
+    const row = renderOutfitRow(a);
+    out[`outfits-${a.id}.png`] = outfitPanel(row, 1).toDataURL('image/png');
+    panels.push(outfitPanel(row, 2 / 3));
+    await frame();
+  }
+  // The board: the ages in rows at two-thirds size, each named, every kit labelled under its wearers.
+  const capH = 44,
+    gap = 16,
+    width = panels[0].width + 24;
+  const top = (data.subtitle ? 100 : 70) + 10;
+  const rowsH = top + panels.reduce((h, p) => h + capH + p.height + gap, 0);
+  const c = document.createElement('canvas');
+  c.width = width;
+  c.height = rowsH + noteBlock(data.note, width);
+  const g = c.getContext('2d')!;
+  g.fillStyle = PAPER;
+  g.fillRect(0, 0, c.width, c.height);
+  heading(g, 'What people wear in every age', data.subtitle, width);
+  let y = top;
   data.ages.forEach((a, i) => {
-    const y = 90 + i * (rows[0].height / 2 + capH);
-    text(g, a.name.toUpperCase(), 12, y + 8, 24, INK, 800);
-    g.drawImage(rows[i], 12, y + capH - 8, rows[i].width / 2, rows[i].height / 2);
+    text(g, a.name.replace(/^the /, '').toUpperCase(), 12, y + 8, 26, INK, 800);
+    g.drawImage(panels[i], 12, y + capH);
+    y += capH + panels[i].height + gap;
   });
+  noteBlock(data.note, width, g, rowsH);
   out['outfits-board.png'] = c.toDataURL('image/png');
   return out;
 }
