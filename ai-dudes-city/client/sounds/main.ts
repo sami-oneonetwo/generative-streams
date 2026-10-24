@@ -3,11 +3,12 @@
 // can judge a sound by ear (agents can't hear). Its own AudioContext, started by a click as browsers
 // need. It reads nothing from the server and writes nothing (Approve is FK-160), so it is harmless if
 // someone else reaches it. The workings are in board.ts.
-import { CUES, createAudio, type AudioHandles, type AudioLevels, type Cue } from '../dudes/audio';
+import { CUES, createAudio, type AudioHandles, type AudioLevels, type Bus, type Cue } from '../dudes/audio';
 import { emoteNames } from '../../src/shared/emotes';
 import {
   CLOCK_MS,
   CROWD_MAX,
+  CROWD_SEED,
   DISTANCES,
   LISTEN,
   RATES,
@@ -51,6 +52,7 @@ const colourOf = (v: Voice | Talker) => ('low' in v && v.low ? 'var(--gold)' : V
 
 // --- the sound ---
 
+let ctx: AudioContext | undefined;
 let audio: AudioHandles | undefined;
 let out: Output | undefined;
 const meter = createMeter();
@@ -58,7 +60,12 @@ const levels: AudioLevels = { ...STREAM };
 let tune = false,
   birds = false,
   where: Distance = 'near',
-  bed: string | undefined;
+  bed: Cue | undefined;
+// The buses a one-off cue opened for itself (none yet: every one-off is on the effects bus), until Hush
+// or that bus's toggle goes off. A bed's bus is open while it holds. Either way only the level comes
+// up: the clock doesn't tick, so a cue never brings the tune or the birds in (the hum is the ambience
+// bus's own, so it comes with the fountain, as it is always under it on the stream).
+const opened = new Set<Bus>();
 // The throttles' clock (AudioOptions.now): the page's, moved on a minute at every click, so a click
 // always plays (the stream rests a fanfare 4 s, a bray 6 s, a speaker 400 ms). The crowd never moves
 // it: its talkers keep the stream's rests.
@@ -68,32 +75,58 @@ const fresh = () => {
   meter.mark();
 };
 
+/** The levels to the town: the effects always up; the music and the ambience while something on them plays. */
 function send() {
-  audio?.levels({ music: tune ? levels.music : 0, sfx: levels.sfx, ambience: birds ? levels.ambience : 0 });
+  const up = (bus: Bus, on: boolean) => on || opened.has(bus) || bed?.bus === bus;
+  audio?.levels({ music: up('music', tune) ? levels.music : 0, sfx: levels.sfx, ambience: up('ambience', birds) ? levels.ambience : 0 });
 }
 
+// The buses glide from 1 to their levels in their first second: the board stays silent through it.
+const SETTLE = 1.5;
+let starting = false,
+  settled = false,
+  live = false;
+/** Start sound: the context made (once) and woken by this click; the board is live once it runs and has settled. */
 async function start() {
+  if (starting) return;
   const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!Ctx) return void ($('status').textContent = 'No Web Audio in this browser');
-  const ctx = new Ctx();
+  starting = true;
   $('start').textContent = 'Starting…';
-  out = createOutput(ctx);
-  // The buses glide from 1 to their levels in their first second: the board stays silent through it.
-  const settle = 1.5;
-  out.hold(settle);
-  audio = createAudio(true, { music: 0, sfx: levels.sfx, ambience: 0 }, { ctx: boardContext(ctx, out.input), now: () => performance.now() + skip });
-  audio.listen(LISTEN.x, LISTEN.z, LISTEN.half);
+  if (!ctx) {
+    const c = (ctx = new Ctx());
+    out = createOutput(c);
+    out.hold(SETTLE);
+    audio = createAudio(true, { music: 0, sfx: levels.sfx, ambience: 0 }, { ctx: boardContext(c, out.input), now: () => performance.now() + skip });
+    audio.listen(LISTEN.x, LISTEN.z, LISTEN.half);
+    // The board is the town's clock (boardContext): the tune and the birds tick only while they are on.
+    setInterval(() => tickClock(audio!, tune, birds), CLOCK_MS);
+    requestAnimationFrame(frame);
+    c.onstatechange = shown;
+  }
   await ctx.resume().catch(() => {});
-  $('status').textContent = 'Settling…';
-  // The board is the town's clock (boardContext): the tune and the birds tick only while they are on.
-  setInterval(() => tickClock(audio!, tune, birds), CLOCK_MS);
-  requestAnimationFrame(frame);
-  setTimeout(() => {
-    $('board').inert = false;
-    document.body.classList.add('on');
-    $('status').textContent = `Sound on · ${(ctx.sampleRate / 1000).toFixed(1)} kHz`;
-    $('start').textContent = 'Hush';
-  }, settle * 1000);
+  if (ctx.state === 'running' && !settled) {
+    $('status').textContent = 'Settling…';
+    await new Promise((r) => setTimeout(r, SETTLE * 1000));
+    settled = true;
+  }
+  starting = false;
+  shown();
+}
+/**
+ * The board as its context stands. The town counts it as always running (boardContext), so a context
+ * the browser suspends or interrupts (autoplay rules, a lost output device) would stack every click
+ * and line on a stopped clock, all to sound at once on waking: the board hushes and waits for Start.
+ */
+function shown() {
+  if (starting || !ctx) return; // start() shows its own progress, then this
+  const on = ctx.state === 'running' && settled;
+  if (live && !on) hush();
+  live = on;
+  $('board').inert = !on;
+  document.body.classList.toggle('on', on);
+  $('status').textContent = on ? `Sound on · ${(ctx.sampleRate / 1000).toFixed(1)} kHz` : settled ? 'Paused by the browser' : 'Sound blocked · click again';
+  $('start').textContent = on ? 'Hush' : 'Start sound';
 }
 
 /** Everything off: the tune, the birds, a bed, the crowd and any run of cues or voices. */
@@ -102,6 +135,7 @@ function hush() {
   stopCrowd();
   if (bed) audio?.beds(0, 0);
   bed = undefined;
+  opened.clear();
   for (const t of document.querySelectorAll<HTMLElement>('#cues [aria-pressed=true]')) pressed(t, false);
   setTune(false);
   setBirds(false);
@@ -159,22 +193,28 @@ const tiles = new Map<string, HTMLElement>();
 function playCue(c: Cue) {
   if (!audio) return;
   fresh();
-  // A cue is heard on its bus: if the board has that bus off, it comes on (the fountain brings the ambience).
-  if (c.bus === 'ambience' && !birds) setBirds(true);
-  if (c.bus === 'music' && !tune) setTune(true);
   const tile = tiles.get(c.name)!;
   pop(tile);
-  if (!isBed(c)) return c.play(audio, c.placed ? placeAt(where) : undefined);
-  // A bed holds until it is clicked again; one at a time, as each bed's play() sets the others to 0.
-  if (bed) pressed(tiles.get(bed)!, false);
-  if (bed === c.name) {
-    audio.beds(0, 0);
-    bed = undefined;
-    return;
+  if (!isBed(c)) {
+    // Heard on its bus: a one-off on the music or the ambience bus opens it (see `opened`). A bus glides
+    // up (levels(): a 0.3 s time constant), so the first cue there would start soft and should wait a
+    // second for it; FK-126's whistle and bell are on the effects bus, so none needs to yet.
+    if (c.bus === 'music' || c.bus === 'ambience') {
+      opened.add(c.bus);
+      send();
+    }
+    return c.play(audio, c.placed ? placeAt(where) : undefined);
   }
-  c.play(audio);
-  bed = c.name;
-  pressed(tile, true);
+  // A bed holds until it is clicked again; one at a time, as each bed's play() sets the others to 0.
+  // Its bus is open while it holds (the fountain's is the ambience), and closes behind it.
+  const was = bed;
+  if (was) pressed(tiles.get(was.name)!, false);
+  bed = was === c ? undefined : c;
+  if (bed) {
+    c.play(audio);
+    pressed(tile, true);
+  } else audio.beds(0, 0);
+  send();
 }
 for (const g of cueGroups(CUES)) {
   const h = el('h3', '', g.title);
@@ -247,7 +287,7 @@ function startCrowd(n: number) {
   stopCrowd();
   if (!audio || was === n) return;
   // The same seed each run: the same talkers in the same places, saying the same lines at the same moments.
-  const rand = seeded(159);
+  const rand = seeded(CROWD_SEED);
   const talkers = crowd(n, rand);
   const ring = $('ring');
   const scale = ring.clientHeight / 2 / 12;
@@ -272,7 +312,7 @@ function startCrowd(n: number) {
       $('crowd-last').textContent = `${t.name}: “${emoteNames(text)}”`;
     }
     const secs = (performance.now() - c.since) / 1000;
-    $('crowd-stat').textContent = `${n} talkers · ${c.heard} lines · ${(c.heard / Math.max(1, secs)).toFixed(1)} a second`;
+    $('crowd-stat').textContent = `${c.heard} lines · ${(c.heard / Math.max(1, secs)).toFixed(1)} a second (expect ${+(n / every).toFixed(2)})`;
   }, SNAPSHOT_MS);
   talking = c;
   meter.mark();
@@ -288,6 +328,7 @@ for (const r of RATES) {
   b.onclick = () => {
     rate = r.key;
     for (const x of $('rates').children) pressed(x as HTMLElement, x === b);
+    if (talking) Object.assign(talking, { heard: 0, since: performance.now() }); // the readout counts the new rate afresh
   };
   $('rates').append(b);
 }
@@ -296,11 +337,13 @@ for (const r of RATES) {
 
 function setTune(on: boolean) {
   tune = on;
+  if (!on) opened.delete('music');
   pressed($('tune'), on);
   send();
 }
 function setBirds(on: boolean) {
   birds = on;
+  if (!on) opened.delete('ambience');
   pressed($('amb'), on);
   send();
 }
@@ -345,4 +388,4 @@ for (const d of DISTANCES) {
   };
   $('where').append(b);
 }
-$('start').onclick = () => (audio ? hush() : void start());
+$('start').onclick = () => (live ? hush() : void start());

@@ -11,10 +11,12 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { CUES, createAudio, type AudioHandles, type AudioLevels, type Cue } from '../client/dudes/audio';
 import {
+  BUTTERWORTH_DB,
   CLOCK,
   CLOCK_MS,
   CROWD_LINES,
   CROWD_MAX,
+  CROWD_SEED,
   DISTANCES,
   LISTEN,
   PHONE,
@@ -105,6 +107,20 @@ function same(a: unknown[][], b: unknown[][], what: string) {
   while (i < a.length && i < b.length && JSON.stringify(a[i]) === JSON.stringify(b[i])) i++;
   assert.deepEqual({ rows: a.length, [`row ${i}`]: a[i] }, { rows: b.length, [`row ${i}`]: b[i] }, what);
 }
+/**
+ * A biquad's gain in dB at `f` Hz, by the Web Audio spec's formulas (the Audio EQ Cookbook's, with a
+ * lowpass's and a highpass's Q read in dB: alpha = sin(w0) / (2·10^(Q/20))).
+ */
+function biquadDb(type: 'lowpass' | 'highpass', f0: number, qDb: number, f: number, rate: number) {
+  const w0 = (2 * Math.PI * f0) / rate,
+    cos = Math.cos(w0),
+    alpha = Math.sin(w0) / (2 * 10 ** (qDb / 20));
+  const b = type === 'lowpass' ? [(1 - cos) / 2, 1 - cos, (1 - cos) / 2] : [(1 + cos) / 2, -(1 + cos), (1 + cos) / 2];
+  const a = [1 + alpha, -2 * cos, 1 - alpha];
+  const w = (2 * Math.PI * f) / rate;
+  const mag = (k: number[]) => Math.hypot(k[0] + k[1] * Math.cos(w) + k[2] * Math.cos(2 * w), k[1] * Math.sin(w) + k[2] * Math.sin(2 * w));
+  return 20 * Math.log10(mag(b) / mag(a));
+}
 const loudest = (evs: Ev[]) => Math.max(0, ...evs.filter((e) => e.op === 'gain.exponentialRampToValueAtTime' && typeof e.v === 'number').map((e) => e.v as number));
 
 // --- the sound is the stream's ---
@@ -137,7 +153,7 @@ test("the board plays the stream's sound: createAudio() asks its context for the
 
 test("the board is the town's clock: no timer of the town's own, nothing woken on a click; tickClock beats as the stream page's timer", () => {
   const b = board();
-  assert.deepEqual(b.timers, [], "no 100 ms timer: a stopped tune doesn't play on under a muted bus");
+  assert.deepEqual(b.timers, [], 'no 100 ms timer: a stopped tune stops within a bar, where the stream plays it on under a muted bus');
   assert.deepEqual(b.listeners, [], 'the board starts its context with its own click');
   assert.equal(CLOCK_MS, 100, 'the board beats ten times a second, as the page timer does');
   // The stream page: a live context, its own timer run by hand every 100 ms for 30 s.
@@ -235,7 +251,7 @@ test('where it plays: near is on the camera, mid and far are quieter and still i
 
 // --- the output ---
 
-test('the output: the full sound or a phone (mono, 300 Hz–8 kHz, 24 dB an octave each side), then the speakers and the meter', () => {
+test('the output: the full sound or a phone (mono, 300 Hz–8 kHz, Butterworths: flat between, −6 dB at the corners, 24 dB an octave), then the speakers and the meter', () => {
   const ctx = new BoardFake();
   const out = createOutput(asCtx(ctx));
   const input = out.input as unknown as FakeNode;
@@ -251,16 +267,23 @@ test('the output: the full sound or a phone (mono, 300 Hz–8 kHz, 24 dB an octa
   );
   const filters: FakeNode[] = [];
   for (let n = mono.out[0]; n.kind === 'biquad'; n = n.out[0]) filters.push(n);
-  assert.deepEqual(
-    filters.map((f) => [set(f, 'type')[0], set(f, 'frequency.value')[0], set(f, 'Q.value')[0]]),
-    [
-      ['highpass', PHONE.low, Math.SQRT1_2],
-      ['highpass', PHONE.low, Math.SQRT1_2],
-      ['lowpass', PHONE.high, Math.SQRT1_2],
-      ['lowpass', PHONE.high, Math.SQRT1_2],
-    ],
-  );
+  const chain = filters.map((f) => [set(f, 'type')[0], set(f, 'frequency.value')[0], set(f, 'Q.value')[0]] as ['lowpass' | 'highpass', number, number]);
+  assert.deepEqual(chain, [
+    ['highpass', PHONE.low, BUTTERWORTH_DB],
+    ['highpass', PHONE.low, BUTTERWORTH_DB],
+    ['lowpass', PHONE.high, BUTTERWORTH_DB],
+    ['lowpass', PHONE.high, BUTTERWORTH_DB],
+  ]);
   assert.deepEqual([PHONE.low, PHONE.high], [300, 8000]);
+  assert.equal(BUTTERWORTH_DB.toFixed(3), '-3.010', "Web Audio reads a lowpass's or a highpass's Q in dB: 1/√2 is −3.01 dB, not 0.707");
+  // What the four filters do, as the browser runs them, at the two usual sample rates.
+  for (const rate of [44_100, 48_000]) {
+    const db = (f: number) => chain.reduce((sum, [type, f0, q]) => sum + biquadDb(type, f0, q, f, rate), 0);
+    for (let f = 1000; f <= 4000; f += 250) assert.ok(Math.abs(db(f)) <= 0.5, `${rate} Hz: flat at ${f} Hz (${db(f).toFixed(2)} dB)`);
+    for (const f of [PHONE.low, PHONE.high]) assert.ok(Math.abs(db(f) + 6) < 0.1, `${rate} Hz: −6 dB at the corner, ${f} Hz (${db(f).toFixed(2)} dB)`);
+    for (let f = 20; f < rate / 2; f *= 1.02) assert.ok(db(f) < 0.05, `${rate} Hz: no hump anywhere, so nothing is flattered (${f.toFixed(0)} Hz: ${db(f).toFixed(2)} dB)`);
+    assert.ok(db(PHONE.low / 2) < -24, `${rate} Hz: an octave under, 24 dB down (${db(PHONE.low / 2).toFixed(1)} dB)`);
+  }
   const phone = filters.at(-1)!.out[0];
   assert.deepEqual(set(phone, 'gain.value'), [0], 'the phone starts off');
   const end = full.out[0];
@@ -312,13 +335,13 @@ test('the meter: a half-scale sine peaks at −6.0 dBFS with an RMS of −9.0; t
 // --- the crowd ---
 
 test('the crowd: 6 or 15 test chatters in earshot, each in their own voice, on the snapshots at the chosen rate, the same crowd each run', () => {
-  const six = crowd(6, crowdRandom(159));
+  const six = crowd(6, crowdRandom(CROWD_SEED));
   assert.equal(six.length, 6);
-  assert.equal(crowd(15, crowdRandom(159)).length, CROWD_MAX);
+  assert.equal(crowd(15, crowdRandom(CROWD_SEED)).length, CROWD_MAX);
   assert.equal(CROWD_MAX, 15);
   assert.equal(crowd(99, crowdRandom(1)).length, 15);
-  assert.deepEqual(crowd(6, crowdRandom(159)), six, 'the same seed, the same crowd');
-  const all = crowd(15, crowdRandom(159));
+  assert.deepEqual(crowd(6, crowdRandom(CROWD_SEED)), six, 'the same seed, the same crowd');
+  const all = crowd(15, crowdRandom(CROWD_SEED));
   assert.equal(new Set(all.map((t) => t.id)).size, 15);
   assert.equal(all[0].id, 'dev:test-kev', "a test chatter's id, as /admin's Test chat makes them");
   for (const t of all) {
@@ -340,10 +363,23 @@ test('the crowd: 6 or 15 test chatters in earshot, each in their own voice, on t
     assert.ok(Math.abs(per * r.every - 1) < 0.1, `${r.label}: a line every ${r.every} s (got one every ${(1 / per).toFixed(2)} s)`);
   }
   const run = () => {
-    const rand = crowdRandom(159);
+    const rand = crowdRandom(CROWD_SEED);
     return Array.from({ length: 40 }, () => crowdLines(all, 4, rand).map(([t, l]) => `${t.name}: ${l}`));
   };
   assert.deepEqual(run(), run(), 'the same lines at the same snapshots, run after run');
+  // The page's crowd, as main.ts runs it from CROWD_SEED: from 5 s to a minute in, every half second,
+  // the lines so far are within 2 or 16% of the rate's, so its lines-a-second reads true from the start.
+  for (const n of [6, CROWD_MAX])
+    for (const r of RATES) {
+      const rand = crowdRandom(CROWD_SEED);
+      const talkers = crowd(n, rand);
+      let lines = 0;
+      for (let k = 1; k <= 120; k++) {
+        lines += crowdLines(talkers, r.every, rand).length;
+        const due = ((n / r.every) * k * SNAPSHOT_MS) / 1000;
+        if (k >= 10) assert.ok(Math.abs(lines - due) <= Math.max(2, 0.16 * due), `${n} at ${r.label}, ${k / 2} s in: ${lines} lines for ${due}`);
+      }
+    }
   const words = CROWD_LINES.map((l) => l.split(/\s+/).length);
   assert.ok(Math.min(...words) < 2 && Math.max(...words) > 7, 'lines short and long enough to reach both ends of the 2–7 syllables');
 });

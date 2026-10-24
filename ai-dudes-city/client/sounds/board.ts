@@ -46,7 +46,10 @@ export const CLOCK: readonly string[] = ['music', 'birds'];
 /** A bed holds until it is stopped (`beds(0, 0)`). */
 export const isBed = (c: Cue) => c.name.startsWith('beds:');
 
-/** What each cue is on the stream: the moment it marks. A cue that lands without a line here shows its name alone. */
+/**
+ * What sets each cue off on the stream: the moment it marks, or for a pose, where a build has people
+ * doing it (blueprint.ts). A cue that lands without a line here shows its name alone.
+ */
 export const WHAT: Readonly<Record<string, string>> = {
   doorbell: 'a new neighbour',
   fanfare: 'a grand opening, a party',
@@ -61,19 +64,19 @@ export const WHAT: Readonly<Record<string, string>> = {
   bray: 'the donkey',
   whistle: "Wren's bone whistle",
   bell: 'the Call',
-  'play:shoot': 'hoops',
-  'play:swim': 'a swim',
-  'play:strum': 'a strum',
-  'play:jump': 'a jump',
-  'play:swing': 'a swing',
-  'play:kick': 'a kick',
-  'play:punch': 'a punch',
-  'play:lift': 'a lift',
-  'play:other': 'any other pose',
-  'burst:smoke': 'a teleport',
-  'burst:confetti': 'confetti',
-  'burst:hearts': 'hearts',
-  'burst:sparkles': 'sparkles',
+  'play:shoot': 'at a basketball hoop',
+  'play:swim': 'in a pool or a pond',
+  'play:strum': 'on a stage, at a piano',
+  'play:jump': 'on a trampoline',
+  'play:swing': 'tennis, golf, cricket',
+  'play:kick': 'at a football pitch',
+  'play:punch': 'at a punch bag',
+  'play:lift': 'at the gym',
+  'play:other': 'any other pose: a chime',
+  'burst:smoke': 'a teleport, a remake',
+  'burst:confetti': 'a bit, the final launch',
+  'burst:hearts': 'a bit with love in it',
+  'burst:sparkles': 'a fix, a hat, a remake',
   'beds:engines': 'cars on the road',
   'beds:fountain': 'by the square',
 };
@@ -87,7 +90,7 @@ export interface CueGroup {
 const GROUPS: Readonly<Record<string, { title: string; note: string }>> = {
   '': { title: 'Town', note: 'the one-offs' },
   play: { title: 'Play', note: "doing a build's thing, by pose" },
-  burst: { title: 'Bursts', note: "a bit's flourish" },
+  burst: { title: 'Bursts', note: 'a flourish over someone or a build' },
   beds: { title: 'Beds', note: 'hold until clicked again, one at a time' },
 };
 /**
@@ -169,6 +172,13 @@ export function crowdLines(talkers: readonly Talker[], every: number, rand: () =
   return talkers.flatMap((t): [Talker, string][] => (rand() < chance ? [[t, CROWD_LINES[Math.floor(rand() * CROWD_LINES.length)]]] : []));
 }
 
+/**
+ * The crowd's seed: the same crowd every run, and one whose opening talks at the rate it says (for 6 or
+ * 15 at each rate, every half second from 5 s to a minute in, the count is within 2 lines or 16% of
+ * the rate's), so the page's lines-a-second reads true from the start. Seed 159's opening ran about half
+ * as busy again (15 at Busy: 5.6 a second, 5 s in, for 3.75).
+ */
+export const CROWD_SEED = 9764;
 /** mulberry32: the crowd's random, so a crowd run twice says the same lines at the same moments. */
 export const seeded = (seed: number) => () => {
   seed = (seed + 0x6d2b79f5) | 0;
@@ -185,7 +195,9 @@ export const seeded = (seed: number) => () => {
  * createAudio() takes a context that can render (an OfflineAudioContext) as one whose caller is the
  * clock: no 100 ms timer, nothing woken on a click, everything asked of it played (AudioOptions.ctx).
  * The board is that caller (tickClock): it runs the tune and the birds only while they are on, so a
- * stopped tune is silent, where the stream's M only turns the music bus down and leaves its reverb.
+ * stopped tune stops within a bar (the bar it scheduled plays out through the reverb sends, which skip
+ * the music bus: FK-163), where the stream's M only turns the music bus down and the tune plays on.
+ * Running counts as always (it renders), so the page watches the real context's state itself (main.ts).
  */
 export function boardContext<C extends BaseAudioContext>(ctx: C, out: AudioNode): C {
   return new Proxy(ctx, {
@@ -218,10 +230,17 @@ export interface Output {
 }
 /** The phone speaker's band: a phone has next to nothing under 300 Hz or over 8 kHz. */
 export const PHONE = { low: 300, high: 8000 } as const;
+/**
+ * A Butterworth filter's Q (1/√2), as Web Audio takes it: a lowpass's and a highpass's Q is in dB
+ * (the spec's alpha = sin(w0) / (2·10^(Q/20))), so 1/√2 is −3.01 dB. A plain 0.707 there is a linear
+ * Q of 1.08, and four of them in a row put a 3.5 dB hump at 400 Hz and 6 kHz, on the blips' own notes.
+ */
+export const BUTTERWORTH_DB = 20 * Math.log10(Math.SQRT1_2);
 
 /**
  * town → input → (full | mono → 2 highpasses at 300 Hz → 2 lowpasses at 8 kHz) → the speakers, with a
- * splitter and two analysers on the way out for the meter. Each pair of filters is 24 dB an octave.
+ * splitter and two analysers on the way out for the meter. Each pair of Butterworths is 24 dB an octave,
+ * −6 dB at its corner and flat between (within 0.4 dB from 1 to 4 kHz).
  */
 export function createOutput(ctx: BaseAudioContext): Output {
   const input = ctx.createGain(),
@@ -240,7 +259,7 @@ export function createOutput(ctx: BaseAudioContext): Output {
     const f = ctx.createBiquadFilter();
     f.type = type;
     f.frequency.value = freq;
-    f.Q.value = Math.SQRT1_2;
+    f.Q.value = BUTTERWORTH_DB;
     chain = chain.connect(f);
   }
   chain.connect(phone).connect(out);
