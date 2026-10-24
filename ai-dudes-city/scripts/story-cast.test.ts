@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { harness } from './harness';
 import { ageOf, cityOf } from '../src/worlds/ai-dudes/city';
-import { skipVisit } from '../src/worlds/ai-dudes/caravan';
+import { caravanSaw, skipVisit } from '../src/worlds/ai-dudes/caravan';
 import { CAST, CAST_ROLES, castId, castTownie } from '../src/worlds/ai-dudes/story/cast';
 import { lookSchema, stateSchema } from '../src/worlds/ai-dudes/state';
 import { BRIDGE } from '../src/shared/scenes';
@@ -138,6 +138,11 @@ test('Story OFF: the same three wipes clear the band as today, and no cast is ev
   assert.equal(travellers().length, 5, "today's Stone band");
   assert.ok(!cityOf(h.state).townies.some((t) => t.role || t.id.startsWith('cast-')), 'no cast');
   assert.equal(travellers()[0].name, 'Toma');
+  // A new caravan (startCaravan): today's band again under its `name:age` ids, and still no cast.
+  run('caravan-restart');
+  assert.deepEqual(travellers().map((t) => t.id), cityOf(h.state).caravan!.travellers, "only today's band");
+  assert.ok(travellers().every((t) => /^c[0-9a-z]+$/.test(t.id)), 'under the hashed ids');
+  assert.ok(!cityOf(h.state).townies.some((t) => t.role), 'no cast');
   run('caravan-off');
   await tick(1000);
   assert.equal(travellers().length, 0, 'the caravan off sends them home');
@@ -146,6 +151,37 @@ test('Story OFF: the same three wipes clear the band as today, and no cast is ev
   run('town-off');
   await tick(1000);
   assert.equal(cityOf(h.state).townies.length, 0, 'town life off empties the town');
+});
+
+test("switched on in Bronze's breather, the fifth of the cast waits at the camp with the rest", async () => {
+  const { h, tick, run, band } = await storyTown(false);
+  run('set-age', 'bronze');
+  await tick(2000);
+  assert.equal(band().length, 4, "today's Bronze band is four");
+  const cv = () => cityOf(h.state).caravan!;
+  for (let i = 0; i < 80 && !cv().turn?.left; i++) {
+    if (!cv().turn) skipVisit(h.state, h.now);
+    await tick(5000);
+  }
+  assert.ok(cv().turn?.left && cv().age === 1, 'Bronze said goodbye and walked back to the camp');
+  h.state.ai.story = true;
+  await tick(500);
+  assert.deepEqual(band(), FIVE);
+  const kit = castTownie(h.state, 'kit')!;
+  assert.ok(kit.position.x > BRIDGE.far && !kit.path.length, `Kit (nobody to take over from) waits at the camp, not at the gate: ${JSON.stringify(kit.position)}`);
+});
+
+test("feeding the travellers counts the cast's Wren, not a resident who shares her name", async () => {
+  const { h, tick, run } = await storyTown();
+  run('set-age', 'bronze');
+  await tick(2000);
+  const fed = () => cityOf(h.state).caravan!.asks.find((a) => a.id === 'fed')!.have;
+  const before = fed();
+  cityOf(h.state).townies.push({ id: 'tzzz', name: 'Wren', look: { ...CAST.wren.look }, position: { x: 0, z: 0 }, facing: 0, path: [], doing: 'stroll', until: h.now });
+  caravanSaw(h.state, 'serve', h.now, 'restaurant', 'tzzz');
+  assert.equal(fed(), before, "the resident's meal is not the band's");
+  caravanSaw(h.state, 'serve', h.now, 'restaurant', 'cast-wren');
+  assert.equal(fed(), before + 1, "the cast's Wren ate");
 });
 
 test('Ash leaves the cast from Medieval on, and Wren leads', async () => {

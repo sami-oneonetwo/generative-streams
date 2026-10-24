@@ -225,7 +225,12 @@ function bandFollowsStory(state: DudesState, cv: Caravan, now: number): void {
   cv.travellers.forEach((id, i) => {
     const t = city.townies.find((x) => x.id === id);
     const w = was[i];
-    if (!t || !w || w === t) return;
+    if (!t || w === t) return;
+    // Nobody to take over from (switched on in Bronze's breather: today's band is 4, the cast 5): wait at the camp with the rest.
+    if (!w) {
+      if (cv.turn?.left) Object.assign(t, { position: { ...STRANDED[i % STRANDED.length] }, facing: FACING_TOWN, path: [] });
+      return;
+    }
     Object.assign(t, { position: { ...w.position }, facing: w.facing, path: w.path.map((p) => ({ ...p })), doing: w.doing, placeId: w.placeId, hidden: w.hidden, until: w.until });
   });
   state.worldRevision++;
@@ -605,14 +610,15 @@ export function tickCaravan(state: DudesState, now: number): void {
   if (cv.asks.every((a) => a.have >= a.need)) complete(state, cv, now);
 }
 
-/** Something happened in town that an ask may be waiting for; `by` (a dude id) gets the deed. */
+/** Something happened in town that an ask may be waiting for; `by` (a dude id) gets the deed, `who` is the
+ * townie served (by id: a resident Wren paying for her meal is not the cast's Wren). */
 export function caravanSaw(state: DudesState, kind: AskKind, now: number, venue?: VenueKind, who?: string, by?: string): void {
   const cv = cityOf(state).caravan;
   if (!caravanOn(state) || !cv?.asks.length || cv.nextAt) return;
   for (const a of cv.asks) {
     if (a.kind !== kind || a.have >= a.need) continue;
     if (a.venues && (!venue || !a.venues.includes(venue))) continue;
-    if (kind === 'serve' && !(who && cityOf(state).townies.some((t) => t.traveller && t.name === who))) continue;
+    if (kind === 'serve' && !(who && cityOf(state).townies.some((t) => t.traveller && t.id === who))) continue;
     a.have++;
     if (kind !== 'project') credit(state, by, kind, now);
   }

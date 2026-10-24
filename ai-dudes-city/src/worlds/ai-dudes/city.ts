@@ -509,8 +509,9 @@ function finishVisit(state: DudesState, d: Dude, p: Place, v: Visit, now: number
   );
 }
 
-/** A visitor pays the owner; the owner hears about it (or finds it in their ledger later). Returns what was paid. */
-export function pay(state: DudesState, visitorName: string, visitor: Dude | undefined, p: Place, now: number): number {
+/** A visitor pays the owner; the owner hears about it (or finds it in their ledger later). Returns what was paid.
+ * `townie`: the paying townie's id (a resident may share a traveller's name). */
+export function pay(state: DudesState, visitorName: string, visitor: Dude | undefined, p: Place, now: number, townie?: string): number {
   const c = cityOf(state);
   const price = visitor && visitor.id === p.owner ? 0 : p.spec.price;
   const paid = visitor ? Math.min(price, coinsOf(visitor)) : price;
@@ -518,7 +519,7 @@ export function pay(state: DudesState, visitorName: string, visitor: Dude | unde
   const owner = p.owner ? state.dudes.find((x) => x.id === p.owner) : undefined;
   if (owner && owner !== visitor) owner.coins = coinsOf(owner) + paid;
   if (p.id.startsWith('town:')) return paid;
-  if (!visitor && p.kind !== 'town') caravanSaw(state, 'serve', now, p.kind, visitorName, owner?.id);
+  if (!visitor && p.kind !== 'town') caravanSaw(state, 'serve', now, p.kind, townie, owner?.id);
   const s = (c.stats[p.id] ??= { visits: 0, coins: 0, recent: [], lastVisitors: [] });
   if (owner === visitor) return paid; // using your own place is not business
   const lastAt = s.recent.at(-1) ?? 0;
@@ -1211,7 +1212,7 @@ export function tickTownies(state: DudesState, dt: number, now: number, rng: () 
       const p = placeById(state, t.placeId);
       t.hidden = undefined;
       t.emote = undefined;
-      if (p) pay(state, t.name, undefined, p, now);
+      if (p) pay(state, t.name, undefined, p, now, t.id);
       t.last = t.placeId;
       // Out of a busy place with something to say about it, sometimes; then a good long stroll
       // before the next place, so a place gets custom without being besieged by the same faces.
