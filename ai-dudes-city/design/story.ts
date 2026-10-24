@@ -5,40 +5,16 @@
 // Nothing here runs in the game; the engineering cards read the specs it writes (FK-016, FK-023, FK-027).
 import { AGES, AGE_IDS, type AgeId } from '../src/shared/ages';
 import { ACCESSORIES, HATS, type Accessory, type DudeLook, type Hat } from '../src/shared/dudesTypes';
-import { OUTFIT_BONES, OUTFIT_HIDES, type Outfit, type OutfitHide, type OutfitPart } from '../src/shared/outfits';
+import { OUTFIT_BONES, OUTFIT_HIDES, type AgeOutfits, type Outfit, type OutfitBone, type OutfitHide, type OutfitPart } from '../src/shared/outfits';
 import { blueprintBounds } from '../src/worlds/ai-dudes/blueprint';
+import { readsGold, readsRed } from './colour';
 import type { Blueprint, Primitive } from '../src/shared/objectTypes';
 
 // ---- colours ---------------------------------------------------------------------------------------
 /** The locked story colours (design-system.md §2): they skip restyleColour in every age and mean one thing each. */
 export const STORY = { red: '#B3262E', redDeep: '#7A1419', gold: '#FFC633', goldDeep: '#A86E00', ink: '#1E1914', cream: '#FFF6E0' } as const;
 
-function hsl(hex: string): [number, number, number] | undefined {
-  const m = /^#([0-9a-f]{6})$/i.exec(hex.trim());
-  if (!m) return undefined;
-  const n = parseInt(m[1], 16);
-  const r = ((n >> 16) & 255) / 255,
-    g = ((n >> 8) & 255) / 255,
-    b = (n & 255) / 255;
-  const max = Math.max(r, g, b),
-    min = Math.min(r, g, b),
-    l = (max + min) / 2;
-  if (max === min) return [0, 0, l];
-  const d = max - min;
-  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  const h = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
-  return [h * 60, s, l];
-}
-/** Would a viewer read this as the red side's red? A saturated mid red (the hide browns, ochres and oranges are not). */
-export function readsRed(hex: string): boolean {
-  const c = hsl(hex);
-  return !!c && (c[0] >= 345 || c[0] <= 8) && c[1] >= 0.45 && c[2] >= 0.2 && c[2] <= 0.62;
-}
-/** Would a viewer read this as the gold side's gold? A bright saturated yellow-gold (bronze browns and sand are not). */
-export function readsGold(hex: string): boolean {
-  const c = hsl(hex);
-  return !!c && c[0] >= 38 && c[0] <= 54 && c[1] >= 0.7 && c[2] >= 0.45 && c[2] <= 0.75;
-}
+export { readsGold, readsRed };
 const same = (a: string, b: string) => a.trim().toLowerCase() === b.toLowerCase();
 
 /**
@@ -227,8 +203,18 @@ export interface CastMember {
   name: string;
   /** Their locked colour (design-system.md §2); the head's is gold. */
   colour: string;
-  /** Figure scale (the game's look height stays 1; this is the townie's scale, as DAUGHTER_SCALE is today). */
+  /** Figure scale (the townie's scale, as DAUGHTER_SCALE is today); `body` shapes the figure under it. */
   scale: Partial<Record<AgeId, number>>;
+  /**
+   * The body's proportions (DudeLook height and build, 0.85–1.15 and 0.85–1.2), the same in every age:
+   * part of the silhouette, so set here and never by the model. Ash is long (height 1.15 at scale 1.15:
+   * 2.27 m, the tallest of them), Oak short and broad (0.92 and 1.2 at 1.25: 2.02 m and the widest).
+   */
+  body: { height: number; build: number };
+  /** Things whose real size is their silhouette (metres in the world, after scale and body), on one bone; checked on their own parts. */
+  sizes?: CastSize[];
+  /** Always seated (Moss): the board, and the game, sit them on their prop. */
+  seated?: boolean;
   /** The silhouette that survives every restyle. */
   rule: string;
   /** What they wear or carry in each age; ages missing from `scale` have no one to dress (Ash dies in Bronze). */
@@ -241,6 +227,15 @@ export interface CastMember {
   red?: boolean;
   gold?: boolean;
 }
+/** A hero thing's real size: its longest side in the world, `m` metres, on `bone`; `along` when that side runs down the bone (stretched by the body's height). */
+export interface CastSize {
+  what: string;
+  m: number;
+  bone: OutfitBone;
+  along?: boolean;
+  /** The ages it is carried in (all the member's ages when missing). */
+  ages?: AgeId[];
+}
 const every = (n: number): Record<AgeId, number> => Object.fromEntries(AGE_IDS.map((a) => [a, n])) as Record<AgeId, number>;
 /** The hat grows every age (story bible, the head's constants): Chief ×1.0 up to Overseer ×2.0. */
 export const HAT_LADDER: Record<AgeId, number> = { stone: 1, bronze: 1.2, medieval: 1.4, industrial: 1.6, modern: 1.8, future: 2 };
@@ -250,9 +245,10 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'Wren',
     colour: STORY.red,
     scale: { stone: 0.82, bronze: 0.9, medieval: 1, industrial: 1, modern: 1, future: 1 },
+    body: { height: 1, build: 0.9 },
     rule: `The daughter, who leads the band. The top third of her silhouette is red ${STORY.red} in every age (hair, headwear and shoulders): her red is the biggest shape in any frame she is in.`,
     looks: {
-      stone: 'A teenager: a red hair cord with long tails, a red-ochre shoulder hide, a bone whistle on a cord round her neck.',
+      stone: `A teenager: a red hair cord wound thick round her hair with two long tails down her back, a shoulder hide dyed with red ochre (story red ${STORY.red}, the biggest thing on her), a bone whistle on a cord round her neck.`,
       bronze: 'A red headband and a red shawl.',
       medieval: 'A woman now: a big red hood and a short red cape.',
       industrial: 'A red scarf wound high, and a cap.',
@@ -266,7 +262,9 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'Ash the hunter',
     colour: '#6E7680',
     scale: { stone: 1.15, bronze: 1.2 },
-    rule: "Wren's father and the expedition leader: tall and thin (Oak is the big, broad one). Grey-streaked hair and beard #6E7680, a cream bandage on his left leg, a carved staff 2.1 m tall in his right hand, a thin red cord on his wrist (his only red).",
+    body: { height: 1.15, build: 0.85 },
+    sizes: [{ what: 'carved staff', m: 2.1, bone: 'armR', along: true, ages: ['stone'] }],
+    rule: "Wren's father and the expedition leader: the tallest of them, long and thin (Oak is the big, broad one). Grey-streaked hair and beard #6E7680, a cream bandage on his left leg, a carved staff 2.1 m tall in his right hand, a thin red cord on his wrist (his only red).",
     looks: { stone: 'Back from a hard winter: worn furs, the bandaged left leg, the carved staff.', bronze: 'The same, sick now: thinner, a blanket over his shoulders (the game lays him on his bedroll).' },
     props: { bronze: 'his bedroll: a hide roll and a straw pillow, about 2 × 0.8 m, beside him' },
     must: ['#6E7680'],
@@ -276,6 +274,8 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'Old Moss',
     colour: '#4E8A3A',
     scale: every(1),
+    body: { height: 0.95, build: 1.05 },
+    seated: true,
     rule: 'The elder, always seated. A green shawl #4E8A3A over her head and shoulders, a knotted cord in her lap with one bead-knot per Folly.',
     looks: { stone: 'Furs under the shawl.', bronze: 'Linen under the shawl.', medieval: 'A plain wool gown under the shawl.', industrial: 'A dark dress and apron under the shawl.', modern: 'A cardigan under the shawl.', future: 'Patched layers under the shawl.' },
     props: { stone: 'a tree stump', bronze: 'a clay-brick stool', medieval: 'a wooden bench', industrial: 'an iron chair', modern: 'a folding chair', future: 'an old tyre' },
@@ -285,6 +285,8 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'Oak the builder',
     colour: '#E8762B',
     scale: every(1.25),
+    body: { height: 0.92, build: 1.2 },
+    sizes: [{ what: 'mallet head', m: 0.35, bone: 'armR' }],
     rule: 'Big, gentle, built to last: broad shoulders, an orange apron #E8762B (a hi-vis orange vest in the Modern age), a tool belt, and a mallet with a 0.35 m head in his right hand.',
     looks: { stone: 'Hides, the apron in orange-dyed leather, a stone-headed mallet.', bronze: 'A kilt, the apron, a bronze-headed mallet.', medieval: 'A tunic and hose, the apron, an iron mallet.', industrial: 'Shirt sleeves and braces, the apron, an iron-headed mallet (0.35 m head).', modern: 'Work clothes and the hi-vis orange vest, a mallet.', future: 'Scrap armour pieces under the orange apron, a mallet made of a pipe and a block.' },
     must: ['#E8762B'],
@@ -293,8 +295,10 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'Kit',
     colour: '#2F6FD0',
     scale: every(0.7),
+    body: { height: 1, build: 0.95 },
+    sizes: [{ what: 'gold badge', m: 0.16, bone: 'hips' }],
     rule: `The band's small boy, the head's biggest fan: plain blue #2F6FD0 all over and a 0.16 m gold badge (${STORY.gold}) on his chest. From the Crossing on he wears a tiny blue copy of the Boss's hat.`,
-    looks: { stone: 'A blue-dyed hide tunic.', bronze: 'A blue tunic.', medieval: 'A blue tunic and a wooden sword.', industrial: 'A blue jacket and cap.', modern: 'A blue hoodie.', future: 'Captain of the guard: blue scrap armour, a pipe spear.' },
+    looks: { stone: 'A blue-dyed hide tunic, and no hat yet (it comes at the Crossing).', bronze: 'A blue tunic.', medieval: 'A blue tunic and a wooden sword.', industrial: 'A blue jacket and cap.', modern: 'A blue hoodie.', future: 'Captain of the guard: blue scrap armour, a pipe spear.' },
     must: ['#2F6FD0', STORY.gold],
     gold: true,
   },
@@ -302,9 +306,11 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'the head',
     colour: STORY.gold,
     scale: every(1),
+    // As the game draws him (src/shared/ages.ts look(), mayor.ts headLook).
+    body: { height: 1.12, build: 1.1 },
     rule: `The streamer's character. A gold sash ${STORY.gold} in every age and a hat that grows every age (×1.0 Chief, ×1.2 High Priest, ×1.4 King, ×1.6 Alderman, ×1.8 Mayor, ×2.0 Overseer). Never any red anywhere: red is Wren's.`,
     looks: {
-      stone: 'The Chief: an antler headdress at ×1.0, the gold sash over his furs.',
+      stone: `The Chief: the antler headdress of his shipped kit, at ×1.0, and the gold sash: a broad band of story gold ${STORY.gold} (about 0.14 m) from his left shoulder across his chest to his right hip, over his furs, front and back.`,
       bronze: 'The High Priest: a tall gold-trimmed hat at ×1.2, robes, the gold sash.',
       medieval: 'The King: a crown at ×1.4, a cape (never red), the gold sash.',
       industrial: 'The Alderman: a top hat at ×1.6, a chain of office, the gold sash.',
@@ -334,8 +340,59 @@ export interface CastLook {
   extras: number;
   /** What they sit or lie on, in world metres round their feet. */
   prop?: { name: string; parts: StoryPart[] };
+  /** A seated member's pose on their prop (seatPose), in the page's pose channels. */
+  seat?: Seat;
   notes?: string;
   checks?: string[];
+}
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+/**
+ * How the page stretches a garment part on a bone, per axis, for a body (client/dudes/dudes.ts compose):
+ * the head by its own scale, the torso and cape by build across and height down, a limb by height down it.
+ */
+export function boneStretch(bone: OutfitBone, body: { height: number; build: number }): [number, number, number] {
+  const k = clamp(body.height, 0.85, 1.15),
+    b = clamp(body.build, 0.85, 1.2);
+  if (bone === 'head') return [(1 + k) / 2, (1 + k) / 2, (1 + k) / 2];
+  if (bone === 'hips' || bone === 'cape') return [b, k, 0.6 + 0.4 * b];
+  return [1, k, 1];
+}
+/** A garment part's longest side in the world: its size stretched by the body, times the figure's scale. */
+export const worldLength = (p: OutfitPart, body: { height: number; build: number }, scale: number): number => {
+  const f = boneStretch(p.bone, body);
+  return Math.max(...p.size.map((n, i) => n * f[i])) * scale;
+};
+/** A hero size on the standard figure the model designs on: the world metres over the scale and the stretch down the bone (along) or across it (x). */
+export function standardLength(s: CastSize, body: { height: number; build: number }, scale: number): number {
+  const f = boneStretch(s.bone, body);
+  return s.m / scale / (s.along ? f[1] : f[0]);
+}
+/** How tall a standing figure is, metres (hips 0.8k, neck 0.6k + 0.02, the head 0.32 at its own scale), before any hat. */
+export const standingHeight = (body: { height: number }, scale: number): number => {
+  const k = clamp(body.height, 0.85, 1.15);
+  return (0.8 * k + 0.6 * k + 0.02 + 0.32 * ((1 + k) / 2)) * scale;
+};
+
+/**
+ * Sat on a prop (Moss on her stump), in the page's pose channels (client/dudes/dudes.ts): the body
+ * dropped by `rise` so the hip joint is 0.08 m over the seat's `top`, the legs swung forward by `legs`
+ * until the feet reach the ground, the hands forward in the lap (`arms`), a slight lean back (`hips`).
+ * The game's own 'sit' puts the hips 0.1 m off the ground with the legs straight out; on a seat that
+ * would leave her feet in the air, so FK-016 sits her with these numbers.
+ */
+export interface Seat {
+  top: number;
+  rise: number;
+  legs: number;
+  arms: number;
+  hips: number;
+}
+export function seatPose(top: number, body: { height: number }, scale: number): Seat {
+  const hipY = 0.8 * clamp(body.height, 0.85, 1.15);
+  const hip = (top + 0.08) / scale;
+  const r = (n: number) => Math.round(n * 1000) / 1000;
+  return { top: r(top), rise: r(hip - hipY), legs: r(-Math.acos(clamp(hip / hipY, 0, 1))), arms: -0.6, hips: -0.05 };
 }
 
 const ROLE = /^(shirt|pants|hat|accent|skin|hair)(:(dark|light))?$|^#[0-9a-f]{6}$/i;
@@ -377,10 +434,12 @@ export function composeCast(age: AgeId, role: CastRole, raw: unknown, kits: { ki
   const m = CAST[role];
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   const checks: string[] = [];
-  const which = r.base === 'head' || r.base === 'leader' ? r.base : Number.isInteger(Number(r.base)) && kits?.kits?.[Number(r.base)] ? Number(r.base) : role === 'head' ? 'head' : 0;
+  // The head is always on the head kit, as the game draws him (mayor.ts headLook), and the flashback's stand-in Chief with him.
+  const which = role === 'head' ? 'head' : r.base === 'head' || r.base === 'leader' ? r.base : Number.isInteger(Number(r.base)) && kits?.kits?.[Number(r.base)] ? Number(r.base) : 0;
   const pinned = typeof which === 'number' ? kits?.kits?.[which] : kits?.[which];
   if (!pinned) checks.push(`no shipped ${age} kit "${String(r.base ?? which)}" to pin on`);
-  const l = (r.look && typeof r.look === 'object' ? r.look : {}) as Record<string, unknown>;
+  // The head's colours are the age's head look (src/shared/ages.ts), so he matches the game; his own parts add the sash.
+  const l = (role === 'head' ? AGES[AGE_IDS.indexOf(age)].head.look : r.look && typeof r.look === 'object' ? r.look : {}) as Record<string, unknown>;
   const look: DudeLook = {
     skin: hex(l.skin, '#d9a27a'),
     hair: hex(l.hair, '#2b2018'),
@@ -390,36 +449,105 @@ export function composeCast(age: AgeId, role: CastRole, raw: unknown, kits: { ki
     hatColor: hex(l.hatColor, m.colour),
     accessory: ACCESSORIES.includes(l.accessory as Accessory) ? (l.accessory as Accessory) : 'none',
     accessoryColor: hex(l.accessoryColor, m.colour),
-    height: 1,
-    build: Math.max(0.85, Math.min(1.2, Number(l.build) || 1)),
+    height: m.body.height,
+    build: m.body.build,
   };
   const extras = cleanKitParts(r.parts);
   const hide = [...new Set([...(pinned?.hide ?? []), ...(Array.isArray(r.hide) ? r.hide : []).filter((h): h is OutfitHide => OUTFIT_HIDES.includes(h as OutfitHide))])];
   const outfit: Outfit = { name: String(r.name ?? m.name).slice(0, 60), ...(hide.length ? { hide } : {}), parts: [...(pinned?.parts ?? []), ...extras] };
   const p = r.prop && typeof r.prop === 'object' ? (r.prop as { name?: unknown; parts?: unknown }) : undefined;
-  const prop = p && m.props?.[age] ? { name: String(p.name ?? m.props[age]).slice(0, 60), parts: cleanParts(p.parts, 40).parts } : undefined;
+  // A prop is world geometry ("color"), but next to garment parts the model may write "colour": take either.
+  const propParts = Array.isArray(p?.parts) ? p.parts.map((x) => (x && typeof x === 'object' && !('color' in x) && 'colour' in x ? { ...x, color: (x as { colour: unknown }).colour } : x)) : undefined;
+  const cleaned = p && m.props?.[age] ? cleanParts(propParts, 40) : undefined;
+  const prop = p && cleaned ? { name: String(p.name ?? m.props![age]).slice(0, 60), parts: cleaned.parts } : undefined;
   if (m.props?.[age] && !prop?.parts.length) checks.push(`no ${m.props[age]}`);
+  if (cleaned?.fixed) checks.push(`${cleaned.fixed} bad shapes or colours replaced on the prop (${m.props![age]})`);
+  const scale = m.scale[age] ?? 1;
+  const seat = m.seated && prop?.parts.length ? seatPose(bounds(prop.parts).maxY, m.body, scale) : undefined;
   const c: CastLook = {
     role,
     name: role === 'head' ? AGES[AGE_IDS.indexOf(age)].head.title : m.name,
-    scale: m.scale[age] ?? 1,
+    scale,
     ...(role === 'head' ? { hatScale: HAT_LADDER[age] } : {}),
     base: `${age}:${which}`,
     look,
     outfit,
     extras: extras.length,
     ...(prop ? { prop } : {}),
+    ...(seat ? { seat } : {}),
     ...(r.notes ? { notes: String(r.notes).slice(0, 240) } : {}),
   };
-  checks.push(...castChecks(c));
+  checks.push(...castChecks(c, age));
   return checks.length ? { ...c, checks } : c;
 }
 
-/** The locked-colour rules (design-system.md §2, §6): who must show what, and who may never wear red or gold. */
-export function castChecks(c: CastLook): string[] {
+// ---- the `cast` brief ---------------------------------------------------------------------------------
+/** The top third of the standard figure (1.74 m tall): from 1.16 m up, the head and the hips bone above y 0.36. */
+export const TOP_THIRD = { worldY: 1.16, hipsY: 0.36 } as const;
+
+/**
+ * What each shipped kit brings before a member's own parts go on (they can't be taken off): the story
+ * colours among its fixed colours and what it holds in each hand. Pinning someone on a kit with the
+ * wrong story colour fails their checks; a spear in Kit's hand, or a pot in the hand Oak's mallet
+ * needs, would change their silhouettes.
+ */
+export function kitNotes(o: AgeOutfits): string[] {
+  const all: [string, Outfit][] = [...o.kits.map((k, i): [string, Outfit] => [String(i), k]), ...(o.head ? [['head', o.head] as [string, Outfit]] : []), ...(o.leader ? [['leader', o.leader] as [string, Outfit]] : [])];
+  return all.map(([base, k]) => {
+    const fixed = [...new Set(k.parts.map((p) => p.colour).filter((c) => c.startsWith('#')))];
+    const red = fixed.filter(readsRed),
+      gold = fixed.filter(readsGold);
+    // In a hand: a part on an arm at or below the hand (y −0.4 and down), or anything long on one.
+    const held = (['armR', 'armL'] as const).flatMap((arm) => {
+      const parts = k.parts.filter((p) => p.bone === arm && (p.position[1] <= -0.4 || Math.max(...p.size) >= 0.6));
+      const long = Math.max(0, ...parts.map((p) => Math.max(...p.size)));
+      return parts.length ? [`${long >= 0.6 ? `a ${long.toFixed(1)} m pole` : `a ${parts.length}-part thing`} in the ${arm === 'armR' ? 'right' : 'left'} hand`] : [];
+    });
+    const bits = [red.length ? `story red (${red.join(', ')}): only Wren or Ash may be pinned on it` : '', gold.length ? `story gold (${gold.join(', ')}): only the head or Kit may be pinned on it` : '', held.length ? `holds ${held.join(' and ')}` : 'hands free'].filter(Boolean);
+    return `"${base}" (${k.name.split(/\s+[—–-]\s+/)[0]}): ${bits.join('; ')}`;
+  });
+}
+
+/**
+ * The cast lines of the `cast` brief: each member's rule and this age's look, their scale and body (set
+ * by the catalogue), their hero sizes turned into metres on the standard figure the model designs on,
+ * Wren's red top third, and their prop or seat.
+ */
+export function castLines(age: AgeId, roles: CastRole[]): string {
+  const title = AGES[AGE_IDS.indexOf(age)].head.title;
+  return roles
+    .map((role) => {
+      const m = CAST[role],
+        scale = m.scale[age] ?? 1;
+      const who = role === 'head' ? `the ${title}, hat ×${HAT_LADDER[age]}` : m.name;
+      const body = `scale ${scale}, body height ${m.body.height} and build ${m.body.build} (the game sets both), ${standingHeight(m.body, scale).toFixed(2)} m standing`;
+      const sizes = sizesIn(role, age).map((s) => `the ${s.what} ${standardLength(s, m.body, scale).toFixed(2)} m ${s.along ? 'long down' : 'across, on'} the ${s.bone} bone of the standard figure (${s.m} m in the world)`);
+      const top = role === 'wren' ? ` Her top third is everything from ${TOP_THIRD.worldY} m up on the standard figure: the head, and the hips bone above y ${TOP_THIRD.hipsY} (shoulders, upper chest and back). Cover it in story red ${STORY.red}, all but her face, so it reads red from the front, from behind and from above.` : '';
+      const prop = m.props?.[age] ? ` Also a "prop": ${m.props[age]}, in real metres round their feet (x 0, z 0, ground y 0; it is not scaled), 3–16 parts in the age's materials, each {"shape","position","size","rotation","color":"#rrggbb"} (world parts, so "color", not a role).` : '';
+      // The seat's size and colour are what the Stone stump needed before it showed round Moss from the stream camera (FK-006, round 2).
+      const seat = m.seated ? ' Always seated on the prop: its top is the seat, 0.38–0.45 m high. Make it wider than them (about 0.8–0.9 m across, feet or roots reaching out to about 1.2 m) and darker or paler than the ground, or their legs and skirt hide it from the stream camera. The game sits them with the hip joint just over it, the legs angled forward to the ground and the hands in the lap: the hips bone at about [0, 0.05, 0.24] is the lap.' : '';
+      return `- ${role} (${who}; ${body}): ${m.rule} In this age: ${m.looks[age] ?? ''}${sizes.length ? ` Sizes: ${sizes.join('; ')}.` : ''}${top}${prop}${seat}`;
+    })
+    .join('\n');
+}
+
+/** The hero sizes an age asks of a member (Ash's staff in Stone, Oak's mallet head, Kit's badge). */
+export const sizesIn = (role: CastRole, age: AgeId): CastSize[] => (CAST[role].sizes ?? []).filter((s) => !s.ages || s.ages.includes(age));
+/** Each hero size against the member's own parts on its bone: the closest one's world length must be within 80–125% of it. */
+export function sizeChecks(c: CastLook, age: AgeId): string[] {
+  const own = c.outfit.parts.slice(c.outfit.parts.length - c.extras);
+  return sizesIn(c.role, age).flatMap((s) => {
+    const lengths = own.filter((p) => p.bone === s.bone).map((p) => worldLength(p, c.look, c.scale));
+    const near = lengths.sort((a, b) => Math.abs(a - s.m) - Math.abs(b - s.m))[0];
+    return near !== undefined && near >= 0.8 * s.m && near <= 1.25 * s.m ? [] : [`no ${s.what} near ${s.m} m on ${s.bone}${near !== undefined ? ` (closest ${near.toFixed(2)} m)` : ''}`];
+  });
+}
+
+/** The locked-colour rules (design-system.md §2, §6): who must show what, and who may never wear red or gold; and the hero sizes. */
+export function castChecks(c: CastLook, age?: AgeId): string[] {
   const m = CAST[c.role];
   const worn = castColours(c);
-  const out: string[] = [];
+  const out: string[] = age ? sizeChecks(c, age) : [];
   for (const must of m.must) if (!worn.some((w) => same(w, must))) out.push(`no ${must} on ${m.name}`);
   if (!m.red && worn.some(readsRed)) out.push(`${m.name} wears red (${worn.filter(readsRed).join(', ')}): red is Wren's`);
   if (!m.gold && worn.some(readsGold)) out.push(`${m.name} wears gold (${worn.filter(readsGold).join(', ')}): gold is the head's`);

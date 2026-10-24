@@ -1,0 +1,138 @@
+{
+  "age": "stone",
+  "spec": "f11249f629db9b53",
+  "measures": [
+    {
+      "role": "wren",
+      "name": "Wren",
+      "scale": 0.82,
+      "height": 1.4267999999999998,
+      "main": [
+        {
+          "hex": "#b3262e",
+          "share": 0.489
+        },
+        {
+          "hex": "#76513b",
+          "share": 0.1
+        },
+        {
+          "hex": "#c3a575",
+          "share": 0.092
+        }
+      ],
+      "red": 0.489,
+      "topRed": 0.872,
+      "phonePx": 24,
+      "phoneW": 16
+    },
+    {
+      "role": "ash",
+      "name": "Ash the hunter",
+      "scale": 1.15,
+      "height": 2.2700999999999993,
+      "main": [
+        {
+          "hex": "#6e7680",
+          "share": 0.39
+        },
+        {
+          "hex": "#76513b",
+          "share": 0.146
+        },
+        {
+          "hex": "#e1d3ae",
+          "share": 0.113
+        }
+      ],
+      "red": 0.005,
+      "topRed": 0,
+      "phonePx": 33,
+      "phoneW": 19
+    },
+    {
+      "role": "moss",
+      "name": "Old Moss",
+      "scale": 1,
+      "height": 1.6620000000000001,
+      "main": [
+        {
+          "hex": "#4e8a3a",
+          "share": 0.663
+        },
+        {
+          "hex": "#76513b",
+          "share": 0.092
+        }
+      ],
+      "red": 0,
+      "topRed": 0,
+      "phonePx": 22,
+      "phoneW": 27
+    },
+    {
+      "role": "oak",
+      "name": "Oak the builder",
+      "scale": 1.25,
+      "height": 2.019,
+      "main": [
+        {
+          "hex": "#e8762b",
+          "share": 0.496
+        }
+      ],
+      "red": 0,
+      "topRed": 0,
+      "phonePx": 30,
+      "phoneW": 28
+    },
+    {
+      "role": "kit",
+      "name": "Kit",
+      "scale": 0.7,
+      "height": 1.218,
+      "main": [
+        {
+          "hex": "#2f6fd0",
+          "share": 0.495
+        },
+        {
+          "hex": "#76513b",
+          "share": 0.129
+        }
+      ],
+      "red": 0,
+      "topRed": 0,
+      "phonePx": 18,
+      "phoneW": 12
+    },
+    {
+      "role": "head",
+      "name": "Chief",
+      "scale": 1,
+      "height": 1.9272,
+      "main": [
+        {
+          "hex": "#987052",
+          "share": 0.402
+        },
+        {
+          "hex": "#c3a575",
+          "share": 0.219
+        },
+        {
+          "hex": "#ffc633",
+          "share": 0.109
+        },
+        {
+          "hex": "#e1d3ae",
+          "share": 0.091
+        }
+      ],
+      "red": 0,
+      "topRed": 0,
+      "phonePx": 40,
+      "phoneW": 26
+    }
+  ]
+}

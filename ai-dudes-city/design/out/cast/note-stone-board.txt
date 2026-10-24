@@ -1,0 +1,13 @@
+Design gate (board/design-system.md §9), FK-006: passed by the design lead (lane X), 24 Oct 2026
+The band and the head in their Stone looks, as FK-016 applies them: each one pinned on a shipped Stone kit with their own parts over it, in fixed colours that skip restyleColour, at the catalogue's scale and body. Ash is the tallest (2.27 m: scale 1.15 on a long body), Oak the broadest (build 1.2 at scale 1.25), Kit the smallest (0.7), Wren a teen at 0.82, Moss always seated on her stump (her seat pose is in the spec), and the Chief on his own head kit with the gold sash, his hat at ×1.0.
+Made by astra in one cast call and two revise rounds ($3.31), read by two critique-image runs ($0.36): card spend $3.67 against the $3 ceiling, inside the coordinator's 2× pre-approval. astra's read went from revise 6/10 to revise 7/10.
+Phone, 390 px in greyscale: pass. Every pair of the six differs by at least 25% in height or width on the phone (pixels tall × wide: Wren 24×16, Ash 33×19, Moss 22×27, Oak 30×28, Kit 18×12, the Chief 40×26), and their silhouettes carry it: the top-knot and flared cape, the long frame and staff, the low seated mass, the broad block, the smallest, the antlers. astra fails the phone check because the small props (the tally, the badge, the knots) blur at 18–24 px; those props are not what tells the six apart.
+Colours: pass. At most 4 main colours each by pixel count; each band member's locked colour is their biggest shape (Wren red 49%, Ash grey 39%, Moss green 66%, Oak orange 50%, Kit blue 50%); Wren's top third is 87% red. Red is only on Wren and Ash's wrist cord, gold only on the Chief's sash and Kit's badge, and the Chief has no red.
+Funny: pass at close and mid shots. The Chief's oversized sash knot, Wren's tally stick under her arm (she is already keeping score), Ash's overenthusiastic bandage knot, Moss's huge counting knot, Oak's tiny spare mallet, Kit's stubby copy of the Chief's staff.
+
+Not taken from the critiques:
+An ochre hide sash for the Chief (his gold sash is locked in every age), and poses such as hands on hips or an eager lean (a look can't set a pose).
+Follow-ups:
+1. FK-016: apply the spec as it is: scale, look (with its height and build), outfit, and Moss's prop and seat (rise, legs, arms, hips). The game's own 'sit' would leave her feet in the air.
+2. FK-063, the ink outline: in greyscale the locked colours sit close to the square's dirt (Oak's orange is about 1.2:1 against it). Today the silhouettes do the work; the outline will lift them off the ground.
+3. FK-030, judged in the game: astra's remaining notes, the boxy capes and panels from behind, and Oak's orange reading as a smock rather than an apron.

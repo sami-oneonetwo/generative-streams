@@ -5,13 +5,18 @@
 // With --shipped the specs are the game's own (design/shipped.ts) and the people columns are the
 // town's figures in the shipped kits (./people.ts). Every board carries its round and date, and the
 // audit note beside it (note-<board>.txt in the round's folder) is printed underneath (FK-004).
+// design/render-cast.mjs hands it a cast spec (window.renderCast): the story's cast at the stream
+// camera, from behind, and at phone size in greyscale, with what their pixels measure (FK-006).
 import * as THREE from 'three';
 import { PATCH, col, ground, isShared, paint, type Surface } from '../../client/dudes/surfaces';
 import { PIECE_MATERIALS, mergePiece, placePiece } from '../../client/dudes/pieces';
 import { figureGroup } from '../../client/dudes/dudes';
-import type { AgeOutfits } from '../../src/shared/outfits';
+import type { AgeOutfits, Outfit } from '../../src/shared/outfits';
+import type { DudeLook } from '../../src/shared/dudesTypes';
 import type { Primitive } from '../../src/shared/objectTypes';
+import type { Seat } from '../story';
 import { boardPeople, lineUp, type Figure, type Slot } from './people';
+import { PHONE, PHONE_HALF, colourShares, lineUpSlots, mainColours, redShare, toGrey, topThirdRed, type Shares } from './cast';
 
 interface Bible {
   id: string;
@@ -156,9 +161,14 @@ function lit(scene: THREE.Scene, b: Bible, reach: number): void {
   scene.add(sun, sun.target);
 }
 
-/** An orthographic camera at the game's angle, fitted round a box with a margin, for a w×h picture. */
-function camera(box: THREE.Box3, w: number, h: number, margin = 1.08, yaw = YAW): THREE.OrthographicCamera {
-  const centre = box.getCenter(new THREE.Vector3());
+/**
+ * An orthographic camera at the game's angle, fitted round a box with a margin, for a w×h picture. A
+ * list of boxes is fitted round them all, not round the box that holds them (a line-up across the view
+ * is diagonal in the world, and its world box would leave it small in the middle).
+ */
+function camera(boxes: THREE.Box3 | THREE.Box3[], w: number, h: number, margin = 1.08, yaw = YAW): THREE.OrthographicCamera {
+  const list = [boxes].flat();
+  const centre = list.reduce((b, x) => b.union(x), new THREE.Box3()).getCenter(new THREE.Vector3());
   const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 600);
   cam.position.set(centre.x + Math.sin(yaw) * CAM_BACK * 3, centre.y + CAM_UP * 3, centre.z + Math.cos(yaw) * CAM_BACK * 3);
   cam.lookAt(centre);
@@ -168,15 +178,16 @@ function camera(box: THREE.Box3, w: number, h: number, margin = 1.08, yaw = YAW)
     maxX = -Infinity,
     minY = Infinity,
     maxY = -Infinity;
-  for (const x of [box.min.x, box.max.x])
-    for (const y of [box.min.y, box.max.y])
-      for (const z of [box.min.z, box.max.z]) {
-        const v = new THREE.Vector3(x, y, z).applyMatrix4(inv);
-        minX = Math.min(minX, v.x);
-        maxX = Math.max(maxX, v.x);
-        minY = Math.min(minY, v.y);
-        maxY = Math.max(maxY, v.y);
-      }
+  for (const box of list)
+    for (const x of [box.min.x, box.max.x])
+      for (const y of [box.min.y, box.max.y])
+        for (const z of [box.min.z, box.max.z]) {
+          const v = new THREE.Vector3(x, y, z).applyMatrix4(inv);
+          minX = Math.min(minX, v.x);
+          maxX = Math.max(maxX, v.x);
+          minY = Math.min(minY, v.y);
+          maxY = Math.max(maxY, v.y);
+        }
   const cx = (minX + maxX) / 2,
     cy = (minY + maxY) / 2;
   let hw = ((maxX - minX) / 2) * margin,
@@ -620,5 +631,284 @@ async function renderOutfits(data: OutfitData): Promise<Record<string, string>> 
   return out;
 }
 
+// ---- the cast board: the story's cast at the stream camera (FK-006) ---------------------------------
+interface CastMemberData {
+  role: string;
+  name: string;
+  scale: number;
+  /** Standing height, metres (design/story.ts standingHeight), for the label. */
+  height: number;
+  look: DudeLook;
+  outfit: Outfit;
+  prop?: { name: string; parts: Part[] };
+  seat?: Seat;
+  checks?: string[];
+}
+interface CastData {
+  title: string;
+  subtitle?: string;
+  /** The design note (note-<board>.txt beside it), printed under the board. */
+  note?: string;
+  bible: Bible;
+  members: CastMemberData[];
+}
+/** What the board measured on one member, for the board's labels and <age>-measures.json. */
+export interface CastMeasure {
+  role: string;
+  name: string;
+  scale: number;
+  height: number;
+  /** Main colours (skin aside), biggest first, with their share of the silhouette from the stream camera. */
+  main: { hex: string; share: number }[];
+  /** Share of the silhouette that reads red, and of its top third. */
+  red: number;
+  topRed: number;
+  /** Their silhouette in the phone strip, pixels: how tall from the ground up, and how wide (staff, antlers and prop-free). */
+  phonePx: number;
+  phoneW: number;
+}
+
+/** Sits a figureGroup figure as the spec says (design/story.ts seatPose). Its bones: body → hips, leg L, leg R; hips → head, arm L, arm R, cape. */
+function sit(fig: THREE.Group, s: Seat): void {
+  const body = fig.children[0];
+  const [hips, legL, legR] = body.children;
+  const [, armL, armR, cape] = hips.children;
+  body.position.y = s.rise;
+  hips.rotation.x = s.hips;
+  legL.rotation.set(s.legs, 0, 0.08);
+  legR.rotation.set(s.legs, 0, -0.08);
+  armL.rotation.x = armR.rotation.x = s.arms;
+  cape.rotation.x = 0.35;
+}
+/** One member as the town draws them: the figure at its scale (seated if they sit), the prop round their feet unscaled. */
+function castFigure(m: CastMemberData): THREE.Group {
+  const g = new THREE.Group();
+  const fig = figureGroup(m.look, m.outfit);
+  fig.scale.setScalar(m.scale);
+  if (m.seat) sit(fig, m.seat);
+  g.add(fig);
+  if (m.prop?.parts.length) placePiece(mergePiece({ name: m.prop.name, parts: m.prop.parts }), { x: 0, z: 0 }, g).name = 'prop';
+  return g;
+}
+/** Along the line-up: the stream camera's right, so they stand side by side on screen, all facing +z as the town's people do. */
+const RIGHT = new THREE.Vector3(Math.cos(YAW), 0, -Math.sin(YAW));
+interface CastScene {
+  scene: THREE.Scene;
+  members: { m: CastMemberData; g: THREE.Group; box: THREE.Box3 }[];
+  /** Each member's own box (for fitting a camera) and the box round them all. */
+  boxes: THREE.Box3[];
+  box: THREE.Box3;
+}
+function castScene(d: CastData, back = false): CastScene {
+  const scene = new THREE.Scene();
+  const members = lineUpSlots(d.members.map((m) => m.role)).map((slot) => {
+    const m = d.members.find((x) => x.role === slot.role)!;
+    const g = castFigure(m);
+    g.position.copy(RIGHT).multiplyScalar(slot.x);
+    if (back) g.rotation.y = Math.PI;
+    scene.add(g);
+    g.updateMatrixWorld(true);
+    return { m, g, box: new THREE.Box3().setFromObject(g) };
+  });
+  const boxes = members.map((x) => x.box);
+  const box = boxes.reduce((b, x) => b.union(x), new THREE.Box3());
+  // They stand on the square's dirt, where the town gathers: brown on brown, the hardest ground they meet.
+  const reach = box.getSize(new THREE.Vector3()).length() / 2 + 10;
+  ground(scene, d.bible.surfaces.square, -reach, reach, -reach, reach, 0);
+  lit(scene, d.bible, reach);
+  return { scene, members, boxes, box };
+}
+/** The stream camera at a set zoom (orthographic half-height, metres) round a centre, for a frame of the given aspect. */
+function streamCamera(centre: THREE.Vector3, half: number, aspect: number): THREE.OrthographicCamera {
+  const cam = new THREE.OrthographicCamera(-half * aspect, half * aspect, half, -half, 0.1, 600);
+  cam.position.set(centre.x + Math.sin(YAW) * CAM_BACK * 3, centre.y + CAM_UP * 3, centre.z + Math.cos(YAW) * CAM_BACK * 3);
+  cam.lookAt(centre);
+  cam.updateMatrixWorld();
+  return cam;
+}
+/** Where a world point lands in a w×h picture from a camera, pixels. */
+function onPicture(p: THREE.Vector3, cam: THREE.Camera, w: number, h: number): { x: number; y: number } {
+  const v = p.clone().project(cam);
+  return { x: ((v.x + 1) / 2) * w, y: ((1 - v.y) / 2) * h };
+}
+
+const FLAT_BG = '#ff00ff';
+/**
+ * One member drawn alone and flat (unlit, untoned: every pixel is exactly one part's colour) from the
+ * board's camera, and its pixels counted (./cast.ts colourShares). The prop is left out: it isn't them.
+ */
+function flatShares(cs: CastScene, who: THREE.Group, cam: THREE.Camera, w: number, h: number): Shares {
+  const shown = cs.scene.children.map((c) => c.visible);
+  cs.scene.children.forEach((c) => (c.visible = c === who));
+  const prop = who.getObjectByName('prop');
+  if (prop) prop.visible = false;
+  const swaps: [THREE.Mesh, THREE.Material | THREE.Material[]][] = [];
+  const palette = new Set<string>();
+  who.traverse((o) => {
+    if (!(o instanceof THREE.Mesh) || !o.visible) return;
+    const m = o.material as THREE.MeshStandardMaterial;
+    swaps.push([o, o.material]);
+    o.material = new THREE.MeshBasicMaterial({ color: m.color, toneMapped: false });
+    palette.add(`#${m.color.getHexString()}`);
+  });
+  const background = cs.scene.background;
+  cs.scene.background = new THREE.Color(FLAT_BG);
+  const shadows = renderer.shadowMap.enabled;
+  renderer.shadowMap.enabled = false;
+  const c = snapshot(cs.scene, cam, w, h);
+  renderer.shadowMap.enabled = shadows;
+  cs.scene.background = background;
+  for (const [mesh, mat] of swaps) {
+    (mesh.material as THREE.Material).dispose();
+    mesh.material = mat;
+  }
+  if (prop) prop.visible = true;
+  cs.scene.children.forEach((c, i) => (c.visible = shown[i]));
+  return colourShares(c.getContext('2d')!.getImageData(0, 0, w, h).data, w, h, [...palette], FLAT_BG);
+}
+/** A look's skin as the page draws it (dudes.ts compose): bare skin, bare feet (×0.82), and the kit's "skin:dark" and "skin:light". */
+function skinTones(look: DudeLook): string[] {
+  const skin = new THREE.Color(look.skin);
+  return [skin, skin.clone().multiplyScalar(0.82), skin.clone().multiplyScalar(0.72), skin.clone().lerp(new THREE.Color(1, 1, 1), 0.4)].map((c) => `#${c.getHexString()}`);
+}
+
+/** Centred text, clipped to `max`. */
+function centred(g: CanvasRenderingContext2D, s: string, cx: number, y: number, size: number, colour: string, weight = 700, max = 360): void {
+  g.font = `${weight} ${size}px ${FONT}`;
+  text(g, s, cx - Math.min(max, g.measureText(s).width) / 2, y, size, colour, weight, max);
+}
+/** A member's main colours as swatches with their share, centred under them. */
+function swatches(g: CanvasRenderingContext2D, main: CastMeasure['main'], cx: number, y: number): void {
+  const size = 26,
+    gap = 12;
+  g.font = `700 18px ${FONT}`;
+  const items = main.slice(0, 5).map((c) => ({ ...c, label: `${Math.round(c.share * 100)}%`, w: size + 6 + g.measureText(`${Math.round(c.share * 100)}%`).width }));
+  let x = cx - (items.reduce((n, i) => n + i.w, 0) + gap * (items.length - 1)) / 2;
+  for (const i of items) {
+    g.fillStyle = INK;
+    g.fillRect(x - 2, y - 2, size + 4, size + 4);
+    g.fillStyle = i.hex;
+    g.fillRect(x, y, size, size);
+    text(g, i.label, x + size + 6, y + 4, 18, INK, 700);
+    x += i.w + gap;
+  }
+}
+
+async function renderCast(d: CastData): Promise<{ images: Record<string, string>; measures: CastMeasure[] }> {
+  const W = 2400,
+    H = 760,
+    PAD = 16;
+  // The line-up from the front, as the stream sees people facing +z.
+  const front = castScene(d);
+  const cam = camera(front.boxes, W, H, 1.08);
+  const picture = snapshot(front.scene, cam, W, H);
+  await frame();
+  // Each member's pixels, flat, at half the size (still 150+ px tall each).
+  const shares = front.members.map((x) => flatShares(front, x.g, cam, W / 2, H / 2));
+  await frame();
+  // The phone check: the stream's 1920×1080 frame at the auto camera's closest zoom, shrunk to 390 px and greyed.
+  const centre = front.box.getCenter(new THREE.Vector3());
+  const pcam = streamCamera(centre, PHONE_HALF, PHONE.frame / PHONE.height);
+  const full = snapshot(front.scene, pcam, PHONE.frame, PHONE.height);
+  const pw = PHONE.width,
+    ph = Math.round((PHONE.height * pw) / PHONE.frame);
+  const phone = document.createElement('canvas');
+  phone.width = pw;
+  phone.height = ph;
+  const pg = phone.getContext('2d')!;
+  pg.imageSmoothingQuality = 'high';
+  pg.drawImage(full, 0, 0, pw, ph);
+  const px = pg.getImageData(0, 0, pw, ph);
+  toGrey(px.data);
+  pg.putImageData(px, 0, 0);
+  // Cropped to the band they stand in, with a margin.
+  const rows = front.members.map((x) => {
+    const b = x.box;
+    const ys = [b.min.y, b.max.y].flatMap((y) => [b.min.x, b.max.x].flatMap((bx) => [b.min.z, b.max.z].map((bz) => onPicture(new THREE.Vector3(bx, y, bz), pcam, pw, ph).y)));
+    const top = onPicture(new THREE.Vector3(x.g.position.x, b.max.y, x.g.position.z), pcam, pw, ph).y,
+      foot = onPicture(x.g.position, pcam, pw, ph).y;
+    return { min: Math.min(...ys), max: Math.max(...ys), tall: foot - top };
+  });
+  const y0 = Math.max(0, Math.floor(Math.min(...rows.map((r) => r.min)) - 6)),
+    y1 = Math.min(ph, Math.ceil(Math.max(...rows.map((r) => r.max)) + 6));
+  const strip = document.createElement('canvas');
+  strip.width = pw;
+  strip.height = y1 - y0;
+  strip.getContext('2d')!.drawImage(phone, 0, y0, pw, y1 - y0, 0, 0, pw, y1 - y0);
+  dispose(front.scene);
+  await frame();
+  // From behind, smaller.
+  const BW = 1180,
+    BH = 380;
+  const back = castScene(d, true);
+  const behind = snapshot(back.scene, camera(back.boxes, BW, BH, 1.08), BW, BH);
+  dispose(back.scene);
+
+  const measures: CastMeasure[] = front.members.map((x, i) => ({
+    role: x.m.role,
+    name: x.m.name,
+    scale: x.m.scale,
+    height: x.m.height,
+    main: mainColours(shares[i], skinTones(x.m.look)).map((c) => ({ hex: c.hex, share: Math.round(c.share * 1000) / 1000 })),
+    red: Math.round(redShare(shares[i]) * 1000) / 1000,
+    topRed: Math.round(topThirdRed(shares[i]) * 1000) / 1000,
+    phonePx: Math.round(rows[i].tall),
+    // The flat silhouette's width, from the board camera's pixels to the phone strip's (both orthographic, same angle).
+    phoneW: Math.round(((shares[i].box ? shares[i].box.x1 - shares[i].box.x0 + 1 : 0) * ((cam.right - cam.left) / (W / 2)) * ph) / (2 * PHONE_HALF)),
+  }));
+
+  // The board: the line-up with each one's name, size and main colours; then from behind and the phone strip; then the note.
+  const width = W + 2 * PAD;
+  const top = (d.subtitle ? 100 : 70) + 6;
+  const labelH = 150,
+    zoom = 3,
+    rowTitle = 40;
+  const row2 = top + H + labelH + 20;
+  const stripH = strip.height * zoom + 14 + strip.height + 34;
+  const row2H = rowTitle + Math.max(BH, stripH) + 72;
+  const checks = d.members.filter((m) => m.checks?.length);
+  const checksH = checks.length ? 30 + checks.length * 26 : 0;
+  const c = document.createElement('canvas');
+  c.width = width;
+  c.height = row2 + row2H + checksH + noteBlock(d.note, width);
+  const g = c.getContext('2d')!;
+  g.fillStyle = PAPER;
+  g.fillRect(0, 0, c.width, c.height);
+  heading(g, d.title, d.subtitle, width);
+  g.drawImage(picture, PAD, top);
+  front.members.forEach((x, i) => {
+    const cx = PAD + onPicture(x.g.position, cam, W, H).x,
+      m = measures[i];
+    centred(g, x.m.name, cx, top + H + 10, 30, INK, 800);
+    centred(g, `scale ${x.m.scale} · ${x.m.seat ? `seated (${x.m.height.toFixed(2)} m standing)` : `${x.m.height.toFixed(2)} m tall`}`, cx, top + H + 48, 19, MUTED, 400);
+    swatches(g, m.main, cx, top + H + 78);
+    if (x.m.role === 'wren') centred(g, `top third ${Math.round(m.topRed * 100)}% red · ${Math.round(m.red * 100)}% of her`, cx, top + H + 116, 19, INK, 700);
+  });
+  // Row 2, left: from behind.
+  text(g, 'From behind (the same line-up turned round)', PAD, row2, 24, INK, 800);
+  g.drawImage(behind, PAD, row2 + rowTitle);
+  // Row 2, right: the phone strip, enlarged ×3 and at its real size.
+  const rx = PAD + BW + 40;
+  text(g, `Phone check: ${pw} px wide, greyscale`, rx, row2, 24, INK, 800);
+  g.imageSmoothingEnabled = false;
+  g.drawImage(strip, rx, row2 + rowTitle, pw * zoom, strip.height * zoom);
+  g.imageSmoothingEnabled = true;
+  const real = row2 + rowTitle + strip.height * zoom + 14;
+  g.drawImage(strip, rx, real);
+  text(g, '← real size', rx + pw + 12, real + strip.height / 2 - 10, 18, MUTED, 700);
+  const sizes = front.members.map((x, i) => `${x.m.name.replace(/^Old /, '').split(' ')[0]} ${measures[i].phonePx}×${measures[i].phoneW}`).join(' · ');
+  wrap(g, `The stream's 1920×1080 frame shrunk to ${pw} px (20%, a phone) at the auto camera's closest zoom (orthographic half-height ${PHONE_HALF} m), greyed, cropped to the band they stand in; above it ×${zoom} with no smoothing, so the pixels show. Left to right as above. Pixels tall × wide: ${sizes}.`, rx, real + strip.height + 14, 18, MUTED, W - BW - 40, 4);
+  // Anything the spec's checks still flag.
+  let y = row2 + row2H;
+  if (checks.length) {
+    text(g, 'Checks still open:', PAD, y, 22, INK, 800);
+    checks.forEach((m, i) => text(g, `${m.name}: ${m.checks!.join('; ')}`, PAD, y + 30 + i * 26, 19, INK, 400, W));
+    y += checksH;
+  }
+  noteBlock(d.note, width, g, y);
+  return { images: { board: c.toDataURL('image/png') }, measures };
+}
+
 (window as unknown as { renderBoard: typeof renderBoard }).renderBoard = renderBoard;
 (window as unknown as { renderOutfits: typeof renderOutfits }).renderOutfits = renderOutfits;
+(window as unknown as { renderCast: typeof renderCast }).renderCast = renderCast;

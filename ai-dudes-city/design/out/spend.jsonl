@@ -701,3 +701,8 @@
 {"at":"2026-10-24T04:12:34.975Z","label":"critique-image outfits-board.png","model":"openai/gpt-6-astra","ms":56818,"cost":0.1734478,"in":5263,"out":1957,"ok":true}
 {"at":"2026-10-24T06:41:35.988Z","label":"critique-image fk-hud-sheet.png","model":"openai/gpt-6-astra","ms":51248,"cost":0.1678298,"in":3883,"out":2196,"ok":true}
 {"at":"2026-10-24T06:53:35.115Z","label":"critique-image fk-hud-sheet.png","model":"openai/gpt-6-astra","ms":47079,"cost":0.14163455,"in":3978,"out":1678,"ok":true}
+{"at":"2026-10-24T08:25:19.506Z","label":"cast stone","model":"openai/gpt-6-astra","ms":317191,"cost":1.00312305,"in":12640,"out":15767,"ok":true}
+{"at":"2026-10-24T08:27:50.663Z","label":"critique-image stone-board.png","model":"openai/gpt-6-astra","ms":40750,"cost":0.1788273,"in":7881,"out":1404,"ok":true}
+{"at":"2026-10-24T08:36:01.639Z","label":"cast stone revise","model":"openai/gpt-6-astra","ms":431423,"cost":1.42442005,"in":22356,"out":21287,"ok":true}
+{"at":"2026-10-24T08:40:40.237Z","label":"cast stone ash,moss,oak revise","model":"openai/gpt-6-astra","ms":185482,"cost":0.8883383,"in":20605,"out":11610,"ok":true}
+{"at":"2026-10-24T08:42:04.418Z","label":"critique-image stone-board.png","model":"openai/gpt-6-astra","ms":45248,"cost":0.17945005,"in":7912,"out":1408,"ok":true}

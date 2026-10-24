@@ -29,7 +29,7 @@ import { AGES, AGE_IDS, ageStyle, type AgeId } from '../src/shared/ages';
 import { DESIGN_SYSTEM, designMessage } from '../src/worlds/ai-dudes/design';
 import { validateDesign } from '../src/worlds/ai-dudes/blueprint';
 import { BASE_FIGURE, ELEMENTS, ENGINE_RULES, SAMI_NOTES, WORLD, elementById, type Element } from './catalogue';
-import { CAST, CAST_ROLES, FOLLIES, FOLLY_TAKES, HAT_LADDER, HUD_RUBRIC, PET, PETS, PET_ANCHORS, PET_BRANCH, PET_KITS, PET_SPEC, STORY, STORY_TEXT, castIn, checkFolly, cleanParts, cleanPetKits, composeCast, petChecks, type CastLook, type CastRole, type FollySpec } from './story';
+import { CAST, CAST_ROLES, FOLLIES, FOLLY_TAKES, HUD_RUBRIC, PET, PETS, PET_ANCHORS, PET_BRANCH, PET_KITS, PET_SPEC, STORY, STORY_TEXT, castIn, castLines, checkFolly, cleanParts, cleanPetKits, composeCast, kitNotes, petChecks, type CastLook, type CastRole, type FollySpec } from './story';
 import { ACCESSORIES, HATS } from '../src/shared/dudesTypes';
 import type { Blueprint } from '../src/shared/objectTypes';
 import type { AgeOutfits } from '../src/shared/outfits';
@@ -537,22 +537,17 @@ function castBrief(age: AgeId, roles: CastRole[]): string {
   return `Age: ${a.name}. The head is the ${a.head.title}.
 World rules for people: ${bible?.rules?.people ?? ''} Palette: ${JSON.stringify(bible?.palette ?? [])}. Materials: ${JSON.stringify(bible?.materials ?? [])}. Never: ${JSON.stringify(bible?.avoid ?? [])}.
 
-The age's shipped kits (the game draws these; pin each person on one with "base", and its role colours take that person's look): ${JSON.stringify({ kits: kits?.kits?.map((k, base) => ({ base, ...k })), head: kits?.head, leader: kits?.leader })}
+The age's shipped kits (the game draws these; pin each person on one with "base", and its role colours take that person's look; the head is always on "head"): ${JSON.stringify({ kits: kits?.kits?.map((k, base) => ({ base, ...k })), head: kits?.head, leader: kits?.leader })}
+What each kit already wears and holds (a kit's parts stay on under a person's own and can't be taken off, so choose the pin with this in mind: a held thing stays in that hand, so whoever carries their own staff or mallet needs that hand free, and only the head keeps a pole; "head" is the head's alone):
+${kits ? kitNotes(kits).map((n) => `- ${n}`).join('\n') : ''}
 
 ${RIG}
 
-Their looks are fixed colours: the game never restyles them, so choose every colour on purpose, in the age's palette, except the locked ones: red ${STORY.red} (Wren, and Ash's wrist cord), gold ${STORY.gold} (the head's sash and Kit's badge), Moss ${CAST.moss.colour}, Oak ${CAST.oak.colour}, Kit ${CAST.kit.colour}, Ash ${CAST.ash.colour}. Nobody else wears red or gold.
-Give each person 3–20 garment parts of their own over the pinned kit ("hide" the base pieces they replace). Design them on the standard figure: the game scales the whole person afterwards. Silhouettes first: they must be told apart at phone size, in greyscale, from the stream camera 40° above.
+Their looks are fixed colours: the game never restyles them, so choose every colour on purpose, in the age's palette, except the locked ones: red ${STORY.red} (Wren, and Ash's wrist cord), gold ${STORY.gold} (the head's sash and Kit's badge), Moss ${CAST.moss.colour}, Oak ${CAST.oak.colour}, Kit ${CAST.kit.colour}, Ash ${CAST.ash.colour}. Nobody else wears red or gold. Each band member's locked colour is their biggest shape (the head's gold is his sash), and at most 4 main colours each (skin aside).
+Give each person 3–20 garment parts of their own over the pinned kit ("hide" the base pieces they replace); their parts must sit outside the kit's parts they cover, or the kit shows through. Design them on the standard figure: the game sets their body and scales the whole person afterwards (the sizes below are already worked out for that). Silhouettes first: they must be told apart at phone size, in greyscale, from the stream camera 40° above: Ash the tallest and thinnest with his staff, Oak the broadest with his mallet, Kit small and blue, Moss low and seated under her shawl, Wren red on top, the Chief under his antlers with the gold sash. One funny detail on each.
 
 The cast:
-${roles
-  .map((role) => {
-    const m = CAST[role];
-    const who = role === 'head' ? `the ${a.head.title}, hat ×${HAT_LADDER[age]}` : m.name;
-    const prop = m.props?.[age] ? ` Also a "prop": ${m.props[age]}, in real metres round their feet (x 0, z 0, ground y 0; it is not scaled), 3–16 parts in the age's materials.` : '';
-    return `- ${role} (${who}, scale ${m.scale[age]}): ${m.rule} In this age: ${m.looks[age] ?? ''}${prop}`;
-  })
-  .join('\n')}
+${castLines(age, roles)}
 
 Sami's notes: ${SAMI_NOTES.join(' ')}`;
 }

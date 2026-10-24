@@ -117,7 +117,7 @@ const wren = {
   name: 'Ochre Hide and Cord',
   base: 2,
   scale: 3,
-  look: { skin: '#c68a5e', hair: '#2b2018', shirt: '#8a6a48', pants: '#5a4532', hat: 'none', hatColor: '#000000', accessory: 'none', accessoryColor: '#000000', build: 0.9 },
+  look: { skin: '#c68a5e', hair: '#2b2018', shirt: '#8a6a48', pants: '#5a4532', hat: 'none', hatColor: '#000000', accessory: 'none', accessoryColor: '#000000', build: 1.2 },
   hide: ['hair', 'nonsense'],
   parts: [
     { bone: 'head', shape: 'box', position: [0, 0.3, -0.05], size: [0.34, 0.08, 0.3], rotation: [0, 0, 0], colour: STORY.red },
@@ -136,17 +136,21 @@ test('a cast look is the pinned shipped kit with their own parts after it, in fi
   assert.equal(c.outfit.parts.length, pinned.parts.length + 2);
   assert.deepEqual(c.outfit.parts.slice(0, pinned.parts.length), pinned.parts);
   assert.ok(c.outfit.hide!.includes('hair') && !c.outfit.hide!.includes('nonsense' as never));
-  assert.equal(c.look.height, 1);
-  assert.equal(c.look.build, 0.9);
+  // Her body is the catalogue's, not the model's.
+  assert.deepEqual([c.look.height, c.look.build], [CAST.wren.body.height, CAST.wren.body.build]);
   assert.equal(c.checks, undefined, String(c.checks));
 });
 
 test('the cast checks hold the locked colours: no red on the head, red on top of Wren, each one wearing their own colour', () => {
-  const head = composeCast('stone', 'head', { role: 'head', base: 'head', look: { shirt: STORY.red, pants: '#5a4532', hair: '#2b2018', hat: 'crown', hatColor: STORY.gold }, parts: [] }, KITS.stone);
+  // The head is always on his kit in the game's head look, whatever the model says; his red can only come from his own parts.
+  const sash = { bone: 'hips', shape: 'box', position: [0, 0.3, 0.27], size: [0.14, 0.8, 0.04], rotation: [0, 0, 0.7], colour: STORY.gold };
+  const head = composeCast('stone', 'head', { role: 'head', base: 2, look: { shirt: STORY.red }, parts: [sash, { ...sash, position: [0, 0.6, 0.27], size: [0.3, 0.06, 0.3], colour: STORY.red }] }, KITS.stone);
   assert.equal(head.base, 'stone:head');
   assert.equal(head.name, 'Chief');
   assert.equal(head.hatScale, 1);
+  assert.equal(head.look.shirt, '#8a6a48'); // src/shared/ages.ts, the Chief's look
   assert.match(head.checks!.join(), /the head wears red \(#B3262E\): red is Wren's/);
+  assert.match(composeCast('stone', 'head', { role: 'head', parts: [] }, KITS.stone).checks!.join(), /no #FFC633 on the head/);
 
   const plainWren = composeCast('stone', 'wren', { ...wren, parts: [] }, KITS.stone);
   assert.match(plainWren.checks!.join(), /no #B3262E on Wren/);
@@ -157,8 +161,8 @@ test('the cast checks hold the locked colours: no red on the head, red on top of
   assert.match(goldOak.checks!.join(), /no #E8762B on Oak the builder/);
   assert.match(goldOak.checks!.join(), /Oak the builder wears gold/);
 
-  const kit = composeCast('stone', 'kit', { role: 'kit', base: 3, look: { shirt: '#2F6FD0', pants: '#2F6FD0', hair: '#2b2018' }, parts: [{ bone: 'hips', shape: 'cylinder', position: [0.1, 0.4, 0.15], size: [0.16, 0.16, 0.03], rotation: [Math.PI / 2, 0, 0], colour: STORY.gold }] }, KITS.stone);
-  assert.equal(kit.checks, undefined, String(kit.checks));
+  const kit = composeCast('stone', 'kit', { role: 'kit', base: 3, look: { shirt: '#2F6FD0', pants: '#2F6FD0', hair: '#2b2018' }, parts: [{ bone: 'hips', shape: 'cylinder', position: [0.1, 0.4, 0.15], size: [0.24, 0.03, 0.24], rotation: [Math.PI / 2, 0, 0], colour: STORY.gold }] }, KITS.stone);
+  assert.equal(kit.checks, undefined, String(kit.checks)); // a 0.24 m badge on the standard figure is 0.16 m on Kit
 });
 
 test('Moss needs her seat, and a kit that is not shipped is reported, not invented', () => {

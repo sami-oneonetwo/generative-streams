@@ -1,0 +1,81 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The cast has strong size differentiation, controlled colour families and correctly assigned story colours, with the Chief and seated Moss especially easy to locate. However, rigid slab clothing weakens Stone Age construction, and several characters lose their individual identifying features and humour in the actual 390 px check.",
+  "problems": [
+    "Replace the repeated rectangular cape-and-collar construction with visibly wrapped, overlapped and tied hides; the rear view currently exposes large, almost manufactured panels.",
+    "Give Wren and Kit distinct silhouettes independent of colour and relative height; their small props disappear in the greyscale phone check.",
+    "Make Oak's orange garment read as a working apron rather than a box-shaped poncho, and bring his stone mallet into the silhouette.",
+    "Make Moss's support unmistakably a natural stump, not an assembly of squared timber feet.",
+    "Retain the Chief's locked gold sash, but translate its construction into an ochre-coloured hide strip rather than a pristine ceremonial ribbon.",
+    "Provide a readable comic character detail for each figure; most current ornaments become indistinct pixels at phone size."
+  ],
+  "elements": [
+    {
+      "id": "Oak",
+      "score": 6,
+      "problems": [
+        "The enormous rectangular shoulder panel and full orange back read as a rigid poncho, not the specified builder's apron.",
+        "The mallet is visually subordinate to the garment and surrounding belt accessories.",
+        "His broad silhouette communicates size, but not yet a distinctive comic builder."
+      ],
+      "fix": "Keep the broad body but expose the shoulders and arms around a front hide apron with narrow ties and an irregular hem. Put a chunky flint-headed mallet clear of the torso; an absurdly short handle beneath its oversized head can supply the readable joke."
+    },
+    {
+      "id": "Kit",
+      "score": 6,
+      "problems": [
+        "The straight blue cape, squared neckline and blue footwear resemble a miniature uniform rather than Stone Age clothing.",
+        "At 18 pixels tall, the badge and small accessories do little to distinguish him beyond being the smallest figure.",
+        "His devotion to the Chief is not yet a readable comic feature."
+      ],
+      "fix": "Use a simple blue wrap with an overlapping edge and exposed hide ties, removing nonessential dangling accessories. Enlarge the existing gold badge into a conspicuously oversized, irregular ochre-daubed hide token on his chest, with enough light-dark separation to survive greyscale."
+    },
+    {
+      "id": "Wren",
+      "score": 7,
+      "problems": [
+        "The red headwear, collar and cape merge into one dark upper mass in greyscale.",
+        "The narrow pale tally-like object reads in the large view but loses its marks and purpose at phone size.",
+        "Her leader identity and comic detail depend too heavily on details inside the body silhouette."
+      ],
+      "fix": "Preserve her red ownership but separate the head from the shoulder wrap with a clearer neckline and an asymmetric tied-hair silhouette. Turn the pale counting prop outward so its shape clears her body, exaggerating it into a comically long bone tally rather than adding more tiny marks."
+    },
+    {
+      "id": "Old Moss",
+      "score": 7,
+      "problems": [
+        "The support beneath her reads as squared blocks and projecting timber feet rather than a stump.",
+        "The green head covering and broad planar shawl feel uniformly fabricated.",
+        "The lap cord is visible at presentation size but does not deliver a clear comic beat at phone size."
+      ],
+      "fix": "Replace the support with one squat, irregular faceted stump and two unequal root flares. Break the shawl into overlapping hide or woven-grass sections, and gather the cord into one oversized knot on her lap with a short, conspicuous trailing loop."
+    },
+    {
+      "id": "Ash",
+      "score": 7,
+      "problems": [
+        "His long, perfectly rectangular grey back panel reads as a board-like cloak.",
+        "Small carving and wrist-cord details cannot carry his identity at phone size.",
+        "The costume needs a clearer Stone Age construction language despite the successful tall silhouette and pale leg bandage."
+      ],
+      "fix": "Keep his height, grey palette, red wrist cord and anatomical left-leg bandage. Replace the single back slab with two unequal overlapping hide panels and broad visible ties; exaggerate one crooked fork in the staff and give the bandage a chunky, slightly overenthusiastic knot as his comic detail."
+    },
+    {
+      "id": "Chief",
+      "score": 7,
+      "problems": [
+        "The mantle reads as a flat angular shoulder shelf rather than broad layered hide.",
+        "The sash has pristine parallel edges and a neat round fitting, giving it a later ceremonial-uniform finish.",
+        "The office silhouette succeeds, but the clothing construction is less convincingly prehistoric than the antlers and staff."
+      ],
+      "fix": "Keep the gold sash and oversized bone-topped staff. Make the sash an irregular gold-coloured hide strip with a bulky tied fastening, and rebuild the mantle as two or three uneven overlapping hide layers; preserve the gloriously excessive staff and unequal antlers as the joke."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": true,
+    "storyColours": true,
+    "funny": false
+  }
+}

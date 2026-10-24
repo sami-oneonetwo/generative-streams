@@ -1,0 +1,82 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The height hierarchy, seated elder and Chief’s headdress make a useful start, and the story colours are correctly assigned. However, rigid slab clothing undermines Stone Age construction, several signature props disappear at phone size, and Wren and Kit rely too heavily on colour rather than distinct silhouettes.",
+  "problems": [
+    "Replace the Chief’s rigid ceremonial sash with a gold-coloured hide wrap integrated into an irregular layered mantle; the current straight strip reads as a modern office sash.",
+    "Make Old Moss’s stump and lap cord unmistakable: the seat currently resembles a supported chair, while the identifying knot is not readable.",
+    "Separate Wren from Kit in greyscale through head shape, clothing outline and pose, not their red and blue fills.",
+    "Move Oak’s stone mallet out of the shoulder silhouette and replace his rectangular apron panel with visibly tied hide.",
+    "Give Kit prehistoric clothing construction and a readable, non-metallic fan token rather than a neat blue tunic-and-badge appearance.",
+    "Break up Ash’s flat grey costume, strengthen his carved-staff silhouette and give each character a deliberate visual joke that survives reduction."
+  ],
+  "elements": [
+    {
+      "id": "Chief",
+      "score": 5,
+      "problems": [
+        "The gold sash is a long, rigid diagonal bar projecting beyond the body rather than a convincing hide garment.",
+        "The mantle reads as angular shoulder armour and flat back panels, not broad layered hides.",
+        "The headdress and bone-topped staff identify his office well, but do not excuse the explicitly prohibited modern sash treatment."
+      ],
+      "fix": "Keep the antlers and oversized staff, but rebuild the mantle with three overlapping, uneven hide masses and visible rawhide ties. Translate the gold sash into a soft-looking, ochre-coloured hide band following the torso, with a short crooked tail; make his comically overlarge ceremonial knot the joke."
+    },
+    {
+      "id": "Old Moss",
+      "score": 5,
+      "problems": [
+        "The stump is obscured by narrow supports and the extended legs, producing a chair-like silhouette.",
+        "The required knotted cord does not read across her lap.",
+        "The square hood and straight horizontal shawl panels look rigid rather than woven or draped."
+      ],
+      "fix": "Expose one broad, irregular stump beneath her hips, with a visible cut top and bark edge. Replace the shawl slabs with two overlapping grass-fibre or hide sections, and place a chunky pale cord loop with one absurdly oversized knot across her lap."
+    },
+    {
+      "id": "Wren",
+      "score": 6,
+      "problems": [
+        "At 21 pixels tall, she reads as another small upright wrapped figure, close to Kit’s 18-pixel silhouette.",
+        "Her red head covering, square shoulder band and rectangular cape provide colour identity but little distinctive greyscale identity.",
+        "The small pendant is neither a readable leadership cue nor a clear funny detail."
+      ],
+      "fix": "Retain #B3262E, but give her an asymmetric tied hood, a short split hide cape and a planted, hands-on-hips leadership pose. Add a conspicuously oversized tally stick tucked under one arm, expressing both her authority and the joke that she is already keeping score."
+    },
+    {
+      "id": "Oak",
+      "score": 6,
+      "problems": [
+        "His broad silhouette succeeds, but the orange apron resembles a rigid rectangular cabinet front.",
+        "The stone mallet merges into his shoulder instead of reading as his defining tool.",
+        "Repeated pouch and basket accessories add clutter without a distinct character joke."
+      ],
+      "fix": "Preserve his width while tapering the apron into an uneven hide shape with a thick neck tie and waist binding. Put a large lashed-stone mallet beside his body with a clear gap from the torso, and replace the generic basket with one comically tiny spare mallet on his belt."
+    },
+    {
+      "id": "Kit",
+      "score": 6,
+      "problems": [
+        "The blue outfit has straight tunic edges and matching block-like footwear, giving it a modern uniform quality.",
+        "His gold badge becomes a tiny light spot at phone size, leaving little identity beyond being small.",
+        "His upright silhouette is too similar to Wren’s, and no funny detail is clearly readable."
+      ],
+      "fix": "Use a plain blue-dyed hide wrap with an offset tie, bare lower legs and irregular hide boots. Make the #FFC633 fan badge a larger ochre-daubed bark medallion on a chunky cord, and give him an eager forward lean with the comically oversized token held proudly out from his chest."
+    },
+    {
+      "id": "Ash",
+      "score": 7,
+      "problems": [
+        "Height, grey colouring and the pale leg bandage distinguish him, but the long straight costume panels resemble a coat and rigid cape.",
+        "The staff’s carved character is lost in its thin, mostly straight outline.",
+        "At 2.27 m he is exceptionally tall beside the 1.8 m reference person; the exaggeration needs to feel intentional rather than simple whole-body enlargement.",
+        "No deliberate funny detail reads at phone size."
+      ],
+      "fix": "Keep him tallest, but use a leaner torso and longer legs rather than uniformly enlarged proportions. Break the #6E7680 wrap into uneven tied hides, preserve the left-leg bandage and red wrist cord, and thicken the staff with an unmistakable crooked carved top; add an oversized loose bandage knot as his gentle visual joke."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": true,
+    "storyColours": true,
+    "funny": false
+  }
+}
