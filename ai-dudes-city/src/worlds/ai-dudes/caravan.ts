@@ -235,6 +235,12 @@ function bandFollowsStory(state: DudesState, cv: Caravan, now: number): void {
   });
   state.worldRevision++;
 }
+/** Story (dev) → Reset the cast: the band as new, on this caravan's marks, as a new caravan brings them. */ // hook FK-002
+export function resetCast(state: DudesState, cv: Caravan, now: number): void {
+  sendTravellersHome(state, cv.age);
+  cv.travellers = bringTravellers(state, cv.age, now, false, true);
+  state.worldRevision++;
+} // hook FK-002
 
 function openVisit(state: DudesState, cv: Caravan, now: number): void {
   cv.openedAt = now;

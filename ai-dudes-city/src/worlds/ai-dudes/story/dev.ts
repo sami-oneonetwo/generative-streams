@@ -9,7 +9,7 @@
 import type { AdminAction, WorldCtx } from '../../../engine/world';
 import type { StoryDevButton } from '../../../shared/dudesTypes';
 import type { SceneId } from '../../../shared/scenes';
-import { caravanOn, playScene } from '../caravan';
+import { caravanOn, playScene, resetCast } from '../caravan';
 import { ageOf, cityOf } from '../city';
 import { storyOn, type DudesState } from '../state';
 import { releaseShow } from './show';
@@ -29,22 +29,49 @@ interface Play {
   run?: Run;
 }
 
-/** Today's caravan scene, played as /admin scene-opening plays the opening. Until FK-127 moves it onto
- * the show runtime it needs what it needs today: the caravan on, town life on, and the caravan here. */
+/** Why the age's band isn't here to look at, if it isn't: today's caravan scenes and the cast need what
+ * they need today, the caravan on, town life on, and this age's caravan come. */
+function noBand(s: DudesState): string | undefined {
+  const cv = cityOf(s).caravan;
+  if (!caravanOn(s)) return 'The caravan is off (sandbox mode): switch it on first';
+  if (s.ai.townLife === false) return 'Town life is off: switch it on first (the travellers are townsfolk)';
+  // The caravan ticks its scenes and brings the band: before it has come to this age a scene would never end, or end at once.
+  if (!cv || cv.age !== ageOf(s)) return 'No caravan in this age yet (it comes with the first chatter): play the opening first';
+  return undefined;
+}
+
+/** Today's caravan scene, played as /admin scene-opening plays the opening (until FK-127 moves it onto the show runtime). */
 const playToday =
   (id: SceneId): Run =>
   (ctx) => {
     const s = ctx.state;
     const city = cityOf(s);
-    if (!caravanOn(s)) return 'The caravan is off (sandbox mode): switch it on first';
-    if (s.ai.townLife === false) return 'Town life is off: switch it on first (the travellers are townsfolk)';
-    // The caravan ticks its scenes: before it has come to this age a scene would never end, or end at once.
-    if (!city.caravan || city.caravan.age !== ageOf(s)) return 'No caravan in this age yet (it comes with the first chatter): play the opening first';
+    const why = noBand(s);
+    if (why) return why;
     // Cutting another scene short would skip what follows it (the bridge ask after the opening, the age after the turn).
     if (city.scene && city.scene.id !== id) return `The ${city.scene.id} scene is playing: let it finish first`;
     playScene(s, id, ctx.now);
     ctx.log(`story: today's ${id} is playing (admin, Story (dev))`);
   };
+
+/**
+ * Reset the cast (FK-014's band): the age's cast as new and back on their marks, as a new caravan brings
+ * them: across the river while the bridge is down, else at the town gate; anyone missing comes back. Not
+ * mid-scene (scenes move the band by its place in the caravan) and not while the age turns (they're
+ * walking home).
+ */
+const resetTheCast: Run = (ctx) => {
+  const s = ctx.state;
+  const city = cityOf(s);
+  const why = noBand(s);
+  if (why) return why;
+  const cv = city.caravan!;
+  if (city.scene) return `The ${city.scene.id} scene is playing: let it finish first`;
+  if (city.story?.scene) return `The ${city.story.scene.id} scene is playing: Stop it first`;
+  if (cv.turn) return 'The age is turning (the band is heading home): reset the cast once the next caravan is here';
+  resetCast(s, cv, ctx.now);
+  ctx.log(`story: the cast reset, on their marks ${cv.stranded ? 'across the river' : 'at the town gate'} (admin, Story (dev))`);
+};
 
 /** Every scene Story (dev) plays, in show order. */
 export const STORY_PLAYS: Play[] = [
@@ -172,7 +199,13 @@ const PIECES: Piece[] = [
     card: 'FK-049',
     buttons: [{ label: 'Spotlight', arg: 'name' }],
   },
-  { id: 'cast-reset', label: 'Reset the cast', group: 'people', card: 'FK-014', hint: 'Wren, Ash, Moss, Oak and Kit as new, on their marks' },
+  {
+    id: 'cast-reset',
+    label: 'Reset the cast',
+    group: 'people',
+    run: resetTheCast,
+    hint: "The age's cast as new, back on their marks: across the river while the bridge is down, else at the gate",
+  },
   {
     id: 'stage-stream-1',
     label: 'Stage stream 1',

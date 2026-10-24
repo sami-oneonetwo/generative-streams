@@ -1,15 +1,18 @@
 // Story (dev) on /admin (FK-002): every Finders Keepers scene and piece on a button, for a look
 // off-air. Every button but Story ON refuses "Story is off" while Story is off; a piece that hasn't
 // landed names its card; neither changes the world. Play: Crossing plays today's Crossing, Stop cuts
-// it, and Story OFF mid-scene lets everyone go, as every boot does.
+// it, Story OFF mid-scene lets everyone go, as every boot does, and Reset the cast puts FK-014's band
+// back on its marks as new.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { cityOf } from '../src/worlds/ai-dudes/city';
 import { mayorOf } from '../src/worlds/ai-dudes/mayor';
+import { CAST_ROLES, castId, castTownie } from '../src/worlds/ai-dudes/story/cast';
 import { STORY_PLAYS, storyDevButtons } from '../src/worlds/ai-dudes/story/dev';
 import { storyOn } from '../src/worlds/ai-dudes/state';
 import type { DudesAdminStatus, DudesScene, StoryDevButton } from '../src/shared/dudesTypes';
-import { SCENES } from '../src/shared/scenes';
+import { PITCH } from '../src/shared/city';
+import { FACING_TOWN, SCENES, STRANDED } from '../src/shared/scenes';
 import { STORY_SITES } from '../src/shared/storyMap';
 import { harness } from './harness';
 
@@ -82,8 +85,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
     ['FK-025', 'FK-026', 'FK-043', 'FK-127', 'FK-017'],
   );
   assert.deepEqual(
-    ['story-gather', 'folly-raise', 'folly-progress', 'folly-retarp', 'side-set', 'cast-reset', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
-    ['FK-019', 'FK-023', 'FK-023', 'FK-023', 'FK-012', 'FK-014', 'FK-049', 'FK-056'],
+    ['story-gather', 'folly-raise', 'folly-progress', 'folly-retarp', 'side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
+    ['FK-019', 'FK-023', 'FK-023', 'FK-023', 'FK-012', 'FK-049', 'FK-056'],
   );
   assert.match(t.run('story-play', 'fireworks') ?? 'ran', /^No scene called "fireworks": intro, crossing, rally, unveil, ageTurn, test$/);
   assert.equal(t.run('story-play', 'CROSSING'), undefined, 'a scene name in any case');
@@ -162,6 +165,46 @@ test('Story OFF mid-scene lets everyone go: the scene ends, nobody gathered, the
   assert.ok(v.dudes.every((d) => d.side === undefined), 'no sides drawn');
   // Five: the scene, kim's and lee's gatherings, the lock, the hiding.
   assert.ok(t.h.logs.some((l) => /Story OFF \(admin\): today's game; let go of 5 held things \(scene, gatherings, the head's lock\)/.test(l)), t.h.logs.join('\n'));
+});
+
+test('Reset the cast: the band as new, back on its marks (Kit too, if gone); not mid-scene or mid age turn', async () => {
+  const t = await town();
+  t.run('story-on');
+  await t.tick(1000);
+  const s = t.h.state;
+  const city = cityOf(s);
+  const five = CAST_ROLES.map(castId);
+  assert.deepEqual(city.caravan!.travellers, five, 'Story ON: the band is the cast (FK-014)');
+  // Knocked about: Wren off chatting in town, Oak indoors, Kit gone.
+  Object.assign(castTownie(s, 'wren')!, { position: { x: 0, z: 0 }, path: [{ x: 1, z: 1 }], doing: 'chat', say: { text: 'hi', until: t.h.now + 9000 }, emote: { pose: 'cheer', until: t.h.now + 9000 } });
+  Object.assign(castTownie(s, 'oak')!, { hidden: true, placeId: 'b1', doing: 'in' });
+  city.townies = city.townies.filter((x) => x.id !== castId('kit'));
+
+  assert.equal(t.run('cast-reset'), undefined);
+  assert.deepEqual(city.caravan!.travellers, five, 'the five, Kit back');
+  assert.equal(city.townies.filter((x) => x.role).length, 5, 'one of each');
+  five.forEach((id, i) => {
+    const x = city.townies.find((y) => y.id === id)!;
+    assert.deepEqual(x.position, STRANDED[i], `${id} on their mark across the river (the bridge is down)`);
+    assert.equal(x.facing, FACING_TOWN);
+    assert.ok(!x.path.length && x.doing === 'stroll' && !x.say && !x.emote && !x.hidden && !x.placeId, `${id} as new`);
+  });
+  assert.ok(t.h.logs.some((l) => /story: the cast reset, on their marks across the river/.test(l)));
+
+  // Mid-scene the scene has the band: wait for it (or Stop the Crossing).
+  t.run('story-play', 'crossing');
+  const before = snapshot(t);
+  assert.match(t.run('cast-reset') ?? 'ran', /^The crossing scene is playing: let it finish first/);
+  assert.equal(snapshot(t), before, 'nothing moved');
+  t.run('story-stop');
+  // The age turning: they are walking home.
+  city.caravan!.turn = { at: t.h.now };
+  assert.match(t.run('cast-reset') ?? 'ran', /^The age is turning/);
+  city.caravan!.turn = undefined;
+  // Once they've crossed, their marks are at the town gate, as a caravan arriving by road stands.
+  city.caravan!.stranded = undefined;
+  assert.equal(t.run('cast-reset'), undefined);
+  five.forEach((id, i) => assert.deepEqual(city.townies.find((y) => y.id === id)!.position, { x: PITCH / 2, z: (i - 1) * 1.2 }, `${id} at the gate`));
 });
 
 test('the /admin card: every button runs a real action that takes what the button sends', async () => {
