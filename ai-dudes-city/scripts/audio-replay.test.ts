@@ -1,6 +1,6 @@
 // FK-158: createAudio() takes its context, its random and its clock from the caller, so the town's
 // sounds can be rendered offline (FK-161), fingerprinted (FK-160) and auditioned on /sounds (FK-159)
-// the same way twice. These drive client/dudes/audio.ts on the fake Web Audio (scripts/audio-fake.ts)
+// the same way twice. These drive client/dudes/audio.ts on the fake Web Audio (client/sounds/fake.ts)
 // with a seeded random and Math.random off limits, and check every cue in CUES plays back event for
 // event.
 import assert from 'node:assert/strict';
@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
 import { CUES, createAudio, type AudioHandles, type AudioLevels, type Bus, type Cue } from '../client/dudes/audio';
-import { FakeContext, FakeNode, FakeOfflineContext, FakeParam, seeded, type Ev } from './audio-fake';
+import { FakeContext, FakeNode, FakeOfflineContext, FakeParam, seeded, type Ev } from '../client/sounds/fake';
 
 /** The stream page's levels (main.ts, its createAudio call). */
 const LEVELS: AudioLevels = { music: 0.5, sfx: 0.8, ambience: 0.6 };

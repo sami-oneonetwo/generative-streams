@@ -108,6 +108,7 @@ import {
 } from './state';
 import { storyDevActions, storyDevButtons } from './story/dev';
 import { gathering, hearInGather, takeQueued, tickGather, tickRing } from './story/gather';
+import { audioApproveAction } from './audioApproval'; // hook FK-160 (Lane S)
 import { releaseShow, tickShow } from './story/show';
 import { storyDudeView } from './story/view';
 import { hearSide } from './story/sides'; // hook FK-012
@@ -1882,6 +1883,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
     },
     // Finders Keepers' Story (dev) card (FK-002): the Story switch and every scene and piece, each gated on Story ON.
     ...storyDevActions(),
+    audioApproveAction<DudesState>(), // hook FK-160: Sami's Approve on /sounds writes client/dudes/audio-approved.json (Lane S)
     {
       id: 'name-daughter',
       label: 'Story: name the daughter (she keeps it through every age)',

@@ -29,12 +29,12 @@ header p{margin:6px 0 0;color:#38464c;font-size:15px}
 #status::before{content:'';display:inline-block;width:.7em;height:.7em;border-radius:50%;margin-right:.5em;background:var(--ash);vertical-align:-.02em}
 body.on #status::before{background:var(--moss)}
 #start{font:700 30px/1 var(--font-display);background:var(--gold);border:4px solid var(--ink);border-radius:999px;padding:16px 36px;box-shadow:var(--drop)}
-#start:active,.tile:active,.pill:active{transform:translateY(3px);box-shadow:0 2px 0 #0005}
+#start:active,button.tile:active,.tile:has(>.hit:active),.pill:active,.mini:active{transform:translateY(3px);box-shadow:0 2px 0 #0005}
 body.on #start{background:var(--cream);font-size:24px;padding:12px 28px}
 
 main{display:grid;gap:22px;padding:18px 32px 32px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,.86fr);grid-template-areas:"cues speech out" "cues crowd music";align-items:start}
 #cues-card{grid-area:cues}#speech-card{grid-area:speech}#crowd-card{grid-area:crowd}#music-card{grid-area:music}#out-card{grid-area:out}
-main[inert] :is(button,input,.ring){opacity:.55}
+main[inert] :is(button:not(.hit),input,.ring,div.tile){opacity:.55}
 .card{background:var(--cream);border:4px solid var(--ink);border-radius:24px;box-shadow:var(--drop);padding:16px 22px 20px}
 h2{margin:0;font:700 27px/1.1 var(--font-display)}
 h3{margin:16px 0 8px;font:700 15px/1 var(--font-display);letter-spacing:.09em;text-transform:uppercase}
@@ -48,7 +48,11 @@ h3 small{margin-left:.6em;font:800 13px var(--font-text);letter-spacing:0;text-t
 .tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--bus,var(--sfx))}
 .tile small{display:block;margin-top:3px;font-size:12.5px;color:var(--dust);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tile.placed::after{content:'';position:absolute;right:9px;top:10px;width:8px;height:8px;border-radius:50%;border:2px solid var(--ink)}
-.tile[aria-pressed=true]{background:var(--gold)}
+.tile[aria-pressed=true],.tile:has(>.hit[aria-pressed=true]){background:var(--gold)}
+/* A cue's tile (FK-160): the cue to play on top, its approval underneath. */
+div.tile{display:flex;flex-direction:column;padding:0}
+div.tile>.hit{flex:1;width:100%;text-align:left;background:none;border:0;padding:8px 12px 6px 17px;font-size:17px;line-height:1.1}
+div.tile>.ok{padding:0 8px 8px 17px}
 .tile.pop,.pill.pop{animation:pop .3s ease-out}
 @keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.06)}100%{transform:none}}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:2px 0 4px;font-size:13px;color:var(--dust)}
@@ -110,8 +114,33 @@ input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
 #phone em{font-style:normal;padding:2px 12px;border-radius:999px;background:var(--ink);color:var(--cream);font-size:14px}
 #phone[aria-pressed=true] em{background:var(--red)}
 
+/* Approve (FK-160): a status, A/B and Approve under each cue, the voices and the tune. Approved is moss, changed is red. */
+.ok{display:flex;flex-wrap:wrap;align-items:center;gap:5px 6px;min-height:30px;font-size:13px}
+.ok .mark{flex:1 1 auto;color:var(--dust);white-space:nowrap}
+.ok .mark::before{content:'';display:inline-block;width:.8em;height:.8em;margin-right:.4em;border-radius:50%;border:2px solid currentColor;vertical-align:-.1em;box-sizing:border-box}
+.ok[data-state=approved] .mark{color:var(--moss)}
+.ok[data-state=changed] .mark{color:var(--red)}
+.ok:is([data-state=approved],[data-state=changed]) .mark::before{background:currentColor}
+.ok[data-state=busy] .mark::before{border-style:dotted}
+.mini{min-height:28px;padding:2px 11px;background:#fff;border:2px solid var(--ink);border-radius:999px;box-shadow:0 3px 0 #0005;font-size:13px;line-height:1;white-space:nowrap}
+.mini.go{background:var(--gold)}
+.mini[aria-pressed=true]{background:var(--ink);color:var(--cream)}
+.mini:disabled{opacity:.55}
+.approval{margin-top:14px;padding:10px 12px 10px 14px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:0 4px 0 #0005}
+.approval>b{font:700 16px/1.1 var(--font-display)}
+.approval>small{margin-left:.6em;color:var(--dust);font-size:12.5px}
+.approval .ok{margin-top:6px}
+.toggle{display:flex;flex-direction:column;gap:8px}
+.toggle .ok{padding:0 4px}
+header p .link{margin-left:.4em;padding:0;background:none;border:0;border-bottom:2px solid currentColor;color:var(--kit)}
+#token-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#token-row input{width:18em;min-height:38px;padding:6px 12px;background:#fff;border:3px solid var(--ink);border-radius:12px}
+#toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:5;pointer-events:none}
+.toast{max-width:min(640px,92vw);padding:9px 18px;background:var(--cream);border:3px solid var(--ink);border-radius:999px;box-shadow:var(--drop);font-size:15px}
+.toast.bad{background:var(--red);color:var(--cream)}
+
 @media (max-width:1499px){main{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-areas:"cues out" "cues music" "speech crowd"}}
-@media (max-width:899px){header{padding:16px 16px 2px}h1{font-size:36px}main{padding:14px 16px 24px;grid-template-columns:minmax(0,1fr);grid-template-areas:"out" "cues" "speech" "crowd" "music"}#start{font-size:24px;padding:12px 26px}.crowd{grid-template-columns:minmax(0,1fr)}.ring{margin:0 auto}#voices{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:899px){header{padding:16px 16px 2px}h1{font-size:36px}main{padding:14px 16px 24px;grid-template-columns:minmax(0,1fr);grid-template-areas:"out" "cues" "speech" "crowd" "music"}#start{font-size:24px;padding:12px 26px}.crowd{grid-template-columns:minmax(0,1fr)}.ring{margin:0 auto}#voices{grid-template-columns:repeat(3,minmax(0,1fr))}.mini{min-height:38px;padding:4px 14px;font-size:14px}.ok{font-size:14px}}
 @media (prefers-reduced-motion:reduce){.tile.pop,.pill.pop{animation:none}.ring .who{transition:none}}
 </style>
 </head>
@@ -119,7 +148,9 @@ input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
 <header>
   <div>
     <h1>Sound board</h1>
-    <p>AI Dudes: the town · every cue, every voice and a crowd, at the stream's levels. Nothing here talks to the server.</p>
+    <p>AI Dudes: the town · every cue, every voice and a crowd, at the stream's levels. <b>Approve</b> records what you heard, for the coordinator to commit.
+      <button id="token-toggle" class="link" type="button" aria-expanded="false" aria-controls="token-row">Operator token</button></p>
+    <p id="token-row" hidden><label for="operator-token">Operator token</label> <input id="operator-token" type="password" autocomplete="off" placeholder="Only if the server has one set"></p>
   </div>
   <div class="go">
     <span id="status" role="status">Sound off</span>
@@ -141,6 +172,7 @@ input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
     <label class="field">Line<input id="line" type="text" value="Hello! Welcome to my town!" maxlength="300" autocomplete="off" spellcheck="false"></label>
     <div id="voices"></div>
     <button id="voices-all" class="pill wide" type="button" aria-pressed="false">All ten in turn</button>
+    <div id="voice-approval" class="approval"><b>The blips</b><small>all ten voices, approved as one</small></div>
     <div class="seed">
       <label class="field">Seed or speaker id<input id="seed" type="text" value="dev:test-kev" autocomplete="off" spellcheck="false"></label>
       <label class="check"><input id="seed-low" type="checkbox">low</label>
@@ -170,8 +202,8 @@ input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
     <h2 id="music-h">Music</h2>
     <p class="note">The town tune and the ambience at the stream's default levels. The ages and the mix states join here later.</p>
     <div class="toggles">
-      <button id="tune" class="tile" type="button" aria-pressed="false" style="--bus:var(--music)">Town tune<small>86 BPM, jazzy chords</small></button>
-      <button id="amb" class="tile" type="button" aria-pressed="false" style="--bus:var(--ambience)">Birds and hum<small>the ambience bed</small></button>
+      <div id="tune-approval" class="toggle"><button id="tune" class="tile" type="button" aria-pressed="false" style="--bus:var(--music)">Town tune<small>86 BPM, jazzy chords</small></button></div>
+      <div id="amb-approval" class="toggle"><button id="amb" class="tile" type="button" aria-pressed="false" style="--bus:var(--ambience)">Birds and hum<small>the ambience bed</small></button></div>
     </div>
     <div class="lv"><label for="lv-music">Music</label><input id="lv-music" type="range" min="0" max="1" step="0.05" value="0.5"><output id="lv-music-v">0.50</output></div>
     <div class="lv"><label for="lv-sfx">Effects, voices</label><input id="lv-sfx" type="range" min="0" max="1" step="0.05" value="0.8"><output id="lv-sfx-v">0.80</output></div>
@@ -200,6 +232,7 @@ input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
     </div>
   </section>
 </main>
+<div id="toasts" aria-live="polite"></div>
 <script src="/sounds/main.js"></script>
 </body>
 </html>

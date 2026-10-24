@@ -1,7 +1,9 @@
-// A fake Web Audio for the sound tests (lifted unchanged from scripts/audio-voice.test.ts by FK-158,
-// so the cue tests and the fingerprints use the very fake the speech-blip guard does). It writes down
-// every node, connection, parameter ramp and start/stop asked of it, and like a browser it throws on
-// a non-finite value, a time before zero or an exponential ramp to zero.
+// A fake Web Audio (lifted from scripts/audio-voice.test.ts by FK-158, so the cue tests use the very
+// fake the speech-blip guard does; moved here from scripts/audio-fake.ts by FK-160, because the sound
+// board runs it too: it fingerprints the voices and every cue in the browser, as the tests do, to show
+// what Sami has approved). It writes down every node, connection, parameter ramp and start/stop asked
+// of it, and like a browser it throws on a non-finite value, a time before zero or an exponential ramp
+// to zero. Nothing here touches the page or the speakers.
 
 export type Val = number | string | boolean;
 export interface Ev {
@@ -107,16 +109,12 @@ function node(ctx: FakeContext, kind: string, params: Record<string, number>, pr
 }
 
 export class FakeContext {
-  static made: FakeContext[] = [];
   readonly log: Ev[] = [];
   readonly nodes: FakeNode[] = [];
   readonly sampleRate = 48_000;
   currentTime = 0;
   state = 'running'; // as in OBS, which never waits for a click
   readonly destination = new FakeNode(this, 'destination');
-  constructor() {
-    FakeContext.made.push(this);
-  }
   resume() {
     return Promise.resolve();
   }
@@ -147,11 +145,25 @@ export class FakeContext {
   }
 }
 
-/** Like an OfflineAudioContext before it renders: its clock at 0, 'suspended', and a startRendering(). */
+/**
+ * Like an OfflineAudioContext before it renders: its clock at 0, 'suspended', and a startRendering().
+ * suspend(t) holds the render at `t` as a real one does (FK-160's renders play each part of a cue
+ * there): startRendering() moves the clock to each in turn and lets what waits on it run first.
+ */
 export class FakeOfflineContext extends FakeContext {
   override state = 'suspended';
-  startRendering() {
-    return Promise.resolve();
+  private holds: { t: number; go: () => void }[] = [];
+  suspend(t: number) {
+    return new Promise<void>((go) => this.holds.push({ t: time(t, 'suspend'), go }));
+  }
+  async startRendering() {
+    for (const h of this.holds.sort((a, b) => a.t - b.t)) {
+      this.currentTime = h.t;
+      h.go();
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    this.holds = [];
+    return this.createBuffer(2, 1, this.sampleRate);
   }
 }
 

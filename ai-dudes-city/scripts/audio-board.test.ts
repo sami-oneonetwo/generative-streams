@@ -4,7 +4,7 @@
 // into the board's output instead of the speakers, and the board's clock ticks the tune as the
 // stream page's timer does), that its voices are the stream's, that every cue is on it, that the
 // phone speaker and the meter are what they say, that the crowd talks as chat does, and that the page
-// is built, served from public/ and talks to no server.
+// is built and served from public/ (and that only its Approve talks to the server: FK-160).
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -40,7 +40,7 @@ import {
   seeded as crowdRandom,
   tickClock,
 } from '../client/sounds/board';
-import { FakeContext, FakeNode, FakeOfflineContext, FakeParam, seeded, type Ev } from './audio-fake';
+import { FakeContext, FakeNode, FakeOfflineContext, FakeParam, seeded, type Ev } from '../client/sounds/fake';
 
 const ROOT = path.join(import.meta.dirname, '..');
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), 'utf8');
@@ -409,7 +409,7 @@ test('the crowd: 6 or 15 test chatters in earshot, each in their own voice, on t
 
 // --- the page ---
 
-test('the page: every section labelled, every element the script asks for is in it, built into public/sounds/, and it talks to no server', () => {
+test('the page: every section labelled, every element the script asks for is in it, built into public/sounds/, and only Approve talks to the server', () => {
   const html = read('client/sounds/index.html');
   const main = read('client/sounds/main.ts');
   const headings = [...html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/g)].map((m) => m[1]);
@@ -423,8 +423,8 @@ test('the page: every section labelled, every element the script asks for is in 
   assert.ok(main.includes('$(`lv-${k}`)') && main.includes('$(`lv-${k}-v`)') && main.includes('$(`crowd-${n}`)'));
   for (const id of asked) assert.ok(ids.has(id), `#${id} is in client/sounds/index.html`);
   assert.match(html, /<script src="\/sounds\/main\.js"><\/script>/);
-  // It reads nothing from the server and writes nothing (FK-160's Approve is the first that will).
-  for (const f of fs.readdirSync(path.join(ROOT, 'client/sounds')).filter((f) => f.endsWith('.ts')))
+  // Only approve.ts talks to the server (FK-160: it reads the approvals and sends Approve, scripts/audio-approve.test.ts) or keeps anything.
+  for (const f of fs.readdirSync(path.join(ROOT, 'client/sounds')).filter((f) => f.endsWith('.ts') && f !== 'approve.ts'))
     assert.doesNotMatch(read(`client/sounds/${f}`), /\b(fetch|XMLHttpRequest|WebSocket|EventSource|sendBeacon|localStorage|indexedDB)\b/, `${f} talks to nothing`);
   // The build: the page to public/sounds/index.html (express.static serves it at /sounds/) and the script to /sounds/main.js.
   const build = read('scripts/build-client.mjs').split('\n');

@@ -9,6 +9,7 @@ const watch = process.argv.includes('--watch');
 mkdirSync('public', { recursive: true });
 const PAGES = { 'client/admin/index.html': 'public/admin.html', 'client/dudes/index.html': 'public/dudes.html' };
 PAGES['client/sounds/index.html'] = 'public/sounds/index.html'; // hook FK-159: the sound board, served at /sounds/ (Lane S)
+PAGES['client/dudes/audio-approved.json'] = 'public/sounds/approved.json'; // hook FK-160: what Sami has approved, for /sounds (each Approve refreshes it too) (Lane S)
 for (const [from, to] of Object.entries(PAGES)) cpSync(from, to);
 // The story HUD's fonts (Fredoka and Nunito woff2 with their OFL texts), served as /fonts/… (FK-009).
 cpSync('client/dudes/fonts', 'public/fonts', { recursive: true });

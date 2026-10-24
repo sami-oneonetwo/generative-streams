@@ -1,10 +1,16 @@
 // The sound board at /sounds (FK-159): every cue, every voice and a crowd, played by the stream's own
 // client/dudes/audio.ts at the stream's levels, with a meter on the master and a phone speaker, so Sami
 // can judge a sound by ear (agents can't hear). Its own AudioContext, started by a click as browsers
-// need. It reads nothing from the server and writes nothing (Approve is FK-160), so it is harmless if
-// someone else reaches it. The workings are in board.ts.
+// need. The workings are in board.ts. And Approve (FK-160): beside every cue and the voices, whether
+// Sami has approved the sound as it is now ("approved <date>", "changed since approval", "not approved
+// yet"), his Approve, and an A/B of the approved sound against the sound now. It reads the approvals
+// from the server and writes only through Approve, which the operator guard keeps to Sami (prints.ts
+// works out the fingerprints, approve.ts talks to the server and keeps the renders).
 import { CUES, createAudio, type AudioHandles, type AudioLevels, type Bus, type Cue } from '../dudes/audio';
 import { emoteNames } from '../../src/shared/emotes';
+import { VOICE, dayOf, entryOf, statusOf, withApproval, type Approved, type Item } from '../../src/shared/audioApproved';
+import { keep, keyOf, kept, loadApproved, renderNow, sendApproval, unpack, type ApproveError, type Pcm } from './approve';
+import { ITEMS, RATE, printOfItem } from './prints';
 import {
   CLOCK_MS,
   CROWD_MAX,
@@ -138,6 +144,7 @@ function shown() {
 /** Everything off: the tune, the birds, a bed, the crowd and any run of cues or voices. */
 function hush() {
   run?.stop();
+  abRun?.stop();
   stopCrowd();
   if (bed) audio?.beds(0, 0);
   bed = undefined;
@@ -193,13 +200,215 @@ function sequence<T>(button: HTMLElement, items: readonly T[], gap: number, play
   next();
 }
 
+// --- Approve (FK-160) ---
+
+/** One thing Sami can approve (the voices, or a cue), its row on the board, and what the page knows of it. */
+interface Approval {
+  item: Item;
+  row: HTMLElement;
+  mark: HTMLElement;
+  approve: HTMLButtonElement;
+  ab: HTMLButtonElement;
+  /** Its fingerprint as it is now: worked out once the page is up (prints.ts). */
+  hash?: string;
+  /** The hash of the render this browser keeps of it, if any: A/B needs the approved one. */
+  kept?: string;
+  busy?: boolean;
+}
+const approvals = new Map<string, Approval>();
+/** The approvals as the server has them; or why they couldn't be read. */
+let approved: Approved | undefined,
+  unread: string | undefined;
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** '2026-10-24' as '24 Oct' (with the year when it isn't this one). */
+function dayLabel(date: string) {
+  const [y, m, d] = date.split('-').map(Number);
+  if (!y || !m || !d) return date;
+  return `${d} ${MONTHS[m - 1]}${y === new Date().getFullYear() ? '' : ` ${y}`}`;
+}
+const labelOf = (item: Item) => (item.kind === 'voice' ? 'the voices' : item.name);
+
+/** An approval's row: its status, A/B (once this browser keeps the approved sound) and Approve. */
+function approvalRow(item: Item): HTMLElement {
+  const row = el('div', 'ok');
+  const mark = el('span', 'mark', 'checking…');
+  const ab = el('button', 'mini ab', 'A/B') as HTMLButtonElement;
+  const approve = el('button', 'mini go', 'Approve') as HTMLButtonElement;
+  for (const b of [ab, approve]) {
+    b.type = 'button';
+    b.hidden = true;
+  }
+  ab.title = 'The approved sound, then the sound now';
+  pressed(ab, false);
+  row.append(mark, ab, approve);
+  const a: Approval = { item, row, mark, approve, ab };
+  approve.onclick = () => void approveIt(a);
+  ab.onclick = () => void abPlay(a);
+  approvals.set(keyOf(item), a);
+  return row;
+}
+
+/** A row as things stand: "approved <date>", "changed since approval" or "not approved yet". */
+function show(a: Approval) {
+  const entry = approved && entryOf(approved, a.item);
+  const status = approved && a.hash !== undefined ? statusOf(entry, a.hash) : undefined;
+  a.row.dataset.state = a.busy ? 'busy' : (status ?? (unread ? 'unread' : 'checking'));
+  a.mark.textContent = a.busy
+    ? 'approving…'
+    : status === 'approved'
+      ? `approved ${dayLabel(entry!.date)}`
+      : status === 'changed'
+        ? 'changed since approval'
+        : status === 'none'
+          ? 'not approved yet'
+          : unread
+            ? "can't read the approvals"
+            : 'checking…';
+  a.mark.title = entry ? `Approved by ${entry.by} on ${entry.date}${status === 'changed' ? '; the sound has changed since' : ''}` : (unread ?? '');
+  a.approve.hidden = !status || status === 'approved';
+  a.approve.disabled = !!a.busy;
+  a.ab.hidden = !entry || a.kept !== entry.hash;
+}
+const showAll = () => approvals.forEach(show);
+
+/** The approvals, fresh from the server; then A/B renders for whatever is approved and kept nowhere here yet. */
+async function refreshApproved() {
+  try {
+    approved = await loadApproved();
+    unread = undefined;
+  } catch (e) {
+    unread = `Couldn't read the approvals (${(e as Error).message}): reload, or rebuild the board`;
+  }
+  showAll();
+  void backfill();
+}
+
+let backfilling = false;
+/**
+ * Renders and keeps, for A/B, every approved sound whose fingerprint is still the approved one and of
+ * which this browser keeps no render (approved elsewhere, or before FK-160, as the blips were): the
+ * same fingerprint is the same sound, so the render is the approved one.
+ */
+async function backfill() {
+  if (backfilling || !approved || typeof OfflineAudioContext === 'undefined') return;
+  backfilling = true;
+  try {
+    for (const a of approvals.values()) {
+      const entry = entryOf(approved, a.item);
+      if (!entry || a.hash !== entry.hash || a.kept === entry.hash || a.busy) continue;
+      try {
+        await keep(a.item, entry.hash, await renderNow(a.item));
+        a.kept = entry.hash;
+        show(a);
+      } catch {
+        return; // no IndexedDB here (or no room): no A/B in this browser
+      }
+    }
+  } finally {
+    backfilling = false;
+  }
+}
+
+const token = () => ($('operator-token') as HTMLInputElement).value.trim();
+function showToken(open: boolean) {
+  $('token-row').hidden = !open;
+  $('token-toggle').setAttribute('aria-expanded', String(open));
+  if (open) $('operator-token').focus();
+}
+$('token-toggle').onclick = () => showToken($('token-row').hidden);
+
+function toast(text: string, kind: 'ok' | 'bad' = 'ok') {
+  const t = el('div', `toast${kind === 'bad' ? ' bad' : ''}`, text);
+  $('toasts').append(t);
+  setTimeout(() => t.remove(), kind === 'bad' ? 7000 : 2600);
+}
+
+/** Sami's Approve: the sound as it is now (its fingerprint) goes on file, and a render of it stays in this browser for A/B. */
+async function approveIt(a: Approval) {
+  if (a.hash === undefined || a.busy) return;
+  const hash = a.hash;
+  a.busy = true;
+  show(a);
+  try {
+    // The render first, so what this browser keeps is the sound approved. Without one, it still approves.
+    const pcm = await renderNow(a.item).catch(() => undefined);
+    await sendApproval(a.item, hash, token());
+    approved = withApproval(approved ?? {}, a.item, hash, dayOf(Date.now()));
+    if (pcm)
+      await keep(a.item, hash, pcm)
+        .then(() => (a.kept = hash))
+        .catch(() => {});
+    toast(`Approved: ${labelOf(a.item)}`);
+  } catch (e) {
+    const err = e as ApproveError;
+    toast(`Not approved: ${err.message}`, 'bad');
+    if (err.status === 401 || err.status === 403) showToken(true);
+  } finally {
+    a.busy = false;
+    show(a);
+  }
+  void refreshApproved();
+}
+
+// A/B: the approved sound as this browser kept it, then the sound now, each rendered the same way from
+// its fingerprint's seed, through the board's output (so the phone speaker and the meter apply).
+let abRun: { a: Approval; stop(): void } | undefined;
+const nowRenders = new Map<string, Pcm>();
+async function abPlay(a: Approval) {
+  const was = abRun?.a;
+  abRun?.stop();
+  if (was === a || !ctx || !out || !playing() || a.hash === undefined) return;
+  const c = ctx,
+    o = out;
+  const entry = approved && entryOf(approved, a.item);
+  const k = await kept(a.item);
+  if (!entry || !k || k.hash !== entry.hash) return toast('This browser keeps no render of the approved sound', 'bad');
+  const id = `${keyOf(a.item)}@${a.hash}`;
+  if (!nowRenders.has(id)) nowRenders.set(id, await renderNow(a.item));
+  const parts = [
+    { tag: 'A · approved', pcm: unpack(k.data) },
+    { tag: 'B · now', pcm: nowRenders.get(id)! },
+  ];
+  let src: AudioBufferSourceNode | undefined,
+    timer = 0,
+    i = 0;
+  const stop = () => {
+    if (src) {
+      src.onended = null;
+      src.stop();
+    }
+    clearTimeout(timer);
+    a.ab.textContent = 'A/B';
+    pressed(a.ab, false);
+    abRun = undefined;
+  };
+  const next = () => {
+    if (i >= parts.length || !playing()) return stop();
+    const p = parts[i++];
+    const buf = c.createBuffer(p.pcm.length, Math.max(1, p.pcm[0]?.length ?? 0), RATE);
+    p.pcm.forEach((d, ch) => buf.copyToChannel(d, ch));
+    src = c.createBufferSource();
+    src.buffer = buf;
+    src.connect(o.input);
+    src.onended = () => (timer = window.setTimeout(next, 500));
+    meter.mark(); // Last play reads each half on its own
+    src.start();
+    a.ab.textContent = p.tag;
+  };
+  abRun = { a, stop };
+  pressed(a.ab, true);
+  next();
+}
+
 // --- cues ---
 
-const tiles = new Map<string, HTMLElement>();
+/** Each cue's tile, and the button on it that plays the cue. */
+const tiles = new Map<string, { tile: HTMLElement; hit: HTMLButtonElement }>();
 function playCue(c: Cue) {
   if (!audio || !playing()) return;
   fresh();
-  const tile = tiles.get(c.name)!;
+  const { tile, hit } = tiles.get(c.name)!;
   pop(tile);
   if (!isBed(c)) {
     // Heard on its bus: a one-off on the music or the ambience bus opens it (see `opened`). A bus glides
@@ -214,11 +423,11 @@ function playCue(c: Cue) {
   // A bed holds until it is clicked again; one at a time, as each bed's play() sets the others to 0.
   // Its bus is open while it holds (the fountain's is the ambience), and closes behind it.
   const was = bed;
-  if (was) pressed(tiles.get(was.name)!, false);
+  if (was) pressed(tiles.get(was.name)!.hit, false);
   bed = was === c ? undefined : c;
   if (bed) {
     c.play(audio);
-    pressed(tile, true);
+    pressed(hit, true);
   } else audio.beds(0, 0);
   send();
 }
@@ -227,15 +436,18 @@ for (const g of cueGroups(CUES)) {
   if (g.note) h.append(el('small', '', g.note));
   const grid = el('div', 'tiles');
   for (const c of g.cues) {
-    const b = el('button', `tile${c.placed ? ' placed' : ''}`, cueLabel(c)) as HTMLButtonElement;
-    b.type = 'button';
-    b.style.setProperty('--bus', `var(--${c.bus})`);
-    if (isBed(c)) pressed(b, false);
-    b.title = `${c.name} · ${c.bus} bus${c.placed ? ' · placed' : ''}`;
-    if (WHAT[c.name]) b.append(el('small', '', WHAT[c.name]));
-    b.onclick = () => playCue(c);
-    tiles.set(c.name, b);
-    grid.append(b);
+    // A tile: the cue to play, and under it its approval (FK-160).
+    const tile = el('div', `tile${c.placed ? ' placed' : ''}`);
+    tile.style.setProperty('--bus', `var(--${c.bus})`);
+    const hit = el('button', 'hit', cueLabel(c)) as HTMLButtonElement;
+    hit.type = 'button';
+    if (isBed(c)) pressed(hit, false);
+    hit.title = `${c.name} · ${c.bus} bus${c.placed ? ' · placed' : ''}`;
+    if (WHAT[c.name]) hit.append(el('small', '', WHAT[c.name]));
+    hit.onclick = () => playCue(c);
+    tile.append(hit, approvalRow({ kind: 'cue', name: c.name }));
+    tiles.set(c.name, { tile, hit });
+    grid.append(tile);
   }
   $('cues').append(h, grid);
 }
@@ -397,3 +609,22 @@ for (const d of DISTANCES) {
   $('where').append(b);
 }
 $('start').onclick = () => (live ? hush() : void start());
+
+// --- Approve: the voices' and the clock's rows, then the fingerprints ---
+
+$('voice-approval').append(approvalRow({ kind: 'voice', name: VOICE }));
+$('tune-approval').append(approvalRow({ kind: 'cue', name: 'music' }));
+$('amb-approval').append(approvalRow({ kind: 'cue', name: 'birds' }));
+/** Every fingerprint, one at a time with a breath between (about a second in all), and what this browser keeps. */
+async function fingerprints() {
+  for (const item of ITEMS) {
+    const a = approvals.get(keyOf(item));
+    if (!a) continue;
+    await new Promise((r) => setTimeout(r, 0));
+    a.kept = (await kept(item))?.hash;
+    a.hash = printOfItem(item);
+    show(a);
+  }
+  void backfill();
+}
+void refreshApproved().then(fingerprints);
