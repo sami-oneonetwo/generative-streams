@@ -14,11 +14,11 @@ import { MODERN, ageStyle } from '../../shared/ages';
 import { outfitFor } from '../../shared/outfits';
 import { interactionOf } from './blueprint';
 import { plotAt, venueKindOf } from '../../shared/city';
-import type { SafehouseObject } from '../../shared/objectTypes';
+import type { GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import { matchName } from './index';
 import { EMOTES, WEAPONS, type DudeLook, type DudeView, type Emote, type MayorView, type Weapon } from '../../shared/dudesTypes';
 import { armedBuild, fire, ram } from './weapons';
-import { LIMITS, nextId, pushFeed, pushLine, type DudesState, type Job, type Mayor } from './state';
+import { LIMITS, nextId, pushFeed, pushLine, storyOn, type DudesState, type Job, type Mayor } from './state';
 import { nudge } from './events';
 import { renewed } from './damage';
 import { onShowInput, type ShowInput } from './story/beats'; // FK-001
@@ -35,6 +35,11 @@ export const MAYOR = {
   reach: 4,
   /** Camera zoom (orthographic half-height, metres) the operator may ask for. */
   half: [5, 45] as const,
+  /**
+   * The longest the show may keep him on a mark (FK-020): past the longest scene's lock (the Rising's
+   * 4 min) and its 25 s Call, so only a release that never came hits it, and Sami's WASD comes back.
+   */
+  lockMs: 5 * 60_000,
 };
 export const MAYOR_LOOK: DudeLook = {
   skin: '#e0ac85',
@@ -120,14 +125,17 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
     case 'move': {
       if (![msg.x, msg.z, msg.facing].every(Number.isFinite)) return undefined;
       at = stampOf(msg.at, now);
-      m.position = clampToGround({ x: msg.x, z: msg.z }, 0.5);
-      m.facing = msg.facing;
-      m.moving = !!msg.moving;
-      m.running = !!msg.running;
+      // On his mark for a scene, he stays on it whatever the page sends (a step sent before it heard
+      // of the lock, a heartbeat); the camera still turns and zooms round him.
+      const lock = headLock(state);
+      m.position = lock ? { ...lock.at } : clampToGround({ x: msg.x, z: msg.z }, 0.5);
+      m.facing = lock ? lock.facing : msg.facing;
+      m.moving = !lock && !!msg.moving;
+      m.running = !lock && !!msg.running;
       if (Number.isFinite(msg.yaw)) m.cam.yaw = msg.yaw!;
       if (Number.isFinite(msg.half)) m.cam.half = Math.max(MAYOR.half[0], Math.min(MAYOR.half[1], msg.half!));
       // Where the camera looks: on the Mayor, or wherever the operator has flown it (a little past the edge at most).
-      if (Number.isFinite(msg.cx) && Number.isFinite(msg.cz)) {
+      if (Number.isFinite(msg.cx) && Number.isFinite(msg.cz) && !lock) {
         const c = clampToGround({ x: msg.cx!, z: msg.cz! }, -20);
         m.cam.x = c.x;
         m.cam.z = c.z;
@@ -142,14 +150,14 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
       break;
     }
     case 'say': {
-      if (m.hidden) return undefined; // nobody to say it
+      if (headHidden(state, m)) return undefined; // nobody to say it
       const text = String(msg.text ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, LIMITS.say);
       if (!text) return undefined;
       speak(state, m, text, now);
       break;
     }
     case 'emote': {
-      if (m.hidden) return undefined;
+      if (headHidden(state, m)) return undefined;
       const pose = (EMOTES as readonly string[]).includes(msg.pose) ? (msg.pose as Emote) : undefined;
       if (!pose) return undefined;
       m.emote = { pose, until: now + (pose === 'dance' ? 10_000 : pose === 'sit' || pose === 'think' ? 60_000 : 3500) };
@@ -173,6 +181,7 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
       break;
     }
     case 'ride':
+      if (headLock(state)) return undefined; // on his mark: nothing to get on or off until the release
       if (m.riding) getOff(state, m);
       else if (!getOn(state, m)) return undefined;
       break;
@@ -194,6 +203,7 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
       break;
     }
     case 'play':
+      if (headLock(state)) return undefined;
       if (m.playing) stopPlaying(m);
       else if (!play(state, m, now)) return undefined;
       break;
@@ -211,10 +221,11 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
       break;
     }
     case 'arm':
+      if (headLock(state)) return undefined; // the show put it away: it stays away until the release
       m.armed = (WEAPONS as readonly string[]).includes(msg.weapon) ? (msg.weapon as Weapon) : undefined;
       break;
     case 'fire': {
-      if (m.hidden) return undefined;
+      if (headHidden(state, m) || headLock(state)) return undefined;
       const vehicle = m.riding ? state.objects.find((o) => o.id === m.riding) : undefined;
       const gun = vehicle && armedBuild(vehicle) ? 'cannon' : m.armed;
       if (!gun) return undefined;
@@ -227,13 +238,15 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
       break;
     }
     case 'ram': {
+      if (headLock(state)) return undefined;
       const vehicle = m.riding ? state.objects.find((o) => o.id === m.riding) : undefined;
       if (!vehicle || !ram(state, { id: 'mayor', name: headName(state), position: m.position, facing: m.facing, vehicle }, String(msg.target ?? ''), Number(msg.speed), now)) return undefined;
       break;
     }
     case 'visible':
+      // The page's own wish: kept even while the show overrides it (headHidden), so it holds again after.
       m.hidden = !msg.on || undefined;
-      if (m.hidden) {
+      if (headHidden(state, m)) {
         m.say = undefined;
         m.emote = undefined;
       }
@@ -306,6 +319,8 @@ export function tickMayor(state: DudesState, now: number): void {
   if (m.say && m.say.until <= now) m.say = undefined;
   if (m.emote && m.emote.until <= now) m.emote = undefined;
   if (m.hatGift && m.hatGift.until <= now) m.hatGift = undefined;
+  // A lock the show never let go of (a scene cut off without its release): his WASD comes back.
+  if (m.lock && now - m.lock.since > MAYOR.lockMs) m.lock = undefined;
   // The operator page went away mid-stride: the Mayor stops (and gets off whatever he was on).
   if (!live(m, now)) {
     m.moving = false;
@@ -325,7 +340,7 @@ export function tickMayor(state: DudesState, now: number): void {
 // ---- playing: shooting hoops, a swim, a tune on the stage ----------------------------------------
 /** The nearest build with something to do at it, within reach: on it (or beside it), in the pose. */
 function play(state: DudesState, m: Mayor, now: number): boolean {
-  if (m.riding || m.hidden) return false;
+  if (m.riding || headHidden(state, m)) return false;
   const p = state.objects
     .filter((o) => interactionOf(o.blueprint))
     .map((o) => ({ o, d: Math.hypot(o.position.x - m.position.x, o.position.z - m.position.z) - Math.max(o.footprint.width, o.footprint.depth) / 2 }))
@@ -545,6 +560,70 @@ function ridden(state: DudesState, m: Mayor, alt?: number): void {
   if (flies(o) && Number.isFinite(alt)) setAltitude(o, alt!);
 }
 
+// ---- the show: his mark (Finders Keepers, FK-020) -----------------------------------------------
+// At a Call the server puts the head where the scene needs him, so Sami never has to find a mark.
+// All of it is Story-only: with Story off a lock or a forced hiding left in a save does nothing.
+
+/** Where the show has him pinned, while Story is on. */
+export function headLock(state: DudesState): Mayor['lock'] {
+  return storyOn(state) ? state.mayor?.lock : undefined;
+}
+
+/**
+ * Whether he is out of sight. The show has the last word (hidden for the Intro's flashback, shown on
+ * his mark); otherwise the operator page's H. The page's own wish is kept apart (`hidden`), so it
+ * holds again once the show lets go.
+ */
+export function headHidden(state: DudesState, m: Mayor): boolean {
+  if (storyOn(state) && m.forcedHidden) return true;
+  if (storyOn(state) && m.lock) return false;
+  return !!m.hidden;
+}
+
+/**
+ * The Call: he is shown (whatever H says), off whatever he was riding (left parked where it stood),
+ * the weapon put away, out of a game or a pose, and snapped onto `mark` facing `face`; the operator
+ * page jumps there too (`moved`), its free camera goes off, and its WASD waits for `releaseHead`.
+ * FK-061 walks him there instead of the snap. False, and nothing touched, while Story is off.
+ */
+export function prepareHead(state: DudesState, mark: GroundPoint, face: number, now: number): boolean {
+  if (!storyOn(state)) return false;
+  const m = mayorOf(state, now);
+  if (m.riding) getOff(state, m);
+  if (m.playing) stopPlaying(m);
+  m.armed = undefined;
+  m.emote = undefined;
+  m.forcedHidden = undefined;
+  const at = clampToGround(mark, 0.5);
+  m.position = { ...at };
+  m.facing = face;
+  m.moving = false;
+  m.running = false;
+  m.cam.x = at.x;
+  m.cam.z = at.z;
+  m.moved = (m.moved ?? 0) + 1;
+  m.lock = { at: { ...at }, facing: face, since: now };
+  return true;
+}
+
+/** The release: his WASD back, from the mark; H's say holds again. False if he wasn't on one. */
+export function releaseHead(state: DudesState): boolean {
+  const m = state.mayor;
+  if (!m?.lock) return false;
+  m.lock = undefined;
+  return true;
+}
+
+/** Out of sight whatever the operator page asks (the Intro's flashback, FK-043), or back as he was. */
+export function forceHeadHidden(state: DudesState, on: boolean, now: number): void {
+  const m = mayorOf(state, now);
+  m.forcedHidden = on || undefined;
+  if (on) {
+    m.say = undefined;
+    m.emote = undefined;
+  }
+}
+
 export function mayorView(state: DudesState, now: number): MayorView {
   const m = mayorOf(state, now);
   return {
@@ -558,7 +637,7 @@ export function mayorView(state: DudesState, now: number): MayorView {
     follow: m.follow,
     ...(m.focus ? { focus: m.focus } : {}),
     live: live(m, now),
-    ...(m.hidden ? { hidden: true } : {}),
+    ...(headHidden(state, m) ? { hidden: true } : {}),
     ...(ridingView(state, m) ? { riding: ridingView(state, m) } : {}),
     ...(m.audio ? { audio: m.audio } : {}),
     ...(m.armed ? { armed: m.armed } : {}),
@@ -581,7 +660,7 @@ export function rideInfo(o: SafehouseObject): NonNullable<MayorView['riding']> {
 /** The Mayor as a figure among the others (only while the operator page is open). */
 export function mayorDudeView(state: DudesState, now: number): DudeView[] {
   const m = state.mayor;
-  if (!m || !live(m, now) || m.hidden) return [];
+  if (!m || !live(m, now) || headHidden(state, m)) return [];
   const riding = ridingView(state, m);
   return [
     {
@@ -603,7 +682,7 @@ export function mayorDudeView(state: DudesState, now: number): DudeView[] {
 /** One line for every agent: where the Mayor is, when the streamer is walking about. */
 export function mayorLine(state: DudesState, at: { x: number; z: number }, now: number): string | undefined {
   const m = state.mayor;
-  if (!m || !live(m, now) || m.hidden) return undefined;
+  if (!m || !live(m, now) || headHidden(state, m)) return undefined;
   const d = Math.round(Math.hypot(m.position.x - at.x, m.position.z - at.z));
   return `${headName(state)} (the Mayor: the streamer, walking round town and talking to everyone) is ${d < 3 ? 'right next to you' : `${d} m away`}.`;
 }

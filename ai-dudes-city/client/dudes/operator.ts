@@ -5,6 +5,8 @@
 // a right-drag) then move the camera itself, and the Mayor stands where he was left. The figure moves here first and the server is told fifteen times a
 // second, so walking never waits on the snapshot clock. The side panel is what a narrator wants
 // to hand: who is near and what they are up to, everyone about, and what the town is doing.
+// At a story Call the server puts him on his mark (`lock`, FK-020): WASD, riding, weapons, playing
+// and the free camera wait for the release; the camera still turns and zooms, and he still talks.
 import type { DudeView, DudesScene, Emote, MayorView } from './types';
 import { CITY_BOUNDS, SQUARE } from './types';
 
@@ -140,6 +142,9 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     free = false,
     cx = 0,
     cz = 9;
+  // On his mark for a scene (the server's `lock`), and whether the stream sees him (`visible` is H's own say).
+  let lock: MayorView['lock'],
+    shown = true;
 
   // --- the socket to the server: the Mayor's moves, words and poses ---
   let socket: WebSocket | undefined;
@@ -281,6 +286,11 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
       renderFollow();
       return;
     }
+    // On his mark for a scene: no riding, playing, weapons or free camera until the release.
+    if (lock && ['t', 'r', 'g', 'x', ' ', 'f'].includes(k)) {
+      e.preventDefault();
+      return;
+    }
     if (k === 't') {
       // Have a go at whatever is nearest: hoops, a swim, the stage (again to stop).
       send({ t: 'play' });
@@ -311,6 +321,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     }
     if (k === 'h') {
       visible = !visible;
+      if (!lock) shown = visible; // the server agrees a moment later (unless the show has him hidden)
       send({ t: 'visible', on: visible });
       renderFollow();
       return;
@@ -347,16 +358,17 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     el('op-follow').className = choosing ? 'warn' : 'ok';
     const mode = focusId ? 'person' : follow ? 'mayor' : 'everyone';
     for (const b of document.querySelectorAll<HTMLButtonElement>('#op-cam-modes button')) b.classList.toggle('on', choosing ? b.dataset.mode === 'person' : b.dataset.mode === mode);
-    el('op-visible').textContent = visible ? 'visible' : 'hidden';
-    el('op-visible').className = visible ? 'ok' : 'warn';
-    el('op-ride').textContent = ride ? `aboard ${getState()?.objects.find((o) => o.id === ride!.id)?.blueprint.name ?? 'something'} (R to get off)` : 'on foot (R near something to ride it)';
-    el('op-ride').className = ride ? 'warn' : 'ok';
-    el('op-arms').textContent = ride?.gun ? 'its gun (click or X to fire)' : arms.armed ? `${arms.armed === 'rocket' ? 'rocket launcher' : 'blaster'} (click or X to fire · G to swap)` : 'nothing (G for a weapon)';
+    // What the stream sees; when the show overrides H (shown on his mark, hidden for a flashback), it says so.
+    el('op-visible').textContent = `${shown ? 'visible' : 'hidden'}${shown !== visible ? ' (the show)' : ''}`;
+    el('op-visible').className = shown ? 'ok' : 'warn';
+    el('op-ride').textContent = ride ? `aboard ${getState()?.objects.find((o) => o.id === ride!.id)?.blueprint.name ?? 'something'} (R to get off)` : lock ? 'on his mark for the show' : 'on foot (R near something to ride it)';
+    el('op-ride').className = ride || lock ? 'warn' : 'ok';
+    el('op-arms').textContent = ride?.gun ? 'its gun (click or X to fire)' : arms.armed ? `${arms.armed === 'rocket' ? 'rocket launcher' : 'blaster'} (click or X to fire · G to swap)` : lock ? 'nothing (put away for the show)' : 'nothing (G for a weapon)';
     el('op-arms').className = arms.armed || ride?.gun ? 'warn' : 'ok';
-    el('op-cam').textContent = free ? 'free (WASD moves the camera)' : 'on the Mayor';
+    el('op-cam').textContent = lock ? 'on his mark: WASD waits for the release' : free ? 'free (WASD moves the camera)' : 'on the Mayor';
     el('op-sound').textContent = `music ${Math.round(sound.music * 100)}% · effects ${sound.sfx > 0 ? 'on' : 'off'}`;
     el('op-sound').className = sound.music > 0 || sound.sfx > 0 ? 'ok' : 'warn';
-    el('op-cam').className = free ? 'warn' : 'ok';
+    el('op-cam').className = free || lock ? 'warn' : 'ok';
   }
   renderFollow();
 
@@ -381,7 +393,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   function frame(dt: number, yaw: number, half: number) {
     let f = 0,
       r = 0;
-    if (!typing()) {
+    if (!typing() && !lock) {
       if (keys.has('w') || keys.has('arrowup')) f += 1;
       if (keys.has('s') || keys.has('arrowdown')) f -= 1;
       if (keys.has('d') || keys.has('arrowright')) r += 1;
@@ -463,6 +475,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
       x = Math.max(b.minX + 0.5, Math.min(b.maxX - 0.5, x));
       z = Math.max(b.minZ + 0.5, Math.min(b.maxZ - 0.5, z));
     }
+    if (lock) [x, z, facing] = [lock.at.x, lock.at.z, lock.facing];
     if (!free) [cx, cz] = [x, z];
     const now = performance.now();
     const key = `${x.toFixed(2)},${z.toFixed(2)},${facing.toFixed(2)},${moving},${yaw.toFixed(2)},${half.toFixed(1)},${cx.toFixed(2)},${cz.toFixed(2)},${alt.toFixed(2)}`;
@@ -476,11 +489,12 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   let moved = -1;
   function mayor(view: MayorView | undefined) {
     renderAide(view?.aide);
-    // The server put him somewhere (onto the court): this page jumps there too.
+    // The server put him somewhere (onto the court, onto his mark): this page jumps there too.
     if (view && (view.moved ?? 0) !== moved) {
       if (moved >= 0) [x, z, facing] = [view.position.x, view.position.z, view.facing];
       moved = view.moved ?? 0;
     }
+    if (view) onMark(view);
     const next = view?.riding;
     if (next?.id === ride?.id) {
       if (next) ride = next; // a flyer's height, as it climbs
@@ -497,6 +511,23 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     lastSent = 0;
     renderFollow();
   }
+  /** The show's hold on him: the lock coming (the camera back on him, the weapon gone) and going, and whether he is seen. */
+  function onMark(view: MayorView) {
+    const was = lock;
+    lock = view.lock;
+    const seen = !view.hidden;
+    if (!!was === !!lock && seen === shown) return;
+    if (lock && !was) {
+      free = false;
+      arms.armed = undefined; // the server put it away
+      [x, z, facing] = [lock.at.x, lock.at.z, lock.facing];
+      lastSent = 0;
+    }
+    // Let go: whatever the stream shows now is H's own say again (this page may have opened mid-scene).
+    if (was && !lock) visible = seen;
+    shown = seen;
+    renderFollow();
+  }
   function clampCam() {
     const b = CITY_BOUNDS;
     cx = Math.max(b.minX - 20, Math.min(b.maxX + 20, cx));
@@ -505,6 +536,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
 
   // --- the panels ---
   function goTo(d: DudeView) {
+    if (lock) return; // on his mark until the release
     // Beside them, on the camera's side.
     x = d.position.x + 1.6;
     z = d.position.z + 1.6;
@@ -532,7 +564,8 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
         facing = m.facing;
         follow = m.follow;
         focusId = m.focus;
-        visible = !m.hidden;
+        visible = shown = !m.hidden;
+        lock = m.lock;
         ride = m.riding;
         alt = altWant = m.riding?.altitude ?? 0;
         if (m.audio) Object.assign(sound, m.audio);
@@ -604,6 +637,6 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     focusOn: (id) => setMode('person', id),
     self: () => 'mayor',
     canRework: () => true,
-    fireAt: (at) => (arms.armed || ride?.gun ? (fireNow(at), true) : false),
+    fireAt: (at) => (!lock && (arms.armed || ride?.gun) ? (fireNow(at), true) : false),
   };
 }
