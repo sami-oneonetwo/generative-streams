@@ -106,6 +106,7 @@ import {
   type Job,
 } from './state';
 import { storyDevActions, storyDevButtons } from './story/dev';
+import { gathering, hearInGather, takeQueued, tickGather } from './story/gather';
 import { releaseShow, tickShow } from './story/show';
 import { storyDudeView } from './story/view';
 
@@ -345,13 +346,15 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
     // chatters each get a turn every half a minute or so instead of the first few getting all of them.
     const talking = state.dudes.filter((d) => ctx.now - d.lastHeardAt < 120_000).length;
     const gap = Math.min(60_000, turnGapMs * Math.max(1, talking / TALKERS_PER_GAP));
+    // While a scene or a gathering runs, nobody reacts on a turn of their own: those wait for the release (FK-018).
+    const own = !gathering(state);
     while (agentCalls.size < opts.agentLimit && canCall(state)) {
       const now = ctx.now;
       // Chat first, oldest waiting first; then characters reacting on their own to what happened to them.
       const free = state.dudes.filter((d) => !d.muted && !agentCalls.has(d.id) && !isPiloted(d.id));
       const next =
         free.filter((d) => d.inbox.length && now - d.lastTurnAt >= gap).sort((a, b) => a.inbox[0].at - b.inbox[0].at)[0] ??
-        free.filter((d) => d.nudges?.length && awake(d, now) && now - d.lastTurnAt >= NUDGE_GAP_MS).sort((a, b) => a.lastTurnAt - b.lastTurnAt)[0];
+        (own ? free.filter((d) => d.nudges?.length && awake(d, now) && now - d.lastTurnAt >= NUDGE_GAP_MS).sort((a, b) => a.lastTurnAt - b.lastTurnAt)[0] : undefined);
       if (!next || !reserveCall(state)) return;
       startTurn(ctx, state, next, now);
     }
@@ -1020,7 +1023,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
   function idleLife(ctx: WorldCtx<DudesState>): void {
     const state = ctx.state,
       now = ctx.now;
-    if (state.ai.idleLife === false || !canCall(state) || now < nextIdleAt) return;
+    if (state.ai.idleLife === false || !canCall(state) || now < nextIdleAt || gathering(state)) return;
     nextIdleAt = now + IDLE_TURN_MS * (0.75 + ctx.rng() * 0.5);
     const quiet = state.dudes.filter(
       (d) =>
@@ -1122,6 +1125,40 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
     return dude.inbox.some((l) => l.from === 'chatter' && sameLine(l.text, text)) || (!!prev && now - prev.at < 8000 && sameLine(prev.text, text));
   }
 
+  /** A chatter's line on its way to their character's agent (said at `at`): the bridge first, then the inbox. */
+  function toAgent(state: DudesState, dude: Dude, clean: string, at: number, now: number): void {
+    // "Help at the bridge", "fix the bridge", "build the bridge": while the travellers are stuck, the
+    // character sets off at once, without waiting on its agent (or building a bridge of its own).
+    if (bridgeOpen(state) && /\bbridge\b/i.test(clean) && !/\b(don'?t|do not|never|stop)\b/i.test(clean)) {
+      const why = startLabour(state, dude, now);
+      if (!why) pushLine(dude.history, { from: 'world', text: 'you set off to help mend the bridge for the travellers', at: now }, LIMITS.history);
+    }
+    // What the agent reads: emotes by name ("lol KEKW"). A player walking their own character is the
+    // character: what they say in chat is just said.
+    const words = emoteNames(clean);
+    if (isPiloted(dude.id)) pushLine(dude.history, { from: 'chatter', text: words, at }, LIMITS.history);
+    else pushLine(dude.inbox, { from: 'chatter', text: words, at }, LIMITS.inbox);
+    // Out on an errand of their own (inside the café, napping at home): their chatter speaking
+    // brings them straight out, so the bubble is seen and the body is free for whatever comes next.
+    if (dude.visit && (dude.visit.why === 'need' || dude.visit.why === 'party')) leaveVisit(dude);
+  }
+
+  /**
+   * Gather mode's queued moves and builds (FK-018), after the release: one chatter's line at a time
+   * goes to their agent, at least 2 s apart (story/gather.ts takeQueued), and only while an agent is
+   * free to take it at once, so the turns start apart too.
+   */
+  function replayQueued(ctx: WorldCtx<DudesState>): void {
+    if (agentCalls.size >= opts.agentLimit) return;
+    const q = takeQueued(ctx.state, ctx.now);
+    if (!q || q.dude.muted) return;
+    const { dude, text, at } = q;
+    toAgent(ctx.state, dude, text, at, ctx.now);
+    ctx.log(`story: ${dude.name}'s line from the gathering goes on, after the release: "${emoteNames(text).slice(0, 60)}"`);
+    // Its turn starts now rather than after the turn gap: the gap between replays is what spaces them.
+    if (!isPiloted(dude.id) && !agentCalls.has(dude.id) && canCall(ctx.state) && reserveCall(ctx.state)) startTurn(ctx, ctx.state, dude, ctx.now);
+  }
+
   function hear(ctx: WorldCtx<DudesState>, userId: string, username: string, text: string): void {
     const c = ctxOf(ctx);
     const now = c.now;
@@ -1172,6 +1209,15 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       if (said) dude.say = { text: said, until: now + sayMs(said) };
       return;
     }
+    // Gather mode (FK-018): while a scene or a gathering runs, the line is a bubble and maybe a vote;
+    // a move or build waits for the release. Nothing reaches the agent, nobody overhears it, and nobody
+    // is called out of a party for it.
+    if (gathering(c.state)) {
+      const said = sayable(clean);
+      if (said) dude.say = { text: said, until: now + sayMs(emoteNames(said)) };
+      if (!hearInGather(c.state, dude, clean, now)) listen(c.state, 'chat', dude.name, clean, now);
+      return;
+    }
     // What the agent reads: emotes by name ("lol KEKW"); the bubble keeps the pictures.
     const words = emoteNames(clean);
     // The same line again (or nearly): the bubble stays up a little longer, but the agent isn't asked twice.
@@ -1180,18 +1226,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       if (said) dude.say = { text: said, until: now + sayMs(emoteNames(said)) };
       return;
     }
-    // "Help at the bridge", "fix the bridge", "build the bridge": while the travellers are stuck, the
-    // character sets off at once, without waiting on its agent (or building a bridge of its own).
-    if (bridgeOpen(c.state) && /\bbridge\b/i.test(clean) && !/\b(don'?t|do not|never|stop)\b/i.test(clean)) {
-      const why = startLabour(c.state, dude, now);
-      if (!why) pushLine(dude.history, { from: 'world', text: 'you set off to help mend the bridge for the travellers', at: now }, LIMITS.history);
-    }
-    // A player walking their own character is the character: what they say in chat is just said.
-    if (isPiloted(dude.id)) pushLine(dude.history, { from: 'chatter', text: words, at: now }, LIMITS.history);
-    else pushLine(dude.inbox, { from: 'chatter', text: words, at: now }, LIMITS.inbox);
-    // Out on an errand of their own (inside the café, napping at home): their chatter speaking
-    // brings them straight out, so the bubble is seen and the body is free for whatever comes next.
-    if (dude.visit && (dude.visit.why === 'need' || dude.visit.why === 'party')) leaveVisit(dude);
+    toAgent(c.state, dude, clean, now, now);
     // The character says it: the chatter's own words, in the bubble straight away, while its agent
     // works out what the body does about them.
     const said = sayable(clean);
@@ -1355,6 +1390,11 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
           }
           dude.say = { text, until: now + sayMs(text) };
           pushLine(dude.history, { from: 'chatter', text, at: now }, LIMITS.history);
+          // Gather mode (FK-018): a bubble and maybe a vote. Nobody overhears it or is nudged, and it stays off the feed.
+          if (gathering(state)) {
+            if (!hearInGather(state, dude, text, now, false)) listen(state, 'chat', dude.name, text, now);
+            return undefined;
+          }
           overhear(state, dude, text, now);
           listen(state, 'chat', dude.name, text, now);
           pushFeed(state, now, `${dude.name}: ${text}`);
@@ -1931,6 +1971,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         if (!d) return refuse(ctx, `No chatter called ${value}`);
         d.muted = true;
         d.inbox = [];
+        d.queuedLine = undefined;
         agentCalls.get(d.id)?.abort();
         ctx.log(`${d.name}'s agent muted (admin)`, 'alert');
       },
@@ -1955,7 +1996,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         if (!d) return refuse(ctx, `No chatter called ${value}`);
         agentCalls.get(d.id)?.abort();
         endUse(ctx.state, d, ctx.now);
-        Object.assign(d, { persona: '', title: undefined, memory: [], history: [], inbox: [], overheard: [], look: defaultLook(d.name), lastError: undefined });
+        Object.assign(d, { persona: '', title: undefined, memory: [], history: [], inbox: [], overheard: [], queuedLine: undefined, look: defaultLook(d.name), lastError: undefined });
         ctx.log(`${d.name}'s agent reset (admin)`, 'alert');
       },
     },
@@ -2077,6 +2118,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       // Story scenes first, whatever the caravan and town life are doing: nothing later in the tick can
       // hold a scene up, and the show never throws (its watchdog ends the scene instead).
       if (storyOn(ctx.state)) tickShow(ctx.state, now, ctx.log);
+      tickGather(ctx.state, ctx.log);
       tickCity(ctx.state, dt, now, ctx.rng);
       tickSpotlight(ctx.state, now, ctx.rng);
       tickCrierAnswers(ctx.state, now);
@@ -2089,6 +2131,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       tickEvents(ctx.state, dt, ctx.now, ctx.rng);
       idleLife(ctx);
       runListener(ctx);
+      replayQueued(ctx);
       pump(ctx); // turn gaps elapse and calls free up between messages
     },
     buildScene: (state, view) => buildScene(state, view.now),

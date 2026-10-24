@@ -50,7 +50,7 @@ function storied(state: DudesState, now: number): void {
     choices: { huts: 'tents' },
   };
   const d = state.dudes[0];
-  Object.assign(d, { side: 'gold', sideAge: 0, seenAge: 0, gather: { slot: { x: 54, z: 58 }, face: Math.PI, until: now + 30_000 } });
+  Object.assign(d, { side: 'gold', sideAge: 0, seenAge: 0, gather: { slot: { x: 54, z: 58 }, face: Math.PI, until: now + 30_000 }, queuedLine: { text: 'build me a hut', at: now - 3000 } });
   cityOf(state).townies[0].role = 'wren';
   const o = state.objects[0];
   Object.assign(o, { folly: 'stone', silhouette: true, past: [{ age: 0, name: 'Mud Hut' }] });
@@ -114,7 +114,7 @@ test('a save with every new field set round-trips through disk and loads', () =>
   assert.equal(back.ai.story, true);
   assert.deepEqual(back.city!.story, before.city!.story);
   const [d0, b0] = [back.dudes[0], before.dudes[0]];
-  assert.deepEqual([d0.side, d0.sideAge, d0.seenAge, d0.gather], [b0.side, b0.sideAge, b0.seenAge, b0.gather]);
+  assert.deepEqual([d0.side, d0.sideAge, d0.seenAge, d0.gather, d0.queuedLine], [b0.side, b0.sideAge, b0.seenAge, b0.gather, b0.queuedLine]);
   assert.equal(back.city!.townies[0].role, 'wren');
   assert.deepEqual([back.objects[0].folly, back.objects[0].silhouette, back.objects[0].past], ['stone', true, [{ age: 0, name: 'Mud Hut' }]]);
   assert.equal(back.objects.find((x) => x.creature)!.creature!.follows, d0.id);
