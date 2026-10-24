@@ -480,7 +480,8 @@ export function cleanPetKits(raw: unknown): { kits: Partial<Record<AgeId, { name
       checks.push(`no ${age} kit`);
       continue;
     }
-    const raws = Array.isArray(k.parts) ? (k.parts as Record<string, unknown>[]) : [];
+    // Only the object parts, as cleanParts keeps them, so each part's anchor lines up with its part.
+    const raws = Array.isArray(k.parts) ? k.parts.filter((p): p is Record<string, unknown> => !!p && typeof p === 'object') : [];
     const parts = cleanParts(raws, 8).parts.map((p, i) => ({
       ...p,
       size: p.size.map((n) => Math.min(0.4, n)) as [number, number, number],

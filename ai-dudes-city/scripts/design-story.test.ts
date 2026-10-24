@@ -201,4 +201,7 @@ test('the pet age kits: one per age, anchored, small', () => {
   assert.equal(r.kits.stone!.parts[1].at, 'neck'); // an unknown anchor falls back to the collar
   assert.equal(r.kits.future!.parts[0].at, 'face');
   assert.deepEqual(r.checks, ['no bronze kit', 'no medieval kit', 'no industrial kit', 'no modern kit']);
+  // A junk entry in astra's list is dropped without shifting the anchors of the parts after it.
+  const j = cleanPetKits({ stone: { name: 'Beads', parts: [null, 'bead', { at: 'face', ...box([0, 0, 0], [0.1, 0.1, 0.1]) }, { at: 'neck', ...box([0, 0, 0], [0.1, 0.1, 0.1]) }] } });
+  assert.deepEqual(j.kits.stone!.parts.map((p) => p.at), ['face', 'neck']);
 });
