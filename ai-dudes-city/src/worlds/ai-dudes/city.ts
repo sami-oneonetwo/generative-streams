@@ -1108,9 +1108,12 @@ const TRAVELLER_SPOTS: GroundPoint[] = [
   { x: 6.2, z: 0.4 },
   { x: 0.6, z: 7.6 },
 ];
+/** The cast are five and wait as the band too, each on a spot of their own so their tags don't pile up (FK-014). */
+const CAST_SPOTS: GroundPoint[] = [...TRAVELLER_SPOTS, { x: 7.4, z: 4.6 }, { x: 3, z: -3.6 }];
 function travellerSpot(state: DudesState, t: Townie): GroundPoint {
   const i = Math.max(0, cityOf(state).caravan?.travellers.indexOf(t.id) ?? 0);
-  return TRAVELLER_SPOTS[i % TRAVELLER_SPOTS.length];
+  const spots = t.role && storyOn(state) ? CAST_SPOTS : TRAVELLER_SPOTS;
+  return spots[i % spots.length];
 }
 function tickTraveller(state: DudesState, t: Townie, now: number, rng: () => number): void {
   const cv = cityOf(state).caravan;

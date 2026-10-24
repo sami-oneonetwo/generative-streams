@@ -66,6 +66,10 @@ test('Stone to Bronze (an off-air set-age) keeps the same five ids', async () =>
   assert.equal(castTownie(h.state, 'ash')!.scale, 1.2);
   assert.ok(stranded.every((p) => p.x > BRIDGE.far) && before.every((t) => t.position.x < BRIDGE.near), 'a new caravan: from across the river into town, on their marks');
   assert.deepEqual(view().town?.cast?.map((c) => c.id), FIVE);
+  // On the square, each waits on a spot of their own (the caravan's three would stack two pairs, tags and all).
+  await tick(40_000);
+  const at = before.map((t) => t.position);
+  assert.ok(at.every((p, i) => at.every((q, j) => i === j || Math.hypot(p.x - q.x, p.z - q.z) > 2)), `five spots apart: ${JSON.stringify(at)}`);
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success);
 });
 
