@@ -10,6 +10,8 @@ interface Env {
   KICK_CLIENT_ID: string;
   KICK_CLIENT_SECRET: string;
   PLAY_SECRET: string;
+  // The town's TUNNEL_KEY: without it the town (and ngrok in front of it) turns the request away.
+  TUNNEL_KEY: string;
 }
 
 const AUTH = 'https://id.kick.com';
@@ -93,6 +95,7 @@ async function proxy(req: Request, url: URL, env: Env): Promise<Response> {
   const headers = new Headers(req.headers);
   headers.set('ngrok-skip-browser-warning', '1');
   headers.set('x-forwarded-host', url.host);
+  headers.set('x-town-key', env.TUNNEL_KEY);
   // A WebSocket upgrade is passed through as is: the 101 and its socket come straight back.
   const upgrade = req.headers.get('upgrade')?.toLowerCase() === 'websocket';
   try {

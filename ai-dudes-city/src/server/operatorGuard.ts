@@ -1,15 +1,29 @@
 import crypto from 'node:crypto';
 import type { RequestHandler } from 'express';
+import { config } from '../config';
 
 function isLoopback(address: string | undefined): boolean {
   return address === '127.0.0.1' || address === '::1' || address === '::ffff:127.0.0.1';
 }
 
-/** This machine only, whatever the token: loopback socket, a localhost Host, and nothing forwarded (the ngrok tunnel forwards). */
-export function isLocalRequest(req: { get(name: string): string | undefined; socket: { remoteAddress?: string } }): boolean {
-  const localHost = /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(req.get('host') ?? '');
+/** TRUSTED_IPS: the operator's own addresses, let in straight to the public port as if on this machine. */
+const TRUSTED = config.TRUSTED_IPS.split(',').map((ip) => ip.trim()).filter(Boolean);
+
+/**
+ * This machine (or a trusted address), whatever the token: nothing forwarded (the ngrok tunnel
+ * forwards), and a Host that is localhost or, from a trusted address, a bare IPv4 address. A Host
+ * that is a domain name would let another site rebind its name to this box and ride the trust.
+ */
+export function isLocalRequest(
+  req: { get(name: string): string | undefined; socket: { remoteAddress?: string } },
+  trusted: string[] = TRUSTED,
+): boolean {
+  const host = req.get('host') ?? '';
   const forwarded = ['forwarded', 'x-forwarded-for', 'x-forwarded-host', 'x-real-ip'].some((h) => req.get(h));
-  return isLoopback(req.socket.remoteAddress) && localHost && !forwarded;
+  if (forwarded) return false;
+  const address = req.socket.remoteAddress?.replace(/^::ffff:/, '');
+  if (isLoopback(req.socket.remoteAddress)) return /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host);
+  return !!address && trusted.includes(address) && /^(localhost|\d{1,3}(?:\.\d{1,3}){3})(?::\d+)?$/.test(host);
 }
 
 /**
@@ -55,11 +69,7 @@ export function operatorGuard(token?: string): RequestHandler {
         return;
       }
     } else {
-      const localHost = /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host);
-      const forwarded = ['forwarded', 'x-forwarded-for', 'x-forwarded-host', 'x-real-ip'].some((h) =>
-        req.get(h),
-      );
-      if (!isLoopback(req.socket.remoteAddress) || !localHost || forwarded) {
+      if (!isLocalRequest(req)) {
         res
           .status(403)
           .json({ error: 'Remote admin access requires ADMIN_TOKEN; use localhost for local controls' });

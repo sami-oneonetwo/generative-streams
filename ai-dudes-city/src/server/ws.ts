@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 import type http from 'node:http';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { ServerMsg } from '../shared/protocol';
+import { isLocalRequest } from './operatorGuard';
+import { tunnelAllowsUpgrade } from './tunnelGuard';
 
 /** The operator's own socket (/ws/mayor) is held to the same rule as /admin/api: localhost, or the token. */
 function operatorAllowed(req: http.IncomingMessage, token?: string): boolean {
@@ -20,10 +22,11 @@ function operatorAllowed(req: http.IncomingMessage, token?: string): boolean {
       b = Buffer.from(token);
     return a.length === b.length && crypto.timingSafeEqual(a, b);
   }
-  const loopback = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress ?? '');
-  const localHost = /^(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?$/.test(host);
-  const forwarded = ['forwarded', 'x-forwarded-for', 'x-forwarded-host', 'x-real-ip'].some((h) => req.headers[h]);
-  return loopback && localHost && !forwarded;
+  const header = (name: string) => {
+    const v = req.headers[name.toLowerCase()];
+    return Array.isArray(v) ? v[0] : v;
+  };
+  return isLocalRequest({ get: header, socket: req.socket });
 }
 
 /**
@@ -57,13 +60,14 @@ export class WsHub {
   /** A logged-in player's socket (/ws/player): the hook checks who it is, and takes it or turns it away. */
   onPlayer?: (req: http.IncomingMessage, ws: WebSocket) => void;
 
-  constructor(server: http.Server, worldId: string, adminToken?: string, playOrigins: string[] = []) {
+  constructor(server: http.Server, worldId: string, adminToken?: string, playOrigins: string[] = [], tunnelKey?: string) {
     // Compressed where the page offers it: snapshots are repetitive JSON, and the /play page's
     // viewers come through the tunnel, which counts every byte.
     this.wss = new WebSocketServer({ noServer: true, perMessageDeflate: { threshold: 1024, zlibDeflateOptions: { level: 6 } } });
     this.operator = new WebSocketServer({ noServer: true, maxPayload: 4096 });
     this.players = new WebSocketServer({ noServer: true, maxPayload: 2048 });
     server.on('upgrade', (req, socket, head) => {
+      if (!tunnelAllowsUpgrade(req, tunnelKey)) return void socket.destroy();
       const path = new URL(req.url ?? '/', 'http://x').pathname;
       if (path === '/ws') this.wss.handleUpgrade(req, socket, head, (ws) => this.wss.emit('connection', ws, req));
       else if (path === '/ws/mayor' && operatorAllowed(req, adminToken)) this.operator.handleUpgrade(req, socket, head, (ws) => this.operator.emit('connection', ws, req));

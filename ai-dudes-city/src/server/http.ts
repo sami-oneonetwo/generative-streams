@@ -2,6 +2,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { config } from '../config';
 import { localOnlyGuard, operatorGuard } from './operatorGuard';
+import { tunnelGuard } from './tunnelGuard';
 import express from 'express';
 import type { Engine } from '../engine/engine';
 import type { EchoGuard } from '../kick/echo';
@@ -26,6 +27,8 @@ export function createHttpServer(deps: HttpDeps): http.Server {
   const { engine, auth } = deps;
   const log = (line: string, level?: 'info' | 'warn' | 'alert') => engine.log.push(line, level);
   const app = express();
+  // Through the tunnel, only the webhook and the play Worker's paths: everything else is this machine's.
+  app.use(tunnelGuard(config.TUNNEL_KEY));
 
   // Webhook route needs the raw body for signature verification — registered
   // before any JSON body parsing.

@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test scripts/*.test.ts",
     "inject": "node scripts/inject.mjs",
-    "builder": "node scripts/wish-builder.mjs"
+    "builder": "node scripts/wish-builder.mjs",
+    "tunnel": "tsx scripts/tunnel.ts"
   },
   "dependencies": {
     "express": "^5.1.0",

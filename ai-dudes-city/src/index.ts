@@ -98,6 +98,7 @@ const hub = new WsHub(
   world.meta.id,
   config.ADMIN_TOKEN,
   config.PLAY_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean),
+  config.TUNNEL_KEY,
 );
 // The Mayor: the operator page walks the streamer's figure; every page hears about it at once.
 hub.onPlayer = (req, ws) => {
@@ -116,9 +117,11 @@ hub.onOperator = (msg) => {
   engine.markDirty();
 };
 
-server.listen(config.PORT, '127.0.0.1', () => {
-  log(`listening on http://localhost:${config.PORT} (renderer: /, admin: /admin)`);
+server.listen(config.PORT, config.HOST, () => {
+  log(`listening on http://${config.HOST === '127.0.0.1' ? 'localhost' : config.HOST}:${config.PORT} (renderer: /, admin: /admin)`);
+  if (config.TRUSTED_IPS) log(`trusted as this machine: ${config.TRUSTED_IPS}`);
   if (!config.OPENROUTER_API_KEY) log('OPENROUTER_API_KEY not set — LLM classify/dialogue disabled', 'warn');
+  if (!config.TUNNEL_KEY) log('TUNNEL_KEY not set: the play paths answer through the tunnel without the Worker\'s key', 'warn');
   if (!auth.configured) log('kick app not configured — running dev-harness only');
   else if (!auth.connected) log('kick configured but not connected — connect from /admin');
 });

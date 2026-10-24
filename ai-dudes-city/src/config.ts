@@ -11,6 +11,12 @@ try {
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(4500),
+  // Where the server listens: this machine only by default. 0.0.0.0 opens the port to the network,
+  // for the addresses the cloud firewall lets through; only TRUSTED_IPS get the operator's pages.
+  HOST: z.string().default('127.0.0.1'),
+  // The operator's own addresses (comma-separated), treated like this machine: /admin, /mayor and
+  // the operator socket without a token. Nothing forwarded through a tunnel ever counts.
+  TRUSTED_IPS: z.string().default(''),
   WORLD: z.string().default('ai-dudes'),
   DATA_DIR: z.string().default('data'),
   ADMIN_TOKEN: z.string().min(16).optional(),
@@ -58,6 +64,9 @@ const envSchema = z.object({
   // Pages allowed to open a player socket (/ws/player), comma-separated, besides the town's own
   // origin (localhost, or the tunnel itself): the play site the Worker serves.
   PLAY_ORIGINS: z.string().default('https://stream-play.kick-product.com'),
+  // The key the play Worker sends with everything it passes on (x-town-key), so the tunnel URL on its
+  // own cannot reach the play paths. `npm run tunnel` gives ngrok the same rule. `openssl rand -hex 32`.
+  TUNNEL_KEY: z.string().min(32).regex(/^[\w-]+$/).optional(),
 });
 
 export const config = envSchema.parse(process.env);
