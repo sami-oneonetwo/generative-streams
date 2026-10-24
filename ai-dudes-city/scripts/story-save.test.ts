@@ -93,7 +93,7 @@ test('Story ON: town.story is set and the pieces come through the one spread eac
   h.state.ai.story = true;
   const scene = view();
   assert.equal(scene.town?.story, true);
-  assert.equal(scene.town?.board, undefined, 'the stubs add nothing until their cards land');
+  assert.ok(scene.town?.board?.ticker.length, 'the Board comes through boardView (FK-011)'); // hook FK-011
   h.state.mayor!.lock = { at: { x: 54, z: 50.5 }, facing: Math.PI, since: h.now };
   assert.deepEqual(view().mayor?.lock, { at: { x: 54, z: 50.5 }, facing: Math.PI }, 'the head’s lock reaches /mayor');
   h.state.ai.story = false;
