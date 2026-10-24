@@ -72,8 +72,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   t.run('story-on');
   const before = snapshot(t);
   const unbuilt = t.status().storyDev!.filter((b) => b.card);
-  // The two plays and two pieces pinned below; each card that lands takes its own off both lists.
-  assert.equal(unbuilt.length, 4, unbuilt.map((b) => b.label).join(', '));
+  // The one play and two pieces pinned below; each card that lands takes its own off both lists.
+  assert.equal(unbuilt.length, 3, unbuilt.map((b) => b.label).join(', '));
   for (const b of unbuilt) {
     assert.match(b.card!, /^FK-\d{3}$/, b.label);
     assert.equal(t.press(b), `not built yet: ${b.card}`, `${b.label} says which card builds it`);
@@ -82,10 +82,11 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   // Which card builds which piece (BOARD.md): each wires its own button in story/dev.ts.
   const cardOf = (action: string, value?: string | number) => unbuilt.find((b) => b.action === action && (value === undefined || b.value === value))?.card;
   assert.deepEqual(
-    [cardOf('story-play', 'unveil'), cardOf('story-play', 'intro')],
-    ['FK-025', 'FK-043'],
+    [cardOf('story-play', 'intro')],
+    ['FK-043'],
   );
   assert.equal(cardOf('story-play', 'rally'), undefined, 'Play: Rally runs (FK-026: scripts/story-rally.test.ts)');
+  assert.equal(cardOf('story-play', 'unveil'), undefined, 'Play: Unveiling runs (FK-025: scripts/story-unveil.test.ts)');
   assert.equal(cardOf('story-play', 'test'), undefined, 'Play: test runs (FK-017: scripts/story-show.test.ts)');
   assert.equal(cardOf('side-set'), undefined, 'Set side runs (FK-012: scripts/story-sides.test.ts)');
   assert.deepEqual(

@@ -26,7 +26,7 @@ import { TOWN_GROUND, shortRef, type DudeView, type DudesScene, type Emote, type
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
 import { PITCH_DEFAULT, SCENES, fillLine, sceneLine, scenePose, type CamPose } from '../../src/shared/scenes';
-import { STORY_SCENES } from '../../src/shared/storyScenes'; // hook FK-026
+import { STORY_SCENES } from '../../src/shared/storyScenes'; // hook FK-124
 
 const el = (id: string) => document.getElementById(id)!;
 /** For newer bits of markup: a page served older HTML (the copy lags the script) skips them rather than throwing. */
@@ -745,8 +745,10 @@ function start() {
   function cinema(serverNow: number): void {
     // `?demo=show` plays its own short scene while the server plays none.
     const sc = state?.town?.scene ?? showUi?.demoScene(serverNow);
-    const scene = sc && (sc.id === DEMO_SCENE.id ? DEMO_SCENE : (SCENES[sc.id] ?? (Object.hasOwn(STORY_SCENES, sc.id) ? STORY_SCENES[sc.id] : undefined))); // hook FK-026: story scenes too
-    const t = sc ? serverNow - sc.at : 0;
+    // FK-124: a story scene (shared/storyScenes.ts) first, then today's; its clock skips holds and stops at one (story/show.ts sceneTime).
+    const scene = sc && (sc.id === DEMO_SCENE.id ? DEMO_SCENE : Object.hasOwn(STORY_SCENES, sc.id) ? STORY_SCENES[sc.id] : SCENES[sc.id]);
+    const run = sc ? serverNow - sc.at - (sc.shift ?? 0) : 0;
+    const t = sc?.heldAt !== undefined ? Math.min(run, sc.heldAt) : run;
     const on = !!scene && t >= 0 && t < scene.ms;
     document.body.classList.toggle('cinema', on);
     if (!on || !scene || !sc) {

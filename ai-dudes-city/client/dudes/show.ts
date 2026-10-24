@@ -491,6 +491,34 @@ export function createShow(
     up(prompt.root);
   }
 
+  // The prompt tile (FK-022's RATE IT, drawn here for the Unveiling, FK-025): the tab, the live average (160), what to type and how many have.
+  let tile: { root: HTMLElement; value: HTMLElement; hint: HTMLElement; key: string } | undefined;
+  function setRate(p: ShowView['prompt']) {
+    if (!p || p.kind !== 'rate') return void down(tile?.root);
+    if (!tile) {
+      const root = piece('div', 'show-rate', 'card ink');
+      root.setAttribute('role', 'status');
+      tile = { root, value: make(doc, 'b', 'value'), hint: make(doc, 'span', 'hint'), key: '' };
+      root.append(make(doc, 'span', 'pill gold tab', words(p.label) || 'RATE IT'), tile.value, tile.hint);
+    }
+    const n = finite(p.count) ? p.count : 0;
+    const value = finite(p.value) && n > 0 ? p.value.toFixed(1) : '–';
+    const hint = n > 0 ? `type 1–10 · ${n} ${n === 1 ? 'vote' : 'votes'}` : 'type 1–10';
+    const key = `${value}\n${hint}`;
+    if (key !== tile.key) {
+      // A new average pops the number, not the tile.
+      if (tile.key && !reduced) {
+        tile.value.classList.remove('in');
+        void tile.value.offsetWidth;
+        tile.value.classList.add('in');
+      }
+      tile.key = key;
+      tile.value.textContent = value;
+      tile.hint.textContent = hint;
+    }
+    up(tile.root);
+  }
+
   /** The fonts arrived or the window changed: everything on show measures again. */
   function refit() {
     if (banner?.root.classList.contains('up')) fitBanner();
@@ -503,9 +531,9 @@ export function createShow(
 
   /** Out of the story look: every piece goes from the page, as if it had never been. */
   function clear() {
-    if (!banner && !nowCard && !title && !sub && !prompt) return;
-    for (const e of [banner?.root, nowCard?.root, title?.root, sub?.root, prompt?.root]) e?.remove();
-    banner = nowCard = title = sub = prompt = undefined;
+    if (!banner && !nowCard && !title && !sub && !prompt && !tile) return;
+    for (const e of [banner?.root, nowCard?.root, title?.root, sub?.root, prompt?.root, tile?.root]) e?.remove();
+    banner = nowCard = title = sub = prompt = tile = undefined;
     at = undefined;
     doc.body.classList.remove('show-call', 'show-now');
     doc.documentElement.style.removeProperty('--show-b');
@@ -548,6 +576,7 @@ export function createShow(
       setTitle(on.includes('title') ? titled : undefined);
       setSub(on.includes('subtitle') ? line : undefined);
       setPrompt(on.includes('prompt') ? show?.prompt : undefined); // hook FK-026
+      setRate(on.includes('prompt') ? show?.prompt : undefined); // hook FK-025: RATE IT
     },
     rect,
   };

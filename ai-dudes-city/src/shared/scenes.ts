@@ -57,7 +57,7 @@ export interface Beat {
    * `age`: the town turns into the next age now (the wave); `leave`: the old caravan heads back to camp; `launch`: the finale's fireworks.
    * A story scene's beats are played by the show runtime (story/show.ts SHOW_BEATS), which knows `step` and `emote` so far.
    */
-  do: 'step' | 'emote' | 'age' | 'leave' | 'launch';
+  do: 'step' | 'emote' | 'age' | 'leave' | 'launch' | 'unveil' | 'crowd' | 'wren';
   /** The traveller's place in the caravan (0 the leader, 1 the daughter …); in a story scene, the age's cast in that order (story/cast.ts castIn). */
   who: number;
   pose?: 'wave' | 'sit' | 'point' | 'shrug' | 'think' | 'cheer';
@@ -72,6 +72,10 @@ export interface Scene {
   beats: Beat[];
   /** A story scene's hard lock cap (LOCK_CAPS): the longest it may hold the town, holds included. Absent: `ms` + LOCK_SLACK_MS. */
   lockMs?: number;
+  /** A story scene's prompt tile (RATE IT …) from `at` for `ms`: chat's live tally (story/gather.ts) on screen. */
+  prompt?: { kind: 'rate'; label: string; at: number; ms: number };
+  /** A story scene's NOW card, up for a few seconds once it ends as written (story/show.ts endShow). */
+  now?: { word: string; chip?: string; side?: 'red' | 'gold' };
 }
 /**
  * The longest a story scene may hold the town, from its start, holds and all (bible §5). Past it the show

@@ -106,7 +106,11 @@ body.board #happening-wrap{top:calc(var(--board-b,0px) + 12px)}body.stream.board
    Board during a Call; the NOW card (word 96, chip 64) sits centre-lower; in a scene the title card (140 caps: a 20 px stroke painted under the fill shows
    10 px of ink) and the subtitle (58, one line) with its 54 px speaker chip in the bottom bar. A piece shows with .up; the Board steps aside while the banner
    or the NOW card is up; in the story look the HUD fades with the letterbox (0.9 s). */
-:is(#show-banner,#show-now,#show-title,#show-sub){position:fixed;z-index:3;pointer-events:none;opacity:0;visibility:hidden}:is(#show-banner,#show-now,#show-title,#show-sub).up{opacity:1;visibility:visible}
+:is(#show-banner,#show-now,#show-title,#show-sub,#show-rate){position:fixed;z-index:3;pointer-events:none;opacity:0;visibility:hidden}:is(#show-banner,#show-now,#show-title,#show-sub,#show-rate).up{opacity:1;visibility:visible}
+#show-rate{right:calc(60 * var(--px));top:calc(var(--letterbox) + 300 * var(--px));z-index:22;display:flex;flex-direction:column;align-items:center;gap:calc(6 * var(--px));min-width:calc(360 * var(--px));padding:calc(46 * var(--px)) calc(44 * var(--px)) calc(30 * var(--px));transition:opacity .4s,visibility 0s .4s}#show-rate.up{transition:opacity .4s}
+#show-rate .tab{position:absolute;left:calc(-24 * var(--px));top:calc(-40 * var(--px));rotate:-6deg;height:calc(78 * var(--px));padding:0 calc(30 * var(--px));font:700 calc(54 * var(--px))/1 var(--font-display)}
+#show-rate .value{font:700 calc(160 * var(--px))/1 var(--font-display);color:var(--gold);font-variant-numeric:tabular-nums}#show-rate .value.in{animation:show-pop .35s ease-out}@keyframes show-pop{from{scale:1.25}}
+#show-rate .hint{font:800 calc(54 * var(--px))/1.1 var(--font-text);white-space:nowrap}
 body.story :is(header,#side,#corner,#feed,#caravan,#happening-wrap,#people,#fixture,#board){transition-duration:.9s}body:is(.show-call,.show-now) #board{opacity:0}
 #show-banner{top:calc(14 * var(--px));left:0;right:0;margin:0 auto;width:calc(1240 * var(--px));z-index:2;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:calc(24 * var(--px));row-gap:calc(2 * var(--px));padding:calc(18 * var(--px)) calc(26 * var(--px)) calc(22 * var(--px)) calc(22 * var(--px));transition:opacity .9s,visibility 0s .9s}
 #show-banner.up{transition:opacity .9s}body.cinema #show-banner{opacity:0}

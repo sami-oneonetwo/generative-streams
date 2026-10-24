@@ -15,14 +15,16 @@
 // FK-019's staggered release).
 import type { WorldCtx } from '../../../engine/world';
 import type { TownView } from '../../../shared/dudesTypes';
-import { LOCK_SLACK_MS, STEP_FORWARD, type Beat, type Scene } from '../../../shared/scenes';
+import { LOCK_SLACK_MS, STEP_FORWARD, fillLine, type Beat, type Scene } from '../../../shared/scenes';
 import { STORY_SCENES } from '../../../shared/storyScenes';
 import { tickCaravanScene } from '../caravan'; // hook FK-127
 import { ageOf } from '../city';
 import type { DudesState, StorySceneState, Townie } from '../state';
 import { castIn, castTownie } from './cast';
-import { dropRing, releaseRing, ringView } from './gather';
+import { follyOf, unveilFolly } from './folly'; // hook FK-025
+import { dropRing, gatherTally, releaseRing, ringView } from './gather';
 import { RALLY_ID, rallyView, tickRally } from './rally'; // hook FK-026
+import { wrenBeat } from './unveil'; // hook FK-025
 
 type Log = WorldCtx<DudesState>['log'];
 
@@ -81,6 +83,19 @@ export const SHOW_BEATS: Record<string, BeatRun> = {
     const t = castAt(state, b.who);
     if (t && b.pose) t.emote = { pose: b.pose, until: now + (b.ms ?? 2500) };
   },
+  // hook FK-025: the tarp comes off the age's Folly (the page drops it: dust, confetti). Already off, or none: nothing.
+  unveil: (state, _b, now) => {
+    if (follyOf(state)?.silhouette) {
+      const why = unveilFolly(state, now);
+      if (why) throw new Error(why);
+    }
+  },
+  // Everyone in the ring strikes the pose (a cheer at the reveal).
+  crowd: (state, b, now) => {
+    for (const d of state.dudes) if (d.gather && b.pose) d.emote = { pose: b.pose, until: now + (b.ms ?? 2500) };
+  },
+  // Wren onto her vantage, facing the Folly (story/unveil.ts), with a pose if the beat has one.
+  wren: (state, b, now) => wrenBeat(state, now, b.pose, b.ms),
 };
 
 function runBeat(state: DudesState, b: Beat, now: number): void {
@@ -90,6 +105,11 @@ function runBeat(state: DudesState, b: Beat, now: number): void {
 }
 
 const why = (e: unknown) => (e instanceof Error ? e.message : String(e));
+
+/** How long a scene's NOW card stays once it ends (client/dudes/show.ts NOW_MS). */
+export const NOW_CARD_MS = 6000;
+/** The NOW card a scene left as it ended, until when: in memory only (a restart loses six seconds of card, nothing else). */
+const nowCards = new WeakMap<DudesState, NonNullable<NonNullable<TownView['show']>['now']>>();
 
 /**
  * Every world tick while Story is on: the playing scene's beats come due in order, each once, and the
@@ -157,9 +177,19 @@ export function panicShow(state: DudesState, reason: string, log: Log): number {
 export function showView(state: DudesState, now: number): Partial<TownView> {
   const sc = state.city?.story?.scene;
   const ring = ringView(state);
-  if (!sc || !storyScene(sc.id)) return ring;
+  const card = nowCards.get(state);
+  if (card && now >= card.until) nowCards.delete(state);
+  // hook FK-025: a scene's NOW card after it ends (the Board steps aside for it on the page).
+  const after = card && now < card.until && !sc ? { show: { ...ring.show, now: { ...card } } } : {};
+  const scene = sc && storyScene(sc.id);
+  if (!sc || !scene) return { ...ring, ...after };
   const vars = sc.vars && Object.keys(sc.vars).length ? { vars: { ...sc.vars } } : {};
-  const view = { ...ring, scene: { id: sc.id, at: sc.at, shift: sc.shift, ...(sc.heldAt !== undefined ? { heldAt: sc.heldAt } : {}), ...vars } };
+  // hook FK-025: the scene's prompt tile (RATE IT: chat's live average) while it is up.
+  const t = sceneTime(sc, now);
+  const p = scene.prompt;
+  const rate = p && t >= p.at && t < p.at + p.ms ? gatherTally(state).rate : undefined;
+  const prompt = p && t >= p.at && t < p.at + p.ms ? { show: { ...ring.show, prompt: { kind: p.kind, label: p.label, ...(rate ? { value: Math.round(rate.avg * 10) / 10, count: rate.n } : { count: 0 }) } } } : {};
+  const view = { ...ring, ...prompt, scene: { id: sc.id, at: sc.at, shift: sc.shift, ...(sc.heldAt !== undefined ? { heldAt: sc.heldAt } : {}), ...vars } };
   return sc.id === RALLY_ID ? rallyView(state, sc, view, now) : view; // hook FK-026
 }
 
@@ -170,6 +200,7 @@ export function showView(state: DudesState, now: number): Partial<TownView> {
  */
 export function releaseShow(state: DudesState): number {
   let n = 0;
+  nowCards.delete(state);
   const story = state.city?.story;
   if (story?.scene) {
     story.scene = undefined;
@@ -202,6 +233,12 @@ export function releaseShow(state: DudesState): number {
 export function endShow(state: DudesState, now: number): number {
   let n = releaseRing(state, now);
   const story = state.city?.story;
+  // hook FK-025: the scene's NOW card ("BRIDGE · type red") as its crowd goes.
+  const card = story?.scene && storyScene(story.scene.id)?.now;
+  if (card) {
+    const word = fillLine(card.word, story!.scene!.vars ?? {}) || card.word.replace(/\{\w+\}/g, '').trim();
+    if (word) nowCards.set(state, { word, until: now + NOW_CARD_MS, ...(card.chip ? { chip: card.chip } : {}), ...(card.side ? { side: card.side } : {}) });
+  }
   if (story?.scene) {
     story.scene = undefined;
     n++;

@@ -18,6 +18,7 @@ import { FOLLIES, FOLLY_DEV } from './folly'; // hook FK-023
 import { callRing } from './gather';
 import { SIDES_DEV } from './sides'; // hook FK-012
 import { startRally } from './rally'; // hook FK-026
+import { playUnveil } from './unveil'; // hook FK-025
 
 type Ctx = WorldCtx<DudesState>;
 /** Does the thing, or says why it didn't (and then has changed nothing). */
@@ -124,7 +125,7 @@ export const STORY_PLAYS: Play[] = [
       ctx.log("story: Wren's rally is playing (admin, Story (dev))");
     },
   },
-  { id: 'unveil', label: 'Unveiling', card: 'FK-025' },
+  { id: 'unveil', label: 'Unveiling', run: (ctx) => playUnveil(ctx) }, // hook FK-025 (wrapped: the import loop)
   { id: 'ageTurn', label: 'Age turn', run: playToday('ageTurn') }, // hook FK-127
   // FK-001's test scene: the runtime (FK-017) and the page (FK-124) end to end.
   { id: 'test', label: 'test', run: playStory('test') },
