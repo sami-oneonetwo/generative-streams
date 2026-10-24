@@ -166,10 +166,22 @@ export type Rate = (typeof RATES)[number]['key'];
  * and main.ts plays every new line in a snapshot at once: so do the crowd's lines.
  */
 export const SNAPSHOT_MS = 500;
-/** One snapshot of the crowd: who speaks in it, and what. */
-export function crowdLines(talkers: readonly Talker[], every: number, rand: () => number): [Talker, string][] {
+/**
+ * One snapshot of the crowd: who speaks in it, and what. Given `last` (each talker's last line, kept up
+ * to date here), a talker never says the same line twice running: main.ts plays a line only when it
+ * differs from what that speaker last said, so every line drawn is a blip, as many as the rate says.
+ * The line comes from the others in the same one draw, so who speaks when is the same either way.
+ */
+export function crowdLines(talkers: readonly Talker[], every: number, rand: () => number, last?: Map<string, string>): [Talker, string][] {
   const chance = SNAPSHOT_MS / 1000 / every;
-  return talkers.flatMap((t): [Talker, string][] => (rand() < chance ? [[t, CROWD_LINES[Math.floor(rand() * CROWD_LINES.length)]]] : []));
+  return talkers.flatMap((t): [Talker, string][] => {
+    if (rand() >= chance) return [];
+    const was = last ? CROWD_LINES.indexOf(last.get(t.id) ?? '') : -1;
+    const i = was < 0 ? Math.floor(rand() * CROWD_LINES.length) : Math.floor(rand() * (CROWD_LINES.length - 1));
+    const text = CROWD_LINES[was >= 0 && i >= was ? i + 1 : i];
+    last?.set(t.id, text);
+    return [[t, text]];
+  });
 }
 
 /**
@@ -240,7 +252,9 @@ export const BUTTERWORTH_DB = 20 * Math.log10(Math.SQRT1_2);
 /**
  * town → input → (full | mono → 2 highpasses at 300 Hz → 2 lowpasses at 8 kHz) → the speakers, with a
  * splitter and two analysers on the way out for the meter. Each pair of Butterworths is 24 dB an octave,
- * −6 dB at its corner and flat between (within 0.4 dB from 1 to 4 kHz).
+ * −6 dB at its corner and flat between (within 0.4 dB from 1 to 4 kHz). Judge the thinning by the RMS:
+ * the highpasses shift a square's or a saw's harmonics out of phase, so those cues' peaks can read up
+ * to about 5 dB higher through the phone while their RMS falls (no gain anywhere: it is the crest).
  */
 export function createOutput(ctx: BaseAudioContext): Output {
   const input = ctx.createGain(),

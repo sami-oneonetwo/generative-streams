@@ -74,6 +74,12 @@ const fresh = () => {
   skip += 60_000;
   meter.mark();
 };
+/**
+ * Whether the board may play: the town counts its context as always running (boardContext), so between
+ * the browser suspending it and onstatechange hushing the board, a click or a line would wait on the
+ * stopped clock and sound with the rest on waking.
+ */
+const playing = () => ctx?.state === 'running';
 
 /** The levels to the town: the effects always up; the music and the ambience while something on them plays. */
 function send() {
@@ -191,7 +197,7 @@ function sequence<T>(button: HTMLElement, items: readonly T[], gap: number, play
 
 const tiles = new Map<string, HTMLElement>();
 function playCue(c: Cue) {
-  if (!audio) return;
+  if (!audio || !playing()) return;
   fresh();
   const tile = tiles.get(c.name)!;
   pop(tile);
@@ -240,7 +246,7 @@ $('cues-all').onclick = () => sequence($('cues-all'), oneOffs, 2000, playCue);
 
 const line = () => emoteNames(($('line') as HTMLInputElement).value) || 'hello';
 function say(seed: number, low: boolean, button?: HTMLElement) {
-  if (!audio) return;
+  if (!audio || !playing()) return;
   fresh();
   audio.speech(seed, line(), placeAt(where), low);
   if (button) pop(button);
@@ -301,9 +307,11 @@ function startCrowd(n: number) {
     return d;
   });
   const c = { n, dots, heard: 0, since: performance.now(), timer: 0 };
+  const last = new Map<string, string>();
   c.timer = window.setInterval(() => {
+    if (!playing()) return;
     const every = RATES.find((r) => r.key === rate)!.every;
-    for (const [t, text] of crowdLines(talkers, every, rand)) {
+    for (const [t, text] of crowdLines(talkers, every, rand, last)) {
       audio!.speech(t.seed, emoteNames(text), t.at, false);
       const d = dots[talkers.indexOf(t)];
       d.classList.add('talk');

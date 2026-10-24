@@ -367,15 +367,38 @@ test('the crowd: 6 or 15 test chatters in earshot, each in their own voice, on t
     return Array.from({ length: 40 }, () => crowdLines(all, 4, rand).map(([t, l]) => `${t.name}: ${l}`));
   };
   assert.deepEqual(run(), run(), 'the same lines at the same snapshots, run after run');
+  // As main.ts runs it (each talker's last line kept): nobody says the same line twice running, which
+  // the stream would not play, and who speaks when is the same as without.
+  {
+    const plain = crowdRandom(CROWD_SEED),
+      kept = crowdRandom(CROWD_SEED),
+      last = new Map<string, string>(),
+      said = new Map<string, string>();
+    let lines = 0;
+    for (let i = 0; i < (20 * 60 * 1000) / SNAPSHOT_MS; i++) {
+      const a = crowdLines(all, 4, plain),
+        b = crowdLines(all, 4, kept, last);
+      assert.deepEqual(b.map(([t]) => t.id), a.map(([t]) => t.id), `snapshot ${i}: the same talkers`);
+      for (const [t, l] of b) {
+        assert.ok(CROWD_LINES.includes(l));
+        assert.notEqual(l, said.get(t.id), `${t.name} says "${l}" twice running`);
+        said.set(t.id, l);
+      }
+      lines += b.length;
+    }
+    assert.ok(lines > 4000, `every talker talks (${lines} lines)`);
+    assert.deepEqual([...last], [...said], 'the map holds each talker\'s last line');
+  }
   // The page's crowd, as main.ts runs it from CROWD_SEED: from 5 s to a minute in, every half second,
   // the lines so far are within 2 or 16% of the rate's, so its lines-a-second reads true from the start.
   for (const n of [6, CROWD_MAX])
     for (const r of RATES) {
       const rand = crowdRandom(CROWD_SEED);
-      const talkers = crowd(n, rand);
+      const talkers = crowd(n, rand),
+        last = new Map<string, string>();
       let lines = 0;
       for (let k = 1; k <= 120; k++) {
-        lines += crowdLines(talkers, r.every, rand).length;
+        lines += crowdLines(talkers, r.every, rand, last).length;
         const due = ((n / r.every) * k * SNAPSHOT_MS) / 1000;
         if (k >= 10) assert.ok(Math.abs(lines - due) <= Math.max(2, 0.16 * due), `${n} at ${r.label}, ${k / 2} s in: ${lines} lines for ${due}`);
       }
