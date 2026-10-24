@@ -411,4 +411,26 @@ export interface DudesAdminStatus {
     proposals?: { id: string; wish: string; status: string; tests?: string; at: string }[];
   };
   jobs: { id: string; dude: string; kind: JobKind; label: string; status: JobStatus; error?: string }[];
+  /** Finders Keepers' Story (dev) card (worlds/ai-dudes/story/dev.ts): its buttons, built or not. */
+  storyDev?: StoryDevButton[];
+}
+
+/**
+ * A button on /admin's Story (dev) card (FK-002): it runs the admin action `action` with `value`, or
+ * with the card's one argument box when `arg` is set (`arg` says what to type: "name red|gold|none").
+ * `card`: the piece hasn't landed yet, so the button refuses with "not built yet: <card>".
+ */
+export interface StoryDevButton {
+  action: string;
+  label: string;
+  group: 'scene' | 'folly' | 'people' | 'stage';
+  value?: string | number;
+  arg?: string;
+  card?: string;
+  /** What it does, for the tooltip. */
+  hint?: string;
+  /** Drawn as a danger button (the panic exit). */
+  danger?: true;
+  /** Asked before it runs (once it is built). */
+  confirm?: string;
 }

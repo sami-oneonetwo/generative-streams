@@ -103,6 +103,7 @@ import {
   type DudesState,
   type Job,
 } from './state';
+import { storyDevActions, storyDevButtons } from './story/dev';
 import { releaseShow } from './story/show';
 import { storyDudeView } from './story/view';
 
@@ -1817,6 +1818,8 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         ctx.log('the opening is playing (admin)');
       },
     },
+    // Finders Keepers' Story (dev) card (FK-002): the Story switch and every scene and piece, each gated on Story ON.
+    ...storyDevActions(),
     {
       id: 'name-daughter',
       label: 'Story: name the daughter (she keeps it through every age)',
@@ -2143,6 +2146,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         status: j.status,
         ...(j.error ? { error: j.error } : {}),
       })),
+      storyDev: storyDevButtons(),
     }),
     tuning: {},
     layout: { width: 1920, height: 1080, worldWidth: 1920, protagonistHomeX: 0, walkSpeedPxPerSec: 1 },

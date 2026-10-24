@@ -2,7 +2,7 @@
 // builds beside it, test chat, and everything else folded into Advanced. Polls /admin/api/status every
 // two seconds and re-renders without disturbing focus, open menus, open <details> or half-typed input.
 import type { AdminStatus } from '../../src/shared/protocol';
-import type { DudesAdminStatus } from '../../src/shared/dudesTypes';
+import type { DudesAdminStatus, StoryDevButton } from '../../src/shared/dudesTypes';
 import { shortRef } from '../../src/shared/objectTypes';
 import { AGES } from '../../src/shared/ages';
 
@@ -129,6 +129,8 @@ const switches: Switch[] = [
   { el: $('sw-listener'), label: 'Listener', read: (s) => s.dudes?.listener?.enabled, set: action('listener-on', 'listener-off') },
   { el: $('sw-kick-replies'), label: 'Kick replies', read: (s) => s.flags.kickRepliesEnabled, set: (v) => api('/flags', { kickRepliesEnabled: v }) },
   { el: $('sw-crier'), label: 'Town Crier', read: (s) => s.flags.crierEnabled, set: (v) => api('/flags', { crierEnabled: v }) },
+  // Finders Keepers (Story (dev) card): on while the town view says so.
+  { el: $('sw-story'), label: 'Story', read: (s) => (s.dudes?.storyDev ? s.dudes.town?.story === true : undefined), set: action('story-on', 'story-off') },
 ];
 const paint = (sw: Switch, on: boolean) => sw.el.setAttribute('aria-checked', String(on));
 for (const sw of switches) {
@@ -267,6 +269,97 @@ function renderWorld(d: DudesAdminStatus | undefined): void {
     $('pj-finish').title = p.status === 'gathering' ? '' : 'Only while it is gathering coins and labour';
   }
 }
+
+// ---- Story (dev) ----------------------------------------------------------
+// Finders Keepers' scenes and pieces on buttons, for a look off-air (FK-002). The server sends the
+// buttons (worlds/ai-dudes/story/dev.ts), so a card that wires its piece there shows up here on its
+// own. One that hasn't landed is drawn dashed with its card number, and says so when pressed.
+
+const storyDev = $('story-dev') as HTMLDetailsElement;
+const storyArg = $('story-arg') as HTMLInputElement;
+try {
+  storyDev.open = localStorage.getItem('admin.storyDev') === 'open';
+} catch {
+  /* no storage: starts folded */
+}
+storyDev.addEventListener('toggle', () => {
+  try {
+    localStorage.setItem('admin.storyDev', storyDev.open ? 'open' : 'closed');
+  } catch {
+    /* no storage */
+  }
+});
+const STORY_GROUPS: [StoryDevButton['group'], string][] = [
+  ['scene', 'Scenes'],
+  ['folly', 'Folly'],
+  ['people', 'Sides, homes and the cast'],
+  ['stage', 'Stage'],
+];
+let storyButtons: StoryDevButton[] = [];
+let storyKey = '';
+function storyButtonHtml(b: StoryDevButton, i: number): string {
+  const title = b.card ? `not built yet: ${b.card}${b.hint ? ` · ${b.hint}` : ''}` : (b.hint ?? '');
+  return (
+    `<button class="sm${b.danger ? ' danger' : ''}${b.card ? ' unbuilt' : ''}" data-i="${i}"${title ? ` title="${esc(title)}"` : ''}>` +
+    esc(b.label) +
+    (b.arg ? ` <span class="arg">‹${esc(b.arg)}›</span>` : '') +
+    (b.card ? ` <span class="badge warn">${esc(b.card)}</span>` : '') +
+    `</button>`
+  );
+}
+function renderStoryDev(d: DudesAdminStatus | undefined): void {
+  storyDev.hidden = !d?.storyDev;
+  if (!d?.storyDev) return;
+  const on = d.town?.story === true;
+  const badge = $('story-badge');
+  setText(badge, on ? 'on' : 'off');
+  badge.className = `badge ${on ? 'ok' : 'dim'}`;
+  const unbuilt = d.storyDev.filter((b) => b.card).length;
+  const scene = d.town?.scene;
+  const note = $('story-note');
+  note.className = `story-note${on ? '' : ' off'}`;
+  setText(
+    note,
+    (on
+      ? `Story is ON. ${scene ? `Playing: ${scene.id}, ${clock((Date.now() - scene.at) / 1000)} in.` : 'Nothing playing.'}`
+      : "Story is OFF: today's game. Every button refuses until Story is on.") +
+      (unbuilt ? ` ${unbuilt} of ${d.storyDev.length} not built yet (dashed).` : ''),
+  );
+  const key = JSON.stringify(d.storyDev);
+  if (key === storyKey) return;
+  storyKey = key;
+  storyButtons = d.storyDev;
+  setHtml(
+    $('story-groups'),
+    STORY_GROUPS.map(([group, title]) => {
+      const html = storyButtons.map((b, i) => (b.group === group ? storyButtonHtml(b, i) : '')).join('');
+      // Today's opening is /admin scene-opening, as it always was (Story on or off): linked here.
+      const opening =
+        group === 'scene'
+          ? `<div class="row"><span class="muted">Today's opening, Story on or off:</span><button class="sm ghost" data-act="scene-opening">scene-opening</button></div>`
+          : '';
+      return html || opening ? `<div class="story-group"><h3>${esc(title)}</h3><div class="story-btns">${html}</div>${opening}</div>` : '';
+    }).join(''),
+  );
+}
+$('story-groups').addEventListener('click', (e) => {
+  const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
+  if (!btn) return;
+  if (btn.dataset.act === 'scene-opening') return void run('scene-opening', undefined, 'The opening is playing');
+  const b = storyButtons[Number(btn.dataset.i)];
+  if (!b) return;
+  let value = b.value;
+  if (b.arg) {
+    value = storyArg.value.trim();
+    if (!value) {
+      toast(`Type ${b.arg} in the argument box first`, 'bad');
+      storyArg.focus();
+      return;
+    }
+  }
+  if (b.confirm && !b.card && !confirm(b.confirm)) return;
+  void run(b.action, value, `Done: ${b.label}${b.arg ? ` ${value}` : ''}`);
+});
 
 // ---- header -------------------------------------------------------------
 
@@ -823,7 +916,9 @@ const CURATED = new Set([
 ]);
 function renderOtherActions(status: AdminStatus): void {
   const actionsEl = $('actions');
-  const others = status.adminActions.filter((a) => !CURATED.has(a.id));
+  // Story (dev)'s actions live on its own card.
+  const story = new Set(['story-on', 'story-off', ...(status.dudes?.storyDev ?? []).map((b) => b.action)]);
+  const others = status.adminActions.filter((a) => !CURATED.has(a.id) && !story.has(a.id));
   $('other-section').hidden = !others.length;
   const key = JSON.stringify(others);
   if (actionsEl.dataset.key === key) return;
@@ -904,6 +999,7 @@ async function refresh(): Promise<void> {
     ['header', () => renderHeader(status)],
     ['switches', () => syncSwitches(status)],
     ['world', () => renderWorld(status.dudes)],
+    ['story', () => renderStoryDev(status.dudes)],
     ['characters', () => renderPeople(status.dudes)],
     ['builds', () => renderBuilds(status.dudes)],
     ['advanced', () => renderAdvanced(status)],

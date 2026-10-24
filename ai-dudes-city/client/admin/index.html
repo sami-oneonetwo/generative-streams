@@ -196,6 +196,29 @@
     details.advanced[open] > summary::before { transform: rotate(90deg); }
     details.advanced > summary .muted { font-weight: 400; font-size: 13px; }
     .adv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0 18px 18px; }
+
+    /* Story (dev): Finders Keepers' scenes and pieces, folded away like Advanced */
+    details.fold { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+    details.fold > summary { padding: 16px 18px; font-size: 15px; font-weight: 650; color: var(--text); list-style: none; display: flex; align-items: center; gap: 8px; }
+    details.fold > summary::-webkit-details-marker { display: none; }
+    details.fold > summary::before { content: "▸"; color: var(--faint); transition: transform 0.15s; display: inline-block; }
+    details.fold[open] > summary::before { transform: rotate(90deg); }
+    details.fold > summary .muted { font-weight: 400; font-size: 13px; }
+    details.fold > summary .badge { margin-left: auto; }
+    .badge.ok { background: #12301f; color: var(--ok); }
+    .fold-body { padding: 0 18px 18px; display: grid; gap: 12px; }
+    .story-note { font-size: 12.5px; color: var(--dim); }
+    .story-note.off { color: var(--warn); }
+    .story-group { display: grid; gap: 8px; }
+    .story-group h3 { margin: 4px 0 0; }
+    .story-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    .story-btns button .arg { font: 11.5px/1 var(--mono); color: var(--faint); }
+    /* Not built yet: still pressable (it says which card builds it), drawn dashed. */
+    .story-btns button.unbuilt { border-style: dashed; background: transparent; color: var(--dim); }
+    .story-btns button.unbuilt .badge { font-size: 10px; padding: 2px 6px; }
+    .story-arg { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; align-items: center; }
+    .story-arg label { font-size: 12.5px; color: var(--dim); }
+    .story-links { display: flex; flex-wrap: wrap; gap: 6px; }
     .adv-grid > .card { background: var(--card-2); }
     .adv-grid > .card.span { grid-column: 1 / -1; }
     pre { margin: 0; background: #0e131a; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow: auto; font: 12px/1.5 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--dim); max-height: 360px; }
@@ -222,9 +245,9 @@
 
     @media (max-width: 960px) {
       main { grid-template-columns: minmax(0, 1fr); }
-      /* One column: the cards go World, Characters, Builds, Test chat, Advanced. */
+      /* One column: the cards go World, Story (dev), Characters, Builds, Test chat, Advanced. */
       .col { display: contents; }
-      #world-card { order: 1; } #people-card { order: 2; } #builds-card { order: 3; } #chat-card { order: 4; } #advanced { order: 5; }
+      #world-card { order: 1; } #story-dev { order: 2; } #people-card { order: 3; } #builds-card { order: 4; } #chat-card { order: 5; } #advanced { order: 6; }
       .adv-grid { grid-template-columns: minmax(0, 1fr); }
     }
     @media (max-width: 560px) {
@@ -233,6 +256,7 @@
       .col { gap: 14px; }
       .card { padding: 15px; }
       .adv-grid { padding: 0 12px 12px; }
+      .fold-body { padding: 0 15px 15px; }
       .inject { grid-template-columns: minmax(0, 1fr) auto; }
       .inject #inj-user { grid-column: 1 / -1; }
       header.top { position: static; }
@@ -343,6 +367,34 @@
           </div>
         </div>
       </section>
+
+      <!-- Story (dev): every Finders Keepers scene and piece on a button, for a look off-air (FK-002). Drawn by main.ts from the server's list. -->
+      <details class="fold" id="story-dev" hidden>
+        <summary>Story (dev) <span class="muted">Finders Keepers</span><span class="badge dim" id="story-badge">off</span></summary>
+        <div class="fold-body">
+          <div class="switch-row" style="border:0;padding:0">
+            <div class="txt"><b>Story</b><span>Finders Keepers: sides, the Folly, the show. Off is today's game</span></div>
+            <button class="switch" role="switch" aria-checked="false" id="sw-story" aria-label="Story"></button>
+          </div>
+          <div class="story-note" id="story-note"></div>
+          <div class="story-arg">
+            <label for="story-arg">Argument</label>
+            <input type="text" id="story-arg" maxlength="40" autocomplete="off" spellcheck="false" placeholder="kev, or kev red" />
+          </div>
+          <div id="story-groups" class="stack"></div>
+          <div class="story-group">
+            <h3>Look at it</h3>
+            <div class="story-links">
+              <a class="btn sm" href="/?stream=1" target="_blank" rel="noopener">Stream ↗</a>
+              <a class="btn sm" href="/?stream=1&amp;demo=board" target="_blank" rel="noopener">demo=board ↗</a>
+              <a class="btn sm" href="/?stream=1&amp;demo=show" target="_blank" rel="noopener">demo=show ↗</a>
+              <a class="btn sm" href="/?stream=1&amp;stats=1" target="_blank" rel="noopener">stats=1 ↗</a>
+              <a class="btn sm" href="/fk-hud.html" target="_blank" rel="noopener">HUD mock ↗</a>
+              <a class="btn sm" href="/mayor" target="_blank" rel="noopener">Mayor ↗</a>
+            </div>
+          </div>
+        </div>
+      </details>
 
       <section class="card" id="builds-card">
         <h2>Builds <span class="count" id="builds-count"></span><span class="count" style="margin-left:auto;font-size:12.5px">newest first</span></h2>
