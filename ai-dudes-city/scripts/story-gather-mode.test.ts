@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { harness } from './harness';
 import { cityOf } from '../src/worlds/ai-dudes/city';
-import { REPLAY_GAP_MS, gatherTally, gathering, keywordOf, movesOrBuilds } from '../src/worlds/ai-dudes/story/gather';
+import { ARRIVED_LINE, REPLAY_GAP_MS, gatherTally, gathering, keywordOf, movesOrBuilds } from '../src/worlds/ai-dudes/story/gather';
 import { pilots } from '../src/worlds/ai-dudes/players';
 import { stateSchema } from '../src/worlds/ai-dudes/state';
 import { STORY_SCENES } from '../src/shared/storyScenes';
@@ -16,7 +16,7 @@ import type { DudesScene } from '../src/shared/dudesTypes';
 
 /** A town with Story on and the caravan off; every agent turn noted with when it started and what it read. */
 function gatherTown(opts: { reply?: (turn: AgentTurn) => AgentReply; idleLife?: boolean } = {}) {
-  const started: { name: string; at: number; said: string[] }[] = [];
+  const started: { name: string; at: number; said: string[]; content: string }[] = [];
   const hs = harness({
     idleLife: opts.idleLife ?? false,
     reply: (turn) => opts.reply?.(turn) ?? { actions: [] },
@@ -28,7 +28,7 @@ function gatherTown(opts: { reply?: (turn: AgentTurn) => AgentReply; idleLife?: 
   const agent = hs.h.turns;
   const push = agent.push.bind(agent);
   agent.push = (...turns: AgentTurn[]) => {
-    for (const t of turns) started.push({ name: t.name, at: hs.h.now, said: t.messages });
+    for (const t of turns) started.push({ name: t.name, at: hs.h.now, said: t.messages, content: t.content });
     return push(...turns);
   };
   const action = (id: string) => hs.world.adminActions!.find((a) => a.id === id)!;
@@ -206,6 +206,26 @@ test('a newcomer in a scene: bubble at once, and their agent meets them after th
   assert.deepEqual(t.started.map((x) => [x.name, x.said]), [['zed', ['hi everyone']]]);
 });
 
+test("a newcomer whose only words in a scene are votes: counted, and their agent meets them after the release, without the vote", async () => {
+  const t = gatherTown();
+  await t.met('kev');
+  t.run('story-play', 'test');
+  await t.say('zed', 'us');
+  await t.say('zed', 'red');
+  await t.say('ivy', '7');
+  await t.say('ivy', 'hiya');
+  assert.deepEqual(t.dude('zed').queuedLine, { text: ARRIVED_LINE, at: t.h.now, world: true }, 'their arrival waits for their agent');
+  assert.equal(t.dude('ivy').queuedLine?.text, 'hiya', 'words of their own after a vote go instead');
+  assert.deepEqual(gatherTally(t.h.state).words.us, [t.dude('zed').id]);
+  assert.equal(gatherTally(t.h.state).rate?.avg, 7);
+  await t.tick(20_000);
+  assert.deepEqual(t.started.map((x) => [x.name, x.said]), [['zed', []], ['ivy', ['hiya']]], 'one turn each; no vote reaches an agent');
+  assert.ok(t.started[0].content.includes(ARRIVED_LINE), 'Zed\'s agent hears that he arrived');
+  assert.ok(t.h.logs.includes('story: zed, new in the gathering, meets their agent after the release'), t.h.logs.join('\n'));
+  await t.tick(1000);
+  assert.ok(t.dude('zed').turns > 0 && t.dude('ivy').turns > 0, 'both met');
+});
+
 test('a gathering with no scene (Story (dev) → Gather) is gather mode too, until Stop', async () => {
   const t = gatherTown();
   await t.met('kev');
@@ -220,6 +240,22 @@ test('a gathering with no scene (Story (dev) → Gather) is gather mode too, unt
   await t.tick(1000);
   assert.ok(t.h.logs.includes('story: gather mode over (the gathering): 2 lines, none to an agent; RATE IT 9.0 from 1; 1 queued for its agent after the release'), t.h.logs.join('\n'));
   assert.deepEqual(t.started.map((x) => x.said), [['build a well']]);
+});
+
+test('a scene begun inside a gathering: the gathering before it still gets its log line', async () => {
+  const t = gatherTown();
+  await t.met('kev');
+  t.run('story-gather');
+  await t.say('kev', '9');
+  // No tick between: the scene starts with the head still on his mark, and Kev votes again at once.
+  t.run('story-play', 'test');
+  await t.say('kev', '3');
+  assert.equal(gatherTally(t.h.state).rate?.avg, 3, "the scene's own tally");
+  await t.tick(500);
+  assert.ok(t.h.logs.includes('story: gather mode over (the gathering): 1 line, none to an agent; RATE IT 9.0 from 1'), t.h.logs.join('\n'));
+  t.run('story-stop');
+  await t.tick(500);
+  assert.ok(t.h.logs.includes('story: gather mode over (the test scene): 1 line, none to an agent; RATE IT 3.0 from 1'), t.h.logs.join('\n'));
 });
 
 test("a /play player's line in gather mode: a bubble and a vote; nobody overhears it, nobody named is nudged, the feed stays quiet", async () => {
@@ -267,6 +303,7 @@ test('a queued line is saved with its chatter, and a save cut off mid-scene repl
   assert.ok(parsed.success, 'the schema takes it');
   assert.deepEqual(parsed.data.dudes[0].queuedLine, { text: 'build me a hut', at: t.h.now });
   assert.ok(!stateSchema.safeParse({ ...saved, dudes: [{ ...saved.dudes[0], queuedLine: { text: 'x'.repeat(301), at: 0 } }] }).success, 'never longer than a chat line');
+  assert.ok(stateSchema.safeParse({ ...saved, dudes: [{ ...saved.dudes[0], queuedLine: { text: ARRIVED_LINE, at: 0, world: true } }] }).success, "a newcomer's arrival saves too");
 
   // A restart: the boot lets everyone go (FK-017), so the line goes on at once.
   const b = gatherTown();

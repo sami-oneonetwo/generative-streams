@@ -16,7 +16,9 @@
 //
 // Free building keeps working: a move or build line ("build me a hut", "go to the café") waits on its
 // chatter (`dude.queuedLine`, saved; their latest one wins, so one queued turn each at most) and goes to
-// their agent after the release, one chatter at a time and at least 2 s apart (takeQueued).
+// their agent after the release, one chatter at a time and at least 2 s apart (takeQueued). A newcomer's
+// first line waits too, so their agent meets them; if all they said was a vote, their arrival stands in
+// for it (a vote never goes to an agent: `red` joins a side, FK-012).
 import { storyOn, type Dude, type DudesState } from '../state';
 
 /** The words gather mode counts, besides a number 1–10. */
@@ -29,6 +31,8 @@ export type Keyword = { word: GatherWord } | { word: 'rate'; n: number };
 export const REPLAY_GAP_MS = 2000;
 /** The longest queued line kept (hear() cuts a chat line to this already). */
 const LINE_MAX = 300;
+/** What a newcomer's agent hears after the release when all they said in the gathering was a vote. */
+export const ARRIVED_LINE = 'you arrived in town in the middle of the show and joined the crowd';
 
 /** A scene playing, the head on his mark for one, or anyone called to a ring: chat is in gather mode. Never with Story off. */
 export function gathering(state: DudesState): boolean {
@@ -68,13 +72,14 @@ interface Tally {
   rates: Map<string, number>;
   words: Record<GatherWord, Set<string>>;
 }
-/** Per world state (tests make many): the tally, and when the next queued line may go. */
+/** Per world state (tests make many): the tally, ones a new gathering cut off before a tick logged them, and when the next queued line may go. */
 interface Memo {
   tally?: Tally;
+  ended: Tally[];
   nextReplayAt: number;
 }
 const memos = new WeakMap<DudesState, Memo>();
-const memoOf = (state: DudesState): Memo => memos.get(state) ?? memos.set(state, { nextReplayAt: 0 }).get(state)!;
+const memoOf = (state: DudesState): Memo => memos.get(state) ?? memos.set(state, { ended: [], nextReplayAt: 0 }).get(state)!;
 
 /** Which gathering this is: a scene by its `id:at`, else the ring or the head's mark on their own. */
 function keyOf(state: DudesState): string {
@@ -82,10 +87,13 @@ function keyOf(state: DudesState): string {
   return sc ? `${sc.id}:${sc.at}` : 'gather';
 }
 
+/** This gathering's tally, begun on its first line. One left from another gathering waits for tickGather to log it. */
 function tallyOf(state: DudesState): Tally {
   const memo = memoOf(state);
   const key = keyOf(state);
-  if (memo.tally?.key !== key) memo.tally = { key, lines: 0, rates: new Map(), words: Object.fromEntries(GATHER_WORDS.map((w) => [w, new Set<string>()])) as Tally['words'] };
+  if (memo.tally?.key === key) return memo.tally;
+  if (memo.tally && memo.ended.length < 4) memo.ended.push(memo.tally);
+  memo.tally = { key, lines: 0, rates: new Map(), words: Object.fromEntries(GATHER_WORDS.map((w) => [w, new Set<string>()])) as Tally['words'] };
   return memo.tally;
 }
 
@@ -93,7 +101,8 @@ function tallyOf(state: DudesState): Tally {
  * A chatter's line in gather mode, once the caller has shown its bubble. A keyword is counted; any other
  * line that is a move or build waits for the release (`queue`: hear()'s lines, not the /play page's,
  * whose builds have a button of their own). So does a newcomer's first line, so their agent meets them
- * after the release. Says which keyword it was, if any.
+ * after the release: their first words, or their arrival if all they have said is a vote. Says which
+ * keyword it was, if any.
  */
 export function hearInGather(state: DudesState, dude: Dude, line: string, now: number, queue = true): Keyword | undefined {
   const t = tallyOf(state);
@@ -101,7 +110,10 @@ export function hearInGather(state: DudesState, dude: Dude, line: string, now: n
   const k = keywordOf(line);
   if (k?.word === 'rate') t.rates.set(dude.id, k.n);
   else if (k) t.words[k.word].add(dude.id);
-  else if (queue && (movesOrBuilds(line) || (dude.turns === 0 && !dude.queuedLine))) dude.queuedLine = { text: line.slice(0, LINE_MAX), at: now };
+  if (!queue) return k;
+  const newcomer = dude.turns === 0 && (!dude.queuedLine || !!dude.queuedLine.world);
+  if (!k && (movesOrBuilds(line) || newcomer)) dude.queuedLine = { text: line.slice(0, LINE_MAX), at: now };
+  else if (k && newcomer && !dude.queuedLine) dude.queuedLine = { text: ARRIVED_LINE, at: now, world: true };
   return k;
 }
 
@@ -130,9 +142,16 @@ export function gatherTally(state: DudesState): GatherTally {
 /** Every world tick: once a gathering is over (or another has begun), its tally goes into the log and is dropped. */
 export function tickGather(state: DudesState, log: (line: string) => void): void {
   const memo = memos.get(state);
-  const t = memo?.tally;
+  if (!memo) return;
+  for (const t of memo.ended.splice(0)) closeTally(state, t, log);
+  const t = memo.tally;
   if (!t || (gathering(state) && t.key === keyOf(state))) return;
   memo.tally = undefined;
+  closeTally(state, t, log);
+}
+
+/** A gathering's tally, summed up in one log line. */
+function closeTally(state: DudesState, t: Tally, log: (line: string) => void): void {
   const rates = [...t.rates.values()];
   const counts = [
     ...(rates.length ? [`RATE IT ${(rates.reduce((a, b) => a + b, 0) / rates.length).toFixed(1)} from ${rates.length}`] : []),
@@ -150,15 +169,15 @@ export function tickGather(state: DudesState, log: (line: string) => void): void
  * The next queued line due to its agent, taken off its chatter: none while chat is in gather mode, nor
  * within REPLAY_GAP_MS of the last one; then the chatter who has waited longest.
  */
-export function takeQueued(state: DudesState, now: number): { dude: Dude; text: string; at: number } | undefined {
+export function takeQueued(state: DudesState, now: number): { dude: Dude; text: string; at: number; world?: true } | undefined {
   if (gathering(state)) return undefined;
   const memo = memoOf(state);
   if (now < memo.nextReplayAt) return undefined;
   let next: Dude | undefined;
   for (const d of state.dudes) if (d.queuedLine && (!next || d.queuedLine.at < next.queuedLine!.at)) next = d;
   if (!next) return undefined;
-  const { text, at } = next.queuedLine!;
+  const q = next.queuedLine!;
   next.queuedLine = undefined;
   memo.nextReplayAt = now + REPLAY_GAP_MS;
-  return { dude: next, text, at };
+  return { dude: next, ...q };
 }

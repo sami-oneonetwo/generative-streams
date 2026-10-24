@@ -1152,9 +1152,11 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
     if (agentCalls.size >= opts.agentLimit) return;
     const q = takeQueued(ctx.state, ctx.now);
     if (!q || q.dude.muted) return;
-    const { dude, text, at } = q;
-    toAgent(ctx.state, dude, text, at, ctx.now);
-    ctx.log(`story: ${dude.name}'s line from the gathering goes on, after the release: "${emoteNames(text).slice(0, 60)}"`);
+    const { dude, text, at, world } = q;
+    // A newcomer who only voted: their arrival is what happened to them, not words of theirs.
+    if (world) nudge(ctx.state, dude, text, ctx.now);
+    else toAgent(ctx.state, dude, text, at, ctx.now);
+    ctx.log(world ? `story: ${dude.name}, new in the gathering, meets their agent after the release` : `story: ${dude.name}'s line from the gathering goes on, after the release: "${emoteNames(text).slice(0, 60)}"`);
     // Its turn starts now rather than after the turn gap: the gap between replays is what spaces them.
     if (!isPiloted(dude.id) && !agentCalls.has(dude.id) && canCall(ctx.state) && reserveCall(ctx.state)) startTurn(ctx, ctx.state, dude, ctx.now);
   }
