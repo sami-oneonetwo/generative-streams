@@ -281,7 +281,9 @@ test('the story sites: the Folly sits in the SE corner park on nobody’s lot, e
 });
 
 test('STORY_SCENES holds the test scene: three shots, 10 s, one subtitle, and an id that is never saved in city.scene', () => {
-  assert.deepEqual(Object.keys(STORY_SCENES), ['test']);
+  assert.ok(Object.hasOwn(STORY_SCENES, 'test'));
+  // hook FK-026: every story scene's id is its own, never a saved city.scene one.
+  for (const id of Object.keys(STORY_SCENES)) assert.ok(!(SCENE_IDS as string[]).includes(id) && STORY_SCENES[id].id === id, id);
   const t = STORY_SCENES.test;
   assert.equal(t.id, 'test');
   assert.equal(t.ms, 10_000);

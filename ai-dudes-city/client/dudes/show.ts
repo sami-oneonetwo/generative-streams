@@ -33,6 +33,9 @@ export const CALL_MS = 25_000;
 export const NOW_MS = 6_000;
 /** A subtitle is one line of at most this many characters (design-system §3); a longer line is shown in parts. */
 export const LINE_MAX = 42;
+/** The pips tile (FK-026): at least this many pips, lit or not, and at most this many drawn (then "+N"). */
+const PIPS_MIN = 6;
+const PIPS_MAX = 20;
 /** Type sizes (design px at 1920×1080) and the least a long text shrinks to: nothing to read under 54, cards 96 or more. */
 export const PX = { title: 140, titleMin: 96, banner: 72, bannerMin: 54, premise: 54, sub: 58, subMin: 54, now: 96, chip: 64, speaker: 54 } as const;
 
@@ -465,6 +468,29 @@ export function createShow(
     up(sub.root);
   }
 
+  // hook FK-026: the pips prompt tile (FK-022 draws the rest): its label, and a pip per "us", lit red; at least PIPS_MIN, unlit, so there is something to fill.
+  let prompt: { root: HTMLElement; label: HTMLElement; pips: HTMLElement; key: string } | undefined;
+  function setPrompt(p: ShowView['prompt']) {
+    if (!p || p.kind !== 'pips') return void down(prompt?.root);
+    if (!prompt) {
+      const root = piece('div', 'show-prompt', 'card ink');
+      root.setAttribute('role', 'status');
+      prompt = { root, label: make(doc, 'b', 'label'), pips: make(doc, 'span', 'pips'), key: '' };
+      root.append(prompt.label, prompt.pips);
+    }
+    const n = Math.max(0, Math.floor(finite(p.count) ? p.count : 0));
+    const key = `${p.label}\n${n}`;
+    if (key !== prompt.key) {
+      prompt.key = key;
+      prompt.label.textContent = p.label;
+      const lit = Math.min(n, PIPS_MAX);
+      prompt.pips.replaceChildren(...Array.from({ length: Math.max(PIPS_MIN, lit) }, (_, i) => make(doc, 'i', i < lit ? 'pip lit' : 'pip')));
+      if (n > PIPS_MAX) prompt.pips.append(make(doc, 'span', 'more', `+${n - PIPS_MAX}`));
+      prompt.root.setAttribute('aria-label', `${p.label}: ${n}`);
+    }
+    up(prompt.root);
+  }
+
   /** The fonts arrived or the window changed: everything on show measures again. */
   function refit() {
     if (banner?.root.classList.contains('up')) fitBanner();
@@ -477,9 +503,9 @@ export function createShow(
 
   /** Out of the story look: every piece goes from the page, as if it had never been. */
   function clear() {
-    if (!banner && !nowCard && !title && !sub) return;
-    for (const e of [banner?.root, nowCard?.root, title?.root, sub?.root]) e?.remove();
-    banner = nowCard = title = sub = undefined;
+    if (!banner && !nowCard && !title && !sub && !prompt) return;
+    for (const e of [banner?.root, nowCard?.root, title?.root, sub?.root, prompt?.root]) e?.remove();
+    banner = nowCard = title = sub = prompt = undefined;
     at = undefined;
     doc.body.classList.remove('show-call', 'show-now');
     doc.documentElement.style.removeProperty('--show-b');
@@ -521,6 +547,7 @@ export function createShow(
       setNow(on.includes('now') ? card : undefined);
       setTitle(on.includes('title') ? titled : undefined);
       setSub(on.includes('subtitle') ? line : undefined);
+      setPrompt(on.includes('prompt') ? show?.prompt : undefined); // hook FK-026
     },
     rect,
   };

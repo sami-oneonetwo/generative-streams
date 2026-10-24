@@ -26,6 +26,7 @@ import { TOWN_GROUND, shortRef, type DudeView, type DudesScene, type Emote, type
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
 import { PITCH_DEFAULT, SCENES, fillLine, sceneLine, scenePose, type CamPose } from '../../src/shared/scenes';
+import { STORY_SCENES } from '../../src/shared/storyScenes'; // hook FK-026
 
 const el = (id: string) => document.getElementById(id)!;
 /** For newer bits of markup: a page served older HTML (the copy lags the script) skips them rather than throwing. */
@@ -744,7 +745,7 @@ function start() {
   function cinema(serverNow: number): void {
     // `?demo=show` plays its own short scene while the server plays none.
     const sc = state?.town?.scene ?? showUi?.demoScene(serverNow);
-    const scene = sc && (sc.id === DEMO_SCENE.id ? DEMO_SCENE : SCENES[sc.id]);
+    const scene = sc && (sc.id === DEMO_SCENE.id ? DEMO_SCENE : (SCENES[sc.id] ?? (Object.hasOwn(STORY_SCENES, sc.id) ? STORY_SCENES[sc.id] : undefined))); // hook FK-026: story scenes too
     const t = sc ? serverNow - sc.at : 0;
     const on = !!scene && t >= 0 && t < scene.ms;
     document.body.classList.toggle('cinema', on);
@@ -799,6 +800,7 @@ function start() {
   let knownObjects: Set<string> | undefined;
   let lastFeedAt: number | undefined;
   let lastHappening = '';
+  let bannerSound = '';
   const hammerAt = new Map<string, number>();
   let nextBrayAt = 0;
   const seedOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
@@ -825,6 +827,11 @@ function start() {
       if (/ moved into | arrived and took a flat/.test(f.text)) audio.doorbell();
       if (/ is open!/.test(f.text)) audio.fanfare();
     }
+    // hook FK-026: a Call's banner that asks for a sound (Wren's whistle), once as it goes up.
+    const b = s.town?.show?.banner;
+    const bk = b?.sound ? `${b.sound}:${b.until}` : '';
+    if (bk && bk !== bannerSound && b?.sound === 'whistle') audio.whistle();
+    bannerSound = bk;
     const h = s.happening;
     const hk = h ? `${h.kind}:${h.title}` : '';
     if (hk && hk !== lastHappening) {

@@ -266,7 +266,7 @@ export interface BoardView {
 /** The show's on-screen pieces (story/show.ts): the Call's banner, a prompt tile, the NOW card, a title card. Times are server time. */
 export interface ShowView {
   /** "GATHER: THE UNVEILING", its few-word premise, and when the Call runs out. */
-  banner?: { title: string; premise?: string; until: number };
+  banner?: { title: string; premise?: string; until: number; sound?: 'whistle' | 'bell' };
   /** What chat is asked to type in a scene: `rate` (the live average), `pips` (one per "us"), `candles`. */
   prompt?: { kind: string; label: string; value?: number; count?: number };
   /** After a scene: one big word and the chip that says what to type ("type red"). */

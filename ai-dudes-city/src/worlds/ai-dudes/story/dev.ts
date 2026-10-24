@@ -17,6 +17,7 @@ import { playShow, releaseShow } from './show';
 import { FOLLIES, FOLLY_DEV } from './folly'; // hook FK-023
 import { callRing } from './gather';
 import { SIDES_DEV } from './sides'; // hook FK-012
+import { startRally } from './rally'; // hook FK-026
 
 type Ctx = WorldCtx<DudesState>;
 /** Does the thing, or says why it didn't (and then has changed nothing). */
@@ -112,7 +113,17 @@ export const STORY_PLAYS: Play[] = [
   // Today's opening, Crossing and age turn, through the show runtime with the cast (FK-127).
   { id: 'opening', label: 'Opening', run: playToday('opening') }, // hook FK-127
   { id: 'crossing', label: 'Crossing', run: playToday('crossing') },
-  { id: 'rally', label: 'Rally', card: 'FK-026' },
+  {
+    id: 'rally',
+    label: 'Rally',
+    run: (ctx) => {
+      const today = cityOf(ctx.state).scene;
+      if (today) return `Today's ${today.id} scene is playing: let it finish first`;
+      const why = startRally(ctx.state, ctx.now); // hook FK-026
+      if (why) return why;
+      ctx.log("story: Wren's rally is playing (admin, Story (dev))");
+    },
+  },
   { id: 'unveil', label: 'Unveiling', card: 'FK-025' },
   { id: 'ageTurn', label: 'Age turn', run: playToday('ageTurn') }, // hook FK-127
   // FK-001's test scene: the runtime (FK-017) and the page (FK-124) end to end.

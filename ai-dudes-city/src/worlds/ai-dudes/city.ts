@@ -1096,7 +1096,7 @@ function streetSpotNear(at: GroundPoint, rng: () => number, spread = 18): Ground
   }
   return clampToGround(at, 2);
 }
-function townieGo(state: DudesState, t: Townie, to: GroundPoint): boolean {
+export function townieGo(state: DudesState, t: Townie, to: GroundPoint): boolean {
   const path = route(t.position, to, state.objects);
   if (!path) return false;
   t.path = path.slice(1);

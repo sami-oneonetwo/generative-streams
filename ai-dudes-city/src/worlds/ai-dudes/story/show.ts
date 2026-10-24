@@ -22,6 +22,7 @@ import { ageOf } from '../city';
 import type { DudesState, StorySceneState, Townie } from '../state';
 import { castIn, castTownie } from './cast';
 import { dropRing, releaseRing, ringView } from './gather';
+import { RALLY_ID, rallyView, tickRally } from './rally'; // hook FK-026
 
 type Log = WorldCtx<DudesState>['log'];
 
@@ -108,6 +109,7 @@ export function tickShow(state: DudesState, now: number, log: Log): void {
     const cap = lockCapOf(scene);
     // Only holds can stretch a scene past its length: one that has simply run long (a stalled server) ends as written, below.
     if (t < scene.ms && now - sc.at > cap) return void panicShow(state, `held past its ${secs(cap)} lock cap (${secs(t)} into ${secs(scene.ms)})`, log);
+    if (sc.id === RALLY_ID) tickRally(state, sc, now); // hook FK-026
     while (sc.beat < scene.beats.length && scene.beats[sc.beat].at <= t) {
       // Counted before it runs: a beat that throws is never run twice.
       const i = sc.beat++;
@@ -152,12 +154,13 @@ export function panicShow(state: DudesState, reason: string, log: Log): number {
  * ring and its banner come with it (FK-019; FK-021 draws the banner); FK-021 and FK-022 add the
  * prompt, the NOW card and the title card.
  */
-export function showView(state: DudesState, _now: number): Partial<TownView> {
+export function showView(state: DudesState, now: number): Partial<TownView> {
   const sc = state.city?.story?.scene;
   const ring = ringView(state);
   if (!sc || !storyScene(sc.id)) return ring;
   const vars = sc.vars && Object.keys(sc.vars).length ? { vars: { ...sc.vars } } : {};
-  return { ...ring, scene: { id: sc.id, at: sc.at, shift: sc.shift, ...(sc.heldAt !== undefined ? { heldAt: sc.heldAt } : {}), ...vars } };
+  const view = { ...ring, scene: { id: sc.id, at: sc.at, shift: sc.shift, ...(sc.heldAt !== undefined ? { heldAt: sc.heldAt } : {}), ...vars } };
+  return sc.id === RALLY_ID ? rallyView(state, sc, view, now) : view; // hook FK-026
 }
 
 /**

@@ -41,6 +41,8 @@ export interface AudioHandles {
   built(at?: { x: number; z: number }): void;
   doorbell(): void;
   fanfare(): void;
+  /** Wren's bone whistle (FK-126, FK-026): three breathy notes, red's call to her fire. */
+  whistle(): void;
   sting(): void;
   boom(at?: { x: number; z: number }): void;
   pew(at?: { x: number; z: number }): void;
@@ -414,6 +416,20 @@ function town(ctx: AudioContext | OfflineAudioContext, initial: AudioLevels, opt
       // The crowd: a swell of noise like cheering.
       hiss(t + 0.5, 2.2, { freq: 1400, q: 0.5, gain: 0.08, attack: 0.4 });
     },
+    whistle() {
+      if (!running() || !gap('whistle', 4000)) return;
+      const t = when();
+      // Up a fourth, back, and up to the octave held: a soft sine with a breath of noise over each note.
+      [
+        [0, 0.18],
+        [5, 0.16],
+        [12, 0.42],
+      ].forEach(([s, d], i) => {
+        const at = t + i * 0.2;
+        tone(NOTE(81 + s), at, d, { type: 'sine', gain: 0.07, attack: 0.03, send: 0.5, glideTo: NOTE(81 + s) * 1.01 });
+        hiss(at, d, { freq: NOTE(81 + s), q: 6, gain: 0.02, attack: 0.03 });
+      });
+    },
     sting() {
       if (!running() || !gap('sting', 4000)) return;
       const t = when();
@@ -525,6 +541,7 @@ export const CUES: readonly Cue[] = [
   { name: 'doorbell', bus: 'sfx', placed: false, play: (a) => a.doorbell() },
   { name: 'fanfare', bus: 'sfx', placed: false, play: (a) => a.fanfare() },
   { name: 'sting', bus: 'sfx', placed: false, play: (a) => a.sting() },
+  { name: 'whistle', bus: 'sfx', placed: false, play: (a) => a.whistle() },
   placed('built', (a, at) => a.built(at)),
   placed('hammer', (a, at) => a.hammer(at)),
   placed('coins', (a, at) => a.coins(at)),
@@ -547,5 +564,5 @@ export const CUES: readonly Cue[] = [
 /** No sound at all (switched off, or no Web Audio). */
 function silent(): AudioHandles {
   const nothing = () => {};
-  return { on: false, burst: nothing, play: nothing, listen: nothing, levels: nothing, speech: nothing, coins: nothing, hammer: nothing, built: nothing, doorbell: nothing, fanfare: nothing, sting: nothing, boom: nothing, pew: nothing, bonk: nothing, thud: nothing, bray: nothing, beds: nothing, ahead: nothing };
+  return { on: false, burst: nothing, play: nothing, listen: nothing, levels: nothing, speech: nothing, coins: nothing, hammer: nothing, built: nothing, doorbell: nothing, fanfare: nothing, whistle: nothing, sting: nothing, boom: nothing, pew: nothing, bonk: nothing, thud: nothing, bray: nothing, beds: nothing, ahead: nothing };
 }

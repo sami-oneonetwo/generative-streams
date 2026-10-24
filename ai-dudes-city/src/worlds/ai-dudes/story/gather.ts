@@ -342,7 +342,7 @@ export function ringRows(state: DudesState, site: RingSite): RingSlot[][] {
  * bit, a build they were using; a player's ride is parked where it stands), on their feet, and off to
  * `slot` (sim.ts runGather walks them). A build of theirs going up waits for them (runGather's release).
  */
-function summon(state: DudesState, d: Dude, slot: RingSlot, until: number, now: number): void {
+export function summon(state: DudesState, d: Dude, slot: RingSlot, until: number, now: number): void {
   endUse(state, d, now);
   leaveVisit(d);
   const ride = d.riding && state.objects.find((o) => o.id === d.riding);
