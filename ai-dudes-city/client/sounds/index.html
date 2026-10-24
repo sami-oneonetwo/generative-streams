@@ -51,8 +51,8 @@ h3 small{margin-left:.6em;font:800 13px var(--font-text);letter-spacing:0;text-t
 .tile[aria-pressed=true],.tile:has(>.hit[aria-pressed=true]){background:var(--gold)}
 /* A cue's tile (FK-160): the cue to play on top, its approval underneath. */
 div.tile{display:flex;flex-direction:column;padding:0}
-div.tile>.hit{flex:1;width:100%;text-align:left;background:none;border:0;padding:8px 12px 6px 17px;font-size:17px;line-height:1.1}
-div.tile>.ok{padding:0 8px 8px 17px}
+div.tile>.hit{width:100%;text-align:left;background:none;border:0;padding:8px 12px 6px 17px;font-size:17px;line-height:1.1}
+div.tile>.ok{margin-top:auto;padding:0 8px 8px 17px}
 .tile.pop,.pill.pop{animation:pop .3s ease-out}
 @keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.06)}100%{transform:none}}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:2px 0 4px;font-size:13px;color:var(--dust)}
@@ -116,7 +116,7 @@ input[type=range]{width:100%;height:32px;accent-color:var(--ink)}
 
 /* Approve (FK-160): a status, A/B and Approve under each cue, the voices and the tune. Approved is moss, changed is red. */
 .ok{display:flex;flex-wrap:wrap;align-items:center;gap:5px 6px;min-height:30px;font-size:13px}
-.ok .mark{flex:1 1 auto;color:var(--dust);white-space:nowrap}
+.ok .mark{flex:1 1 auto;color:var(--dust)}
 .ok .mark::before{content:'';display:inline-block;width:.8em;height:.8em;margin-right:.4em;border-radius:50%;border:2px solid currentColor;vertical-align:-.1em;box-sizing:border-box}
 .ok[data-state=approved] .mark{color:var(--moss)}
 .ok[data-state=changed] .mark{color:var(--red)}

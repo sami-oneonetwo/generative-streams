@@ -266,7 +266,8 @@ function show(a: Approval) {
             ? "can't read the approvals"
             : 'checking…';
   a.mark.title = entry ? `Approved by ${entry.by} on ${entry.date}${status === 'changed' ? '; the sound has changed since' : ''}` : (unread ?? '');
-  a.approve.hidden = !status || status === 'approved';
+  // While its A/B plays, the row is for listening: Approve comes back when it ends.
+  a.approve.hidden = !status || status === 'approved' || abRun?.a === a;
   a.approve.disabled = !!a.busy;
   a.ab.hidden = !entry || a.kept !== entry.hash;
 }
@@ -382,6 +383,7 @@ async function abPlay(a: Approval) {
     a.ab.textContent = 'A/B';
     pressed(a.ab, false);
     abRun = undefined;
+    show(a);
   };
   const next = () => {
     if (i >= parts.length || !playing()) return stop();
@@ -398,6 +400,7 @@ async function abPlay(a: Approval) {
   };
   abRun = { a, stop };
   pressed(a.ab, true);
+  show(a);
   next();
 }
 
