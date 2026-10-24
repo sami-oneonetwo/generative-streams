@@ -18,6 +18,7 @@ import PIECES from './agePieces.json';
 import { ground, isShared, seeded, vary, type Surface } from './surfaces';
 import { OWNER_COLOUR, PIECE_MATERIALS, disposePiece, instancePiece, mergePiece, placePiece, placementMatrix, type MergedPiece, type Piece, type Placement } from './pieces';
 import type { TownView } from './types';
+import { STORY_SITES } from '../../src/shared/storyMap'; // hook FK-023
 
 export interface EnvironmentHandles {
   world: THREE.Group;
@@ -236,6 +237,10 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
     }
     for (const p of placed) yard.push({ ...p, turn: r() * Math.PI * 2, scale: 0.75 + r() * 0.45, mirror: r() < 0.5 });
   }
+  // hook FK-023: park trees on the Folly's plot (a little round it) go in a group of their own, hidden while Story is on.
+  const follyRect = STORY_SITES.folly.rect; // hook FK-023
+  const follyTrees = yard.filter((p) => p.x > follyRect.minX - 2 && p.x < follyRect.maxX + 2 && p.z > follyRect.minZ - 2 && p.z < follyRect.maxZ + 2); // hook FK-023
+  for (const p of follyTrees) yard.splice(yard.indexOf(p), 1); // hook FK-023
 
   // --- the river east of the ring road, its banks, and the path out to the camp across it ---
   ground(world, S.water, rx0, rx1, -450, 450, -0.38);
@@ -273,6 +278,9 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
     if (clear(x, z, 4)) bits.push({ x, z, turn: r() * Math.PI * 2, scale: 0.9 + r() * 0.3 });
   }
   instancePiece(piece('wild-tree'), [...wild, ...yard], world);
+  const follyGroup = new THREE.Group(); // hook FK-023
+  world.add(follyGroup); // hook FK-023
+  if (follyTrees.length) instancePiece(piece('wild-tree'), follyTrees, follyGroup); // hook FK-023
   // The ground's bits blended most of the way into the grass, so people and builds stand out.
   const into = (base: string, k: number) => (hex: string) => `#${new THREE.Color(hex).lerp(new THREE.Color(base), k).getHexString()}`;
   instancePiece(piece('ground', into(S.countryside.base, 0.4)), bits, world, false);
@@ -423,6 +431,7 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
     // District names used to float over their streets here; dropped (Sami 2026-10-22: not needed).
     drawBridge(view.bridge);
     centrepiece.visible = !view.wonder;
+    follyGroup.visible = !view.story; // hook FK-023
     party = view.party;
   }
 

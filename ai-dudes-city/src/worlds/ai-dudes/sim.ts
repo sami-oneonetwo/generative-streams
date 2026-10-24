@@ -7,6 +7,8 @@ import type { GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import { abilitiesOf, blueprintBounds, measureBlueprint } from './blueprint';
 import { choosePlacement, clampToGround, onGround, route, route as findRoute, walkableSegment, workSpots } from './placement';
 import { LIMITS, nextId, pushFeed, pushLine, type Dude, type DudesState, type Job, type UseTask } from './state';
+import { storyOn } from './state'; // hook FK-023
+import { STORY_RECTS } from '../../shared/storyMap'; // hook FK-023
 import type { Emote, FieldEffect, UseHow } from '../../shared/dudesTypes';
 import { claimHat, restore } from './events';
 import { knockedOut, recover, runAttack, runOver } from './combat';
@@ -34,7 +36,8 @@ const dist = (a: GroundPoint, b: GroundPoint) => Math.hypot(a.x - b.x, a.z - b.z
 export function reserved(state: DudesState, exceptJob?: string): Rect[] {
   return state.jobs
     .filter((j) => j.id !== exceptJob && j.kind === 'build' && j.position && j.footprint && isActive(j))
-    .map((j) => footprint(j.position!, j.footprint!.width, j.footprint!.depth));
+    .map((j) => footprint(j.position!, j.footprint!.width, j.footprint!.depth))
+    .concat(storyOn(state) ? STORY_RECTS : []); // hook FK-023: while Story is on, the Folly's plot and the crowd's ring take no build
 }
 
 export function workMsFor(job: Job): number {

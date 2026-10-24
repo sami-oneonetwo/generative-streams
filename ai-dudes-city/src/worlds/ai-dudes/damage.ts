@@ -34,8 +34,11 @@ export function maxHpOf(o: SafehouseObject): number {
 }
 export const hpOf = (o: SafehouseObject): number => o.health ?? o.maxHealth ?? maxHpOf(o);
 export const ruined = (o: SafehouseObject): boolean => o.destroyedAt !== undefined;
-/** Builds the Mayor and players can shoot at and creatures can knock about: anything standing that is somebody's work. */
-export const breakable = (o: SafehouseObject): boolean => !o.wild && !o.silhouette && !(o.passable && !o.creature);
+/**
+ * Builds the Mayor and players can shoot at and creatures can knock about: anything standing that is
+ * somebody's work. Not the head's Folly, under wraps or unveiled: the evidence stands (FK-023).
+ */
+export const breakable = (o: SafehouseObject): boolean => !o.wild && !o.silhouette && !o.folly && !(o.passable && !o.creature);
 
 export interface Attacker {
   /** The one doing it, for the feed and the owner's nudge ("Sam", "The Mayor", "Sam's T-Rex"). */

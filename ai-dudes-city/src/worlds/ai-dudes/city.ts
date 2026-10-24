@@ -44,6 +44,7 @@ import { credit } from './crier';
 import { LIMITS, nextId, pushFeed, pushLine, storyOn, type City, type Dude, type DudesState, type Ledger, type Project, type Tie, type Townie, type Visit } from './state';
 import { storyTownView } from './story/view'; // FK-001
 import { castLabel, keepsCast } from './story/cast';
+import { tickFolly } from './story/folly';
 
 export const TOWN = {
   startCoins: 150,
@@ -114,8 +115,9 @@ export function setAge(state: DudesState, age: number, now: number): void {
 export function queueRestyles(state: DudesState): void {
   const age = ageOf(state);
   // The town's own landmarks keep the look of the age they were raised in: a Wonder (and any community
-  // project) is a piece of that age's history, so only people's builds are remade.
-  cityOf(state).restyle = { age, ids: state.objects.filter((o) => !o.wild && !o.civic && o.wonder === undefined && originOf(o) !== age).map((o) => o.id) };
+  // project, and the head's Folly: the evidence stays as it was built) is a piece of that age's history,
+  // so only people's builds are remade.
+  cityOf(state).restyle = { age, ids: state.objects.filter((o) => !o.wild && !o.civic && o.wonder === undefined && o.folly === undefined && originOf(o) !== age).map((o) => o.id) };
 }
 
 /** What the streamer's character is called in this age: "The Chief". */
@@ -1383,6 +1385,8 @@ export function tickCity(state: DudesState, dt: number, now: number, rng: () => 
   tickNeeds(state, dt, now);
   tickProject(state, now);
   tickParty(state, now);
+  // The head's Folly: it follows the Story switch, fills on its own and carves gold's names (FK-023).
+  tickFolly(state, dt, now);
   if (state.ai.townLife !== false) {
     tickTownies(state, dt, now, rng);
     tickCaravan(state, now);
