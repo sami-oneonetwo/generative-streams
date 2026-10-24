@@ -6,8 +6,8 @@
 | Discipline | sound |
 | Lane | S · Sound |
 | Size | S (≤ half a day) |
-| Status | Ready |
-| Owner | — (write your name and the date here when you pick it up; the coordinator moves the row in BOARD.md) |
+| Status | Done (landed) |
+| Owner | lane S agent, 2026-10-24 |
 | Depends on | — |
 | Unblocks | [FK-031](FK-031-m1-demo.md), [FK-126](FK-126-story-sounds-1.md), [FK-158](FK-158-injectable-audio-context.md), [FK-162](FK-162-voice-bus-split.md), [FK-173](FK-173-cast-voices.md) |
 
@@ -51,4 +51,52 @@ Sami, 2026-10-24: "The noises as people speak right now are fantastic and I love
 
 ## Log
 
-- (picked up / review notes / done, with dates)
+- 2026-10-24 · lane S agent: picked up.
+- 2026-10-24 · lane S agent: **done, ready for review** on fk-s (commit 0ffedea, rebased on main 383fc05; not landed). `git diff --stat main` = the two new files only: scripts/audio-voice.test.ts (+641) and client/dudes/audio-approved.json (+4). audio.ts and main.ts untouched; nothing changes on 4600, so no demo server or screenshots were needed.
+  - **The fake:** `globalThis.window.AudioContext` is a recorder of every node, connection, param call (value, setValueAtTime, ramps, setTargetAtTime) and start/stop. Like a browser it throws on a non-finite value, a time before 0 and an exponential ramp to 0. `Math.random` is seeded (mulberry32), `performance.now` is a fake clock, and `setInterval`/`addEventListener` are stubbed, all only for the length of each call. Buses are named by behaviour: nudge each level and see which gain follows, so the names don't depend on creation order.
+  - **11 tests, every failure ending with the board rule and "put it on /sounds and get Sami's Approve":**
+    - the pitch for seeds 0–8 plus 9, 157 and 2^32−1: 230 + (seed % 9) × 22, low 150 + (seed % 9) × 8, and the sine at ×2;
+    - 2–7 syllables (an emote counts as a word);
+    - 70/130 ms syllables with 30/80 ms gaps at Math.random 0 and at its top, the 20 ms lead, the 10 ms attack and the exponential decay to 0.0001, stops at +50 ms;
+    - the ×0.85/×1.30 jitter, the ×1.25 (r < 0.5) or ×0.82 glide over the whole syllable, and no glide on the sine;
+    - triangle 0.07 and sine 0.025, four nodes a syllable, dry, onto the sfx bus only;
+    - the voice path: sfx level × 0.7 (0.56 at the stream's 0.8, tc 0.1) → master 0.9 → compressor −14 dB 6:1 → out, which puts a syllable into the compressor at 0.03528;
+    - the 400 ms throttle: at 399 ms the line is dropped, another speaker isn't held up, at 400 ms it plays, and a line too far to hear doesn't reset it;
+    - the falloff table (reach = half × 1.4 + 12; full to 0.15 × reach, 0.65 at half the reach, silent under 0.05);
+    - seedOf: a copy pinned for the 5 golden speakers, plus a check that main.ts still has the exact line (it's at main.ts:786 now, :752 in the plan);
+    - the golden hash.
+  - **The golden** is the voice path, the pitch table, the syllable counts, the two Math.random extremes, the throttle run, the falloff table, seedOf and the event lists of the 5 lines ("hi"; "hello there friend" at 0.65; "lol [emote:37226:KEKW] that is so good" through emoteNames; a 9-word line; the Mayor's "Hello! Welcome to my town!" in the low voice). Numbers are rounded (6 significant digits, times to 1 µs) and hashed with sha-256. Baseline: `fd4fb174e2c6734444bfae1ae97e1d615a4e0c6de4d28542f4529b74d3f5a2da`, written once to audio-approved.json as the card says (`by: Sami, 2026-10-24, "today's blips: fantastic, I love them"`, `cues: {}`). **This one-time baseline needs the coordinator's sign-off.**
+  - **NaN half:** today's near() gives NaN and the gain ramp throws, so that test is a `todo` that names FK-158. FK-158: add the guard, then remove the `todo` option.
+  - **Scratch-copy mutations** (in /tmp/fk-s-scratch, never committed; re-run with /tmp/fk-s-scratch/mutate.sh). Each one fails with the rule's message:
+    - blip gain 0.07 → 0.08: 4 tests fail;
+    - throttle 400 → 300 ms: 2 fail;
+    - base 230 → 240 Hz: 3 fail;
+    - sfx ×0.7 → ×0.6: 2 fail;
+    - compressor −14 → −12 dB: 2 fail;
+    - a reverb send on the blips: 2 fail;
+    - seedOf ×31 → ×33 in main.ts: 1 fails.
+    - Control: music bus ×0.32 → ×0.3 is not a voice change, and 0 tests fail.
+  - **Checks:** `npm run typecheck` is green. `npm test`: 172 tests, 171 pass, 0 fail, 1 todo (161 existing on today's main + 11 new; the card's "112" was from before other lanes landed).
+  - **For FK-160:** Approve has to compute the same hash. `golden()` and the fake sit together in the test file, ready to lift into a scripts/audio-voice-golden.ts module (Lane S's own path) when FK-160 needs them.
+  - Hooks into other lanes' files: none.
+- 2026-10-24 · lane S agent: **landed on main at 6caa500** (fast-forward of fk-s: 0ffedea + 6caa500, on main 383fc05). Two new files only: scripts/audio-voice.test.ts and client/dudes/audio-approved.json; audio.ts and main.ts untouched. Checks after the rebase: `npm run typecheck` green; `npm test` 173 tests, 172 pass, 0 fail, 1 todo (the NaN-half test, for FK-158).
+  - **What Sami gets once 4600 is restarted and the client rebuilt:** nothing to see or hear. The blips sound exactly as they do today, and from now on any change to them fails `npm test` until he has heard it on /sounds and clicked Approve.
+  - **Review notes, all applied in 6caa500 (test file only; the approved hash is still fd4fb174…f5a2da):**
+    - a new test pins how main.ts feeds the voices: the exact line `if (text && text !== lastSaid.get(d.id)) audio.speech(seedOf(d.id), emoteNames(text), d.position, d.mayor);`, with speech() called from that one line only; the createAudio line's `sfx: level('sfx', 0.8)` (checked against LEVELS.sfx); and the operator's `sfx: a.sfx * level('sfx', 0.8) * 1.25`;
+    - a 211-character, 43-word chat line is in the syllable-count cases, so a cap or mute by length fails;
+    - a hash mismatch now writes the record to a temp file, a row a line, and the message says how to diff it: `AUDIO_VOICE_RECORD=/tmp/audio-voice-approved.json npx tsx --test scripts/audio-voice.test.ts` in a checkout of main writes the approved record. It also says a hash-only failure is something the other tests don't spell out.
+  - **Scratch mutations for the review notes** (/tmp/fk-s-scratch/mutate2.sh, never committed). Each one fails 1 test with the rule's message:
+    - main.ts drops `d.mayor`;
+    - main.ts uses `seedOf(d.id) + 1`;
+    - main.ts drops `emoteNames`;
+    - main.ts createAudio sfx 0.8 → 0.6;
+    - operator sfx ×1.25 → ×1.0;
+    - speech() returns on lines over 60 characters;
+    - `detune: 5` on the blips: only the hash test fails, and diffing the written record against the approved one shows exactly the `["#n","detune.value",5]` rows.
+    - Controls pass with 0 failures: an unchanged copy, and the main.ts music level 0.5 → 0.4.
+  - **Follow-ups:**
+    - the long line went into the syllable cases, not LINES/golden, so the signed-off baseline hash didn't move. Add it to LINES the next time the hash changes on purpose through Approve (FK-160 or FK-173).
+    - FK-173 edits the speech() call site in main.ts, so it has to update the SPEECH pin in the same change, and that needs Sami's Approve.
+    - FK-160 can reuse `golden()`, `lined()` and the fake: lift them into scripts/audio-voice-golden.ts.
+    - FK-158 adds the near() NaN guard; when it does, remove the todo.
+  - Hooks into other lanes' files: none.

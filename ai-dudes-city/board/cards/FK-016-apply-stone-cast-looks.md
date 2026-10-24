@@ -6,8 +6,8 @@
 | Discipline | eng |
 | Lane | D · World look |
 | Size | S (≤ half a day) |
-| Status | Backlog |
-| Owner | — (write your name and the date here when you pick it up; the coordinator moves the row in BOARD.md) |
+| Status | In progress |
+| Owner | lane D agent, 2026-10-24 |
 | Depends on | [FK-006](FK-006-stone-cast-looks.md), [FK-014](FK-014-cast-persists.md) |
 | Unblocks | [FK-030](FK-030-story-world-kit-review.md), [FK-031](FK-031-m1-demo.md), [FK-144](FK-144-moss-knots-kit-hat.md) |
 

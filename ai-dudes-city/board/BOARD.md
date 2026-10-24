@@ -126,6 +126,22 @@ If the fast-forward fails, main moved: rebase and run again. Landing changes fil
 ### Later
 **Goal:** one age ahead of each stream: the Medieval to Wasteland design packs, beats, red jobs, age turns, cue cards and age music (Medieval, Industrial with Modern's PA call, Wasteland); the Rising with the honest count and the three endings; the trial montage; their sound (the count's speeding drums, a last sound for each ending, each Folly's age motif at the trial, the Friends of the Boss march); performance for 20+ chatter nights (FK-118 must land before any stream with 20 or more chatters); and Wren's own Kick account if Sami wants it. Later cards have placeholder lanes; the coordinator rebalances them at the M3 review. Design spend about $31.50.
 
+
+
+## Where it stopped (2026-10-24, wrap-up)
+
+**On main (33 cards):** FK-001 FK-002 FK-003 FK-004 FK-005 FK-006 FK-009 FK-010 FK-011 FK-012 FK-013 FK-014 FK-017 FK-018 FK-019 FK-020 FK-021 FK-023 FK-024 FK-027 FK-065 FK-072 FK-073 FK-075 FK-077 FK-078 FK-127 FK-128 FK-157 FK-158 FK-159 FK-160 FK-162.
+
+**Works on 4600 with Story ON** (/admin header switch, or `story-on`): the cast (Ash, Wren, Old Moss, Oak, Kit) persisting across ages; the Board (Folly in gold vs the red job, tug line, ticker); `red` / `gold` sides with ground discs and crown/flag tags; the Folly site on the River Bank under its tarp with cordon, beam and KEEP OUT sign (`folly-raise`, `folly-progress`); the Bell (`story-gather`): GATHER banner + countdown and everyone walking into a ring; the show HUD (banner, NOW card, title cards, slim letterbox); pets following their owners; chat during a gathering becomes bubbles and votes; old scenes (opening, Crossing, age turn) run through the show runtime. Also: layout A+ (lots fill from the bridge, River Bank, half the square open), `/sounds` sound board with Approve and the speech-blip guard, `?stats=1`, feed dedupe, `/fk-hud.html` mock, fresh design boards (design/out/rfinal3, o4), Stone cast specs (design/spec/cast/stone.json).
+
+**Not built yet (the next slice):** FK-022 RATE IT + crowd shot, FK-124 story scenes on the stream page, FK-007 the Big Hut model (partial work parked in fk-wt/x), FK-016 cast looks in game, then FK-025 the Unveiling and FK-026 the Rally. Parked partial work: FK-079 bank story sites (fk-wt/b, uncommitted). Known issue: troublemaker pop-ups still fire during a gathering (pause them in tickEvents while a story scene/gather runs).
+
+## Fast path (2026-10-24, Sami: "trim the fat… see it come together sooner so we can iterate")
+
+**In scope now — only what gets a working Unveiling + Rally on 4600:** FK-019, FK-021, FK-022, FK-124, FK-024, FK-012, FK-006, FK-007, FK-016, FK-127, then FK-025 (Unveiling) and FK-026 (Rally). Lanes run the lean runner (~/gs-tools/fk-lane-fast.js: build + land with tests green → one audit → one fix round only if blocking); the coordinator does the visual checks at check-ins.
+
+**Deferred until Sami has seen it and reacted:** FK-040/041/136 perspective camera, FK-029 world breathes, FK-028 one pet per chatter, FK-125 Wren's site sign, FK-008 camp dressing, FK-034 intro art, FK-068 age-life design, FK-076 Bridge Lane, FK-079 bank story sites, FK-015, FK-160/161 sound Approve + offline render, FK-030 design review, FK-031 formal demo, and all M2+ cards. They stay on the board; nothing is deleted.
+
 ## Columns
 
 ### Ready

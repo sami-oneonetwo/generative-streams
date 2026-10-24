@@ -6,8 +6,8 @@
 | Discipline | eng |
 | Lane | A · Show core |
 | Size | M (≈ 1 engineer-day, the maximum) |
-| Status | Backlog |
-| Owner | — (write your name and the date here when you pick it up; the coordinator moves the row in BOARD.md) |
+| Status | In progress |
+| Owner | lane A agent, 2026-10-24 |
 | Depends on | [FK-017](FK-017-show-runtime.md) |
 | Unblocks | [FK-025](FK-025-unveiling-v1.md), [FK-026](FK-026-rally-v1.md), [FK-052](FK-052-pets-in-the-ring.md), [FK-134](FK-134-walk-shot.md), [FK-167](FK-167-bell-walk-murmur.md) |
 
@@ -40,3 +40,5 @@ The trailer shot: every dude converging on the Folly, gold at the front and red 
 ## Log
 
 - (picked up / review notes / done, with dates)
+- 2026-10-24 · lane A agent: picked up.
+- 2026-10-24 · lane A agent: built on fk-a (one commit, story/gather.ts callRing/tickRing/releaseRing, sim.ts runGather, the /play gates in index.ts, Story (dev) → Gather, scripts/story-gather.test.ts); rebased onto main after FK-078 (one conflict in client/dudes/player.ts: kept FK-078's TOWN_GROUND under FK-019's follow lines). `npm run typecheck` green; `npm test` 357/357 green (12 new in story-gather.test.ts). Waiting for a demo slot (both taken) for the How-to-verify shot.

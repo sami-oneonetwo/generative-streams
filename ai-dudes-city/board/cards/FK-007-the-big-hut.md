@@ -6,8 +6,8 @@
 | Discipline | design |
 | Lane | X · Design |
 | Size | M (≈ 1 engineer-day, the maximum) |
-| Status | Backlog |
-| Owner | — (write your name and the date here when you pick it up; the coordinator moves the row in BOARD.md) |
+| Status | In progress |
+| Owner | lane X agent, 2026-10-24 |
 | Depends on | [FK-003](FK-003-design-pipeline-repair.md) |
 | Unblocks | [FK-094](FK-094-verdict-variants-design.md) |
 | Design spend (openai/gpt-6-astra only) | ~$4 |

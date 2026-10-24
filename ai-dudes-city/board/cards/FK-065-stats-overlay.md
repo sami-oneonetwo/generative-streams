@@ -6,7 +6,7 @@
 | Discipline | eng |
 | Lane | D · World look |
 | Size | S (≤ half a day) |
-| Status | Review |
+| Status | Done (landed) |
 | Owner | lane D agent, 2026-10-24 |
 | Depends on | — |
 | Unblocks | [FK-118](FK-118-merge-static-parts-1.md) |
@@ -50,3 +50,22 @@ The motion budget needs numbers: fps, draw calls, and how many things move.
   - **walkers in frame: 20–27 of 40–41 people in frame** (budget about 12, so over: FK-120).
   - **movers moving: 0–3 town-wide** (drive 1, fly 1, roam 1), **0–1 in frame**.
   - The baseline world is kept as `data/demo-d/world-ai-dudes.fk065-baseline-40.json` in Lane D's worktree. Copy it over `data/demo-d/world-ai-dudes.json` to measure "After M1" and "After M2" on the same world. Demo server stopped.
+- 2026-10-24 lane D agent (fixer, after review): fixes on `fk-d`, rebased on main fd27274 (FK-072 and the board commit; one import conflict in main.ts resolved by keeping both, so the hook is still the same 4 lines marked `// hook FK-065`). Head is 59da952, and the branch fast-forwards onto main.
+  - **Blocking (baseline not in motion-budget.md):** this lane may only edit this card, so here is the "Today" column ready to paste. It merges three runs on the same 40-chatter world (`?stream=1&stats=1`, 1920×1080, port 4614): mine before review, the reviewer's re-run, and mine after the fix (8 samples over ~12 s). The fixtures keep the world busy and the stream's shots change, so the counts drift a little between runs. These are ranges, not one number.
+    | Measure | Today |
+    |---|---|
+    | fps at 1080p | pending: Sami reads `?stream=1&stats=1` on the OBS machine (0.1–2 here is software GL on the shared box, not OBS) |
+    | draw calls | 880–1,092 (main + shadow pass; ~1.7 per build part; triangles 180k–225k) |
+    | walkers in frame | 19–28 of 40–42 in frame |
+    | movers moving | 0–3 town-wide (drive ≤1, fly 1, roam ≤1), 0–3 in frame |
+  - **Minor, fixed: hidden tab.** main.ts skips frames while `document.hidden`, but the window's clock kept running, so the first sample back was one very slow fps. Now `FrameWindow.restart()` drops the window on every `visibilitychange`, and the next frame starts the clock again. This is in stats.ts, not in main.ts. I didn't use a gap threshold because software GL legitimately runs frames seconds apart. New test: "a hidden tab: the gap is dropped" (9 tests in `scripts/stats.test.ts` now).
+  - **Minor, left as is: the panel's 92% ink.** It matches design-system.md ("panels at 92%") and the KNOCKOUTS and feed panels, and this overlay is for debugging only.
+  - **Minor, for the coordinator:** acceptance criterion 2's count is now 126 existing + 9 new = **135**. `npm run typecheck` is green and `npm test` passes 135/135 after the rebase. The client build is clean.
+  - Verify: `/tmp/fk-shots/lane-d/fk065-fix.png` (the baseline world, after the fix). I read it: the panel is clear, the over-budget chips show on fps and walking, and after a forced `visibilitychange` the overlay sampled again (1.6 fps, no stale window). Demo server stopped.
+- 2026-10-24 lane D agent: **landed on main at 31fd62c** (fast-forward from fd27274; `npm run typecheck` green, `npm test` 135/135). One review note applied first (31fd62c): the fps row's note now reads `page 6.0 ms · worst 12`, because that number is the page's CPU time per frame only (GPU and compositor time show up in fps, not there).
+  - **What Sami can see once the coordinator rebuilds the client and restarts 4600:** add `&stats=1` to any page, for example `/?stream=1&stats=1` in OBS. A small ink panel at the left centre shows fps (with page ms), draw calls of 1,500, triangles, people walking in the frame, and builds on the move by kind. Any number over the motion budget turns into a cream chip. Without `?stats=1` nothing changes.
+  - **Follow-ups (from review, not done in this lane):**
+    - *Coordinator:* paste the "Today" table from the fixer entry above into motion-budget.md's Baseline numbers. Add this note under it: "walkers measured right after the 30 test chatters chatted; to re-measure, copy `data/demo-d/world-ai-dudes.fk065-baseline-40.json` over the demo save, inject one line per test chatter, then sample". Ten minutes later, with many dudes away, the same world read 10–13 walking of 31–32 in frame. Draw calls read 750–920.
+    - *Sami:* read fps from `?stream=1&stats=1` on the OBS machine and fill in the fps cell. If GPU-bound frames turn out to matter, the fps row could also flag below a floor. That floor depends on the OBS browser source's frame rate (30 or 60), so it isn't set yet.
+    - *FK-027/FK-028:* pets are blueprint `roam`, so `movers()` in objects.ts would count them against the town-wide `roam ≤ 4` budget. When follow-pets land, report them as their own kind or skip them.
+    - *Caveat, no change:* with prefers-reduced-motion the overlay reports 0 movers, because `entry.moving` respects `still`. This is intended and tested, and OBS doesn't set reduced motion.

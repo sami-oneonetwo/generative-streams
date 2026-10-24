@@ -6,8 +6,8 @@
 | Discipline | eng |
 | Lane | A · Show core |
 | Size | S (≤ half a day) |
-| Status | Backlog |
-| Owner | — (write your name and the date here when you pick it up; the coordinator moves the row in BOARD.md) |
+| Status | In progress |
+| Owner | lane B agent, 2026-10-24 |
 | Depends on | [FK-014](FK-014-cast-persists.md), [FK-017](FK-017-show-runtime.md) |
 | Unblocks | [FK-026](FK-026-rally-v1.md), [FK-031](FK-031-m1-demo.md), [FK-045](FK-045-crossing-new-cast.md) |
 
@@ -39,3 +39,4 @@ The Rally waits until the band has crossed, and the Crossing today only ticks in
 ## Log
 
 - (picked up / review notes / done, with dates)
+- 2026-10-24, lane B agent: picked up (assigned to lane B by the coordinator).

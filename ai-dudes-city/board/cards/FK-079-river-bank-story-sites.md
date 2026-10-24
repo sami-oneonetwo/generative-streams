@@ -6,8 +6,8 @@
 | Discipline | eng |
 | Lane | B · Story and cast |
 | Size | M (≈ 1 engineer-day, the maximum) |
-| Status | Backlog |
-| Owner | — (write your name and the date here when you pick it up; the coordinator moves the row in BOARD.md) |
+| Status | In progress |
+| Owner | lane B agent, 2026-10-24 |
 | Depends on | [FK-078](FK-078-river-bank-ground.md) |
 | Unblocks | — |
 
@@ -37,3 +37,4 @@ The Folly, the camp and Wren's fire line up along open water, so eye-level shots
 ## Log
 
 - (picked up / review notes / done, with dates)
+- 2026-10-24, lane B agent: picked up.
