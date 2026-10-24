@@ -18,7 +18,7 @@ import { mayorLookSchema, type DudesState, type MayorLook } from './state';
 export type AideFn = (input: { system: string; content: string }, signal: AbortSignal) => Promise<string>;
 
 /** Admin actions the aide may use: town things, never moderation, the call limit or anything destructive to chatters. */
-const ALLOWED = ['party', 'project-finish', 'project-shelve', 'coins', 'set-age', 'rename-town', 'caravan-on', 'caravan-off', 'caravan-skip', 'event-now', 'events-on', 'events-off', 'town-on', 'town-off'];
+const ALLOWED = ['party', 'project-finish', 'project-shelve', 'coins', 'set-age', 'rename-town', 'caravan-on', 'caravan-off', 'caravan-skip', 'town-on', 'town-off'];
 
 const lookSchema = mayorLookSchema;
 

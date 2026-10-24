@@ -36,8 +36,8 @@ export type DudeActivity = 'idle' | 'walking' | 'building' | 'emote' | 'sleeping
  * Ways to use any build (the agent's `use` action). The app owns the motion for each; the agent only
  * picks the build, the way, and for a run where to go. `drive`/`ride` take the build along with the
  * character aboard and park it where the run ends; `sit`/`lie`/`stand` put the character on top;
- * `enter` hides them inside a while; `push` shoves it a few metres; `fix` undoes what a troublemaker did
- * to it (paint, squash); the rest are poses beside it.
+ * `enter` hides them inside a while; `push` shoves it a few metres; `fix` puts a damaged or blown-up build
+ * back as it was; the rest are poses beside it.
  */
 export const USE_HOWS = ['drive', 'ride', 'sit', 'lie', 'stand', 'enter', 'push', 'hug', 'kick', 'punch', 'lean', 'look', 'dance', 'fix', 'fire'] as const;
 export type UseHow = (typeof USE_HOWS)[number];
@@ -68,8 +68,6 @@ export interface DudeView {
   ko?: number;
   /** On the way to attack something (walking into range, or running from a lit bomb). */
   attacking?: { with: AttackWith; targetId: string };
-  /** A troublemaker the field sends in (events.ts), not a chatter: drawn like a character, tagged differently. */
-  npc?: boolean;
   /** One of the town's own residents (city.ts): no chatter behind them; a quieter tag, no mood. */
   resident?: boolean;
   /** One of the age's caravan (their leader brings the asks); `asking` while the leader has asks open. */
@@ -173,12 +171,12 @@ export interface FieldEffect {
   fromHeight?: number;
 }
 
-/** What a troublemaker is up to, for a banner across the top while it lasts. */
+/** The banner across the top while it lasts: a grand opening, or the community project (city.ts townBanner). */
 export interface HappeningView {
   kind: string;
-  title: string; // "GARY THE PAINTER"
+  title: string; // "BUILDING THE BIG HUT"
   text: string; // "is repainting everyone's builds. Ask your character to fix yours."
-  until?: number; // server time a deadline runs out (the mayor's decree)
+  until?: number; // server time it runs out (a grand opening's end)
   /** Progress bars under the text (a challenge: who is across, the bridge, the boss's health). */
   bars?: { label: string; value: number; note?: string }[];
 }
@@ -352,7 +350,6 @@ export interface DudesScene {
     thinking: number; // agent turns in flight
     designing: number; // design calls in flight
     idleLife: boolean; // quiet characters take a turn of their own now and then
-    events: boolean; // troublemakers come by
     townLife: boolean; // residents walk about and characters go out on their own
     caravan?: boolean; // the caravan game runs; off is sandbox mode
     themes?: boolean; // the age themes apply; off is the theme-free sandbox world
@@ -403,8 +400,6 @@ export interface DudesAdminStatus {
   }[];
   objects: { id: string; name: string; createdBy: string; damage?: string }[];
   town?: TownView;
-  happening?: HappeningView;
-  nextHappeningInS?: number;
   listener?: {
     enabled: boolean;
     runs: number;

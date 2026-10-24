@@ -129,7 +129,6 @@ test('the tug line: the rope is gold up to the knot, which sits at gold’s shar
 test('?demo=board: BIG HUT 35% and BRIDGE 3/8, the tally from the same fake sides the dudes wear', () => {
   const dudes = Array.from({ length: 40 }, (_, i) => dude(`chatter-${i}`, { name: `test-${i}`, away: i % 7 === 3 }));
   dudes.push(
-    dude('wren', { name: 'Wren', npc: true }),
     dude('tom', { name: 'Old Tom', resident: true }),
     dude('band', { name: 'Moss', traveller: true }),
     dude('head', { name: 'Sami', mayor: true }),
@@ -141,7 +140,7 @@ test('?demo=board: BIG HUT 35% and BRIDGE 3/8, the tally from the same fake side
   // Exactly the awake chatters whose marks show a side (client/dudes/sideMarks.ts, FK-013): a real side counts as itself.
   const want = { red: 0, gold: 0 };
   for (const d of dudes) {
-    if (d.away || d.npc || d.resident || d.traveller || d.mayor) continue;
+    if (d.away || d.resident || d.traveller || d.mayor) continue;
     const s = sideOf(d, true);
     if (s) want[s]++;
   }
@@ -323,7 +322,7 @@ test('scenes: the strip fades out with the rest of the HUD; reduced motion: no s
   assert.equal(decl('#board', 'transition'), 'opacity .6s');
   assert.equal(decl('body.cinema #board', 'opacity'), '0');
   assert.ok(RULES.some((r) => r.sel === '#board,#board *' && r.decls.transition === 'none'));
-  // The troublemaker banner and the stream's knockout board drop under the strip while it shows.
+  // The banner and the stream's knockout board drop under the strip while it shows.
   assert.equal(decl('body.board #happening-wrap', 'top'), 'calc(var(--board-b,0px) + 12px)');
   assert.equal(decl('body.stream.board #side', 'top'), 'calc((var(--board-b,0px) + 12px) / var(--ui-scale,1))', '#side is zoomed on the stream');
   // On narrow pages the banner never sits higher than today's (118 px, 100 px on a phone), clear of the header.

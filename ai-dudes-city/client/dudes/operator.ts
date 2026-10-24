@@ -592,7 +592,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
       }
       placed = true;
     }
-    const chatters = s.dudes.filter((d) => !d.npc && !d.resident && !d.mayor);
+    const chatters = s.dudes.filter((d) => !d.resident && !d.mayor);
     const near = chatters
       .map((d) => ({ d, m: Math.hypot(d.position.x - x, d.position.z - z) }))
       .filter((n) => n.m < 30)

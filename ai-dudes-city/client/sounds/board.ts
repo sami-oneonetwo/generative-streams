@@ -53,7 +53,6 @@ export const isBed = (c: Cue) => c.name.startsWith('beds:');
 export const WHAT: Readonly<Record<string, string>> = {
   doorbell: 'a new neighbour',
   fanfare: 'a grand opening, a party',
-  sting: 'a troublemaker turns up',
   built: 'a new build appears',
   hammer: 'someone building',
   coins: 'coins change hands',

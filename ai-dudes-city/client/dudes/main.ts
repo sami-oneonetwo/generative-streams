@@ -232,7 +232,7 @@ function start() {
     // about). Nappers count only when nobody is awake, so a quiet stream still shows someone.
     const people: { x: number; z: number }[] = [];
     dudes.each((x, z, v) => {
-      if (v.resident || v.npc) return;
+      if (v.resident) return;
       if (awake && v.away) return;
       people.push({ x, z });
       add(x, 0, z);
@@ -549,7 +549,7 @@ function start() {
   }
 
   // --- HUD ---
-  // The troublemaker banner: title and line from the snapshot; a deadline (the mayor's decree)
+  // The banner (a grand opening, the community project): title and line from the snapshot; a deadline
   // counts down locally against the drawn server clock. Content stays put while it fades out.
   let happeningUntil: number | undefined;
   let bannerRect: { l: number; t: number; r: number; b: number } | undefined;
@@ -699,14 +699,14 @@ function start() {
   function touring(): boolean {
     if (TOUR === '0' || !state) return false;
     if (TOUR === 'always') return true;
-    const lastChat = state.dudes.filter((d) => !d.npc && !d.resident && !d.mayor).reduce((m, d) => Math.max(m, d.heardAt ?? 0), 0);
+    const lastChat = state.dudes.filter((d) => !d.resident && !d.mayor).reduce((m, d) => Math.max(m, d.heardAt ?? 0), 0);
     return serverClock() - lastChat > QUIET_MS;
   }
   /** Someone worth a look, weighted by what they are doing; not the one just seen. */
   function pickSubject(): { id: string; kind: 'dude' | 'object' } | undefined {
     const pool: { id: string; kind: 'dude' | 'object'; w: number }[] = [];
     for (const d of state?.dudes ?? []) {
-      if (d.hidden || d.npc || d.id === lastTourId || !dudes.positionOf(d.id)) continue;
+      if (d.hidden || d.id === lastTourId || !dudes.positionOf(d.id)) continue;
       const w =
         d.activity === 'building' || d.activity === 'designing' ? 6 : d.activity === 'using' ? 4 : d.activity === 'walking' ? 3 : d.say ? 3 : d.emote ? 2 : d.away ? 0.4 : 1.2;
       pool.push({ id: d.id, kind: 'dude', w: d.resident ? w * 0.6 : w });
@@ -806,7 +806,7 @@ function start() {
   const hammerAt = new Map<string, number>();
   let nextBrayAt = 0;
   const seedOf = (id: string) => [...id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
-  /** What just happened in this snapshot, as sound: speech, new builds, arrivals, openings, troublemakers. */
+  /** What just happened in this snapshot, as sound: speech, new builds, arrivals, openings. */
   function hear(s: DudesScene) {
     // The operator's levels for the stream.
     const a = s.mayor?.audio;
@@ -836,10 +836,7 @@ function start() {
     bannerSound = bk;
     const h = s.happening;
     const hk = h ? `${h.kind}:${h.title}` : '';
-    if (hk && hk !== lastHappening) {
-      if (h!.kind === 'party') audio.fanfare();
-      else if (h!.kind !== 'project') audio.sting();
-    }
+    if (hk && hk !== lastHappening && h!.kind === 'party') audio.fanfare();
     lastHappening = hk;
   }
   /** Per frame: hammering where things go up, engines on the road, the fountain, the odd bray. */

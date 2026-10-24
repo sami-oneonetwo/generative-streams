@@ -8,7 +8,6 @@ import { normalizeAgentReply, type AgentFn, type AgentReply, type AgentTurn } fr
 import type { DesignFn } from '../src/worlds/ai-dudes/design';
 import { fixtureDesign } from '../src/worlds/ai-dudes/fixtures';
 import { stateSchema, type DudesState } from '../src/worlds/ai-dudes/state';
-import { startHappening, troublemakerName, wearing } from '../src/worlds/ai-dudes/events';
 import { applyReading, wishesMarkdown, type ListenerFn } from '../src/worlds/ai-dudes/listener';
 import { validateDesign } from '../src/worlds/ai-dudes/blueprint';
 import { plotById } from '../src/shared/city';
@@ -282,69 +281,6 @@ test('drive/ride synonyms parse into use', () => {
   assert.deepEqual(r.actions, [{ do: 'use', target: 'rx7', how: 'drive', to: 'brian' }, { do: 'use', target: 'house', how: 'enter' }]);
 });
 
-test('Gary the Painter repaints builds, their owners react on their own, and "fix" puts them back', async () => {
-  let script: AgentReply['actions'] = [];
-  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }) });
-  script = [{ do: 'build', what: 'a blue tower' }];
-  await say('owner', 'build a tower');
-  await tick(60_000);
-  const tower = h.state.objects[0];
-  const before = tower.blueprint.parts.map((p) => p.color).join();
-  const turnsBefore = h.turns.length;
-  assert.equal(startHappening(h.state, h.now, () => 0.01, 'painter'), undefined);
-  assert.equal(h.state.happening?.kind, 'painter');
-  await tick(40_000);
-  assert.notEqual(tower.blueprint.parts.map((p) => p.color).join(), before, 'repainted');
-  assert.ok(h.state.vandalised?.[tower.id]);
-  assert.ok(h.turns.length > turnsBefore, 'the owner reacted without anyone in chat saying anything');
-  const reaction = h.turns.at(-1)!;
-  // Gary the Painter, or whoever paints builds in the town's age.
-  assert.match(reaction.content, new RegExp(`${troublemakerName(h.state, 'painter')} painted your build`));
-  script = [{ do: 'use', target: 'tower', how: 'fix' }];
-  await say('owner', 'fix it');
-  await tick(20_000);
-  assert.equal(tower.blueprint.parts.map((p) => p.color).join(), before, 'fixed');
-  await tick(60_000);
-  assert.equal(h.state.npcs?.length ?? 0, 0, 'he left');
-  assert.equal(h.state.happening, undefined);
-  assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success);
-});
-
-test('Sticky Mick steals hats into a pile, and using the pile hands yours back', async () => {
-  let script: AgentReply['actions'] = [];
-  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }) });
-  await say('capper', 'hello');
-  await tick(1000);
-  const capper = h.state.dudes[0];
-  capper.look.hat = 'cowboy';
-  startHappening(h.state, h.now, () => 0.5, 'thief');
-  await tick(90_000);
-  assert.equal(capper.look.hat, 'none', 'stolen');
-  const pile = h.state.objects.find((o) => o.blueprint.name === 'Pile of stolen hats');
-  assert.ok(pile, 'dumped in a pile');
-  script = [{ do: 'use', target: 'pile of stolen hats', how: 'look' }];
-  await say('capper', 'get my hat back');
-  await tick(40_000);
-  assert.equal(capper.look.hat, 'cowboy');
-  assert.equal(h.state.objects.find((o) => o.id === pile!.id), undefined, 'the empty pile goes');
-});
-
-test('the councillor decrees a colour, comes back, praises the obedient and fines the rest', async () => {
-  const { h, say, tick } = harness();
-  await say('good', 'hi');
-  await say('bad', 'hi');
-  await tick(1000);
-  const [good, bad] = h.state.dudes;
-  bad.look.shirt = '#3f6fb0';
-  startHappening(h.state, h.now, () => 0, 'mayor'); // the first decree: red
-  assert.equal(h.state.happening?.decree?.colour, 'red');
-  good.look.shirt = '#c4402f';
-  assert.ok(wearing(good.look, 'red') && !wearing(bad.look, 'red'));
-  await tick(420_000); // the field is wide: he walks off to the edge and all the way back
-  assert.equal(bad.title, 'fined by the council');
-  assert.notEqual(good.title, 'fined by the council');
-});
-
 test('quiet characters move about on their own, without any model calls', async () => {
   const { h, say, tick } = harness();
   for (const n of ['a', 'b', 'c']) await say(n, 'hi');
@@ -456,7 +392,7 @@ test('a turn nobody asked for cannot start a fight or a build', async () => {
   assert.equal(h.state.jobs.filter((j) => j.dudeId === a.id).length, 0);
 });
 
-test('driving through people runs them over, and beating up a troublemaker chases him off', async () => {
+test('driving through people runs them over', async () => {
   let script: AgentReply['actions'] = [];
   const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }) });
   script = [{ do: 'build', what: 'a red car' }];
@@ -476,24 +412,6 @@ test('driving through people runs them over, and beating up a troublemaker chase
     hit = !!ped.ko;
   }
   assert.ok(hit, `ran over (car at ${JSON.stringify(car.driven?.at)}, ped at ${JSON.stringify(ped.position)})`);
-  await tick(20_000);
-  const why = startHappening(h.state, h.now, () => 0.3, 'painter');
-  assert.equal(why, undefined, 'Gary came');
-  // He hangs about rather than finishing his round first: the glade is small and he is quick.
-  h.state.npcs![0].plan.splice(1, 0, { do: 'wait', ms: 120_000 });
-  await tick(3000);
-  script = [{ do: 'attack', target: troublemakerName(h.state, 'painter'), with: 'punch' }];
-  let chased = false;
-  for (let tries = 0; tries < 6 && !chased; tries++) {
-    await say('driver', 'punch gary');
-    for (let i = 0; i < 80 && !chased; i++) {
-      await tick(500);
-      chased = !!h.state.npcs?.[0]?.ko;
-    }
-  }
-  assert.ok(chased, 'Gary went down');
-  await tick(60_000);
-  assert.equal(h.state.npcs?.length ?? 0, 0, 'and left');
 });
 
 test('attack phrasing parses: shoot/bomb/kill verbs and weapon words', () => {

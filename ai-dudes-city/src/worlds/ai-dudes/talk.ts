@@ -9,7 +9,7 @@
 import type { GroundPoint } from '../../shared/objectTypes';
 import { VENUES } from '../../shared/city';
 import { bestPlaceFor, cityOf, coinsOf, feelings, needsOf, placesOf, projectOf, recentVisits, warmth } from './city';
-import { nudge } from './events';
+import { nudge } from './state';
 import { awake } from './sim';
 import { isPiloted } from './players';
 import type { Dude, DudesState } from './state';

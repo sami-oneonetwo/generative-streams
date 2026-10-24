@@ -9,9 +9,8 @@ import { harness } from './harness';
 import { TOWNIE_NAMES, TOWN_NAMES, ageOf, cityOf } from '../src/worlds/ai-dudes/city';
 import { DAUGHTER, RENAMED_TRAVELLERS, caravanLine, caravanOf, daughterOf, resumeCaravan, skipVisit } from '../src/worlds/ai-dudes/caravan';
 import { hashOf } from '../src/worlds/ai-dudes/agent';
-import { troublemakerName } from '../src/worlds/ai-dudes/events';
 import { CAST, CAST_ROLES, castTownie, clashesWithCast } from '../src/worlds/ai-dudes/story/cast';
-import { stateSchema, type DudesState, type NpcKind } from '../src/worlds/ai-dudes/state';
+import { stateSchema, type DudesState } from '../src/worlds/ai-dudes/state';
 import { AGES, LAST_AGE, venueName } from '../src/shared/ages';
 import { CITY, DISTRICT_NAMES, VENUE_KINDS, allPlots, avenueName, streetName } from '../src/shared/city';
 import { SCENES, fillLine, sceneLine } from '../src/shared/scenes';
@@ -61,11 +60,9 @@ test('every name table: no townie, traveller, street or district goes by a cast 
   for (let age = 0; age <= LAST_AGE; age++) {
     const c = caravanOf(age);
     clash(`${c.name} (age ${age})`, [c.name, c.leader, ...c.travellers, c.specialist]);
-    clash(`${AGES[age].id} troublemakers`, (['painter', 'squasher', 'tow', 'thief', 'mayor'] as NpcKind[]).map((k) => troublemakerName({ ai: {}, city: { age } } as DudesState, k)));
     clash(`${AGES[age].id} places`, VENUE_KINDS.map((k) => venueName(age, k)));
   }
   clash('the daughter', [DAUGHTER]);
-  clash('the sandbox troublemakers', (['painter', 'squasher', 'tow', 'thief', 'mayor'] as NpcKind[]).map((k) => troublemakerName({ ai: { themes: false } } as DudesState, k)));
   assert.deepEqual(
     [caravanOf(1).travellers[0], caravanOf(2).travellers[1], caravanOf(3).leader, caravanOf(5).leader],
     ['Hori the Boatman', 'Minstrel Robin', 'Mr Hargreaves', 'Road Boss Roxy'],

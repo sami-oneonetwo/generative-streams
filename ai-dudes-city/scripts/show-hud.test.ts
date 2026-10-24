@@ -283,7 +283,7 @@ test('?demo=show on a page: each piece shows in its turn, never more than two, a
   assert.equal(banner.children.find((c) => c.classes.has('title'))?.textContent, 'GATHER: THE UNVEILING');
   assert.ok(p.body.classes.has('show-call'), 'the Board steps aside');
   assert.ok(p.ui.rect(), 'the strip’s rect is the banner’s');
-  assert.equal(p.root.style.props.get('--show-b'), '204px', 'the troublemaker banner drops under it');
+  assert.equal(p.root.style.props.get('--show-b'), '204px', 'the banner drops under it');
   run(4600);
   assert.equal(banner.children.find((c) => c.classes.has('clock'))?.textContent, '0:22');
   assert.deepEqual(run(8000), { scene: true, up: ['show-title', 'show-sub'] }, 'the scene: the title card and the subtitle, two layers');
@@ -416,7 +416,7 @@ test('the HUD fades with the letterbox (0.9 s) in the story look; the Board step
   assert.ok(RULES.some((r) => r.sel.startsWith(':is(#show-banner,#show-now,#show-title,#show-sub),') && r.decls.transition === 'none'));
   assert.ok(RULES.some((r) => r.sel === '#show-sub .line.in' && r.decls.animation === 'none'));
   assert.ok(!RULES.some((r) => /#show-/.test(r.sel) && /infinite/.test(r.decls.animation ?? '')), 'nothing animates at rest');
-  // The troublemaker banner sits under whichever is lower, the Board or the GATHER banner.
+  // The banner sits under whichever is lower, the Board or the GATHER banner.
   assert.equal(decl('body.show-call #happening-wrap', 'top'), 'calc(max(var(--board-b,0px),var(--show-b,0px)) + 12px)');
 });
 

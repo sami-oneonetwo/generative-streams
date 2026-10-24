@@ -32,7 +32,7 @@ import { bridgeOpen } from '../caravan';
 import { ageOf, cityOf, headName, leaveVisit, startLabour } from '../city';
 import { knockedOut } from '../combat';
 import { crierReply } from '../crier';
-import { nudge } from '../events';
+import { nudge } from '../state';
 import { clampToGround } from '../placement';
 import { isPiloted } from '../players';
 import { endUse, isActive, sendDude } from '../sim';

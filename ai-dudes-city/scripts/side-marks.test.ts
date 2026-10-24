@@ -130,8 +130,8 @@ test('whose side: the server’s always; ?demo=board fakes one for chatters only
   assert.ok(sides.includes('gold') && sides.includes('red') && sides.includes(undefined), 'both sides and some neutrals');
   assert.ok(sides.filter((s) => s).length >= 24, 'most chatters in view carry a mark');
   assert.deepEqual(ids.map((id) => sideOf(dude(id), true)), sides, 'the same side every frame');
-  // The town's own people never get a fake side: troublemakers, residents, travellers, the head.
-  for (const extra of [{ npc: true }, { resident: true }, { traveller: true }, { mayor: true }] as Partial<DudeView>[])
+  // The town's own people never get a fake side: residents, travellers, the head.
+  for (const extra of [{ resident: true }, { traveller: true }, { mayor: true }] as Partial<DudeView>[])
     for (const id of ids) assert.equal(demoSide(dude(id, extra)), undefined, JSON.stringify(extra));
 });
 

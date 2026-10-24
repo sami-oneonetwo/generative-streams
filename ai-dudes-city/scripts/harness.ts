@@ -9,7 +9,7 @@ import type { DudesState } from '../src/worlds/ai-dudes/state';
 export const flush = () => new Promise((r) => setImmediate(r));
 
 /** A world with a scripted agent, a minimal engine context and a clock the test moves. */
-export function harness(options: Partial<DudesOptions> & { reply?: (turn: AgentTurn) => AgentReply | Promise<AgentReply>; events?: boolean; idleLife?: boolean; town?: boolean } = {}) {
+export function harness(options: Partial<DudesOptions> & { reply?: (turn: AgentTurn) => AgentReply | Promise<AgentReply>; idleLife?: boolean; town?: boolean } = {}) {
   const turns: AgentTurn[] = [];
   let inFlight = 0,
     peak = 0;
@@ -74,8 +74,7 @@ export function harness(options: Partial<DudesOptions> & { reply?: (turn: AgentT
     rng: () => ((seed = (seed * 16807) % 2147483647) / 2147483647),
   };
   h.state = world.createInitialState(h.now);
-  // Troublemakers and idle turns are opt-in per test, so the older tests see only what they asked for.
-  h.state.ai.events = options.events ?? false;
+  // Idle turns are opt-in per test, so the older tests see only what they asked for.
   h.state.ai.idleLife = options.idleLife ?? false;
   h.state.listener = { enabled: !!options.listener, buffer: [], wishes: [], tips: [], lastRunAt: 0, runs: 0 };
   // Residents and needs-driven outings are opt-in, so the older tests see only what they asked for.

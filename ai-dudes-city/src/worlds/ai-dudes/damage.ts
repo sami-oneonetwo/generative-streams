@@ -9,8 +9,7 @@
 // Zero AI: the app owns every number here.
 import type { Blueprint, GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import { addEffect, awake, shake } from './sim';
-import { nudge } from './events';
-import { pushFeed, type DudesState } from './state';
+import { nudge, pushFeed, type DudesState } from './state';
 
 export const DAMAGE = {
   /** Crumbling is drawn in this many steps between whole and fallen. */
@@ -195,4 +194,26 @@ export function crumble(original: Blueprint, gone: number, seed: string, fallen:
 export function renewed(state: DudesState, o: SafehouseObject): void {
   if (state.vandalised?.[o.id]) delete state.vandalised[o.id];
   heal(state, o);
+}
+
+/** Put a damaged or blown-up build back the way it was (the `fix` use). */
+export function restore(state: DudesState, o: SafehouseObject): boolean {
+  const v = state.vandalised?.[o.id];
+  if (!v) return false;
+  o.blueprint = v.original;
+  o.revision++;
+  delete state.vandalised![o.id];
+  heal(state, o);
+  state.worldRevision++;
+  return true;
+}
+
+/** How a damaged build reads to an agent. */
+export function damageOf(state: DudesState, objectId: string): string | undefined {
+  const v = state.vandalised?.[objectId];
+  const o = state.objects.find((x) => x.id === objectId);
+  const hurt = o && damageNote(o);
+  if (v && hurt) return `${hurt} (by ${v.by})`;
+  if (v) return `${v.kind === 'wrecked' ? 'blown up' : v.kind} by ${v.by}; use it with "fix" to restore it`;
+  return undefined;
 }

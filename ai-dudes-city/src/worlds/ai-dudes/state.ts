@@ -228,6 +228,7 @@ export interface Tie {
 
 export interface AttackTask {
   with: AttackWith;
+  /** 'npc' was a troublemaker (gone); kept so an older save loads, and such an attack just gives up. */
   kind: 'dude' | 'npc' | 'object' | 'boss';
   targetId: string;
   phase: 'going' | 'fuse';
@@ -385,8 +386,6 @@ const jobSchema: z.ZodType<Job> = z.object({
 export interface AiSettings {
   /** Quiet characters take a turn of their own now and then (costs calls; operator switch). */
   idleLife?: boolean;
-  /** Troublemakers come by (events.ts; no calls of their own, but their victims react). */
-  events?: boolean;
   /** The town lives on its own: residents walk about, and characters go out when they need to (city.ts). */
   townLife?: boolean;
   /** Builds take damage and fall down (damage.ts). Off: shots and stomps only rattle them. */
@@ -421,15 +420,9 @@ export interface DudesState {
   ai: AiSettings;
   worldRevision: number;
   nextId: number;
-  /** Troublemakers on the field right now (events.ts). */
-  npcs?: Npc[];
-  /** The event in progress, for the banner and every agent's context. */
-  happening?: Happening;
-  nextHappeningAt?: number;
-  /** What a troublemaker did to a build, so `use … fix` can put it back: object id → the design before. */
+  /** A damaged or blown-up build's design before, so `use … fix` can put it back: object id → the design before.
+   * 'painted' and 'squashed' are from the old troublemakers, kept so older saves load. */
   vandalised?: Record<string, { by: string; kind: 'painted' | 'squashed' | 'wrecked' | 'damaged'; original: z.infer<typeof blueprintSchema> }>;
-  /** Stolen hats waiting in a pile build: pile object id → owner dude id → the hat. */
-  hatPiles?: Record<string, Record<string, { hat: Hat; color: string }>>;
   /** Brief happenings for the page (a kicked build rattles, a shot, a bomb); the last few seconds' worth. */
   effects?: FieldEffect[];
   /** The Listener's wishlist, tips and what it has heard since its last reading (listener.ts). */
@@ -896,7 +889,6 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
   feed: z.array(z.object({ at: z.number(), text: z.string().max(200) })).max(LIMITS.feed),
   ai: z.object({
     idleLife: z.boolean().optional(),
-    events: z.boolean().optional(),
     townLife: z.boolean().optional(),
     destruction: z.boolean().optional(),
     caravan: z.boolean().optional(),
@@ -936,11 +928,7 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
     .optional(),
   listener: z.lazy(() => listenerSchema).optional(),
   scores: z.record(z.string(), z.object({ kos: z.number().int().nonnegative(), downs: z.number().int().nonnegative() })).optional(),
-  npcs: z.array(z.lazy(() => npcSchema)).max(6).optional(),
-  happening: z.lazy(() => happeningSchema).optional(),
-  nextHappeningAt: z.number().optional(),
   vandalised: z.record(z.string(), z.object({ by: z.string().max(40), kind: z.enum(['painted', 'squashed', 'wrecked', 'damaged']), original: blueprintSchema })).optional(),
-  hatPiles: z.record(z.string(), z.record(z.string(), z.object({ hat: z.enum(HATS), color: hex }))).optional(),
   city: z.lazy(() => citySchema).optional(),
   mayor: z.lazy(() => mayorSchema).optional(),
 });
@@ -978,6 +966,13 @@ export function pushFeed(state: DudesState, now: number, text: string): void {
 export function pushLine<T>(list: T[], item: T, cap: number): void {
   list.push(item);
   while (list.length > cap) list.shift();
+}
+
+/** Tell a character's agent what happened to it; it reacts on a turn of its own. */
+export function nudge(state: DudesState, dude: Dude, text: string, now: number): void {
+  dude.nudges ??= [];
+  pushLine(dude.nudges, text.slice(0, 240), 4);
+  pushLine(dude.history, { from: 'world', text: text.slice(0, 240), at: now }, LIMITS.history);
 }
 
 // ---- Finders Keepers: the switch and the save guard ------------------------------------------------
@@ -1088,74 +1083,3 @@ function dropInvalid(target: object, shape: Record<string, z.ZodType>, where: st
   }
 }
 
-// ---- troublemakers (events.ts) --------------------------------------------------------------------
-export type NpcKind = 'painter' | 'squasher' | 'tow' | 'thief' | 'mayor';
-/** One thing a troublemaker does next; it works through its plan in order. */
-export type NpcStep =
-  | { do: 'goto'; to: GroundPoint; camp?: boolean }
-  | { do: 'goto-object'; objectId: string }
-  | { do: 'goto-dude'; dudeId: string }
-  | { do: 'wait'; ms: number; until?: number }
-  | { do: 'say'; text: string }
-  | { do: 'emote'; pose: Emote; ms: number }
-  | { do: 'paint'; objectId: string }
-  | { do: 'squash'; objectId: string }
-  | { do: 'tow'; objectId: string; to: GroundPoint; route?: GroundPoint[] }
-  | { do: 'steal-hat'; dudeId: string; tries?: number }
-  | { do: 'drop-hats' }
-  | { do: 'decree-check' }
-  | { do: 'leave'; to: GroundPoint };
-export interface Npc {
-  id: string;
-  kind: NpcKind;
-  name: string;
-  look: DudeLook;
-  position: GroundPoint;
-  facing: number;
-  path: GroundPoint[];
-  speed: number;
-  plan: NpcStep[];
-  say?: { text: string; until: number };
-  emote?: { pose: Emote; until: number };
-  loot?: { dudeId: string; hat: Hat; color: string }[];
-  /** A towed build travels with it. */
-  towing?: string;
-  /** Knocked out by a character: lies there until this time, then gives up and leaves. */
-  ko?: number;
-}
-export interface Happening {
-  kind: NpcKind;
-  npcId: string;
-  title: string;
-  text: string;
-  startedAt: number;
-  until?: number;
-  /** The mayor's decree: what everyone must be wearing by `until`. */
-  decree?: { colour: string; hex: string };
-}
-const stepSchema = z.object({ do: z.string() }).passthrough() as unknown as z.ZodType<NpcStep>;
-const npcSchema: z.ZodType<Npc> = z.object({
-  id: z.string(),
-  kind: z.enum(['painter', 'squasher', 'tow', 'thief', 'mayor']),
-  name: z.string().max(40),
-  look: lookSchema,
-  position: point,
-  facing: z.number(),
-  path: z.array(point).max(400),
-  speed: z.number(),
-  plan: z.array(stepSchema).max(60),
-  say: z.object({ text: z.string().max(LIMITS.say), until: z.number() }).optional(),
-  emote: z.object({ pose: z.enum(EMOTES), until: z.number() }).optional(),
-  loot: z.array(z.object({ dudeId: z.string(), hat: z.enum(HATS), color: hex })).max(20).optional(),
-  towing: z.string().optional(),
-  ko: z.number().optional(),
-});
-const happeningSchema: z.ZodType<Happening> = z.object({
-  kind: z.enum(['painter', 'squasher', 'tow', 'thief', 'mayor']),
-  npcId: z.string(),
-  title: z.string().max(60),
-  text: z.string().max(200),
-  startedAt: z.number(),
-  until: z.number().optional(),
-  decree: z.object({ colour: z.string().max(20), hex }).optional(),
-});

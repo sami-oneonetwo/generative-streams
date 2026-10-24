@@ -19,7 +19,7 @@ import { matchName } from './index';
 import { EMOTES, WEAPONS, type DudeLook, type DudeView, type Emote, type MayorView, type Weapon } from '../../shared/dudesTypes';
 import { armedBuild, fire, ram } from './weapons';
 import { LIMITS, nextId, pushFeed, pushLine, storyOn, type DudesState, type Job, type Mayor } from './state';
-import { nudge } from './events';
+import { nudge } from './state';
 import { renewed } from './damage';
 import { onShowInput, type ShowInput } from './story/beats'; // FK-001
 import { storyMayorView } from './story/view'; // FK-001
@@ -170,7 +170,7 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
       break;
     case 'camera': {
       const target = String(msg.target ?? '');
-      const known = state.dudes.some((d) => d.id === target) || cityOf(state).townies.some((t) => t.id === target) || (state.npcs ?? []).some((n) => n.id === target);
+      const known = state.dudes.some((d) => d.id === target) || cityOf(state).townies.some((t) => t.id === target);
       if (msg.mode === 'person' && known) {
         m.focus = target;
         m.follow = false;

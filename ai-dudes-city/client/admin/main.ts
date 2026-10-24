@@ -123,7 +123,6 @@ const switches: Switch[] = [
   { el: $('sw-town'), label: 'Town life', read: (s) => (s.dudes ? s.dudes.ai.townLife !== false : undefined), set: action('town-on', 'town-off') },
   { el: $('sw-caravan'), label: 'Caravan', read: (s) => (s.dudes ? s.dudes.ai.caravan !== false : undefined), set: action('caravan-on', 'caravan-off') },
   { el: $('sw-themes'), label: 'Age themes', read: (s) => (s.dudes ? s.dudes.ai.themes !== false : undefined), set: action('themes-on', 'themes-off') },
-  { el: $('sw-events'), label: 'Troublemakers', read: (s) => s.dudes?.ai.events, set: action('events-on', 'events-off') },
   { el: $('sw-idle'), label: 'Idle turns', read: (s) => s.dudes?.ai.idleLife, set: action('idle-on', 'idle-off') },
   { el: $('sw-enforce'), label: 'Call limit', read: (s) => s.dudes?.ai.enforced, set: action('allowance-enforce', 'allowance-ignore') },
   { el: $('sw-listener'), label: 'Listener', read: (s) => s.dudes?.listener?.enabled, set: action('listener-on', 'listener-off') },
@@ -218,10 +217,6 @@ $('qa-designs-cancel').onclick = () => {
 };
 $('qa-clear-bubbles').onclick = () => void run('clear-say', 'all', 'Every bubble cleared');
 $('qa-clear-feed').onclick = () => void run('feed-clear', undefined, 'Feed cleared');
-$('qa-trouble-send').onclick = () => {
-  const sel = $('qa-trouble') as HTMLSelectElement;
-  void run('event-now', sel.value, `Sent: ${sel.options[sel.selectedIndex].text}`);
-};
 $('pj-finish').onclick = () => void run('project-finish', undefined, 'Community project finished');
 $('pj-shelve').onclick = () => {
   if (!confirm('Shelve the community project? Coins go back to whoever chipped in.')) return;
@@ -243,14 +238,6 @@ function renderWorld(d: DudesAdminStatus | undefined): void {
 
   // What is happening right now, under the quick actions.
   const bits: string[] = [];
-  if (d?.happening)
-    bits.push(
-      `Now: <b>${esc(d.happening.title)}</b> ${esc(d.happening.text)}${
-        d.happening.until ? ` (${clock((d.happening.until - Date.now()) / 1000)} left)` : ''
-      }`,
-    );
-  else if (d && !d.ai.events) bits.push('Troublemakers are off.');
-  else if (d?.nextHappeningInS !== undefined) bits.push(`Next troublemaker in ${clock(d.nextHappeningInS)}.`);
   if (town?.party) bits.push(`🎉 <b>${esc(town.party.title)}</b> is on.`);
   setHtml($('happening'), bits.join('<br>'));
 
@@ -580,10 +567,9 @@ people.addEventListener('click', (e) => {
 // ---- builds -------------------------------------------------------------
 
 const BUILDS_SHOWN = 10;
-/** "painted by Gary the Painter; use it…" → "painted" (the culprit is in the badge's tooltip). */
+/** "blown up by kev; use it…" → "blown up" (the culprit is in the badge's tooltip). */
 function damageTag(damage: string): string {
   const first = damage.split(';')[0].trim();
-  if (/^a pile of stolen hats/i.test(first)) return 'hat pile';
   return /^(.+?) by /.exec(first)?.[1] ?? first;
 }
 let showAllBuilds = false;
@@ -916,10 +902,10 @@ function renderListener(l: DudesAdminStatus['listener']): void {
 // Every admin action the curated controls above don't cover, with the generic field + button, so a
 // new action on the server shows up here without touching this page.
 const CURATED = new Set([
-  'ai-pause', 'ai-resume', 'allowance-set', 'allowance-ignore', 'allowance-enforce', 'event-now',
+  'ai-pause', 'ai-resume', 'allowance-set', 'allowance-ignore', 'allowance-enforce',
   'budget-agent', 'budget-design', 'designs-cancel', 'send-home', 'clear-say', 'feed-clear',
   'listener-now', 'listener-off', 'listener-on', 'listener-clear', 'party', 'project-shelve', 'project-finish',
-  'coins', 'release-lot', 'set-age', 'rename-town', 'town-off', 'town-on', 'events-off', 'events-on',
+  'coins', 'release-lot', 'set-age', 'rename-town', 'town-off', 'town-on',
   'idle-off', 'idle-on', 'mute', 'unmute', 'forget', 'remove-dude', 'remove-build',
 ]);
 function renderOtherActions(status: AdminStatus): void {

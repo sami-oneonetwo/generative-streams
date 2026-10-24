@@ -6,7 +6,7 @@
 import { normalizeColor } from './blueprint';
 import { ACCESSORIES, ATTACKS, EMOTES, HATS, LOOK_LIMITS, USE_HOWS, type AttackWith, type Accessory, type DudeLook, type Emote, type Hat, type UseHow } from '../../shared/dudesTypes';
 import { LIMITS, type Dude, type DudesState } from './state';
-import { damageOf, happeningLine } from './events';
+import { damageOf } from './damage';
 import { townForAgent } from './city';
 import { hatOf, type BitRequest } from './bits';
 import { BIT_BURSTS, BIT_PROPS, type BitBurst, type BitProp } from '../../shared/dudesTypes';
@@ -111,7 +111,7 @@ What you can do each turn, as JSON:
    {"do":"follow","target":"<character name>"}   stick with them for a minute
    {"do":"move","to":"<character name>"|"<build name>"|"home"|"square"|"<an address>"|"wander"}
    {"do":"use","target":"<any build by name>","how":"${USE_HOWS.filter((h) => h !== 'fire').join('|')}","to":"optional, for drive/ride: <character name>|<build name>|square"}
-   {"do":"attack","target":"<character name>|<troublemaker name>|<build name>","with":"${ATTACKS.join('|')}"}   shove is a harmless push
+   {"do":"attack","target":"<character name>|<build name>","with":"${ATTACKS.join('|')}"}   shove is a harmless push
    {"do":"stop"}   stop driving, riding, following or whatever you are doing
    {"do":"show","what":"badges"}
  ],
@@ -132,8 +132,8 @@ How the town works:
 - The Mayor is the streamer, walking round town with a camera and talking about what is going on ("mayor" says where he is). When the Mayor says something to you or near you, you may answer him on a turn of your own with a "say" of a sentence or three, in character: friendly, cheeky or grumpy as fits your chatter, and with something real to tell him (what you are building, what you think of the town, a complaint, some gossip). Never pretend to be the Mayor.
 - The age ("town.age"): the town lives through history, from the Stone Age to the Wasteland after the modern world falls, and moves on as it grows. Everything in it is made and named the way that age would: when your chatter asks for anything, build that age's version of it (a skyscraper in the Stone Age is a tower of stacked boulders; a car in the Middle Ages is a horse and cart) and talk about it in those terms, but keep the "kind" from the list above. "town.age" also says what the Mayor is called in this age (the Chief, the King …): use that name when you talk about or to them.
 - The caravan ("town.caravan"): when the town begins, a band of travellers (a father, his little daughter and their people) is stuck across the river because the bridge is broken; "help" sends you to mend it, and once enough people have, they cross. After that, every age a band of travellers camps across the river and its leader asks the town for things (places to eat, a workshop and shifts worked there, a party, a great community project). Doing what they ask moves the whole town into the next age. When your chatter wants to help, or just wants to build something, prefer what the caravan asks for; never ignore what your chatter actually said.
-- The town has its own residents (not chatters) who use people's places and gossip. Troublemakers (a painter, a squasher, someone who drags builds off, a hat thief, an official with decrees; who they are changes with the age, e.g. Gary the Painter or Councillor Pemberton today) come by now and then: chase them off, fix your build (use ... fix), obey or defy the decree (defying it costs a fine).
-- Using builds: drive and ride take vehicles round town; sit, lie and stand put you on top; enter takes you inside a while; push shoves it; hug, kick, punch, lean, look and dance happen beside it; fix repairs a troublemaker's damage, or puts a damaged or knocked-down build back as it was.
+- The town has its own residents (not chatters) who use people's places and gossip.
+- Using builds: drive and ride take vehicles round town; sit, lie and stand put you on top; enter takes you inside a while; push shoves it; hug, kick, punch, lean, look and dance happen beside it; fix puts a damaged or knocked-down build back as it was.
 - Breaking things (cartoon, nobody is hurt for long): builds have health. Attacking a build (punch, kick, shoot, throw, bomb) knocks pieces off it; at nothing it comes down in a heap of rubble, and it rebuilds itself a few minutes later (or at once with "fix"). A bomb takes a big chunk out of everything round it. A tank (or anything built with a gun) is driven with use ... drive, then attack ... shoot fires its cannon from where it is. A monster built to smash things (a T-rex, a kaiju) roams about knocking down other people's builds by itself, never its owner's. Only wreck things when your chatter asks for it.
 - Fighting is cartoon action and fine when your chatter wants it. Knocked-out characters get back up after a few seconds. Do not start real fights on your own.
 - Your appearance changes through "look", not builds. Other characters are other chatters: you can greet, follow, invite and talk near them; you cannot control them or their things.
@@ -637,8 +637,6 @@ export function agentInput(state: DudesState, dude: Dude, now: number, awakeMs: 
       builds: state.objects.length,
       nearbyDudes: others,
       nearbyBuilds,
-      ...(happeningLine(state, now) ? { happeningNow: happeningLine(state, now) } : {}),
-      ...(state.npcs?.length ? { troublemakers: state.npcs.map((n) => `${n.name}, ${round(dist(n.position, dude.position))} m away`) } : {}),
     },
     conversation: dude.history.map((l) => `${l.from === 'chatter' ? `${dude.name} (your chatter)` : l.from === 'dude' ? 'you' : 'world'}: ${l.text}`),
     overheard: dude.overheard.map((o) => `${o.from}: ${o.text}`),

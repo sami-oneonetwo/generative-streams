@@ -1,6 +1,6 @@
 // The feed in the corner (bottom left; on stream with Story OFF, and on /mayor): the last few things
-// that happened, made readable. The server keeps every line it pushed (state.feed), so a troublemaker
-// who comes back three times is three identical lines, and the operator's own speech ("The Chief: hi")
+// that happened, made readable. The server keeps every line it pushed (state.feed), so something that
+// happens three times is three identical lines, and the operator's own speech ("The Chief: hi")
 // is in there too, though his bubble already says it. The page shows each line once, at its newest,
 // leaves the operator's out, and cuts a line too long for its row at a word, with an ellipsis, where
 // CSS alone would stop mid-word ("Find the p…"). Pure: the page measures, this decides.

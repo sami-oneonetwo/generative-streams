@@ -7,8 +7,8 @@
 //             under the streamer's voice.
 //   ambience  birdsong, a soft town hum, the fountain when the camera is near the square.
 //   effects   coins changing hands, hammering while things go up, a chime when they are done, a
-//             doorbell for a new neighbour, a fanfare and cheering for a grand opening, a sting for a
-//             troublemaker, car engines and the odd bray, pops and booms. Quieter the further from
+//             doorbell for a new neighbour, a fanfare and cheering for a grand opening, car engines
+//             and the odd bray, pops and booms. Quieter the further from
 //             the camera.
 //   voices    speech as cheerful gibberish blips, each character its own pitch, also quieter with
 //             distance. A bus of their own at exactly the effects' level (FK-162), so the effects
@@ -43,7 +43,6 @@ export interface AudioHandles {
   fanfare(): void;
   /** Wren's bone whistle (FK-126, FK-026): three breathy notes, red's call to her fire. */
   whistle(): void;
-  sting(): void;
   boom(at?: { x: number; z: number }): void;
   pew(at?: { x: number; z: number }): void;
   bonk(at?: { x: number; z: number }): void;
@@ -430,11 +429,6 @@ function town(ctx: AudioContext | OfflineAudioContext, initial: AudioLevels, opt
         hiss(at, d, { freq: NOTE(81 + s), q: 6, gain: 0.02, attack: 0.03 });
       });
     },
-    sting() {
-      if (!running() || !gap('sting', 4000)) return;
-      const t = when();
-      [7, 6, 5, 4].forEach((s, i) => tone(NOTE(55 + s), t + i * 0.22, i === 3 ? 0.7 : 0.2, { type: 'square', gain: 0.04, attack: 0.01, glideTo: i === 3 ? NOTE(55 + s) * 0.9 : undefined }));
-    },
     boom(at) {
       const v = near(at);
       if (!running() || v < 0.05) return;
@@ -540,7 +534,6 @@ const placed = (name: string, play: (a: AudioHandles, at?: At) => void): Cue => 
 export const CUES: readonly Cue[] = [
   { name: 'doorbell', bus: 'sfx', placed: false, play: (a) => a.doorbell() },
   { name: 'fanfare', bus: 'sfx', placed: false, play: (a) => a.fanfare() },
-  { name: 'sting', bus: 'sfx', placed: false, play: (a) => a.sting() },
   { name: 'whistle', bus: 'sfx', placed: false, play: (a) => a.whistle() },
   placed('built', (a, at) => a.built(at)),
   placed('hammer', (a, at) => a.hammer(at)),
@@ -564,5 +557,5 @@ export const CUES: readonly Cue[] = [
 /** No sound at all (switched off, or no Web Audio). */
 function silent(): AudioHandles {
   const nothing = () => {};
-  return { on: false, burst: nothing, play: nothing, listen: nothing, levels: nothing, speech: nothing, coins: nothing, hammer: nothing, built: nothing, doorbell: nothing, fanfare: nothing, whistle: nothing, sting: nothing, boom: nothing, pew: nothing, bonk: nothing, thud: nothing, bray: nothing, beds: nothing, ahead: nothing };
+  return { on: false, burst: nothing, play: nothing, listen: nothing, levels: nothing, speech: nothing, coins: nothing, hammer: nothing, built: nothing, doorbell: nothing, fanfare: nothing, whistle: nothing, boom: nothing, pew: nothing, bonk: nothing, thud: nothing, bray: nothing, beds: nothing, ahead: nothing };
 }

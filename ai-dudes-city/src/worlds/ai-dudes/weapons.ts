@@ -8,9 +8,9 @@
 import type { Weapon } from '../../shared/dudesTypes';
 import type { GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import { abilitiesOf } from './blueprint';
-import { knockOut, knockOutNpc, knockedOut, stagger } from './combat';
+import { knockOut, knockedOut, stagger } from './combat';
 import { breakable, damageBuild, ruined, type Attacker } from './damage';
-import { nudge } from './events';
+import { nudge } from './state';
 import { addEffect } from './sim';
 import type { Dude, DudesState } from './state';
 
@@ -83,7 +83,7 @@ function passes(a: GroundPoint, b: GroundPoint, p: GroundPoint, r: number): numb
   return Math.hypot(a.x + dx * t - p.x, a.z + dz * t - p.z) <= r ? t : undefined;
 }
 
-type Hit = { t: number; object?: SafehouseObject; dude?: Dude; npc?: NonNullable<DudesState['npcs']>[number] };
+type Hit = { t: number; object?: SafehouseObject; dude?: Dude };
 
 /**
  * Fire. `aim` is where they clicked (a point on the ground), or straight ahead when absent. Returns
@@ -118,11 +118,6 @@ export function fire(state: DudesState, s: Shooter, gun: Gun, aim: GroundPoint |
     const t = passes(a, b, d.position, 0.6);
     if (t !== undefined) hits.push({ t, dude: d });
   }
-  for (const n of state.npcs ?? []) {
-    if (n.ko && n.ko > now) continue;
-    const t = passes(a, b, n.position, 0.6);
-    if (t !== undefined) hits.push({ t, npc: n });
-  }
   const first = hits.sort((x, y) => x.t - y.t)[0];
   const t = first?.t ?? 1;
   const to = { x: a.x + (b.x - a.x) * t, z: a.z + (b.z - a.z) * t };
@@ -140,7 +135,7 @@ export function fire(state: DudesState, s: Shooter, gun: Gun, aim: GroundPoint |
         told.set(s.id, now + ZAP_NUDGE_MS);
         nudge(state, first.dude, `${s.name} zapped you with a blaster`, now);
       }
-    } else if (first?.npc) stagger(first.npc, from, now);
+    }
     return true;
   }
   // A rocket or a shell: it flies there and goes off.
@@ -161,7 +156,6 @@ export function blast(state: DudesState, s: Shooter, to: GroundPoint, damage: nu
   }
   for (const d of state.dudes)
     if (d.id !== s.id && !d.hidden && !(s.vehicle && d.riding === s.vehicle.id) && Math.hypot(d.position.x - to.x, d.position.z - to.z) <= radius) zap(state, s, d, how, now);
-  if (s.dude) for (const n of state.npcs ?? []) if (Math.hypot(n.position.x - to.x, n.position.z - to.z) <= radius) knockOutNpc(state, n, s.dude, how, now);
 }
 
 /** A person hit: flat on their back a few seconds, and told who did it. */

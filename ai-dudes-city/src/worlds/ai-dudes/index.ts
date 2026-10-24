@@ -81,10 +81,9 @@ import { altitudeOf, flies, rideable, setAltitude, tickMovers } from './movers';
 import { armedBuild, fire, ram } from './weapons';
 import { DAMAGE, heal, ruined } from './damage';
 import { WEAPONS, type Weapon } from '../../shared/dudesTypes';
-import { tickDamage } from './damage';
+import { damageOf, restore, tickDamage } from './damage';
 import { PLAYER, allowedStep, isPiloted, pilot, pilots, solidStep, stampOf, stepped, trailSpeed } from './players';
 import { BUS_STOP, CITY, NEEDS, SQUARE, VENUES, WONDER, allPlots, moodOf, plotById, venueKindOf, type Need, type VenueKind } from '../../shared/city';
-import { damageOf, happeningView, nudge, restore, startHappening, tickEvents } from './events';
 import { knockedOut, runOver, startAttack } from './combat';
 import { idleHook, spokeTo } from './talk';
 import { applyReading, backfill, chatFromLog, due, fixtureListener, listen, listenerInput, listenerOf, REFUSAL, wishesMarkdown, wishViews, type ListenerFn } from './listener';
@@ -96,6 +95,7 @@ import {
   dropBadStory,
   freshState,
   nextId,
+  nudge,
   pushFeed,
   pushLine,
   resetState,
@@ -707,11 +707,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         if (other) {
           startAttack(state, dude, 'dude', other.id, action.with, now);
           noteTie(state, dude.id, other.id, 'hit', now);
-          return undefined;
-        }
-        const npc = matchName(action.target, state.npcs ?? [], (n) => n.name);
-        if (npc) {
-          startAttack(state, dude, 'npc', npc.id, action.with, now);
           return undefined;
         }
         const build = matchName(action.target, visible, (o) => o.blueprint.name);
@@ -1612,24 +1607,10 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       objects: state.objects.map(viewOf),
       dudes: [
         ...shown.map((d) => dudeView(state, d, now)),
-        ...(state.npcs ?? []).map(
-          (n): DudeView => ({
-            id: n.id,
-            name: n.name,
-            npc: true,
-            position: n.position,
-            facing: n.facing,
-            activity: n.path.length || n.towing ? 'walking' : n.emote ? 'emote' : 'idle',
-            look: dressed(state, n.look, { id: n.id }),
-            ...(n.emote ? { emote: n.emote } : {}),
-            ...(n.say ? { say: n.say } : {}),
-            ...(n.ko && n.ko > now ? { ko: n.ko } : {}),
-          }),
-        ),
         ...townieViews(state),
         ...mayorDudeView(state, now),
       ],
-      ...((townBanner(state, now) ?? happeningView(state)) ? { happening: townBanner(state, now) ?? happeningView(state) } : {}),
+      ...(townBanner(state, now) ? { happening: townBanner(state, now) } : {}),
       ...(scoreRows(state).length ? { scores: scoreRows(state) } : {}),
       ...(wishViews(state.listener, 3).length ? { wishes: wishViews(state.listener, 3) } : {}),
       feed: state.feed.slice(-8),
@@ -1645,7 +1626,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         thinking: agentCalls.size,
         designing: designCalls.size,
         idleLife: state.ai.idleLife !== false,
-        events: state.ai.events !== false,
         townLife: state.ai.townLife !== false,
         caravan: state.ai.caravan !== false,
         themes: state.ai.themes !== false,
@@ -1763,18 +1743,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       run: (ctx) => {
         ctx.state.feed = [];
         ctx.log('feed cleared (admin)', 'alert');
-      },
-    },
-    {
-      id: 'event-now',
-      label: 'Send a troublemaker now',
-      input: { kind: 'text', label: 'painter | squasher | tow | thief | mayor | random', maxLength: 10 },
-      run: (ctx, value) => {
-        const v = String(value).trim().toLowerCase();
-        const kind = (['painter', 'squasher', 'tow', 'thief', 'mayor'] as const).find((k) => k === v);
-        const why = startHappening(ctx.state, ctx.now, ctx.rng, kind);
-        if (why) return refuse(ctx, `No troublemaker sent: ${why}`);
-        ctx.log(`troublemaker sent in: ${ctx.state.happening?.title} (admin)`);
       },
     },
     {
@@ -1977,8 +1945,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         ctx.log('age themes on (admin)');
       },
     },
-    { id: 'events-off', label: 'Stop troublemakers', run: (ctx) => { ctx.state.ai.events = false; ctx.log('troublemakers stopped (admin)'); } },
-    { id: 'events-on', label: 'Let troublemakers come', run: (ctx) => { ctx.state.ai.events = true; ctx.log('troublemakers on (admin)'); } },
     { id: 'idle-off', label: 'Stop idle turns (quiet characters stay quiet)', run: (ctx) => { ctx.state.ai.idleLife = false; ctx.log('idle turns off (admin)'); } },
     { id: 'idle-on', label: 'Idle turns on (one quiet character every ~40 s)', run: (ctx) => { ctx.state.ai.idleLife = true; ctx.log('idle turns on (admin)'); } },
     {
@@ -2095,7 +2061,10 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       cityOf(ctx.state);
       // Tips from before the town (the forest walk, the Mayor as a troublemaker) mislead every agent: gone.
       const l = ctx.state.listener;
-      if (l) l.tips = l.tips.filter((t) => !/\b(river|boss|forest|trail|journey|glade)\b|troublemaker npcs?\b|like the mayor|mayor is a troublemaker|only appears? every/i.test(t));
+      if (l) l.tips = l.tips.filter((t) => !/\b(river|boss|forest|trail|journey|glade)\b|troublemakers?\b|like the mayor|mayor is a troublemaker|only appears? every/i.test(t));
+      // The troublemakers are gone: whatever they repainted or squashed goes back as it was.
+      const unpainted = ctx.state.objects.filter((o) => /^(painted|squashed)$/.test(ctx.state.vandalised?.[o.id]?.kind ?? '') && restore(ctx.state, o)).length;
+      if (unpainted) ctx.log(`troublemakers gone: put back ${unpainted} build${unpainted === 1 ? '' : 's'} they had repainted or squashed`);
       // Personas, titles and memories written before the plain-voice filter (voice.ts) are cleaned once.
       const cleaned = ctx.state.dudes.filter((d) => cleanVoiceOf(d)).length;
       if (cleaned) ctx.log(`plain voice: cleaned ${cleaned} character${cleaned === 1 ? '' : 's'}`);
@@ -2151,7 +2120,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       tickMovers(ctx.state, dt, now, ctx.rng);
       tickDamage(ctx.state, now);
       tickDudes(ctx.state, dt, ctx.now, ctx.rng);
-      tickEvents(ctx.state, dt, ctx.now, ctx.rng);
       idleLife(ctx);
       runListener(ctx);
       replayQueued(ctx);
@@ -2202,7 +2170,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         })),
       objects: state.objects.map((o) => ({ id: o.id, name: o.blueprint.name, createdBy: o.createdBy, ...(damageOf(state, o.id) ? { damage: damageOf(state, o.id) } : {}) })),
       town: townView(state, now),
-      ...(happeningView(state) ? { happening: happeningView(state) } : {}),
       listener: {
         enabled: state.listener?.enabled !== false,
         runs: state.listener?.runs ?? 0,
@@ -2213,7 +2180,6 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         wishes: (state.listener?.wishes ?? []).map((w) => ({ id: w.id, wish: w.wish, count: w.count, status: w.status, askers: w.askers, examples: w.examples, how: w.how })),
         proposals: opts.readProposals?.() ?? [],
       },
-      ...(state.nextHappeningAt && !state.happening ? { nextHappeningInS: Math.max(0, Math.round((state.nextHappeningAt - now) / 1000)) } : {}),
       jobs: state.jobs.map((j) => ({
         id: j.id,
         dude: state.dudes.find((d) => d.id === j.dudeId)?.name ?? j.dudeId,

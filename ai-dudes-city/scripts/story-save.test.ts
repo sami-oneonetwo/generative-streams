@@ -304,7 +304,6 @@ const HATS = ['none', 'cap', 'beanie', 'tophat', 'cowboy', 'crown', 'bucket', 'h
 const ACCESSORIES = ['none', 'backpack', 'cape', 'scarf', 'glasses', 'toolbelt'];
 const LINE_FROM = ['chatter', 'dude', 'world'];
 const VENUES = ['home', 'cafe', 'restaurant', 'bakery', 'bar', 'club', 'shop', 'market', 'workshop', 'apartments', 'gym', 'park', 'library', 'florist', 'venue', 'decor'];
-const NPC_KINDS = ['painter', 'squasher', 'tow', 'thief', 'mayor'];
 const SIDES = ['red', 'gold'];
 const BLUEPRINT: Record<string, string[]> = {
   'parts[].shape': ['box', 'cylinder', 'sphere', 'cone'],
@@ -348,14 +347,9 @@ const FROZEN: Record<string, string[]> = {
   'effects[].kind': ['shake', 'shot', 'throw', 'bomb', 'boom', 'ko', 'splash', 'slam', 'coins', 'pop', 'burst', 'shell', 'hit', 'collapse'],
   'listener.buffer[].kind': ['chat', 'failed', 'refused'],
   'listener.wishes[].status': ['works-now', 'needs-feature', 'blocked'],
-  'npcs[].kind': NPC_KINDS,
-  'npcs[].look.hat': HATS,
-  'npcs[].look.accessory': ACCESSORIES,
-  'npcs[].emote.pose': EMOTES,
-  'npcs[].loot[].hat': HATS,
-  'happening.kind': NPC_KINDS,
+  // (npcs, happening and hatPiles went with the troublemakers: a whole optional field dropped is safe both
+  // ways, as the loader strips keys it does not know. 'painted' and 'squashed' stay: live saves have them.)
   'vandalised{}.kind': ['painted', 'squashed', 'wrecked', 'damaged'],
-  'hatPiles{}{}.hat': HATS,
   'city.project.status': ['designing', 'gathering', 'done', 'failed'],
   'city.townies[].look.hat': HATS,
   'city.townies[].look.accessory': ACCESSORIES,

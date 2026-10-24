@@ -610,7 +610,7 @@ export interface OverlayOptions {
   hovered?: string;
   selected?: string;
   uiScale: number;
-  /** A screen rect the HUD has taken (the troublemaker banner): bubbles drop below it, ordinary tags under it hide. */
+  /** A screen rect the HUD has taken (the banner): bubbles drop below it, ordinary tags under it hide. */
   reserve?: { l: number; t: number; r: number; b: number };
 }
 export interface DudesHandles {
@@ -926,7 +926,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     // Aboard something (a car, a ship, the donkey), the vehicle moves, not the legs: never a walk.
     const aboard = !!v.riding || activity === 'using';
     if (moving && !aboard) {
-      // Stride and lean grow from a stroll (1.3 m/s) through a walk (2.4) to a run (4.2, the troublemakers).
+      // Stride and lean grow from a stroll (1.3 m/s) through a walk (2.4) to a run (4.2).
       const run = clamp((f.speed - 2.4) / 1.8, 0, 1);
       const g = reduced ? 0 : Math.sin(f.gait);
       T[P_LEGL_X] = (0.55 + 0.3 * run) * g;
@@ -1434,7 +1434,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
         b.inst.setColorAt(i, col.copy(part.color).multiplyScalar(f.dim));
         b.owners[i] = f.id;
       }
-      if (v.mood !== undefined && !v.npc && !v.resident && f.poseName !== 'ko') {
+      if (v.mood !== undefined && !v.resident && f.poseName !== 'ko') {
         const spin = reduced ? 0 : now * 0.0018 + f.phase;
         starScratch.position.set(f.anchor.x, f.anchor.y + 0.42 + (reduced ? 0 : Math.sin(spin * 1.3) * 0.04), f.anchor.z);
         starScratch.rotation.set(0, spin, 0);
@@ -1508,14 +1508,14 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       const spokeRecently = sayActive || (v.heardAt !== undefined && serverNow - v.heardAt < TAG_RECENT_MS);
       const pinned = f.id === opts.hovered || f.id === opts.selected;
       // Recency of speech ranks the tags; the hovered or selected one always wins.
-      // Troublemakers always keep their tag; so do the hovered and the selected.
-      const prio = pinned || v.npc || v.mayor || v.traveller
+      // The Mayor and travellers always keep their tag; so do the hovered and the selected.
+      const prio = pinned || v.mayor || v.traveller
         ? Infinity
         : Math.max(v.heardAt ?? 0, sayActive ? serverNow : 0) + (v.thinking ? 2 : 0) + (v.job ? 1 : 0);
       const tagW = Math.max((f.nameLine.length + f.badgeChars + (f.moodKey ? 2 : 0) + (f.side ? SIDE_ICON_CHARS : 0) + (v.queued && !v.thinking ? 2 : 0)) * metrics.char, f.jobLine.length * metrics.jobChar) + metrics.pad;
       const tagH = metrics.height + (f.jobLine ? metrics.jobHeight : 0);
       const busy = !!v.thinking || !!v.job || !!v.use || !!v.attacking || v.activity === 'using' || (v.ko ?? 0) > serverNow;
-      const wanted = on && (!v.away || pinned || spokeRecently || busy || !!v.npc || !!v.mayor || !!v.traveller);
+      const wanted = on && (!v.away || pinned || spokeRecently || busy || !!v.mayor || !!v.traveller);
       items.push({ f, rx, ry, on, prio, tagW, tagH, tagShown: wanted });
     }
     // Tags: greedy, most recent speaker first; one that would overlap an accepted tag is hidden.
@@ -1539,7 +1539,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     // Bubbles: never hidden for crowding, but nudged up above one already placed. Placed in the
     // same order (most recent first), then any other dude's tag a bubble covers is dropped.
     const bubbles: (Rect & { owner: Figure })[] = [];
-    // Only the newest few lines are drawn in full (the Mayor, travellers, troublemakers and the
+    // Only the newest few lines are drawn in full (the Mayor, travellers and the
     // hovered or selected one always are); the rest shrink to a dot until they finish.
     const speaking = (it: Item) => it.on && !!it.f.sayText && !!it.f.view.say && it.f.view.say.until > serverNow;
     const lines = items.filter(speaking).sort((a, b) => Number(b.prio === Infinity) - Number(a.prio === Infinity) || (b.f.sayAt ?? 0) - (a.f.sayAt ?? 0));
@@ -1655,15 +1655,13 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
           f.lookKey = key;
         }
         // "dave · the pigeon whisperer", and under it what it is working on.
-        // A troublemaker's tag is just the name, in its own colours.
-        const title = v.npc ? undefined : v.title;
+        const title = v.title;
         const nameLine = title ? `${v.name} · ${title}` : v.name;
         if (nameLine !== f.nameLine) {
           f.nameLine = nameLine;
           f.tagName.textContent = v.name;
           f.tagTitle.textContent = title ? ` · ${title}` : '';
         }
-        if (f.tag.classList.contains('npc') !== !!v.npc) f.tag.classList.toggle('npc', !!v.npc);
         if (f.tag.classList.contains('resident') !== !!v.resident) f.tag.classList.toggle('resident', !!v.resident);
         if (f.tag.classList.contains('mayor') !== !!v.mayor) f.tag.classList.toggle('mayor', !!v.mayor);
         // The caravan's travellers stand out from the town's residents; their leader carries a "!" while asks are open.
@@ -1677,7 +1675,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
           f.tagSide.hidden = !side;
         }
         // The mood diamond, in the tag too: the 3D one over the head is hidden behind it.
-        const moodKey = v.mood === undefined || v.npc || v.resident ? '' : v.mood >= 65 ? 'good' : v.mood >= 40 ? 'ok' : 'low';
+        const moodKey = v.mood === undefined || v.resident ? '' : v.mood >= 65 ? 'good' : v.mood >= 40 ? 'ok' : 'low';
         if (moodKey !== f.moodKey) {
           f.moodKey = moodKey;
           f.tagMood.hidden = !moodKey;

@@ -66,7 +66,7 @@ const agent: AgentFn = async (turn) => {
   } else {
     const c = turn.content;
     const talk = /said to you/.test(c);
-    kind = talk ? 'talk' : /troublemaker|painted|squashed|towed|stole|decree|fine|knocked|hit you|attacked/i.test(c) ? 'nudge' : 'idle';
+    kind = talk ? 'talk' : /knocked|hit you|attacked|shoved|zapped|blew up/i.test(c) ? 'nudge' : 'idle';
     const actions: AgentAction[] = [];
     // An unprompted turn may work a shift, help with the project, or chip in a little (never build or fight).
     if (!talk && /community project|Wonder|chip in|lend a hand/i.test(c) && rnd() < 0.35) actions.push(rnd() < 0.5 ? { do: 'help' } : { do: 'contribute', coins: 10 });
@@ -82,7 +82,7 @@ const design: DesignFn = async (input, signal) => {
 };
 
 // ---- the world ----------------------------------------------------------------------------------------
-const { world, ctx, h, say } = harness({ agent, design, events: true, idleLife: true, town: true, agentLimit: 6, designLimit: 3, agentPerHour: 1200, designPerHour: 90, turnGapMs: 2500 });
+const { world, ctx, h, say } = harness({ agent, design, idleLife: true, town: true, agentLimit: 6, designLimit: 3, agentPerHour: 1200, designPerHour: 90, turnGapMs: 2500 });
 H = h;
 h.state.ai.enforced = true;
 const START = h.now;
@@ -178,11 +178,11 @@ function hookFeed() {
 }
 const townieSays: { at: number; who: string; text: string }[] = [];
 const seenSay = new WeakSet<object>();
-let prevHappening: string | undefined, prevParty: string | undefined, prevScene: string | undefined, prevCv = '', prevAge = 0;
+let prevParty: string | undefined, prevScene: string | undefined, prevCv = '', prevAge = 0;
 const seenObj = new Map<string, number>();
 const koSeen = new WeakMap<object, number>();
 const attackSeen = new WeakMap<object, object>();
-type Sample = { m: number; dudes: number; awake: number; away: number; hidden: number; bridge: number; labour: number; visiting: number; coins: number[]; total: number; jobsWaiting: number; designing: number; inbox: number; agentBucket?: number; designBucket?: number; npcs: number; townies: number };
+type Sample = { m: number; dudes: number; awake: number; away: number; hidden: number; bridge: number; labour: number; visiting: number; coins: number[]; total: number; jobsWaiting: number; designing: number; inbox: number; agentBucket?: number; designBucket?: number; townies: number };
 const samples: Sample[] = [];
 const caravanLog: { at: number; age: number; what: string; asks?: string }[] = [];
 let lastAnnounced = 0;
@@ -192,9 +192,6 @@ function observe() {
   const st = h.state,
     c = cityOf(st),
     now = h.now;
-  const hp = st.happening ? `${st.happening.kind}:${st.happening.npcId}` : undefined;
-  if (hp && hp !== prevHappening) ev('troublemaker', st.happening!.kind);
-  prevHappening = hp;
   const party = c.party ? `${c.party.title}@${c.party.until}` : undefined;
   if (party && party !== prevParty) ev(/^GRAND OPENING/.test(c.party!.title) ? 'opening' : 'party', c.party!.title);
   prevParty = party;
@@ -255,7 +252,6 @@ function sample() {
     designing: st.jobs.filter((j) => j.status === 'designing').length,
     inbox: st.dudes.reduce((a, d) => a + d.inbox.length, 0),
     ...(b ? { agentBucket: Math.round(b.agent), designBucket: Math.round(b.design) } : {}),
-    npcs: st.npcs?.length ?? 0,
     townies: cityOf(st).townies.length,
   });
 }
@@ -329,13 +325,12 @@ const FEED_CATS: [string, RegExp][] = [
   ['caravan/story', /of the |bridge|caravan|camp|Wonder|is finished|settled in town|pleased|make do|drawn up|girl at the river|THE WONDER/],
   ['project', /COMMUNITY PROJECT|proposed a community project|toward|is open!|shelved|fell through/],
   ['combat/damage', /brought down|put back up|knocked|punched|kicked|shot|bomb|shoved|threw/],
-  ['troublemaker', /Ug|Grak|Dragger|Bramm|Daubus|River Bull|Barge|Raider|Tax Collector|Gilbert|Squatsalot|Reeve|Cutpurse|Sheriff|Whitewash|Steamroller|Bailiff|Artful|Pemberton|Gary|Big Steve|Tow Guy|Sticky|Councillor/],
   ['social', /gave|invited|share/],
 ];
 const catOf = (t: string) => FEED_CATS.find(([, re]) => re.test(t))?.[0] ?? 'other';
 
 // Noteworthy-on-screen moments for dead-air: strict = story/trouble/party/build/combat/talk; loose = + any feed line + agent bubbles.
-const strictKinds = new Set(['troublemaker', 'opening', 'party', 'scene', 'build-stands', 'project-stands', 'ko', 'attack', 'ask-progress', 'age']);
+const strictKinds = new Set(['opening', 'party', 'scene', 'build-stands', 'project-stands', 'ko', 'attack', 'ask-progress', 'age']);
 const strictTimes = [
   ...events.filter((e) => strictKinds.has(e.kind)).map((e) => e.at),
   ...turnLog.filter((t) => t.kind === 'talk').map((t) => t.at),
@@ -372,7 +367,6 @@ table(
     ['first chat line', f1(min(msgTimes[0] ?? NaN))],
     ['first feed line', firstFeed ? f1(min(firstFeed.at)) + ` (${firstFeed.text.slice(0, 60)})` : '-'],
     ['first build stands', f1(firstOf('build-stands') ? min(firstOf('build-stands')!.at) : NaN)],
-    ['first troublemaker', f1(firstOf('troublemaker') ? min(firstOf('troublemaker')!.at) : NaN)],
     ['first party', f1(firstOf('party') ? min(firstOf('party')!.at) : NaN)],
     ['first dude-to-dude talk', f1(turnLog.find((t) => t.kind === 'talk') ? min(turnLog.find((t) => t.kind === 'talk')!.at) : NaN)],
     ['first strict-noteworthy', f1(min(Math.min(...strictTimes)))],
@@ -398,12 +392,9 @@ table(['minutes', 'chat lines', 'strict moments', 'longest strict gap (s)', 'avg
 console.log('### Event counts');
 const count = (k: string) => events.filter((e) => e.kind === k).length;
 const perHour = (n: number) => f1((n / MINUTES) * 60);
-const tmKinds: Record<string, number> = {};
-for (const e of events.filter((e) => e.kind === 'troublemaker')) tmKinds[e.text!] = (tmKinds[e.text!] ?? 0) + 1;
 table(
   ['event', 'count', 'per hour'],
   [
-    ['troublemakers', `${count('troublemaker')} (${Object.entries(tmKinds).map(([k, v]) => `${k} ${v}`).join(', ')})`, perHour(count('troublemaker'))],
     ['parties (chat-thrown)', count('party'), perHour(count('party'))],
     ['grand openings', count('opening'), perHour(count('opening'))],
     ['scenes (opening/crossing/arrival/ageTurn)', `${count('scene')} (${events.filter((e) => e.kind === 'scene').map((e) => e.text).join(',')})`, perHour(count('scene'))],
@@ -467,9 +458,7 @@ table(
     ['crier lines', crier.length, uniq(crier), topDup(crier, 2).map(([k, v]) => `${v}× "${k.slice(0, 60)}"`).join('; ')],
   ],
 );
-const tmSeq = events.filter((e) => e.kind === 'troublemaker').map((e) => e.text).join(' ');
-console.log(`troublemaker sequence: ${tmSeq}`);
-console.log(`idle turns ${idleHooks}; troublemaker gaps (min): ${events.filter((e) => e.kind === 'troublemaker').map((e, i, a) => (i ? f1(min(e.at) - min(a[i - 1].at)) : f1(min(e.at)))).join(' ')}`);
+console.log(`idle turns ${idleHooks}`);
 console.log(`party times (min): ${events.filter((e) => e.kind === 'party' || e.kind === 'opening').map((e) => `${f1(min(e.at))}${e.kind === 'opening' ? 'O' : ''}`).join(' ')}`);
 
 if (JSON_OUT) fs.writeFileSync(JSON_OUT, JSON.stringify({ N, MINUTES, SEED, events: events.map((e) => ({ ...e, m: min(e.at) })), feed: feedLines.map((f) => ({ m: min(f.at), text: f.text })), turns: turnLog.map((t) => ({ ...t, m: min(t.at) })), samples, caravanLog: caravanLog.map((c) => ({ ...c, m: min(c.at) })), townieSays: townieSays.map((t) => ({ ...t, m: min(t.at) })) }, null, 1));

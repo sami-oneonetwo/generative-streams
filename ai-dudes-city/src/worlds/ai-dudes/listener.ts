@@ -100,8 +100,8 @@ What the game can do right now (every character's agent has these actions; what 
 - Visit places (food, rest, fun, company), work a shift, invite someone, give coins, propose / contribute to / help build a community project.
 - Bits: act out anything no action covers, with a caption, up to four poses with lines, a prop (sign with words, drink, flowers, megaphone), a burst (sparkles, smoke, confetti, hearts), a real teleport, or putting a hat on someone (the Mayor included). Petitions, protests, cults, pranks, proposals all go here.
 - The Mayor is a target like anyone: walk to him, greet him, take a cartoon swing at him (he stumbles), give him a hat.
-- Explore, greet (high five, handshake, hug, wave, bow), follow, stop, emote (${EMOTES.join(', ')}), change look (hats: ${HATS.join(', ')}; accessories: ${ACCESSORIES.join(', ')}; colours; height; build), use any build (${USE_HOWS.join(', ')}), attack a character, a troublemaker or a build (${ATTACKS.join(', ')}; knocked-out characters get back up; bombs wreck builds, fixable).
-- The town has its own residents who use places and gossip; troublemakers come by now and then (a painter, a squasher, a tow truck guy, a hat thief, Councillor Pemberton with decrees).
+- Explore, greet (high five, handshake, hug, wave, bow), follow, stop, emote (${EMOTES.join(', ')}), change look (hats: ${HATS.join(', ')}; accessories: ${ACCESSORIES.join(', ')}; colours; height; build), use any build (${USE_HOWS.join(', ')}), attack a character or a build (${ATTACKS.join(', ')}; knocked-out characters get back up; bombs wreck builds, fixable).
+- The town has its own residents who use places and gossip.
 Re-check every current wish against this list each reading and correct any status that has changed: something that needed a feature may work now.
 
 Content policy for wishes: cartoon action violence is fine and should be enabled (guns, bombs, explosions, fights, knocking out or "killing" characters in the game). Mark "blocked" anything involving gore or blood, torture, racism, slurs or hate symbols, sexual content, harassment of real people outside the game, real-world weapon or explosive instructions, self-harm.

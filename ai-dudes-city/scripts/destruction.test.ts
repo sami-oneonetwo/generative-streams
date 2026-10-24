@@ -6,7 +6,7 @@ import { test } from 'node:test';
 import { harness } from './harness';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
 import { DAMAGE, damageBuild, hpOf, maxHpOf } from '../src/worlds/ai-dudes/damage';
-import { restore } from '../src/worlds/ai-dudes/events';
+import { restore } from '../src/worlds/ai-dudes/damage';
 import { stateSchema } from '../src/worlds/ai-dudes/state';
 import type { AgentReply } from '../src/worlds/ai-dudes/agent';
 

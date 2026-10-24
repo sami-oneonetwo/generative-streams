@@ -108,7 +108,7 @@ export function checkBoard(b: BoardView | undefined): BoardView | undefined {
 /** The demo's two jobs: the head's Folly a third of the way up, Wren's bridge at 3 of 8. */
 export const DEMO_BOARD = { gold: { word: 'BIG HUT', pct: 35 }, red: { word: 'BRIDGE', have: 3, need: 8 } } as const;
 
-const isChatter = (d: DudeView) => !d.npc && !d.resident && !d.traveller && !d.mayor;
+const isChatter = (d: DudeView) => !d.resident && !d.traveller && !d.mayor;
 const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 /** A play URL as people type it: no scheme, no trailing slash. */
 export const shortUrl = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -201,7 +201,7 @@ export function liftUnder(top: number, half: number): number {
 // --- on the page ----------------------------------------------------------------------------------
 
 export type Rect = { l: number; t: number; r: number; b: number };
-/** The HUD's rects at the top (the troublemaker banner, the Board) as the one rect the tags keep out of. */
+/** The HUD's rects at the top (the banner, the Board) as the one rect the tags keep out of. */
 export function reserved(a?: Rect, b?: Rect): Rect | undefined {
   if (!a || !b) return a ?? b;
   return { l: Math.min(a.l, b.l), t: Math.min(a.t, b.t), r: Math.max(a.r, b.r), b: Math.max(a.b, b.b) };
@@ -382,7 +382,7 @@ export function createBoard(doc: Document = document, reduced = matchMedia('(pre
     if (goldN.textContent !== g) goldN.textContent = g;
     if (redN.textContent !== r) redN.textContent = r;
     setLine(clock.pick(board.ticker, now, board.now));
-    if (!measured) rect(); // so the troublemaker banner, measured next, already sits under the strip
+    if (!measured) rect(); // so the banner, measured next, already sits under the strip
   }
 
   function rect(): Rect | undefined {

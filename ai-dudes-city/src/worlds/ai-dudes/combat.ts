@@ -1,14 +1,13 @@
 // Cartoon violence, because chat asks for it more than anything: punch, kick, shoot, throw, bomb,
 // and running people over. Nobody bleeds and nobody stays down: a knocked-out character lies there
 // seeing stars for a few seconds and gets back up. Builds rattle when hit and blow apart in a bomb
-// (fixable, like a troublemaker's work). Troublemakers can be fought off. Zero AI: the agent picks a
+// (fixable). Zero AI: the agent picks a
 // target and a way, the app owns the ranges, the odds, the fuse and the blast.
 import type { AttackWith } from '../../shared/dudesTypes';
 import type { Blueprint, GroundPoint, SafehouseObject } from '../../shared/objectTypes';
-import { GROUND, clampToGround, walkableSegment } from './placement';
-import { addEffect, awake, endUse, face, shake, walkTo } from './sim';
-import { nudge } from './events';
-import { LIMITS, pushFeed, pushLine, type Dude, type DudesState, type Npc } from './state';
+import { clampToGround, walkableSegment } from './placement';
+import { addEffect, endUse, face, shake, walkTo } from './sim';
+import { LIMITS, nudge, pushFeed, pushLine, type Dude, type DudesState } from './state';
 import { leaveVisit } from './city';
 import { damageBuild } from './damage';
 import { WEAPON, armedBuild, blast, fire } from './weapons';
@@ -19,7 +18,6 @@ export const COMBAT = {
   koMs: 10_000,
   /** Back up after a knockout: nobody can knock them flat again for this long (no chain knockouts). */
   koGuardMs: 7000,
-  npcKoMs: 4000,
   fuseMs: 3000,
   blast: 3, // metres
   runFrom: 6, // a bomber runs this far from a lit bomb
@@ -39,25 +37,21 @@ export const knockedOut = (d: Dude, now: number) => !!d.ko && d.ko.until > now;
 const koGuard = new WeakMap<Dude, number>();
 export const koGuarded = (d: Dude, now: number) => (koGuard.get(d) ?? 0) > now;
 
-type Target = { kind: 'dude'; dude: Dude } | { kind: 'npc'; npc: Npc } | { kind: 'object'; object: SafehouseObject };
+type Target = { kind: 'dude'; dude: Dude } | { kind: 'object'; object: SafehouseObject };
 function find(state: DudesState, kind: 'dude' | 'npc' | 'object' | 'boss', id: string): Target | undefined {
-  if (kind === 'boss') return undefined;
+  if (kind === 'boss' || kind === 'npc') return undefined; // 'npc': an old save's troublemaker, long gone
   if (kind === 'dude') {
     const dude = state.dudes.find((d) => d.id === id);
     return dude ? { kind, dude } : undefined;
-  }
-  if (kind === 'npc') {
-    const npc = state.npcs?.find((n) => n.id === id);
-    return npc ? { kind, npc } : undefined;
   }
   const object = state.objects.find((o) => o.id === id);
   return object ? { kind, object } : undefined;
 }
 const where = (t: Target): GroundPoint =>
-  t.kind === 'dude' ? t.dude.position : t.kind === 'npc' ? t.npc.position : (t.object.driven?.at ?? t.object.position);
+  t.kind === 'dude' ? t.dude.position : (t.object.driven?.at ?? t.object.position);
 const reachOf = (t: Target): number =>
   t.kind === 'object' ? Math.max(t.object.footprint.width, t.object.footprint.depth) / 2 : 0;
-const nameOf = (t: Target): string => (t.kind === 'dude' ? t.dude.name : t.kind === 'npc' ? t.npc.name : t.object.blueprint.name);
+const nameOf = (t: Target): string => (t.kind === 'dude' ? t.dude.name : t.object.blueprint.name);
 
 function score(state: DudesState, id: string, field: 'kos' | 'downs'): void {
   state.scores ??= {};
@@ -88,30 +82,8 @@ export function knockOut(state: DudesState, victim: Dude, by: Dude | undefined, 
   }
 }
 
-/** A troublemaker who gets beaten gives up and leaves, dropping whatever they were carrying. */
-export function knockOutNpc(state: DudesState, npc: Npc, by: Dude, how: string, now: number): void {
-  if (npc.ko && npc.ko > now) return;
-  npc.ko = now + COMBAT.npcKoMs;
-  npc.path = [];
-  npc.emote = { pose: 'lie', until: npc.ko };
-  npc.say = { text: pick(['Alright! Alright! I am going.', 'Ow. Fine. You win.', 'This is not over.']), until: now + 5000 };
-  // Whatever was left of the plan is off: drop the loot, let go of a towed build, and go.
-  const leave = [...npc.plan].reverse().find((s) => s.do === 'leave') ?? { do: 'leave' as const, to: clampToGround({ x: GROUND.bounds.minX, z: npc.position.z }, 1) };
-  npc.plan = [{ do: 'wait', ms: COMBAT.npcKoMs }, ...(npc.loot?.length ? [{ do: 'drop-hats' as const }] : []), leave];
-  npc.towing = undefined;
-  if (npc.kind === 'mayor' && state.happening?.npcId === npc.id) state.happening = { ...state.happening, text: 'was chased off. No fines today.', until: undefined, decree: undefined };
-  score(state, by.id, 'kos');
-  addEffect(state, { kind: 'ko', dudeId: npc.id, at: now });
-  pushFeed(state, now, `${by.name} ${how} ${npc.name} and chased them off`);
-  pushLine(by.history, { from: 'world', text: `you ${how} ${npc.name} and chased them off the field`, at: now }, LIMITS.history);
-  for (const d of state.dudes) if (d !== by && awake(d, now) && dist(d.position, npc.position) < 15) d.emote = { pose: 'cheer', until: now + 3000 };
-}
-function pick<T>(list: T[]): T {
-  return list[Math.floor(Math.random() * list.length)];
-}
-
 /** Start an attack: resolve nothing here but the target; walk into range in `runAttack`. */
-export function startAttack(state: DudesState, dude: Dude, kind: 'dude' | 'npc' | 'object' | 'boss', targetId: string, how: AttackWith, now: number): void {
+export function startAttack(state: DudesState, dude: Dude, kind: 'dude' | 'object' | 'boss', targetId: string, how: AttackWith, now: number): void {
   // Aboard a tank, a shot (or a bomb, or a throw) is its cannon: they stay in it.
   if (!gunAboard(state, dude) || (how !== 'shoot' && how !== 'bomb' && how !== 'throw')) endUse(state, dude, now);
   dude.emote = undefined;
@@ -209,8 +181,8 @@ export function runAttack(state: DudesState, dude: Dude, now: number, rng: () =>
     dude.emote = { pose: 'push', until: now + 1200 };
     dude.attack = undefined;
     if (t.kind === 'object') return shake(state, t.object.id, now);
-    stagger(t.kind === 'dude' ? t.dude : t.npc, dude.position, now);
-    if (t.kind === 'dude') nudge(state, t.dude, `${dude.name} shoved you`, now);
+    stagger(t.dude, dude.position, now);
+    nudge(state, t.dude, `${dude.name} shoved you`, now);
     return;
   }
   dude.emote = { pose: a.with === 'kick' ? 'kick' : a.with === 'shoot' ? 'point' : 'punch', until: now + 1500 };
@@ -230,18 +202,16 @@ export function runAttack(state: DudesState, dude: Dude, now: number, rng: () =>
   dude.attack = undefined;
   if (!hit) {
     pushLine(dude.history, { from: 'world', text: `you ${a.with === 'shoot' ? 'shot at' : 'swung at'} ${nameOf(t)} and missed`, at: now }, LIMITS.history);
-    if (t.kind === 'dude') t.dude.emote = { pose: 'jump', until: now + 1200 };
+    t.dude.emote = { pose: 'jump', until: now + 1200 };
     return;
   }
-  if (t.kind === 'dude') knockOut(state, t.dude, dude, verb, now);
-  else knockOutNpc(state, t.npc, dude, verb, now);
+  knockOut(state, t.dude, dude, verb, now);
 }
 
-/** Everything within the blast: characters out, troublemakers off, builds blown apart (fixable). */
+/** Everything within the blast: characters out, builds blown apart (fixable). */
 function explode(state: DudesState, bomber: Dude, at: GroundPoint, now: number, rng: () => number): void {
   addEffect(state, { kind: 'boom', from: at, radius: COMBAT.blast, at: now });
   for (const d of state.dudes) if (!d.hidden && dist(d.position, at) <= COMBAT.blast) knockOut(state, d, bomber, 'blew up', now);
-  for (const n of state.npcs ?? []) if (dist(n.position, at) <= COMBAT.blast) knockOutNpc(state, n, bomber, 'blew up', now);
   // Builds: the nearest takes the full charge, the rest less the further off (damage.ts).
   blast(state, { id: bomber.id, name: bomber.name, position: bomber.position, facing: bomber.facing, dude: bomber }, at, COMBAT.buildDamage.bomb, COMBAT.blast, undefined, now, 'blew up');
   void rng;
@@ -258,7 +228,6 @@ function edgeOf(o: SafehouseObject, from: GroundPoint): GroundPoint {
 
 /** Blown apart: the parts tumble outward and down. The design before is kept so `fix` puts it back. */
 export function wreck(state: DudesState, o: SafehouseObject, by: Dude, rng: () => number, now: number): void {
-  if (state.hatPiles?.[o.id]) return;
   state.vandalised ??= {};
   state.vandalised[o.id] ??= { by: by.name, kind: 'wrecked', original: structuredClone(o.blueprint) };
   state.vandalised[o.id].kind = 'wrecked';
@@ -288,7 +257,6 @@ export function runOver(state: DudesState, driver: Dude, at: GroundPoint, now: n
   for (const d of state.dudes)
     if (d !== driver && !d.riding && !d.hidden && !d.y && !knockedOut(d, now) && dist(d.position, at) < reach)
       knockOut(state, d, driver, 'ran over', now);
-  for (const n of state.npcs ?? []) if (!(n.ko && n.ko > now) && dist(n.position, at) < reach) knockOutNpc(state, n, driver, 'ran over', now);
 }
 
 /** Knocked back a step from `from` (if there is ground there), stumbling. */

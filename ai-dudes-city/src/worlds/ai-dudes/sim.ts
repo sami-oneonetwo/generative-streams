@@ -10,9 +10,8 @@ import { LIMITS, nextId, pushFeed, pushLine, type Dude, type DudesState, type Jo
 import { storyOn } from './state'; // hook FK-023
 import { STORY_RECTS } from '../../shared/storyMap'; // hook FK-023
 import type { Emote, FieldEffect, UseHow } from '../../shared/dudesTypes';
-import { claimHat, restore } from './events';
 import { knockedOut, recover, runAttack, runOver } from './combat';
-import { renewed } from './damage';
+import { renewed, restore } from './damage';
 import { listen } from './listener';
 import { ageOf, autonomy, awayOuting, fitToLot, stampAge, freeSpaceOn, leaveVisit, lotsOf, runLabour, runVisit, socialised } from './city';
 import { fitBlueprint } from './blueprint';
@@ -766,14 +765,6 @@ export function addEffect(state: DudesState, effect: Omit<FieldEffect, 'id'>): v
 
 function beginDoing(state: DudesState, dude: Dude, o: SafehouseObject, use: UseTask, now: number): void {
   use.phase = 'doing';
-  // The hat pile hands back whatever of yours is in it, however you go about using it.
-  const claimed = claimHat(state, dude, o.id);
-  if (claimed) {
-    pushLine(dude.history, { from: 'world', text: claimed, at: now }, LIMITS.history);
-    dude.emote = { pose: claimed.startsWith('you got') ? 'cheer' : 'think', until: now + 3000 };
-    dude.use = undefined;
-    return;
-  }
   const at = o.driven?.at ?? o.position;
   const pose = POSE_FOR[use.how];
   const hold = USE.holdMs[use.how] ?? 8000;

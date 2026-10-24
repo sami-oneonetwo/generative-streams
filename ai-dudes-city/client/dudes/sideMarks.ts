@@ -46,8 +46,8 @@ const hashOf = (s: string): number => {
 };
 
 /** A chatter's fake side for the demo, steady per id: two in five gold, two in five red, one neutral. Never the town's own people. */
-export function demoSide(v: Pick<DudeView, 'id' | 'npc' | 'resident' | 'traveller' | 'mayor'>): Side | undefined {
-  if (v.npc || v.resident || v.traveller || v.mayor) return undefined;
+export function demoSide(v: Pick<DudeView, 'id' | 'resident' | 'traveller' | 'mayor'>): Side | undefined {
+  if (v.resident || v.traveller || v.mayor) return undefined;
   const k = hashOf(v.id) % 5;
   return k < 2 ? 'gold' : k < 4 ? 'red' : undefined;
 }

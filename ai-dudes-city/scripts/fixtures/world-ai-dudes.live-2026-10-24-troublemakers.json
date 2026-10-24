@@ -1,0 +1,7080 @@
+{
+  "version": 1,
+  "createdAt": 1792822379350,
+  "dudes": [
+    {
+      "id": "kick:28683256",
+      "name": "Sami",
+      "createdAt": 1792828172456,
+      "lastHeardAt": 1792874696726,
+      "lastTurnAt": 1792875416705,
+      "turns": 20,
+      "persona": "Sami is practical and straightforward, someone who gets things done without fuss. They arrived in Kettlewick ready to build, and waste no time on hesitation. They have a calm, grounded presence and a dry sense of humour.",
+      "title": "the settler",
+      "look": {
+        "skin": "#d8a07a",
+        "shirt": "#e2d8c3",
+        "pants": "#6a5a43",
+        "hair": "#d9c27a",
+        "hat": "none",
+        "hatColor": "#b04a7a",
+        "accessory": "none",
+        "accessoryColor": "#c4402f",
+        "height": 0.92,
+        "build": 1
+      },
+      "memory": [
+        "still need to build a roasting pit for the travellers",
+        "158 coins on hand",
+        "built a proper stone house on Alder Street",
+        "140 coins, need roasting pit for travellers next",
+        "Ochre Ug is the painter troublemaker",
+        "The Dragger tows builds away—just drove mine back",
+        "still need roasting pit for travellers to eat at",
+        "Dana offered to help fix the paint damage",
+        "still need roasting pit for travellers to eat at",
+        "town needs a bar—nobody's built one yet",
+        "Dana's reliable—offered to help with paint damage",
+        "roasting pit is the priority for travellers",
+        "need bar still, but roasting pit first",
+        "Elder Bramm decreed orange—Sami's ignoring it",
+        "Kev overheard wanting to build the roasting pit",
+        "Dana's reliable and close by"
+      ],
+      "history": [
+        {
+          "from": "dude",
+          "text": "The Dragger can haul stone around all it likes, but these huts stay put. Ochre Ug's paint job is another matter—that comes off.",
+          "at": 1792875090891
+        },
+        {
+          "from": "world",
+          "text": "test-dana (4 m away) said to you: \"I hear you, Sami. That's rough about the paint job. I'm still finding my way around, but I'd be happy to help fix it up if you need an extra hand.\". Answer them out loud, in a sentence or two.",
+          "at": 1792875093042
+        },
+        {
+          "from": "dude",
+          "text": "Thanks, Dana. I appreciate that. These huts are solid work, and they'll stay that way. If you want to lend a hand with the paint, I won't say no.",
+          "at": 1792875107931
+        },
+        {
+          "from": "world",
+          "text": "you had a rest at Sami’s Boulder Hearth",
+          "at": 1792875294637
+        },
+        {
+          "from": "dude",
+          "text": "No bar yet means people are drinking water and talking by the fire. That'll change soon enough. Thanks again for the offer, Dana—solid of you.",
+          "at": 1792875321668
+        },
+        {
+          "from": "world",
+          "text": "test-dana (1 m away) said to you: \"Happy to help, Sami. Ochre Ug's caused enough trouble around here. And you're right about the bar—seems like something people are starting to want. I'm still...\". Answer them out loud, in a sentence or two",
+          "at": 1792875324975
+        },
+        {
+          "from": "dude",
+          "text": "The town's coming together. We've got solid homes now, and people like you showing up matters. Once we get that roasting pit built for the travellers, we'll have fed them proper and shown we're ready for what comes next.",
+          "at": 1792875339359
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm has decreed that everyone must wear orange within three minutes, or be fined. Change your look if you want to comply.",
+          "at": 1792875413750
+        },
+        {
+          "from": "dude",
+          "text": "Elder Bramm can decree all he likes. I've got stone-grey skin and earth-brown clothes—that's what fits the work. Orange doesn't change what needs doing, and I'm not paying a fine for fashion.",
+          "at": 1792875416705
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792875421754
+        },
+        {
+          "from": "world",
+          "text": "you had a rest at Sami’s Boulder Hearth",
+          "at": 1792875559881
+        },
+        {
+          "from": "world",
+          "text": "The Dragger is towing your build Sami’s Boulder Hearth to the edge of the field. You can drive it back with \"use\".",
+          "at": 1792876328099
+        },
+        {
+          "from": "world",
+          "text": "The Dragger is towing your build Sami’s Stout Hide-Roof Hut to the edge of the field. You can drive it back with \"use\".",
+          "at": 1792876331602
+        },
+        {
+          "from": "world",
+          "text": "you had a rest at Sami’s Boulder Hearth",
+          "at": 1792876447740
+        }
+      ],
+      "inbox": [],
+      "overheard": [
+        {
+          "from": "test-dana",
+          "text": "Elder Bramm's decree, huh? Orange it is then. Can't have a fine hanging over my head when there's work to do for the travellers.",
+          "at": 1792875416642
+        },
+        {
+          "from": "test-kev",
+          "text": "Right, I'm building this roasting pit straight away—the travellers need it, and honestly, the whole town does too. This is what Kettlewick's been missing: a proper gathering spot where everyone can come together.",
+          "at": 1792875419189
+        }
+      ],
+      "position": {
+        "x": 53.4517666337749,
+        "z": 10.288905250273277
+      },
+      "facing": -1.422893275046696,
+      "path": [],
+      "idleUntil": 1792876850557.9438,
+      "coins": 151,
+      "needs": {
+        "hunger": 74.48714000030822,
+        "energy": 98.48814000000078,
+        "fun": 61.38456800004469,
+        "social": 84.73232266666568
+      },
+      "plot": "q1_0_1_1",
+      "nudges": [
+        "The Dragger is towing your build Sami’s Boulder Hearth to the edge of the field. You can drive it back with \"use\".",
+        "The Dragger is towing your build Sami’s Stout Hide-Roof Hut to the edge of the field. You can drive it back with \"use\"."
+      ]
+    },
+    {
+      "id": "dev:test-kev",
+      "name": "test-kev",
+      "createdAt": 1792829420874,
+      "lastHeardAt": 1792876348323,
+      "lastTurnAt": 1792876722590,
+      "turns": 20,
+      "persona": "Kev is easygoing and social, the kind of person who moves to a new place and immediately wants to meet the neighbours. They're curious about how things work and what people are building, and they're not one to sit idle for long. Quick to recognize what the community needs and eager to pitch in. They've got a warm, practical way of speaking and genuinely care about bringing people together.",
+      "title": "the friendly newcomer",
+      "look": {
+        "skin": "#f5d6c0",
+        "shirt": "#ff69b4",
+        "pants": "#2f3236",
+        "hair": "#5a3a22",
+        "hat": "none",
+        "hatColor": "#ff69b4",
+        "accessory": "backpack",
+        "accessoryColor": "#3f6fb0",
+        "height": 1,
+        "build": 1
+      },
+      "memory": [
+        "Just moved to Kettlewick on Elm Street",
+        "Neighbours: Dana on Alder Street, Nia on Elm Street, Sami nearby",
+        "Market stall is 48m away, has good food",
+        "Travellers stuck across broken bridge",
+        "Nia wants to build a bakery after eating",
+        "Dana is thinking about helping mend the bridge",
+        "The travellers need the bridge fixed to cross",
+        "Elder Bramm's decree: everyone wears orange for three minutes or gets fined—complying now",
+        "Building the roasting pit at 16 Elm Street to feed the travellers",
+        "This is what the caravan asked for: a place to eat",
+        "Built the roasting pit at 16 Elm Street for the travellers—this is what they asked for",
+        "Complied with Elder Bramm's orange decree; got praised for it",
+        "Just moved to Kettlewick on Elm Street",
+        "Neighbours: Dana on Alder Street, Nia on Elm Street, Sami nearby",
+        "Market stall is 80m away, has good food",
+        "Travellers stuck across broken bridge"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "your new look cost §10",
+          "at": 1792875419189
+        },
+        {
+          "from": "dude",
+          "text": "Right, I'm building this roasting pit straight away—the travellers need it, and honestly, the whole town does too. This is what Kettlewick's been missing: a proper gathering spot where everyone can come together.",
+          "at": 1792875419189
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm inspected the field and praised you for wearing orange.",
+          "at": 1792875631464
+        },
+        {
+          "from": "dude",
+          "text": "Right then, here it is—the roasting pit the travellers need! This is what brings everyone together, innit. Let's get some food on and show Ash and the others that Kettlewick's ready for them.",
+          "at": 1792875635710
+        },
+        {
+          "from": "chatter",
+          "text": "7",
+          "at": 1792876348323
+        },
+        {
+          "from": "world",
+          "text": "you finished building Seven Stones Roast Circle",
+          "at": 1792876419205
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792876464758
+        },
+        {
+          "from": "dude",
+          "text": "Nia, the roasting pit's done! Now we need to get some of the travellers over here to eat. That's what Ash asked for—let's make sure they know they're welcome.",
+          "at": 1792876550742
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm has decreed that everyone must wear pink within three minutes, or be fined. Change your look if you want to comply.",
+          "at": 1792876702542
+        },
+        {
+          "from": "world",
+          "text": "your new look cost §10",
+          "at": 1792876705075
+        },
+        {
+          "from": "dude",
+          "text": "Pink, is it? Right then, can't be having a fine on top of everything else. Let me sort this out quick.",
+          "at": 1792876705075
+        },
+        {
+          "from": "world",
+          "text": "test-nia (1 m away) said to you: \"Elder Bramm's decree, eh? Right then—can't have the town getting fined. Let me sort this out quick like Kev did.\". Answer them out loud, in a sentence or two.",
+          "at": 1792876708047
+        },
+        {
+          "from": "dude",
+          "text": "That's the spirit, Nia! We're all in this together, aren't we. Elder Bramm's not so bad once you know what he wants—just needs to see everyone pulling together. Come on, let's get those travellers fed and show the town what we're made of.",
+          "at": 1792876722590
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792876772130
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": 65.5,
+        "z": -1.7063361202591358
+      },
+      "facing": 0,
+      "path": [
+        {
+          "x": 65.5,
+          "z": 13.5
+        }
+      ],
+      "walkingFor": "wander",
+      "idleUntil": 1792876786041.9934,
+      "coins": 215,
+      "needs": {
+        "hunger": 51.322540000299675,
+        "energy": 70.39352400006959,
+        "fun": 70.78704799999393,
+        "social": 98.03558333333318
+      },
+      "plot": "q1_0_1_-1",
+      "side": "red",
+      "sideAge": 0,
+      "lookAt": {
+        "x": 69.5,
+        "z": 10.5
+      }
+    },
+    {
+      "id": "dev:test-dana",
+      "name": "test-dana",
+      "createdAt": 1792829421179,
+      "lastHeardAt": 1792876348522,
+      "lastTurnAt": 1792876706205,
+      "turns": 19,
+      "persona": "Dana is a friendly newcomer to Kettlewick, eager to meet neighbours and get a feel for the place. They're observant and curious, picking up on what the community needs rather than rushing ahead with plans.",
+      "title": "the new settler",
+      "look": {
+        "skin": "#f5d6c0",
+        "shirt": "#ff8c00",
+        "pants": "#3a4a5e",
+        "hair": "#5a3a22",
+        "hat": "none",
+        "hatColor": "#5a6b7a",
+        "accessory": "none",
+        "accessoryColor": "#e07a4a",
+        "height": 0.96,
+        "build": 1
+      },
+      "memory": [
+        "Ochre Ug the painter is the troublemaker to watch out for",
+        "town really needs a bar or brew pit for evening gathering",
+        "travellers want a roasting pit or fire pit built, and feeding people there",
+        "test-nia built a roasting pit at 16 Elm Street—this is what the travellers asked for",
+        "Elder Bramm praised Dana for wearing orange",
+        "test-nia built the roasting pit at 16 Elm Street—this is what Ash and the travellers asked for",
+        "still need to feed 2 travellers at the roasting pit to complete what the caravan wants",
+        "Elder Bramm praised Dana for wearing orange",
+        "town moving toward next age once travellers are fed",
+        "roasting pit at 16 Elm Street is done",
+        "need to work at the pit or invite travellers to eat there to complete the caravan's request",
+        "feeding 2 travellers will move the town forward",
+        "Elder Bramm's pink decree ended—wore orange instead, got praised",
+        "roasting pit at 16 Elm Street is finished and working",
+        "need to feed 2 travellers there to complete the caravan's request",
+        "working shifts at the pit is the way to help feed them"
+      ],
+      "history": [
+        {
+          "from": "dude",
+          "text": "Elder Bramm's decree, huh? Orange it is then. Can't have a fine hanging over my head when there's work to do for the travellers.",
+          "at": 1792875416642
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792875541862
+        },
+        {
+          "from": "world",
+          "text": "test-nia (2 m away) said to you: \"Dana! I've just got the roasting pit finished over at 16 Elm Street—come and see it when you get a moment. We're really coming together as a town, aren't we?\". Answer them out loud, in a sentence or two.",
+          "at": 1792875605744
+        },
+        {
+          "from": "dude",
+          "text": "That's brilliant, Nia! A roasting pit is exactly what we needed—the travellers will be pleased, and you're right, the whole town's been missing a proper gathering place. Let me head over and see what you've done.",
+          "at": 1792875607890
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm inspected the field and praised you for wearing orange.",
+          "at": 1792875631464
+        },
+        {
+          "from": "dude",
+          "text": "Nia, that roasting pit looks solid. The travellers are going to have a proper place to gather now, and that's half the battle won. You've done real work here.",
+          "at": 1792875634322
+        },
+        {
+          "from": "chatter",
+          "text": "7",
+          "at": 1792876348522
+        },
+        {
+          "from": "world",
+          "text": "test-nia (1 m away) said to you: \"Kev, thanks for the invite! I'm keen to hang out. Have you had a chance to see the roasting pit yet? And we still need to get a couple of the travellers over...\". Answer them out loud, in a sentence or two.",
+          "at": 1792876368953
+        },
+        {
+          "from": "dude",
+          "text": "Nia, that roasting pit looks solid. The travellers are going to have a proper place to gather now, and that's half the battle won. You've done real work here.",
+          "at": 1792876372016
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792876553849
+        },
+        {
+          "from": "dude",
+          "text": "Nia, the roasting pit's looking proper now. We've got the place ready—now we just need to get those travellers over and feed them. That's the last piece Ash is waiting for, isn't it?",
+          "at": 1792876594986
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm has decreed that everyone must wear pink within three minutes, or be fined. Change your look if you want to comply.",
+          "at": 1792876702542
+        },
+        {
+          "from": "dude",
+          "text": "Right then—the roasting pit's built and ready, and Ash needs those travellers fed. I'll put in a shift here and help get some of them over. That's what'll move us forward.",
+          "at": 1792876706205
+        },
+        {
+          "from": "world",
+          "text": "you worked a shift at Seven Stones Roast Circle and earned §12",
+          "at": 1792876762121
+        }
+      ],
+      "inbox": [],
+      "overheard": [
+        {
+          "from": "test-kev",
+          "text": "That's the spirit, Nia! We're all in this together, aren't we. Elder Bramm's not so bad once you know what he wants—just needs to see everyone pulling together. Come on, let's get those travellers fed and show the town what we're made of.",
+          "at": 1792876722590
+        }
+      ],
+      "position": {
+        "x": 49.67483843425623,
+        "z": -18.90850844080437
+      },
+      "facing": 0.36999886231768914,
+      "path": [
+        {
+          "x": 51.61256916644265,
+          "z": -13.912578271132798
+        }
+      ],
+      "idleUntil": 1792876833297.157,
+      "coins": 163,
+      "needs": {
+        "hunger": 58.38211333363472,
+        "energy": 61.629268000051844,
+        "fun": 61.25853599998504,
+        "social": 97.6685866666665
+      },
+      "plot": "q1_0_0_1",
+      "side": "gold",
+      "sideAge": 0,
+      "walkingFor": "wander",
+      "lookAt": {
+        "x": 56.5,
+        "z": -11
+      }
+    },
+    {
+      "id": "dev:test-nia",
+      "name": "test-nia",
+      "createdAt": 1792829421419,
+      "lastHeardAt": 1792876348710,
+      "lastTurnAt": 1792876708047,
+      "turns": 20,
+      "persona": "Nia is a friendly newcomer to Kettlewick with a warm energy and genuine curiosity about the people around her. She's the kind of person who lights up when meeting neighbours and settles into new places quickly, eager to build something meaningful and be part of the community.",
+      "title": "the friendly settler",
+      "look": {
+        "skin": "#f1c9a5",
+        "shirt": "#ff69b4",
+        "pants": "#ff1493",
+        "hair": "#d9c27a",
+        "hat": "none",
+        "hatColor": "#ff8c00",
+        "accessory": "none",
+        "accessoryColor": "#d9a23a",
+        "height": 1.04,
+        "build": 1
+      },
+      "memory": [
+        "Ash the traveller leader wants a roasting pit or fire pit",
+        "Bo just moved in, curious and direct",
+        "Kev mentioned a gym would be good for the town",
+        "Planning to build roasting pit at 16 Elm Street for travellers",
+        "Need to feed 2 travellers at eating places to progress",
+        "Kev is right here at the fountain",
+        "Still planning to build roasting pit for Ash and the travellers",
+        "Built roasting pit at 16 Elm Street for Ash and the travellers",
+        "Kev thinks it's a brilliant idea—good community support",
+        "Built roasting pit at 16 Elm Street—Ash's first request done",
+        "Still need to feed 2 travellers at eating places to move forward",
+        "Kev is good people, loves community ideas",
+        "Kev invited me to hang out",
+        "Still need to feed 2 travellers at eating places",
+        "Roasting pit is built and ready at 16 Elm Street",
+        "Kev's good people, very supportive of community ideas"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "test-dana (1 m away) said to you: \"That's brilliant, Nia! A roasting pit is exactly what we needed—the travellers will be pleased, and you're right, the whole town's been missing a proper gath...\". Answer them out loud, in a sentence or two",
+          "at": 1792875607890
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm inspected the field and praised you for wearing orange.",
+          "at": 1792875631464
+        },
+        {
+          "from": "dude",
+          "text": "That's brilliant—Elder Bramm even praised us for the orange! The roasting pit's really coming together, and I reckon we're getting closer to what the travellers need. Now we just need to get a couple of them fed there, and we'll have done o",
+          "at": 1792875640831
+        },
+        {
+          "from": "chatter",
+          "text": "3",
+          "at": 1792876348710
+        },
+        {
+          "from": "world",
+          "text": "there is no place called \"the roasting pit\" in town",
+          "at": 1792876351267
+        },
+        {
+          "from": "world",
+          "text": "test-kev invited you to hang out",
+          "at": 1792876353903
+        },
+        {
+          "from": "dude",
+          "text": "Kev, thanks for the invite! I'm keen to hang out. Have you had a chance to see the roasting pit yet? And we still need to get a couple of the travellers over for a proper meal—that's what'll really seal the deal for Ash and his people cross",
+          "at": 1792876368953
+        },
+        {
+          "from": "world",
+          "text": "test-dana (5 m away) said to you: \"Nia, that roasting pit looks solid. The travellers are going to have a proper place to gather now, and that's half the battle won. You've done real work here.\". Answer them out loud, in a sentence or two.",
+          "at": 1792876372016
+        },
+        {
+          "from": "dude",
+          "text": "Dana, that means the world—you're right, it's half the battle won. Now we just need to get a couple of the travellers over to eat there, and Ash will see we're serious about having them here. I reckon once they taste proper roasted food, th",
+          "at": 1792876386706
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792876434225
+        },
+        {
+          "from": "dude",
+          "text": "Kev! Good to see you. I was just thinking—we've got the roasting pit sorted now, but we still need to get a couple of the travellers over to eat there. That's what'll really show Ash we're serious about having them here. Fancy helping me fi",
+          "at": 1792876690133
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm has decreed that everyone must wear pink within three minutes, or be fined. Change your look if you want to comply.",
+          "at": 1792876702542
+        },
+        {
+          "from": "world",
+          "text": "your new look cost §10",
+          "at": 1792876708047
+        },
+        {
+          "from": "dude",
+          "text": "Elder Bramm's decree, eh? Right then—can't have the town getting fined. Let me sort this out quick like Kev did.",
+          "at": 1792876708047
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": 61.48031650679423,
+        "z": -5.950527938526981
+      },
+      "facing": -2.3630893971313647,
+      "path": [],
+      "idleUntil": 1792876827259.8984,
+      "coins": 142,
+      "needs": {
+        "hunger": 53.3260066669642,
+        "energy": 63.3956040000652,
+        "fun": 56.79120799998709,
+        "social": 95.66742999999964
+      },
+      "plot": "q1_0_0_-1",
+      "side": "red",
+      "sideAge": 0,
+      "emote": {
+        "pose": "sit",
+        "until": 1792876848698
+      },
+      "visit": {
+        "placeId": "bj",
+        "phase": "in",
+        "why": "need",
+        "need": "hunger",
+        "until": 1792876848698
+      }
+    },
+    {
+      "id": "dev:test-bo",
+      "name": "test-bo",
+      "createdAt": 1792845970522,
+      "lastHeardAt": 1792876286134,
+      "lastTurnAt": 1792876704952,
+      "turns": 12,
+      "persona": "Bo is curious and direct, the type to show up somewhere new and immediately start poking around. They've got an easygoing confidence and aren't afraid to ask questions. Practical minded, probably good with their hands.",
+      "title": "the inquisitive settler",
+      "look": {
+        "skin": "#a26a42",
+        "shirt": "#ff69b4",
+        "pants": "#ff69b4",
+        "hair": "#d9c27a",
+        "hat": "cowboy",
+        "hatColor": "#4f8a4b",
+        "accessory": "none",
+        "accessoryColor": "#5a6b7a",
+        "height": 1.08,
+        "build": 1
+      },
+      "memory": [
+        "Just arrived in Kettlewick with an empty lot at 13 Alder Street",
+        "There's a tarp over something nearby—found something interesting to investigate",
+        "Sami's Boulder Hearth got squashed by Big Grak—just fixed it",
+        "Travellers across the river want a place to eat built",
+        "Nia, Kev, and Dana are the neighbours around here",
+        "Sticky Ug is a hat thief; stole my hat and piled them all up nearby",
+        "Got my hat back from the pile",
+        "Kev mentioned Big Grak as a troublemaker who knocks things around",
+        "The travellers need a place to eat built; that's the first thing to do",
+        "Ash is the travellers' leader; helping them moves the town forward",
+        "Elder Bramm enforces decrees; wore orange to avoid a fine",
+        "Kev's enthusiastic about the roasting pit idea and wants to make it special",
+        "Need to build the roasting pit on my lot at 13 Alder Street soon",
+        "Building the roasting pit on 13 Alder Street now to feed the travellers",
+        "Kev wants to make it special; it's the first thing the travellers asked for"
+      ],
+      "history": [
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792875193531
+        },
+        {
+          "from": "dude",
+          "text": "Right then, let's see what we're working with here. Empty lot, good neighbours nearby, and the travellers across the river want somewhere to eat. I reckon a roasting pit would do the trick—get some meat cooking, bring people in.",
+          "at": 1792875211838
+        },
+        {
+          "from": "world",
+          "text": "test-kev (1 m away) said to you: \"Nia, I'm buzzing about this roasting pit! Let's make it something special—the kind of place where the whole town gathers. I'll get started on it right away.\". Answer them out loud, in a sentence or two.",
+          "at": 1792875363987
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm has decreed that everyone must wear orange within three minutes, or be fined. Change your look if you want to comply.",
+          "at": 1792875413750
+        },
+        {
+          "from": "dude",
+          "text": "Orange? That's a strange one. I'll sort it out in a minute, but first—Kev's right, a roasting pit that brings everyone together is exactly what we need. The travellers are counting on us.",
+          "at": 1792875415917
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792875474799
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm inspected the field and praised you for wearing orange.",
+          "at": 1792875631464
+        },
+        {
+          "from": "dude",
+          "text": "Right, I'm famished. Let me grab something proper to eat, then I'll get that roasting pit started. The travellers are waiting, and Kev's got the right idea—we need a place that brings everyone together.",
+          "at": 1792876381559
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792876392177
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792876409694
+        },
+        {
+          "from": "dude",
+          "text": "Right, here we go. The travellers need feeding and Kev's keen on making this a proper gathering spot. Let's build something that brings the whole town together—a roasting pit where we can cook meat and share a meal.",
+          "at": 1792876644858
+        },
+        {
+          "from": "world",
+          "text": "Elder Bramm has decreed that everyone must wear pink within three minutes, or be fined. Change your look if you want to comply.",
+          "at": 1792876702542
+        },
+        {
+          "from": "world",
+          "text": "your new look cost §10",
+          "at": 1792876704952
+        },
+        {
+          "from": "dude",
+          "text": "Pink now, is it? Elder Bramm's got some strong ideas about colour. Right then, let me get changed and head over to my lot—time to start on that roasting pit before the travellers think we've forgotten about them.",
+          "at": 1792876704952
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": 74,
+        "z": 9.586999999999952
+      },
+      "facing": 3.141592653589793,
+      "path": [
+        {
+          "x": 74,
+          "z": 8
+        }
+      ],
+      "idleUntil": 1792876824958.9873,
+      "coins": 149,
+      "needs": {
+        "hunger": 69.57601333351532,
+        "energy": 65.9456080000208,
+        "fun": 55.89121599999048,
+        "social": 84.74626333333221
+      },
+      "plot": "q1_0_-1_1",
+      "walkingFor": "wander",
+      "lookAt": {
+        "x": 69.5,
+        "z": 10.5
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "b2",
+      "revision": 8,
+      "blueprint": {
+        "name": "Sami’s Boulder Hearth",
+        "description": "A circular boulder hut with timber reinforcement, an open flat-stone doorway, and a lashed branch-and-hide roof surrounding a smoke hole.",
+        "parts": [
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.1,
+              -0.19572333007617404
+            ],
+            "size": [
+              6.5,
+              0.2,
+              6.5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#a38a60"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              0.72,
+              1.864276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              0.63,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              0.72,
+              0.594276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              1.26,
+              0
+            ],
+            "color": "#a7a18e"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              0.72,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              1.88,
+              0
+            ],
+            "color": "#888b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              0.72,
+              -2.255723330076174
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              2.51,
+              0
+            ],
+            "color": "#aaa28c"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.72,
+              -2.745723330076174
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#94968a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              0.72,
+              -2.255723330076174
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -2.51,
+              0
+            ],
+            "color": "#a7a18e"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              0.72,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -1.88,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              0.72,
+              0.594276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -1.26,
+              0
+            ],
+            "color": "#aaa28c"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              0.72,
+              1.864276669923826
+            ],
+            "size": [
+              1.8,
+              1.3,
+              1.55
+            ],
+            "rotation": [
+              0,
+              -0.63,
+              0
+            ],
+            "color": "#888b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              1.82,
+              1.864276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              0.56,
+              0
+            ],
+            "color": "#aaa593"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              1.82,
+              0.594276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              1.3,
+              0
+            ],
+            "color": "#8d9083"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.43,
+              1.82,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              1.8,
+              0
+            ],
+            "color": "#a09b89"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.5,
+              1.82,
+              -2.255723330076174
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              2.6,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              1.82,
+              -2.745723330076174
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#b0a892"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              1.82,
+              -2.255723330076174
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -2.6,
+              0
+            ],
+            "color": "#8d9083"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              1.82,
+              -0.9857233300761741
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -1.8,
+              0
+            ],
+            "color": "#aaa593"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.43,
+              1.82,
+              0.594276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -1.3,
+              0
+            ],
+            "color": "#929084"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.5,
+              1.82,
+              1.864276669923826
+            ],
+            "size": [
+              1.85,
+              1.25,
+              1.5
+            ],
+            "rotation": [
+              0,
+              -0.56,
+              0
+            ],
+            "color": "#a09b89"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -0.79,
+              0.95,
+              2.474276669923826
+            ],
+            "size": [
+              0.48,
+              1.7,
+              0.9
+            ],
+            "rotation": [
+              0,
+              0,
+              0.06
+            ],
+            "color": "#b9ad91"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0.79,
+              0.95,
+              2.474276669923826
+            ],
+            "size": [
+              0.48,
+              1.7,
+              0.9
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.06
+            ],
+            "color": "#a79f8b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              1.88,
+              2.474276669923826
+            ],
+            "size": [
+              2.12,
+              0.42,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#c3b69b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              2.4,
+              1.45,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.3,
+              2.7,
+              0.3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.4,
+              1.45,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.3,
+              2.7,
+              0.3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              1.45,
+              -2.595723330076174
+            ],
+            "size": [
+              0.32,
+              2.7,
+              0.32
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#68472d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              1.03,
+              1.45,
+              2.034276669923826
+            ],
+            "size": [
+              0.28,
+              2.7,
+              0.28
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -1.03,
+              1.45,
+              2.034276669923826
+            ],
+            "size": [
+              0.28,
+              2.7,
+              0.28
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#77502e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.03,
+              1.804276669923826
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              0,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.03,
+              1.2182766699238259
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              0.7854,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2,
+              3.03,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              1.5708,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.03,
+              -1.609723330076174
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              2.3562,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.03,
+              -2.195723330076174
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              3.1416,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.03,
+              -1.609723330076174
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              -2.3562,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2,
+              3.03,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              -1.5708,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.03,
+              1.2182766699238259
+            ],
+            "size": [
+              0.25,
+              0.25,
+              3.35
+            ],
+            "rotation": [
+              0.36,
+              -0.7854,
+              0
+            ],
+            "color": "#65452b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.2,
+              1.804276669923826
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              0,
+              0
+            ],
+            "color": "#cf9854"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.22,
+              1.2182766699238259
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              0.7854,
+              0
+            ],
+            "color": "#b87b42"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2,
+              3.2,
+              -0.19572333007617404
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              1.5708,
+              0
+            ],
+            "color": "#dfb270"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.414,
+              3.22,
+              -1.609723330076174
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              2.3562,
+              0
+            ],
+            "color": "#c78b4c"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.2,
+              -2.195723330076174
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              3.1416,
+              0
+            ],
+            "color": "#cf9854"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.22,
+              -1.609723330076174
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              -2.3562,
+              0
+            ],
+            "color": "#b87b42"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2,
+              3.2,
+              -0.19572333007617404
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              -1.5708,
+              0
+            ],
+            "color": "#dfb270"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.414,
+              3.22,
+              1.2182766699238259
+            ],
+            "size": [
+              2.7,
+              0.15,
+              3.1
+            ],
+            "rotation": [
+              0.36,
+              -0.7854,
+              0
+            ],
+            "color": "#c78b4c"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.31,
+              1.804276669923826
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              0,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2,
+              3.31,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              1.5708,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.31,
+              -2.195723330076174
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              3.1416,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2,
+              3.31,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.065,
+              0.045,
+              3.15
+            ],
+            "rotation": [
+              0.36,
+              -1.5708,
+              0
+            ],
+            "color": "#ead5a2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.27,
+              -0.19572333007617404
+            ],
+            "size": [
+              1.1,
+              0.24,
+              1.1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#68645a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.4,
+              -0.19572333007617404
+            ],
+            "size": [
+              0.65,
+              0.15,
+              0.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#dc7836"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.5,
+              0.29,
+              -0.895723330076174
+            ],
+            "size": [
+              1.1,
+              0.18,
+              1.9
+            ],
+            "rotation": [
+              0,
+              -0.18,
+              0
+            ],
+            "color": "#ba864e"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.18,
+              3.354276669923826
+            ],
+            "size": [
+              1.35,
+              0.28,
+              0.75
+            ],
+            "rotation": [
+              0,
+              0.12,
+              0
+            ],
+            "color": "#a9a08a"
+          }
+        ]
+      },
+      "position": {
+        "x": 69.5,
+        "z": 10.5
+      },
+      "footprint": {
+        "width": 7.350000918278676,
+        "depth": 7.614771296578093
+      },
+      "createdBy": "Sami",
+      "editedBy": "Sami",
+      "createdAt": 1792828234512,
+      "owner": "kick:28683256",
+      "driven": {
+        "at": {
+          "x": 69.5,
+          "z": 10.5
+        },
+        "turn": 0,
+        "by": "The Dragger",
+        "until": 9007199254740991
+      },
+      "plot": "q1_0_1_1",
+      "venue": "home",
+      "age": 0
+    },
+    {
+      "id": "b3",
+      "revision": 1,
+      "blueprint": {
+        "name": "The Big Hut",
+        "description": "A cream-and-ochre family hide shelter with a pinned-back entrance flap, snug sleeping annex and glowing outdoor hearth beside a shared log seat.",
+        "parts": [
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.34056801985547785,
+              0.05132470630454622,
+              -1.786679809261782
+            ],
+            "size": [
+              9.751694197863781,
+              0.10264941260909244,
+              9.751694197863781
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#8a6a48"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.8049856954123475,
+              0.06415588288068277,
+              0.7795555059655287
+            ],
+            "size": [
+              3.5927294413182347,
+              0.12831176576136555,
+              3.0794823782727727
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#79563b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.8407319980877361,
+              0.05774029459261449,
+              1.9985172806985012
+            ],
+            "size": [
+              4.234288270125062,
+              0.11548058918522898,
+              2.822858846750042
+            ],
+            "rotation": [
+              0,
+              -0.2,
+              0
+            ],
+            "color": "#79563b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.34056801985547785,
+              0.06415588288068277,
+              3.474102586954205
+            ],
+            "size": [
+              2.3096117837045798,
+              0.12831176576136555,
+              4.234288270125062
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#8a6a48"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.46887978561684335,
+              0.05774029459261449,
+              5.334623190494005
+            ],
+            "size": [
+              2.6945470809886762,
+              0.11548058918522898,
+              2.0529882521818488
+            ],
+            "rotation": [
+              0,
+              -0.25,
+              0
+            ],
+            "color": "#8a6a48"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -3.0607774539964274,
+              1.578234718864796,
+              -3.1082909966038472
+            ],
+            "size": [
+              3.5927294413182347,
+              2.951170612511407,
+              4.041820621483014
+            ],
+            "rotation": [
+              0,
+              0.17,
+              0
+            ],
+            "color": "#987052"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -0.34056801985547785,
+              2.7843653170216323,
+              -1.786679809261782
+            ],
+            "size": [
+              7.185458882636469,
+              5.260782396215987,
+              7.185458882636469
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -0.34056801985547785,
+              4.067482974635287,
+              -1.786679809261782
+            ],
+            "size": [
+              3.7338723836557373,
+              2.7202094341409495,
+              3.7338723836557373
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#987052"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -0.46887978561684335,
+              1.5012476594079767,
+              1.1516596266734889
+            ],
+            "size": [
+              2.0529882521818488,
+              3.0024953188159533,
+              0.23096117837045796
+            ],
+            "rotation": [
+              -0.599,
+              0,
+              0.06
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.5843603748020724,
+              0.20529882521818488,
+              1.9728549275462282
+            ],
+            "size": [
+              1.642390601745479,
+              0.23096117837045796,
+              0.5902341225022815
+            ],
+            "rotation": [
+              0,
+              0.12,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              0.6474325765070368,
+              1.48841648283184,
+              1.2029843329780348
+            ],
+            "size": [
+              1.180468245004563,
+              2.2839494305523065,
+              0.20529882521818488
+            ],
+            "rotation": [
+              -0.599,
+              0,
+              -0.4
+            ],
+            "color": "#79563b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.0323678737911335,
+              0.7955329477204663,
+              1.5750884536859948
+            ],
+            "size": [
+              0.5004158864693257,
+              0.2822858846750042,
+              0.3849352972840966
+            ],
+            "rotation": [
+              0,
+              0.18,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0.9938743440627238,
+              1.3472735404943381,
+              1.2414778627064444
+            ],
+            "size": [
+              0.1411429423375021,
+              0.41059765043636975,
+              0.1411429423375021
+            ],
+            "rotation": [
+              0.15,
+              0,
+              0.65
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.4047239027361606,
+              0.1411429423375021,
+              2.3321278716780514
+            ],
+            "size": [
+              1.7707023675068443,
+              0.15397411891363863,
+              1.1676370684284265
+            ],
+            "rotation": [
+              0,
+              0.1,
+              0
+            ],
+            "color": "#a0522d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.34056801985547785,
+              5.376262985401216,
+              -1.786679809261782
+            ],
+            "size": [
+              0.7313770648397835,
+              0.12831176576136555,
+              0.7313770648397835
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.019788605452063995,
+              5.3890941619773525,
+              -1.786679809261782
+            ],
+            "size": [
+              0.2566235315227311,
+              0.17963647206591177,
+              0.30794823782727726
+            ],
+            "rotation": [
+              0,
+              0.2,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.6356850811066186,
+              5.363431808825079,
+              -1.786679809261782
+            ],
+            "size": [
+              0.2694547080988676,
+              0.17963647206591177,
+              0.29511706125114073
+            ],
+            "rotation": [
+              0,
+              -0.2,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.34056801985547785,
+              5.3890941619773525,
+              -2.081796870512923
+            ],
+            "size": [
+              0.35927294413182354,
+              0.1668052954897752,
+              0.23096117837045796
+            ],
+            "rotation": [
+              0,
+              0.1,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.34056801985547785,
+              5.363431808825079,
+              -1.4915627480106413
+            ],
+            "size": [
+              0.3336105909795504,
+              0.1668052954897752,
+              0.23096117837045796
+            ],
+            "rotation": [
+              0,
+              -0.1,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.22508743067024886,
+              5.748367106109177,
+              -1.786679809261782
+            ],
+            "size": [
+              0.17963647206591177,
+              1.5140788359841133,
+              0.17963647206591177
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.25
+            ],
+            "color": "#533d30"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.45604860904070676,
+              5.748367106109177,
+              -1.786679809261782
+            ],
+            "size": [
+              0.17963647206591177,
+              1.5140788359841133,
+              0.17963647206591177
+            ],
+            "rotation": [
+              0,
+              0,
+              0.25
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.34056801985547785,
+              5.7355359295330395,
+              -1.6711992200765529
+            ],
+            "size": [
+              0.17963647206591177,
+              1.48841648283184,
+              0.17963647206591177
+            ],
+            "rotation": [
+              0.25,
+              0,
+              0
+            ],
+            "color": "#533d30"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.34056801985547785,
+              5.761198282685313,
+              -1.902160398447011
+            ],
+            "size": [
+              0.17963647206591177,
+              1.5397411891363864,
+              0.17963647206591177
+            ],
+            "rotation": [
+              -0.25,
+              0,
+              0
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.25716537211059026,
+              5.722704752956903,
+              -1.8700824570066699
+            ],
+            "size": [
+              0.1668052954897752,
+              1.4499229531034303,
+              0.1668052954897752
+            ],
+            "rotation": [
+              -0.18,
+              0,
+              -0.18
+            ],
+            "color": "#533d30"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.34056801985547785,
+              5.478912398010308,
+              -1.786679809261782
+            ],
+            "size": [
+              0.43626000358864286,
+              0.1668052954897752,
+              0.43626000358864286
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.34056801985547785,
+              5.62005534034781,
+              -1.786679809261782
+            ],
+            "size": [
+              0.4619223567409159,
+              0.10264941260909244,
+              0.4619223567409159
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#c3a575"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.239582153123688,
+              0.29511706125114073,
+              1.1644908032496255
+            ],
+            "size": [
+              0.8468576540250126,
+              0.43626000358864286,
+              0.7313770648397835
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.214751572910066,
+              0.2822858846750042,
+              0.20215256003938387
+            ],
+            "size": [
+              0.8083641242966029,
+              0.41059765043636975,
+              0.74420824141592
+            ],
+            "rotation": [
+              0,
+              -0.3,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.8049856954123475,
+              0.29511706125114073,
+              -1.0553027444219985
+            ],
+            "size": [
+              0.7698705945681932,
+              0.43626000358864286,
+              0.834026477448876
+            ],
+            "rotation": [
+              0,
+              0.2,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -4.536362760252131,
+              0.2822858846750042,
+              -2.8131739353527063
+            ],
+            "size": [
+              0.7955329477204663,
+              0.41059765043636975,
+              0.834026477448876
+            ],
+            "rotation": [
+              0,
+              -0.2,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.958959814325986,
+              0.2822858846750042,
+              -4.494058066826595
+            ],
+            "size": [
+              0.8596888306011492,
+              0.41059765043636975,
+              0.7313770648397835
+            ],
+            "rotation": [
+              0,
+              0.4,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.0727768576339125,
+              0.29511706125114073,
+              -4.904655717262965
+            ],
+            "size": [
+              0.8468576540250126,
+              0.43626000358864286,
+              0.7057147116875105
+            ],
+            "rotation": [
+              0,
+              -0.2,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.49454213876911646,
+              0.2822858846750042,
+              -5.263928661394788
+            ],
+            "size": [
+              0.8596888306011492,
+              0.41059765043636975,
+              0.7185458882636471
+            ],
+            "rotation": [
+              0,
+              0.1,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.1350172864002257,
+              0.29511706125114073,
+              -4.9816427767197835
+            ],
+            "size": [
+              0.8211953008727395,
+              0.43626000358864286,
+              0.7313770648397835
+            ],
+            "rotation": [
+              0,
+              -0.3,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.456628473742291,
+              0.2822858846750042,
+              -3.826836884867494
+            ],
+            "size": [
+              0.8083641242966029,
+              0.41059765043636975,
+              0.7827017711443297
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.1366808322775284,
+              0.29511706125114073,
+              -2.2999268723072444
+            ],
+            "size": [
+              0.74420824141592,
+              0.43626000358864286,
+              0.834026477448876
+            ],
+            "rotation": [
+              0,
+              0.1,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.9955378899400262,
+              0.2822858846750042,
+              -0.6575362705617654
+            ],
+            "size": [
+              0.7827017711443297,
+              0.41059765043636975,
+              0.8083641242966029
+            ],
+            "rotation": [
+              0,
+              -0.3,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.110186706186604,
+              0.29511706125114073,
+              0.715399623084846
+            ],
+            "size": [
+              0.834026477448876,
+              0.43626000358864286,
+              0.7313770648397835
+            ],
+            "rotation": [
+              0,
+              -0.4,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.355894515247568,
+              0.05774029459261449,
+              4.628908478806495
+            ],
+            "size": [
+              2.6303911981079935,
+              0.11548058918522898,
+              2.4379235494659452
+            ],
+            "rotation": [
+              0,
+              0.13,
+              0
+            ],
+            "color": "#79563b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.355894515247568,
+              0.1411429423375021,
+              4.628908478806495
+            ],
+            "size": [
+              1.4370917765272941,
+              0.17963647206591177,
+              1.3857670702227478
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -4.2797392287294,
+              0.2566235315227311,
+              4.500596713045129
+            ],
+            "size": [
+              0.6158964756545545,
+              0.43626000358864286,
+              0.6287276522306912
+            ],
+            "rotation": [
+              0,
+              0.23,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.9076351080214393,
+              0.24379235494659451,
+              5.3602855436462775
+            ],
+            "size": [
+              0.6800523585352374,
+              0.41059765043636975,
+              0.5389094161977352
+            ],
+            "rotation": [
+              0,
+              -0.24,
+              0
+            ],
+            "color": "#a19b85"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.983790394539608,
+              0.2566235315227311,
+              5.450103779679234
+            ],
+            "size": [
+              0.6287276522306912,
+              0.43626000358864286,
+              0.5774029459261449
+            ],
+            "rotation": [
+              0,
+              0.4,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.4063874486134633,
+              0.2822858846750042,
+              4.744389067991723
+            ],
+            "size": [
+              0.6415588288068277,
+              0.48758470989318903,
+              0.6543900053829642
+            ],
+            "rotation": [
+              0,
+              0.14,
+              0
+            ],
+            "color": "#a19b85"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.804153922473696,
+              0.24379235494659451,
+              3.897531413966711
+            ],
+            "size": [
+              0.6928835351113739,
+              0.41059765043636975,
+              0.5517405927738718
+            ],
+            "rotation": [
+              0,
+              -0.27,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.702336282803255,
+              0.2694547080988676,
+              3.8077131779337554
+            ],
+            "size": [
+              0.7185458882636471,
+              0.4619223567409159,
+              0.5774029459261449
+            ],
+            "rotation": [
+              0,
+              0.31,
+              0
+            ],
+            "color": "#a19b85"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.355894515247568,
+              0.30794823782727726,
+              4.641739655382631
+            ],
+            "size": [
+              0.30794823782727726,
+              1.4755853062557036,
+              0.30794823782727726
+            ],
+            "rotation": [
+              1.5708,
+              0.65,
+              0
+            ],
+            "color": "#533d30"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.3430633386714312,
+              0.44909118016477934,
+              4.628908478806495
+            ],
+            "size": [
+              0.2822858846750042,
+              1.3472735404943381,
+              0.2822858846750042
+            ],
+            "rotation": [
+              1.5708,
+              -0.7,
+              0
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.3430633386714312,
+              0.41059765043636975,
+              4.628908478806495
+            ],
+            "size": [
+              0.8596888306011492,
+              0.3336105909795504,
+              0.8083641242966029
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#f07835"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -3.5098686341612066,
+              0.8468576540250126,
+              4.641739655382631
+            ],
+            "size": [
+              0.6287276522306912,
+              0.9238447134818318,
+              0.5774029459261449
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.12
+            ],
+            "color": "#f07835"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -3.150595690029383,
+              0.7313770648397835,
+              4.577583772501948
+            ],
+            "size": [
+              0.44909118016477934,
+              0.7057147116875105,
+              0.5004158864693257
+            ],
+            "rotation": [
+              0.1,
+              0,
+              0.16
+            ],
+            "color": "#e9b04c"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -5.652675122376011,
+              0.1924676486420483,
+              3.8333755310860287
+            ],
+            "size": [
+              0.7057147116875105,
+              0.3849352972840966,
+              0.6800523585352374
+            ],
+            "rotation": [
+              0,
+              0.22,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -5.703999828680557,
+              0.1924676486420483,
+              5.527090839136054
+            ],
+            "size": [
+              0.7057147116875105,
+              0.3849352972840966,
+              0.6800523585352374
+            ],
+            "rotation": [
+              0,
+              -0.18,
+              0
+            ],
+            "color": "#918c76"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -5.678337475528284,
+              0.39776647386023317,
+              4.680233185111041
+            ],
+            "size": [
+              0.7570394179920567,
+              2.848521199902315,
+              0.7570394179920567
+            ],
+            "rotation": [
+              1.5708,
+              0.04,
+              0
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -5.678337475528284,
+              0.6928835351113739,
+              4.680233185111041
+            ],
+            "size": [
+              0.5389094161977352,
+              0.12831176576136555,
+              2.6303911981079935
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#987052"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -5.627012769223738,
+              0.41059765043636975,
+              6.104493785062198
+            ],
+            "size": [
+              0.5774029459261449,
+              0.10264941260909244,
+              0.5774029459261449
+            ],
+            "rotation": [
+              1.5708,
+              0.04,
+              0
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              4.945876729512783,
+              1.3472735404943381,
+              -1.0168092146935888
+            ],
+            "size": [
+              0.23096117837045796,
+              2.6303911981079935,
+              0.23096117837045796
+            ],
+            "rotation": [
+              0.06,
+              0,
+              -0.1
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              6.665254390715081,
+              1.2702864810375187,
+              -0.7601856831708578
+            ],
+            "size": [
+              0.24379235494659451,
+              2.4764170791943547,
+              0.24379235494659451
+            ],
+            "rotation": [
+              -0.07,
+              0,
+              0.13
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              5.805565560113932,
+              2.4379235494659452,
+              -0.8884974489322233
+            ],
+            "size": [
+              0.20529882521818488,
+              2.3737676665852625,
+              0.20529882521818488
+            ],
+            "rotation": [
+              0,
+              0.13,
+              1.5
+            ],
+            "color": "#533d30"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              5.074188495274147,
+              2.463585902618218,
+              -0.9783156849651793
+            ],
+            "size": [
+              0.37210412070796,
+              0.23096117837045796,
+              0.37210412070796
+            ],
+            "rotation": [
+              0,
+              0,
+              1.5
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              6.511280271801442,
+              2.3737676665852625,
+              -0.7986792128992674
+            ],
+            "size": [
+              0.37210412070796,
+              0.23096117837045796,
+              0.37210412070796
+            ],
+            "rotation": [
+              0,
+              0,
+              1.5
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              5.741409677233249,
+              1.783533544082981,
+              -0.8115103894754039
+            ],
+            "size": [
+              1.0778188323954705,
+              1.3087800107659284,
+              0.20529882521818488
+            ],
+            "rotation": [
+              0,
+              0.13,
+              0.1
+            ],
+            "color": "#a0522d"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              5.446292615982108,
+              1.1932994215806996,
+              -0.837172742627677
+            ],
+            "size": [
+              0.4619223567409159,
+              0.834026477448876,
+              0.20529882521818488
+            ],
+            "rotation": [
+              0,
+              0.13,
+              3.02
+            ],
+            "color": "#a0522d"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              6.0365267384843895,
+              1.3087800107659284,
+              -0.7601856831708578
+            ],
+            "size": [
+              0.3849352972840966,
+              0.6800523585352374,
+              0.20529882521818488
+            ],
+            "rotation": [
+              0,
+              0.13,
+              3.25
+            ],
+            "color": "#a0522d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              5.420630262829835,
+              2.386598843161399,
+              -0.9141598020844964
+            ],
+            "size": [
+              0.12831176576136555,
+              0.37210412070796,
+              0.12831176576136555
+            ],
+            "rotation": [
+              0,
+              0,
+              0.15
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              6.049357915060527,
+              2.3481053134329892,
+              -0.8243415660515405
+            ],
+            "size": [
+              0.12831176576136555,
+              0.37210412070796,
+              0.12831176576136555
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.12
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              4.150343781792316,
+              0.3849352972840966,
+              2.4476084608632807
+            ],
+            "size": [
+              0.949507066634105,
+              0.7185458882636471,
+              0.949507066634105
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#987052"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              4.150343781792316,
+              0.74420824141592,
+              2.4476084608632807
+            ],
+            "size": [
+              1.0008317729386513,
+              0.15397411891363863,
+              1.0008317729386513
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              4.150343781792316,
+              0.834026477448876,
+              2.4476084608632807
+            ],
+            "size": [
+              0.7313770648397835,
+              0.07698705945681932,
+              0.7313770648397835
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#3b2a22"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.9963696628786773,
+              0.8853511837534221,
+              2.4091149311348707
+            ],
+            "size": [
+              0.30794823782727726,
+              0.23096117837045796,
+              0.29511706125114073
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#d9534f"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              4.291486724129818,
+              0.8853511837534221,
+              2.5374266968962362
+            ],
+            "size": [
+              0.30794823782727726,
+              0.23096117837045796,
+              0.29511706125114073
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#a0522d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              5.754240853809385,
+              0.7313770648397835,
+              4.782882597720134
+            ],
+            "size": [
+              0.23096117837045796,
+              1.411429423375021,
+              0.23096117837045796
+            ],
+            "rotation": [
+              0.07,
+              0,
+              -0.09
+            ],
+            "color": "#533d30"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              5.805565560113932,
+              1.1034811855477435,
+              4.885532010329226
+            ],
+            "size": [
+              0.7313770648397835,
+              0.603065299078418,
+              0.20529882521818488
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.13
+            ],
+            "color": "#79563b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              5.792734383537796,
+              1.2574553044613823,
+              5.0138437760905905
+            ],
+            "size": [
+              0.7313770648397835,
+              0.17963647206591177,
+              0.11548058918522898
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.13
+            ],
+            "color": "#d9534f"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              5.818396736690068,
+              1.0136629495147877,
+              5.0138437760905905
+            ],
+            "size": [
+              0.3336105909795504,
+              0.2822858846750042,
+              0.11548058918522898
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#e1d3ae"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -5.703999828680557,
+              0.06415588288068277,
+              -3.3007586452458955
+            ],
+            "size": [
+              2.1813000179432143,
+              0.12831176576136555,
+              1.7193776612022984
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#526b40"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -5.999116889931698,
+              0.4619223567409159,
+              -3.287927468669759
+            ],
+            "size": [
+              0.4619223567409159,
+              0.7955329477204663,
+              0.48758470989318903
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.2
+            ],
+            "color": "#7c9254"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -5.498701003462372,
+              0.37210412070796,
+              -3.0056415839947546
+            ],
+            "size": [
+              0.5517405927738718,
+              0.5902341225022815,
+              0.5004158864693257
+            ],
+            "rotation": [
+              0.12,
+              0,
+              0.2
+            ],
+            "color": "#a8ad68"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -5.575688062919192,
+              0.5260782396215987,
+              -3.6985251191061286
+            ],
+            "size": [
+              0.43626000358864286,
+              0.8725200071772857,
+              0.4747535333170525
+            ],
+            "rotation": [
+              -0.18,
+              0,
+              0.1
+            ],
+            "color": "#526b40"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              4.4839543727718665,
+              0.20529882521818488,
+              -4.571045126283415
+            ],
+            "size": [
+              0.8468576540250126,
+              0.41059765043636975,
+              0.6800523585352374
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#81847a"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              4.8303961403275535,
+              0.32077941440341384,
+              -4.198941005575454
+            ],
+            "size": [
+              0.43626000358864286,
+              0.5132470630454622,
+              0.41059765043636975
+            ],
+            "rotation": [
+              0,
+              0,
+              0.18
+            ],
+            "color": "#7c9254"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -5.088103353026003,
+              0.17963647206591177,
+              1.8317119852087262
+            ],
+            "size": [
+              0.1668052954897752,
+              1.3344423639182017,
+              0.1668052954897752
+            ],
+            "rotation": [
+              1.5708,
+              0.6,
+              0
+            ],
+            "color": "#76513b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -4.805817468350998,
+              0.24379235494659451,
+              2.075504340155321
+            ],
+            "size": [
+              0.11548058918522898,
+              0.6158964756545545,
+              0.11548058918522898
+            ],
+            "rotation": [
+              1.5708,
+              -0.5,
+              0
+            ],
+            "color": "#76513b"
+          }
+        ]
+      },
+      "position": {
+        "x": 54,
+        "z": 40
+      },
+      "footprint": {
+        "width": 13.999986,
+        "depth": 13.325053816387346
+      },
+      "createdBy": "The Chief",
+      "editedBy": "The Chief",
+      "createdAt": 1792839539519,
+      "civic": true,
+      "age": 0,
+      "folly": "stone"
+    },
+    {
+      "id": "bd",
+      "revision": 2,
+      "blueprint": {
+        "name": "Sami’s Stout Hide-Roof Hut",
+        "description": "A practical rectangular boulder home with corner timbers, a low open doorway, packed earth floor, central hearth, and sinew-lashed hide roofing with a smoke opening.",
+        "parts": [
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.12,
+              0
+            ],
+            "size": [
+              6.8,
+              0.24,
+              6.2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.15,
+              0.68,
+              -2.8
+            ],
+            "size": [
+              2.3,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.68,
+              -2.8
+            ],
+            "size": [
+              2.35,
+              1.2,
+              1.1
+            ],
+            "rotation": [
+              0,
+              -0.09,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.15,
+              0.68,
+              -2.8
+            ],
+            "size": [
+              2.3,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.12,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.15,
+              1.73,
+              -2.8
+            ],
+            "size": [
+              2.35,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.08,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              1.73,
+              -2.8
+            ],
+            "size": [
+              2.4,
+              1.15,
+              1.1
+            ],
+            "rotation": [
+              0,
+              0.1,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.15,
+              1.73,
+              -2.8
+            ],
+            "size": [
+              2.3,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.12,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              0.68,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              0.68,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              1.73,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              1.73,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              0.68,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              0.68,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              1.73,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              1.73,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.95,
+              0.68,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.95,
+              0.68,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.06,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.95,
+              1.73,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.06,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.95,
+              1.73,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.06,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              1.42,
+              -2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              1.42,
+              -2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              1.42,
+              2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              1.42,
+              2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              2.09,
+              2.8
+            ],
+            "size": [
+              1.65,
+              0.32,
+              0.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.29,
+              0
+            ],
+            "size": [
+              1.65,
+              0.16,
+              1.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.39,
+              0
+            ],
+            "size": [
+              1.13,
+              0.12,
+              1.13
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.49,
+              0
+            ],
+            "size": [
+              0.95,
+              0.18,
+              0.24
+            ],
+            "rotation": [
+              0,
+              0.55,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.63,
+              0
+            ],
+            "size": [
+              0.82,
+              0.17,
+              0.23
+            ],
+            "rotation": [
+              0,
+              -0.65,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              0,
+              0.92,
+              0
+            ],
+            "size": [
+              0.48,
+              0.66,
+              0.43
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -3.05,
+              2.54,
+              0
+            ],
+            "size": [
+              0.3,
+              0.32,
+              6.35
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "box",
+            "position": [
+              3.05,
+              2.54,
+              0
+            ],
+            "size": [
+              0.3,
+              0.32,
+              6.35
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.58,
+              3.12,
+              2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              0.32
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.58,
+              3.12,
+              2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.58,
+              3.12,
+              -2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              0.32
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.58,
+              3.12,
+              -2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.68,
+              0
+            ],
+            "size": [
+              0.24,
+              0.24,
+              6.8
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.78,
+              3.18,
+              0
+            ],
+            "size": [
+              3.85,
+              0.16,
+              7
+            ],
+            "rotation": [
+              0,
+              0,
+              0.32
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.78,
+              3.18,
+              2.02
+            ],
+            "size": [
+              3.85,
+              0.16,
+              2.96
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.78,
+              3.18,
+              -2.02
+            ],
+            "size": [
+              3.85,
+              0.16,
+              2.96
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2.36,
+              2.99,
+              0
+            ],
+            "size": [
+              2.62,
+              0.16,
+              1.08
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              2.48,
+              2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              2.48,
+              2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff7a1a"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              2.48,
+              -2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              2.48,
+              -2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ff3fd2"
+          }
+        ]
+      },
+      "position": {
+        "x": 72,
+        "z": 21
+      },
+      "footprint": {
+        "width": 9.837968294035846,
+        "depth": 9.748113533131619
+      },
+      "createdBy": "Sami",
+      "editedBy": "Sami",
+      "createdAt": 1792874767571,
+      "owner": "kick:28683256",
+      "driven": {
+        "at": {
+          "x": 72,
+          "z": 21
+        },
+        "turn": 2.5981947790863815,
+        "by": "The Dragger",
+        "until": 9007199254740991
+      },
+      "plot": "q1_0_1_1",
+      "venue": "home",
+      "age": 0
+    },
+    {
+      "id": "bj",
+      "revision": 1,
+      "blueprint": {
+        "name": "Seven Stones Roast Circle",
+        "description": "A communal Stone Age roasting restaurant with a circular hearth, bone-supported wooden spit, seven boulder seats and a stone serving table with hanging roasting tools.",
+        "parts": [
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.12,
+              -0.22052793852698116
+            ],
+            "size": [
+              4.3,
+              0.24,
+              4.3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#79624b"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.27,
+              -0.22052793852698116
+            ],
+            "size": [
+              3.2,
+              0.14,
+              3.2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#38312b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.43,
+              1.629472061473019
+            ],
+            "size": [
+              1.04,
+              0.78,
+              0.73
+            ],
+            "rotation": [
+              0,
+              0.12,
+              0
+            ],
+            "color": "#979487"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0.93,
+              0.42,
+              1.379472061473019
+            ],
+            "size": [
+              1.02,
+              0.75,
+              0.76
+            ],
+            "rotation": [
+              0,
+              0.52,
+              0
+            ],
+            "color": "#aaa393"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.6,
+              0.43,
+              0.7094720614730189
+            ],
+            "size": [
+              1.02,
+              0.78,
+              0.77
+            ],
+            "rotation": [
+              0,
+              1.05,
+              0
+            ],
+            "color": "#858b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.85,
+              0.42,
+              -0.22052793852698116
+            ],
+            "size": [
+              1.04,
+              0.75,
+              0.76
+            ],
+            "rotation": [
+              0,
+              1.57,
+              0
+            ],
+            "color": "#aaa393"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.6,
+              0.44,
+              -1.1505279385269813
+            ],
+            "size": [
+              1.04,
+              0.8,
+              0.75
+            ],
+            "rotation": [
+              0,
+              2.09,
+              0
+            ],
+            "color": "#979487"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0.93,
+              0.42,
+              -1.8205279385269812
+            ],
+            "size": [
+              1.04,
+              0.75,
+              0.76
+            ],
+            "rotation": [
+              0,
+              2.62,
+              0
+            ],
+            "color": "#858b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.44,
+              -2.0705279385269812
+            ],
+            "size": [
+              1.06,
+              0.8,
+              0.75
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#aaa393"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.93,
+              0.43,
+              -1.8205279385269812
+            ],
+            "size": [
+              1.04,
+              0.78,
+              0.76
+            ],
+            "rotation": [
+              0,
+              0.52,
+              0
+            ],
+            "color": "#979487"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.6,
+              0.42,
+              -1.1505279385269813
+            ],
+            "size": [
+              1.03,
+              0.75,
+              0.76
+            ],
+            "rotation": [
+              0,
+              1.05,
+              0
+            ],
+            "color": "#858b80"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.85,
+              0.44,
+              -0.22052793852698116
+            ],
+            "size": [
+              1.06,
+              0.8,
+              0.76
+            ],
+            "rotation": [
+              0,
+              1.57,
+              0
+            ],
+            "color": "#aaa393"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.6,
+              0.42,
+              0.7094720614730189
+            ],
+            "size": [
+              1.04,
+              0.75,
+              0.76
+            ],
+            "rotation": [
+              0,
+              2.09,
+              0
+            ],
+            "color": "#979487"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.93,
+              0.43,
+              1.379472061473019
+            ],
+            "size": [
+              1.03,
+              0.78,
+              0.76
+            ],
+            "rotation": [
+              0,
+              2.62,
+              0
+            ],
+            "color": "#858b80"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.48,
+              0.09947206147301885
+            ],
+            "size": [
+              0.34,
+              2.25,
+              0.34
+            ],
+            "rotation": [
+              0,
+              0,
+              1.5708
+            ],
+            "color": "#563722"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.48,
+              -0.5405279385269812
+            ],
+            "size": [
+              0.34,
+              2.1,
+              0.34
+            ],
+            "rotation": [
+              0,
+              0,
+              1.5708
+            ],
+            "color": "#694127"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.66,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.3,
+              1.8,
+              0.3
+            ],
+            "rotation": [
+              1.5708,
+              0,
+              0
+            ],
+            "color": "#402d24"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.48,
+              -0.22052793852698116
+            ],
+            "size": [
+              1.58,
+              0.25,
+              1.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#e84b20"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -0.53,
+              1.02,
+              -0.16052793852698116
+            ],
+            "size": [
+              0.8,
+              1.22,
+              0.77
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.12
+            ],
+            "color": "#ff7c20"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              0.4,
+              1.1,
+              -0.34052793852698116
+            ],
+            "size": [
+              0.85,
+              1.4,
+              0.84
+            ],
+            "rotation": [
+              0,
+              0,
+              0.13
+            ],
+            "color": "#ff9825"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              0,
+              0.97,
+              0.17947206147301886
+            ],
+            "size": [
+              0.7,
+              1.08,
+              0.68
+            ],
+            "rotation": [
+              0.1,
+              0,
+              0
+            ],
+            "color": "#ffd351"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              -0.05,
+              1.21,
+              -0.5705279385269811
+            ],
+            "size": [
+              0.67,
+              1.46,
+              0.65
+            ],
+            "rotation": [
+              -0.12,
+              0,
+              0
+            ],
+            "color": "#ffbc32"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.22,
+              0.28,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.92,
+              0.56,
+              0.91
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#777d73"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.22,
+              0.28,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.92,
+              0.56,
+              0.91
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#777d73"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.22,
+              1.44,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.32,
+              2.4,
+              0.32
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.06
+            ],
+            "color": "#e1d1a9"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              2.22,
+              1.44,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.32,
+              2.4,
+              0.32
+            ],
+            "rotation": [
+              0,
+              0,
+              0.06
+            ],
+            "color": "#e1d1a9"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.16,
+              2.62,
+              -0.02052793852698115
+            ],
+            "size": [
+              0.48,
+              0.4,
+              0.38
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#f2e4bf"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.16,
+              2.62,
+              -0.42052793852698117
+            ],
+            "size": [
+              0.48,
+              0.4,
+              0.38
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#f2e4bf"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.16,
+              2.62,
+              -0.02052793852698115
+            ],
+            "size": [
+              0.48,
+              0.4,
+              0.38
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#f2e4bf"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.16,
+              2.62,
+              -0.42052793852698117
+            ],
+            "size": [
+              0.48,
+              0.4,
+              0.38
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#f2e4bf"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              2.62,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.2,
+              5.15,
+              0.2
+            ],
+            "rotation": [
+              0,
+              0,
+              1.5708
+            ],
+            "color": "#704324"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2.67,
+              2.38,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.18,
+              0.65,
+              0.2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#83512a"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              2.67,
+              2.08,
+              -0.0005279385269811587
+            ],
+            "size": [
+              0.18,
+              0.52,
+              0.18
+            ],
+            "rotation": [
+              1.5708,
+              0,
+              0
+            ],
+            "color": "#e6d6ae"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -0.45,
+              2.59,
+              -0.22052793852698116
+            ],
+            "size": [
+              1.18,
+              0.75,
+              0.78
+            ],
+            "rotation": [
+              0.12,
+              0,
+              0
+            ],
+            "color": "#a95028"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0.43,
+              2.62,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.48,
+              0.54,
+              0.54
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#df9c32"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0.99,
+              2.62,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.5,
+              0.51,
+              0.53
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#82a64c"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.24,
+              2.62,
+              -0.22052793852698116
+            ],
+            "size": [
+              0.43,
+              0.49,
+              0.5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#daaa55"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3,
+              0.39,
+              1.979472061473019
+            ],
+            "size": [
+              1.4,
+              0.78,
+              1.16
+            ],
+            "rotation": [
+              0,
+              -0.3,
+              0
+            ],
+            "color": "#a9aaa0"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.72,
+              0.38,
+              -0.22052793852698116
+            ],
+            "size": [
+              1.22,
+              0.76,
+              1.38
+            ],
+            "rotation": [
+              0,
+              0.14,
+              0
+            ],
+            "color": "#919b90"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.65,
+              0.4,
+              -2.9205279385269813
+            ],
+            "size": [
+              1.4,
+              0.8,
+              1.14
+            ],
+            "rotation": [
+              0,
+              0.4,
+              0
+            ],
+            "color": "#b6ad99"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.39,
+              -3.870527938526981
+            ],
+            "size": [
+              1.52,
+              0.78,
+              1.12
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#979e93"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.65,
+              0.4,
+              -2.9205279385269813
+            ],
+            "size": [
+              1.4,
+              0.8,
+              1.16
+            ],
+            "rotation": [
+              0,
+              -0.4,
+              0
+            ],
+            "color": "#aaa99b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.72,
+              0.38,
+              -0.22052793852698116
+            ],
+            "size": [
+              1.22,
+              0.76,
+              1.38
+            ],
+            "rotation": [
+              0,
+              -0.14,
+              0
+            ],
+            "color": "#b6ad99"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3,
+              0.39,
+              1.979472061473019
+            ],
+            "size": [
+              1.4,
+              0.78,
+              1.16
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#919b90"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2.9,
+              0.43,
+              3.929472061473019
+            ],
+            "size": [
+              0.52,
+              0.86,
+              0.76
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#8e9283"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.25,
+              0.43,
+              3.929472061473019
+            ],
+            "size": [
+              0.52,
+              0.86,
+              0.76
+            ],
+            "rotation": [
+              0,
+              -0.08,
+              0
+            ],
+            "color": "#969886"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2.08,
+              0.96,
+              3.929472061473019
+            ],
+            "size": [
+              2.55,
+              0.25,
+              1.12
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#b8aa89"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.65,
+              1.13,
+              3.929472061473019
+            ],
+            "size": [
+              0.68,
+              0.11,
+              0.64
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#b06a3d"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.65,
+              1.29,
+              3.929472061473019
+            ],
+            "size": [
+              0.43,
+              0.26,
+              0.43
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#8ca44a"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -1.65,
+              1.13,
+              3.929472061473019
+            ],
+            "size": [
+              0.68,
+              0.11,
+              0.64
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#b06a3d"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.65,
+              1.28,
+              3.929472061473019
+            ],
+            "size": [
+              0.49,
+              0.24,
+              0.36
+            ],
+            "rotation": [
+              0,
+              0.3,
+              0
+            ],
+            "color": "#b96a35"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.45,
+              1.35,
+              4.279472061473019
+            ],
+            "size": [
+              0.22,
+              2.7,
+              0.22
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#795333"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.1,
+              2.58,
+              4.279472061473019
+            ],
+            "size": [
+              0.2,
+              2.9,
+              0.2
+            ],
+            "rotation": [
+              0,
+              0,
+              1.5708
+            ],
+            "color": "#795333"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -0.75,
+              1.35,
+              4.279472061473019
+            ],
+            "size": [
+              0.22,
+              2.7,
+              0.22
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#795333"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.85,
+              2.21,
+              4.279472061473019
+            ],
+            "size": [
+              0.13,
+              0.7,
+              0.13
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.08
+            ],
+            "color": "#ecddb5"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.85,
+              1.82,
+              4.279472061473019
+            ],
+            "size": [
+              0.34,
+              0.42,
+              0.16
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.08
+            ],
+            "color": "#69766e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -1.25,
+              2.12,
+              4.279472061473019
+            ],
+            "size": [
+              0.14,
+              0.9,
+              0.14
+            ],
+            "rotation": [
+              0,
+              0,
+              0.08
+            ],
+            "color": "#ecddb5"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.25,
+              1.65,
+              4.279472061473019
+            ],
+            "size": [
+              0.4,
+              0.28,
+              0.12
+            ],
+            "rotation": [
+              0,
+              0,
+              0.08
+            ],
+            "color": "#7b8580"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -2.05,
+              2.31,
+              4.279472061473019
+            ],
+            "size": [
+              0.85,
+              0.48,
+              0.1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#d9ac65"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -2.05,
+              2.31,
+              4.359472061473019
+            ],
+            "size": [
+              0.065,
+              0.72,
+              0.065
+            ],
+            "rotation": [
+              0,
+              0,
+              1.1
+            ],
+            "color": "#6b4329"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.05,
+              2.31,
+              4.4194720614730185
+            ],
+            "size": [
+              0.29,
+              0.22,
+              0.1
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.45
+            ],
+            "color": "#a34e29"
+          }
+        ],
+        "animations": [
+          {
+            "part": 18,
+            "kind": "sway",
+            "axis": "z",
+            "speed": 0.7,
+            "amplitude": 0.1,
+            "phase": 0
+          },
+          {
+            "part": 19,
+            "kind": "sway",
+            "axis": "x",
+            "speed": 0.85,
+            "amplitude": 0.12,
+            "phase": 0
+          },
+          {
+            "part": 20,
+            "kind": "bob",
+            "axis": "y",
+            "speed": 0.9,
+            "amplitude": 0.06,
+            "phase": 0
+          },
+          {
+            "part": 21,
+            "kind": "sway",
+            "axis": "z",
+            "speed": 0.6,
+            "amplitude": 0.13,
+            "phase": 0
+          }
+        ]
+      },
+      "position": {
+        "x": 56.5,
+        "z": -11
+      },
+      "footprint": {
+        "width": 8.840633013588464,
+        "depth": 8.97894412294604
+      },
+      "createdBy": "test-kev",
+      "editedBy": "test-kev",
+      "createdAt": 1792876419205,
+      "owner": "dev:test-kev",
+      "plot": "q1_0_1_-1",
+      "venue": "restaurant",
+      "age": 0
+    }
+  ],
+  "jobs": [],
+  "feed": [
+    {
+      "at": 1792874767571,
+      "text": "Sami built Sami’s Stout Hide-Roof Hut"
+    },
+    {
+      "at": 1792874770944,
+      "text": "Ochre Ug is repainting builds. Ask your character to fix yours."
+    },
+    {
+      "at": 1792875030856,
+      "text": "The Dragger is towing builds to the edge. Drive yours back."
+    },
+    {
+      "at": 1792875070405,
+      "text": "The Dragger dumped Sami’s Stout Hide-Roof Hut at the edge"
+    },
+    {
+      "at": 1792875072906,
+      "text": "The Dragger dumped Sami’s Boulder Hearth at the edge"
+    },
+    {
+      "at": 1792875099933,
+      "text": "Sami took Sami’s Stout Hide-Roof Hut for a drive"
+    },
+    {
+      "at": 1792875322163,
+      "text": "test-dana fixed Sami’s Boulder Hearth"
+    },
+    {
+      "at": 1792875361901,
+      "text": "test-nia invited test-kev"
+    },
+    {
+      "at": 1792875413750,
+      "text": "Elder Bramm decrees: everyone wears orange. Three minutes."
+    },
+    {
+      "at": 1792875631464,
+      "text": "Elder Bramm: 4 obeyed, 0 fined"
+    },
+    {
+      "at": 1792876313083,
+      "text": "The Chief unveils The Big Hut!"
+    },
+    {
+      "at": 1792876317088,
+      "text": "The Dragger is towing builds to the edge. Drive yours back."
+    },
+    {
+      "at": 1792876328600,
+      "text": "The Dragger dumped Sami’s Boulder Hearth at the edge"
+    },
+    {
+      "at": 1792876339605,
+      "text": "The Dragger dumped Sami’s Stout Hide-Roof Hut at the edge"
+    },
+    {
+      "at": 1792876353903,
+      "text": "test-kev is designing a restaurant: a large circular stone hearth with a sturdy wooden spit susp"
+    },
+    {
+      "at": 1792876353903,
+      "text": "test-kev invited test-nia"
+    },
+    {
+      "at": 1792876419205,
+      "text": "test-kev built Seven Stones Roast Circle"
+    },
+    {
+      "at": 1792876477772,
+      "text": "Moss had dinner at Seven Stones Roast Circle (+§12 to test-kev)"
+    },
+    {
+      "at": 1792876547844,
+      "text": "Nana Rose had dinner at Seven Stones Roast Circle (+§12 to test-kev)"
+    },
+    {
+      "at": 1792876648469,
+      "text": "Priya had dinner at Seven Stones Roast Circle (+§12 to test-kev)"
+    },
+    {
+      "at": 1792876702542,
+      "text": "Elder Bramm decrees: everyone wears pink. Three minutes."
+    },
+    {
+      "at": 1792876713548,
+      "text": "Nana Rose had dinner at Seven Stones Roast Circle (+§12 to test-kev)"
+    },
+    {
+      "at": 1792876762121,
+      "text": "test-dana worked a shift at Seven Stones Roast Circle"
+    },
+    {
+      "at": 1792876769627,
+      "text": "Old Tom had dinner at Seven Stones Roast Circle (+§12 to test-kev)"
+    }
+  ],
+  "ai": {
+    "story": true,
+    "paused": false,
+    "enforced": true,
+    "callsRemaining": 500,
+    "callsUsed": 117,
+    "bucket": {
+      "agent": 300,
+      "design": 22.5,
+      "at": 1792876825705
+    },
+    "minutes": [
+      [
+        29881244,
+        4,
+        0
+      ],
+      [
+        29881245,
+        0,
+        1
+      ],
+      [
+        29881246,
+        4,
+        0
+      ],
+      [
+        29881247,
+        1,
+        0
+      ],
+      [
+        29881251,
+        6,
+        0
+      ],
+      [
+        29881252,
+        3,
+        0
+      ],
+      [
+        29881253,
+        1,
+        0
+      ],
+      [
+        29881254,
+        1,
+        0
+      ],
+      [
+        29881255,
+        4,
+        0
+      ],
+      [
+        29881256,
+        7,
+        0
+      ],
+      [
+        29881260,
+        7,
+        0
+      ],
+      [
+        29881271,
+        1,
+        0
+      ],
+      [
+        29881272,
+        6,
+        1
+      ],
+      [
+        29881273,
+        1,
+        0
+      ],
+      [
+        29881275,
+        1,
+        0
+      ],
+      [
+        29881276,
+        1,
+        0
+      ],
+      [
+        29881277,
+        1,
+        0
+      ],
+      [
+        29881278,
+        6,
+        0
+      ]
+    ]
+  },
+  "worldRevision": 32,
+  "nextId": 21,
+  "effects": [],
+  "listener": {
+    "backfilled": true,
+    "buffer": [
+      {
+        "kind": "failed",
+        "name": "test-nia",
+        "text": "there is no place called \"the roasting pit\" in town",
+        "at": 1792876351267
+      },
+      {
+        "kind": "refused",
+        "name": "test-kev",
+        "text": "Pink, is it? Right then, can't be having a fine on top of everything else. Let me sort this out quick.",
+        "at": 1792876705075
+      },
+      {
+        "kind": "refused",
+        "name": "test-nia",
+        "text": "Elder Bramm's decree, eh? Right then—can't have the town getting fined. Let me sort this out quick like Kev did.",
+        "at": 1792876708047
+      }
+    ],
+    "wishes": [
+      {
+        "id": "build-house",
+        "wish": "Build a house",
+        "status": "works-now",
+        "count": 2,
+        "askers": [
+          "Sami"
+        ],
+        "examples": [
+          "build a house"
+        ],
+        "how": "Build on your own lot with kind home and a short description of the style, for example 'cosy two-storey cottage with a red door, chimney and flower boxes'. Edit it later to add rooms or details, then invite a neighbour or the Mayor over to see it.",
+        "firstAt": 1792829427131,
+        "lastAt": 1792874855727
+      },
+      {
+        "id": "reveal-under-tarp",
+        "wish": "See what's under the tarp",
+        "status": "works-now",
+        "count": 2,
+        "askers": [
+          "test-kev",
+          "test-dana"
+        ],
+        "examples": [
+          "hey! what's under that tarp?"
+        ],
+        "how": "If you own the tarped build, do a reveal bit with a caption, a confetti or sparkles burst and a pose with a line, then edit the build to show what is underneath. Anyone else can use the build with 'look' and comment on it.",
+        "firstAt": 1792845980788,
+        "lastAt": 1792845980788
+      },
+      {
+        "id": "edit-friends-build",
+        "wish": "Change or add to someone else's build",
+        "status": "works-now",
+        "count": 1,
+        "askers": [
+          "test-bo"
+        ],
+        "examples": [
+          "[failed] Sami's Boulder Hearth is Sami's, not yours; you can only change your own builds"
+        ],
+        "how": "Only the owner can edit a build. Ask the owner to share their lot with you, or invite them over and suggest the change so they make the edit. You can also build a matching addition on your own lot. To pool effort on something shared, propose a community project instead.",
+        "firstAt": 1792874663911,
+        "lastAt": 1792874663911
+      },
+      {
+        "id": "sticky-ug",
+        "wish": "Find or interact with 'Sticky Ug'",
+        "status": "works-now",
+        "count": 1,
+        "askers": [
+          "test-bo"
+        ],
+        "examples": [
+          "[failed] there is nobody and nothing called \"Sticky Ug\" in town"
+        ],
+        "how": "Sticky Ug doesn't exist yet. Build it on your own lot as a roaming animal or a decor piece described as 'Sticky Ug'. Once it exists, others can visit it, use it or ride it.",
+        "firstAt": 1792874663911,
+        "lastAt": 1792874663911
+      },
+      {
+        "id": "market-stall",
+        "wish": "A market stall to visit",
+        "status": "works-now",
+        "count": 1,
+        "askers": [
+          "test-nia"
+        ],
+        "examples": [
+          "[failed] there is nothing called \"the market stall\" in town"
+        ],
+        "how": "Build on your own lot with kind market and a description like 'small market stall with a striped awning, crates of fruit and a hand-written price board'. Others can then visit it and work a shift there.",
+        "firstAt": 1792845980788,
+        "lastAt": 1792845980788
+      },
+      {
+        "id": "build-vegetable-garden",
+        "wish": "A garden with tomatoes and vegetables",
+        "status": "works-now",
+        "count": 1,
+        "askers": [
+          "Sami"
+        ],
+        "examples": [
+          "build a garden with tomatoes and stuff"
+        ],
+        "how": "Build on your own lot with kind park (or decor) and a description like 'vegetable garden with tomato plants, raised beds, a watering can and a little fence'. Act out tending it with emotes like chop or hammer.",
+        "firstAt": 1792829427131,
+        "lastAt": 1792829427131
+      }
+    ],
+    "tips": [
+      "When chat asks for something to be built, build it on your own lot right away. Use the closest kind (home, market, park, decor, etc.) and a vivid description that includes every detail they named.",
+      "If chat repeats a build request, it hasn't happened yet or they want more. Build it now, or edit the existing build to add detail, and say so with a pose and a line.",
+      "If a visit or target fails because the thing doesn't exist yet, build it on your lot with a matching kind and the exact name chat used, so everyone can find it.",
+      "You can only edit your own builds. To change a friend's build, ask them to share their lot, or invite them over and suggest the edit so they make it.",
+      "For gardens or farms, use kind park or decor and list the specific plants asked for. Act out gardening with emotes like chop, hammer or sit.",
+      "When people ask what's hidden or covered, make a moment of it: do a reveal bit with a caption and a confetti or sparkles burst, then edit the build to show what's underneath.",
+      "After building, invite a neighbour or the Mayor over to show it off. Visiting and inviting make builds feel lived in."
+    ],
+    "lastRunAt": 1792876297737,
+    "runs": 5
+  },
+  "npcs": [
+    {
+      "id": "nk",
+      "kind": "mayor",
+      "name": "Elder Bramm",
+      "look": {
+        "skin": "#f5d6c0",
+        "shirt": "#3a2f5e",
+        "pants": "#2a2a2a",
+        "hair": "#7a7a7a",
+        "hat": "tophat",
+        "hatColor": "#1d1d1d",
+        "accessory": "scarf",
+        "accessoryColor": "#c4402f",
+        "height": 1,
+        "build": 1.1
+      },
+      "position": {
+        "x": -69.5,
+        "z": 19.39040577975095
+      },
+      "facing": -1.4195835293879686,
+      "path": [],
+      "speed": 4.2,
+      "plan": [
+        {
+          "do": "wait",
+          "ms": 155000,
+          "until": 1792876953668
+        },
+        {
+          "do": "goto",
+          "to": {
+            "x": 56.76304471162543,
+            "z": 0.44700638785204055
+          },
+          "camp": true
+        },
+        {
+          "do": "decree-check"
+        },
+        {
+          "do": "say",
+          "text": "Carry on, citizens."
+        },
+        {
+          "do": "leave",
+          "to": {
+            "x": 39.12031262026771,
+            "z": 69.5
+          }
+        }
+      ]
+    }
+  ],
+  "nextHappeningAt": 1792877086075.6067,
+  "vandalised": {
+    "bd": {
+      "by": "Ochre Ug",
+      "kind": "painted",
+      "original": {
+        "name": "Sami’s Stout Hide-Roof Hut",
+        "description": "A practical rectangular boulder home with corner timbers, a low open doorway, packed earth floor, central hearth, and sinew-lashed hide roofing with a smoke opening.",
+        "parts": [
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.12,
+              0
+            ],
+            "size": [
+              6.8,
+              0.24,
+              6.2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#96724b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.15,
+              0.68,
+              -2.8
+            ],
+            "size": [
+              2.3,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.08,
+              0
+            ],
+            "color": "#89867b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              0.68,
+              -2.8
+            ],
+            "size": [
+              2.35,
+              1.2,
+              1.1
+            ],
+            "rotation": [
+              0,
+              -0.09,
+              0
+            ],
+            "color": "#aaa493"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.15,
+              0.68,
+              -2.8
+            ],
+            "size": [
+              2.3,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.12,
+              0
+            ],
+            "color": "#928f82"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -2.15,
+              1.73,
+              -2.8
+            ],
+            "size": [
+              2.35,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.08,
+              0
+            ],
+            "color": "#aaa493"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              0,
+              1.73,
+              -2.8
+            ],
+            "size": [
+              2.4,
+              1.15,
+              1.1
+            ],
+            "rotation": [
+              0,
+              0.1,
+              0
+            ],
+            "color": "#858579"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              2.15,
+              1.73,
+              -2.8
+            ],
+            "size": [
+              2.3,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.12,
+              0
+            ],
+            "color": "#b1a995"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              0.68,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#9d998a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              0.68,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#858579"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              1.73,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#b1a995"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -3.05,
+              1.73,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#a49d8b"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              0.68,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#858579"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              0.68,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.2,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#aaa493"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              1.73,
+              -1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#9d998a"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              3.05,
+              1.73,
+              1.35
+            ],
+            "size": [
+              1.05,
+              1.15,
+              2.9
+            ],
+            "rotation": [
+              0,
+              -0.04,
+              0
+            ],
+            "color": "#858579"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.95,
+              0.68,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.04,
+              0
+            ],
+            "color": "#aaa493"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.95,
+              0.68,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.2,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.06,
+              0
+            ],
+            "color": "#969385"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              -1.95,
+              1.73,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              -0.06,
+              0
+            ],
+            "color": "#858579"
+          },
+          {
+            "shape": "sphere",
+            "position": [
+              1.95,
+              1.73,
+              2.8
+            ],
+            "size": [
+              2.65,
+              1.15,
+              1.05
+            ],
+            "rotation": [
+              0,
+              0.06,
+              0
+            ],
+            "color": "#b1a995"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              1.42,
+              -2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#68452c"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              1.42,
+              -2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#745033"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              1.42,
+              2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#745033"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              1.42,
+              2.8
+            ],
+            "size": [
+              0.42,
+              2.6,
+              0.42
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#68452c"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              2.09,
+              2.8
+            ],
+            "size": [
+              1.65,
+              0.32,
+              0.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#765034"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.29,
+              0
+            ],
+            "size": [
+              1.65,
+              0.16,
+              1.65
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#58564e"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              0,
+              0.39,
+              0
+            ],
+            "size": [
+              1.13,
+              0.12,
+              1.13
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#c75b2e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.49,
+              0
+            ],
+            "size": [
+              0.95,
+              0.18,
+              0.24
+            ],
+            "rotation": [
+              0,
+              0.55,
+              0
+            ],
+            "color": "#503622"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              0.63,
+              0
+            ],
+            "size": [
+              0.82,
+              0.17,
+              0.23
+            ],
+            "rotation": [
+              0,
+              -0.65,
+              0
+            ],
+            "color": "#62402a"
+          },
+          {
+            "shape": "cone",
+            "position": [
+              0,
+              0.92,
+              0
+            ],
+            "size": [
+              0.48,
+              0.66,
+              0.43
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#ffb33b"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -3.05,
+              2.54,
+              0
+            ],
+            "size": [
+              0.3,
+              0.32,
+              6.35
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#67462e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              3.05,
+              2.54,
+              0
+            ],
+            "size": [
+              0.3,
+              0.32,
+              6.35
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#67462e"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.58,
+              3.12,
+              2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              0.32
+            ],
+            "color": "#805734"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.58,
+              3.12,
+              2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#805734"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.58,
+              3.12,
+              -2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              0.32
+            ],
+            "color": "#805734"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.58,
+              3.12,
+              -2.8
+            ],
+            "size": [
+              3.65,
+              0.22,
+              0.27
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#805734"
+          },
+          {
+            "shape": "box",
+            "position": [
+              0,
+              3.68,
+              0
+            ],
+            "size": [
+              0.24,
+              0.24,
+              6.8
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#69462d"
+          },
+          {
+            "shape": "box",
+            "position": [
+              -1.78,
+              3.18,
+              0
+            ],
+            "size": [
+              3.85,
+              0.16,
+              7
+            ],
+            "rotation": [
+              0,
+              0,
+              0.32
+            ],
+            "color": "#c6995d"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.78,
+              3.18,
+              2.02
+            ],
+            "size": [
+              3.85,
+              0.16,
+              2.96
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#d5ad72"
+          },
+          {
+            "shape": "box",
+            "position": [
+              1.78,
+              3.18,
+              -2.02
+            ],
+            "size": [
+              3.85,
+              0.16,
+              2.96
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#c9a064"
+          },
+          {
+            "shape": "box",
+            "position": [
+              2.36,
+              2.99,
+              0
+            ],
+            "size": [
+              2.62,
+              0.16,
+              1.08
+            ],
+            "rotation": [
+              0,
+              0,
+              -0.32
+            ],
+            "color": "#bd8d53"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              2.48,
+              2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#dfc48d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              2.48,
+              2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#dfc48d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              -3.05,
+              2.48,
+              -2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#dfc48d"
+          },
+          {
+            "shape": "cylinder",
+            "position": [
+              3.05,
+              2.48,
+              -2.8
+            ],
+            "size": [
+              0.51,
+              0.22,
+              0.51
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "color": "#dfc48d"
+          }
+        ]
+      }
+    }
+  },
+  "hatPiles": {},
+  "city": {
+    "layout": 3,
+    "name": "Kettlewick",
+    "plots": {
+      "q1_0_1_1": {
+        "owner": "kick:28683256",
+        "coOwners": [],
+        "claimedAt": 1792828172456
+      },
+      "q1_0_1_-1": {
+        "owner": "dev:test-kev",
+        "coOwners": [],
+        "claimedAt": 1792829420874
+      },
+      "q1_0_0_1": {
+        "owner": "dev:test-dana",
+        "coOwners": [],
+        "claimedAt": 1792829421179
+      },
+      "q1_0_0_-1": {
+        "owner": "dev:test-nia",
+        "coOwners": [],
+        "claimedAt": 1792829421419
+      },
+      "q1_0_-1_1": {
+        "owner": "dev:test-bo",
+        "coOwners": [],
+        "claimedAt": 1792845970522
+      }
+    },
+    "done": [],
+    "stats": {
+      "b2": {
+        "visits": 0,
+        "coins": 0,
+        "recent": [],
+        "lastVisitors": []
+      },
+      "bj": {
+        "visits": 6,
+        "coins": 72,
+        "recent": [
+          1792876477772,
+          1792876547844,
+          1792876559858,
+          1792876648469,
+          1792876713548,
+          1792876769627
+        ],
+        "lastVisitors": [
+          "Moss",
+          "Nana Rose",
+          "Old Tom",
+          "Priya",
+          "Nana Rose",
+          "Old Tom"
+        ]
+      }
+    },
+    "townies": [
+      {
+        "id": "cast-ash",
+        "name": "Ash",
+        "look": {
+          "skin": "#c68b5f",
+          "shirt": "#6b5a48",
+          "pants": "#4b4038",
+          "hair": "#6E7680",
+          "hat": "none",
+          "hatColor": "#6E7680",
+          "accessory": "none",
+          "accessoryColor": "#6E7680",
+          "height": 1.12,
+          "build": 0.88
+        },
+        "position": {
+          "x": 4.1,
+          "z": 4.1
+        },
+        "facing": -2.356194490192345,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792876829945.7434,
+        "say": {
+          "text": "We still need: Feed 2 of the travellers at your places to eat (1/2)",
+          "until": 1792876833704
+        },
+        "traveller": true,
+        "leader": true,
+        "scale": 1.15,
+        "role": "ash"
+      },
+      {
+        "id": "cast-wren",
+        "name": "Wren",
+        "look": {
+          "skin": "#e0ac85",
+          "shirt": "#B3262E",
+          "pants": "#5a3e2b",
+          "hair": "#2b2018",
+          "hat": "headband",
+          "hatColor": "#B3262E",
+          "accessory": "scarf",
+          "accessoryColor": "#B3262E",
+          "height": 1,
+          "build": 0.9
+        },
+        "position": {
+          "x": 6.2,
+          "z": 0.4
+        },
+        "facing": -1.6352231662204502,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792876827564.7864,
+        "traveller": true,
+        "daughter": true,
+        "scale": 0.82,
+        "role": "wren"
+      },
+      {
+        "id": "cast-moss",
+        "name": "Moss",
+        "look": {
+          "skin": "#d8a07a",
+          "shirt": "#4E8A3A",
+          "pants": "#4b4038",
+          "hair": "#c9c4ba",
+          "hat": "none",
+          "hatColor": "#4E8A3A",
+          "accessory": "scarf",
+          "accessoryColor": "#4E8A3A",
+          "height": 0.9,
+          "build": 1
+        },
+        "position": {
+          "x": 0.6,
+          "z": 7.6
+        },
+        "facing": -3.0628086926006493,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792876827628.5237,
+        "traveller": true,
+        "role": "moss",
+        "placeId": "bj",
+        "last": "bj"
+      },
+      {
+        "id": "cast-oak",
+        "name": "Oak",
+        "look": {
+          "skin": "#a26a42",
+          "shirt": "#E8762B",
+          "pants": "#4b4038",
+          "hair": "#2b2018",
+          "hat": "none",
+          "hatColor": "#E8762B",
+          "accessory": "toolbelt",
+          "accessoryColor": "#6a4a2a",
+          "height": 1.1,
+          "build": 1.2
+        },
+        "position": {
+          "x": 7.4,
+          "z": 4.6
+        },
+        "facing": -2.1269625569153496,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792876829494.667,
+        "traveller": true,
+        "scale": 1.25,
+        "role": "oak"
+      },
+      {
+        "id": "cast-kit",
+        "name": "Kit",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#2F6FD0",
+          "pants": "#2F6FD0",
+          "hair": "#5a3a22",
+          "hat": "none",
+          "hatColor": "#2F6FD0",
+          "accessory": "none",
+          "accessoryColor": "#FFC633",
+          "height": 0.95,
+          "build": 0.9
+        },
+        "position": {
+          "x": 3,
+          "z": -3.6
+        },
+        "facing": -0.6947382761967031,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792876828084.6902,
+        "traveller": true,
+        "scale": 0.7,
+        "role": "kit"
+      },
+      {
+        "id": "t7690ps",
+        "name": "Nana Rose",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#b04a7a",
+          "pants": "#3a4a5e",
+          "hair": "#1d1d1d",
+          "hat": "tophat",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#5a6b7a",
+          "height": 0.9600000000000001,
+          "build": 1
+        },
+        "position": {
+          "x": 21.90247626329965,
+          "z": -17.93143504027692
+        },
+        "facing": 2.2371287353779046,
+        "path": [],
+        "doing": "stroll",
+        "placeId": "town:fountain",
+        "until": 1792876832143.7134,
+        "last": "town:fountain"
+      },
+      {
+        "id": "t1hvm93i",
+        "name": "Old Tom",
+        "look": {
+          "skin": "#f5d6c0",
+          "shirt": "#d9a23a",
+          "pants": "#6a5a43",
+          "hair": "#5a3a22",
+          "hat": "bucket",
+          "hatColor": "#7d4fa3",
+          "accessory": "none",
+          "accessoryColor": "#b04a7a",
+          "height": 1.08,
+          "build": 1
+        },
+        "position": {
+          "x": 23.201700765100554,
+          "z": -17.97633152031933
+        },
+        "facing": -1.5362537039911859,
+        "path": [],
+        "doing": "chat",
+        "placeId": "bj",
+        "until": 1792876830199,
+        "last": "bj",
+        "say": {
+          "text": "This town could do with somewhere to go out at night.",
+          "until": 1792876827699
+        }
+      },
+      {
+        "id": "t1n6zdaw",
+        "name": "Priya",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#5a6b7a",
+          "pants": "#3a4a5e",
+          "hair": "#d9c27a",
+          "hat": "none",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#3f6fb0",
+          "height": 0.92,
+          "build": 1
+        },
+        "position": {
+          "x": 21.365341805810935,
+          "z": 26.869569691111657
+        },
+        "facing": 0.7126203300565949,
+        "path": [],
+        "doing": "stroll",
+        "placeId": "town:market",
+        "until": 1792876846932.981,
+        "last": "town:market"
+      }
+    ],
+    "unmet": {
+      "rest": 27,
+      "fun": 13
+    },
+    "nextProjectId": 1,
+    "age": 0,
+    "caravan": {
+      "age": 0,
+      "visit": 0,
+      "openedAt": 1792839781662,
+      "asks": [
+        {
+          "id": "food",
+          "kind": "build",
+          "venues": [
+            "restaurant",
+            "cafe",
+            "bakery",
+            "market"
+          ],
+          "label": "Build or do up a place to eat (roasting pit, fire pit…)",
+          "need": 1,
+          "have": 1
+        },
+        {
+          "id": "fed",
+          "kind": "serve",
+          "venues": [
+            "restaurant",
+            "cafe",
+            "bakery",
+            "market"
+          ],
+          "label": "Feed 2 of the travellers at your places to eat",
+          "need": 2,
+          "have": 1
+        }
+      ],
+      "travellers": [
+        "cast-ash",
+        "cast-wren",
+        "cast-moss",
+        "cast-oak",
+        "cast-kit"
+      ],
+      "trimmed": true,
+      "seen": [
+        "bj"
+      ],
+      "helpers": [
+        "kick:28683256"
+      ],
+      "volunteers": [],
+      "revs": {}
+    },
+    "restyle": {
+      "age": 0,
+      "ids": []
+    },
+    "paidMinute": 29881280,
+    "story": {
+      "folly": {
+        "age": 0,
+        "pct": 100,
+        "startedAt": 1792839539519,
+        "plaque": [
+          "test-dana"
+        ],
+        "unveiled": true
+      },
+      "sideLog": [
+        {
+          "at": 1792874767467,
+          "id": "dev:test-kev",
+          "name": "test-kev",
+          "side": "red"
+        },
+        {
+          "at": 1792874767476,
+          "id": "dev:test-nia",
+          "name": "test-nia",
+          "side": "red"
+        },
+        {
+          "at": 1792874767484,
+          "id": "dev:test-dana",
+          "name": "test-dana",
+          "side": "gold"
+        }
+      ]
+    },
+    "crier": {
+      "age": 0,
+      "tally": {
+        "dev:test-kev": 11,
+        "kick:28683256": 4
+      },
+      "visit": {
+        "dev:test-kev": 7
+      },
+      "builds": [
+        "bj"
+      ],
+      "nudgeAt": 1792875793648,
+      "deedAt": 1792876477772,
+      "spot": [
+        "b2",
+        "bd"
+      ],
+      "spotAt": 1792876901586.2837,
+      "out": [],
+      "leader": "dev:test-kev",
+      "leaderAt": 1792876477772
+    }
+  },
+  "mayor": {
+    "position": {
+      "x": 54,
+      "z": 50.5
+    },
+    "facing": 3.141592653589793,
+    "moving": false,
+    "running": false,
+    "cam": {
+      "yaw": 0.65,
+      "half": 14,
+      "x": 54,
+      "z": 50.5
+    },
+    "follow": true,
+    "moved": 5,
+    "lastInputAt": 1792839472879
+  },
+  "happening": {
+    "kind": "mayor",
+    "npcId": "nk",
+    "title": "ELDER BRAMM",
+    "text": "decrees: everyone wears pink. Three minutes.",
+    "startedAt": 1792876702542,
+    "until": 1792876882542,
+    "decree": {
+      "colour": "pink",
+      "hex": "#e07aa8"
+    }
+  }
+}
