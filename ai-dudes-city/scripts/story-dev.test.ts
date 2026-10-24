@@ -72,8 +72,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   t.run('story-on');
   const before = snapshot(t);
   const unbuilt = t.status().storyDev!.filter((b) => b.card);
-  // The four plays and three pieces pinned below; each card that lands takes its own off both lists.
-  assert.equal(unbuilt.length, 7, unbuilt.map((b) => b.label).join(', '));
+  // The four plays and two pieces pinned below; each card that lands takes its own off both lists.
+  assert.equal(unbuilt.length, 6, unbuilt.map((b) => b.label).join(', '));
   for (const b of unbuilt) {
     assert.match(b.card!, /^FK-\d{3}$/, b.label);
     assert.equal(t.press(b), `not built yet: ${b.card}`, `${b.label} says which card builds it`);
@@ -86,9 +86,10 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
     ['FK-025', 'FK-026', 'FK-043', 'FK-127'],
   );
   assert.equal(cardOf('story-play', 'test'), undefined, 'Play: test runs (FK-017: scripts/story-show.test.ts)');
+  assert.equal(cardOf('side-set'), undefined, 'Set side runs (FK-012: scripts/story-sides.test.ts)');
   assert.deepEqual(
-    ['side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
-    ['FK-012', 'FK-049', 'FK-056'],
+    ['spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
+    ['FK-049', 'FK-056'],
   );
   assert.match(t.run('story-play', 'fireworks') ?? 'ran', /^No scene called "fireworks": intro, crossing, rally, unveil, ageTurn, test$/);
   assert.equal(t.run('story-play', 'CROSSING'), undefined, 'a scene name in any case');

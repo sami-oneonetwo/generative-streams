@@ -17,6 +17,7 @@ import { storyOn, type DudesState } from '../state';
 import { playShow, releaseShow } from './show';
 import { FOLLIES, FOLLY_DEV } from './folly'; // hook FK-023
 import { callRing } from './gather';
+import { SIDES_DEV } from './sides'; // hook FK-012
 
 type Ctx = WorldCtx<DudesState>;
 /** Does the thing, or says why it didn't (and then has changed nothing). */
@@ -233,7 +234,7 @@ const PIECES: Piece[] = [
     label: "Set a chatter's side",
     group: 'people',
     input: { kind: 'text', label: 'name red|gold|none', maxLength: 40 },
-    card: 'FK-012',
+    run: (ctx, v) => SIDES_DEV['side-set'](ctx, v), // hook FK-012 (wrapped, as FK-023's: the import loop)
     buttons: [{ label: 'Set side', arg: 'name red|gold|none' }],
   },
   {

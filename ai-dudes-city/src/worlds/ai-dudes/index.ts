@@ -110,6 +110,7 @@ import { storyDevActions, storyDevButtons } from './story/dev';
 import { gathering, hearInGather, takeQueued, tickGather, tickRing } from './story/gather';
 import { releaseShow, tickShow } from './story/show';
 import { storyDudeView } from './story/view';
+import { hearSide } from './story/sides'; // hook FK-012
 
 export interface DudesOptions {
   agent: AgentFn;
@@ -1208,6 +1209,8 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       if (cmd.line) c.announce?.(cmd.line);
       return;
     }
+    // Red, gold or help as the whole line, with Story on: the side and its job, no agent (story/sides.ts; a newcomer's too). // hook FK-012
+    if (hearSide(c.state, dude, clean, now)) return void (dude.say = { text: sayable(clean), until: now + sayMs(clean) }); // hook FK-012
     // Any other "!word" is a command for some other bot: not speech, and nothing for the agent.
     if (/^![\w]/.test(clean) && !isCrierCommand(clean)) return;
     // Emotes only: the bubble shows them, and that's all (no agent turn for a KEKW).

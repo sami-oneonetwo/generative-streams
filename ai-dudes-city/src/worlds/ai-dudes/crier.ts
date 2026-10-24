@@ -331,6 +331,16 @@ export function crierCommand(state: DudesState, dudeId: string, text: string, no
   return { handled: true, line };
 }
 
+/** A reply to one chatter that isn't a `!` command (story/sides.ts: "You're red this age"): once a minute per chatter, out with the next answers. */ // hook FK-012
+export function crierReply(state: DudesState, dudeId: string, key: string, line: string, now: number): void {
+  let cd = cooldowns.get(state);
+  if (!cd) cooldowns.set(state, (cd = { asked: new Map(), answeredAt: -Infinity, pending: [] }));
+  if (now - (cd.asked.get(`${dudeId}:${key}`) ?? -Infinity) < CRIER.askMs) return;
+  cd.asked.set(`${dudeId}:${key}`, now);
+  if (!cd.pending.includes(line)) cd.pending.push(line);
+  if (cd.pending.length > 12) cd.pending.shift();
+} // hook FK-012
+
 /** Every tick: answers that waited out the gap go out together, as many as fit in one chat line. */
 export function tickCrierAnswers(state: DudesState, now: number): void {
   const cd = cooldowns.get(state);
