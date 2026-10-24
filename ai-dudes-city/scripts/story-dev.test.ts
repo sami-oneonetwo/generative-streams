@@ -1,7 +1,7 @@
 // Story (dev) on /admin (FK-002): every Finders Keepers scene and piece on a button, for a look
 // off-air. Every button but Story ON refuses "Story is off" while Story is off; a piece that hasn't
-// landed names its card; neither changes the world. Play: Crossing plays today's Crossing, Stop cuts
-// it, Story OFF mid-scene lets everyone go, as every boot does, and Reset the cast puts FK-014's band
+// landed names its card; neither changes the world. Play: Crossing plays today's Crossing (for real
+// while the band waits across the river, FK-127), Stop cuts it, Story OFF mid-scene lets everyone go, as every boot does, and Reset the cast puts FK-014's band
 // back on its marks as new.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -72,8 +72,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   t.run('story-on');
   const before = snapshot(t);
   const unbuilt = t.status().storyDev!.filter((b) => b.card);
-  // The four plays and two pieces pinned below; each card that lands takes its own off both lists.
-  assert.equal(unbuilt.length, 6, unbuilt.map((b) => b.label).join(', '));
+  // The three plays and two pieces pinned below; each card that lands takes its own off both lists.
+  assert.equal(unbuilt.length, 5, unbuilt.map((b) => b.label).join(', '));
   for (const b of unbuilt) {
     assert.match(b.card!, /^FK-\d{3}$/, b.label);
     assert.equal(t.press(b), `not built yet: ${b.card}`, `${b.label} says which card builds it`);
@@ -82,8 +82,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   // Which card builds which piece (BOARD.md): each wires its own button in story/dev.ts.
   const cardOf = (action: string, value?: string | number) => unbuilt.find((b) => b.action === action && (value === undefined || b.value === value))?.card;
   assert.deepEqual(
-    [cardOf('story-play', 'unveil'), cardOf('story-play', 'rally'), cardOf('story-play', 'intro'), cardOf('story-play', 'ageTurn')],
-    ['FK-025', 'FK-026', 'FK-043', 'FK-127'],
+    [cardOf('story-play', 'unveil'), cardOf('story-play', 'rally'), cardOf('story-play', 'intro')],
+    ['FK-025', 'FK-026', 'FK-043'],
   );
   assert.equal(cardOf('story-play', 'test'), undefined, 'Play: test runs (FK-017: scripts/story-show.test.ts)');
   assert.equal(cardOf('side-set'), undefined, 'Set side runs (FK-012: scripts/story-sides.test.ts)');
@@ -91,11 +91,11 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
     ['spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
     ['FK-049', 'FK-056'],
   );
-  assert.match(t.run('story-play', 'fireworks') ?? 'ran', /^No scene called "fireworks": intro, crossing, rally, unveil, ageTurn, test$/);
+  assert.match(t.run('story-play', 'fireworks') ?? 'ran', /^No scene called "fireworks": intro, opening, crossing, rally, unveil, ageTurn, test$/);
   assert.equal(t.run('story-play', 'CROSSING'), undefined, 'a scene name in any case');
 });
 
-test("Play: Crossing plays today's Crossing; Stop and Story OFF cut it; the opening is never cut short", async () => {
+test("Play: Crossing plays today's Crossing (the band crosses); Stop and Story OFF cut it; the opening is never cut short", async () => {
   const t = await town();
   t.run('story-on');
   assert.ok(cityOf(t.h.state).caravan?.stranded, 'the band waits across the river');
@@ -104,7 +104,7 @@ test("Play: Crossing plays today's Crossing; Stop and Story OFF cut it; the open
   assert.ok(t.h.logs.some((l) => /today's crossing is playing \(admin, Story \(dev\)\)/.test(l)));
   await t.tick(SCENES.crossing.ms + 1000);
   assert.equal(t.view().town?.scene, undefined, 'and ends on its own');
-  assert.ok(cityOf(t.h.state).caravan?.stranded, 'a look only: the band is still waiting, the bridge ask untouched');
+  assert.equal(cityOf(t.h.state).caravan?.stranded, undefined, 'the crossing for real: the bridge mended, the band over (FK-127)');
 
   // Stop (the panic exit) cuts it: nothing follows the Crossing's end.
   t.run('story-play', 'crossing');
@@ -133,21 +133,25 @@ test("Play: Crossing plays today's Crossing; Stop and Story OFF cut it; the open
   assert.equal(t.view().town?.scene?.id, 'test', 'no Crossing on top: the test scene has the page');
   t.run('story-stop');
 
-  // What today's Crossing needs, it still needs.
+  // The show runtime ticks it (FK-127): the Crossing needs neither the caravan nor town life; the opening (it opens an ask) does.
   t.h.state.ai.caravan = false;
-  assert.match(t.run('story-play', 'crossing') ?? 'ran', /^The caravan is off/);
-  t.h.state.ai.caravan = true;
+  assert.match(t.run('story-play', 'opening') ?? 'ran', /^The caravan is off/);
   t.h.state.ai.townLife = false;
-  assert.match(t.run('story-play', 'crossing') ?? 'ran', /^Town life is off/);
+  assert.equal(t.run('story-play', 'crossing'), undefined);
+  await t.tick(SCENES.crossing.ms + 1000);
+  assert.equal(t.view().town?.scene, undefined, 'and it ends');
 });
 
-test('Play: Crossing before any caravan refuses (nothing would end the scene)', () => {
-  const { world, ctx, h } = harness({ town: true });
+test('Play: Crossing before any caravan is a look, ticked by the show runtime (FK-127)', async () => {
+  const { world, ctx, h, tick } = harness({ town: true });
   h.state.ai.story = true;
   assert.equal(cityOf(h.state).caravan, undefined, 'nobody has chatted: no caravan yet');
   const why = world.adminActions!.find((a) => a.id === 'story-play')!.run(ctx, 'crossing');
-  assert.match(why ?? 'ran', /^No caravan in this age yet/);
-  assert.equal(cityOf(h.state).scene, undefined);
+  assert.equal(why ?? undefined, undefined);
+  assert.equal(cityOf(h.state).scene?.id, 'crossing');
+  await tick(SCENES.crossing.ms + 1000);
+  assert.equal(cityOf(h.state).scene, undefined, 'it ends with no caravan to tick it');
+  assert.equal(cityOf(h.state).caravan, undefined, 'and brings none');
 });
 
 test('Story OFF mid-scene lets everyone go: the scene ends, nobody gathered, the head free and shown, today’s view', async () => {

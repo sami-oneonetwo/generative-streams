@@ -8,9 +8,8 @@
 // button there follows on its own.
 import type { AdminAction, WorldCtx } from '../../../engine/world';
 import type { StoryDevButton } from '../../../shared/dudesTypes';
-import type { SceneId } from '../../../shared/scenes';
 import { STORY_SITES } from '../../../shared/storyMap'; // hook FK-020
-import { caravanOn, playScene, resetCast } from '../caravan';
+import { caravanOn, playStoryScene, resetCast } from '../caravan'; // hook FK-127
 import { ageOf, cityOf, headName } from '../city';
 import { prepareHead } from '../mayor'; // hook FK-020
 import { storyOn, type DudesState } from '../state';
@@ -45,18 +44,12 @@ function noBand(s: DudesState): string | undefined {
   return undefined;
 }
 
-/** Today's caravan scene, played as /admin scene-opening plays the opening (until FK-127 moves it onto the show runtime). */
+/** Today's caravan scene, ticked by the show runtime (FK-127: caravan.ts playStoryScene says what each needs). */
 const playToday =
-  (id: SceneId): Run =>
+  (id: 'opening' | 'crossing' | 'ageTurn'): Run =>
   (ctx) => {
-    const s = ctx.state;
-    const city = cityOf(s);
-    const why = noBand(s);
+    const why = playStoryScene(ctx.state, id, ctx.now); // hook FK-127
     if (why) return why;
-    // Cutting another scene short would skip what follows it (the bridge ask after the opening, the age after the turn).
-    if (city.scene && city.scene.id !== id) return `The ${city.scene.id} scene is playing: let it finish first`;
-    if (city.story?.scene) return `The ${city.story.scene.id} scene is playing: Stop it first`;
-    playScene(s, id, ctx.now);
     ctx.log(`story: today's ${id} is playing (admin, Story (dev))`);
   };
 
@@ -116,11 +109,12 @@ const gatherAll: Run = (ctx) => {
 /** Every scene Story (dev) plays, in show order. */
 export const STORY_PLAYS: Play[] = [
   { id: 'intro', label: 'Intro', card: 'FK-043' },
-  // Today's Crossing; FK-127 plays it through the show runtime with the cast (FK-017).
+  // Today's opening, Crossing and age turn, through the show runtime with the cast (FK-127).
+  { id: 'opening', label: 'Opening', run: playToday('opening') }, // hook FK-127
   { id: 'crossing', label: 'Crossing', run: playToday('crossing') },
   { id: 'rally', label: 'Rally', card: 'FK-026' },
   { id: 'unveil', label: 'Unveiling', card: 'FK-025' },
-  { id: 'ageTurn', label: 'Age turn', card: 'FK-127' },
+  { id: 'ageTurn', label: 'Age turn', run: playToday('ageTurn') }, // hook FK-127
   // FK-001's test scene: the runtime (FK-017) and the page (FK-124) end to end.
   { id: 'test', label: 'test', run: playStory('test') },
 ];

@@ -1,7 +1,7 @@
 // The show runtime (FK-017): story scenes (shared/storyScenes.ts) played from `city.story.scene`. They
 // tick on their own, every world tick while Story is on (index.ts), whatever the caravan and town life
-// are doing and with nobody awake; today's caravan scenes still tick inside tickCaravan until FK-127
-// moves them here. A scene's clock is `now − at − shift`, frozen at `heldAt` while a hold is on
+// are doing and with nobody awake; today's caravan scenes tick from here too while Story is on (FK-127,
+// caravan.ts tickCaravanScene). A scene's clock is `now − at − shift`, frozen at `heldAt` while a hold is on
 // (FK-035 sets both): `at` never moves, because the page keys a scene's shots by `id:at`.
 //
 // The watchdog: every beat runs inside its own try/catch, and so does the whole round. A beat that
@@ -17,6 +17,7 @@ import type { WorldCtx } from '../../../engine/world';
 import type { TownView } from '../../../shared/dudesTypes';
 import { LOCK_SLACK_MS, STEP_FORWARD, type Beat, type Scene } from '../../../shared/scenes';
 import { STORY_SCENES } from '../../../shared/storyScenes';
+import { tickCaravanScene } from '../caravan'; // hook FK-127
 import { ageOf } from '../city';
 import type { DudesState, StorySceneState, Townie } from '../state';
 import { castIn, castTownie } from './cast';
@@ -94,6 +95,7 @@ const why = (e: unknown) => (e instanceof Error ? e.message : String(e));
  * scene ends at its length. Anything wrong is a panic exit (the header); this never throws.
  */
 export function tickShow(state: DudesState, now: number, log: Log): void {
+  tickCaravanScene(state, now, log); // hook FK-127: today's caravan scenes (opening, Crossing, age turn …) tick here while Story is on
   const sc = state.city?.story?.scene;
   if (!sc) return;
   try {

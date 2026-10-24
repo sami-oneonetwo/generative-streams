@@ -10,7 +10,9 @@
 // until the streamer plays the opening (admin) and a share of the active chatters mend it ('help').
 // Then the travellers walk over and the first visit opens. A daughter travels with every caravan and
 // grows up age by age: the story's through-line. With Finders Keepers' Story switch on, the band is
-// the cast (story/cast.ts): the same five in every age, spared when travellers go home.
+// the cast (story/cast.ts): the same five in every age, spared when travellers go home, and the
+// caravan's scenes are ticked by the show runtime (tickCaravanScene, FK-127) instead of tickCaravan.
+import type { WorldCtx } from '../../engine/world';
 import { BUS_STOP, LANDING, PITCH, VENUES, type VenueKind } from '../../shared/city';
 import { contains } from '../../shared/layout';
 import { BRIDGE, FACING_TOWN, SCENES, STEP_FORWARD, STRANDED, type SceneId } from '../../shared/scenes';
@@ -21,7 +23,7 @@ import { addEffect, awake } from './sim';
 import { route } from './placement';
 import { defaultLook, hashOf } from './agent';
 import { pushFeed, storyOn, type DudesState, type Townie } from './state';
-import { CAST, castArrival, castId, castIn, isCastId, keepsCast } from './story/cast';
+import { CAST, castArrival, castId, castIn, castTownie, isCastId, keepsCast } from './story/cast';
 import { ageHeroes, credit, creditBuilds, crierAgeTurned, crierBridgeDone, crierBridgeOpened, crierVisitDone, crierVisitOpened, tickCrier } from './crier';
 
 export type AskKind = 'build' | 'serve' | 'operate' | 'party' | 'project' | 'bridge';
@@ -508,22 +510,33 @@ function keepVolunteers(state: DudesState, cv: Caravan, now: number): void {
   }
 }
 
+/** Who a scene's beat moves: the traveller at that place in the caravan; with Story on, the age's cast
+ * member at that place in castIn's order, found by role (FK-127), so a band out of order (or no caravan
+ * at all, a Story (dev) look) still has the right one wave. */
+function beatWho(state: DudesState, cv: Caravan | undefined, who: number): Townie | undefined {
+  if (!storyOn(state)) return cityOf(state).townies.find((x) => x.id === cv?.travellers[who]);
+  const m = castIn(cv?.age ?? ageOf(state))[who];
+  return m && castTownie(state, m.role);
+}
+
 /** Every tick while a scene plays: its beats, and what follows when it ends. */
-function tickScene(state: DudesState, cv: Caravan, now: number): void {
+function tickScene(state: DudesState, now: number): void {
   const city = cityOf(state);
   const sc = city.scene;
   if (!sc) return;
+  const cv = city.caravan;
   const scene = SCENES[sc.id];
   const t = now - sc.at;
   while (sc.beat < scene.beats.length && scene.beats[sc.beat].at <= t) {
     const b = scene.beats[sc.beat++];
     if (b.do === 'age') {
       // The wave: the town turns into the next age, on camera.
-      if (cv.turn && !cv.turn.final && ageOf(state) === cv.age) setAge(state, cv.age + 1, now);
+      if (cv?.turn && !cv.turn.final && ageOf(state) === cv.age) setAge(state, cv.age + 1, now);
       continue;
     }
     if (b.do === 'leave') {
-      walkBack(state, cv, now);
+      // Only an age really turning sends the band home: a Story (dev) look at the scene leaves them be.
+      if (cv?.turn) walkBack(state, cv, now);
       continue;
     }
     if (b.do === 'launch') {
@@ -532,7 +545,7 @@ function tickScene(state: DudesState, cv: Caravan, now: number): void {
       for (let i = 0; i < 4; i++) addEffect(state, { kind: 'burst', at: now, to: { x: at.x + Math.cos(i * 1.7) * 4, z: at.z + Math.sin(i * 1.7) * 4 }, label: 'confetti' });
       continue;
     }
-    const who = city.townies.find((x) => x.id === cv.travellers[b.who]);
+    const who = beatWho(state, cv, b.who);
     if (!who) continue;
     if (b.do === 'step') {
       who.path = [{ x: who.position.x - STEP_FORWARD, z: who.position.z }];
@@ -541,13 +554,71 @@ function tickScene(state: DudesState, cv: Caravan, now: number): void {
   }
   if (t < scene.ms) return;
   city.scene = undefined;
-  if (sc.id === 'opening' && cv.stranded && !cv.asks.length) openBridge(state, cv, now);
-  if (sc.id === 'ageTurn' && cv.turn && !cv.turn.arriveAt) cv.turn.arriveAt = now + BREATHER_MS;
+  if (sc.id === 'opening' && cv?.stranded && !cv.asks.length) openBridge(state, cv, now);
+  if (sc.id === 'ageTurn' && cv?.turn && !cv.turn.arriveAt) cv.turn.arriveAt = now + BREATHER_MS;
 }
+
+/**
+ * With Story on, today's caravan scenes tick here, from the show runtime (story/show.ts tickShow,
+ * FK-127), and tickCaravan leaves them alone: so one plays out whatever the caravan, town life and the
+ * chatters are doing, with nobody awake and the caravan off. The same script, the same `city.scene`
+ * (the page, the save and everything waiting on a scene see no difference) and the same endings (the
+ * bridge ask after the opening, the breather after the age turn); only the people are found by role
+ * (beatWho). A story scene has the page (story/view.ts): a caravan scene that comes up under one waits
+ * for it to end, then starts from the top. Never throws: a scene that breaks ends, with an alert.
+ */
+export function tickCaravanScene(state: DudesState, now: number, log: WorldCtx<DudesState>['log']): void {
+  const city = state.city;
+  const sc = city?.scene;
+  if (!city || !sc) return;
+  try {
+    if (city.story?.scene && sc.beat === 0) {
+      sc.at = now;
+      return;
+    }
+    tickScene(state, now);
+  } catch (e) {
+    city.scene = undefined;
+    log(`story: PANIC EXIT from today's ${String(sc.id).slice(0, 40)} scene: it threw: ${e instanceof Error ? e.message : String(e)}`, 'alert');
+  }
+}
+
+/**
+ * Story (dev) → Play: Opening, Crossing or Age turn (FK-127): today's scene now, ticked by the show
+ * runtime (tickCaravanScene). Says why not, and changes nothing, while a scene plays. The opening needs
+ * what /admin's scene-opening needs (the caravan and town life on: it opens the bridge ask); the other two
+ * need nothing, not the caravan, not anyone awake. With the band waiting across the river, the Crossing
+ * is the crossing for real (the bridge mended, the band walks over, the first visit opens after); else
+ * it is a look. The age turn is always a look: its lines as they would read now, and the age stays (only
+ * the Wonder standing turns it).
+ */
+export function playStoryScene(state: DudesState, id: 'opening' | 'crossing' | 'ageTurn', now: number): string | undefined {
+  const city = cityOf(state);
+  if (city.scene) return `The ${city.scene.id} scene is playing: let it finish first`;
+  if (city.story?.scene) return `The ${city.story.scene.id} scene is playing: Stop it first`;
+  const cv = city.caravan;
+  const age = ageOf(state);
+  if (id === 'opening') {
+    if (!caravanOn(state)) return 'The caravan is off (sandbox mode): switch it on first';
+    if (state.ai.townLife === false) return 'Town life is off: switch it on first (the travellers are townsfolk)';
+    playScene(state, 'opening', now);
+  } else if (id === 'crossing') {
+    if (cv?.stranded && cv.age === age) crossOver(state, cv, now);
+    else playScene(state, 'crossing', now);
+  } else {
+    const c = bandOf(state, age);
+    const vars = { head: headName(state), wonder: c.wonder, was: ageStyle(age).name, age: ageStyle(Math.min(age + 1, LAST_AGE)).name, heroes: names(ageHeroes(state, 3)), farewell: c.farewell };
+    city.scene = { id: 'ageTurn', at: now, beat: 0, vars };
+  }
+  return undefined;
+}
+
 export const sceneView = (state: DudesState) => {
   const city = cityOf(state);
   const sc = city.scene;
-  return sc ? { id: sc.id, at: sc.at, ...(city.caravan ? { leader: bandOf(state, city.caravan.age).leader } : {}), ...(sc.vars ? { vars: sc.vars } : {}) } : undefined;
+  // With Story on the cast's leader speaks even before any caravan has come (a Story (dev) look, FK-127).
+  const age = city.caravan?.age ?? (storyOn(state) ? ageOf(state) : undefined);
+  return sc ? { id: sc.id, at: sc.at, ...(age !== undefined ? { leader: bandOf(state, age).leader } : {}), ...(sc.vars ? { vars: sc.vars } : {}) } : undefined;
 };
 
 const names = (xs: string[]) => (xs.length <= 1 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
@@ -631,7 +702,8 @@ export function tickCaravan(state: DudesState, now: number): void {
   // The age is turning: the scene, the goodbye, a breather, then the next caravan walks in from the camp.
   if (cv?.turn) {
     bandFollowsStory(state, cv, now);
-    tickScene(state, cv, now);
+    // With Story on the show runtime ticks the scene (tickCaravanScene, FK-127).
+    if (!storyOn(state)) tickScene(state, now);
     if (cv.turn.final) return;
     if (!city.scene && !cv.turn.arriveAt) cv.turn.arriveAt = now + BREATHER_MS;
     if (cv.turn.arriveAt && now >= cv.turn.arriveAt) arrive(state, cv, now);
@@ -642,7 +714,7 @@ export function tickCaravan(state: DudesState, now: number): void {
   // Travellers who wandered off (town life switched off and back) come back.
   // Their ids are taken afresh: one made from an old name (a save from before FK-128) would otherwise dangle.
   if (cv.travellers.some((id) => !city.townies.some((t) => t.id === id)) && cv.visit < 3) cv.travellers = bringTravellers(state, cv.age, now);
-  tickScene(state, cv, now);
+  if (!storyOn(state)) tickScene(state, now);
   // The Wonder visit: the leader's Wonder goes forward as soon as the square is free to build it.
   if (!cv.nextAt && cv.asks.some((a) => a.kind === 'project' && a.have < a.need) && !projectOf(state)) leaderProposesWonder(state, cv, now);
   if (bridgeOpen(state)) {
