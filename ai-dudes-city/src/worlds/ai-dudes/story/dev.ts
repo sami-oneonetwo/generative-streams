@@ -9,8 +9,10 @@
 import type { AdminAction, WorldCtx } from '../../../engine/world';
 import type { StoryDevButton } from '../../../shared/dudesTypes';
 import type { SceneId } from '../../../shared/scenes';
+import { STORY_SITES } from '../../../shared/storyMap'; // hook FK-020
 import { caravanOn, playScene, resetCast } from '../caravan';
 import { ageOf, cityOf } from '../city';
+import { prepareHead } from '../mayor'; // hook FK-020
 import { storyOn, type DudesState } from '../state';
 import { releaseShow } from './show';
 
@@ -176,7 +178,8 @@ const PIECES: Piece[] = [
     id: 'story-gather',
     label: 'Gather at the Folly (no scene)',
     group: 'scene',
-    card: 'FK-019',
+    // hook FK-020: the head goes onto his mark, facing the Folly, until Stop; FK-019 adds the ring and swaps this run for its gather.
+    run: (ctx) => { prepareHead(ctx.state, STORY_SITES.headMark.at, STORY_SITES.headMark.facing, ctx.now); ctx.log('story: gather (admin): the head is on his mark (the ring is FK-019)'); },
     buttons: [{ label: 'Gather', hint: 'The Call: everyone walks into the ring at the Folly, no scene' }],
   },
   { id: 'folly-raise', label: 'Raise the cordon', group: 'folly', card: 'FK-023', hint: "The age's Folly goes up under its tarp" },

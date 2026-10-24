@@ -85,8 +85,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
     ['FK-025', 'FK-026', 'FK-043', 'FK-127', 'FK-017'],
   );
   assert.deepEqual(
-    ['story-gather', 'folly-raise', 'folly-progress', 'folly-retarp', 'side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
-    ['FK-019', 'FK-023', 'FK-023', 'FK-023', 'FK-012', 'FK-049', 'FK-056'],
+    ['folly-raise', 'folly-progress', 'folly-retarp', 'side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
+    ['FK-023', 'FK-023', 'FK-023', 'FK-012', 'FK-049', 'FK-056'],
   );
   assert.match(t.run('story-play', 'fireworks') ?? 'ran', /^No scene called "fireworks": intro, crossing, rally, unveil, ageTurn, test$/);
   assert.equal(t.run('story-play', 'CROSSING'), undefined, 'a scene name in any case');
