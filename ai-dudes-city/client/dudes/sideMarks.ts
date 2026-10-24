@@ -25,8 +25,12 @@ export const SIDE_HEX: Record<Side, string> = { red: '#B3262E', gold: '#FFC633' 
 export const CREAM = '#FFF6E0';
 export const INK = '#1E1914';
 
-/** The disc, in metres: the side's colour 1.3 m across, then the sticker rim; and how far above the ground it lies. */
-export const SIDE_DISC = { face: 0.65, cream: 0.1, ink: 0.05, segments: 36, y: 0.03 };
+/**
+ * The disc, in metres: the side's colour 1.3 m across, then the sticker rim; and how far above the
+ * ground it lies: over the raised pavement (0.02) and the kerb tops (0.04), so a kerb never cuts a
+ * band out of a disc on the walking edge, and still under ON_GROUND.
+ */
+export const SIDE_DISC = { face: 0.65, cream: 0.1, ink: 0.05, segments: 36, y: 0.045 };
 /** Off the ground by more than this (up on a build, or aboard one), a dude has no disc: the tag still carries the side. */
 const ON_GROUND = 0.05;
 
@@ -56,10 +60,11 @@ export function sideOf(v: DudeView, demo: boolean): Side | undefined {
 
 /**
  * Where a dude's disc lies this frame (its height), or undefined for none: on foot only. Up on a
- * build, aboard one, inside one or swimming, the disc goes (it would float); the tag still shows the side.
+ * build, aboard one or swimming, the disc goes (it would float); the tag still shows the side. Going
+ * into a build it stays: pose() scales it with the shrinking figure and stops drawing both at once.
  */
-export function discHeight(v: Pick<DudeView, 'hidden' | 'riding'>, lift: number, pose: string): number | undefined {
-  if (v.hidden || v.riding || lift > ON_GROUND || pose === 'swim') return undefined;
+export function discHeight(v: Pick<DudeView, 'riding'>, lift: number, pose: string): number | undefined {
+  if (v.riding || lift > ON_GROUND || pose === 'swim') return undefined;
   return SIDE_DISC.y;
 }
 

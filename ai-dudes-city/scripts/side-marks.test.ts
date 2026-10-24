@@ -135,16 +135,17 @@ test('whose side: the server’s always; ?demo=board fakes one for chatters only
     for (const id of ids) assert.equal(demoSide(dude(id, extra)), undefined, JSON.stringify(extra));
 });
 
-test('the disc lies on the ground under a dude on foot, and goes while they are up on, aboard or inside a build', () => {
+test('the disc lies on the ground under a dude on foot, and goes while they are up on or aboard a build', () => {
   assert.equal(discHeight(dude('a'), 0, 'idle'), SIDE_DISC.y);
   assert.equal(discHeight(dude('a'), 0, 'walk'), SIDE_DISC.y);
   assert.equal(discHeight(dude('a'), 0, 'away'), SIDE_DISC.y, 'napping where they stand');
   assert.equal(discHeight(dude('a'), 0, 'ko'), SIDE_DISC.y, 'knocked flat');
-  assert.equal(discHeight(dude('a', { hidden: true }), 0, 'idle'), undefined, 'inside a build');
+  // Going into a build the disc stays, scaled by the shrinking figure (pose() stops at f.vis <= 0).
+  assert.equal(discHeight(dude('a', { hidden: true }), 0, 'idle'), SIDE_DISC.y, 'shrinks with them into a build');
   assert.equal(discHeight(dude('a', { riding: 'o1' }), 1.1, 'drive'), undefined, 'aboard');
   assert.equal(discHeight(dude('a'), 2.4, 'idle'), undefined, 'up on a roof');
   assert.equal(discHeight(dude('a'), 0, 'swim'), undefined, 'in the river');
-  assert.ok(SIDE_DISC.y > 0 && SIDE_DISC.y < 0.05, 'just over the ground, under the feet');
+  assert.ok(SIDE_DISC.y > 0.04 && SIDE_DISC.y < 0.05, 'over the pavement and the kerb tops, under the feet');
 });
 
 test('the tag icon: a crown for gold, a pennant flag for red, nothing for a neutral', () => {
