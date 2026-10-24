@@ -17,6 +17,7 @@ import { createPlayer } from './player';
 import { createPlansLayer } from './plans';
 import { createAudio } from './audio';
 import { feedLines, fitWords } from './feed';
+import { createStats } from './stats'; // hook FK-065
 import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
@@ -1121,6 +1122,7 @@ function start() {
   }
   connect();
 
+  const stats = createStats(params, renderer, camera, dudes, objects); // hook FK-065: `?stats=1` only
   // --- the frame ---
   let frame = 0,
     frameAt = 0,
@@ -1128,6 +1130,7 @@ function start() {
   function draw(now: number) {
     frame = requestAnimationFrame(draw);
     if (document.hidden) return;
+    stats?.begin(); // hook FK-065
     const dt = frameAt ? Math.min((now - frameAt) / 1000, 0.1) : 0;
     frameAt = now;
     timeline.tick(dt * 1000);
@@ -1223,6 +1226,7 @@ function start() {
       lastInspectAt = now;
       renderInspect();
     }
+    stats?.end(now); // hook FK-065
   }
   frame = requestAnimationFrame(draw);
   addEventListener(

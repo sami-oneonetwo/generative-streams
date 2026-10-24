@@ -27,6 +27,7 @@ import {
   type SafehouseObject,
   type SafehouseObjectView,
 } from './types';
+import type { Moves } from '../../src/shared/objectTypes';
 
 interface Entry {
   revision: number;
@@ -40,6 +41,8 @@ interface Entry {
   animations?: PartAnimation[];
   /** On a run under a viewer (`!drive`): drawn from its track like a creature, snapped back to its true spot when it stops. */
   driven?: boolean;
+  /** Sliding along this frame (the stats overlay). */
+  moving?: boolean;
   /** Drawn here rather than from its track: what the operator's Mayor is riding, on the operator page. */
   local?: { x: number; z: number; facing: number; y: number; moving?: boolean };
   /** The age it was designed in, and the age its colours were last drawn for. */
@@ -148,6 +151,8 @@ function animateParts(group: THREE.Group, animations: PartAnimation[], t: number
   }
 }
 
+/** What a moving build counts as in the motion budget: its own way of moving, or someone at the wheel. */
+export type MoverKind = Moves | 'ridden';
 /** A build in flight: Rook's current job, or a neighbour's. Keyed by whose it is. */
 export interface PreviewSpec {
   key: string;
@@ -177,6 +182,8 @@ export interface ObjectsHandles {
   positionOf(objectId: string): { x: number; y: number; z: number } | undefined;
   /** The server restarted (a new epoch): ids and revisions may name different builds now, so every build's parts are fetched again and redrawn where they changed. */
   resetGeometry(): void;
+  /** Every build that can move, where it is drawn and whether it moved this frame (the stats overlay). */
+  movers(fn: (x: number, y: number, z: number, kind: MoverKind, moving: boolean) => void): void;
   dispose(): void;
 }
 const SHAKE_MS = 800;
@@ -536,6 +543,7 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
         else animateParts(entry.group, entry.animations, t);
       }
       const c = entry.creature;
+      entry.moving = false;
       // A living build follows its creature; a piece on a run (`!drive`) follows `driven`; the
       // operator's own ride follows the Mayor. Nothing else moves.
       if (!c && !entry.driven && !entry.local) continue;
@@ -552,6 +560,7 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
       const flying = !!c?.flying || pose.y > 0.3; // anything up in the air sways a little
       const still = reducedMotion || !!c?.destroyed || !!c?.perched;
       const hums = entry.driven || c?.behaviour === 'zoom';
+      entry.moving = pose.moving && !still;
       const bob = still
         ? 0
         : flying
@@ -665,6 +674,17 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     return { x: p.x, y: p.y, z: p.z };
   }
 
+  function movers(fn: (x: number, y: number, z: number, kind: MoverKind, moving: boolean) => void): void {
+    for (const entry of committed.values()) {
+      if (!entry.creature && !entry.driven && !entry.local) continue;
+      // The snapshot has no `blueprint.moves`; the creature says it (movers.ts startMoving: drive is `zoom`, fly is `flying`).
+      const c = entry.creature;
+      const kind: MoverKind = entry.driven || entry.local ? 'ridden' : c?.flying ? 'fly' : c?.behaviour === 'zoom' ? 'drive' : 'roam';
+      const p = entry.group.position;
+      fn(p.x, p.y, p.z, kind, !!entry.moving);
+    }
+  }
+
   function dispose(): void {
     for (const entry of committed.values()) {
       disposeObject3D(entry.group);
@@ -689,5 +709,5 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     if (entry) entry.local = at;
   }
 
-  return { root, sample, sampleOne, setLocal, setAge, syncCommitted, syncPreviews, update, shake, positionOf, resetGeometry, dispose };
+  return { root, sample, sampleOne, setLocal, setAge, syncCommitted, syncPreviews, update, shake, positionOf, resetGeometry, movers, dispose };
 }

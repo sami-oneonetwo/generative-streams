@@ -628,8 +628,8 @@ export interface DudesHandles {
   sampleOne(v: DudeView, serverTime: number): void;
   /** Draw this figure where the page says, now, not where the server last had it (the operator's own Mayor). */
   setLocal(id: string, at: { x: number; z: number; facing: number; moving: boolean; y?: number; pose?: Emote } | undefined): void;
-  /** Where every figure is drawn now (for the camera's framing). */
-  each(fn: (x: number, z: number, view: DudeView) => void): void;
+  /** Where every figure is drawn now (for the camera's framing), and how fast it is going (m/s, for the stats overlay). */
+  each(fn: (x: number, z: number, view: DudeView, speed: number) => void): void;
   /** Re-measure the tag font after a resize or a stream-scale change. */
   measure(): void;
   dispose(): void;
@@ -1730,7 +1730,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     headOf: (id) => figures.get(id)?.anchor,
     count: () => [...figures.values()].filter((f) => f.synced).length,
     each(fn) {
-      for (const f of figures.values()) if (f.synced) fn(f.x, f.z, f.view);
+      for (const f of figures.values()) if (f.synced) fn(f.x, f.z, f.view, f.speed);
     },
     measure,
     dispose() {
