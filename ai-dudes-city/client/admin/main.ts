@@ -297,6 +297,7 @@ const STORY_GROUPS: [StoryDevButton['group'], string][] = [
 ];
 let storyButtons: StoryDevButton[] = [];
 let storyKey = '';
+let storyIsOn = false;
 function storyButtonHtml(b: StoryDevButton, i: number): string {
   const title = b.card ? `not built yet: ${b.card}${b.hint ? ` · ${b.hint}` : ''}` : (b.hint ?? '');
   return (
@@ -310,7 +311,7 @@ function storyButtonHtml(b: StoryDevButton, i: number): string {
 function renderStoryDev(d: DudesAdminStatus | undefined): void {
   storyDev.hidden = !d?.storyDev;
   if (!d?.storyDev) return;
-  const on = d.town?.story === true;
+  const on = (storyIsOn = d.town?.story === true);
   const badge = $('story-badge');
   setText(badge, on ? 'on' : 'off');
   badge.className = `badge ${on ? 'ok' : 'dim'}`;
@@ -348,16 +349,19 @@ $('story-groups').addEventListener('click', (e) => {
   if (btn.dataset.act === 'scene-opening') return void run('scene-opening', undefined, 'The opening is playing');
   const b = storyButtons[Number(btn.dataset.i)];
   if (!b) return;
+  // Would the server refuse it anyway? Then an empty argument box isn't the news (the server only hears
+  // a refusal once it has text), and there's nothing to confirm.
+  const refused = !storyIsOn ? 'Story is off: switch Story ON first' : b.card ? `not built yet: ${b.card}` : '';
   let value = b.value;
   if (b.arg) {
     value = storyArg.value.trim();
     if (!value) {
-      toast(`Type ${b.arg} in the argument box first`, 'bad');
-      storyArg.focus();
+      toast(refused || `Type ${b.arg} in the argument box first`, 'bad');
+      if (!refused) storyArg.focus();
       return;
     }
   }
-  if (b.confirm && !b.card && !confirm(b.confirm)) return;
+  if (b.confirm && !refused && !confirm(b.confirm)) return;
   void run(b.action, value, `Done: ${b.label}${b.arg ? ` ${value}` : ''}`);
 });
 
