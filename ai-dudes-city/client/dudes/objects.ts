@@ -15,6 +15,10 @@
 // Ages (src/shared/ages.ts): a build designed in one age and shown in another is drawn with its
 // colours swapped into the town's age (`restyleColour`), deterministically, until a proper restyle of
 // it exists. A new age refills every group from the cached parts; nothing is fetched again.
+//
+// The head's Folly (Finders Keepers, FK-024) is not drawn while it is under wraps: its tarp, cordon
+// and beam are (storyProps.ts, folly.ts), over the box its parts fill (`boundsOf`). It shows in its
+// own colours the moment the server unveils it, under the tarp as it drops.
 
 import * as THREE from 'three';
 import { buildPrimitiveMesh, disposeObject3D, newMaterialCache } from './primitives';
@@ -28,6 +32,7 @@ import {
   type SafehouseObjectView,
 } from './types';
 import type { Moves } from '../../src/shared/objectTypes';
+import type { Bounds } from './folly';
 
 interface Entry {
   revision: number;
@@ -60,6 +65,8 @@ interface Entry {
   front?: number;
   /** A pet settling (0 up … 1 down): sitting, and curled up asleep; eased each frame from `at`. */
   rest?: { sit: number; nap: number; at: number };
+  /** The box its parts fill, in its own frame, measured with `top` (the Folly's tarp goes over it). */
+  bounds?: Bounds;
   /** The health bar over it, made the first time it is hit; and when it last puffed smoke. */
   bar?: { sprite: THREE.Sprite; canvas: HTMLCanvasElement; tex: THREE.CanvasTexture; drawn: number };
   smokeAt?: number;
@@ -80,6 +87,32 @@ const MAX_SPEED = 3,
   MAX_SHIFT = 0.5,
   DEFAULT_SPEED = 0.3,
   DEFAULT_AMPLITUDE = 0.08;
+
+/** The box a build's parts fill, in its own frame: each part's box turned as it is turned, all of them together. */
+export function partsBounds(parts: Primitive[]): Bounds {
+  const b = { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity, minZ: Infinity, maxZ: -Infinity };
+  const m = new THREE.Matrix4();
+  const e = new THREE.Euler();
+  for (const p of parts) {
+    const r = m.makeRotationFromEuler(e.set(p.rotation[0], p.rotation[1], p.rotation[2])).elements;
+    const hx = Math.abs(p.size[0]) / 2,
+      hy = Math.abs(p.size[1]) / 2,
+      hz = Math.abs(p.size[2]) / 2;
+    // The turned box's half-extents along each axis (column-major: elements[col * 4 + row]).
+    const ex = Math.abs(r[0]) * hx + Math.abs(r[4]) * hy + Math.abs(r[8]) * hz,
+      ey = Math.abs(r[1]) * hx + Math.abs(r[5]) * hy + Math.abs(r[9]) * hz,
+      ez = Math.abs(r[2]) * hx + Math.abs(r[6]) * hy + Math.abs(r[10]) * hz;
+    b.minX = Math.min(b.minX, p.position[0] - ex);
+    b.maxX = Math.max(b.maxX, p.position[0] + ex);
+    b.minY = Math.min(b.minY, p.position[1] - ey);
+    b.maxY = Math.max(b.maxY, p.position[1] + ey);
+    b.minZ = Math.min(b.minZ, p.position[2] - ez);
+    b.maxZ = Math.max(b.maxZ, p.position[2] + ez);
+  }
+  return parts.length ? b : { minX: 0, maxX: 0, minY: 0, maxY: 0, minZ: 0, maxZ: 0 };
+}
+/** The head's Folly while it is under wraps: its tarp is drawn instead (storyProps.ts), so the build itself is not. */
+const underTarp = (o: SafehouseObjectView): boolean => !!o.folly && !!o.silhouette;
 
 function recordBases(group: THREE.Group): void {
   for (const child of group.children) {
@@ -189,6 +222,8 @@ export interface ObjectsHandles {
   resetGeometry(): void;
   /** Every build that can move, where it is drawn and whether it moved this frame (the stats overlay). */
   movers(fn: (x: number, y: number, z: number, kind: MoverKind, moving: boolean) => void): void;
+  /** The box a committed build's parts fill, in its own frame; undefined until its parts have landed. */
+  boundsOf(objectId: string): Bounds | undefined;
   dispose(): void;
 }
 const SHAKE_MS = 800;
@@ -335,6 +370,7 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     entry.top = parts.reduce((m, p) => Math.max(m, p.position[1] + p.size[1] / 2), 0.5) * (entry.destroyed ? 0.5 : 1);
     entry.front = parts.reduce((m, p) => Math.max(m, p.position[2] + p.size[2] / 2), 0);
     entry.long = entry.front - parts.reduce((m, p) => Math.min(m, p.position[2] - p.size[2] / 2), 0);
+    entry.bounds = partsBounds(parts);
     entry.filled = true;
     entry.drawnFor = townAge;
   }
@@ -406,10 +442,12 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     for (const obj of objects) {
       seen.add(obj.id);
       const destroyed = obj.destroyedAt !== undefined;
-      // The landmark before it is reached is a dark shape in the mist.
-      const shade = obj.silhouette ? 0.1 : destroyed ? 0.7 : 0.75 + 0.25 * hpOf(obj);
+      // The landmark before it is reached is a dark shape in the mist. The Folly under wraps keeps its
+      // own colours, unseen: its tarp is drawn over it, and it shows as the tarp drops.
+      const shade = obj.silhouette && !obj.folly ? 0.1 : destroyed ? 0.7 : 0.75 + 0.25 * hpOf(obj);
       const existing = committed.get(obj.id);
       if (existing && existing.revision === obj.revision) {
+        existing.group.visible = !underTarp(obj);
         // Restyled since (a new age stamped on it), or not drawn for this age yet: refill from the cached parts.
         const origin = obj.free ? NO_AGE : (obj.age ?? MODERN);
         if (existing.origin !== origin) {
@@ -450,6 +488,7 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
       const group = new THREE.Group();
       group.position.set(obj.position.x, obj.creature?.altitude ?? 0, obj.position.z);
       group.scale.y = destroyed ? rubble(obj) : 1;
+      group.visible = !underTarp(obj);
       if (obj.creature) group.rotation.y = obj.creature.facing;
       root.add(group);
       if (existing) {
@@ -729,6 +768,11 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     }
   }
 
+  function boundsOf(objectId: string): Bounds | undefined {
+    const entry = committed.get(objectId);
+    return entry?.filled ? entry.bounds : undefined;
+  }
+
   function dispose(): void {
     for (const entry of committed.values()) {
       disposeObject3D(entry.group);
@@ -753,5 +797,5 @@ export function createObjectsLayer(parent: THREE.Object3D): ObjectsHandles {
     if (entry) entry.local = at;
   }
 
-  return { root, sample, sampleOne, setLocal, setAge, syncCommitted, syncPreviews, update, shake, positionOf, resetGeometry, movers, dispose };
+  return { root, sample, sampleOne, setLocal, setAge, syncCommitted, syncPreviews, update, shake, positionOf, resetGeometry, movers, boundsOf, dispose };
 }

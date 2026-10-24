@@ -18,6 +18,7 @@ import { createPlansLayer } from './plans';
 import { createAudio } from './audio';
 import { feedLines, fitWords } from './feed';
 import { createStats } from './stats'; // hook FK-065
+import { createStoryProps } from './storyProps'; // hook FK-024
 import { setStoryLook, storyLook } from './sticker';
 import { boardFor, createBoard, fitUnder, liftUnder, reserved } from './board';
 import { TOWN_GROUND, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
@@ -131,6 +132,7 @@ function start() {
     dudes = createDudesLayer(environment.world, el('people')),
     fx = createEffectsLayer(environment.world),
     plans = createPlansLayer(environment.world);
+  const storyProps = createStoryProps(environment.world, objects, location.search); // hook FK-024: the Folly's cordon, tarp, sign and beam (and `?demo=folly`)
 
   // Read-only handles for browser smokes.
   (window as unknown as { __dudes?: unknown }).__dudes = {
@@ -987,6 +989,7 @@ function start() {
     playLine(msg.play);
     objects.syncCommitted(next.objects);
     objects.syncPreviews(previewsOf(next));
+    storyProps.sync(next); // hook FK-024
     const names = new Map(next.objects.map((o) => [o.id, o.blueprint.name]));
     dudes.sync(next.dudes, (id) => names.get(id), serverClock());
     // Sites marked out for everyone's designs, the Mayor's included.
@@ -1155,6 +1158,7 @@ function start() {
     const live = connected && Date.now() - lastMessageAt < 6000;
     dudes.pose(now, reduced, renderTime, serverNow, live);
     objects.update(now, reduced, renderTime);
+    storyProps.update(now, serverNow, reduced); // hook FK-024
     plans.update(now, reduced);
     const mayor = liveMayor ?? state?.mayor;
     if (op) {
@@ -1182,6 +1186,10 @@ function start() {
       }
       const k = reduced ? 1 : 1 - Math.exp(-dt * (me.free ? 14 : 6));
       focus.lerp(mayorFocus.set(me.cam.x, 1, me.cam.z), k);
+    } else if (autoCamera && storyProps.demoShot) { // hook FK-024: `?demo=folly` holds the shot on its fake Folly (a cut to it, then eased)
+      const k = reduced || focus.distanceTo(storyProps.demoShot.centre) > 20 ? 1 : 1 - Math.exp(-dt * 1.4);
+      focus.lerp(storyProps.demoShot.centre, k);
+      half += (storyProps.demoShot.half - half) * k;
     } else if (autoCamera && mayor?.live && mayor.focus && dudes.positionOf(mayor.focus)) {
       // The stream: on the one person the Mayor chose, close in, eased.
       const p = dudes.positionOf(mayor.focus)!;

@@ -281,6 +281,7 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
   for (const list of [wild, bits]) for (const p of list.filter((q) => q.x > 0 && q.x < rx0 && Math.abs(q.z) < b.maxZ + 4)) list.splice(list.indexOf(p), 1); // hook FK-078
   instancePiece(piece('wild-tree'), [...wild, ...yard], world);
   const follyGroup = new THREE.Group(); // hook FK-023
+  const follyDemo = typeof location !== 'undefined' && new URLSearchParams(location.search).get('demo') === 'folly'; // hook FK-024
   world.add(follyGroup); // hook FK-023
   if (follyTrees.length) instancePiece(piece('wild-tree'), follyTrees, follyGroup); // hook FK-023
   // The ground's bits blended most of the way into the grass, so people and builds stand out.
@@ -434,6 +435,7 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
     drawBridge(view.bridge);
     centrepiece.visible = !view.wonder;
     follyGroup.visible = !view.story; // hook FK-023
+    if (follyDemo) follyGroup.visible = false; // hook FK-024: `?demo=folly`'s fake Folly stands on the plot
     party = view.party;
   }
 
