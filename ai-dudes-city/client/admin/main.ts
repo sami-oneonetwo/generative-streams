@@ -336,7 +336,7 @@ function renderStoryDev(d: DudesAdminStatus | undefined): void {
       // Today's opening is /admin scene-opening, as it always was (Story on or off): linked here.
       const opening =
         group === 'scene'
-          ? `<div class="row"><span class="muted">Today's opening, Story on or off:</span><button class="sm ghost" data-act="scene-opening">scene-opening</button></div>`
+          ? `<div class="row story-opening"><span class="muted">Today's opening (Story on or off):</span><button class="sm" data-act="scene-opening">scene-opening</button></div>`
           : '';
       return html || opening ? `<div class="story-group"><h3>${esc(title)}</h3><div class="story-btns">${html}</div>${opening}</div>` : '';
     }).join(''),

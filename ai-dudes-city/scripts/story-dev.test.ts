@@ -89,7 +89,7 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   assert.equal(t.run('story-play', 'CROSSING'), undefined, 'a scene name in any case');
 });
 
-test("Play: Crossing plays today's Crossing; Stop cuts it; the opening is never cut short", async () => {
+test("Play: Crossing plays today's Crossing; Stop and Story OFF cut it; the opening is never cut short", async () => {
   const t = await town();
   t.run('story-on');
   assert.ok(cityOf(t.h.state).caravan?.stranded, 'the band waits across the river');
@@ -106,6 +106,11 @@ test("Play: Crossing plays today's Crossing; Stop cuts it; the opening is never 
   assert.equal(t.run('story-stop'), undefined);
   assert.equal(t.view().town?.scene, undefined, 'cut');
   assert.match(t.run('story-stop') ?? 'ran', /^Nothing to stop/, 'a second press has nothing to do');
+  // Story OFF lets go of the same: today's game, with no Crossing left playing from here.
+  t.run('story-play', 'crossing');
+  assert.equal(t.run('story-off'), undefined);
+  assert.equal(t.view().town?.scene, undefined, 'Story OFF cut it too');
+  t.run('story-on');
 
   // The opening (today's /admin scene-opening, linked from the card) opens the bridge ask as it ends,
   // so neither Play: Crossing nor Stop cuts it short.

@@ -58,6 +58,23 @@ export const STORY_PLAYS: Play[] = [
   { id: 'test', label: 'test', card: 'FK-017' },
 ];
 
+/**
+ * Let go of everything a Story (dev) button can have started: FK-001's release (the story scene, every
+ * gathering, the head's lock and hiding), and today's Crossing, which nothing follows, so cutting it is
+ * safe. The opening and the age turn play on: they open the bridge ask and turn the age as they end
+ * (Caravan → finish this visit's asks hurries them). Returns how many things it let go.
+ */
+function letGo(state: DudesState): number {
+  const city = cityOf(state);
+  let n = releaseShow(state);
+  if (city.scene?.id === 'crossing') {
+    city.scene = undefined;
+    n++;
+  }
+  return n;
+}
+const things = (n: number) => `${n} held thing${n === 1 ? '' : 's'}`;
+
 /** One Story (dev) action and its buttons on /admin. */
 interface Piece {
   id: string;
@@ -88,12 +105,12 @@ const PIECES: Piece[] = [
     id: 'story-off',
     label: 'Story OFF',
     group: 'switch',
-    // The clean-up every boot runs (FK-001): the scene ends, every gathering is called off, the head
-    // walks and shows again. The page brings back the old band and its panels once `town.story` goes.
+    // The clean-up every boot runs (FK-001), as Stop: the scene ends, every gathering is called off, the
+    // head walks and shows again. The page brings back the old band and its panels once `town.story` goes.
     run: (ctx) => {
       ctx.state.ai.story = false;
-      const n = releaseShow(ctx.state);
-      ctx.log(`Story OFF (admin): today's game${n ? `; let go of ${n} held thing${n === 1 ? '' : 's'} (scene, gatherings, the head's lock)` : ''}`, 'alert');
+      const n = letGo(ctx.state);
+      ctx.log(`Story OFF (admin): today's game${n ? `; let go of ${things(n)} (scene, gatherings, the head's lock)` : ''}`, 'alert');
     },
   },
   {
@@ -117,16 +134,9 @@ const PIECES: Piece[] = [
     danger: true,
     hint: 'Ends the scene, lets everyone go, gives the head his WASD back',
     run: (ctx) => {
-      const city = cityOf(ctx.state);
-      let n = releaseShow(ctx.state);
-      // Today's Crossing stops too: nothing follows its end, so cutting it is safe. (The opening and the
-      // age turn open the bridge ask and turn the age as they end: Caravan → finish this visit's asks.)
-      if (city.scene?.id === 'crossing') {
-        city.scene = undefined;
-        n++;
-      }
+      const n = letGo(ctx.state);
       if (!n) return 'Nothing to stop: no scene playing, nobody gathered, the head free';
-      ctx.log(`story: stopped (admin, panic exit): let go of ${n} held thing${n === 1 ? '' : 's'}`, 'alert');
+      ctx.log(`story: stopped (admin, panic exit): let go of ${things(n)}`, 'alert');
     },
   },
   {
