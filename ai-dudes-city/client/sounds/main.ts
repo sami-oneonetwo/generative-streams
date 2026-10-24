@@ -275,6 +275,7 @@ function startCrowd(n: number) {
     $('crowd-stat').textContent = `${n} talkers · ${c.heard} lines · ${(c.heard / Math.max(1, secs)).toFixed(1)} a second`;
   }, SNAPSHOT_MS);
   talking = c;
+  meter.mark();
   pressed($(`crowd-${n}`), true);
 }
 $('crowd-6').onclick = () => startCrowd(6);
@@ -331,6 +332,7 @@ $('phone').onclick = () => {
   pressed($('phone'), on);
   $('phone').querySelector('em')!.textContent = on ? 'on' : 'off';
   out?.phone(on);
+  meter.mark(); // Last play reads the sound as it is heard now
 };
 for (const d of DISTANCES) {
   const b = el('button', '', d.label) as HTMLButtonElement;
