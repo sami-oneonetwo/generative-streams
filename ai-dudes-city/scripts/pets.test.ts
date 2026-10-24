@@ -270,7 +270,7 @@ test('Story OFF: a pet roams as it always has; it neither trails its owner nor s
   assert.ok(spots.some((p) => dist(p, spots[0]) > 1), 'wandering');
 });
 
-test('the save: `follows` is kept, a rest is never written down (it is worked out again each tick)', async () => {
+test('the save: `follows` is kept; a rest is not (it is worked out again each tick)', async () => {
   const { h, tick, kev } = await town(true);
   const dog = await built(h.state, kev, { x: kev.position.x + 2, z: kev.position.z }, 'pet dog', h.now);
   await tick(5000);

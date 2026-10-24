@@ -146,7 +146,7 @@ export interface CreatureState {
   prevNode?: string;
   /** ai-dudes Finders Keepers, a pet: the chatter (dude id) it trails instead of roaming. */
   follows?: string; // hook FK-001
-  /** A pet at rest (movers.ts): sitting by its owner, or asleep on their lot. Set afresh every tick, never saved. */
+  /** A pet at rest (movers.ts): sitting by its owner, or asleep on their lot. Worked out afresh every tick; the save's schema drops it. */
   rest?: 'sit' | 'sleep'; // hook FK-027
 }
 export interface SafehouseObject {
