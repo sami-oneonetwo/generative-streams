@@ -67,7 +67,7 @@ export interface PlotInfo {
   sign: GroundPoint;
   /** The town square's lots are for community projects, never anyone's home. */
   civic: boolean;
-  /** Order lots are handed out in: nearest the square first. */
+  /** Order lots are handed out in: the square's first, then block by block from the bridge (BLOCK_ORDER). */
   rank: number;
 }
 
@@ -135,6 +135,25 @@ export interface LayoutSpec {
 }
 export const CURRENT_LAYOUT: LayoutSpec = { ...CITY, path: SQUARE.path, site: SQUARE.site };
 
+/**
+ * The order home blocks are handed out in (layout A+, Sami 2026-10-24): from the bridge. The block
+ * between the square and the river, then south, south-east, north, north-east, west, south-west and
+ * north-west, so the first chatters live together by the water instead of one per side of the square.
+ * The corners are parks with no lots while `CITY.parks` holds, so today it runs E, S, N, W.
+ */
+export const BLOCK_ORDER = [
+  [1, 0],
+  [0, 1],
+  [1, 1],
+  [0, -1],
+  [1, -1],
+  [-1, 0],
+  [-1, 1],
+  [-1, -1],
+] as const;
+/** The east block's middle row, the two lots Bridge Lane will run through from the square to the bridge (FK-076). */
+export const isBridgeLane = (p: { bx: number; bz: number; sz: number }): boolean => p.bx === 1 && p.bz === 0 && p.sz === 0;
+
 let PLOTS: PlotInfo[] | undefined;
 /** Every lot in the city, home lots and the square's community lots, in hand-out order. */
 export function allPlots(): PlotInfo[] {
@@ -182,9 +201,22 @@ export function layoutPlots(L: LayoutSpec): PlotInfo[] {
           });
         }
     }
-  // Nearest the square first; round each ring in turn so a block fills before the next one starts.
-  const score = (p: PlotInfo) => Math.max(Math.abs(p.bx), Math.abs(p.bz)) * 1000 + Math.hypot(p.centre.x, p.centre.z) + Math.atan2(p.centre.z, p.centre.x) * 0.01;
-  out.sort((a, b) => score(a) - score(b));
+  // The square's lots first, round from the north-west as ever (community projects take the first free
+  // one). Then home lots block by block in BLOCK_ORDER, each block's river-side (east) cells first, then
+  // the ones nearest Bridge Lane (z = 0), south before north. Bridge Lane's own two cells go last of all,
+  // so they are still free when FK-076 takes them out.
+  const block = (p: PlotInfo) => {
+    if (p.civic) return -1;
+    if (isBridgeLane(p)) return 1e6;
+    const i = BLOCK_ORDER.findIndex(([bx, bz]) => bx === p.bx && bz === p.bz);
+    // A wider town (none today) carries on ring by ring.
+    return i >= 0 ? i : BLOCK_ORDER.length + Math.max(Math.abs(p.bx), Math.abs(p.bz)) * 10 + Math.atan2(p.bz, p.bx) + Math.PI;
+  };
+  out.sort(
+    (a, b) =>
+      block(a) - block(b) ||
+      (a.civic ? Math.atan2(a.centre.z, a.centre.x) - Math.atan2(b.centre.z, b.centre.x) : b.centre.x - a.centre.x || Math.abs(a.centre.z) - Math.abs(b.centre.z) || b.centre.z - a.centre.z),
+  );
   out.forEach((p, i) => (p.rank = i));
   return out;
 }

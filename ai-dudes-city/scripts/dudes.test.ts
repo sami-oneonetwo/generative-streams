@@ -421,9 +421,14 @@ test('fights: a shot knocks someone out and they get back up; a bomb blows up ev
 
   const tower = h.state.objects[0];
   const before = JSON.stringify(tower.blueprint);
-  victim.position = { x: tower.position.x + tower.footprint.width / 2 + 1, z: tower.position.z };
   script = [{ do: 'attack', target: 'tower', with: 'bomb' }];
   await say('bomber', 'bomb the tower');
+  // hook FK-075: the victim stands by the tower a metre from the bomb, on whichever side the bomber came from (lots move with the layout).
+  const bomber = h.state.dudes.find((d) => d.name === 'bomber')!;
+  for (let i = 0; i < 120 && bomber.attack?.phase !== 'fuse'; i++) await tick(500);
+  const bomb = bomber.attack!.bombAt!,
+    far = Math.hypot(tower.position.x - bomb.x, tower.position.z - bomb.z) || 1;
+  victim.position = { x: bomb.x + (tower.position.x - bomb.x) / far, z: bomb.z + (tower.position.z - bomb.z) / far };
   await tick(70_000);
   assert.ok(h.state.effects?.some((e) => e.kind === 'boom') || h.state.vandalised?.[tower.id], 'it went off');
   assert.ok(['damaged', 'wrecked'].includes(h.state.vandalised?.[tower.id]?.kind ?? ''), 'the bomb took a chunk out of it');

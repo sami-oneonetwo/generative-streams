@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { normalizeAgentReply, type AgentReply } from '../src/worlds/ai-dudes/agent';
 import { stateSchema } from '../src/worlds/ai-dudes/state';
-import { allPlots, homePlots, plotById, courtyards, CITY, CITY_BOUNDS, BLOCK_HALF, PITCH } from '../src/shared/city';
+import { allPlots, homePlots, plotById, courtyards, layoutPlots, isBridgeLane, isPark, BLOCK_ORDER, CURRENT_LAYOUT, CITY, CITY_BOUNDS, BLOCK_HALF, PITCH, type PlotInfo } from '../src/shared/city';
 import { cityOf, districtsOf, headName, placesOf, wantsOf, TOWN } from '../src/worlds/ai-dudes/city';
 import { AWAKE_MS, seatHeight } from '../src/worlds/ai-dudes/sim';
 import { altitudeOf, flies } from '../src/worlds/ai-dudes/movers';
@@ -30,13 +30,77 @@ test('the layout: lots never overlap the roads or each other, every address is d
     assert.ok(a.rect.minX >= bx - BLOCK_HALF && a.rect.maxX <= bx + BLOCK_HALF && a.rect.minZ >= bz - BLOCK_HALF && a.rect.maxZ <= bz + BLOCK_HALF, a.id);
     for (const b of lots) if (a !== b) assert.ok(a.rect.maxX <= b.rect.minX || b.rect.maxX <= a.rect.minX || a.rect.maxZ <= b.rect.minZ || b.rect.maxZ <= a.rect.minZ, `${a.id} overlaps ${b.id}`);
   }
-  // Handed out nearest the square first.
   const home = homePlots();
-  assert.equal(Math.max(Math.abs(home[0].bx), Math.abs(home[0].bz)), 1);
-  assert.equal(Math.max(Math.abs(home.at(-1)!.bx), Math.abs(home.at(-1)!.bz)), 1);
   // No lot on a courtyard; every lot fronts a road.
   for (const c of courtyards()) assert.ok(!lots.some((l) => inside(c, l.rect)), `courtyard ${c.x},${c.z} is no lot`);
   for (const l of home) assert.ok(Math.abs(l.centre.x + l.front.x * (CITY.plot / 2 + CITY.sidewalk + CITY.road / 2) - (l.bx * PITCH + l.front.x * PITCH / 2)) < 0.01 || l.front.z !== 0, `${l.id} fronts its avenue`);
+});
+
+test('lots are handed out block by block from the bridge (layout A+): river-side cells first, the square as before, Bridge Lane last', () => {
+  const lots = allPlots();
+  lots.forEach((l, i) => assert.equal(l.rank, i, `${l.id} ranks where it stands`));
+  // The square's four come first, round from the north-west as they always have (community projects take the first free one).
+  assert.deepEqual(lots.slice(0, 4).map((l) => l.id), ['q0_0_-1_-1', 'q0_0_1_-1', 'q0_0_1_1', 'q0_0_-1_1']);
+  const home = homePlots();
+  // Bridge Lane's two cells go last, so they are still free when FK-076 takes them out.
+  assert.deepEqual(home.slice(-2).map((l) => l.id), ['q1_0_1_0', 'q1_0_-1_0']);
+  assert.ok(home.slice(-2).every(isBridgeLane) && !home.slice(0, -2).some(isBridgeLane), 'only the last two are on Bridge Lane');
+  /** The blocks in the order they are handed out, and each block's lots in that order. */
+  const blocks = (ls: PlotInfo[]) => {
+    const out: { key: string; lots: PlotInfo[] }[] = [];
+    for (const l of ls) {
+      const key = `${l.bx},${l.bz}`;
+      if (out.at(-1)?.key === key) out.at(-1)!.lots.push(l);
+      else out.push({ key, lots: [l] });
+    }
+    return out;
+  };
+  const filled = blocks(home.filter((l) => !isBridgeLane(l)));
+  // East (between the square and the river), then south, north and west: the corners are parks, with no lots.
+  assert.deepEqual(filled.map((b) => b.key), ['1,0', '0,1', '0,-1', '-1,0'], 'one block at a time, never back to one already started');
+  assert.deepEqual(BLOCK_ORDER.filter(([bx, bz]) => !isPark(bx, bz)).map(([bx, bz]) => `${bx},${bz}`), filled.map((b) => b.key));
+  for (const b of filled)
+    b.lots.forEach((l, i) => {
+      const prev = b.lots[i - 1];
+      if (!prev) return;
+      // River-side (east) cells first; along a column, the one nearest Bridge Lane (z = 0) first, south before north.
+      assert.ok(l.centre.x < prev.centre.x || (l.centre.x === prev.centre.x && (Math.abs(l.centre.z) > Math.abs(prev.centre.z) || (Math.abs(l.centre.z) === Math.abs(prev.centre.z) && l.centre.z < prev.centre.z))), `${prev.id} before ${l.id}`);
+    });
+  assert.deepEqual(home.slice(0, 6).map((l) => l.id), ['q1_0_1_1', 'q1_0_1_-1', 'q1_0_0_1', 'q1_0_0_-1', 'q1_0_-1_1', 'q1_0_-1_-1'], 'the first six fill the east block, river side first');
+  assert.equal(home[6].id, 'q0_1_1_-1', 'then the south block, at its corner nearest the east block');
+  // The first three live next door to each other (one lot across, two along), not 66 m apart round the square.
+  const first = home.slice(0, 3).map((l) => l.centre);
+  assert.ok(Math.max(...first.map((p) => p.x)) - Math.min(...first.map((p) => p.x)) <= CITY.plot && Math.max(...first.map((p) => p.z)) - Math.min(...first.map((p) => p.z)) <= 2 * CITY.plot, 'the first three are neighbours');
+  // When the corner parks open (FK-081), they take their turn in the same order.
+  const open = blocks(layoutPlots({ ...CURRENT_LAYOUT, parks: false }).filter((l) => !l.civic && !isBridgeLane(l)));
+  assert.deepEqual(open.map((b) => b.key), BLOCK_ORDER.map(([bx, bz]) => `${bx},${bz}`));
+});
+
+test('the first chatters move in together by the river; a lot claimed under the old order stays put through a restart', async () => {
+  const a = harness();
+  await a.say('Sami', 'hi');
+  const sami = a.h.state.dudes[0];
+  // The live save was laid out by the old order: Sami holds its first lot, the north block's nearest the square.
+  const c = cityOf(a.h.state);
+  delete c.plots[sami.plot!];
+  c.plots['q0_-1_0_1'] = { owner: sami.id, coOwners: [], claimedAt: a.h.now };
+  sami.plot = 'q0_-1_0_1';
+  // A restart: the save goes through the schema and the world boots on it.
+  const b = harness();
+  b.h.state = stateSchema.parse(JSON.parse(JSON.stringify(a.h.state)));
+  b.world.start!(b.ctx);
+  for (const name of ['test-kev', 'test-dana', 'test-bo', 'test-nia', 'test-ash', 'test-ru', 'test-jo']) await b.say(name, 'hi');
+  const town = cityOf(b.h.state);
+  assert.equal(town.plots['q0_-1_0_1']?.owner, sami.id, "Sami's lot is untouched");
+  assert.equal(b.h.state.dudes.find((d) => d.id === sami.id)?.plot, 'q0_-1_0_1');
+  const lotOf = (name: string) => b.h.state.dudes.find((d) => d.name === name)!.plot;
+  assert.deepEqual(
+    ['test-kev', 'test-dana', 'test-bo', 'test-nia', 'test-ash', 'test-ru', 'test-jo'].map(lotOf),
+    ['q1_0_1_1', 'q1_0_1_-1', 'q1_0_0_1', 'q1_0_0_-1', 'q1_0_-1_1', 'q1_0_-1_-1', 'q0_1_1_-1'],
+    'newcomers fill the east block by the river, then start on the south block',
+  );
+  for (const name of ['test-kev', 'test-dana']) assert.equal(town.plots[lotOf(name)!]?.owner, b.h.state.dudes.find((d) => d.name === name)!.id);
+  assert.ok(b.h.state.feed.some((f) => f.text === `test-kev moved into ${plotById('q1_0_1_1')!.address}`), 'and the feed says where');
 });
 
 test('everyone who turns up gets their own lot, walks over to it, and starts with coins and needs', async () => {
