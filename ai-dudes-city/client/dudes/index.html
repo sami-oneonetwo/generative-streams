@@ -81,6 +81,25 @@ body.story{--letterbox:7vh}body.stream.story :is(#feed,.invite,#caravan){display
 :is(.pill,.card).red{background:var(--red);color:var(--cream)}:is(.pill,.card).gold{background:var(--gold);color:var(--ink)}:is(.pill,.card).ink{background:#1E1914eb;color:var(--cream)}
 /* Pop-in 0.85 -> 1.06 -> 1 over 300 ms, on the `scale` property so an element's own transform (centring) stays. */
 .pop-in{animation:sticker-in .3s ease-out both}@keyframes sticker-in{0%{scale:.85;opacity:0}60%{scale:1.06;opacity:1}100%{scale:1}}@media(prefers-reduced-motion:reduce){.pop-in{animation:none}}
+/* The Board (FK-010, client/dudes/board.ts), a top-centre strip 1240 px wide. board.ts builds #board only while there is a board (Story ON, or ?demo=board) and
+   removes it when the board goes, so none of this reaches a Story OFF page. Two 96 px bars (word 64), the tug line (chips 54, tallies 64; the rope gold up to the
+   knot, red after it), the 54 px ticker. It fades out for scenes, and the troublemaker banner and the stream's knockout board sit under it (--board-b: its bottom). */
+@property --knot{syntax:'<percentage>';inherits:true;initial-value:50%}
+#board{position:fixed;top:calc(14 * var(--px));left:0;right:0;margin:0 auto;width:calc(1240 * var(--px));z-index:2;display:flex;flex-direction:column;align-items:center;gap:calc(12 * var(--px));pointer-events:none;transition:opacity .6s}body.cinema #board{opacity:0}
+#board .bars,#board .tug{align-self:stretch;display:flex;align-items:center;gap:calc(20 * var(--px))}
+#board .bar{position:relative;flex:1 1 0;min-width:0;height:calc(96 * var(--px));border:var(--outline);border-radius:999px;box-shadow:var(--drop);background:#1E1914eb;overflow:hidden}
+#board .face{position:absolute;inset:0;display:flex;align-items:center;gap:calc(14 * var(--px));padding:0 calc(28 * var(--px));color:var(--cream)}#board .red .face{flex-direction:row-reverse}
+#board .fill{transition:clip-path .8s ease-out}#board .gold .fill{background:var(--gold);color:var(--ink)}#board .red .fill{background:var(--red)}
+#board .icon{flex:none;width:calc(78 * var(--px));height:calc(64 * var(--px))}#board .icon svg{display:block;width:100%;height:100%;overflow:visible}
+#board .word{min-width:0;overflow:hidden;white-space:nowrap;font:700 calc(64 * var(--px))/1 var(--font-display);letter-spacing:.01em}
+#board .pill{line-height:1.05}#board .cmd{flex:none}
+#board .n{flex:none;min-width:calc(84 * var(--px));padding:calc(6 * var(--px)) calc(16 * var(--px));border:var(--outline);border-radius:999px;box-shadow:var(--drop);background:#1E1914eb;color:var(--cream);font:700 calc(64 * var(--px))/.95 var(--font-display);text-align:center}
+#board .rope{position:relative;flex:1;height:calc(28 * var(--px));border:var(--outline);border-radius:999px;box-shadow:var(--drop);background:repeating-linear-gradient(115deg,#0000 0 calc(14 * var(--px)),#0003 0 calc(20 * var(--px))),linear-gradient(90deg,var(--gold) var(--knot),var(--red) 0);transition:--knot .8s ease-out}
+#board .knot{position:absolute;top:50%;left:var(--knot);width:calc(48 * var(--px));height:calc(48 * var(--px));translate:-50% -50%;border-radius:50%;background:var(--cream);border:var(--outline);box-shadow:var(--drop)}
+#board .ticker{display:grid;justify-items:center;max-width:calc(1840 * var(--px));overflow:hidden;transition:width .6s ease}#board .ticker[hidden]{display:none}
+#board .ticker .line{grid-area:1/1;white-space:nowrap;transition:opacity .3s ease-in}#board .ticker .out{opacity:0}#board .ticker .in{animation:ticker-in .3s ease-out .3s both}@keyframes ticker-in{from{opacity:0}}
+body.board #happening-wrap{top:calc(var(--board-b,0px) + 12px)}body.stream.board #side{top:calc((var(--board-b,0px) + 12px) / var(--ui-scale,1))}
+@media(prefers-reduced-motion:reduce){#board,#board *{transition:none}#board .ticker .in{animation:none}}
 </style></head><body><main id="world" aria-label="Live field of chat characters"></main>
 <header><div class="invite">Say anything in chat: you move in and get a lot. Build a home, open a café, chip in for the town.<small class="cmds">!help · !town · !top · !me · !play</small><span id="play-line" hidden>Walk your character: <b id="play-url"></b> <span id="play-seats"></span></span></div></header>
 <div id="caravan" hidden aria-live="polite"><small id="caravan-age"></small><span id="caravan-steps" aria-hidden="true"></span><strong id="caravan-title"></strong><q id="caravan-say"></q><div id="caravan-asks"></div><em id="caravan-note"></em></div>

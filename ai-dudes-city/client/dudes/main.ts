@@ -19,6 +19,7 @@ import { createAudio } from './audio';
 import { feedLines, fitWords } from './feed';
 import { createStats } from './stats'; // hook FK-065
 import { setStoryLook, storyLook } from './sticker';
+import { boardFor, createBoard, fitUnder, liftUnder, reserved } from './board';
 import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
@@ -258,11 +259,15 @@ function start() {
     // Room for tags and bubbles above the heads, and for the HUD at the top and bottom.
     const needH = ((maxU - minU) / 2) * 1.12 + 2.5,
       needW = ((maxR - minR) / 2) * 1.06 + 2;
-    const fit = Math.max(needH, needW / a) / zoomBias;
+    // With the Board up, everyone stays in the view below it (its share of the height, plus a margin).
+    const strip = boardUi?.rect();
+    const top = strip ? (strip.b + 12) / innerHeight : 0;
+    const fit = Math.max(fitUnder(top, needH), needW / a) / zoomBias;
+    const half = Math.max(AUTO_MIN, Math.min(AUTO_MAX, fit));
     const centre = new THREE.Vector3()
       .addScaledVector(right, (minR + maxR) / 2)
-      .addScaledVector(up, (minU + maxU) / 2 + 0.6);
-    return { centre, half: Math.max(AUTO_MIN, Math.min(AUTO_MAX, fit)) };
+      .addScaledVector(up, (minU + maxU) / 2 + 0.6 + liftUnder(top, half));
+    return { centre, half };
   }
   /** Where the view centre meets the ground, for the shadow box. */
   const groundCentre = new THREE.Vector3();
@@ -876,6 +881,9 @@ function start() {
   /** Server time as drawn: what bubbles, emotes and waves are measured against. */
   const serverClock = () => (timeline.ready ? timeline.renderTime(performance.now()) : Date.now() + offset);
 
+  // Finders Keepers: the Board (board.ts), on the viewer page only (the stream and the plain page);
+  // /mayor gets its own strip and /play keeps today's panels. Where it shows, it replaces the caravan's.
+  const boardUi = !operatorMode && !playerMode ? createBoard(document, reduced) : undefined;
   // The caravan's board (bottom right): who is camped across the river and what their leader asks.
   let caravanKey = '';
   /** What to type for the first ask still open, as an example a viewer can copy. */
@@ -972,7 +980,10 @@ function start() {
     environment.town(next.town);
     // Finders Keepers: the story look while Story is ON; back to today's panels the moment it goes off.
     setStoryLook(storyLook(next.town?.story, params));
-    renderCaravan(next.town?.caravan, next.town?.age);
+    // The Board while Story is ON (or `?demo=board`) instead of the caravan's panel; Story OFF brings it back.
+    const board = boardFor(next.town, next.dudes, location.search, msg.play);
+    boardUi?.update(board, serverClock());
+    renderCaravan(board && boardUi ? undefined : next.town?.caravan, next.town?.age);
     playLine(msg.play);
     objects.syncCommitted(next.objects);
     objects.syncPreviews(previewsOf(next));
@@ -1223,7 +1234,7 @@ function start() {
       hovered,
       selected: selected?.kind === 'dude' ? selected.id : undefined,
       uiScale,
-      reserve: bannerRect,
+      reserve: reserved(bannerRect, boardUi?.rect()),
     });
     countdown();
     if (selected && now - lastInspectAt > 500) {

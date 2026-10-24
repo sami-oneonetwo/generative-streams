@@ -149,8 +149,10 @@ test('Story OFF is today: the story look only adds, and only today’s three pan
   const hide = RULES.filter((r) => r.decls.display === 'none!important' && /\.story\b/.test(r.sel));
   assert.deepEqual(hide.map((r) => r.sel), ['body.stream.story :is(#feed,.invite,#caravan)'], 'on the stream, in the story look');
   for (const r of RULES) if (/\.story\b/.test(r.sel)) assert.match(r.sel, /^body(\.stream)?\.story\b/, `${r.sel}: keyed off body.story`);
-  // Today's rules never reach for the story's tokens, so they draw exactly as before.
-  const KIT = /^(:root|@font-face|body\.story|body\.stream\.story .*|\.pill.*|\.card|:is\(\.pill,\.card\)\..*|\.pop-in|body\.cinema::before,body\.cinema::after|#subtitle)$/;
+  // Today's rules never reach for the story's tokens, so they draw exactly as before. The Board's rules
+  // (FK-010) may: board.ts builds #board only while there is a board, and the markup has none.
+  const KIT = /^(:root|@font-face|body\.story|body\.stream\.story .*|\.pill.*|\.card|:is\(\.pill,\.card\)\..*|\.pop-in|body\.cinema::before,body\.cinema::after|#subtitle|(body\.cinema )?#board\b.*)$/;
+  assert.ok(!/id="board"/.test(HTML), 'no #board in the markup');
   const STORY_VARS = /var\(--(?:red|red-deep|gold|gold-deep|ink|cream|dust|wren|moss|oak|kit|ash|font-display|font-text|px|outline|drop)\)/;
   for (const r of RULES) if (!KIT.test(r.sel)) assert.ok(!STORY_VARS.test(Object.values(r.decls).join(';')), `${r.sel} uses a story token`);
   // The /play gate card kept its look under its own class: `.card` is the sticker card now.
