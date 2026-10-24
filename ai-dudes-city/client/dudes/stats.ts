@@ -117,6 +117,12 @@ export class FrameWindow {
     this.since = now;
     return out;
   }
+
+  /** Drop the window; the next frame starts the clock again (a hidden tab draws nothing, so its gap is no frame rate). */
+  restart(): void {
+    this.frames = this.work = this.worst = this.draws = this.tris = 0;
+    this.since = NaN;
+  }
 }
 
 export interface StatsRow {
@@ -188,6 +194,8 @@ export function createStats(
   document.body.append(panel);
 
   const frames = new FrameWindow();
+  // main.ts skips frames while the tab is hidden: start afresh either side, not one slow sample on return.
+  document.addEventListener('visibilitychange', () => frames.restart());
   const inFrame = framer(camera);
   let started = 0,
     last: StatsSample | undefined;

@@ -85,6 +85,19 @@ test('a window of frames: fps, the mean and worst work, draws and triangles per 
   assert.equal(w.take(2000)!.fps, 4, 'two frames in the half second since the last sample');
 });
 
+test('a hidden tab: the gap is dropped, not reported as one slow window', () => {
+  const w = new FrameWindow();
+  w.add(1000, 4, 800, 100_000);
+  w.add(1016, 4, 800, 100_000);
+  w.restart(); // hidden for a minute: main.ts draws nothing
+  w.add(61_000, 4, 800, 100_000); // back: starts the clock only
+  assert.equal(w.take(61_000), undefined);
+  for (let i = 1; i <= 30; i++) w.add(61_000 + i * (500 / 30), 4, 800, 100_000);
+  const s = w.take(61_500)!;
+  assert.ok(Math.abs(s.fps - 60) < 1e-9, `60 fps from the first half second back, not a minute's gap (got ${s.fps})`);
+  assert.equal(s.draws, 800);
+});
+
 const sample = (over: Partial<StatsSample> = {}): StatsSample => ({
   fps: 59.6,
   ms: 6.04,
