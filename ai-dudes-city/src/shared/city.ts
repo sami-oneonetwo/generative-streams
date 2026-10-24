@@ -97,10 +97,17 @@ export const SQUARE = {
   site: 13,
 };
 /**
+ * The square's river-side half, kept open for the town to gather in: a crowd ring, the Rising (layout
+ * A+, Sami 2026-10-24). Community projects never take its two lots, q0_0_1_±1 (`isOpenSquare`), so they
+ * keep to the west half. From the middle of the cross to the pavement's edge, 19.5 × 39 m; the Wonder
+ * in the middle leans 3.2 m into it.
+ */
+export const OPEN_SQUARE: Rect = { minX: 0, maxX: BLOCK_HALF, minZ: -BLOCK_HALF, maxZ: BLOCK_HALF };
+/**
  * The Wonder's own spot (docs/ages.md): where the paths cross, in place of the centrepiece. Each age's
- * Wonder goes up here and replaces the last, so the four community lots stay for chat's projects and
- * a six-age run never runs out of room. `size` is its footprint a side (it may lean a little into the
- * lots' inner corners), `height` how tall it may stand.
+ * Wonder goes up here and replaces the last, so the community lots in the square's west half stay for
+ * chat's projects and a six-age run never runs out of room. `size` is its footprint a side (it may lean
+ * a little into the lots' inner corners), `height` how tall it may stand.
  */
 export const WONDER = { x: 0, z: 0, size: 6.4, height: 26, plot: 'wonder' };
 /** The Wonder's spot as a lot, for fitting and placing: never handed out, never in `allPlots`. */
@@ -153,6 +160,8 @@ export const BLOCK_ORDER = [
 ] as const;
 /** The east block's middle row, the two lots Bridge Lane will run through from the square to the bridge (FK-076). */
 export const isBridgeLane = (p: { bx: number; bz: number; sz: number }): boolean => p.bx === 1 && p.bz === 0 && p.sz === 0;
+/** The square's two river-side lots, the ones in OPEN_SQUARE: kept open, never given to a community project (FK-077). */
+export const isOpenSquare = (p: { bx: number; bz: number; sx: number }): boolean => p.bx === 0 && p.bz === 0 && p.sx > 0;
 
 let PLOTS: PlotInfo[] | undefined;
 /** Every lot in the city, home lots and the square's community lots, in hand-out order. */
@@ -202,9 +211,9 @@ export function layoutPlots(L: LayoutSpec): PlotInfo[] {
         }
     }
   // The square's lots first, round from the north-west as ever (community projects take the first free
-  // one). Then home lots block by block in BLOCK_ORDER, each block's river-side (east) cells first, then
-  // the ones nearest Bridge Lane (z = 0), south before north. Bridge Lane's own two cells go last of all,
-  // so they are still free when FK-076 takes them out.
+  // one of the west two, `projectPlots`). Then home lots block by block in BLOCK_ORDER, each block's
+  // river-side (east) cells first, then the ones nearest Bridge Lane (z = 0), south before north. Bridge
+  // Lane's own two cells go last of all, so they are still free when FK-076 takes them out.
   const block = (p: PlotInfo) => {
     if (p.civic) return -1;
     if (isBridgeLane(p)) return 1e6;
@@ -223,6 +232,8 @@ export function layoutPlots(L: LayoutSpec): PlotInfo[] {
 export const plotById = (id: string | undefined) => (!id ? undefined : id === WONDER.plot ? wonderLot() : allPlots().find((p) => p.id === id));
 export const homePlots = () => allPlots().filter((p) => !p.civic);
 export const civicPlots = () => allPlots().filter((p) => p.civic);
+/** The square's lots a community project (or an old Wonder kept as a keepsake) may go on, in hand-out order: the west half's, north-west then south-west. */
+export const projectPlots = () => civicPlots().filter((p) => !isOpenSquare(p));
 /** The lot a point stands on, if any. */
 export const plotAt = (p: GroundPoint) => allPlots().find((l) => p.x >= l.rect.minX && p.x <= l.rect.maxX && p.z >= l.rect.minZ && p.z <= l.rect.maxZ);
 /** The block a lot belongs to, as a key (districts are counted by block). */

@@ -19,11 +19,11 @@ import {
   WONDER,
   allPlots,
   blockKey,
-  civicPlots,
   homePlots,
   moodOf,
   plotAt,
   plotById,
+  projectPlots, // hook FK-077: community projects keep to the square's west half
   venueKindOf,
   type Need,
   type Needs,
@@ -749,13 +749,13 @@ export function projectOf(state: DudesState): Project | undefined {
 }
 const civicTaken = (state: DudesState) => new Set([...state.objects.filter((o) => o.civic).map((o) => o.plot), cityOf(state).project?.plot]);
 
-/** Someone proposes something for everyone. One at a time; it goes on a free lot on the square. */
+/** Someone proposes something for everyone. One at a time; it goes on a free lot in the square's west half (the river side is kept open). */ // hook FK-077
 export function proposeProject(state: DudesState, d: Dude, what: string, now: number): string | undefined {
   const c = cityOf(state);
   const current = projectOf(state);
   if (current) return `the town is already building ${current.name ?? current.what.slice(0, 50)}; help finish that first`;
   const taken = civicTaken(state);
-  const lot = civicPlots().find((p) => !taken.has(p.id));
+  const lot = projectPlots().find((p) => !taken.has(p.id)); // hook FK-077
   if (!lot) return 'the square has no room left for another community project';
   const awakeCount = state.dudes.filter((x) => awake(x, now)).length;
   c.project = {
@@ -815,7 +815,7 @@ function clearWonderSpot(state: DudesState, now: number): void {
   const old = wonderOf(state);
   if (!old) return;
   const taken = civicTaken(state);
-  const free = civicPlots().filter((p) => !taken.has(p.id));
+  const free = projectPlots().filter((p) => !taken.has(p.id)); // hook FK-077
   if (free.length >= 2) {
     const lot = free[0];
     old.plot = lot.id;

@@ -6,14 +6,15 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { normalizeAgentReply, type AgentReply } from '../src/worlds/ai-dudes/agent';
 import { stateSchema } from '../src/worlds/ai-dudes/state';
-import { allPlots, homePlots, plotById, courtyards, layoutPlots, isBridgeLane, isPark, BLOCK_ORDER, CURRENT_LAYOUT, CITY, CITY_BOUNDS, BLOCK_HALF, PITCH, type PlotInfo } from '../src/shared/city';
-import { cityOf, districtsOf, headName, placesOf, wantsOf, TOWN } from '../src/worlds/ai-dudes/city';
+import { allPlots, homePlots, civicPlots, projectPlots, plotById, courtyards, layoutPlots, isBridgeLane, isOpenSquare, isPark, wonderLot, BLOCK_ORDER, CURRENT_LAYOUT, CITY, CITY_BOUNDS, BLOCK_HALF, OPEN_SQUARE, PITCH, WONDER, type PlotInfo } from '../src/shared/city';
+import { cityOf, districtsOf, headName, placesOf, proposeWonder, wantsOf, TOWN } from '../src/worlds/ai-dudes/city';
 import { AWAKE_MS, seatHeight } from '../src/worlds/ai-dudes/sim';
 import { altitudeOf, flies } from '../src/worlds/ai-dudes/movers';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
 import { harness } from './harness';
 import type { DesignFn, DesignInput } from '../src/worlds/ai-dudes/design';
 import { validateDesign } from '../src/worlds/ai-dudes/blueprint';
+import type { SafehouseObject } from '../src/shared/objectTypes';
 
 const inside = (p: { x: number; z: number }, r: { minX: number; maxX: number; minZ: number; maxZ: number }) => p.x >= r.minX && p.x <= r.maxX && p.z >= r.minZ && p.z <= r.maxZ;
 
@@ -101,6 +102,113 @@ test('the first chatters move in together by the river; a lot claimed under the 
   );
   for (const name of ['test-kev', 'test-dana']) assert.equal(town.plots[lotOf(name)!]?.owner, b.h.state.dudes.find((d) => d.name === name)!.id);
   assert.ok(b.h.state.feed.some((f) => f.text === `test-kev moved into ${plotById('q1_0_1_1')!.address}`), 'and the feed says where');
+});
+
+test('the square keeps its river-side half open (layout A+): community projects get only the west two lots', () => {
+  const civic = civicPlots();
+  // All four lots are still there with their ids and addresses, so a save with a project on the river side loads as it was.
+  assert.deepEqual(civic.map((l) => l.id), ['q0_0_-1_-1', 'q0_0_1_-1', 'q0_0_1_1', 'q0_0_-1_1']);
+  assert.deepEqual(civic.filter(isOpenSquare).map((l) => l.id), ['q0_0_1_-1', 'q0_0_1_1'], 'the river side (east) is kept open');
+  assert.deepEqual(projectPlots().map((l) => l.id), ['q0_0_-1_-1', 'q0_0_-1_1'], 'projects take the west half, north-west first as ever');
+  assert.ok(!homePlots().some(isOpenSquare) && !isOpenSquare(wonderLot()), "only the square's own lots");
+  // About 20 × 39 m to gather in: from the middle of the cross to the pavement's edge, the whole length of the square.
+  assert.equal(OPEN_SQUARE.maxX - OPEN_SQUARE.minX, BLOCK_HALF);
+  assert.equal(OPEN_SQUARE.maxZ - OPEN_SQUARE.minZ, 2 * BLOCK_HALF);
+  const overlaps = (a: PlotInfo['rect'], b: PlotInfo['rect']) => a.minX < b.maxX && b.minX < a.maxX && a.minZ < b.maxZ && b.minZ < a.maxZ;
+  for (const l of civic.filter(isOpenSquare)) assert.ok(inside({ x: l.rect.minX, z: l.rect.minZ }, OPEN_SQUARE) && inside({ x: l.rect.maxX, z: l.rect.maxZ }, OPEN_SQUARE), `${l.id} lies in the open half`);
+  for (const l of allPlots().filter((x) => !isOpenSquare(x))) assert.ok(!overlaps(l.rect, OPEN_SQUARE), `${l.id} stays out of the open half`);
+  // The Wonder in the middle of the cross leans in by half its footprint, no more.
+  assert.equal(wonderLot().rect.maxX - OPEN_SQUARE.minX, WONDER.size / 2);
+});
+
+test("community projects go up in the square's west half; with it full the square says no, though the river side is free", async () => {
+  let script: AgentReply['actions'] = [];
+  const { h, say, tick } = harness({ reply: (turn) => ({ actions: turn.messages.length ? script : [] }) });
+  // A save from before layout A+: the old order gave a town's second project the north-east lot, by the river. It stays put.
+  const ne = plotById('q0_0_1_-1')!;
+  const old: SafehouseObject = {
+    id: 'old1',
+    revision: 1,
+    blueprint: { name: 'Old Bandstand', description: 'a bandstand', parts: [{ shape: 'box', position: [0, 0.5, 0], size: [4, 1, 4], rotation: [0, 0, 0], color: '#888888' }] },
+    position: { ...ne.centre },
+    footprint: { width: 4, depth: 4 },
+    createdBy: 'lee',
+    editedBy: 'lee',
+    createdAt: h.now,
+    plot: ne.id,
+    venue: 'park',
+    civic: true,
+  };
+  h.state.objects.push(old);
+  /** Proposed in chat (the fixture designer answers at once). */
+  const propose = async (name: string, what: string) => {
+    script = [{ do: 'propose', what }];
+    await say(name, `the town needs ${what}`);
+    await tick(1000);
+    script = [];
+    return cityOf(h.state).project;
+  };
+  /** Paid for and built: the money and hands are filled in here, the opening is the town's own. */
+  const finish = async () => {
+    const p = cityOf(h.state).project!;
+    p.coins = p.coinsNeed;
+    p.work = p.workNeed;
+    await tick(1000);
+    assert.equal(cityOf(h.state).project, undefined, `${p.name} is finished`);
+    return h.state.objects.find((o) => o.civic && o.plot === p.plot)!;
+  };
+  assert.equal((await propose('mo', 'a public swimming pool'))?.plot, 'q0_0_-1_-1', 'the first goes north-west, as ever');
+  const pool = await finish();
+  assert.ok(pool.position.x < 0, 'and goes up in the west half');
+  // The old order would have taken the south-east lot next, the river side's other half.
+  assert.equal((await propose('zed', 'a railway station'))?.plot, 'q0_0_-1_1', 'the second goes south-west, not across the cross');
+  await finish();
+  // The west half is full: a third is turned away, though the river side's south-east lot is free.
+  assert.equal(await propose('mo', 'a bandstand'), undefined, 'no third project');
+  assert.ok(h.state.dudes.find((d) => d.name === 'mo')!.history.some((l) => /no room left/.test(l.text)), 'mo hears the square is full');
+  assert.deepEqual(h.state.objects.filter((o) => o.civic).map((o) => o.plot).sort(), ['q0_0_-1_-1', 'q0_0_-1_1', 'q0_0_1_-1'].sort());
+  assert.ok(!h.state.objects.some((o) => o.plot === 'q0_0_1_1'), 'the south-east lot stays open');
+  assert.equal(old.plot, ne.id, 'the old project keeps its lot');
+  assert.deepEqual(old.position, ne.centre);
+  assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success, 'the save keeps it all');
+});
+
+test("an old Wonder kept as a keepsake goes to the square's west half, never the river side", async () => {
+  const { h, tick } = harness();
+  const furnace: SafehouseObject = {
+    id: 'furnace',
+    revision: 1,
+    blueprint: { name: 'The Furnace', description: 'a great stone furnace', parts: [{ shape: 'box', position: [0, 1, 0], size: [5, 2, 5], rotation: [0, 0, 0], color: '#886644' }] },
+    position: { x: WONDER.x, z: WONDER.z },
+    footprint: { width: 5, depth: 5 },
+    createdBy: 'the town',
+    editedBy: 'the town',
+    createdAt: h.now,
+    plot: WONDER.plot,
+    venue: 'decor',
+    civic: true,
+    wonder: 0,
+  };
+  h.state.objects.push(furnace);
+  // The next age's Wonder is designed: with both west lots free, the Furnace moves to the first of them.
+  assert.ok(proposeWonder(h.state, 1, 'a great stone keep', h.now), 'proposed');
+  await tick(1000);
+  const keep = cityOf(h.state).project!;
+  assert.equal(keep.status, 'gathering', 'designed');
+  assert.equal(furnace.plot, 'q0_0_-1_-1');
+  assert.deepEqual(furnace.position, plotById('q0_0_-1_-1')!.centre);
+  // The Keep goes up, then the age after's Wonder comes. One west lot is left, so the Keep is taken down
+  // rather than moved across to the river side (the old rule took any free lot while two were free).
+  keep.coins = keep.coinsNeed;
+  keep.work = keep.workNeed;
+  await tick(1000);
+  assert.equal(h.state.objects.find((o) => o.wonder === 1)?.plot, WONDER.plot, 'the Keep stands');
+  assert.ok(proposeWonder(h.state, 2, 'a high castle', h.now), 'proposed');
+  await tick(1000);
+  assert.ok(!h.state.objects.some((o) => o.wonder === 1), 'the Keep made way');
+  assert.ok(h.state.feed.some((f) => /is taken down to make way for the new Wonder/.test(f.text)), 'taken down, not moved');
+  assert.ok(!h.state.objects.some((o) => o.plot === 'q0_0_1_-1' || o.plot === 'q0_0_1_1'), 'nothing stands on the open half');
+  assert.equal(furnace.plot, 'q0_0_-1_-1', 'the Furnace stays where it was kept');
 });
 
 test('everyone who turns up gets their own lot, walks over to it, and starts with coins and needs', async () => {
