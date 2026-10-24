@@ -39,7 +39,8 @@ const ages = AGE_IDS.filter((a) => !only.length || only.includes(a)).map((id) =>
   for (const e of elements) specs[e.id] = game && e.board === 'fabric' ? game.pieces[e.id] : read(path.join(dir, `${e.id}.json`));
   return { id, name: bible.name ?? id, bible, elements: specs, ...(game ? { index: game.index, people: game.outfits } : {}) };
 });
-const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+// BOARD_DATE=2026-10-24 pins the label's date, so a board re-renders byte-identical on another day.
+const date = new Date(process.env.BOARD_DATE ? `${process.env.BOARD_DATE}T12:00` : Date.now()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const label = `Round r${round}, ${date}`;
 const notes = Object.fromEntries(['board-fabric', 'board-life', 'board-vignettes'].map((b) => [`${b}.png`, existsSync(path.join(out, `note-${b}.txt`)) ? readFileSync(path.join(out, `note-${b}.txt`), 'utf8') : undefined]).filter(([, n]) => n));
 

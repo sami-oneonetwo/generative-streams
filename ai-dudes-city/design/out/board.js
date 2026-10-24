@@ -20527,23 +20527,38 @@
   var MEASURE = document.createElement("canvas").getContext("2d");
   var NOTE_HEAD = 26;
   var NOTE_SIZE = 21;
+  var NOTE_GAP = 48;
   function noteBlock(note, width, g, y = 0) {
     if (!note?.trim()) return 0;
-    const max = Math.min(width - 32, 1500);
+    const [head, ...rows] = note.trim().split("\n");
+    const split = rows.findIndex((r) => !r.trim()), two = split > 0 && (width - 32 - NOTE_GAP) / 2 >= 900;
+    const max = Math.min(two ? (width - 32 - NOTE_GAP) / 2 : width - 32, 1500);
     if (g) {
       g.fillStyle = INK;
       g.fillRect(16, y + 4, width - 32, 3);
     }
     let h = 22;
-    note.trim().split("\n").forEach((row, i) => {
-      if (!row.trim()) return void (h += NOTE_SIZE * 0.6);
-      const size = i ? NOTE_SIZE : NOTE_HEAD, weight = !i ? 800 : /^[^.]{1,40}:$/.test(row.trim()) ? 700 : 400;
-      for (const l of lines(g ?? MEASURE, row.trim(), size, weight, max)) {
-        if (g) text(g, l, 16, y + h, size, INK, weight);
-        h += size * 1.32;
+    for (const l of lines(g ?? MEASURE, head.trim(), NOTE_HEAD, 800, max)) {
+      if (g) text(g, l, 16, y + h, NOTE_HEAD, INK, 800);
+      h += NOTE_HEAD * 1.32;
+    }
+    const column = (rows2, x, top) => {
+      let ch = 0;
+      for (const row of rows2) {
+        if (!row.trim()) {
+          ch += NOTE_SIZE * 0.6;
+          continue;
+        }
+        const weight = /^[^.]{1,40}:$/.test(row.trim()) ? 700 : 400;
+        for (const l of lines(g ?? MEASURE, row.trim(), NOTE_SIZE, weight, max)) {
+          if (g) text(g, l, x, top + ch, NOTE_SIZE, INK, weight);
+          ch += NOTE_SIZE * 1.32;
+        }
       }
-    });
-    return h + 18;
+      return ch;
+    };
+    const cols = two ? [rows.slice(0, split), rows.slice(split + 1)] : [rows];
+    return h + Math.max(...cols.map((r, i) => column(r, 16 + i * (max + NOTE_GAP), y + h))) + 18;
   }
   function heading(g, title, subtitle, width) {
     text(g, title, 16, 14, 40, INK, 800, width - 32);
@@ -20685,7 +20700,7 @@
     g.drawImage(row.picture, 0, 0, c.width, c.height - bandH);
     const top = c.height - bandH + 6 * scale;
     for (const s of row.slots) {
-      const x = (s.px - s.pw / 2) * scale + 6 * scale, max = s.pw * scale - 12 * scale;
+      const x = (s.px - s.pw / 2) * scale + 14 * scale, max = s.pw * scale - 28 * scale;
       text(g, ROLE[s.role], x, top, roleSize, MUTED, 700, max);
       const name = lines(g, s.label, nameSize, 700, max);
       name.slice(0, 2).forEach((l, i) => text(g, i === 1 && name.length > 2 ? `${l}\u2026` : l, x, top + roleSize * 1.3 + i * nameSize * 1.25, nameSize, INK, 700, max));

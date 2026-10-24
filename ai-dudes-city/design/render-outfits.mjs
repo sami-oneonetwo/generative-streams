@@ -27,7 +27,8 @@ const ages = AGE_IDS.map((id, index) => {
 })
   .filter((a) => !only.length || only.includes(a.id))
   .map((a) => ({ ...a, name: a.bible?.name ?? a.id }));
-const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+// BOARD_DATE=2026-10-24 pins the label's date, so a board re-renders byte-identical on another day.
+const date = new Date(process.env.BOARD_DATE ? `${process.env.BOARD_DATE}T12:00` : Date.now()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const subtitle = `Round o${round}, ${date} · ${shipped ? "as shipped: the game's garment kits today" : 'from design/spec'}, each everyday kit on two people`;
 const noteFile = path.join(out, 'note-outfits-board.txt');
 const note = existsSync(noteFile) ? readFileSync(noteFile, 'utf8') : undefined;

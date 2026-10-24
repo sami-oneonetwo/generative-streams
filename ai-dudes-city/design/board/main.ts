@@ -351,33 +351,48 @@ function lines(g: CanvasRenderingContext2D, s: string, size: number, weight: num
 }
 const MEASURE = document.createElement('canvas').getContext('2d')!;
 const NOTE_HEAD = 26,
-  NOTE_SIZE = 21;
+  NOTE_SIZE = 21,
+  NOTE_GAP = 48;
 /**
  * The audit note under a board (note-<board>.txt beside it): the first line is its heading, a short
- * line ending in a colon ("Top 3 fixes:") is bold, the rest wraps, a blank line is a small gap. In a column no wider than 1500 px so it reads on a wide
- * board. Draws it at y when given a context; returns the height it takes either way.
+ * line ending in a colon ("Top 3 fixes:") is bold, the rest wraps, a blank line is a small gap. A board
+ * wide enough for two 900 px columns sets what follows the first blank line (the fixes) in the right-hand
+ * one, so the note fills the board; a column is never wider than 1500 px, so it reads. Draws it at y when
+ * given a context; returns the height it takes either way.
  */
 function noteBlock(note: string | undefined, width: number, g?: CanvasRenderingContext2D, y = 0): number {
   if (!note?.trim()) return 0;
-  const max = Math.min(width - 32, 1500);
+  const [head, ...rows] = note.trim().split('\n');
+  const split = rows.findIndex((r) => !r.trim()),
+    two = split > 0 && (width - 32 - NOTE_GAP) / 2 >= 900;
+  const max = Math.min(two ? (width - 32 - NOTE_GAP) / 2 : width - 32, 1500);
   if (g) {
     g.fillStyle = INK;
     g.fillRect(16, y + 4, width - 32, 3);
   }
   let h = 22;
-  note
-    .trim()
-    .split('\n')
-    .forEach((row, i) => {
-      if (!row.trim()) return void (h += NOTE_SIZE * 0.6);
-      const size = i ? NOTE_SIZE : NOTE_HEAD,
-        weight = !i ? 800 : /^[^.]{1,40}:$/.test(row.trim()) ? 700 : 400;
-      for (const l of lines(g ?? MEASURE, row.trim(), size, weight, max)) {
-        if (g) text(g, l, 16, y + h, size, INK, weight);
-        h += size * 1.32;
+  for (const l of lines(g ?? MEASURE, head.trim(), NOTE_HEAD, 800, max)) {
+    if (g) text(g, l, 16, y + h, NOTE_HEAD, INK, 800);
+    h += NOTE_HEAD * 1.32;
+  }
+  // One column's rows from its top; returns its height.
+  const column = (rows: string[], x: number, top: number): number => {
+    let ch = 0;
+    for (const row of rows) {
+      if (!row.trim()) {
+        ch += NOTE_SIZE * 0.6;
+        continue;
       }
-    });
-  return h + 18;
+      const weight = /^[^.]{1,40}:$/.test(row.trim()) ? 700 : 400;
+      for (const l of lines(g ?? MEASURE, row.trim(), NOTE_SIZE, weight, max)) {
+        if (g) text(g, l, x, top + ch, NOTE_SIZE, INK, weight);
+        ch += NOTE_SIZE * 1.32;
+      }
+    }
+    return ch;
+  };
+  const cols = two ? [rows.slice(0, split), rows.slice(split + 1)] : [rows];
+  return h + Math.max(...cols.map((r, i) => column(r, 16 + i * (max + NOTE_GAP), y + h))) + 18;
 }
 /** The board's title and the label under it; returns where the board's own content starts. */
 function heading(g: CanvasRenderingContext2D, title: string, subtitle: string | undefined, width: number): number {
@@ -562,9 +577,10 @@ function outfitPanel(row: { picture: HTMLCanvasElement; slots: SlotPx[] }, scale
   g.fillRect(0, 0, c.width, c.height);
   g.drawImage(row.picture, 0, 0, c.width, c.height - bandH);
   const top = c.height - bandH + 6 * scale;
+  // 14 a side, so two neighbouring names keep a clear gap and never read as one.
   for (const s of row.slots) {
-    const x = (s.px - s.pw / 2) * scale + 6 * scale,
-      max = s.pw * scale - 12 * scale;
+    const x = (s.px - s.pw / 2) * scale + 14 * scale,
+      max = s.pw * scale - 28 * scale;
     text(g, ROLE[s.role], x, top, roleSize, MUTED, 700, max);
     const name = lines(g, s.label, nameSize, 700, max);
     name.slice(0, 2).forEach((l, i) => text(g, i === 1 && name.length > 2 ? `${l}…` : l, x, top + roleSize * 1.3 + i * nameSize * 1.25, nameSize, INK, 700, max));
