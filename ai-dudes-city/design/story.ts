@@ -260,7 +260,7 @@ export const CAST: Record<CastRole, CastMember> = {
     name: 'Ash the hunter',
     colour: '#6E7680',
     scale: { stone: 1.15, bronze: 1.2 },
-    rule: "Wren's father and the expedition leader: the tallest of them. Grey-streaked hair and beard #6E7680, a cream bandage on his left leg, a carved staff 2.1 m tall in his right hand, a thin red cord on his wrist (his only red).",
+    rule: "Wren's father and the expedition leader: tall and thin (Oak is the big, broad one). Grey-streaked hair and beard #6E7680, a cream bandage on his left leg, a carved staff 2.1 m tall in his right hand, a thin red cord on his wrist (his only red).",
     looks: { stone: 'Back from a hard winter: worn furs, the bandaged left leg, the carved staff.', bronze: 'The same, sick now: thinner, a blanket over his shoulders (the game lays him on his bedroll).' },
     props: { bronze: 'his bedroll: a hide roll and a straw pillow, about 2 × 0.8 m, beside him' },
     must: ['#6E7680'],
@@ -280,7 +280,7 @@ export const CAST: Record<CastRole, CastMember> = {
     colour: '#E8762B',
     scale: every(1.25),
     rule: 'Big, gentle, built to last: broad shoulders, an orange apron #E8762B (a hi-vis orange vest in the Modern age), a tool belt, and a mallet with a 0.35 m head in his right hand.',
-    looks: { stone: 'Hides, the apron in orange-dyed leather, a stone-headed mallet.', bronze: 'A kilt, the apron, a bronze-headed mallet.', medieval: 'A tunic and hose, the apron, an iron mallet.', industrial: 'Shirt sleeves and braces, the apron, a sledgehammer.', modern: 'Work clothes and the hi-vis orange vest, a mallet.', future: 'Scrap armour pieces under the orange apron, a mallet made of a pipe and a block.' },
+    looks: { stone: 'Hides, the apron in orange-dyed leather, a stone-headed mallet.', bronze: 'A kilt, the apron, a bronze-headed mallet.', medieval: 'A tunic and hose, the apron, an iron mallet.', industrial: 'Shirt sleeves and braces, the apron, an iron-headed mallet (0.35 m head).', modern: 'Work clothes and the hi-vis orange vest, a mallet.', future: 'Scrap armour pieces under the orange apron, a mallet made of a pipe and a block.' },
     must: ['#E8762B'],
   },
   kit: {
@@ -432,6 +432,7 @@ export const PET_SPEC = `a companion that follows its owner about: ${PET.minHeig
 /**
  * The pet branch for the game's design prompt, appended to DESIGN_SYSTEM by `astra.ts pets` until
  * FK-070 ships it in src/worlds/ai-dudes/design.ts (design-system.md §8 item 4); same words both places.
+ * "roam", not §8's "follow": FK-027 makes small roamers follow their owner, and "follow" would widen the saved Moves enum.
  */
 export const PET_BRANCH = `Pets: when "isFor" is "pet", design ${PET_SPEC} Give it "moves":"roam".`;
 /** The eight Stone pets (FK-071); each goes through the game's own design prompt. */
