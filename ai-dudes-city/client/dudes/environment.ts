@@ -277,6 +277,8 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
       z = Math.sin(a) * d;
     if (clear(x, z, 4)) bits.push({ x, z, turn: r() * Math.PI * 2, scale: 0.9 + r() * 0.3 });
   }
+  // hook FK-078: the River Bank (TOWN_GROUND, the ring road out to the water) is walked on now: no wild trees or bits on it.
+  for (const list of [wild, bits]) for (const p of list.filter((q) => q.x > 0 && q.x < rx0 && Math.abs(q.z) < b.maxZ + 4)) list.splice(list.indexOf(p), 1); // hook FK-078
   instancePiece(piece('wild-tree'), [...wild, ...yard], world);
   const follyGroup = new THREE.Group(); // hook FK-023
   world.add(follyGroup); // hook FK-023

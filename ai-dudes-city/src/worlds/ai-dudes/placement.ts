@@ -34,11 +34,15 @@ export function bridgeStands(whole: boolean): void {
   if (whole !== deckOpen) [deckOpen, GROUND.water] = [whole, riverWater(whole)];
 }
 const inWater = (p: GroundPoint) => GROUND.water.some((r) => contains(r, p));
+/** On the town's side of the river (the town and the bank), `margin` metres in from its edge. */
+function inTown(p: GroundPoint, margin = 0): boolean {
+  const b = GROUND.bounds;
+  return !(p.x < b.minX + margin || p.x > b.maxX - margin || p.z < b.minZ + margin || p.z > b.maxZ - margin);
+}
 /** On the ground, `margin` metres in from its edge: in the town, or on the way over and the landing (water or not: that is route's). */
 export function onGround(p: GroundPoint, margin = 0): boolean {
-  const b = GROUND.bounds,
-    o = GROUND.over;
-  if (!(p.x < b.minX + margin || p.x > b.maxX - margin || p.z < b.minZ + margin || p.z > b.maxZ - margin)) return true;
+  const o = GROUND.over;
+  if (inTown(p, margin)) return true;
   // The way over meets the town at the water's edge: no margin on that side.
   return !(p.x < o.minX - margin || p.x > o.maxX - margin || p.z < o.minZ + margin || p.z > o.maxZ - margin);
 }
@@ -104,6 +108,8 @@ export function route(from: GroundPoint, to: GroundPoint, objects: SafehouseObje
     const near = nearestOpen(end, walk);
     if (!near) return null;
     end = near;
+    // A spot in the river snaps to the nearest bank: the far one is as cut off as the landing itself.
+    if (!overWater && cutOff(from, end)) return null;
     if (walkableSegment(from, end, objects, reserved, overWater)) return [from, end];
   }
   const queue = [start],
@@ -209,7 +215,8 @@ export function choosePlacement(
       { x: rect.minX, z: rect.maxZ },
       { x: rect.maxX, z: rect.maxZ },
     ];
-    if (!corners.every((c) => onGround(c, 0.5))) return false;
+    // On the town's side: never on the landing, which the river cuts off whenever the bridge goes down.
+    if (!corners.every((c) => inTown(c, 0.5))) return false;
     return !blocked.some((r) => overlaps(rect, inflate(r, 1.4))); // room to walk between builds
   };
   if (within && fits(anchor)) return { x: Math.round(anchor.x * 2) / 2, z: Math.round(anchor.z * 2) / 2 };

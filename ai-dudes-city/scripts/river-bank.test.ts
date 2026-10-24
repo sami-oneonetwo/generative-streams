@@ -11,11 +11,11 @@ import { harness } from './harness';
 import { loadState, statePath } from '../src/engine/persistence';
 import { cityOf } from '../src/worlds/ai-dudes/city';
 import { BRIDGE_ROAD, bridgeSpot } from '../src/worlds/ai-dudes/caravan';
-import { GROUND, bridgeStands, clampToGround, onGround, route, walkableSegment } from '../src/worlds/ai-dudes/placement';
+import { GROUND, bridgeStands, choosePlacement, clampToGround, onGround, route, walkableSegment } from '../src/worlds/ai-dudes/placement';
 import { sendDude } from '../src/worlds/ai-dudes/sim';
 import { stateSchema, type Dude } from '../src/worlds/ai-dudes/state';
 import { CITY_BOUNDS, LANDING, RIVER, TOWN_GROUND, allPlots } from '../src/shared/city';
-import { contains } from '../src/shared/layout';
+import { contains, footprint } from '../src/shared/layout';
 import { BRIDGE, FACING_TOWN, SCENES, STEP_FORWARD, STRANDED } from '../src/shared/scenes';
 import type { GroundPoint } from '../src/shared/objectTypes';
 
@@ -60,6 +60,12 @@ test('the river is walked over only on the deck, and only while the bridge stand
     assert.ok(ashore && ashore.length > 2 && ashore.at(-1)!.x === 60, 'wades out of the river');
     assert.equal(route({ x: 105, z: 0 }, { x: 128, z: 0 }, []), null, 'no way over to the landing');
     assert.equal(route({ x: 128, z: 0 }, { x: 40, z: 30 }, []), null, 'nor back');
+    // A spot in the river by the far bank snaps onto the landing: refused at once, with no search of the whole town.
+    const t0 = performance.now();
+    assert.equal(route({ x: 105, z: 6 }, { x: 122.5, z: 6 }, []), null, 'a spot in the water by the landing');
+    assert.ok(performance.now() - t0 < 60, `refused at once (${(performance.now() - t0).toFixed(0)} ms)`);
+    const edge = route({ x: 105, z: 6 }, { x: 109.5, z: 6 }, []);
+    assert.ok(edge && contains(TOWN_GROUND, edge.at(-1)!) && !inWater(edge.at(-1)!), "a spot in the water by the town bank: as far as the water's edge");
     assert.ok(!walkableSegment({ x: 105, z: 0 }, { x: 128, z: 0 }, []), 'not even in a straight line');
     assert.ok(route({ x: 30, z: 20 }, { ...bridgeSpot(3) }, []), "the helpers' spot on the bank is reached");
     assert.deepEqual(clampToGround({ x: 116, z: 0 }, 1), { x: 108, z: 0 }, 'a point in the river comes ashore on the town side');
@@ -76,6 +82,9 @@ test('the river is walked over only on the deck, and only while the bridge stand
     assert.deepEqual(clampToGround({ x: 116, z: 5 }, 1), { x: 108, z: 5 }, 'beside it, in the water: ashore');
     assert.deepEqual(clampToGround({ x: 130, z: 40 }, 2), { x: 107, z: 40 }, 'the far bank past the landing: back on the town side');
     assert.deepEqual(clampToGround({ x: 200, z: -200 }, 1), { x: 108, z: CITY_BOUNDS.minZ + 1 });
+    // A build is never put on the landing, even from a chatter standing there: the river cuts it off when the bridge goes.
+    const built = footprint(choosePlacement({ width: 3, depth: 3 }, [], { x: 128, z: 0 }), 3, 3);
+    assert.ok(contains(TOWN_GROUND, { x: built.minX, z: built.minZ }) && contains(TOWN_GROUND, { x: built.maxX, z: built.maxZ }), `on the town's side: ${JSON.stringify(built)}`);
   } finally {
     bridgeStands(true);
   }

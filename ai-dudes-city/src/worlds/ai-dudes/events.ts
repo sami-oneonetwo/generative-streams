@@ -6,8 +6,9 @@
 // `use … fix` restores a build, a towed build is driven back, the hat pile hands hats back.
 import type { Blueprint, GroundPoint, SafehouseObject } from '../../shared/objectTypes';
 import type { DudeLook, HappeningView } from '../../shared/dudesTypes';
-import { clampToGround, GROUND, route } from './placement';
+import { clampToGround, route } from './placement'; // hook FK-078 (GROUND no longer needed here)
 import { choosePlacement } from './placement';
+import { CITY_BOUNDS } from '../../shared/city'; // hook FK-078
 import { measureBlueprint } from './blueprint';
 import { damageNote, heal } from './damage';
 import { addEffect, awake, face, inUse, parkObject, shake, step } from './sim';
@@ -96,7 +97,7 @@ const dist = (a: GroundPoint, b: GroundPoint) => Math.hypot(a.x - b.x, a.z - b.z
 
 /** A spot just inside the window's edge nearest `p`, or a random edge point. */
 function edgeNear(p: GroundPoint | undefined, rng: () => number): GroundPoint {
-  const FIELD = GROUND.bounds;
+  const FIELD = CITY_BOUNDS; // hook FK-078: the town's own edge, not the River Bank down to the water
   if (!p) {
     const side = Math.floor(rng() * 4);
     const t = rng();
