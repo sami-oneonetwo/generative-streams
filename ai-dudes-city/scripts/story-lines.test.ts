@@ -46,7 +46,8 @@ test('the plaque reads out its friends: capitalised, once each, in pledge order'
   assert.deepEqual(plaqueReadout([]), ['Built by the Chief, all by himself!'], 'an empty plaque is still a boast');
   assert.deepEqual(plaqueReadout(['', '@']), ['Built by the Chief, all by himself!']);
   const long = plaqueReadout(['abcdefghijklmnopqrstuvwxyz0123456789abcd', 'bo']);
-  assert.equal(long[1], 'Abcdefghijklmno…, Bo!', 'a 40-character name is cut so the rest still fit');
+  assert.equal(long[1], 'Abcdefghijklmnopqrstuvwx…, Bo!', 'a 40-character name is cut so the rest still fit');
+  assert.deepEqual(plaqueReadout(['xXx_SuperLongGamerName_xX']), ['Built by friends of the Chief:', 'xXx_SuperLongGamerName_xX!'], 'a 25-character Kick name is read out whole');
 });
 
 test('a full plaque fits its rows and says how many more', () => {

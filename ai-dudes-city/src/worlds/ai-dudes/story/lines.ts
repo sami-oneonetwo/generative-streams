@@ -33,21 +33,21 @@ export const CUE_CARDS: { [A in AgeId]?: { [S in CueSlot]?: CueCard } } = {
     // I8: Sami's live Chief at the band's fire, waving at them across the river they just came home to.
     'intro-I8': { lines: ['Hello! Welcome to my town!', "I'm the Chief. You can tell by the hat.", 'The bridge was like that when I got here.'] },
     // Ash limps over on Oak's shoulder, then Kit runs straight to the Chief.
-    crossing: { lines: ["Mind the floor. It's new.", 'Make yourselves at home. Not that one.', 'Oh, a fan! Well, obviously.'] },
+    crossing: { lines: ["Mind the floor. It's new.", 'Make yourselves at home. Shoes off.', 'Oh, a fan! Well, obviously.'] },
     // The slow push-in on the tarp, before it drops.
     'unveil-U2': { lines: ['Behold! A hut. For me.', "Trust me. It's going to be amazing.", "You may look. Don't touch."] },
     // From the hut looking back: his face, the crowd soft behind. The plaque first, then a riff.
-    'unveil-U4': { lines: ['A hut fit for a Chief. One Chief.', "Hold your applause. No, don't. Clap!", "Yes, the door is small. It's exclusive."], plaque: true },
+    'unveil-U4': { lines: ['A hut fit for a Chief. One Chief.', 'Hold your applause. Kidding. Clap!', "Yes, the door is small. It's exclusive."], plaque: true },
     // The Furnace, built from Ash's red stone by chat, and he cuts the ribbon.
-    ribbon: { lines: ['My idea!', 'Bronze! Shiny, like me.', 'Next age: a bigger hat.'] },
+    ribbon: { lines: ['My idea!', 'Bronze! Shiny, like me.', "Next age, I'm getting a bigger hat."] },
   },
 };
 
 /** The card for a slot in an age; undefined where that age has none (yet). */
 export const cueCard = (age: AgeId, slot: CueSlot): CueCard | undefined => CUE_CARDS[age]?.[slot];
 
-/** A plaque name is cut to this, so a long one can't crowd out the rest. */
-const NAME_MAX = 16;
+/** A plaque name is cut to this, so a long one can't crowd out the rest: a Kick username (≤ 25) fits whole. */
+const NAME_MAX = 25;
 
 /** The plaque read out (U4): a header, then gold's names in pledge order, capitalised, as many as fit
  * in `rows` lines of at most CUE_MAX, then "and N more!". Nobody on it: he built it all by himself.
