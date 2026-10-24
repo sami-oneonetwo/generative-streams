@@ -60,6 +60,11 @@ footer h1{font:700 1.6em/1.1 var(--display);color:var(--cream);margin:0 0 .4em}
 .chip.gold{background:var(--gold);color:var(--ink)}.chip.red{background:var(--red);color:var(--cream)}
 .chip.cream{background:var(--cream);color:var(--ink)}.chip.dust{background:var(--dust);color:var(--ink)}
 .chip svg{width:52px;height:52px;flex:none}.chip.big svg{width:62px;height:62px}
+/* An icon in a chip always sits on a cream badge (crown on a gold chip, flag on a red one), as on the tags and the
+   speaker chips: one rule, so a side's chip carries its icon in colour, in greyscale and at 390 px. */
+.chip:has(>.badge){padding-left:8px}
+.chip>.badge{width:58px;height:58px}.chip>.badge svg{width:42px;height:42px}
+.chip.big>.badge{width:72px;height:72px}.chip.big>.badge svg{width:52px;height:52px}
 .badge{display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:var(--cream);border:var(--line);flex:none}
 .badge svg{width:54px;height:54px}
 .badge.gold{background:var(--gold)}.badge.red{background:var(--red)}
@@ -69,9 +74,12 @@ footer h1{font:700 1.6em/1.1 var(--display);color:var(--cream);margin:0 0 .4em}
 .strip{position:absolute;left:340px;top:24px;width:1240px;display:flex;flex-direction:column;align-items:center;gap:14px}
 .bars{display:flex;gap:20px;width:100%}
 .bar{position:relative;flex:1;height:96px;background:var(--ink92);overflow:hidden}
+/* 0% sits at the end badge's inner edge (4 px inset + the 76 px badge), not at the pill's end under it, so a
+   start shows from the first brick: GOLDEN ME 8% is a 41 px stub past the crown, not an empty bar. */
+.bar,.wonder{--zero:80px}
 .bar .fill{position:absolute;top:0;bottom:0;background:var(--shine),var(--gold)}
-.bar.gold .fill{left:0;width:calc(var(--fill) * 100%)}
-.bar.red .fill{right:0;width:calc(var(--fill) * 100%);background:var(--shine),var(--red)}
+.bar.gold .fill{left:0;width:calc(var(--zero) + var(--fill) * (100% - var(--zero)))}
+.bar.red .fill{right:0;width:calc(var(--zero) + var(--fill) * (100% - var(--zero)));background:var(--shine),var(--red)}
 /* A cream leading edge, so the fill's end shows in greyscale too: red and the ink track are close in grey (none at 0 or 100%). */
 .bar.gold .fill{border-right:5px solid var(--cream)}.bar.red .fill{border-left:5px solid var(--cream)}
 .bar .lab{position:absolute;inset:0;display:flex;align-items:center;gap:16px;padding:0 20px 0 98px;font:700 64px/1 var(--display);white-space:nowrap}
@@ -107,20 +115,23 @@ body:not(.still) .ticker .line{animation:tick 15s infinite both}
 body:not(.still) .ticker .line:nth-child(2){animation-delay:5s}body:not(.still) .ticker .line:nth-child(3){animation-delay:10s}
 body.still .ticker .line+.line{display:none}
 @keyframes tick{0%{opacity:0}3%,30%{opacity:1}33.3%,100%{opacity:0}}
-/* With THE WONDER up, "type help" is the one command: the tug keeps the tally, its ends turn to plain side badges. */
+/* With THE WONDER up, "type help" is the one command, in its own chip beside the ticker (on the pill it would hide
+   the grey that's left and the edge where red starts): the tug keeps the tally, its ends turn to plain side badges. */
 .tug .badge{width:78px;height:78px;border-width:6px}
+.say{display:flex;align-items:center;gap:18px}
 .gather{width:1240px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:24px;row-gap:4px;padding:18px 26px 24px 22px}
 .gather .badge{width:104px;height:104px;grid-row:span 2}.gather .badge svg{width:74px;height:74px}
 .gather h2{margin:0;font:700 72px/1.05 var(--display);white-space:nowrap}
 .gather p{margin:0;font:800 54px/1.1 var(--text);color:var(--cream)}
 .gather .chip{grid-row:span 2;align-self:center}
-/* THE WONDER: the two bars become one; gold from the left, red from the right by who put in what, grey the rest. */
+/* THE WONDER: the two bars become one; gold from the left, red from the right by who put in what, grey the rest.
+   Shares count between the two end badges (0% at each badge's inner edge, as on the Board), and each fill has the
+   Board's cream leading edge: dust and red are close in grey. */
 .wonder{position:relative;width:1240px;height:96px;background:var(--dust);overflow:hidden}
 .wonder .fg,.wonder .fr{position:absolute;top:0;bottom:0}
-.wonder .fg{left:0;width:calc(var(--by-gold) * 100%);background:var(--shine),var(--gold)}
-.wonder .fr{right:0;width:calc(var(--by-red) * 100%);background:var(--shine),var(--red)}
-.wonder .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:22px;font:700 64px/1 var(--display);white-space:nowrap}
-.wonder .lab .chip{height:72px;box-shadow:none}
+.wonder .fg{left:0;width:calc(var(--zero) + var(--by-gold) * (100% - 2 * var(--zero)));background:var(--shine),var(--gold);border-right:5px solid var(--cream)}
+.wonder .fr{right:0;width:calc(var(--zero) + var(--by-red) * (100% - 2 * var(--zero)));background:var(--shine),var(--red);border-left:5px solid var(--cream)}
+.wonder .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 64px/1 var(--display);white-space:nowrap}
 .wonder .badge{position:absolute;top:4px}.wonder .badge.at-l{left:4px}.wonder .badge.at-r{right:4px}
 
 /* ---- in the world: tags over heads, discs under feet (positions from the town shot) ---- */
@@ -149,8 +160,7 @@ body.still .ticker .line+.line{display:none}
 .lb::before{top:0}.lb::after{bottom:0}
 .sub{position:absolute;left:0;right:0;bottom:0;height:76px;z-index:6;display:flex;align-items:center;justify-content:center;gap:22px}
 .sub .chip{height:66px;padding:0 26px 0 8px;box-shadow:none;gap:10px}
-.sub .chip:has(> svg){padding-left:16px}
-.sub .chip svg{width:44px;height:44px}
+.sub .chip>.badge{width:54px;height:54px}.sub .chip>.badge svg{width:38px;height:38px}
 .sub .line{font:800 58px/1 var(--text);color:var(--cream);white-space:nowrap}
 .titlecard{position:absolute;left:0;right:0;top:118px;z-index:4;text-align:center;font:700 140px/1 var(--display);letter-spacing:.015em;text-transform:uppercase;
   color:var(--gold);-webkit-text-stroke:20px var(--ink);paint-order:stroke fill;text-shadow:0 10px 0 #0006}
@@ -224,25 +234,25 @@ body:not(.still) .pop{animation:pop .3s ease-out both}
 <main>
 <!-- 1 ─ FREE PLAY: the Board, tags, discs ─────────────────────────────────────────────────── -->
 <section id="free" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-band)">
-  <!-- discs under the sided chatters' feet (the band shot is ~67.5 px per metre); kev's tag is decluttered under Wren's -->
+  <!-- discs under the sided chatters' feet (the band shot is ~67.5 px per metre): kev red, dana gold; the little one's
+       tag is thinned under kev's (the game thins overlapping tags), and Wren, cast, stands on no disc -->
   <i class="disc red"  style="left:1160px;top:752px;--m:67.5"></i>
-  <i class="disc red"  style="left:1470px;top:766px;--m:67.5"></i>
   <i class="disc gold" style="left:1443px;top:890px;--m:67.5"></i>
   <i class="feet" style="left:1140px;top:705px;width:40px;height:55px;--bg:var(--bg-band);--fx:-1140px;--fy:-705px"></i>
   <i class="feet" style="left:1426px;top:842px;width:36px;height:56px;--bg:var(--bg-band);--fx:-1426px;--fy:-842px"></i>
-  <span class="tag cast wren has-icon pop" style="left:1248px;top:666px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
-  <span class="tag chatter sided pop" style="left:1476px;top:662px"><span class="badge"><svg><use href="#flag"/></svg></span>bo</span>
+  <span class="tag cast wren has-icon pop" style="left:1472px;top:664px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
+  <span class="tag chatter sided pop" style="left:1160px;top:662px"><span class="badge"><svg><use href="#flag"/></svg></span>kev</span>
   <span class="tag chatter sided pop" style="left:1445px;top:784px"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span>
-  <span class="tag chatter pop" style="left:1268px;top:792px">nia</span>
+  <span class="tag chatter pop" style="left:1282px;top:792px">nia</span>
   <div class="strip">
     <div class="bars">
       <div class="bar gold pill pop" style="--fill:.72"><i class="fill"></i><span class="lab">BIG HUT <b>72%</b></span><span class="badge"><svg><use href="#crown"/></svg></span></div>
       <div class="bar red pill pop" style="--fill:.375"><i class="fill"></i><span class="lab">BRIDGE <b>3/8</b></span><span class="badge"><svg><use href="#flag"/></svg></span></div>
     </div>
     <div class="tug pop" style="--p:.636">
-      <span class="chip gold pill">type gold</span><span class="num pill">7</span>
+      <span class="chip gold pill"><span class="badge"><svg><use href="#crown"/></svg></span>type gold</span><span class="num pill">7</span>
       <span class="rope"><span class="cord"><i></i></span><i class="mid"></i><i class="knot" style="--look:-1"><u></u></i></span>
-      <span class="num pill">4</span><span class="chip red pill">type red</span>
+      <span class="num pill">4</span><span class="chip red pill"><span class="badge"><svg><use href="#flag"/></svg></span>type red</span>
     </div>
     <div class="ticker ink pill pop">
       <span class="line"><span class="badge"><svg><use href="#flag"/></svg></span>Kev crossed to red</span>
@@ -251,7 +261,7 @@ body:not(.still) .pop{animation:pop .3s ease-out both}
     </div>
   </div>
 </div></div>
-<p class="cap"><b>1 · Free play</b><span>The Board: gold BIG HUT 72% left with the crown, red BRIDGE 3/8 right with the flag, each filling toward the middle, the words cream with an ink keyline so they read at any fill; the tug line (gold 7, red 4, the knot looks at who leads); the ticker. Wren's cast tag (54 px), chatter tags (40 px) with crown or flag, side discs under the sided chatters. Kev's tag is decluttered under Wren's, as the game does; his red disc still says his side.</span></p></section>
+<p class="cap"><b>1 · Free play</b><span>The Board: gold BIG HUT 72% left with the crown, red BRIDGE 3/8 right with the flag, each filling toward the middle, the words cream with an ink keyline so they read at any fill; the tug line (gold 7, red 4, the knot looks at who leads); the ticker. Wren's cast tag (54 px) and the chatter tags (40 px): kev and dana with flag and crown, each on a side disc, nia neutral with none (the little one's tag is thinned under kev's, as the game thins overlapping tags). The command chips carry their side's icon on a cream badge.</span></p></section>
 
 <!-- 2 ─ THE CALL: the GATHER banner takes the strip ──────────────────────────────────────── -->
 <section id="call" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-bridge)">
@@ -277,7 +287,7 @@ body:not(.still) .pop{animation:pop .3s ease-out both}
     <span class="chip ink pill">type 1–10</span>
   </div>
 </div></div>
-<p class="cap"><b>3 · The reveal (U3)</b><span>Letterbox 76 px a bar. Title card 140 px caps, gold with a 10 px ink stroke (gold because it's his). The RATE IT tile pops in a beat after the title: the 160 px live average, one decimal ("7" and "3" make 5.0), and what to type. Two text layers.</span></p></section>
+<p class="cap"><b>3 · The reveal (U3)</b><span>Letterbox 76 px a bar. Title card 140 px caps, gold with a 10 px ink stroke (gold because it's his). The RATE IT tile pops in a beat after the title: the 160 px live average, one decimal ("7" and "3" make 5.0), and what to type. Two text layers. (The Big Hut itself is FK-007's build: this empty lot stands in for it.)</span></p></section>
 
 <!-- 4 ─ THE HERO SHOT (U4): plaque card + subtitle ──────────────────────────────────────── -->
 <section id="plaque" class="v"><div class="view"><div class="frame lb" data-scene="1" style="--bg:var(--bg-bridge)">
@@ -287,43 +297,43 @@ body:not(.still) .pop{animation:pop .3s ease-out both}
     <p>Friends of<br>the Chief</p>
     <div class="names">Dana<br>Bo · Juno</div>
   </div>
-  <div class="sub" data-layer><span class="chip gold pill"><span class="badge" style="width:54px;height:54px"><svg style="width:38px;height:38px"><use href="#crown"/></svg></span>THE CHIEF</span><span class="line">A hut fit for a Chief. One Chief.</span></div>
+  <div class="sub" data-layer><span class="chip gold pill"><span class="badge"><svg><use href="#crown"/></svg></span>THE CHIEF</span><span class="line">A hut fit for a Chief. One Chief.</span></div>
 </div></div>
 <p class="cap"><b>4 · The hero shot (U4)</b><span>The plaque card: a gold plate with a crown emboss and the plaque names, big, for Sami to read out (the build's name already had its title card). Subtitle inside the bottom bar: speaker chip 54 px in the speaker's colour, one line of 58 px, ≤ 42 characters. Two text layers.</span></p></section>
 
 <!-- 5 ─ THE RALLY: pips at Wren's fire + subtitle ───────────────────────────────────────── -->
 <section id="rally" class="v"><div class="view"><div class="frame lb" data-scene="1" style="--bg:var(--bg-band)">
   <div class="pips ink pill pop"><span class="badge"><svg><use href="#fire"/></svg></span><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i></i><i></i><i></i></div>
-  <div class="sub" data-layer><span class="chip red pill"><span class="badge" style="width:54px;height:54px"><svg style="width:38px;height:38px"><use href="#flag"/></svg></span>WREN</span><span class="line">Him or us?</span><span class="chip red pill"><svg><use href="#flag-cream"/></svg>type us</span></div>
+  <div class="sub" data-layer><span class="chip red pill"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span><span class="line">Him or us?</span><span class="chip red pill"><span class="badge"><svg><use href="#flag"/></svg></span>type us</span></div>
 </div></div>
 <p class="cap"><b>5 · The rally</b><span>Wren asks "Him or us?" with the command in its own chip; each "us" lights the next red pip right above it and joins red, so the answer is a picture. One text layer. On /mayor meanwhile, Sami sees only the grey ON STREAM chip (kit sheet).</span></p></section>
 
 <!-- 6 ─ THE NOW CARD: after every scene ──────────────────────────────────────────────────── -->
-<section id="now" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-bridge)">
+<section id="now" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-band)">
   <div class="now card ink pop">
     <span class="tab chip cream pill">NOW</span>
     <span class="word">MEND THE BRIDGE</span>
-    <span class="chip red pill big"><svg><use href="#flag-cream"/></svg>type red</span>
+    <span class="chip red pill big"><span class="badge"><svg><use href="#flag"/></svg></span>type red</span>
   </div>
 </div></div>
-<p class="cap"><b>6 · The NOW card</b><span>Centre-lower for 6 s as the letterbox goes out: the next job at 96 px and the word to type in a 64 px chip. The Board comes back when it goes, so only one text layer is up.</span></p></section>
+<p class="cap"><b>6 · The NOW card</b><span>Centre-lower for 6 s as the letterbox goes out: the next job at 96 px and the word to type in a 64 px chip. The Board comes back when it goes, so only one text layer is up. The broken bridge it names is in view above it.</span></p></section>
 
 <!-- 7 ─ THE WONDER: the bars merge ───────────────────────────────────────────────────────── -->
 <section id="wonder" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-band)">
-  <!-- discs under the sided chatters' feet (the band shot is ~67.5 px per metre); kev's tag is decluttered under Wren's -->
+  <!-- discs under the sided chatters' feet (the band shot is ~67.5 px per metre): kev red, dana gold; the little one's
+       tag is thinned under kev's (the game thins overlapping tags), and Wren, cast, stands on no disc -->
   <i class="disc red"  style="left:1160px;top:752px;--m:67.5"></i>
-  <i class="disc red"  style="left:1470px;top:766px;--m:67.5"></i>
   <i class="disc gold" style="left:1443px;top:890px;--m:67.5"></i>
   <i class="feet" style="left:1140px;top:705px;width:40px;height:55px;--bg:var(--bg-band);--fx:-1140px;--fy:-705px"></i>
   <i class="feet" style="left:1426px;top:842px;width:36px;height:56px;--bg:var(--bg-band);--fx:-1426px;--fy:-842px"></i>
-  <span class="tag cast wren has-icon" style="left:1248px;top:666px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
-  <span class="tag chatter sided" style="left:1476px;top:662px"><span class="badge"><svg><use href="#flag"/></svg></span>bo</span>
+  <span class="tag cast wren has-icon" style="left:1472px;top:664px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
+  <span class="tag chatter sided" style="left:1160px;top:662px"><span class="badge"><svg><use href="#flag"/></svg></span>kev</span>
   <span class="tag chatter sided" style="left:1445px;top:784px"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span>
-  <span class="tag chatter" style="left:1268px;top:792px">nia</span>
+  <span class="tag chatter" style="left:1282px;top:792px">nia</span>
   <div class="strip">
     <div class="wonder pill pop" style="--by-gold:.38;--by-red:.27">
       <i class="fg"></i><i class="fr"></i>
-      <span class="lab"><span class="word">THE WONDER</span><span class="chip cream pill">type help</span></span>
+      <span class="lab"><span class="word">THE WONDER</span></span>
       <span class="badge at-l"><svg><use href="#crown"/></svg></span><span class="badge at-r"><svg><use href="#flag"/></svg></span>
     </div>
     <div class="tug pop" style="--p:.5">
@@ -331,10 +341,10 @@ body:not(.still) .pop{animation:pop .3s ease-out both}
       <span class="rope"><span class="cord"><i></i></span><i class="mid"></i><i class="knot"><u></u></i></span>
       <span class="num pill">6</span><span class="badge red"><svg><use href="#flag-cream"/></svg></span>
     </div>
-    <div class="ticker ink pill pop"><span class="line"><span class="badge"><svg><use href="#hand"/></svg></span>Everyone builds the Furnace</span></div>
+    <div class="say pop"><div class="ticker ink pill"><span class="line"><span class="badge"><svg><use href="#hand"/></svg></span>Everyone builds the Furnace</span></div><span class="chip cream pill">type help</span></div>
   </div>
 </div></div>
-<p class="cap"><b>7 · THE WONDER</b><span>In the last stretch the two bars merge into one 1240 px pill: gold fills from the left and red from the right by who put in what (38% · 27%), grey for the rest (neutrals and what's left to build). The label is cream with an ink stroke, like the title card, so it reads on all three. "type help" is the one command: the tug line keeps the tally with plain side badges at its ends; at 6–6 the knot looks straight out.</span></p></section>
+<p class="cap"><b>7 · THE WONDER</b><span>In the last stretch the two bars merge into one 1240 px pill: gold fills from the left and red from the right by who put in what (38% · 27%), grey for the rest (neutrals and what's left to build). Shares count from the end badges' inner edges and each fill ends in the Board's cream edge, so both sides and what's left read in greyscale. The label is cream with an ink stroke, like the title card, so it reads on all three. "type help" is the one command, off the pill beside the ticker so it hides nothing: the tug line keeps the tally with plain side badges at its ends; at 6–6 the knot looks straight out.</span></p></section>
 
 <!-- 8 ─ YOUR HOME THROUGH THE AGES ───────────────────────────────────────────────────────── -->
 <section id="home" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-lots)">
@@ -351,15 +361,15 @@ body:not(.still) .pop{animation:pop .3s ease-out both}
     </div>
   </div>
 </div></div>
-<p class="cap"><b>8 · Your home through the ages</b><span>On a returning chatter's first line in a new age (here stream 2, Bronze): the home card, one stamp per age (past cream, now bigger, later dashed; no story colours), while the camera holds on the home for 6 s. The Board stays up, here with Bronze's jobs: GOLDEN ME has just started (8%, its fill still under the crown) and the healer's hut is half done. (The "test-nia" sign is the game's own lot sign, in the world.)</span></p></section>
+<p class="cap"><b>8 · Your home through the ages</b><span>On a returning chatter's first line in a new age (here stream 2, Bronze): the home card, one stamp per age (past cream, now bigger, later dashed; no story colours), while the camera holds on the home for 6 s. The Board stays up, here with Bronze's jobs: GOLDEN ME has just started (8%: 0% sits at the crown's inner edge, so the start shows as a stub) and the healer's hut is half done. (The "test-nia" sign is the game's own lot sign, in the world.)</span></p></section>
 
 <!-- 9 ─ THE KIT SHEET ─────────────────────────────────────────────────────────────────────── -->
 <section id="kit" class="v"><div class="view"><div class="frame"><div class="kitbg"></div><div class="kit">
   <div class="row" style="left:60px;top:44px"><span class="tag head" style="position:static;transform:none"><span class="badge"><svg><use href="#crown"/></svg></span>THE CHIEF</span><span class="tag cast wren has-icon" style="position:static;transform:none"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span><span class="tag cast ash" style="position:static;transform:none">ASH THE HUNTER</span><span class="tag cast moss" style="position:static;transform:none">OLD MOSS</span></div>
-  <div class="row" style="left:60px;top:150px"><span class="tag cast oak" style="position:static;transform:none">OAK THE BUILDER</span><span class="tag cast kit" style="position:static;transform:none">KIT</span><span class="tag chatter sided" style="position:static;transform:none"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span><span class="tag chatter sided" style="position:static;transform:none"><span class="badge"><svg><use href="#flag"/></svg></span>kev</span><span class="tag chatter" style="position:static;transform:none">nia</span></div>
+  <div class="row" style="left:60px;top:150px"><span class="tag cast oak" style="position:static;transform:none">OAK THE BUILDER</span><span class="tag cast kit" style="position:static;transform:none">KIT</span><span class="tag chatter sided" style="position:static;transform:none"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span><span class="tag chatter sided" style="position:static;transform:none"><span class="badge"><svg><use href="#flag"/></svg></span>kev</span><span class="tag chatter" style="position:static;transform:none">nia</span><span class="chip dust pill"><span class="badge"><svg><use href="#eye"/></svg></span>ON STREAM</span></div>
   <div class="row note" style="left:60px;top:246px">Head and cast tags 54 px (head gold, never red; cast in their locked colours) · chatter tags 40 px, crown or flag only once they pick a side.</div>
-  <div class="row" style="left:60px;top:304px"><span class="chip gold pill">type gold</span><span class="chip red pill">type red</span><span class="chip cream pill">type help</span><span class="chip ink pill" style="background:var(--ink92);color:var(--cream)"><svg><use href="#fire"/></svg>type coming</span><span class="chip dust pill"><svg><use href="#eye"/></svg>ON STREAM</span></div>
-  <div class="row note" style="left:60px;top:404px">Command chips 54 px (64 px on the NOW card). <b>type coming</b> answers Wren's whistle (the rally banner); a town gathering needs no command. <b>ON STREAM</b> is /mayor only: grey, no instruction, during rallies. Board words: 10 letters at most (64 px, 54 px once the count is long).</div>
+  <div class="row" style="left:60px;top:304px"><span class="chip gold pill"><span class="badge"><svg><use href="#crown"/></svg></span>type gold</span><span class="chip red pill"><span class="badge"><svg><use href="#flag"/></svg></span>type red</span><span class="chip cream pill">type help</span><span class="chip ink pill"><span class="badge"><svg><use href="#fire"/></svg></span>type coming</span></div>
+  <div class="row note" style="left:60px;top:404px">Command chips 54 px (64 on the NOW card), any icon on a cream badge. <b>type coming</b> answers Wren's whistle (the rally banner); a gathering needs no command. <b>ON STREAM</b> (by the tags): /mayor only, grey, during rallies. Board words: 10 letters at most.</div>
   <div class="row" style="left:60px;top:470px">
     <span class="sw"><i style="background:var(--red)"></i><span class="note">RED #B3262E</span></span>
     <span class="sw"><i style="background:var(--gold)"></i><span class="note">GOLD #FFC633</span></span>

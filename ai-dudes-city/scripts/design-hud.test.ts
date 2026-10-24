@@ -120,6 +120,13 @@ test('shapes and layout: 6 px ink outline, hard shadow, radius-28 cards, the 124
   // The Board's and THE WONDER's words: cream with an ink keyline, so they read over any fill.
   assert.match(rule('.bar .lab,.wonder .lab .word'), /color:var\(--cream\);-webkit-text-stroke:16px var\(--ink\);paint-order:stroke fill;letter-spacing:\.025em/);
   assert.match(rule('.titlecard'), /-webkit-text-stroke:20px var\(--ink\);paint-order:stroke fill/);
+  // 0% sits at the end badge's inner edge (4 px inset + 76 px badge), so a start shows past the crown or flag;
+  // THE WONDER counts its shares between its two badges, and its fills carry the Board's cream leading edge.
+  assert.match(rule('.bar,.wonder'), /--zero:80px/);
+  assert.match(rule('.bar .badge'), /top:4px/);
+  for (const side of ['gold', 'red']) assert.match(rule(`.bar.${side} .fill`), /width:calc\(var\(--zero\) \+ var\(--fill\) \* \(100% - var\(--zero\)\)\)/, side);
+  assert.match(rule('.wonder .fg'), /width:calc\(var\(--zero\) \+ var\(--by-gold\) \* \(100% - 2 \* var\(--zero\)\)\).*border-right:5px solid var\(--cream\)/);
+  assert.match(rule('.wonder .fr'), /width:calc\(var\(--zero\) \+ var\(--by-red\) \* \(100% - 2 \* var\(--zero\)\)\).*border-left:5px solid var\(--cream\)/);
   assert.match(rule('.disc'), /width:calc\(1\.3px \* var\(--m\)\)/);
   assert.match(rule('.disc'), /0 0 0 calc\(\.1px \* var\(--m\)\) var\(--cream\),0 0 0 calc\(\.15px \* var\(--m\)\) var\(--ink\)/);
   // Pop-in 0.85 -> 1.06 -> 1 over 300 ms; the ticker is the only thing that loops.
@@ -150,6 +157,13 @@ test('every piece on the card is drawn, crown with gold and flag with red', () =
     'THE WONDER': /class="wonder pill[\s\S]*?THE WONDER/,
   };
   for (const [name, re] of Object.entries(pieces)) assert.match(body, re, name);
+  // One rule for icons in chips: always on a cream badge, never bare; a side's command chip carries its icon.
+  assert.doesNotMatch(body, /class="chip[^"]*"[^>]*>\s*<svg/);
+  const sideChips = [...body.matchAll(/<span class="chip (gold|red)[^"]*">(<span class="badge"><svg><use href="#\w+"\/><\/svg><\/span>)?type (?:gold|red|us)<\/span>/g)];
+  assert.equal(sideChips.length, 6, 'type gold and red on the Board and the kit sheet, red on the NOW card, us at the rally');
+  for (const m of sideChips) assert.equal(m[2], `<span class="badge"><svg><use href="#${m[1] === 'gold' ? 'crown' : 'flag'}"/></svg></span>`, m[0]);
+  // THE WONDER's pill holds only its word: the command sits off it, so it hides neither fill nor what's left.
+  assert.doesNotMatch(body, /<span class="lab"><span class="word">THE WONDER<\/span><span class="chip/);
   // Side marks: a gold chatter badge holds the crown, a red one the flag; never the other way round.
   assert.doesNotMatch(body, /class="badge gold"><svg><use href="#flag/);
   assert.doesNotMatch(body, /class="badge red"><svg><use href="#crown/);
