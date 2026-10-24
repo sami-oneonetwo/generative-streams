@@ -144,7 +144,8 @@ export function hearInGather(state: DudesState, dude: Dude, line: string, now: n
   const k = keywordOf(line);
   if (k?.word === 'rate') t.rates.set(dude.id, k.n);
   else if (k) t.words[k.word].add(dude.id);
-  if (k?.word === 'red' || k?.word === 'gold' || k?.word === 'help') joinInGather(state, dude, k.word, now); // hook FK-012: the side, never its job, until the release
+  // hook FK-012: the side, never its job, until the release; the other side's word, refused this age, isn't counted for it
+  if ((k?.word === 'red' || k?.word === 'gold' || k?.word === 'help') && !joinInGather(state, dude, k.word, now)) t.words[k.word].delete(dude.id);
   if (!queue) return k;
   const newcomer = dude.turns === 0 && (!dude.queuedLine || !!dude.queuedLine.world);
   if (!k && (movesOrBuilds(line) || newcomer)) dude.queuedLine = { text: line.slice(0, LINE_MAX), at: now };

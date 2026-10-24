@@ -5,7 +5,8 @@
 // through dudeFor to the same check), so "make my house gold" stays a build line and "help me build a
 // hut" an agent line. Not in crierCommand: that only takes `!` words. While chat is in gather mode (a
 // scene or a gathering, FK-018) the word is a vote there, and hearInGather joins the side through
-// joinInGather: the side, never its job, while the crowd is held.
+// joinInGather: the side, never its job, while the crowd is held (and the other side's word, refused this
+// age, isn't counted for that side in the gathering's tally either).
 // - A side word sets `dude.side` and `dude.sideAge`, puts it on the ticker (`city.story.sideLog`: "Kev
 //   joined red", or "Kev crossed to gold" when last age's side was the other) and starts the side's
 //   job. The same word again just does the job again.
@@ -17,7 +18,11 @@
 //   walk to Wren's site sign (STORY_SITES.redSign). Gold's: the name goes on the Folly's plaque (folly.ts
 //   carves gold's names every tick once the cordon is up) and a walk to the cordon. No gold shifts in
 //   stream 1: the Folly fills on its timer only (bible §9; FK-096 in Bronze).
-// The chatter's agent only reads what happened, in its history. Zero AI.
+// The chatter's agent only reads what happened, in its history: the word itself costs no call. Someone new
+// is the exception (their agent has never had a turn): what they did is how they arrived, and their agent
+// meets them on one turn of its own (a nudge, as gather mode's ARRIVED_LINE), so a newcomer who only ever
+// types `red` still gets a persona and a look. The line also wakes the chatter as any chat line does, so
+// they take part in what happens in town afterwards, as an active chatter does.
 import type { WorldCtx } from '../../../engine/world';
 import type { DudeView } from '../../../shared/dudesTypes';
 import type { GroundPoint } from '../../../shared/objectTypes';
@@ -27,6 +32,7 @@ import { bridgeOpen } from '../caravan';
 import { ageOf, cityOf, headName, leaveVisit, startLabour } from '../city';
 import { knockedOut } from '../combat';
 import { crierReply } from '../crier';
+import { nudge } from '../events';
 import { clampToGround } from '../placement';
 import { isPiloted } from '../players';
 import { endUse, isActive, sendDude } from '../sim';
@@ -70,22 +76,33 @@ export function hearSide(state: DudesState, d: Dude, text: string, now: number):
   if (!storyOn(state) || gathering(state)) return false;
   const word = sideWord(text);
   if (!word) return false;
-  pickSide(state, d, word, now, true);
+  // Their agent has never had a turn and has nothing waiting for one: this is how they arrive (once; the
+  // nudge waiting, or a turn under way, stops a second).
+  const arrived = d.turns === 0 && !d.lastTurnAt && !d.inbox.length && !d.queuedLine && !d.nudges?.length;
+  pickSide(state, d, word, now, true, arrived);
   return true;
 }
 
-/** A side word in gather mode (story/gather.ts hearInGather): the side, never its job, while the crowd is held. */
-export function joinInGather(state: DudesState, d: Dude, word: SideWord, now: number): void {
-  if (storyOn(state)) pickSide(state, d, word, now, false);
+/**
+ * A side word in gather mode (story/gather.ts hearInGather): the side, never its job, while the crowd is
+ * held. False when it was the other side's word, refused this age: the tally doesn't count it for that side.
+ * (A newcomer's arrival is gather mode's own there, ARRIVED_LINE after the release.)
+ */
+export function joinInGather(state: DudesState, d: Dude, word: SideWord, now: number): boolean {
+  return !storyOn(state) || pickSide(state, d, word, now, false);
 }
 
-function pickSide(state: DudesState, d: Dude, word: SideWord, now: number, work: boolean): void {
+/** The side and, with `work`, its job; or the crier's refusal. True unless refused. */
+function pickSide(state: DudesState, d: Dude, word: SideWord, now: number, work: boolean, arrived = false): boolean {
   const was = sideNow(state, d);
   const side: Side = word === 'help' ? (was ?? d.side ?? 'red') : word;
   const refused = takeSide(state, d, side, now);
-  if (refused) crierReply(state, d.id, 'side', refused, now);
-  else if (work) sideJob(state, d, side, now, !was);
+  if (refused) {
+    crierReply(state, d.id, 'side', refused, now);
+    if (arrived) told(state, d, side, now, false, undefined, true);
+  } else if (work) sideJob(state, d, side, now, !was, arrived);
   else if (!was) told(state, d, side, now, true);
+  return !refused;
 }
 
 /**
@@ -117,11 +134,13 @@ function logSide(state: DudesState, d: Dude, side: Side, now: number, from?: Sid
 
 /**
  * The side's job, at once (`joined`: they took the side with this line). Not for a body someone else has
- * (a player walking it on /play, a gathering holding it, flat on its back), and a build under way comes
- * first. Its agent is told what happened, in its history: no turn.
+ * (a player walking it on /play, a gathering holding it, flat on its back). Red's bridge shift comes
+ * before a build under way (the build waits for the shift, as when the agent sends them to the bridge);
+ * otherwise the build comes first, and they stay at it. Its agent is told what happened, in its history:
+ * no turn, unless they've just `arrived` (see told).
  */
-export function sideJob(state: DudesState, d: Dude, side: Side, now: number, joined = false): void {
-  const tell = (what?: string) => told(state, d, side, now, joined, what);
+export function sideJob(state: DudesState, d: Dude, side: Side, now: number, joined = false, arrived = false): void {
+  const tell = (what?: string) => told(state, d, side, now, joined, what, arrived);
   if (isPiloted(d.id) || d.gather || knockedOut(d, now)) return tell();
   if (side === 'red' && d.labour?.site === 'bridge') return tell();
   if (side === 'red' && bridgeOpen(state) && !(cityOf(state).caravan?.helpers ?? []).includes(d.id) && !startLabour(state, d, now))
@@ -142,10 +161,15 @@ export function sideJob(state: DudesState, d: Dude, side: Side, now: number, joi
   tell(side === 'red' ? `went over to ${CAST.wren.name}'s sign by the bridge` : `went over to the cordon round ${folly} (your name goes on its plaque)`);
 }
 
-/** Its agent's history: "you joined red, Wren's side, and …", or "you …" for a side they were on. */
-function told(state: DudesState, d: Dude, side: Side, now: number, joined: boolean, what?: string): void {
+/**
+ * Its agent's history: "you joined red, Wren's side, and …", or "you …" for a side they were on. Someone
+ * new (`arrived`) hears it as how they arrived, "you arrived in town and joined red, …", as a nudge: their
+ * agent meets them on a turn of its own, never with the word they typed.
+ */
+function told(state: DudesState, d: Dude, side: Side, now: number, joined: boolean, what?: string, arrived = false): void {
   const took = joined ? `you joined ${side}, ${whose(state, side)} side` : '';
   const text = took && what ? `${took}, and ${what}` : took || (what ? `you ${what}` : '');
+  if (arrived) return nudge(state, d, text ? text.replace(/^you /, 'you arrived in town and ') : 'you arrived in town', now);
   if (text && d.history.at(-1)?.text !== text) pushLine(d.history, { from: 'world', text, at: now }, LIMITS.history);
 }
 

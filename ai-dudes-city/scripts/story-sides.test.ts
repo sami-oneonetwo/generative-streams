@@ -1,8 +1,9 @@
 // Red and gold (FK-012): with Story on, `red`, `gold` and `help` as the whole message set a chatter's
-// side for the age, put it on the ticker and send their dude to the side's job, with no agent call;
-// one pick per age (the other word is refused through the crier); a neutral's `help` goes to red; sides
-// survive a save; and lines that only contain the words ("make my house gold", "help me build a hut")
-// reach the agent as today, from a newcomer and from someone already in town. Story OFF is today's game.
+// side for the age, put it on the ticker and send their dude to the side's job, with no agent call (a
+// newcomer's agent meets them once, on their arrival, never with the word); one pick per age (the other
+// word is refused through the crier); a neutral's `help` goes to red; sides survive a save; and lines that
+// only contain the words ("make my house gold", "help me build a hut") reach the agent as today, from a
+// newcomer and from someone already in town. Story OFF is today's game.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -57,7 +58,8 @@ test('Story OFF: "red" is an agent line as today, and nobody takes a side', asyn
 });
 
 test('"kev: red": kev is red, the ticker says so, the tug line moves, he heads for Wren\'s sign, and no agent call', async () => {
-  const { h, tick, say, dude, sideLog, view, turns } = await town();
+  const { h, tick, say, dude, sideLog, view, turns } = await town({ names: ['test-kev'] });
+  const before = turns();
   assert.deepEqual(view().town!.board!.tally, { red: 0, gold: 0 });
   await say('test-kev', 'red');
   const kev = dude('test-kev');
@@ -69,6 +71,7 @@ test('"kev: red": kev is red, the ticker says so, the tug line moves, he heads f
   const end = kev.path.at(-1)!;
   assert.ok(near(end, STORY_SITES.redSign.at) <= SIDES.signRing[1] + 0.1, `by the sign (${near(end, STORY_SITES.redSign.at).toFixed(1)} m)`);
   assert.equal(kev.history.at(-1)?.text, "you joined red, Wren's side, and went over to Wren's sign by the bridge");
+  assert.equal(kev.nudges, undefined, 'met already: no arrival turn');
   await tick(30_000);
   assert.ok(near(kev.position, STORY_SITES.redSign.at) <= SIDES.signRing[1] + 0.1, 'there');
   const look = Math.atan2(STORY_SITES.redSign.at.x - kev.position.x, STORY_SITES.redSign.at.z - kev.position.z);
@@ -77,12 +80,13 @@ test('"kev: red": kev is red, the ticker says so, the tug line moves, he heads f
   assert.deepEqual(b.tally, { red: 1, gold: 0 }, 'the tug line moved');
   assert.ok(b.ticker.includes('Test-kev joined red'));
   assert.equal(view().dudes.find((d) => d.name === 'test-kev')?.side, 'red', 'the disc and the flag');
-  assert.equal(turns(), 0, 'no agent call');
+  assert.equal(turns(), before, 'no agent call');
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success, 'the save takes it');
 });
 
 test('"kev: gold" in the same age: the crier says "You\'re red this age", once a minute, and nothing changes', async () => {
-  const { h, tick, say, dude, sideLog, view, turns } = await town();
+  const { h, tick, say, dude, sideLog, view, turns } = await town({ names: ['test-kev'] });
+  const before = turns();
   await say('test-kev', 'red');
   await tick(1000);
   const kev = dude('test-kev');
@@ -101,7 +105,7 @@ test('"kev: gold" in the same age: the crier says "You\'re red this age", once a
   await tick(1000);
   assert.equal(h.announced.length, 2, 'and again after it');
   assert.deepEqual(view().town!.board!.tally, { red: 1, gold: 0 });
-  assert.equal(turns(), 0, 'no agent call');
+  assert.equal(turns(), before, 'no agent call');
 });
 
 test("a crier reply waits out the commands' gap and goes out with the others", async () => {
@@ -136,7 +140,8 @@ test('with the bridge ask open red takes a shift on it, one per chatter; after t
 });
 
 test("a neutral's help goes to red and joins it; gold's help walks to the cordon, and gold's names go on the plaque", async () => {
-  const { h, tick, say, dude, sideLog, turns } = await town();
+  const { h, tick, say, dude, sideLog, turns } = await town({ names: ['test-nia', 'test-dana'] });
+  const before = turns();
   await say('test-nia', 'help');
   assert.equal(dude('test-nia').side, 'red', 'help from nobody: Wren');
   assert.deepEqual(sideLog().map((e) => [e.name, e.side]), [['test-nia', 'red']]);
@@ -156,7 +161,7 @@ test("a neutral's help goes to red and joins it; gold's help walks to the cordon
   assert.equal(dana.side, 'gold');
   assert.ok(dana.path.length, 'back to the cordon');
   assert.equal(sideLog().length, 2, 'help on your own side logs nothing');
-  assert.equal(turns(), 0);
+  assert.equal(turns(), before, 'no agent call');
 });
 
 test('a new age: last age\'s red can cross to gold (on the ticker), then is held to it; help picks last age\'s side up again', async () => {
@@ -198,15 +203,43 @@ test('"make my house gold" and "help me build a hut" reach the agent as today, f
   assert.equal(dude('test-kev').history.filter((l) => l.from === 'chatter' && /gold|hut/.test(l.text)).length, 2);
 });
 
-test("a newcomer's first line can be a side word: they move in and take the side, no agent call", async () => {
-  const { h, say, dude, turns } = await town();
+test("a newcomer's first line can be a side word: they move in, take the side, and their agent meets them once, on their arrival, never with the word", async () => {
+  const { h, tick, say, dude, turns } = await town();
   await say('test-bo', 'GOLD');
   const bo = dude('test-bo');
   assert.ok(bo, 'moved in');
   assert.equal(bo.side, 'gold');
-  assert.ok(bo.history.some((l) => /got a lot of your own|flat|arrived/.test(l.text)), 'arrived as anyone does');
-  assert.equal(turns(), 0);
+  assert.ok(bo.history.some((l) => /got a lot of your own|flat/.test(l.text)), 'arrived as anyone does');
+  const arrival = "you arrived in town and joined gold, the Chief's side, and went over to the cordon round The Big Hut";
+  assert.ok(bo.nudges?.[0]?.startsWith(arrival), `their arrival waits for their agent (${bo.nudges})`);
+  // Again before the turn, and again after it: still the one arrival.
+  await say('test-bo', 'gold!');
+  await tick(500);
+  await say('test-bo', 'help');
+  await tick(20_000);
+  assert.equal(turns('test-bo'), 1, 'one turn: their arrival');
+  const t = h.turns[0];
+  assert.deepEqual(t.messages, [], 'nothing from their chatter: the word never reaches the agent');
+  assert.ok(t.content.includes(arrival), 'their agent hears how they arrived');
+  assert.ok(!t.content.includes('(your chatter)'), 'and nothing they typed');
+  assert.equal(bo.turns, 1, 'met: their persona and look come with it, and idle life and welcome-backs count them from here on');
+  await say('test-bo', 'gold');
+  await tick(2000);
+  assert.equal(turns('test-bo'), 1, 'after that a side word is free, as for anyone in town');
   assert.ok(h.state.dudes.length === 1);
+});
+
+test("an arrival waits while the newcomer's agent turn is under way: no second one", async () => {
+  const { h, tick, say, dude, turns } = await town();
+  await say('test-bo', 'red');
+  const bo = dude('test-bo');
+  // As startTurn leaves them while the call is out: the nudge taken, lastTurnAt set, turns not yet counted.
+  bo.nudges = undefined;
+  bo.lastTurnAt = h.now;
+  await say('test-bo', 'red');
+  assert.equal(bo.nudges, undefined);
+  await tick(2000);
+  assert.equal(turns('test-bo'), 0);
 });
 
 test("a body someone else has keeps still: a player walking it, a gathering holding it (gather mode: a vote, and the side); the side still counts", async () => {
@@ -244,6 +277,8 @@ test("during a scene the word is gather mode's vote and still takes the side, ne
   await tick(1000);
   assert.equal(dude('test-kev').side, 'red');
   assert.ok(h.announced.includes("You're red this age, @test-kev."));
+  assert.deepEqual(gatherTally(h.state).words.gold, [dude('test-dana').id], "refused, so not counted for gold: the tally's red and gold agree with the sides");
+  assert.deepEqual(gatherTally(h.state).words.red, [dude('test-kev').id]);
   await tick(12_000);
   assert.equal(gathering(h.state), false, 'released');
   await say('test-kev', 'help');

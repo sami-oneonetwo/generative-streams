@@ -337,8 +337,8 @@ export function crierReply(state: DudesState, dudeId: string, key: string, line:
   if (!cd) cooldowns.set(state, (cd = { asked: new Map(), answeredAt: -Infinity, pending: [] }));
   if (now - (cd.asked.get(`${dudeId}:${key}`) ?? -Infinity) < CRIER.askMs) return;
   cd.asked.set(`${dudeId}:${key}`, now);
-  if (!cd.pending.includes(line)) cd.pending.push(line);
-  if (cd.pending.length > 12) cd.pending.shift();
+  if (cd.asked.size > 500) cd.asked.clear();
+  if (!cd.pending.includes(line) && cd.pending.push(line) > 12) cd.pending.shift();
 } // hook FK-012
 
 /** Every tick: answers that waited out the gap go out together, as many as fit in one chat line. */
