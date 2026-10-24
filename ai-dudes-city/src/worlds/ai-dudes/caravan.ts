@@ -201,7 +201,9 @@ function bringTravellers(state: DudesState, age: number, now: number, strand = f
   const names = [c.leader, daughterOf(state), ...c.travellers].slice(0, STRANDED.length);
   const ids: string[] = [];
   names.forEach((name, i) => {
-    const id = `c${hashOf(`${name}:${age}`).toString(36)}`.slice(0, 20);
+    // One of the band here already keeps their id, though it was made from another name: renamed where
+    // they stood (a save from before FK-128's renames, or the daughter named by admin), they're still them.
+    const id = city.townies.find((t) => t.traveller && !t.role && t.name === name)?.id ?? `c${hashOf(`${name}:${age}`).toString(36)}`.slice(0, 20);
     ids.push(id);
     if (city.townies.some((t) => t.id === id)) return;
     const at = spot(i);
@@ -541,7 +543,7 @@ function turnAge(state: DudesState, cv: Caravan, now: number, final: boolean): v
         [`roll${i}`, names(h.names)],
       ]),
     );
-    city.scene = { id: 'finale', at: now, beat: 0, vars: { ...vars, ...roll, daughter: daughterOf(state), daughterLine: caravanOf(0).daughterLine } };
+    city.scene = { id: 'finale', at: now, beat: 0, vars: { ...vars, ...roll, daughter: daughterOf(state), daughterLine: bandOf(state, 0).daughterLine } }; // with Story on, no line of Ama's for Wren (FK-128)
   } else city.scene = { id: 'ageTurn', at: now, beat: 0, vars: { ...vars, age: ageStyle(cv.age + 1).name, heroes: names(heroes), farewell: c.farewell } }; // no goodbye from the cast (FK-128)
   state.worldRevision++;
 }
@@ -612,7 +614,8 @@ export function tickCaravan(state: DudesState, now: number): void {
   if (!cv || cv.age !== ageOf(state)) cv = startCaravan(state, now);
   bandFollowsStory(state, cv, now);
   // Travellers who wandered off (town life switched off and back) come back.
-  if (cv.travellers.some((id) => !city.townies.some((t) => t.id === id)) && cv.visit < 3) bringTravellers(state, cv.age, now);
+  // Their ids are taken afresh: one made from an old name (a save from before FK-128) would otherwise dangle.
+  if (cv.travellers.some((id) => !city.townies.some((t) => t.id === id)) && cv.visit < 3) cv.travellers = bringTravellers(state, cv.age, now);
   tickScene(state, cv, now);
   // The Wonder visit: the leader's Wonder goes forward as soon as the square is free to build it.
   if (!cv.nextAt && cv.asks.some((a) => a.kind === 'project' && a.have < a.need) && !projectOf(state)) leaderProposesWonder(state, cv, now);
@@ -690,7 +693,7 @@ export function caravanLine(state: DudesState): string | undefined {
 export function resumeCaravan(state: DudesState, now: number): void {
   const cv = cityOf(state).caravan;
   if (!cv || cv.visit > 2) return;
-  bringTravellers(state, cv.age, now);
+  cv.travellers = bringTravellers(state, cv.age, now);
   if (cv.stranded) {
     if (cv.asks.length) openBridge(state, cv, now);
     return;

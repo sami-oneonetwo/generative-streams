@@ -7,7 +7,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { harness } from './harness';
 import { TOWNIE_NAMES, TOWN_NAMES, ageOf, cityOf } from '../src/worlds/ai-dudes/city';
-import { DAUGHTER, RENAMED_TRAVELLERS, caravanLine, caravanOf, daughterOf, skipVisit } from '../src/worlds/ai-dudes/caravan';
+import { DAUGHTER, RENAMED_TRAVELLERS, caravanLine, caravanOf, daughterOf, resumeCaravan, skipVisit } from '../src/worlds/ai-dudes/caravan';
+import { hashOf } from '../src/worlds/ai-dudes/agent';
 import { troublemakerName } from '../src/worlds/ai-dudes/events';
 import { CAST, CAST_ROLES, castTownie, clashesWithCast } from '../src/worlds/ai-dudes/story/cast';
 import { stateSchema, type DudesState, type NpcKind } from '../src/worlds/ai-dudes/state';
@@ -204,4 +205,68 @@ test('a save from before the renames: old travellers renamed where they stand; a
   await tick(1000);
   assert.notEqual(wren()?.name, 'Wren', 'and keeps it');
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success);
+});
+
+test('a save from before the renames: a traveller under the id of his old name is still the one in the band (caravan back on, town life off and on)', async () => {
+  const { h, tick, run } = await town(false);
+  run('set-age', 'bronze');
+  await tick(2000);
+  const city = () => cityOf(h.state);
+  const band = () => city().caravan!.travellers.map((id) => city().townies.find((t) => t.id === id)?.name);
+  const all = ['Captain Nebet', 'Ama', 'Hori the Boatman', 'Mina'];
+  const one = (name: string) => assert.equal(city().townies.filter((t) => t.name === name).length, 1, `one ${name}`);
+  // As an older save had him: Ashur the Boatman, under the id made from that name.
+  const old = `c${hashOf('Ashur the Boatman:1').toString(36)}`.slice(0, 20);
+  const hori = city().townies.find((t) => t.name === 'Hori the Boatman')!;
+  city().caravan!.travellers = city().caravan!.travellers.map((id) => (id === hori.id ? old : id));
+  city().townies = city().townies.filter((t) => t !== hori);
+  city().townies.push({ ...hori, id: old, name: 'Ashur the Boatman' });
+  await tick(1000);
+  assert.deepEqual(band(), all, 'renamed where he stands');
+  // The caravan back on while he stands (or the band brought back mid-visit): no second Hori.
+  resumeCaravan(h.state, h.now);
+  await tick(1000);
+  assert.deepEqual(band(), all);
+  assert.ok(city().caravan!.travellers.includes(old), 'the same townie');
+  one('Hori the Boatman');
+  // Town life off and on: the band comes back under ids the caravan knows, Hori third (the elder's place).
+  run('town-off');
+  await tick(1000);
+  assert.ok(!city().townies.some((t) => t.traveller), 'the band has gone');
+  run('town-on');
+  await tick(1000);
+  assert.deepEqual(band(), all, 'every id in the band is in town');
+  one('Hori the Boatman');
+  // And sandbox and back.
+  run('caravan-off');
+  await tick(1000);
+  run('caravan-on');
+  await tick(1000);
+  assert.deepEqual(band(), all);
+  one('Hori the Boatman');
+  // The daughter named by admin is the same case: renamed where she stands, then the caravan brought back.
+  run('name-daughter', 'Nell');
+  resumeCaravan(h.state, h.now);
+  await tick(1000);
+  assert.deepEqual(band(), ['Captain Nebet', 'Nell', 'Hori the Boatman', 'Mina']);
+  one('Nell');
+});
+
+test("the finale: Story ON, Wren has no line of Ama's; Story OFF, Ama's line as today", async () => {
+  for (const story of [true, false]) {
+    const { h, tick, run, view } = await town(story);
+    run('set-age', AGES[LAST_AGE].id);
+    await tick(2000);
+    for (let i = 0; i < 30 && !cityOf(h.state).caravan?.turn; i++) {
+      skipVisit(h.state, h.now);
+      await tick(1000);
+    }
+    if (cityOf(h.state).scene?.id !== 'finale') assert.fail(`the finale is playing: ${cityOf(h.state).scene?.id}`);
+    const line = subtitle(view(), 34_601);
+    if (story) {
+      assert.equal(cityOf(h.state).scene!.vars!.daughterLine, '');
+      assert.equal(line, undefined, 'the daughter\'s slot is empty');
+      assert.ok(!subtitles(view()).some((s) => OLD_BAND.test(s)), JSON.stringify(subtitles(view())));
+    } else assert.equal(line, `Ama: ${caravanOf(0).daughterLine}`);
+  }
 });
