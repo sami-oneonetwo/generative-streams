@@ -1,8 +1,11 @@
 // Red and gold (FK-012): chat's core choice, one word and no AI call. With Story on, `red`, `gold` and
-// `help` count only as the whole message (trimmed, any case, trailing `!`s): hear() asks hearSide()
-// before anything goes to the agent (a newcomer's first line too: the newcomer branch only stops emotes
-// and `!` commands, then comes through dudeFor to the same check). So "make my house gold" stays a
-// build line and "help me build a hut" an agent line. Not in crierCommand: that only takes `!` words.
+// `help` count only as the whole message, by gather mode's rule (story/gather.ts wholeWord: trimmed, any
+// case, a trailing `!` or `.` and Kick emotes aside). hear() asks hearSide() before anything goes to the
+// agent (a newcomer's first line too: the newcomer branch only stops emotes and `!` commands, then comes
+// through dudeFor to the same check), so "make my house gold" stays a build line and "help me build a
+// hut" an agent line. Not in crierCommand: that only takes `!` words. While chat is in gather mode (a
+// scene or a gathering, FK-018) the word is a vote there, and hearInGather joins the side through
+// joinInGather: the side, never its job, while the crowd is held.
 // - A side word sets `dude.side` and `dude.sideAge`, puts it on the ticker (`city.story.sideLog`: "Kev
 //   joined red", or "Kev crossed to gold" when last age's side was the other) and starts the side's
 //   job. The same word again just does the job again.
@@ -30,6 +33,7 @@ import { endUse, isActive, sendDude } from '../sim';
 import { LIMITS, STORY_CAPS, pushLine, storyOn, type Dude, type DudesState, type Side } from '../state';
 import { CAST } from './cast';
 import { FOLLIES } from './folly';
+import { gathering, wholeWord } from './gather';
 
 export const SIDES = {
   /** At the sign or the cordon this long before going about again (as the agent's `move` stays). */
@@ -42,12 +46,11 @@ export const SIDES = {
 
 /** The three words, as `sideWord` reads them. */
 export type SideWord = Side | 'help';
-const WORD = /^(red|gold|help)!*$/i;
 
-/** The side word a line is, if the whole line is one: "red", "GOLD!", " help " yes; "make my house gold" no. */
+/** The side word a line is, if the whole line is one: "red", "GOLD!", " help. " yes; "make my house gold" no. */
 export function sideWord(text: string): SideWord | undefined {
-  const m = WORD.exec(text.trim());
-  return m ? (m[1].toLowerCase() as SideWord) : undefined;
+  const w = wholeWord(text);
+  return w === 'red' || w === 'gold' || w === 'help' ? w : undefined;
 }
 
 /** The side a chatter is on this age, if any: one taken in an earlier age doesn't count, as on the Folly's
@@ -60,18 +63,29 @@ export function sideNow(state: DudesState, d: Dude): Side | undefined {
 
 /**
  * hear()'s fast path, before the agent: true when the line was a side word and is dealt with (the
- * side, its job, or the crier's "You're red this age"), false to carry on as today. Story off: always false.
+ * side, its job, or the crier's "You're red this age"), false to carry on as today. Story off, or chat
+ * in gather mode (the vote counts there, and joinInGather takes the side): always false.
  */
 export function hearSide(state: DudesState, d: Dude, text: string, now: number): boolean {
-  if (!storyOn(state)) return false;
+  if (!storyOn(state) || gathering(state)) return false;
   const word = sideWord(text);
   if (!word) return false;
+  pickSide(state, d, word, now, true);
+  return true;
+}
+
+/** A side word in gather mode (story/gather.ts hearInGather): the side, never its job, while the crowd is held. */
+export function joinInGather(state: DudesState, d: Dude, word: SideWord, now: number): void {
+  if (storyOn(state)) pickSide(state, d, word, now, false);
+}
+
+function pickSide(state: DudesState, d: Dude, word: SideWord, now: number, work: boolean): void {
   const was = sideNow(state, d);
   const side: Side = word === 'help' ? (was ?? d.side ?? 'red') : word;
   const refused = takeSide(state, d, side, now);
   if (refused) crierReply(state, d.id, 'side', refused, now);
-  else sideJob(state, d, side, now, !was);
-  return true;
+  else if (work) sideJob(state, d, side, now, !was);
+  else if (!was) told(state, d, side, now, true);
 }
 
 /**
@@ -107,11 +121,7 @@ function logSide(state: DudesState, d: Dude, side: Side, now: number, from?: Sid
  * first. Its agent is told what happened, in its history: no turn.
  */
 export function sideJob(state: DudesState, d: Dude, side: Side, now: number, joined = false): void {
-  const tell = (what?: string) => {
-    const took = joined ? `you joined ${side}, ${whose(state, side)} side` : '';
-    const text = took && what ? `${took}, and ${what}` : took || (what ? `you ${what}` : '');
-    if (text && d.history.at(-1)?.text !== text) pushLine(d.history, { from: 'world', text, at: now }, LIMITS.history);
-  };
+  const tell = (what?: string) => told(state, d, side, now, joined, what);
   if (isPiloted(d.id) || d.gather || knockedOut(d, now)) return tell();
   if (side === 'red' && d.labour?.site === 'bridge') return tell();
   if (side === 'red' && bridgeOpen(state) && !(cityOf(state).caravan?.helpers ?? []).includes(d.id) && !startLabour(state, d, now))
@@ -130,6 +140,13 @@ export function sideJob(state: DudesState, d: Dude, side: Side, now: number, joi
   d.idleUntil = now + SIDES.stayMs;
   const folly = (FOLLIES[ageOf(state)] ?? FOLLIES[0]).name;
   tell(side === 'red' ? `went over to ${CAST.wren.name}'s sign by the bridge` : `went over to the cordon round ${folly} (your name goes on its plaque)`);
+}
+
+/** Its agent's history: "you joined red, Wren's side, and …", or "you …" for a side they were on. */
+function told(state: DudesState, d: Dude, side: Side, now: number, joined: boolean, what?: string): void {
+  const took = joined ? `you joined ${side}, ${whose(state, side)} side` : '';
+  const text = took && what ? `${took}, and ${what}` : took || (what ? `you ${what}` : '');
+  if (text && d.history.at(-1)?.text !== text) pushLine(d.history, { from: 'world', text, at: now }, LIMITS.history);
 }
 
 /** "Wren's" or "the Chief's". */

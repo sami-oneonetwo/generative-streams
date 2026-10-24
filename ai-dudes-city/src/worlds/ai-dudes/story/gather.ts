@@ -45,7 +45,7 @@ import { isPiloted } from '../players';
 import { addEffect, awake, endUse, parkObject } from '../sim';
 import { storyOn, type Dude, type DudesState } from '../state';
 import { lockCapOf, playShow, storyScene } from './show';
-import { sideNow } from './sides';
+import { joinInGather, sideNow } from './sides'; // hook FK-012 (joinInGather)
 
 /** The words gather mode counts, besides a number 1–10. */
 export const GATHER_WORDS = ['us', 'coming', 'warn', 'red', 'gold', 'help'] as const;
@@ -144,6 +144,7 @@ export function hearInGather(state: DudesState, dude: Dude, line: string, now: n
   const k = keywordOf(line);
   if (k?.word === 'rate') t.rates.set(dude.id, k.n);
   else if (k) t.words[k.word].add(dude.id);
+  if (k?.word === 'red' || k?.word === 'gold' || k?.word === 'help') joinInGather(state, dude, k.word, now); // hook FK-012: the side, never its job, until the release
   if (!queue) return k;
   const newcomer = dude.turns === 0 && (!dude.queuedLine || !!dude.queuedLine.world);
   if (!k && (movesOrBuilds(line) || newcomer)) dude.queuedLine = { text: line.slice(0, LINE_MAX), at: now };

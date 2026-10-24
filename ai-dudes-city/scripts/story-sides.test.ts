@@ -18,6 +18,7 @@ import type { DudesScene } from '../src/shared/dudesTypes';
 import { STORY_CAPS, stateSchema } from '../src/worlds/ai-dudes/state';
 import { raiseFolly } from '../src/worlds/ai-dudes/story/folly';
 import { SIDES, sideNow, sideWord, takeSide } from '../src/worlds/ai-dudes/story/sides';
+import { gatherTally, gathering } from '../src/worlds/ai-dudes/story/gather';
 
 /** A town with the caravan in (Stone's band stuck across the river), Story on or off; `names` said hello first. */
 async function town(opts: { story?: boolean; names?: string[] } = {}) {
@@ -36,8 +37,8 @@ async function town(opts: { story?: boolean; names?: string[] } = {}) {
 }
 const near = (a: { x: number; z: number }, b: { x: number; z: number }) => Math.hypot(a.x - b.x, a.z - b.z);
 
-test('side words are the whole message only: trimmed, any case, trailing !', () => {
-  for (const [line, word] of [['red', 'red'], ['RED', 'red'], [' Gold ', 'gold'], ['gold!', 'gold'], ['help!!', 'help'], ['Help', 'help']] as const)
+test("side words are the whole message only, by gather mode's rule: trimmed, any case, a trailing ! or ., Kick emotes aside", () => {
+  for (const [line, word] of [['red', 'red'], ['RED', 'red'], [' Gold ', 'gold'], ['gold!', 'gold'], ['help!!', 'help'], ['Help', 'help'], ['red.', 'red'], ['gold [emote:123:KEKW]', 'gold']] as const)
     assert.equal(sideWord(line), word, line);
   for (const line of ['make my house gold', 'help me build a hut', 'red gold', '!red', '!help', 'redd', 'golden', 'red?', 'go red', 'gold KEKW', ''])
     assert.equal(sideWord(line), undefined, line);
@@ -208,7 +209,7 @@ test("a newcomer's first line can be a side word: they move in and take the side
   assert.ok(h.state.dudes.length === 1);
 });
 
-test("a body someone else has keeps still: a player walking it, a gathering holding it; the side still counts", async () => {
+test("a body someone else has keeps still: a player walking it, a gathering holding it (gather mode: a vote, and the side); the side still counts", async () => {
   const { h, world, ctx, say, dude } = await town({ names: ['test-kev', 'test-dana'] });
   const kev = dude('test-kev');
   assert.ok(typeof world.players!.join(ctx, kev.id, 'test-kev') === 'object', 'kev walks himself (/play)');
@@ -223,6 +224,31 @@ test("a body someone else has keeps still: a player walking it, a gathering hold
   assert.equal(dana.side, 'gold');
   assert.deepEqual(dana.path, [], 'stays in the ring');
   assert.equal(dana.history.at(-1)?.text, "you joined gold, the Chief's side");
+});
+
+test("during a scene the word is gather mode's vote and still takes the side, never its job; after the release help works it", async () => {
+  const { h, tick, say, dude, sideLog, run, turns } = await town({ names: ['test-kev', 'test-dana'] });
+  const before = turns();
+  dude('test-kev').path = [];
+  assert.equal(run('story-play', 'test'), undefined);
+  assert.ok(gathering(h.state));
+  await say('test-kev', 'red!');
+  await say('test-dana', 'gold');
+  await say('test-new', 'help');
+  assert.deepEqual(['test-kev', 'test-dana', 'test-new'].map((n) => dude(n).side), ['red', 'gold', 'red'], "a newcomer's help: red");
+  assert.deepEqual(dude('test-kev').path, [], 'held: no walk to the sign mid-scene');
+  assert.equal(dude('test-kev').say?.text, 'red!', 'the bubble, as for every line in a scene');
+  assert.deepEqual(gatherTally(h.state).words.red, [dude('test-kev').id], 'the vote counts');
+  assert.deepEqual(sideLog().map((e) => e.name), ['test-kev', 'test-dana', 'test-new']);
+  await say('test-kev', 'gold');
+  await tick(1000);
+  assert.equal(dude('test-kev').side, 'red');
+  assert.ok(h.announced.includes("You're red this age, @test-kev."));
+  await tick(12_000);
+  assert.equal(gathering(h.state), false, 'released');
+  await say('test-kev', 'help');
+  assert.ok(near(dude('test-kev').path.at(-1)!, STORY_SITES.redSign.at) <= SIDES.signRing[1] + 0.1, "now he goes to Wren's sign");
+  assert.equal(turns('test-kev') + turns('test-dana'), before, 'no agent call for any of it');
 });
 
 test("takeSide (the Rally's path) logs once per side, and refuses the other side this age", async () => {
