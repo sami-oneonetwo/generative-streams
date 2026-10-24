@@ -1815,6 +1815,9 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       run: (ctx) => {
         if (ctx.state.ai.caravan === false) return refuse(ctx, 'The caravan is off (sandbox mode): switch it on first');
         if (ctx.state.ai.townLife === false) return refuse(ctx, 'Town life is off: switch it on first (the travellers are townsfolk)');
+        // A story scene has the page (FK-017's showView): today's opening would play on unseen underneath.
+        const story = ctx.state.city?.story?.scene;
+        if (story) return refuse(ctx, `The ${story.id} scene is playing: Stop it first`);
         playScene(ctx.state, 'opening', ctx.now);
         ctx.log('the opening is playing (admin)');
       },

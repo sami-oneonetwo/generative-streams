@@ -34,6 +34,9 @@ export function sceneTime(sc: StorySceneState, now: number): number {
 /** The longest a scene may hold the town (bible §5), from its start, holds included. */
 export const lockCapOf = (scene: Scene): number => scene.lockMs ?? scene.ms + LOCK_SLACK_MS;
 
+/** How far behind a scene's start the clock may read before it counts as broken: a tick or two of jitter. */
+const CLOCK_SLACK_MS = 2000;
+
 const secs = (ms: number) => `${Math.round(ms / 100) / 10} s`;
 const clip = (s: string, n: number) => (s.length > n ? s.slice(0, n) : s);
 
@@ -96,6 +99,8 @@ export function tickShow(state: DudesState, now: number, log: Log): void {
     if (!scene) return void panicShow(state, `this build has no story scene called "${clip(String(sc.id), 40)}"`, log);
     const t = sceneTime(sc, now);
     if (!Number.isFinite(t)) return void panicShow(state, 'its clock is broken', log);
+    // A clock stepped back past the scene's start: no beat would come due, it would never end and the cap would never trip.
+    if (now < sc.at - CLOCK_SLACK_MS) return void panicShow(state, `its clock is broken (back ${secs(sc.at - now)} before it began)`, log);
     const cap = lockCapOf(scene);
     // Only holds can stretch a scene past its length: one that has simply run long (a stalled server) ends as written, below.
     if (t < scene.ms && now - sc.at > cap) return void panicShow(state, `held past its ${secs(cap)} lock cap (${secs(t)} into ${secs(scene.ms)})`, log);

@@ -14,7 +14,7 @@ import { mayorOf } from '../src/worlds/ai-dudes/mayor';
 import { castArrival, castIn, castTownie } from '../src/worlds/ai-dudes/story/cast';
 import { SHOW_BEATS, lockCapOf, playShow, sceneTime, storyScene } from '../src/worlds/ai-dudes/story/show';
 import { stateSchema, type StorySceneState } from '../src/worlds/ai-dudes/state';
-import { LOCK_CAPS, LOCK_SLACK_MS, SCENES, type Scene } from '../src/shared/scenes';
+import { LOCK_CAPS, LOCK_SLACK_MS, SCENES, STEP_FORWARD, type Scene } from '../src/shared/scenes';
 import { STORY_SCENES } from '../src/shared/storyScenes';
 import { STORY_SITES } from '../src/shared/storyMap';
 import type { DudesScene } from '../src/shared/dudesTypes';
@@ -225,6 +225,18 @@ test('a beat or a scene this build does not know, a broken clock or broken scene
     assert.equal(t.scene(), undefined);
     assert.match(t.alerts[0], /PANIC EXIT from the test scene: its clock is broken/);
   }
+  // A clock stepped back past the scene's start: scene time would stay negative, so nothing would ever end it.
+  {
+    const t = showTown();
+    cityOf(t.h.state).story = { scene: { id: 'test', at: t.h.now + 1500, shift: 0, beat: 0, vars: {} } };
+    await t.tick(500);
+    assert.ok(t.scene(), 'a tick or two of jitter is let be');
+    assert.deepEqual(t.alerts, []);
+    t.scene()!.at = t.h.now + 60_000;
+    await t.tick(500);
+    assert.equal(t.scene(), undefined);
+    assert.match(t.alerts[0], /PANIC EXIT from the test scene: its clock is broken \(back 59\.5 s before it began\)/);
+  }
   // Scene data that throws outside any beat (no beats list): the round's own try/catch.
   await withScene({ id: 'bad-test', ms: 5000, shots: [], lines: [], beats: undefined as never }, async () => {
     const t = showTown();
@@ -232,6 +244,24 @@ test('a beat or a scene this build does not know, a broken clock or broken scene
     await t.tick(500);
     assert.equal(t.scene(), undefined);
     assert.match(t.alerts[0], /PANIC EXIT from the bad-test scene: the show runtime threw: /);
+  });
+});
+
+test('a step beat walks one of the cast STEP_FORWARD the way they face (atan2(dx, dz), as the caravan’s leader steps)', async () => {
+  await withScene({ id: 'step-test', ms: 3000, shots: [], lines: [], beats: [{ at: 500, do: 'step', who: 1 }] }, async () => {
+    const t = showTown();
+    const s = t.h.state;
+    t.bringCast();
+    const wren = castTownie(s, 'wren')!;
+    wren.facing = Math.PI / 2; // facing +x
+    const from = { ...wren.position };
+    playShow(s, 'step-test', t.h.now);
+    await t.tick(500);
+    const to = wren.path[wren.path.length - 1] ?? wren.position;
+    assert.ok(Math.abs(to.x - (from.x + STEP_FORWARD)) < 1e-9 && Math.abs(to.z - from.z) < 1e-9, `Wren steps to +x: ${JSON.stringify(to)}`);
+    assert.ok(Math.abs(Math.atan2(to.x - from.x, to.z - from.z) - wren.facing) < 1e-9, 'the way she faces');
+    assert.equal(castTownie(s, 'ash')!.path.length, 0, 'only the one the beat names');
+    assert.deepEqual(t.alerts, []);
   });
 });
 
@@ -284,6 +314,8 @@ test('Play: test refuses over today’s scene and over a story scene; Stop cuts 
   assert.equal(t.run('story-play', 'test'), undefined);
   assert.match(t.run('story-play', 'test') ?? 'ran', /^The test scene is playing: Stop it first$/);
   assert.match(t.run('story-play', 'crossing') ?? 'ran', /^The test scene is playing: Stop it first$/);
+  assert.match(t.run('scene-opening') ?? 'ran', /^The test scene is playing: Stop it first$/, '/admin’s opening too: it would play unseen under the story scene');
+  assert.equal(cityOf(s).scene, undefined);
   await t.tick(3000);
   assert.equal(t.run('story-stop'), undefined);
   assert.equal(t.scene(), undefined);
