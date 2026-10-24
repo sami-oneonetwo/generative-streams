@@ -1,6 +1,6 @@
 {
   "age": "stone",
-  "spec": "f11249f629db9b53",
+  "spec": "387addc4ee2cd342",
   "measures": [
     {
       "role": "wren",
@@ -10,21 +10,16 @@
       "main": [
         {
           "hex": "#b3262e",
-          "share": 0.489
-        },
-        {
-          "hex": "#76513b",
-          "share": 0.1
-        },
-        {
-          "hex": "#c3a575",
-          "share": 0.092
+          "share": 0.618
         }
       ],
-      "red": 0.489,
-      "topRed": 0.872,
+      "red": 0.618,
+      "topRed": 0.879,
+      "px": 7088,
+      "ownPx": 4378,
       "phonePx": 24,
-      "phoneW": 16
+      "phoneW": 16,
+      "freePx": 10
     },
     {
       "role": "ash",
@@ -34,21 +29,28 @@
       "main": [
         {
           "hex": "#6e7680",
-          "share": 0.39
+          "share": 0.302
         },
         {
           "hex": "#76513b",
-          "share": 0.146
+          "share": 0.159
         },
         {
           "hex": "#e1d3ae",
-          "share": 0.113
+          "share": 0.124
+        },
+        {
+          "hex": "#c3a575",
+          "share": 0.102
         }
       ],
-      "red": 0.005,
+      "red": 0.006,
       "topRed": 0,
+      "px": 13161,
+      "ownPx": 3970,
       "phonePx": 33,
-      "phoneW": 19
+      "phoneW": 19,
+      "freePx": 14
     },
     {
       "role": "moss",
@@ -58,17 +60,20 @@
       "main": [
         {
           "hex": "#4e8a3a",
-          "share": 0.663
+          "share": 0.372
         },
         {
-          "hex": "#76513b",
-          "share": 0.092
+          "hex": "#e1d3ae",
+          "share": 0.085
         }
       ],
       "red": 0,
       "topRed": 0,
-      "phonePx": 22,
-      "phoneW": 27
+      "px": 10645,
+      "ownPx": 3958,
+      "phonePx": 21,
+      "phoneW": 24,
+      "freePx": 9
     },
     {
       "role": "oak",
@@ -78,13 +83,28 @@
       "main": [
         {
           "hex": "#e8762b",
-          "share": 0.496
+          "share": 0.256
+        },
+        {
+          "hex": "#76513b",
+          "share": 0.16
+        },
+        {
+          "hex": "#c3a575",
+          "share": 0.157
+        },
+        {
+          "hex": "#3d2a1e",
+          "share": 0.135
         }
       ],
       "red": 0,
       "topRed": 0,
+      "px": 14690,
+      "ownPx": 3763,
       "phonePx": 30,
-      "phoneW": 28
+      "phoneW": 26,
+      "freePx": 13
     },
     {
       "role": "kit",
@@ -94,17 +114,20 @@
       "main": [
         {
           "hex": "#2f6fd0",
-          "share": 0.495
+          "share": 0.555
         },
         {
           "hex": "#76513b",
-          "share": 0.129
+          "share": 0.111
         }
       ],
       "red": 0,
       "topRed": 0,
+      "px": 4559,
+      "ownPx": 2529,
       "phonePx": 18,
-      "phoneW": 12
+      "phoneW": 13,
+      "freePx": 8
     },
     {
       "role": "head",
@@ -113,16 +136,16 @@
       "height": 1.9272,
       "main": [
         {
-          "hex": "#987052",
-          "share": 0.402
+          "hex": "#76513b",
+          "share": 0.375
         },
         {
           "hex": "#c3a575",
-          "share": 0.219
+          "share": 0.209
         },
         {
           "hex": "#ffc633",
-          "share": 0.109
+          "share": 0.16
         },
         {
           "hex": "#e1d3ae",
@@ -131,8 +154,11 @@
       ],
       "red": 0,
       "topRed": 0,
+      "px": 14159,
+      "ownPx": 2269,
       "phonePx": 40,
-      "phoneW": 26
+      "phoneW": 26,
+      "freePx": 17
     }
   ]
 }

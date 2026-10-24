@@ -6,8 +6,8 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { CAST, CAST_ROLES, STORY, castIn, castLines, composeCast, kitNotes, readsGold, readsRed, seatPose, sizeChecks, standardLength, standingHeight, worldLength, type CastLook, type CastRole } from '../design/story';
-import { CAST_ORDER, PHONE, PHONE_HALF, SLOT, colourShares, lineUpSlots, mainColours, redShare, toGrey, topThirdRed } from '../design/board/cast';
+import { CAST, CAST_ROLES, STORY, castColours, castIn, castLines, composeCast, editKit, kitNotes, readsGold, readsRed, seatPose, sizeChecks, standardLength, standingHeight, worldLength, type CastLook, type CastRole } from '../design/story';
+import { CAST_ORDER, PHONE, PHONE_FREE_HALF, PHONE_HALF, SLOT, colourShares, familyArea, lineUpSlots, mainColours, ownArea, redArea, redShare, toGrey, topThirdRed } from '../design/board/cast';
 import OUTFITS from '../src/shared/ageOutfits.json';
 import type { AgeOutfits, OutfitPart } from '../src/shared/outfits';
 
@@ -79,6 +79,27 @@ test("a prop's parts may come back with garment-style \"colour\": the stump keep
   assert.equal(moss(stump('colour', '#6b4a2e')).prop!.parts[0].color, '#6b4a2e');
   assert.equal(moss(stump('colour', '#6b4a2e')).checks, undefined);
   assert.match(moss(stump('colour', 'bark')).checks!.join(), /1 bad shapes or colours replaced on the prop \(a tree stump\)/);
+});
+
+test("a pinned kit's edits take parts off and recolour others by the kit's own index; the rest is the kit as shipped", () => {
+  const kit = KITS.stone.kits[1].parts;
+  // Kit 1's basket (16–21) off, its olive capes (8, 9) in hide and in the shirt; nonsense ignored.
+  const raw = { drop: [21, 16, 17, 18, 19, 20, 16, 99, -1, 'x'], colour: { 8: '#76513b', 9: 'shirt:dark', 16: '#ffffff', 3: 'red', 40: '#000000' } };
+  const oak = composeCast('stone', 'oak', { role: 'oak', base: 1, kitEdits: raw, parts: [part('hips', [0.4, 0.5, 0.05], '#E8762B')] }, KITS.stone);
+  assert.deepEqual(oak.kitEdits, { drop: [16, 17, 18, 19, 20, 21], colour: { 8: '#76513b', 9: 'shirt:dark' } });
+  assert.equal(oak.outfit.parts.length, kit.length - 6 + 1);
+  assert.deepEqual(oak.outfit.parts.slice(0, 8), kit.slice(0, 8));
+  assert.deepEqual(oak.outfit.parts.slice(8, 10), [
+    { ...kit[8], colour: '#76513b' },
+    { ...kit[9], colour: 'shirt:dark' },
+  ]);
+  assert.deepEqual(oak.outfit.parts.slice(10, 16), kit.slice(10, 16));
+  assert.equal(oak.outfit.parts.at(-1)!.colour, '#E8762B');
+  // No edits: the kit as shipped, and none written.
+  assert.deepEqual(editKit(kit, undefined), kit);
+  const plain = composeCast('stone', 'oak', { role: 'oak', base: 1, kitEdits: { drop: [40] }, parts: [] }, KITS.stone);
+  assert.equal(plain.kitEdits, undefined);
+  assert.deepEqual(plain.outfit.parts, kit);
 });
 
 test("the brief tells astra what each shipped Stone kit already wears and holds: the head's and leader's gold, the poles", () => {
@@ -157,9 +178,37 @@ test("main colours: skin aside, a hide's two browns counted once, small bits lef
   );
 });
 
-test('the phone check greys the stream frame at 20%: 390 px of 1920, at the auto camera\'s closest zoom', () => {
+test("a colour's area counts its tones as the page shades them, and red and gold as a viewer reads them", () => {
+  const ORANGE = [0xe8, 0x76, 0x2b],
+    ORANGE_DARK = ORANGE.map((n) => Math.round(n * 0.72)),
+    ORANGE_LIGHT = ORANGE.map((n) => Math.round(n + (255 - n) * 0.4)),
+    RED_DARK = [0x7a, 0x14, 0x19];
+  const hexOf = (c: number[]) => '#' + c.map((n) => n.toString(16).padStart(2, '0')).join('');
+  const px = picture(20, 10, MAGENTA, [
+    [0, 0, 4, 10, ORANGE],
+    [4, 0, 6, 10, ORANGE_DARK],
+    [6, 0, 7, 10, ORANGE_LIGHT],
+    [7, 0, 10, 10, BROWN],
+    [10, 0, 13, 10, RED],
+    [13, 0, 15, 10, RED_DARK],
+    [15, 0, 20, 10, GREEN],
+  ]);
+  const s = colourShares(px, 20, 10, ['#e8762b', hexOf(ORANGE_DARK), hexOf(ORANGE_LIGHT), '#987052', '#b3262e', '#7a1419', '#4e8a3a'], '#ff00ff');
+  // Oak's orange in all three tones, and not the brown beside it.
+  assert.equal(familyArea(s, '#E8762B'), 70);
+  assert.equal(ownArea(s, '#E8762B'), 70);
+  // Wren's red with its deep tone; green as itself.
+  assert.equal(redArea(s), 50);
+  assert.equal(ownArea(s, STORY.red), 50);
+  assert.equal(ownArea(s, '#4E8A3A'), 50);
+  assert.equal(ownArea(s, STORY.gold), 0);
+});
+
+test('the phone check greys the stream frame at 20%: 390 px of 1920, at the auto camera\'s closest zoom and in free play', () => {
   assert.equal(PHONE.width / PHONE.frame, 390 / 1920);
   assert.equal(PHONE_HALF, 6);
+  // Free play frames the crowd between the auto camera's 6 and 40 m (client/dudes/main.ts AUTO_MIN, AUTO_MAX).
+  assert.ok(PHONE_FREE_HALF > PHONE_HALF * 2 && PHONE_FREE_HALF < 40);
   const px = new Uint8ClampedArray([0xb3, 0x26, 0x2e, 255, 0xff, 0xc6, 0x33, 255]);
   toGrey(px);
   // Red and gold stay far apart in greyscale (design-system §2: luminance 0.11 against 0.62).
@@ -191,10 +240,10 @@ test('the Stone cast spec FK-016 applies: all six on the shipped kits, at the ca
     assert.equal(c.checks, undefined, `${role}: ${c.checks}`);
     // Today's rules still pass (the checks were written by the run that made it).
     assert.deepEqual(composeCast('stone', role, { ...c, base: c.base.split(':')[1], parts: c.outfit.parts.slice(c.outfit.parts.length - c.extras), hide: c.outfit.hide }, KITS.stone).checks, undefined, role);
-    // The pinned kit is the one the game ships, part for part, under their own parts.
+    // The pinned kit is the one the game ships, part for part (bar the design lead's kit edits), under their own parts.
     const [, which] = c.base.split(':');
     const kit = which === 'head' || which === 'leader' ? KITS.stone[which]! : KITS.stone.kits[Number(which)];
-    assert.deepEqual(c.outfit.parts.slice(0, c.outfit.parts.length - c.extras), kit.parts, `${role} on ${c.base}`);
+    assert.deepEqual(c.outfit.parts.slice(0, c.outfit.parts.length - c.extras), editKit(kit.parts, c.kitEdits), `${role} on ${c.base}`);
   }
   assert.equal(spec.cast.head.base, 'stone:head');
   assert.equal(spec.cast.head.hatScale, 1);
@@ -208,8 +257,60 @@ test('the Stone cast spec FK-016 applies: all six on the shipped kits, at the ca
   assert.ok(moss.seat!.top >= 0.38 && moss.seat!.top <= 0.45, `seat ${moss.seat!.top} m`);
 });
 
+test("no two of the six carry the same thing: the kits' basket and gourd are off, and each one's held things are their own", () => {
+  // A held thing hangs from a hand: an arm part reaching below the hand (client/dudes/dudes.ts: −0.46 on the standard figure).
+  const held = (c: CastLook) => c.outfit.parts.filter((p) => (p.bone === 'armL' || p.bone === 'armR') && p.position[1] - p.size[1] / 2 < -0.46).map((p) => JSON.stringify([p.bone, p.shape, p.position, p.size]));
+  const roles = castIn('stone');
+  for (let i = 0; i < roles.length; i++)
+    for (let j = i + 1; j < roles.length; j++) {
+      const a = held(spec.cast[roles[i]]),
+        b = held(spec.cast[roles[j]]);
+      assert.deepEqual(
+        a.filter((x) => b.includes(x)),
+        [],
+        `${roles[i]} and ${roles[j]} carry the same thing`,
+      );
+    }
+  // Kit 1's basket of greens and kit 2's gourd are on nobody, though Ash, Oak and Kit wear kit 1 and Wren and Moss kit 2.
+  const kitHeld = [...held({ outfit: KITS.stone.kits[1] } as CastLook), ...held({ outfit: KITS.stone.kits[2] } as CastLook)];
+  assert.equal(kitHeld.length, 9);
+  for (const role of roles) assert.deepEqual(held(spec.cast[role]).filter((x) => kitHeld.includes(x)), [], role);
+  // Oak's mallet head rides over his shoulder (above the arm's root), clear of his body; Ash's staff and the Chief's reach the ground.
+  const mallet = spec.cast.oak.outfit.parts.find((p) => p.bone === 'armR' && p.colour === '#a8a392' && p.size[0] >= 0.28);
+  assert.ok(mallet && mallet.position[1] > 0.2, `Oak's mallet head at ${mallet?.position[1]} on his arm`);
+});
+
+const chroma = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16),
+    c = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  return Math.max(...c) - Math.min(...c);
+};
+const hue = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16),
+    [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255],
+    max = Math.max(r, g, b),
+    d = max - Math.min(r, g, b);
+  if (!d) return 0;
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+};
+/** A Stone hide, bone or stone: a quiet brown, ochre or cream (chroma under 100, hue 15–60°), or a grey or near-black (chroma under 40). */
+const stoneHide = (hex: string) => chroma(hex) < 40 || (chroma(hex) < 100 && hue(hex) >= 15 && hue(hex) <= 60);
+
+test("each one wears their own colour, story red and gold where they mean something, and Stone hides: nobody else's colour", () => {
+  assert.ok(['#76513b', '#987052', '#c3a575', '#e1d3ae', '#3d2a1e', '#a8a392', '#6E7680'].every(stoneHide));
+  // Kit 1's olive capes are Moss's green family, and the head kit's war paint is Oak's orange: neither is a hide.
+  assert.ok(!['#7c9254', '#a8ad68', '#f07835', '#4E8A3A', '#E8762B', '#2F6FD0', STORY.red, STORY.gold].some(stoneHide));
+  const own: Record<CastRole, string[]> = { wren: [STORY.red], ash: [CAST.ash.colour, STORY.red], moss: [CAST.moss.colour], oak: [CAST.oak.colour], kit: [CAST.kit.colour, STORY.gold], head: [STORY.gold] };
+  for (const role of castIn('stone'))
+    for (const hex of castColours(spec.cast[role])) {
+      const ok = stoneHide(hex) || own[role].some((c) => c.toLowerCase() === hex.toLowerCase()) || (own[role].includes(STORY.gold) && readsGold(hex));
+      assert.ok(ok, `${role} wears ${hex}`);
+    }
+});
+
 const MEASURES = 'design/out/cast/stone-measures.json';
-const measured = JSON.parse(readFileSync(MEASURES, 'utf8')) as { age: string; spec: string; measures: { role: string; main: { hex: string; share: number }[]; red: number; topRed: number; phonePx: number; phoneW: number }[] };
+const measured = JSON.parse(readFileSync(MEASURES, 'utf8')) as { age: string; spec: string; measures: { role: string; main: { hex: string; share: number }[]; red: number; topRed: number; px: number; ownPx: number; phonePx: number; phoneW: number; freePx: number }[] };
 const by = Object.fromEntries(measured.measures.map((m) => [m.role, m]));
 
 test('the board was drawn from the spec as committed (re-render after any change: node design/render-cast.mjs stone)', async () => {
@@ -227,8 +328,19 @@ test("the board's pixel counts pass the gate: Wren's top third is red, everyone'
   assert.ok(by.head.main.some((c) => c.hex === STORY.gold.toLowerCase()));
   assert.equal(by.head.red, 0);
   for (const role of ['ash', 'moss', 'oak', 'kit'] as const) assert.ok(by[role].red < 0.03, `${role} is ${by[role].red} red`);
-  // On the phone Kit is the smallest of them.
+  // On the phone Kit is the smallest of them, in close shots and in free play.
   assert.equal(Math.min(...measured.measures.map((m) => m.phonePx)), by.kit.phonePx);
+  assert.equal(Math.min(...measured.measures.map((m) => m.freePx)), by.kit.freePx);
+  for (const m of measured.measures) assert.ok(m.freePx > 0 && m.freePx < m.phonePx, `${m.role}: ${m.freePx} px in free play`);
+});
+
+test("Wren's red is the biggest colour mass in the line-up: more pixels than Oak's orange, Moss's green, Kit's blue, Ash's grey or the Chief's gold", () => {
+  // All six drawn flat from the stream camera at one size, so their pixels compare (design/board/main.ts flatShares).
+  assert.ok(by.wren.ownPx > 0.5 * by.wren.px, `Wren is ${by.wren.ownPx} px red of ${by.wren.px}`);
+  for (const m of measured.measures) if (m.role !== 'wren') assert.ok(by.wren.ownPx >= m.ownPx, `Wren's red ${by.wren.ownPx} px against ${m.role}'s own colour ${m.ownPx} px`);
+  // Everything else on them is a quiet Stone hide (main colours beyond their own), so nothing louder stands beside her red.
+  for (const m of measured.measures)
+    if (m.role !== 'wren') for (const c of m.main) assert.ok(c.hex === CAST[m.role as CastRole].colour.toLowerCase() || stoneHide(c.hex), `${m.role}'s main colour ${c.hex}`);
 });
 
 test('at 390 px in greyscale every pair of the six differs by a quarter in height or width: their silhouettes tell them apart', () => {

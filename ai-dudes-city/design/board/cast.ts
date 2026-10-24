@@ -3,7 +3,7 @@
 // pixels: each member's main colours (the design gate's "4 at most") and how much of Wren's top third
 // is red (her red is the biggest shape in any frame she is in). Pure data and arithmetic, so
 // scripts/design-cast.test.ts can check it; design/board/main.ts does the drawing.
-import { readsRed } from '../colour';
+import { readsGold, readsRed } from '../colour';
 
 /** The order they stand in, as the card names them. */
 export const CAST_ORDER = ['wren', 'ash', 'moss', 'oak', 'kit', 'head'] as const;
@@ -101,10 +101,27 @@ export function mainColours(s: Shares, skin: readonly string[], min = 0.08, merg
     .sort((a, b) => b.share - a.share);
 }
 
+/**
+ * Pixels of one colour family on a flat-drawn figure: `hex` and its tones as the page shades a part
+ * (":dark" ×0.72, ":light" 40% of the way to white), each within `near`. Every member is drawn from the
+ * same camera at the same size, so these compare across the line-up: Wren's red against Oak's orange.
+ */
+export function familyArea(s: Shares, hex: string, near = 40): number {
+  const c = rgb(hex);
+  const tones = [c, c.map((n) => n * 0.72), c.map((n) => n + (255 - n) * 0.4)];
+  return Object.entries(s.by).reduce((n, [h, k]) => n + (tones.some((t) => dist(rgb(h), t) < near) ? k : 0), 0);
+}
+/** Pixels that read red (story red and anything a viewer reads as it, design/colour.ts readsRed). */
+export const redArea = (s: Shares): number => Object.entries(s.by).reduce((n, [hex, k]) => n + (readsRed(hex) ? k : 0), 0);
+/** Pixels that read as story gold (design/colour.ts readsGold). */
+export const goldArea = (s: Shares): number => Object.entries(s.by).reduce((n, [hex, k]) => n + (readsGold(hex) ? k : 0), 0);
+/** A member's own locked colour on them, in pixels: red and gold as a viewer reads them, a cast colour as its family. */
+export const ownArea = (s: Shares, colour: string): number => (readsRed(colour) ? redArea(s) : readsGold(colour) ? goldArea(s) : familyArea(s, colour));
+
 /** How much of the top third of a silhouette is red (story red and anything a viewer reads as it). */
 export const topThirdRed = (s: Shares): number => (s.top ? Object.entries(s.topBy).reduce((n, [hex, k]) => n + (readsRed(hex) ? k : 0), 0) / s.top : 0);
 /** How much of the whole silhouette is red. */
-export const redShare = (s: Shares): number => (s.total ? Object.entries(s.by).reduce((n, [hex, k]) => n + (readsRed(hex) ? k : 0), 0) / s.total : 0);
+export const redShare = (s: Shares): number => (s.total ? redArea(s) / s.total : 0);
 
 /** A picture's pixels to grey in place (Rec. 709 luma on the sRGB values, as a greyscale phone check sees it). */
 export function toGrey(px: { length: number; [i: number]: number }): void {
@@ -121,3 +138,9 @@ export const PHONE = { width: 390, frame: 1920, height: 1080 } as const;
  * (client/dudes/main.ts AUTO_MIN), about where the scenes' close shots sit (src/shared/scenes.ts 6.4–7).
  */
 export const PHONE_HALF = 6;
+/**
+ * A typical free-play framing for the second strip: the auto camera frames the whole crowd between
+ * AUTO_MIN 6 and AUTO_MAX 40 (FOCUS_HALF 8 on one person), so between scenes the cast are 1.3–6× smaller
+ * than in close shots; at 14 m they are about 2.3× smaller.
+ */
+export const PHONE_FREE_HALF = 14;

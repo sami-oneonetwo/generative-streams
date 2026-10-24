@@ -23,7 +23,7 @@ const data = JSON.parse(
   execFileSync('npx', ['tsx', '-e', `import {readFileSync} from 'node:fs'; import {CAST, standingHeight} from './design/story'; import BIBLES from './src/shared/ageBibles.json';
 const spec = JSON.parse(readFileSync('design/spec/cast/${age}.json', 'utf8'));
 const bible = (BIBLES as {id: string}[]).find((b) => b.id === '${age}');
-const members = Object.values(spec.cast as Record<string, any>).map((c) => ({ role: c.role, name: c.name, scale: c.scale, height: standingHeight(CAST[c.role as keyof typeof CAST].body, c.scale), look: c.look, outfit: c.outfit, prop: c.prop, seat: c.seat, checks: c.checks }));
+const members = Object.values(spec.cast as Record<string, any>).map((c) => ({ role: c.role, name: c.name, colour: CAST[c.role as keyof typeof CAST].colour, scale: c.scale, height: standingHeight(CAST[c.role as keyof typeof CAST].body, c.scale), look: c.look, outfit: c.outfit, prop: c.prop, seat: c.seat, checks: c.checks }));
 console.log(JSON.stringify({ bible, members }));`], { encoding: 'utf8', maxBuffer: 64 << 20 }),
 );
 if (!data.bible) throw new Error(`no ${age} world rules in src/shared/ageBibles.json`);
@@ -51,4 +51,4 @@ writeFileSync(path.join(out, `${age}-board.png`), Buffer.from(images.board.split
 const spec = createHash('sha256').update(readFileSync(path.resolve(`design/spec/cast/${age}.json`))).digest('hex').slice(0, 16);
 writeFileSync(path.join(out, `${age}-measures.json`), JSON.stringify({ age, spec, measures }, null, 2) + '\n');
 console.log(`cast ${age}: design/out/cast/${age}-board.png (${((Date.now() - started) / 1000).toFixed(0)} s)${note ? ', with the note' : ''}${errors.length ? `; page errors: ${errors.join(' | ')}` : ''}`);
-for (const m of measures) console.log(`  ${m.name}: ${m.main.map((c) => `${c.hex} ${Math.round(c.share * 100)}%`).join(', ')}${m.role === 'wren' ? `; top third ${Math.round(m.topRed * 100)}% red` : ''}; ${m.phonePx}×${m.phoneW} px on the phone`);
+for (const m of measures) console.log(`  ${m.name}: ${m.main.map((c) => `${c.hex} ${Math.round(c.share * 100)}%`).join(', ')}${m.role === 'wren' ? `; top third ${Math.round(m.topRed * 100)}% red` : ''}; own colour ${m.ownPx} px of ${m.px}; ${m.phonePx}×${m.phoneW} px on the phone, ${m.freePx} px tall in free play`);

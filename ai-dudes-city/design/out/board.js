@@ -20299,6 +20299,10 @@
     const c = hsl(hex);
     return !!c && (c[0] >= 345 || c[0] <= 8) && c[1] >= 0.45 && c[2] >= 0.2 && c[2] <= 0.62;
   }
+  function readsGold(hex) {
+    const c = hsl(hex);
+    return !!c && c[0] >= 38 && c[0] <= 54 && c[1] >= 0.7 && c[2] >= 0.45 && c[2] <= 0.75;
+  }
 
   // design/board/cast.ts
   var CAST_ORDER = ["wren", "ash", "moss", "oak", "kit", "head"];
@@ -20361,8 +20365,16 @@
     }
     return groups.map((g) => ({ hex: g.hex, share: s.total ? g.n / s.total : 0 })).filter((g) => g.share >= min).sort((a, b) => b.share - a.share);
   }
+  function familyArea(s, hex, near = 40) {
+    const c = rgb(hex);
+    const tones = [c, c.map((n) => n * 0.72), c.map((n) => n + (255 - n) * 0.4)];
+    return Object.entries(s.by).reduce((n, [h, k]) => n + (tones.some((t) => dist(rgb(h), t) < near) ? k : 0), 0);
+  }
+  var redArea = (s) => Object.entries(s.by).reduce((n, [hex, k]) => n + (readsRed(hex) ? k : 0), 0);
+  var goldArea = (s) => Object.entries(s.by).reduce((n, [hex, k]) => n + (readsGold(hex) ? k : 0), 0);
+  var ownArea = (s, colour2) => readsRed(colour2) ? redArea(s) : readsGold(colour2) ? goldArea(s) : familyArea(s, colour2);
   var topThirdRed = (s) => s.top ? Object.entries(s.topBy).reduce((n, [hex, k]) => n + (readsRed(hex) ? k : 0), 0) / s.top : 0;
-  var redShare = (s) => s.total ? Object.entries(s.by).reduce((n, [hex, k]) => n + (readsRed(hex) ? k : 0), 0) / s.total : 0;
+  var redShare = (s) => s.total ? redArea(s) / s.total : 0;
   function toGrey(px) {
     for (let i = 0; i < px.length; i += 4) {
       const y = Math.round(0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2]);
@@ -20371,6 +20383,7 @@
   }
   var PHONE = { width: 390, frame: 1920, height: 1080 };
   var PHONE_HALF = 6;
+  var PHONE_FREE_HALF = 14;
 
   // design/board/main.ts
   var CAM_BACK = 43;
@@ -20876,7 +20889,8 @@
     const boxes = members.map((x) => x.box);
     const box = boxes.reduce((b, x) => b.union(x), new Box3());
     const reach = box.getSize(new Vector3()).length() / 2 + 10;
-    ground(scene, d.bible.surfaces.square, -reach, reach, -reach, reach, 0);
+    const far = reach + PHONE_FREE_HALF * 3;
+    ground(scene, d.bible.surfaces.square, -far, far, -far, far, 0);
     lit(scene, d.bible, reach);
     return { scene, members, boxes, box };
   }
@@ -20943,17 +20957,9 @@
       x += i.w + gap;
     }
   }
-  async function renderCast(d) {
-    const W = 2400, H = 760, PAD = 16;
-    const front = castScene(d);
-    const cam = camera(front.boxes, W, H, 1.08);
-    const picture = snapshot(front.scene, cam, W, H);
-    await frame();
-    const shares = front.members.map((x) => flatShares(front, x.g, cam, W / 2, H / 2));
-    await frame();
-    const centre = front.box.getCenter(new Vector3());
-    const pcam = streamCamera(centre, PHONE_HALF, PHONE.frame / PHONE.height);
-    const full = snapshot(front.scene, pcam, PHONE.frame, PHONE.height);
+  function phoneStrip(cs, centre, half) {
+    const pcam = streamCamera(centre, half, PHONE.frame / PHONE.height);
+    const full = snapshot(cs.scene, pcam, PHONE.frame, PHONE.height);
     const pw = PHONE.width, ph = Math.round(PHONE.height * pw / PHONE.frame);
     const phone = document.createElement("canvas");
     phone.width = pw;
@@ -20964,17 +20970,32 @@
     const px = pg.getImageData(0, 0, pw, ph);
     toGrey(px.data);
     pg.putImageData(px, 0, 0);
-    const rows = front.members.map((x) => {
+    const rows = cs.members.map((x) => {
       const b = x.box;
-      const ys = [b.min.y, b.max.y].flatMap((y2) => [b.min.x, b.max.x].flatMap((bx) => [b.min.z, b.max.z].map((bz) => onPicture(new Vector3(bx, y2, bz), pcam, pw, ph).y)));
-      const top2 = onPicture(new Vector3(x.g.position.x, b.max.y, x.g.position.z), pcam, pw, ph).y, foot = onPicture(x.g.position, pcam, pw, ph).y;
-      return { min: Math.min(...ys), max: Math.max(...ys), tall: foot - top2 };
+      const ys = [b.min.y, b.max.y].flatMap((y) => [b.min.x, b.max.x].flatMap((bx) => [b.min.z, b.max.z].map((bz) => onPicture(new Vector3(bx, y, bz), pcam, pw, ph).y)));
+      const top = onPicture(new Vector3(x.g.position.x, b.max.y, x.g.position.z), pcam, pw, ph).y, foot = onPicture(x.g.position, pcam, pw, ph).y;
+      return { min: Math.min(...ys), max: Math.max(...ys), tall: foot - top };
     });
     const y0 = Math.max(0, Math.floor(Math.min(...rows.map((r) => r.min)) - 6)), y1 = Math.min(ph, Math.ceil(Math.max(...rows.map((r) => r.max)) + 6));
     const strip = document.createElement("canvas");
     strip.width = pw;
     strip.height = y1 - y0;
     strip.getContext("2d").drawImage(phone, 0, y0, pw, y1 - y0, 0, 0, pw, y1 - y0);
+    return { strip, ph, rows };
+  }
+  async function renderCast(d) {
+    const W = 2400, H = 760, PAD = 16;
+    const front = castScene(d);
+    const cam = camera(front.boxes, W, H, 1.08);
+    const picture = snapshot(front.scene, cam, W, H);
+    await frame();
+    const shares = front.members.map((x) => flatShares(front, x.g, cam, W / 2, H / 2));
+    await frame();
+    const centre = front.box.getCenter(new Vector3());
+    const close = phoneStrip(front, centre, PHONE_HALF);
+    await frame();
+    const free = phoneStrip(front, centre, PHONE_FREE_HALF);
+    const pw = PHONE.width, ph = close.ph;
     dispose(front.scene);
     await frame();
     const BW = 1180, BH = 380;
@@ -20989,16 +21010,21 @@
       main: mainColours(shares[i], skinTones(x.m.look)).map((c2) => ({ hex: c2.hex, share: Math.round(c2.share * 1e3) / 1e3 })),
       red: Math.round(redShare(shares[i]) * 1e3) / 1e3,
       topRed: Math.round(topThirdRed(shares[i]) * 1e3) / 1e3,
-      phonePx: Math.round(rows[i].tall),
+      px: shares[i].total,
+      ownPx: ownArea(shares[i], x.m.colour),
+      phonePx: Math.round(close.rows[i].tall),
       // The flat silhouette's width, from the board camera's pixels to the phone strip's (both orthographic, same angle).
-      phoneW: Math.round((shares[i].box ? shares[i].box.x1 - shares[i].box.x0 + 1 : 0) * ((cam.right - cam.left) / (W / 2)) * ph / (2 * PHONE_HALF))
+      phoneW: Math.round((shares[i].box ? shares[i].box.x1 - shares[i].box.x0 + 1 : 0) * ((cam.right - cam.left) / (W / 2)) * ph / (2 * PHONE_HALF)),
+      freePx: Math.round(free.rows[i].tall)
     }));
     const width = W + 2 * PAD;
     const top = (d.subtitle ? 100 : 70) + 6;
     const labelH = 150, zoom = 3, rowTitle = 40;
     const row2 = top + H + labelH + 20;
-    const stripH = strip.height * zoom + 14 + strip.height + 34;
-    const row2H = rowTitle + Math.max(BH, stripH) + 72;
+    const capH = (n) => Math.ceil(n * 18 * 1.25) + 16;
+    const block = (h, n) => h * zoom + 14 + h + 14 + capH(n);
+    const right = rowTitle + block(close.strip.height, 3) + 34 + block(free.strip.height, 2);
+    const row2H = Math.max(rowTitle + BH, right) + 24;
     const checks = d.members.filter((m) => m.checks?.length);
     const checksH = checks.length ? 30 + checks.length * 26 : 0;
     const c = document.createElement("canvas");
@@ -21018,16 +21044,33 @@
     });
     text(g, "From behind (the same line-up turned round)", PAD, row2, 24, INK2, 800);
     g.drawImage(behind, PAD, row2 + rowTitle);
-    const rx = PAD + BW + 40;
+    const rx = PAD + BW + 40, rw = W - BW - 40;
+    const short = (x) => x.m.name.replace(/^Old /, "").split(" ")[0];
+    const drawStrip = (strip, y2, caption2, n) => {
+      g.imageSmoothingEnabled = false;
+      g.drawImage(strip, rx, y2, pw * zoom, strip.height * zoom);
+      g.imageSmoothingEnabled = true;
+      const real = y2 + strip.height * zoom + 14;
+      g.drawImage(strip, rx, real);
+      text(g, "\u2190 real size", rx + pw + 12, real + strip.height / 2 - 10, 18, MUTED, 700);
+      wrap(g, caption2, rx, real + strip.height + 14, 18, MUTED, rw, n);
+      return real + strip.height + 14 + capH(n);
+    };
     text(g, `Phone check: ${pw} px wide, greyscale`, rx, row2, 24, INK2, 800);
-    g.imageSmoothingEnabled = false;
-    g.drawImage(strip, rx, row2 + rowTitle, pw * zoom, strip.height * zoom);
-    g.imageSmoothingEnabled = true;
-    const real = row2 + rowTitle + strip.height * zoom + 14;
-    g.drawImage(strip, rx, real);
-    text(g, "\u2190 real size", rx + pw + 12, real + strip.height / 2 - 10, 18, MUTED, 700);
-    const sizes = front.members.map((x, i) => `${x.m.name.replace(/^Old /, "").split(" ")[0]} ${measures[i].phonePx}\xD7${measures[i].phoneW}`).join(" \xB7 ");
-    wrap(g, `The stream's 1920\xD71080 frame shrunk to ${pw} px (20%, a phone) at the auto camera's closest zoom (orthographic half-height ${PHONE_HALF} m), greyed, cropped to the band they stand in; above it \xD7${zoom} with no smoothing, so the pixels show. Left to right as above. Pixels tall \xD7 wide: ${sizes}.`, rx, real + strip.height + 14, 18, MUTED, W - BW - 40, 4);
+    const sizes = front.members.map((x, i) => `${short(x)} ${measures[i].phonePx}\xD7${measures[i].phoneW}`).join(" \xB7 ");
+    const after = drawStrip(
+      close.strip,
+      row2 + rowTitle,
+      `Close shots: the auto camera's closest zoom (orthographic half-height ${PHONE_HALF} m, where the scenes' close shots sit). The stream's 1920\xD71080 frame shrunk to ${pw} px (20%, a phone), greyed, cropped to the band they stand in; above it \xD7${zoom} with no smoothing, so the pixels show. Left to right as above. Pixels tall \xD7 wide: ${sizes}.`,
+      3
+    );
+    text(g, `Free play: half-height ${PHONE_FREE_HALF} m`, rx, after + 4, 20, INK2, 800);
+    drawStrip(
+      free.strip,
+      after + 34,
+      `A typical free-play framing (the auto camera frames the crowd at 6\u201340 m, 8 on one person). Pixels tall: ${front.members.map((x, i) => `${short(x)} ${measures[i].freePx}`).join(" \xB7 ")}. Here they are told apart by size and colour, not by their props.`,
+      2
+    );
     let y = row2 + row2H;
     if (checks.length) {
       text(g, "Checks still open:", PAD, y, 22, INK2, 800);

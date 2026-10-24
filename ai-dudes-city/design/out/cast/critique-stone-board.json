@@ -1,81 +1,78 @@
 {
   "verdict": "revise",
-  "score": 7,
-  "summary": "The cast has strong size differentiation, controlled colour families and correctly assigned story colours, with the Chief and seated Moss especially easy to locate. However, rigid slab clothing weakens Stone Age construction, and several characters lose their individual identifying features and humour in the actual 390 px check.",
+  "score": 6,
+  "summary": "The cast has strong toy-like proportions, useful silhouette variety and readable close-shot jokes, but several costumes still read as modern uniforms or superhero capes rather than constructed Stone Age clothing. The board's approval note does not resolve the Chief's prohibited ceremonial sash, Kit's conflicting gold badge, or the loss of identification in the free-play greyscale check.",
   "problems": [
-    "Replace the repeated rectangular cape-and-collar construction with visibly wrapped, overlapped and tied hides; the rear view currently exposes large, almost manufactured panels.",
-    "Give Wren and Kit distinct silhouettes independent of colour and relative height; their small props disappear in the greyscale phone check.",
-    "Make Oak's orange garment read as a working apron rather than a box-shaped poncho, and bring his stone mallet into the silhouette.",
-    "Make Moss's support unmistakably a natural stump, not an assembly of squared timber feet.",
-    "Retain the Chief's locked gold sash, but translate its construction into an ochre-coloured hide strip rather than a pristine ceremonial ribbon.",
-    "Provide a readable comic character detail for each figure; most current ornaments become indistinct pixels at phone size."
+    "Kit's blue outfit reads as a matching manufactured uniform, and his gold badge assigns the Chief's story colour to a member of Wren's band; replace the badge with bone and rebuild the outfit as visibly tied hide.",
+    "The Chief wears a broad diagonal sash with a medal-like knot despite the bible explicitly excluding modern mayoral sashes; move his gold identity onto an irregular layered hide mantle and rawhide bindings.",
+    "The actual-size free-play greyscale strip does not reliably distinguish Wren from Kit without lineup position; strengthen their silhouettes and value separation before passing the phone gate.",
+    "Wren's rigid red shoulder slabs and straight cape panels suggest superhero clothing; retain her dominant red mass but express it through overlapping hide, irregular hems and visible ties.",
+    "Oak's rectangular orange apron and exceptionally regular mallet head look manufactured; introduce hide construction and a rough, visibly lashed stone tool head without losing his broad silhouette.",
+    "Ash's rear cape is a large straight-edged slab; replace it with uneven overlapping hide panels and a clearly supported shoulder fastening."
   ],
   "elements": [
     {
-      "id": "Oak",
-      "score": 6,
+      "id": "Kit",
+      "score": 5,
       "problems": [
-        "The enormous rectangular shoulder panel and full orange back read as a rigid poncho, not the specified builder's apron.",
-        "The mallet is visually subordinate to the garment and surrounding belt accessories.",
-        "His broad silhouette communicates size, but not yet a distinctive comic builder."
+        "Matching blue torso, cape and footwear read as a uniform rather than gathered and tied Stone Age clothing.",
+        "The gold chest badge conflicts with his membership in Wren's band.",
+        "His small dark silhouette becomes too similar to Wren's in free-play greyscale."
       ],
-      "fix": "Keep the broad body but expose the shoulders and arms around a front hide apron with narrow ties and an irregular hem. Put a chunky flint-headed mallet clear of the torso; an absurdly short handle beneath its oversized head can supply the readable joke."
+      "fix": "Keep blue as one hide-wrap mass, expose neutral hide boots and sinew closures, and replace the gold badge with an unpainted bone token. Give his imitation staff a thicker, offset silhouette that remains separate from his torso at actual phone size."
     },
     {
-      "id": "Kit",
+      "id": "Chief",
       "score": 6,
       "problems": [
-        "The straight blue cape, squared neckline and blue footwear resemble a miniature uniform rather than Stone Age clothing.",
-        "At 18 pixels tall, the badge and small accessories do little to distinguish him beyond being the smallest figure.",
-        "His devotion to the Chief is not yet a readable comic feature."
+        "The diagonal gold sash and oversized round knot reproduce modern civic regalia.",
+        "The mantle reads as stacked rectangular shoulder armour rather than layered hide.",
+        "The headdress has antler-like branches but no clearly readable feather component."
       ],
-      "fix": "Use a simple blue wrap with an overlapping edge and exposed hide ties, removing nonessential dangling accessories. Enlarge the existing gold badge into a conspicuously oversized, irregular ochre-daubed hide token on his chest, with enough light-dark separation to survive greyscale."
+      "fix": "Remove the sash geometry while retaining story gold as ochre-painted areas on a broad, asymmetrically layered hide mantle and its ties. Add one chunky off-centre feather, preserve the oversized bone staff, and retain an absurdly excessive hide fastening as the vanity joke."
+    },
+    {
+      "id": "phone-check",
+      "score": 6,
+      "problems": [
+        "Close-shot recognition is substantially stronger than free-play recognition.",
+        "At free-play size, Wren and Kit rely heavily on relative height and lineup position.",
+        "Oak's mid-value clothing has weak separation from the dirt; a proposed future outline is not evidence of a current pass."
+      ],
+      "fix": "Strengthen distinguishing outer contours and introduce broad light-dark breaks within each existing four-colour palette. Re-render the 390 px greyscale check with shuffled positions and representative town clutter; include any intended outline in the actual render."
     },
     {
       "id": "Wren",
       "score": 7,
       "problems": [
-        "The red headwear, collar and cape merge into one dark upper mass in greyscale.",
-        "The narrow pale tally-like object reads in the large view but loses its marks and purpose at phone size.",
-        "Her leader identity and comic detail depend too heavily on details inside the body silhouette."
+        "The squared shoulder assembly and rigid flared cape read closer to superhero costume construction than tied hide.",
+        "Her top-knot helps at close range but does not sufficiently separate her from Kit at free-play size."
       ],
-      "fix": "Preserve her red ownership but separate the head from the shoulder wrap with a clearer neckline and an asymmetric tied-hair silhouette. Turn the pale counting prop outward so its shape clears her body, exaggerating it into a comically long bone tally rather than adding more tiny marks."
+      "fix": "Preserve the dominant story-red upper body and tally stick, but replace the shoulder slabs with two overlapping hide flaps, one visible bone fastening and an asymmetric cape hem. Make one side of the wrap project clearly enough to distinguish her contour in greyscale."
     },
     {
-      "id": "Old Moss",
+      "id": "Oak",
       "score": 7,
       "problems": [
-        "The support beneath her reads as squared blocks and projecting timber feet rather than a stump.",
-        "The green head covering and broad planar shawl feel uniformly fabricated.",
-        "The lap cord is visible at presentation size but does not deliver a clear comic beat at phone size."
+        "The orange apron is an almost perfectly rectangular plate with ruler-straight edges.",
+        "The mallet's regular pale block and neat central band suggest a manufactured hammer."
       ],
-      "fix": "Replace the support with one squat, irregular faceted stump and two unequal root flares. Break the shawl into overlapping hide or woven-grass sections, and gather the cord into one oversized knot on her lap with a short, conspicuous trailing loop."
+      "fix": "Give the apron a folded upper edge, unequal lower corners and chunky rawhide neck and waist ties. Reshape the mallet into an asymmetric faceted stone with crossed lashings around a crooked wooden haft, keeping its head clear of his silhouette."
     },
     {
       "id": "Ash",
       "score": 7,
       "problems": [
-        "His long, perfectly rectangular grey back panel reads as a board-like cloak.",
-        "Small carving and wrist-cord details cannot carry his identity at phone size.",
-        "The costume needs a clearer Stone Age construction language despite the successful tall silhouette and pale leg bandage."
+        "The back view exposes a broad, flat, straight-edged grey cape with little evidence of hide construction.",
+        "The rigid pale collar reinforces an armour-like reading."
       ],
-      "fix": "Keep his height, grey palette, red wrist cord and anatomical left-leg bandage. Replace the single back slab with two unequal overlapping hide panels and broad visible ties; exaggerate one crooked fork in the staff and give the bandage a chunky, slightly overenthusiastic knot as his comic detail."
-    },
-    {
-      "id": "Chief",
-      "score": 7,
-      "problems": [
-        "The mantle reads as a flat angular shoulder shelf rather than broad layered hide.",
-        "The sash has pristine parallel edges and a neat round fitting, giving it a later ceremonial-uniform finish.",
-        "The office silhouette succeeds, but the clothing construction is less convincingly prehistoric than the antlers and staff."
-      ],
-      "fix": "Keep the gold sash and oversized bone-topped staff. Make the sash an irregular gold-coloured hide strip with a bulky tied fastening, and rebuild the mantle as two or three uneven overlapping hide layers; preserve the gloriously excessive staff and unequal antlers as the joke."
+      "fix": "Break the cape into two unequal overlapping hides with a stepped torn edge and a visible shoulder tie. Replace the continuous pale collar with interrupted fur masses, preserving his tall frame and oversized bandage-knot joke."
     }
   ],
   "gate": {
     "phone": false,
     "colours": true,
-    "storyColours": true,
-    "funny": false
+    "storyColours": false,
+    "funny": true
   }
 }

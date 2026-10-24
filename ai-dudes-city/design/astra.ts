@@ -579,7 +579,12 @@ async function cast(age: AgeId, only: CastRole[], r: Revise): Promise<void> {
       console.warn(`cast ${age}: no ${role} in the reply`);
       continue;
     }
-    const c = composeCast(age, role, raw, kits);
+    // The design lead's edits to the pinned kit stay through a revise (astra designs only the parts of their own),
+    // but only on the kit they were made for: on another kit the same index is another part.
+    const old = was[role];
+    const plain = composeCast(age, role, { ...raw, kitEdits: undefined }, kits);
+    const c = old?.kitEdits && plain.base === old.base ? composeCast(age, role, { ...raw, kitEdits: old.kitEdits }, kits) : plain;
+    if (old?.kitEdits && plain.base !== old.base) console.warn(`cast ${age}/${role}: now pinned on ${plain.base}, not ${old.base}; the kit edits made for ${old.base} are dropped`);
     next[role] = c;
     console.log(`cast ${age}/${role}: ${c.outfit.name} on ${c.base}, ${c.extras} parts of their own${c.prop ? `, ${c.prop.name}` : ''}${c.checks ? ` [${c.checks.join('; ')}]` : ''}`);
   }

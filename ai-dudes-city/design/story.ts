@@ -332,9 +332,11 @@ export interface CastLook {
   hatScale?: number;
   /** The shipped kit they are pinned on ("stone:2", "stone:head"; src/shared/outfits.ts outfitByKey). */
   base: string;
+  /** What the design lead took off the pinned kit or recoloured on it (editKit); the rest is the shipped kit, part for part. */
+  kitEdits?: KitEdits;
   /** Fixed colours: never restyled, so the kit's role colours resolve to these in every age. */
   look: DudeLook;
-  /** The pinned kit's parts followed by the hand-made ones, ready for the page's compose (client/dudes/dudes.ts). */
+  /** The pinned kit's parts (after kitEdits) followed by the hand-made ones, ready for the page's compose (client/dudes/dudes.ts). */
   outfit: Outfit;
   /** How many of outfit.parts are hand-made (the last ones). */
   extras: number;
@@ -411,6 +413,27 @@ export function cleanKitParts(raw: unknown, max = 40): OutfitPart[] {
       colour: ROLE.test(String(p.colour ?? '')) ? String(p.colour) : 'shirt',
     }));
 }
+/**
+ * Changes to a pinned kit, by the kit's part index: parts dropped (a held thing another member carries
+ * too, a panel in someone else's colour) and parts recoloured (a fixed colour or a role). A shipped kit
+ * is shared by townsfolk, so two of the band on one kit would otherwise carry the same basket.
+ */
+export interface KitEdits {
+  drop?: number[];
+  colour?: Record<string, string>;
+}
+/** A kit's parts with its edits made: the dropped ones gone, the recoloured ones in their new colour, the rest as shipped. */
+export function editKit(parts: readonly OutfitPart[], e: KitEdits | undefined): OutfitPart[] {
+  return parts.flatMap((p, i) => (e?.drop?.includes(i) ? [] : [e?.colour?.[i] ? { ...p, colour: e.colour[i] } : p]));
+}
+/** Kit edits made safe against the kit they edit: indexes in range, colours a role or #rrggbb; undefined when there are none. */
+function cleanKitEdits(raw: unknown, size: number): KitEdits | undefined {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as { drop?: unknown; colour?: unknown };
+  const index = (n: unknown) => Number.isInteger(Number(n)) && Number(n) >= 0 && Number(n) < size;
+  const drop = [...new Set((Array.isArray(r.drop) ? r.drop : []).filter(index).map(Number))].sort((a, b) => a - b);
+  const colour = Object.fromEntries(Object.entries(r.colour && typeof r.colour === 'object' ? r.colour : {}).filter(([i, c]) => index(i) && !drop.includes(Number(i)) && ROLE.test(String(c))));
+  return drop.length || Object.keys(colour).length ? { ...(drop.length ? { drop } : {}), ...(Object.keys(colour).length ? { colour } : {}) } : undefined;
+}
 const hex = (v: unknown, d: string) => (typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v) ? v : d);
 /** A cast look's colours as the page resolves them: every role and fixed colour it wears (skin aside). */
 export function castColours(c: Pick<CastLook, 'look' | 'outfit'>): string[] {
@@ -453,8 +476,9 @@ export function composeCast(age: AgeId, role: CastRole, raw: unknown, kits: { ki
     build: m.body.build,
   };
   const extras = cleanKitParts(r.parts);
+  const kitEdits = cleanKitEdits(r.kitEdits, pinned?.parts.length ?? 0);
   const hide = [...new Set([...(pinned?.hide ?? []), ...(Array.isArray(r.hide) ? r.hide : []).filter((h): h is OutfitHide => OUTFIT_HIDES.includes(h as OutfitHide))])];
-  const outfit: Outfit = { name: String(r.name ?? m.name).slice(0, 60), ...(hide.length ? { hide } : {}), parts: [...(pinned?.parts ?? []), ...extras] };
+  const outfit: Outfit = { name: String(r.name ?? m.name).slice(0, 60), ...(hide.length ? { hide } : {}), parts: [...editKit(pinned?.parts ?? [], kitEdits), ...extras] };
   const p = r.prop && typeof r.prop === 'object' ? (r.prop as { name?: unknown; parts?: unknown }) : undefined;
   // A prop is world geometry ("color"), but next to garment parts the model may write "colour": take either.
   const propParts = Array.isArray(p?.parts) ? p.parts.map((x) => (x && typeof x === 'object' && !('color' in x) && 'colour' in x ? { ...x, color: (x as { colour: unknown }).colour } : x)) : undefined;
@@ -470,6 +494,7 @@ export function composeCast(age: AgeId, role: CastRole, raw: unknown, kits: { ki
     scale,
     ...(role === 'head' ? { hatScale: HAT_LADDER[age] } : {}),
     base: `${age}:${which}`,
+    ...(kitEdits ? { kitEdits } : {}),
     look,
     outfit,
     extras: extras.length,

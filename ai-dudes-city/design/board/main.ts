@@ -16,7 +16,7 @@ import type { DudeLook } from '../../src/shared/dudesTypes';
 import type { Primitive } from '../../src/shared/objectTypes';
 import type { Seat } from '../story';
 import { boardPeople, lineUp, type Figure, type Slot } from './people';
-import { PHONE, PHONE_HALF, colourShares, lineUpSlots, mainColours, redShare, toGrey, topThirdRed, type Shares } from './cast';
+import { PHONE, PHONE_FREE_HALF, PHONE_HALF, colourShares, lineUpSlots, mainColours, ownArea, redShare, toGrey, topThirdRed, type Shares } from './cast';
 
 interface Bible {
   id: string;
@@ -635,6 +635,8 @@ async function renderOutfits(data: OutfitData): Promise<Record<string, string>> 
 interface CastMemberData {
   role: string;
   name: string;
+  /** Their locked colour (design/story.ts CAST): Wren's red, the head's gold, a band member's own. */
+  colour: string;
   scale: number;
   /** Standing height, metres (design/story.ts standingHeight), for the label. */
   height: number;
@@ -663,9 +665,17 @@ export interface CastMeasure {
   /** Share of the silhouette that reads red, and of its top third. */
   red: number;
   topRed: number;
+  /**
+   * Pixels from the stream camera, every member drawn at the same size: their whole silhouette, and
+   * their own locked colour on it (Wren's red, the head's gold). Wren's red must be the biggest.
+   */
+  px: number;
+  ownPx: number;
   /** Their silhouette in the phone strip, pixels: how tall from the ground up, and how wide (staff, antlers and prop-free). */
   phonePx: number;
   phoneW: number;
+  /** How tall at a typical free-play framing (PHONE_FREE_HALF), pixels on the same 390 px phone. */
+  freePx: number;
 }
 
 /** Sits a figureGroup figure as the spec says (design/story.ts seatPose). Its bones: body → hips, leg L, leg R; hips → head, arm L, arm R, cape. */
@@ -714,7 +724,9 @@ function castScene(d: CastData, back = false): CastScene {
   const box = boxes.reduce((b, x) => b.union(x), new THREE.Box3());
   // They stand on the square's dirt, where the town gathers: brown on brown, the hardest ground they meet.
   const reach = box.getSize(new THREE.Vector3()).length() / 2 + 10;
-  ground(scene, d.bible.surfaces.square, -reach, reach, -reach, reach, 0);
+  // The dirt runs on past the free-play phone strip's frame (16:9 at half-height PHONE_FREE_HALF, seen 40° down); the shadows keep to the line-up.
+  const far = reach + PHONE_FREE_HALF * 3;
+  ground(scene, d.bible.surfaces.square, -far, far, -far, far, 0);
   lit(scene, d.bible, reach);
   return { scene, members, boxes, box };
 }
@@ -794,22 +806,10 @@ function swatches(g: CanvasRenderingContext2D, main: CastMeasure['main'], cx: nu
   }
 }
 
-async function renderCast(d: CastData): Promise<{ images: Record<string, string>; measures: CastMeasure[] }> {
-  const W = 2400,
-    H = 760,
-    PAD = 16;
-  // The line-up from the front, as the stream sees people facing +z.
-  const front = castScene(d);
-  const cam = camera(front.boxes, W, H, 1.08);
-  const picture = snapshot(front.scene, cam, W, H);
-  await frame();
-  // Each member's pixels, flat, at half the size (still 150+ px tall each).
-  const shares = front.members.map((x) => flatShares(front, x.g, cam, W / 2, H / 2));
-  await frame();
-  // The phone check: the stream's 1920×1080 frame at the auto camera's closest zoom, shrunk to 390 px and greyed.
-  const centre = front.box.getCenter(new THREE.Vector3());
-  const pcam = streamCamera(centre, PHONE_HALF, PHONE.frame / PHONE.height);
-  const full = snapshot(front.scene, pcam, PHONE.frame, PHONE.height);
+/** One phone strip: the stream's 1920×1080 frame at an orthographic half-height, shrunk to 390 px, greyed, cropped to the band the cast stand in; and each member's rows in it. */
+function phoneStrip(cs: CastScene, centre: THREE.Vector3, half: number): { strip: HTMLCanvasElement; ph: number; rows: { min: number; max: number; tall: number }[] } {
+  const pcam = streamCamera(centre, half, PHONE.frame / PHONE.height);
+  const full = snapshot(cs.scene, pcam, PHONE.frame, PHONE.height);
   const pw = PHONE.width,
     ph = Math.round((PHONE.height * pw) / PHONE.frame);
   const phone = document.createElement('canvas');
@@ -822,7 +822,7 @@ async function renderCast(d: CastData): Promise<{ images: Record<string, string>
   toGrey(px.data);
   pg.putImageData(px, 0, 0);
   // Cropped to the band they stand in, with a margin.
-  const rows = front.members.map((x) => {
+  const rows = cs.members.map((x) => {
     const b = x.box;
     const ys = [b.min.y, b.max.y].flatMap((y) => [b.min.x, b.max.x].flatMap((bx) => [b.min.z, b.max.z].map((bz) => onPicture(new THREE.Vector3(bx, y, bz), pcam, pw, ph).y)));
     const top = onPicture(new THREE.Vector3(x.g.position.x, b.max.y, x.g.position.z), pcam, pw, ph).y,
@@ -835,6 +835,29 @@ async function renderCast(d: CastData): Promise<{ images: Record<string, string>
   strip.width = pw;
   strip.height = y1 - y0;
   strip.getContext('2d')!.drawImage(phone, 0, y0, pw, y1 - y0, 0, 0, pw, y1 - y0);
+  return { strip, ph, rows };
+}
+
+async function renderCast(d: CastData): Promise<{ images: Record<string, string>; measures: CastMeasure[] }> {
+  const W = 2400,
+    H = 760,
+    PAD = 16;
+  // The line-up from the front, as the stream sees people facing +z.
+  const front = castScene(d);
+  const cam = camera(front.boxes, W, H, 1.08);
+  const picture = snapshot(front.scene, cam, W, H);
+  await frame();
+  // Each member's pixels, flat, at half the size (still 150+ px tall each).
+  const shares = front.members.map((x) => flatShares(front, x.g, cam, W / 2, H / 2));
+  await frame();
+  // The phone check: the stream's 1920×1080 frame shrunk to 390 px and greyed, at the auto camera's
+  // closest zoom (the scenes' close shots) and at a typical free-play framing.
+  const centre = front.box.getCenter(new THREE.Vector3());
+  const close = phoneStrip(front, centre, PHONE_HALF);
+  await frame();
+  const free = phoneStrip(front, centre, PHONE_FREE_HALF);
+  const pw = PHONE.width,
+    ph = close.ph;
   dispose(front.scene);
   await frame();
   // From behind, smaller.
@@ -852,9 +875,12 @@ async function renderCast(d: CastData): Promise<{ images: Record<string, string>
     main: mainColours(shares[i], skinTones(x.m.look)).map((c) => ({ hex: c.hex, share: Math.round(c.share * 1000) / 1000 })),
     red: Math.round(redShare(shares[i]) * 1000) / 1000,
     topRed: Math.round(topThirdRed(shares[i]) * 1000) / 1000,
-    phonePx: Math.round(rows[i].tall),
+    px: shares[i].total,
+    ownPx: ownArea(shares[i], x.m.colour),
+    phonePx: Math.round(close.rows[i].tall),
     // The flat silhouette's width, from the board camera's pixels to the phone strip's (both orthographic, same angle).
     phoneW: Math.round(((shares[i].box ? shares[i].box.x1 - shares[i].box.x0 + 1 : 0) * ((cam.right - cam.left) / (W / 2)) * ph) / (2 * PHONE_HALF)),
+    freePx: Math.round(free.rows[i].tall),
   }));
 
   // The board: the line-up with each one's name, size and main colours; then from behind and the phone strip; then the note.
@@ -864,8 +890,11 @@ async function renderCast(d: CastData): Promise<{ images: Record<string, string>
     zoom = 3,
     rowTitle = 40;
   const row2 = top + H + labelH + 20;
-  const stripH = strip.height * zoom + 14 + strip.height + 34;
-  const row2H = rowTitle + Math.max(BH, stripH) + 72;
+  // The right column: the close strip ×3 and at real size with its caption, then the free-play strip the same way.
+  const capH = (n: number) => Math.ceil(n * 18 * 1.25) + 16;
+  const block = (h: number, n: number) => h * zoom + 14 + h + 14 + capH(n);
+  const right = rowTitle + block(close.strip.height, 3) + 34 + block(free.strip.height, 2);
+  const row2H = Math.max(rowTitle + BH, right) + 24;
   const checks = d.members.filter((m) => m.checks?.length);
   const checksH = checks.length ? 30 + checks.length * 26 : 0;
   const c = document.createElement('canvas');
@@ -887,17 +916,35 @@ async function renderCast(d: CastData): Promise<{ images: Record<string, string>
   // Row 2, left: from behind.
   text(g, 'From behind (the same line-up turned round)', PAD, row2, 24, INK, 800);
   g.drawImage(behind, PAD, row2 + rowTitle);
-  // Row 2, right: the phone strip, enlarged ×3 and at its real size.
-  const rx = PAD + BW + 40;
+  // Row 2, right: the phone strips, each enlarged ×3 and at its real size.
+  const rx = PAD + BW + 40,
+    rw = W - BW - 40;
+  const short = (x: { m: CastMemberData }) => x.m.name.replace(/^Old /, '').split(' ')[0];
+  const drawStrip = (strip: HTMLCanvasElement, y: number, caption: string, n: number): number => {
+    g.imageSmoothingEnabled = false;
+    g.drawImage(strip, rx, y, pw * zoom, strip.height * zoom);
+    g.imageSmoothingEnabled = true;
+    const real = y + strip.height * zoom + 14;
+    g.drawImage(strip, rx, real);
+    text(g, '← real size', rx + pw + 12, real + strip.height / 2 - 10, 18, MUTED, 700);
+    wrap(g, caption, rx, real + strip.height + 14, 18, MUTED, rw, n);
+    return real + strip.height + 14 + capH(n);
+  };
   text(g, `Phone check: ${pw} px wide, greyscale`, rx, row2, 24, INK, 800);
-  g.imageSmoothingEnabled = false;
-  g.drawImage(strip, rx, row2 + rowTitle, pw * zoom, strip.height * zoom);
-  g.imageSmoothingEnabled = true;
-  const real = row2 + rowTitle + strip.height * zoom + 14;
-  g.drawImage(strip, rx, real);
-  text(g, '← real size', rx + pw + 12, real + strip.height / 2 - 10, 18, MUTED, 700);
-  const sizes = front.members.map((x, i) => `${x.m.name.replace(/^Old /, '').split(' ')[0]} ${measures[i].phonePx}×${measures[i].phoneW}`).join(' · ');
-  wrap(g, `The stream's 1920×1080 frame shrunk to ${pw} px (20%, a phone) at the auto camera's closest zoom (orthographic half-height ${PHONE_HALF} m), greyed, cropped to the band they stand in; above it ×${zoom} with no smoothing, so the pixels show. Left to right as above. Pixels tall × wide: ${sizes}.`, rx, real + strip.height + 14, 18, MUTED, W - BW - 40, 4);
+  const sizes = front.members.map((x, i) => `${short(x)} ${measures[i].phonePx}×${measures[i].phoneW}`).join(' · ');
+  const after = drawStrip(
+    close.strip,
+    row2 + rowTitle,
+    `Close shots: the auto camera's closest zoom (orthographic half-height ${PHONE_HALF} m, where the scenes' close shots sit). The stream's 1920×1080 frame shrunk to ${pw} px (20%, a phone), greyed, cropped to the band they stand in; above it ×${zoom} with no smoothing, so the pixels show. Left to right as above. Pixels tall × wide: ${sizes}.`,
+    3,
+  );
+  text(g, `Free play: half-height ${PHONE_FREE_HALF} m`, rx, after + 4, 20, INK, 800);
+  drawStrip(
+    free.strip,
+    after + 34,
+    `A typical free-play framing (the auto camera frames the crowd at 6–40 m, 8 on one person). Pixels tall: ${front.members.map((x, i) => `${short(x)} ${measures[i].freePx}`).join(' · ')}. Here they are told apart by size and colour, not by their props.`,
+    2,
+  );
   // Anything the spec's checks still flag.
   let y = row2 + row2H;
   if (checks.length) {
