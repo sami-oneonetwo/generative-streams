@@ -473,6 +473,9 @@ pin("the voice path: the voices' bus at the sfx level × 0.7, the master at 0.9,
   close(0.07 * level * 0.9, 0.03528, 'a syllable into the compressor');
 });
 
+// FK-163 (the mix director) is expected to change the effects' bus. That card relaxes this pin's
+// effects' half (and audio-replay.test.ts's "beside it") through Sami's Approve, as the rule asks; the
+// voices' rows pinned here and the approved record stay as they are.
 pin("the voices' bus is the sfx bus's twin (FK-162): made the same way, at the same level, and N on /mayor (sfx 0) mutes both", () => {
   const r = rig();
   const sfx = named(r, 'sfx'),

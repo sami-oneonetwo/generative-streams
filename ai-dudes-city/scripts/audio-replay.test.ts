@@ -229,10 +229,13 @@ test('speech() plays into the voice bus alone and no cue does; levels({ sfx: 0 }
   }
   for (const cue of CUES) {
     const c = make(7);
-    const evs = play(c, cue);
+    // The buses before the cue, so a cue that moves the voice bus's gain fails below by name, not in buses().
     const theirs = buses(c);
+    const theirVoice = busNode(theirs, 'voice');
+    const evs = play(c, cue);
     assert.ok(evs.length > 0 && !into(evs, theirs).includes('voice'), `${cue.name} keeps off the voice bus`);
-    assert.ok(!c.ctx.nodes.some((n) => n.out.includes(busNode(theirs, 'voice'))), `${cue.name}: nothing at all is wired into the voice bus`);
+    assert.ok(!evs.some((e) => e.node === theirVoice), `${cue.name} never touches the voice bus's gain (no duck)`);
+    assert.ok(!c.ctx.nodes.some((n) => n.out.includes(theirVoice)), `${cue.name}: nothing at all is wired into the voice bus`);
   }
   // N on /mayor sets the operator's sfx to 0, and the stream page passes it on: both buses go quiet,
   // just as the one sfx bus did; the music and the ambience don't move.
