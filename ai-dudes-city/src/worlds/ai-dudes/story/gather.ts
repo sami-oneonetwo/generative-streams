@@ -169,7 +169,7 @@ function closeTally(state: DudesState, t: Tally, log: (line: string) => void): v
  * The next queued line due to its agent, taken off its chatter: none while chat is in gather mode, nor
  * within REPLAY_GAP_MS of the last one; then the chatter who has waited longest.
  */
-export function takeQueued(state: DudesState, now: number): { dude: Dude; text: string; at: number; world?: true } | undefined {
+export function takeQueued(state: DudesState, now: number): { dude: Dude; text: string; at: number; world?: boolean } | undefined {
   if (gathering(state)) return undefined;
   const memo = memoOf(state);
   if (now < memo.nextReplayAt) return undefined;

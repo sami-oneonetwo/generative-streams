@@ -196,7 +196,7 @@ export interface Dude {
   /** Called to a gathering (story/gather.ts): their ring slot, the way to face there, and when it lets them go. */
   gather?: Gather;
   /** A move or build typed in gather mode (story/gather.ts), for their agent after the release: their latest, so one turn at most. `world`: not their words but their arrival (a newcomer who only voted). */
-  queuedLine?: { text: string; at: number; world?: true };
+  queuedLine?: { text: string; at: number; world?: boolean };
 }
 
 /** The two sides of Finders Keepers: Wren's band (red) and the head's friends (gold). */
@@ -213,7 +213,7 @@ const dudeStoryShape = {
   sideAge: z.number().int().min(0).max(5).optional(),
   seenAge: z.number().int().min(0).max(5).optional(),
   gather: z.object({ slot: point, face: z.number().finite(), until: z.number() }).optional(),
-  queuedLine: z.object({ text: z.string().max(300), at: z.number(), world: z.literal(true).optional() }).optional(),
+  queuedLine: z.object({ text: z.string().max(300), at: z.number(), world: z.boolean().optional() }).optional(),
 };
 
 /** One side of two characters' history: they came to your places, you went to theirs, gifts, hits, projects built together. */
