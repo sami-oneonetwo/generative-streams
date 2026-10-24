@@ -229,13 +229,16 @@ export interface ShowUi {
 /** A piece first showing, for a sound (FK-126's Call bell, FK-171's NOW chime: one line in main.ts). */
 export type ShowCue = 'banner' | 'now' | 'title';
 
-// The Call's bell and the long-poled pennant (the FK-005 mock's): red in a cream seal on Wren's chip, cream on a red
-// chip. (The tag's small flag, in a seal, reads as a "play" button at stream size.)
+// The Call's bell and the long-poled pennant (the FK-005 mock's). An icon in a chip sits on a cream seal: the
+// pennant on red, the crown on gold. (The tag's small flag, in a seal, reads as a "play" button at stream size.)
 const BELL = `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8c-11 0-17 9-17 20v9l-6 9h46l-6-9v-9c0-11-6-20-17-20z" fill="${SIDE_HEX.gold}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><circle cx="32" cy="52" r="6" fill="${CREAM}" stroke="${INK}" stroke-width="4.5"/><path d="M32 3v6" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><path d="M5 22c1-6 4-10 8-13M59 22c-1-6-4-10-8-13" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/></svg>`;
-const pennant = (fill: string) =>
-  `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M15 7v52" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M18 9c12 2 26 6 40 12-13 6-27 10-40 14z" fill="${fill}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/></svg>`;
-const FLAG = pennant(SIDE_HEX.red),
-  FLAG_CREAM = pennant(CREAM);
+const FLAG = `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M15 7v52" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M18 9c12 2 26 6 40 12-13 6-27 10-40 14z" fill="${SIDE_HEX.red}" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/></svg>`;
+/** A side's icon on its cream seal, for a chip. */
+function seal(doc: Document, side: 'red' | 'gold'): HTMLElement {
+  const e = make(doc, 'span', 'seal');
+  e.innerHTML = side === 'red' ? FLAG : sideIcon('gold');
+  return e;
+}
 
 const make = <K extends keyof HTMLElementTagNameMap>(doc: Document, tag: K, cls?: string, text?: string) => {
   const e = doc.createElement(tag);
@@ -346,10 +349,10 @@ export function createShow(
     if (!banner) {
       const root = piece('div', 'show-banner', 'card ink');
       root.setAttribute('role', 'status');
-      const seal = make(doc, 'span', 'seal');
-      seal.innerHTML = BELL;
+      const bell = make(doc, 'span', 'seal');
+      bell.innerHTML = BELL;
       banner = { root, title: make(doc, 'b', 'title'), clock: make(doc, 'span', 'pill gold clock'), premise: make(doc, 'span', 'premise'), words: ['', ''] };
-      root.append(seal, banner.title, banner.clock, banner.premise);
+      root.append(bell, banner.title, banner.clock, banner.premise);
     }
     const premise = b.premise ?? '';
     if (b.title !== banner.words[0] || premise !== banner.words[1]) {
@@ -389,7 +392,8 @@ export function createShow(
       nowCard.key = key;
       nowCard.word.textContent = n.word;
       nowCard.chip.className = `pill chip ${n.side ?? 'cream'}`;
-      nowCard.chip.innerHTML = n.side === 'red' ? FLAG_CREAM : n.side === 'gold' ? sideIcon('gold') : '';
+      nowCard.chip.replaceChildren();
+      if (n.side) nowCard.chip.append(seal(doc, n.side));
       nowCard.chip.append(n.chip ?? '');
       nowCard.chip.hidden = !n.chip;
       // A new card while one is up pops again: it says something new.
@@ -442,11 +446,7 @@ export function createShow(
       const tone = speakerTone(said.who, head);
       sub.who.className = `pill who ${tone}`;
       sub.who.replaceChildren();
-      if (tone === 'red' || tone === 'gold') {
-        const seal = make(doc, 'span', 'seal');
-        seal.innerHTML = tone === 'red' ? FLAG : sideIcon('gold');
-        sub.who.append(seal);
-      }
+      if (tone === 'red' || tone === 'gold') sub.who.append(seal(doc, tone));
       sub.who.append(said.who);
       sub.who.hidden = !said.who;
     }
