@@ -14,9 +14,13 @@
 // lasts, an animated "…" while its agent is mid-turn, a small "z" over a napping dude, and a job
 // line under the tag while it has work on. Tags that would overlap are thinned greedily, most
 // recent speaker first; bubbles never hide but stack upward when they would cover each other.
+//
+// Finders Keepers (FK-013): a chatter on a side stands on a disc in the side's colour and wears a
+// crown (gold) or a pennant flag (red) on the tag. The marks themselves are in sideMarks.ts.
 import * as THREE from 'three';
 import { badgeMarkup } from './badges';
 import { Track, turn } from './motion';
+import { SIDE_ICON_CHARS, SIDE_ICON_CSS, SideDiscs, demoSidesOn, discHeight, sideIcon, sideOf, type Side } from './sideMarks';
 import type { Accessory, DudeLook, DudeView, Emote, Hat } from './types';
 import { outfitByKey, type Outfit, type OutfitBone, type OutfitPart } from '../../src/shared/outfits';
 import { emoteNames, emoteParts, emoteUrl } from '../../src/shared/emotes';
@@ -90,8 +94,11 @@ interface Figure {
   dim: number; // 1 awake … 0.6 napping, eased
   tool: Tool;
   anchor: THREE.Vector3; // world point just above the head, for the overlay
+  /** Red or gold (FK-013): the disc under them and the icon on the tag; none for a neutral. */
+  side?: Side;
   // Overlay
   tag: HTMLElement;
+  tagSide: HTMLElement;
   tagMood: HTMLElement;
   moodKey: string;
   /** Drawn here rather than from the track (the operator's own Mayor). */
@@ -672,6 +679,12 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
   const diamondMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0.05, emissive: 0x1d3a12, emissiveIntensity: 0.6 });
   const diamonds = new Batch(diamondGeometry, diamondMaterial, root, false, 16);
   const moodColour = (m: number) => (m >= 65 ? 0x57d64a : m >= 40 ? 0xe9c23c : 0xe0523f);
+  // The side discs (FK-013): one draw call per colour, none while nobody is on a side.
+  const discs = new SideDiscs(root);
+  const demoSides = demoSidesOn(location.search);
+  const sideStyle = document.createElement('style');
+  sideStyle.textContent = SIDE_ICON_CSS;
+  document.head.append(sideStyle);
   const figures = new Map<string, Figure>();
 
   // One scratch skeleton, posed once per figure per frame.
@@ -742,6 +755,9 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     const look = { ...DEFAULT_LOOK, ...(v.look ?? {}) };
     const { parts, dims, counts } = compose(look);
     const tag = el('tag dude');
+    const tagSide = document.createElement('i');
+    tagSide.className = 's';
+    tagSide.hidden = true;
     const tagMood = document.createElement('i');
     tagMood.className = 'm';
     tagMood.hidden = true;
@@ -755,7 +771,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     const tagJob = document.createElement('div');
     tagJob.className = 'job';
     tagJob.hidden = true;
-    tag.append(tagMood, tagName, tagTitle, tagBadges, tagJob);
+    tag.append(tagSide, tagMood, tagName, tagTitle, tagBadges, tagJob);
     const think = el('think');
     for (let i = 0; i < 3; i++) think.append(document.createElement('i'));
     const zz = el('zz');
@@ -785,6 +801,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       tool: '',
       anchor: new THREE.Vector3(v.position.x, 2, v.position.z),
       tag,
+      tagSide,
       tagMood,
       moodKey: '',
       tagName,
@@ -1337,6 +1354,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     stars.n = 0;
     diamonds.ensure(figures.size);
     diamonds.n = 0;
+    discs.begin(figures.size);
     for (const f of figures.values()) {
       if (!f.synced) continue;
       const v = f.view;
@@ -1399,6 +1417,10 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       f.rise = f.cur[P_RISE];
       placeRig(f, f.cur);
       if (f.vis <= 0) continue; // inside a build: nothing to draw
+      if (f.side) {
+        const y = discHeight(v, f.lift, f.poseName);
+        if (y !== undefined) discs.add(f.side, f.x, y, f.z, f.vis * (v.scale ?? 1), f.dim);
+      }
       // The overlay anchor: just above the hat, wherever the head is (sitting, lying, bowing).
       f.anchor.setFromMatrixPosition(bones[B_HEAD].matrixWorld);
       f.anchor.y += f.dims.crown * (v.scale ?? 1);
@@ -1442,6 +1464,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
     for (const b of batches) b.finish();
     stars.finish();
     diamonds.finish();
+    discs.finish();
     const sel = selectedForRing ? figures.get(selectedForRing) : undefined;
     ring.visible = !!sel;
     if (sel) ring.position.set(sel.x, 0.02, sel.z);
@@ -1489,7 +1512,7 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       const prio = pinned || v.npc || v.mayor || v.traveller
         ? Infinity
         : Math.max(v.heardAt ?? 0, sayActive ? serverNow : 0) + (v.thinking ? 2 : 0) + (v.job ? 1 : 0);
-      const tagW = Math.max((f.nameLine.length + f.badgeChars + (f.moodKey ? 2 : 0) + (v.queued && !v.thinking ? 2 : 0)) * metrics.char, f.jobLine.length * metrics.jobChar) + metrics.pad;
+      const tagW = Math.max((f.nameLine.length + f.badgeChars + (f.moodKey ? 2 : 0) + (f.side ? SIDE_ICON_CHARS : 0) + (v.queued && !v.thinking ? 2 : 0)) * metrics.char, f.jobLine.length * metrics.jobChar) + metrics.pad;
       const tagH = metrics.height + (f.jobLine ? metrics.jobHeight : 0);
       const busy = !!v.thinking || !!v.job || !!v.use || !!v.attacking || v.activity === 'using' || (v.ko ?? 0) > serverNow;
       const wanted = on && (!v.away || pinned || spokeRecently || busy || !!v.npc || !!v.mayor || !!v.traveller);
@@ -1646,6 +1669,13 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
         // The caravan's travellers stand out from the town's residents; their leader carries a "!" while asks are open.
         if (f.tag.classList.contains('traveller') !== !!v.traveller) f.tag.classList.toggle('traveller', !!v.traveller);
         if (f.tag.classList.contains('asking') !== !!v.asking) f.tag.classList.toggle('asking', !!v.asking);
+        // Red or gold: the crown or the flag in front of the name (the disc is drawn in pose()).
+        const side = sideOf(v, demoSides);
+        if (side !== f.side) {
+          f.side = side;
+          f.tagSide.innerHTML = sideIcon(side);
+          f.tagSide.hidden = !side;
+        }
         // The mood diamond, in the tag too: the 3D one over the head is hidden behind it.
         const moodKey = v.mood === undefined || v.npc || v.resident ? '' : v.mood >= 65 ? 'good' : v.mood >= 40 ? 'ok' : 'low';
         if (moodKey !== f.moodKey) {
@@ -1738,6 +1768,8 @@ export function createDudesLayer(parent: THREE.Object3D, overlay: HTMLElement): 
       for (const b of batches) b.dispose();
       for (const g of geometries) g.dispose();
       stars.dispose();
+      discs.dispose();
+      sideStyle.remove();
       starGeometry.dispose();
       starMaterial.dispose();
       material.dispose();
