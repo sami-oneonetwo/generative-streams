@@ -72,7 +72,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   t.run('story-on');
   const before = snapshot(t);
   const unbuilt = t.status().storyDev!.filter((b) => b.card);
-  assert.ok(unbuilt.length >= 8, 'most of M1 is still to come');
+  // The four plays and three pieces pinned below; each card that lands takes its own off both lists.
+  assert.equal(unbuilt.length, 7, unbuilt.map((b) => b.label).join(', '));
   for (const b of unbuilt) {
     assert.match(b.card!, /^FK-\d{3}$/, b.label);
     assert.equal(t.press(b), `not built yet: ${b.card}`, `${b.label} says which card builds it`);
