@@ -72,7 +72,7 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
   t.run('story-on');
   const before = snapshot(t);
   const unbuilt = t.status().storyDev!.filter((b) => b.card);
-  assert.ok(unbuilt.length >= 10, 'most of M1 is still to come');
+  assert.ok(unbuilt.length >= 8, 'most of M1 is still to come');
   for (const b of unbuilt) {
     assert.match(b.card!, /^FK-\d{3}$/, b.label);
     assert.equal(t.press(b), `not built yet: ${b.card}`, `${b.label} says which card builds it`);
@@ -85,8 +85,8 @@ test('Story ON: a piece that has not landed names its card and changes nothing',
     ['FK-025', 'FK-026', 'FK-043', 'FK-127', 'FK-017'],
   );
   assert.deepEqual(
-    ['folly-raise', 'folly-progress', 'folly-retarp', 'side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
-    ['FK-023', 'FK-023', 'FK-023', 'FK-012', 'FK-049', 'FK-056'],
+    ['side-set', 'spotlight-test', 'stage-stream-1'].map((a) => cardOf(a)),
+    ['FK-012', 'FK-049', 'FK-056'],
   );
   assert.match(t.run('story-play', 'fireworks') ?? 'ran', /^No scene called "fireworks": intro, crossing, rally, unveil, ageTurn, test$/);
   assert.equal(t.run('story-play', 'CROSSING'), undefined, 'a scene name in any case');

@@ -321,7 +321,7 @@ export function follyView(state: DudesState, _now: number): Partial<TownView> {
 }
 
 type Run = (ctx: WorldCtx<DudesState>, value?: number | string) => void | string;
-/** Story (dev)'s Folly buttons (FK-002 swaps their `card: 'FK-023'` for these): each does it and logs, or says why not. */
+/** Story (dev)'s Folly buttons (story/dev.ts calls these at the press, not at load: the modules import each other): each does it and logs, or says why not. */
 export const FOLLY_DEV: Record<'folly-raise' | 'folly-progress' | 'folly-retarp', Run> = {
   'folly-raise': (ctx) => {
     const why = raiseFolly(ctx.state, ctx.now);

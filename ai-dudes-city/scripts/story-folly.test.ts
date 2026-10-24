@@ -15,6 +15,7 @@ import { startHappening } from '../src/worlds/ai-dudes/events';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
 import { placeJob, reserved } from '../src/worlds/ai-dudes/sim';
 import { FOLLY, FOLLY_DEV, follyOf, raiseFolly, tickFolly, unveilFolly } from '../src/worlds/ai-dudes/story/folly';
+import { storyDevActions, storyDevButtons } from '../src/worlds/ai-dudes/story/dev';
 import { LIMITS, STORY_CAPS, pushFeed, stateSchema, trimStory, type Job } from '../src/worlds/ai-dudes/state';
 import { STORY_RECTS, STORY_SITES } from '../src/shared/storyMap';
 import { BLOCK_HALF, CITY, PITCH } from '../src/shared/city';
@@ -65,6 +66,20 @@ test('Raise the cordon: the Folly stands under wraps on its plot in the SE corne
   assert.ok(h.state.feed.some((f) => /cordon goes up .*KEEP OUT\. SOMETHING AMAZING\./.test(f.text)));
   assert.match(String(dev('folly-raise')), /already up: The Big Hut is under wraps/, 'once is enough');
   assert.ok(loads(h.state), 'the save takes it');
+});
+
+test('Story (dev) on /admin: Raise the cordon, Folly → 100 and Re-tarp do it (none says "not built yet")', async () => {
+  const { h, folly } = await storyTown();
+  const press = (id: string, value?: number) => storyDevActions().find((a) => a.id === id)!.run({ state: h.state, now: h.now, log: (l: string) => void h.logs.push(l) } as never, value);
+  assert.ok(storyDevButtons().filter((b) => b.group === 'folly').every((b) => !b.card), 'all wired');
+  assert.equal(press('folly-raise'), undefined);
+  assert.ok(follyOf(h.state)?.silhouette, 'up, under wraps');
+  assert.equal(press('folly-progress', 100), undefined);
+  assert.equal(folly()!.pct, 100);
+  unveilFolly(h.state, h.now);
+  assert.equal(press('folly-retarp'), undefined);
+  assert.ok(follyOf(h.state)?.silhouette, 'under wraps again');
+  assert.match(String(press('folly-raise')), /already up/);
 });
 
 test('Story OFF: nothing to raise, set or re-tarp; no Folly, no reserved ground', async () => {

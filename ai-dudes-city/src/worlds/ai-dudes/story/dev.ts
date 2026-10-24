@@ -15,6 +15,7 @@ import { ageOf, cityOf } from '../city';
 import { prepareHead } from '../mayor'; // hook FK-020
 import { storyOn, type DudesState } from '../state';
 import { releaseShow } from './show';
+import { FOLLY_DEV } from './folly'; // hook FK-023
 
 type Ctx = WorldCtx<DudesState>;
 /** Does the thing, or says why it didn't (and then has changed nothing). */
@@ -182,16 +183,16 @@ const PIECES: Piece[] = [
     run: (ctx) => { prepareHead(ctx.state, STORY_SITES.headMark.at, STORY_SITES.headMark.facing, ctx.now); ctx.log('story: gather (admin): the head is on his mark (the ring is FK-019)'); },
     buttons: [{ label: 'Gather', hint: 'The Call: everyone walks into the ring at the Folly, no scene' }],
   },
-  { id: 'folly-raise', label: 'Raise the cordon', group: 'folly', card: 'FK-023', hint: "The age's Folly goes up under its tarp" },
+  { id: 'folly-raise', label: 'Raise the cordon', group: 'folly', run: (ctx, v) => FOLLY_DEV['folly-raise'](ctx, v), hint: "The age's Folly goes up under its tarp" }, // hook FK-023 (wrapped: FOLLY_DEV isn't there yet while this file loads)
   {
     id: 'folly-progress',
     label: "set the Folly's progress",
     group: 'folly',
     input: { label: 'percent', min: 0, max: 100, step: 1 },
-    card: 'FK-023',
+    run: (ctx, v) => FOLLY_DEV['folly-progress'](ctx, v), // hook FK-023
     buttons: [0, 50, 100].map((n) => ({ label: `Folly → ${n}`, value: n })),
   },
-  { id: 'folly-retarp', label: 'Re-tarp', group: 'folly', card: 'FK-023', hint: 'The tarp back over the Folly, for another Unveiling' },
+  { id: 'folly-retarp', label: 'Re-tarp', group: 'folly', run: (ctx, v) => FOLLY_DEV['folly-retarp'](ctx, v), hint: 'The tarp back over the Folly, for another Unveiling' }, // hook FK-023
   {
     id: 'side-set',
     label: "Set a chatter's side",
