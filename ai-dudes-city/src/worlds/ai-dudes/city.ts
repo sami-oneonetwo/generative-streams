@@ -33,7 +33,7 @@ import {
 } from '../../shared/city';
 import type { DudeLook, DudeView, Emote, HappeningView, TownView } from '../../shared/dudesTypes';
 import { MODERN, NO_AGE, SANDBOX_DESIGN, ageStyle, clampAge, dressFor, venueName } from '../../shared/ages';
-import { BRIDGE_ROAD, BRIDGE_SHIFT_MS, volunteer, bridgeHelped, bridgeOpen, bridgeProgress, bridgeSpot, caravanLine, caravanOf, caravanSaw, caravanView, daughterTitle, sceneView, tickCaravan } from './caravan';
+import { BRIDGE_ROAD, BRIDGE_SHIFT_MS, RENAMED_TRAVELLERS, volunteer, bridgeHelped, bridgeOpen, bridgeProgress, bridgeSpot, bandOf, caravanLine, caravanSaw, caravanView, daughterTitle, sceneView, tickCaravan } from './caravan';
 import { BRIDGE, FACING_TOWN } from '../../shared/scenes';
 import { blueprintBounds, fitBlueprint, interactionOf, measureBlueprint } from './blueprint';
 import { defaultLook, hashOf } from './agent';
@@ -43,7 +43,7 @@ import { moversNear } from './movers';
 import { credit } from './crier';
 import { LIMITS, nextId, pushFeed, pushLine, storyOn, type City, type Dude, type DudesState, type Ledger, type Project, type Tie, type Townie, type Visit } from './state';
 import { storyTownView } from './story/view'; // FK-001
-import { castLabel, keepsCast } from './story/cast';
+import { castLabel, clashesWithCast, keepsCast } from './story/cast';
 import { tickFolly } from './story/folly';
 
 export const TOWN = {
@@ -76,8 +76,9 @@ export const TOWN = {
   reclaimDays: Number(process.env.DUDES_LOT_RECLAIM_DAYS) > 0 ? Number(process.env.DUDES_LOT_RECLAIM_DAYS) : 14,
 };
 
-const TOWN_NAMES = ['Larkhaven', 'Puddleby', 'Little Hollow', 'New Bramley', 'Sunnymead', 'Kettlewick', 'Applecross', 'Fernley Green'];
-const TOWNIE_NAMES = ['Mrs Okafor', 'Old Tom', 'Priya', 'Dev', 'Nana Rose', 'Mr Lindqvist', 'Wren', 'Bao', 'Auntie Mags', 'Felix', 'Signora Bassi', 'Kwame', 'Ivy', 'Mr Patel', 'June', 'Rafa'];
+export const TOWN_NAMES = ['Larkhaven', 'Puddleby', 'Little Hollow', 'New Bramley', 'Sunnymead', 'Kettlewick', 'Applecross', 'Fernley Green'];
+/** Residents off the bus, first free name first. Nobody here shares a name with the cast (Wren, Ash, Moss, Oak, Kit; FK-128). */
+export const TOWNIE_NAMES = ['Mrs Okafor', 'Old Tom', 'Priya', 'Dev', 'Nana Rose', 'Mr Lindqvist', 'Hattie', 'Bao', 'Auntie Mags', 'Felix', 'Signora Bassi', 'Kwame', 'Ivy', 'Mr Patel', 'June', 'Rafa'];
 
 const dist = (a: GroundPoint, b: GroundPoint) => Math.hypot(a.x - b.x, a.z - b.z);
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
@@ -863,7 +864,7 @@ export function projectDesigned(state: DudesState, blueprint: Project['blueprint
   }
   const wonder = p.wonder !== undefined;
   pushFeed(state, now, `${wonder ? 'THE WONDER' : 'COMMUNITY PROJECT'}: ${p.name} on the square (§${p.coinsNeed} and many hands needed)`);
-  const by = proposer?.name ?? (wonder ? `${caravanOf(p.wonder!).leader} of the caravan` : 'someone');
+  const by = proposer?.name ?? (wonder ? `${bandOf(state, p.wonder!).leader} of the caravan` : 'someone');
   for (const d of state.dudes) if (awake(d, now)) tell(state, d, `The town is building ${p.name}${wonder ? ", the age's Wonder, in the middle of the square" : ' on the square'} (proposed by ${by}). Chip in coins with "contribute" or help build it with "help".`, now, d.id !== p.by);
 }
 
@@ -1134,7 +1135,9 @@ function tickTraveller(state: DudesState, t: Townie, now: number, rng: () => num
     const a = cv.asks[0];
     if (t.leader && a && a.have < a.need && rng() < 0.1) {
       const left = a.need - a.have;
-      t.say = { text: rng() < 0.5 ? `We're still here. The bridge needs ${left === 1 ? 'one more pair' : `${left} more pairs`} of hands.` : 'Is anyone coming? The little one is cold.', until: now + 7000 };
+      // With Story on there is no little one in the band (Wren is a teenager): Ash's own line from the bible instead (FK-128).
+      const call = storyOn(state) ? "Mend the bridge, and we'll mend the rest." : 'Is anyone coming? The little one is cold.';
+      t.say = { text: rng() < 0.5 ? `We're still here. The bridge needs ${left === 1 ? 'one more pair' : `${left} more pairs`} of hands.` : call, until: now + 7000 };
     } else if (!t.leader && rng() < 0.14) {
       const elder = cv.travellers.indexOf(t.id) === 2;
       t.emote = elder ? { pose: 'sit', until: now + 20_000 } : { pose: (['think', 'shrug', 'point', 'wave'] as const)[Math.floor(rng() * 4)], until: now + 2500 };
@@ -1171,8 +1174,32 @@ function tickTraveller(state: DudesState, t: Townie, now: number, rng: () => num
   } else if (!t.leader && rng() < 0.15) t.emote = { pose: (['wave', 'point', 'think'] as const)[Math.floor(rng() * 3)], until: now + 2500 };
 }
 
+/**
+ * Nobody but the cast goes by a cast name (FK-128). Travellers saved under the caravans' old names take
+ * the new ones where they stand (same townie, same id). With Story on, a resident who shares a cast name
+ * (a "Wren" off the bus before the rename) takes the first free name on the list, or catches the bus
+ * home if there is none.
+ */
+function clearCastNames(state: DudesState, c: City): void {
+  const story = storyOn(state);
+  let gone = false;
+  for (const t of c.townies) {
+    if (t.role) continue;
+    const renamed = t.traveller ? RENAMED_TRAVELLERS.get(t.name) : undefined;
+    if (renamed) t.name = renamed;
+    else if (story && !t.traveller && clashesWithCast(t.name)) {
+      const used = new Set(c.townies.map((x) => x.name));
+      const name = TOWNIE_NAMES.find((n) => !used.has(n));
+      if (name) t.name = name;
+      else gone = true;
+    }
+  }
+  if (gone) c.townies = c.townies.filter((t) => t.role || t.traveller || !clashesWithCast(t.name));
+}
+
 export function tickTownies(state: DudesState, dt: number, now: number, rng: () => number): void {
   const c = cityOf(state);
+  clearCastNames(state, c);
   const want = wantedTownies(state, now);
   // One newcomer at a time, off the bus.
   if (c.townies.filter((x) => !x.traveller).length < want && rng() < dt / 15_000) {
@@ -1291,7 +1318,8 @@ export function townieViews(state: DudesState): DudeView[] {
       facing: t.facing,
       activity: t.path.length ? 'walking' : t.emote ? 'emote' : 'idle',
       look: dressed(state, t.look, { id: t.id, ...(dress ? { role: dress } : {}) }),
-      ...(t.traveller ? { traveller: true, ...(cast ? {} : t.leader ? { title: 'leader of the travellers' } : t.daughter ? { title: daughterTitle(age) } : {}) } : {}),
+      // Today's band's titles ("his daughter", "Toma's daughter, grown") only with Story off: the cast's tags carry their role (FK-128).
+      ...(t.traveller ? { traveller: true, ...(story ? {} : t.leader ? { title: 'leader of the travellers' } : t.daughter ? { title: daughterTitle(age) } : {}) } : {}),
       ...(t.scale && t.scale !== 1 ? { scale: t.scale } : {}),
       ...(t.leader ? { leader: true, ...(caravanView(state)?.asks.some((a) => a.have < a.need) ? { asking: true } : {}) } : {}),
       ...(t.hidden ? { hidden: true } : {}),

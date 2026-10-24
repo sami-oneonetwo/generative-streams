@@ -90,6 +90,11 @@ export const keepsCast = (state: DudesState, t: Townie, age: number): boolean =>
 /** A cast member in town, by role: scenes and bits find the band this way, not by their place in the caravan. */
 export const castTownie = (state: DudesState, role: CastRole): Townie | undefined => state.city?.townies.find((t) => t.id === castId(role));
 
+/** A name that would read as one of the cast's: Wren, Moss or Kit as a word, or a word starting with Ash or Oak
+ * ("Minstrel Wren", "Ashur", "Mr Ashby", "Oak Street"; not "the Kitchen Quarter"). Nobody else in town goes by one (FK-128). */
+const CLASH = /\b(?:wren|moss|kit|ash\w*|oak\w*)\b/i;
+export const clashesWithCast = (name: string): boolean => CLASH.test(name);
+
 /** A cast member arriving with the age's caravan: `i` is their place in it (the first leads). */
 export function castArrival(m: CastMember, i: number, age: number, at: GroundPoint, facing: number, now: number): Townie {
   const scale = m.scale[age] ?? 1;

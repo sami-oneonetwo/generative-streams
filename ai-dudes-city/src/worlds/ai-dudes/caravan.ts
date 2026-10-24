@@ -20,7 +20,7 @@ import { addEffect, awake } from './sim';
 import { route } from './placement';
 import { defaultLook, hashOf } from './agent';
 import { pushFeed, storyOn, type DudesState, type Townie } from './state';
-import { castArrival, castId, castIn, isCastId, keepsCast } from './story/cast';
+import { CAST, castArrival, castId, castIn, isCastId, keepsCast } from './story/cast';
 import { ageHeroes, credit, creditBuilds, crierAgeTurned, crierBridgeDone, crierBridgeOpened, crierVisitDone, crierVisitOpened, tickCrier } from './crier';
 
 export type AskKind = 'build' | 'serve' | 'operate' | 'party' | 'project' | 'bridge';
@@ -87,20 +87,43 @@ interface AgeCaravan {
 }
 const CARAVANS: AgeCaravan[] = [
   { name: 'the Mammoth Herders', leader: 'Toma', travellers: ['Old Ura', 'Bo the Herder', 'Tusk'], specialist: 'Kesa the Potter', wonder: 'the Furnace', wonderWhat: 'The Furnace: a great clay-and-stone smelting furnace with a tall chimney, leather bellows and a ring of stone anvils, glowing at its mouth, where the first bronze is poured',  problems: ["We've walked a long way and the little ones are hungry. Somewhere with a fire to eat at, and we'll stay.", 'Kesa the Potter travels with us. She needs a place to work, and hands to help her.', 'Our metalworker says a great furnace could melt stone into bronze. Build it on the square, all of you.'], greeting: 'Hello.', farewell: "We'll tell every river about this town. Goodbye, and thank you.", daughterLine: 'I was a little girl at the river when you mended the bridge. Look how far you came.' },
-  { name: 'the River Traders', leader: 'Captain Nebet', travellers: ['Ashur the Boatman', 'Mina'], specialist: 'Tamu the Scribe', wonder: 'the Keep', wonderWhat: 'The Keep: a tall square keep of dressed stone and timber with battlements, a banner and a heavy gate, watching over the river',  problems: ['Our barges are full of grain and empty of bread. Feed my crew.', 'Tamu the Scribe would settle here, if there were a workshop worth writing about.', 'Raiders watch the river. Raise a keep on the square and we will trade here for good.'], greeting: 'Ho, the town! We heard there was a furnace here. We have grain to trade.', farewell: 'The river will carry your name downstream. Fair winds.', daughterLine: 'I was small when we crossed your bridge. I remember the fire pits.' },
-  { name: 'the Travelling Court', leader: 'Sir Aldric', travellers: ['Pip the Jester', 'Minstrel Wren'], specialist: 'Master Wick the Millwright', wonder: 'the Steam Engine', wonderWhat: 'The Steam Engine: a great beam engine house of brick with a tall chimney, a huge flywheel, pistons and a brass boiler, puffing steam',  problems: ['The court is hungry and the jester is worse. Feast us!', 'Master Wick the Millwright seeks a smithy and willing hands.', 'Wick dreams of an engine that runs on steam. Build it on the square and the world will change.'], greeting: 'Make way for the court! We have heard of your keep.', farewell: 'The court must ride on. This town has earned its place in the songs.', daughterLine: 'My father is gone now. I travel with the court, and I asked them to come this way.' },
-  { name: 'the Railway Barons', leader: 'Mr Ashby', travellers: ['Porter Jones', 'Miss Clay'], specialist: 'Ada the Engineer', wonder: 'the Power Station', wonderWhat: 'The Power Station: a brick power station with tall chimneys, turbine halls and pylons carrying wires out over the town, its windows lit',  problems: ['The line brings hungry passengers. Feed them and the trains will keep coming.', 'Ada the Engineer needs a works to build her machines in.', 'Ada says lightning can run through wires. Build a power station on the square.'], greeting: 'The line reaches you at last. There is money to be made in this town.', farewell: "The line runs on. You'll be on every timetable now.", daughterLine: 'I told the barons about the girl at the river. Nobody believed me until they saw the place.' },
+  { name: 'the River Traders', leader: 'Captain Nebet', travellers: ['Hori the Boatman', 'Mina'], specialist: 'Tamu the Scribe', wonder: 'the Keep', wonderWhat: 'The Keep: a tall square keep of dressed stone and timber with battlements, a banner and a heavy gate, watching over the river',  problems: ['Our barges are full of grain and empty of bread. Feed my crew.', 'Tamu the Scribe would settle here, if there were a workshop worth writing about.', 'Raiders watch the river. Raise a keep on the square and we will trade here for good.'], greeting: 'Ho, the town! We heard there was a furnace here. We have grain to trade.', farewell: 'The river will carry your name downstream. Fair winds.', daughterLine: 'I was small when we crossed your bridge. I remember the fire pits.' },
+  { name: 'the Travelling Court', leader: 'Sir Aldric', travellers: ['Pip the Jester', 'Minstrel Robin'], specialist: 'Master Wick the Millwright', wonder: 'the Steam Engine', wonderWhat: 'The Steam Engine: a great beam engine house of brick with a tall chimney, a huge flywheel, pistons and a brass boiler, puffing steam',  problems: ['The court is hungry and the jester is worse. Feast us!', 'Master Wick the Millwright seeks a smithy and willing hands.', 'Wick dreams of an engine that runs on steam. Build it on the square and the world will change.'], greeting: 'Make way for the court! We have heard of your keep.', farewell: 'The court must ride on. This town has earned its place in the songs.', daughterLine: 'My father is gone now. I travel with the court, and I asked them to come this way.' },
+  { name: 'the Railway Barons', leader: 'Mr Hargreaves', travellers: ['Porter Jones', 'Miss Clay'], specialist: 'Ada the Engineer', wonder: 'the Power Station', wonderWhat: 'The Power Station: a brick power station with tall chimneys, turbine halls and pylons carrying wires out over the town, its windows lit',  problems: ['The line brings hungry passengers. Feed them and the trains will keep coming.', 'Ada the Engineer needs a works to build her machines in.', 'Ada says lightning can run through wires. Build a power station on the square.'], greeting: 'The line reaches you at last. There is money to be made in this town.', farewell: "The line runs on. You'll be on every timetable now.", daughterLine: 'I told the barons about the girl at the river. Nobody believed me until they saw the place.' },
   { name: 'the Tour Coach', leader: 'Guide Lena', travellers: ['Tourist Bob', 'Influencer Kai'], specialist: 'Dr Rao the Researcher', wonder: 'the Launch Tower', wonderWhat: 'The Launch Tower: a tall steel launch tower with a gantry and walkways, a slim rocket standing ready beside it, floodlights and a blast pad',  problems: ["The coach is starving and the reviews are due. Feed my group!", 'Dr Rao wants to open a lab here. Give her a workshop and some help.', 'Dr Rao is reaching for the stars. Build a launch tower on the square.'], greeting: 'Everyone off the coach, please. This is the town from the reviews.', farewell: 'Five stars. Everyone back on the coach, please.', daughterLine: 'Every age I come back, and every age the town is bigger.' },
-  { name: 'the Scrap Convoy', leader: 'Road Boss Mara', travellers: ['Rust', 'Patch'], specialist: 'Sparks the Tinker', wonder: 'the Scrap Rocket', wonderWhat: 'The Scrap Rocket: a tall rocket welded together from scrap, oil drums and old car panels, fins of sheet metal, standing on a launch pad of salvage, ready to fly',  problems: ["The convoy has run dry. Food, clean water, anything. Feed us and we'll park the rigs.", 'Sparks the Tinker can mend anything, given a scrapyard to work in and a few hands.', 'There is one way out of the wastes, and it is up. Build a rocket from the scrap on the square, and the journey ends among the stars.'], greeting: "Easy. We're not raiders. We saw your lights from the road.", farewell: "We'll see you up there.", daughterLine: 'The roads are empty now. This town is the last light on them.' },
+  { name: 'the Scrap Convoy', leader: 'Road Boss Roxy', travellers: ['Rust', 'Patch'], specialist: 'Sparks the Tinker', wonder: 'the Scrap Rocket', wonderWhat: 'The Scrap Rocket: a tall rocket welded together from scrap, oil drums and old car panels, fins of sheet metal, standing on a launch pad of salvage, ready to fly',  problems: ["The convoy has run dry. Food, clean water, anything. Feed us and we'll park the rigs.", 'Sparks the Tinker can mend anything, given a scrapyard to work in and a few hands.', 'There is one way out of the wastes, and it is up. Build a rocket from the scrap on the square, and the journey ends among the stars.'], greeting: "Easy. We're not raiders. We saw your lights from the road.", farewell: "We'll see you up there.", daughterLine: 'The roads are empty now. This town is the last light on them.' },
 ];
 export const caravanOf = (age: number): AgeCaravan => CARAVANS[Math.max(0, Math.min(CARAVANS.length - 1, age))];
+/** The travellers renamed so nobody shares a name with the cast (FK-128; Road Boss Mara too, in case the bible's fallback
+ * cast names are ever used). A save from before may still hold them under the old names: city.ts renames them where they stand. */
+export const RENAMED_TRAVELLERS: ReadonlyMap<string, string> = new Map([
+  ['Ashur the Boatman', 'Hori the Boatman'],
+  ['Minstrel Wren', 'Minstrel Robin'],
+  ['Mr Ashby', 'Mr Hargreaves'],
+  ['Road Boss Mara', 'Road Boss Roxy'],
+]);
+
+/**
+ * The band as the town hears of them. With Story on it is the same five every age (FK-014), so the age's
+ * own band never shows (FK-128): the cast's leader speaks for them (Ash, then Wren from Medieval), not
+ * Toma or Captain Nebet; they are "the travellers", not the Mammoth Herders; and the lines that only fit
+ * a new band (its greeting walking in, its goodbye, the daughter's line on arriving) are dropped. A
+ * scene line that comes out empty is skipped (shared/scenes.ts fillLine).
+ */
+export function bandOf(state: DudesState, age: number): AgeCaravan {
+  const c = caravanOf(age);
+  return storyOn(state) ? { ...c, name: 'the travellers', leader: castIn(age)[0].name, greeting: '', farewell: '', daughterLine: '' } : c;
+}
+/** The band's leader as a pronoun: Ash's, or Wren's once she leads (Story on); today's leaders are all "his". */
+const leaderHis = (state: DudesState, age: number) => (storyOn(state) && castIn(age)[0].role === 'wren' ? 'her' : 'his');
 
 /** The daughter: a small child at the river in the Stone Age, grown up by the Future (docs/ages.md, the
- * through-line). Her name is the town's (admin can change it; chat may get to choose). */
+ * through-line). Her name is the town's (admin can change it; chat may get to choose). With Story on she
+ * is the cast's Wren; the town's own name for her (`city.daughter`) is kept for when Story goes off. */
 export const DAUGHTER = 'Ama';
 const DAUGHTER_SCALE = [0.56, 0.8, 0.96, 1, 1, 1];
-export const daughterOf = (state: DudesState): string => cityOf(state).daughter ?? DAUGHTER;
-/** The leader's daughter, in Stone; later ages say who she travels with. */
+export const daughterOf = (state: DudesState): string => (storyOn(state) ? CAST.wren.name : (cityOf(state).daughter ?? DAUGHTER));
+/** The leader's daughter, in Stone; later ages say who she travels with. Today's band only: the cast's tags carry no title. */
 export const daughterTitle = (age: number) => (age === 0 ? 'his daughter' : age === 1 ? 'Toma\u2019s daughter, grown' : 'once the girl at the river');
 
 /** The bridge needs this share of the chatters who are around, each putting in a shift. */
@@ -250,7 +273,7 @@ function openVisit(state: DudesState, cv: Caravan, now: number): void {
   cv.asks = asksFor(state, cv.age, cv.visit, now);
   const kinds = new Set(cv.asks.flatMap((a) => (a.kind === 'build' ? (a.venues ?? []) : [])));
   cv.revs = Object.fromEntries(state.objects.filter((o) => o.venue && kinds.has(o.venue)).map((o) => [o.id, o.revision]));
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   const line = c.problems[cv.visit] ?? c.problems[0];
   const leader = cityOf(state).townies.find((t) => t.id === cv.travellers[0]);
   if (leader) {
@@ -271,7 +294,7 @@ function leaderProposesWonder(state: DudesState, cv: Caravan, now: number): void
   if (p && (p.status === 'designing' || p.status === 'gathering')) return;
   if (now - wonderTriedAt < WONDER_RETRY_MS && wonderTriedAt <= now) return;
   wonderTriedAt = now;
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   if (!proposeWonder(state, cv.age, c.wonderWhat, now)) return;
   pushFeed(state, now, `${c.leader} has drawn up ${c.wonder} for the middle of the square`);
 }
@@ -290,14 +313,15 @@ export function startCaravan(state: DudesState, now: number, strand = ageOf(stat
   const cv: Caravan = { age, visit: 0, openedAt: now, asks: [], travellers, ...(strand ? { stranded: true, helpers: [] } : {}) };
   city.caravan = cv;
   state.worldRevision++;
-  pushFeed(state, now, strand ? `${cap(caravanOf(age).name)} are stuck across the river: the bridge is down` : `${caravanOf(age).name} have made camp across the river`);
+  const c = bandOf(state, age);
+  pushFeed(state, now, strand ? `${cap(c.name)} are stuck across the river: the bridge is down` : `${c.name} have made camp across the river`);
   if (strand) return cv;
   if (walkIn) {
-    // The arrival: over the bridge and into town; the first visit opens once they are across.
+    // The arrival: over the bridge and into town; the first visit opens once they are across. With Story
+    // on it is the cast walking back in, so neither a new band's greeting nor the daughter's line (FK-128).
     walkOver(state, cv, now);
     cv.nextAt = now + SCENES.arrival.ms + 4000;
-    const d = daughterOf(state);
-    city.scene = { id: 'arrival', at: now, beat: 0, vars: { greeting: caravanOf(age).greeting, daughter: d, daughterLine: caravanOf(age).daughterLine } };
+    city.scene = { id: 'arrival', at: now, beat: 0, vars: { greeting: c.greeting, daughter: daughterOf(state), daughterLine: c.daughterLine } };
     return cv;
   }
   openVisit(state, cv, now);
@@ -364,7 +388,7 @@ function bridgeNeed(state: DudesState, now: number): number {
 }
 /** The opening has played: the board asks for the bridge. */
 function openBridge(state: DudesState, cv: Caravan, now: number): void {
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   const need = bridgeNeed(state, now);
   cv.openedAt = now;
   cv.trimmed = undefined;
@@ -373,7 +397,7 @@ function openBridge(state: DudesState, cv: Caravan, now: number): void {
   const line = `${c.leader} of ${c.name}: "The bridge is gone. We can't cross. Can you mend it?"`;
   pushFeed(state, now, line);
   crierBridgeOpened(state, cv, need, now);
-  for (const d of state.dudes) if (awake(d, now)) tell(state, d, `${c.leader} of ${c.name} is stuck across the river with his people: the bridge is broken. ${need} of the town need to help mend it ("help" goes to the bridge). Once they cross, they will have more to ask.`, now, false);
+  for (const d of state.dudes) if (awake(d, now)) tell(state, d, `${c.leader} of ${c.name} is stuck across the river with ${leaderHis(state, cv.age)} people: the bridge is broken. ${need} of the town need to help mend it ("help" goes to the bridge). Once they cross, they will have more to ask.`, now, false);
 }
 /** A traveller to the bridge site: where a helper stands on the town bank, spread out along it. */
 export function bridgeSpot(i: number): { x: number; z: number } {
@@ -407,7 +431,7 @@ export function bridgeProgress(state: DudesState): number | undefined {
 /** Mended: the travellers walk over, the crossing plays, and the first visit opens a little later. */
 function crossOver(state: DudesState, cv: Caravan, now: number): void {
   const city = cityOf(state);
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   cv.stranded = undefined;
   cv.asks = [];
   cv.visit = 0;
@@ -495,14 +519,14 @@ function tickScene(state: DudesState, cv: Caravan, now: number): void {
 export const sceneView = (state: DudesState) => {
   const city = cityOf(state);
   const sc = city.scene;
-  return sc ? { id: sc.id, at: sc.at, ...(city.caravan ? { leader: caravanOf(city.caravan.age).leader } : {}), ...(sc.vars ? { vars: sc.vars } : {}) } : undefined;
+  return sc ? { id: sc.id, at: sc.at, ...(city.caravan ? { leader: bandOf(state, city.caravan.age).leader } : {}), ...(sc.vars ? { vars: sc.vars } : {}) } : undefined;
 };
 
 const names = (xs: string[]) => (xs.length <= 1 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
 /** The Wonder stands: write down the age's heroes, then the age turns on screen (or, the last age, the finale). */
 function turnAge(state: DudesState, cv: Caravan, now: number, final: boolean): void {
   const city = cityOf(state);
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   const heroes = ageHeroes(state, 3);
   city.heroes = [...(city.heroes ?? []).filter((h) => h.age !== cv.age), { age: cv.age, names: heroes.map((h) => h.slice(0, 40)) }].slice(-6);
   cv.visit = 3;
@@ -518,11 +542,14 @@ function turnAge(state: DudesState, cv: Caravan, now: number, final: boolean): v
       ]),
     );
     city.scene = { id: 'finale', at: now, beat: 0, vars: { ...vars, ...roll, daughter: daughterOf(state), daughterLine: caravanOf(0).daughterLine } };
-  } else city.scene = { id: 'ageTurn', at: now, beat: 0, vars: { ...vars, age: ageStyle(cv.age + 1).name, heroes: names(heroes), farewell: c.farewell } };
+  } else city.scene = { id: 'ageTurn', at: now, beat: 0, vars: { ...vars, age: ageStyle(cv.age + 1).name, heroes: names(heroes), farewell: c.farewell } }; // no goodbye from the cast (FK-128)
   state.worldRevision++;
 }
-/** Admin: name the daughter (her name follows her through every age). */
+/** Why the daughter can't be named now: with Story on she is the cast's Wren (FK-128; /admin's name-daughter says so). */
+export const daughterLocked = (state: DudesState): string | undefined => (storyOn(state) ? `Story is on: ${CAST.wren.name} is the daughter` : undefined);
+/** Admin: name the daughter (her name follows her through every age). Never with Story on: the town's name for her stays as it was. */
 export function nameDaughter(state: DudesState, name: string, now: number): void {
+  if (daughterLocked(state)) return;
   const city = cityOf(state);
   const was = daughterOf(state);
   city.daughter = name;
@@ -531,7 +558,7 @@ export function nameDaughter(state: DudesState, name: string, now: number): void
 }
 
 function complete(state: DudesState, cv: Caravan, now: number): void {
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   const city = cityOf(state);
   if (cv.stranded) return crossOver(state, cv, now);
   if (cv.visit === 1) {
@@ -600,7 +627,7 @@ export function tickCaravan(state: DudesState, now: number): void {
     const left = cv.asks.filter((a) => a.have < a.need).sort((a, b) => b.need - b.have - (a.need - a.have))[0];
     if (left && left.need > 1) {
       left.need = Math.max(left.have + 1, Math.ceil(left.need * (2 / 3)));
-      pushFeed(state, now, `${caravanOf(cv.age).leader}: "We'll make do with less."`);
+      pushFeed(state, now, `${bandOf(state, cv.age).leader}: "We'll make do with less."`);
     }
     cv.trimmed = true;
   }
@@ -635,7 +662,7 @@ export function caravanSaw(state: DudesState, kind: AskKind, now: number, venue?
 export function caravanView(state: DudesState): { name: string; leader: string; visit: number; of: number; problem: string; asks: { label: string; have: number; need: number }[]; between?: boolean; stranded?: boolean } | undefined {
   const cv = cityOf(state).caravan;
   if (!caravanOn(state) || !cv || cv.visit > 2) return undefined;
-  const c = caravanOf(cv.age);
+  const c = bandOf(state, cv.age);
   if (cv.stranded) {
     // Nothing on the board until the opening has shown the town what's wrong.
     if (!cv.asks.length) return undefined;
@@ -646,10 +673,12 @@ export function caravanView(state: DudesState): { name: string; leader: string; 
 export function caravanLine(state: DudesState): string | undefined {
   const cv = cityOf(state).caravan;
   if (caravanOn(state) && cv?.stranded) {
-    const c = caravanOf(cv.age);
+    const c = bandOf(state, cv.age);
     const a = cv.asks[0];
+    // Who is waiting: today's leader and his little daughter, or with Story on the cast by their tags (FK-128).
+    const who = storyOn(state) ? names(castIn(cv.age).map((m) => m.tag)) : `${c.leader} and ${daughterOf(state)}, his little daughter, with their people`;
     return a
-      ? `${c.name} (${c.leader} and ${daughterOf(state)}, his little daughter, with their people) are stuck across the river: the bridge is broken. ${a.have}/${a.need} have put in a shift mending it. "help" goes to the bridge: when your chatter says build, fix or mend the bridge, that is "help", never a build of your own. Once they cross, they will have more to ask.`
+      ? `${c.name} (${who}) are stuck across the river: the bridge is broken. ${a.have}/${a.need} have put in a shift mending it. "help" goes to the bridge: when your chatter says build, fix or mend the bridge, that is "help", never a build of your own. Once they cross, they will have more to ask.`
       : `${c.name} are camped across the river; the bridge is broken and nobody can cross yet.`;
   }
   const v = caravanView(state);

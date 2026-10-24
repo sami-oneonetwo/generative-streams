@@ -6,14 +6,15 @@
 // word about it. In sandbox mode (the caravan switched off) it never mentions the caravan: no
 // deeds, and !top / !me are about builds instead. Lines wait in `out` for the world's tick to post them, so
 // nothing here needs the engine. Zero AI; every line is a template, so nothing is said that
-// wasn't written here.
+// wasn't written here. With Story on the band it speaks of is the cast's (caravan.ts bandOf): Ash or Wren
+// speaks for them, never Toma or the age's new leader (FK-128).
 import { ageStyle, venueName } from '../../shared/ages';
 import { plotAt } from '../../shared/city';
 import type { SafehouseObject } from '../../shared/objectTypes';
 import { awake } from './sim';
 import { cityOf, namingAge, tell } from './city';
-import { caravanOf, type Caravan } from './caravan';
-import type { DudesState } from './state';
+import { bandOf, type Caravan } from './caravan';
+import { storyOn, type DudesState } from './state';
 import { config } from '../../config';
 
 export interface Crier {
@@ -154,7 +155,7 @@ export function crierVisitOpened(state: DudesState, cv: Caravan, now: number): v
   c.visit = {};
   c.builds = [];
   c.nudgeAt = now;
-  const k = caravanOf(cv.age);
+  const k = bandOf(state, cv.age);
   const age = ageStyle(cv.age).name;
   const lines =
     cv.visit === 0
@@ -179,7 +180,7 @@ export function crierVisitOpened(state: DudesState, cv: Caravan, now: number): v
 export function crierVisitDone(state: DudesState, cv: Caravan, now: number): void {
   if (cv.visit >= 2) return; // the age turning says it instead
   const c = crierOf(state);
-  const k = caravanOf(cv.age);
+  const k = bandOf(state, cv.age);
   const rows = ranked(state, c.visit);
   if (!rows.length) {
     say(state, `${k.leader} is satisfied. Nobody in particular gets the credit, which is its own kind of teamwork. More asks shortly.`);
@@ -207,13 +208,15 @@ export function crierBridgeOpened(state: DudesState, cv: Caravan, need: number, 
   c.visit = {};
   c.builds = [];
   c.nudgeAt = now;
-  const k = caravanOf(cv.age);
+  const k = bandOf(state, cv.age);
   const hands = need === 1 ? 'One pair of hands' : `${need} pairs of hands`;
+  // Today's band has a little girl among them; with Story on it is the cast, and Wren is no little girl (FK-128).
+  const stuck = storyOn(state) ? `${k.leader} and the band are stuck across the river` : `${k.leader} and his people are stuck across the river, a little girl among them`;
   say(
     state,
     pick(
       [
-        `Hear ye. ${k.leader} and his people are stuck across the river, a little girl among them. The bridge is gone. ${hands} will mend it: tell your character to help at the bridge. !town for the list.`,
+        `Hear ye. ${stuck}. The bridge is gone. ${hands} will mend it: tell your character to help at the bridge. !town for the list.`,
         `There are travellers at the river and no way over. ${k.leader} asked for help. ${hands} at the bridge and they can cross. Names go in the ledger.`,
       ],
       now,
@@ -223,7 +226,7 @@ export function crierBridgeOpened(state: DudesState, cv: Caravan, need: number, 
 /** The bridge is mended and the travellers cross: who did it. */
 export function crierBridgeDone(state: DudesState, cv: Caravan, now: number): void {
   const c = crierOf(state);
-  const k = caravanOf(cv.age);
+  const k = bandOf(state, cv.age);
   const who = (cv.helpers ?? []).filter((id) => nameOf(state, id)).map((id) => tag(state, id));
   say(state, who.length ? `The bridge is mended. ${list(who)} did it, and ${k.name} are crossing into town. ${k.leader} will have more to ask shortly.` : `The bridge is mended and ${k.name} are crossing into town. ${k.leader} will have more to ask shortly.`);
   c.visit = {};
@@ -232,7 +235,7 @@ export function crierBridgeDone(state: DudesState, cv: Caravan, now: number): vo
 /** The Wonder is done: the age's results, its hero's laurel, and a fresh board. */
 export function crierAgeTurned(state: DudesState, from: number, now: number, final = false): void {
   const c = crierOf(state);
-  const k = caravanOf(from);
+  const k = bandOf(state, from);
   const rows = ranked(state, c.tally);
   const was = ageStyle(from).name;
   const hero = rows[0];
@@ -275,7 +278,7 @@ export function tickCrier(state: DudesState, cv: Caravan | undefined, now: numbe
   c.nudgeAt = now;
   const left = cv.asks.filter((a) => a.have < a.need);
   if (!left.length) return;
-  const k = caravanOf(cv.age);
+  const k = bandOf(state, cv.age);
   const mins = Math.round((now - Math.max(c.deedAt ?? cv.openedAt, cv.openedAt)) / 60_000);
   const what = left.map((a) => `${short(a.label)} (${a.have}/${a.need})`).join('; ');
   say(
@@ -350,7 +353,7 @@ function commandAnswer(state: DudesState, cmd: string, dudeId: string): string |
   if (state.ai.caravan === false) return sandboxAnswer(state, cmd, dudeId);
   if (cmd === 'town' || cmd === 'caravan') {
     if (!cv || cv.visit > 2) return `No caravan at the river right now. The journey's done; the board stands.`;
-    const k = caravanOf(cv.age);
+    const k = bandOf(state, cv.age);
     if (cv.nextAt || !cv.asks.length) return `${k.leader} is thinking about what to ask for next. Hold on.`;
     return `${k.leader} of ${k.name} wants: ${cv.asks.map((a) => `${short(a.label)} (${a.have}/${a.need})`).join('; ')}. Visit ${cv.visit + 1} of 3 in ${age}. Tell your character to do it.`;
   }

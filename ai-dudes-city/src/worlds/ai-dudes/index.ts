@@ -68,6 +68,7 @@ import {
 } from './city';
 import { AGES, MODERN, ageStyle, dressFor, parseAge, venueName } from '../../shared/ages';
 import { bridgeOpen, nameDaughter, playScene, resumeCaravan, skipVisit, startCaravan } from './caravan';
+import { daughterLocked } from './caravan'; // hook FK-128
 import { crierCommand, crierSays, isCrierCommand, takeCrierLines, tickCrierAnswers, tickSpotlight } from './crier';
 import { emoteNames, emoteOnly } from '../../shared/emotes';
 import { cleanVoiceOf } from './voice';
@@ -1829,6 +1830,8 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       label: 'Story: name the daughter (she keeps it through every age)',
       input: { kind: 'text', label: 'name', maxLength: 24 },
       run: (ctx, value) => {
+        const locked = daughterLocked(ctx.state); // hook FK-128: with Story on she is Wren
+        if (locked) return refuse(ctx, locked); // hook FK-128
         const v = String(value).trim().replace(/[^\p{L}\p{N} '-]/gu, '').slice(0, 24);
         if (!v) return refuse(ctx, 'She needs a name');
         nameDaughter(ctx.state, v, ctx.now);

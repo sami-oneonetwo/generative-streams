@@ -40,8 +40,9 @@ export const isPark = (bx: number, bz: number): boolean => CITY.parks && bx !== 
 export const RIVER = { x: CITY_BOUNDS.maxX + 16, width: 14 };
 
 // Streets run between the blocks: avenues north–south (constant x), streets east–west (constant z).
+// No Oak Street: Oak is one of the cast (FK-128), so that one is Alder Street.
 const AVENUES = ['Larch Avenue', 'First Avenue', 'Second Avenue', 'Third Avenue', 'Fourth Avenue', 'Fifth Avenue', 'Sixth Avenue', 'Seventh Avenue'];
-const STREETS = ['Willow Street', 'Elm Street', 'Oak Street', 'Maple Street', 'Birch Street', 'Cedar Street', 'Hazel Street', 'Rowan Street'];
+const STREETS = ['Willow Street', 'Elm Street', 'Alder Street', 'Maple Street', 'Birch Street', 'Cedar Street', 'Hazel Street', 'Rowan Street'];
 /** Road centre lines: k from −rings−1 to rings, the road at block·PITCH + PITCH/2. */
 export function roadLines(): number[] {
   const out: number[] = [];
