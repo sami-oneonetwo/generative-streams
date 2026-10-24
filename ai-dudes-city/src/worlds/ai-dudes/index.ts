@@ -91,6 +91,7 @@ import path from 'node:path';
 import {
   LIMITS,
   STATE_VERSION,
+  dropBadStory,
   freshState,
   nextId,
   pushFeed,
@@ -2004,7 +2005,15 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         const dropped = trimStory(state);
         if (dropped.length) live?.log(`story: dropped ${dropped.join(', ')} before saving (would not have loaded)`, 'alert');
       } catch (e) {
-        live?.log(`story: save guard failed: ${(e as Error).message}`, 'alert');
+        // Never expected (trimStory takes any shape), but a story the loader refuses must not reach the file.
+        let gone: string[] = [];
+        try {
+          gone = dropBadStory(state);
+        } catch {
+          delete state.city?.story;
+          gone = ['city.story'];
+        }
+        live?.log(`story: save guard failed (${(e as Error).message}); dropped ${gone.join(', ') || 'nothing'} before saving`, 'alert');
       }
     },
     start(ctx) {

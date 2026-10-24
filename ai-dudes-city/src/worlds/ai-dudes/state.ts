@@ -985,51 +985,82 @@ export const storyOn = (state: DudesState): boolean => state.ai.story === true;
  * Run before every save (the world's `beforeSave`): cut Finders Keepers' lists back to STORY_CAPS and
  * clip their names, then check each story field the way the loader will. The loader refuses a save
  * that breaks the schema (engine/persistence.ts), and a town that won't boot is worse than a lost
- * plaque: a list loses the entries that would not load, any other bad field goes. Returns what had to
- * go, for the log (trims and clips are routine and silent).
+ * plaque: a list loses the entries that would not load, a record the keys, any other bad field goes.
+ * The trims expect nothing of the shape they meet (a list that isn't one, a null entry), so the checks
+ * always run. Returns what had to go, for the log (trims and clips are routine and silent).
  */
 export function trimStory(state: DudesState): string[] {
-  const dropped: string[] = [];
+  const dropped = dropStoryIfNotObject(state);
   const s = state.city?.story;
   if (s) {
-    if (s.folly) {
+    const f = s.folly;
+    if (isObj(f) && Array.isArray(f.plaque)) {
+      const names = f.plaque.filter((n) => typeof n === 'string');
+      if (names.length < f.plaque.length) dropped.push(`city.story.folly.plaque (${f.plaque.length - names.length} of ${f.plaque.length})`);
       // The first names carved stay: a late joiner past the plaque's 40 is the one left off.
-      capList(s.folly.plaque, STORY_CAPS.plaque, 'first');
-      s.folly.plaque.forEach((n, i, list) => (list[i] = clip(n, 40)));
-      s.folly.pct = Math.max(0, Math.min(100, s.folly.pct));
+      f.plaque = names.slice(0, STORY_CAPS.plaque).map((n) => clip(n, 40));
     }
-    if (s.scene?.vars) for (const [k, v] of Object.entries(s.scene.vars)) s.scene.vars[k] = clip(v, 160);
+    if (isObj(f) && typeof f.pct === 'number') f.pct = Math.max(0, Math.min(100, f.pct));
+    if (isObj(s.scene) && isObj(s.scene.vars)) clipRecord(s.scene.vars, 160, 'city.story.scene.vars', dropped);
     // The beat queue keeps its order; the logs keep their newest.
-    if (s.cue) capList(s.cue, STORY_CAPS.cue, 'first');
-    if (s.sideLog) {
+    if (Array.isArray(s.cue)) capList(s.cue, STORY_CAPS.cue, 'first');
+    if (Array.isArray(s.sideLog)) {
       capList(s.sideLog, STORY_CAPS.sideLog, 'last');
-      for (const e of s.sideLog) e.name = clip(e.name, 40);
+      for (const e of s.sideLog) if (isObj(e)) e.name = clip(e.name, 40);
     }
-    if (s.verdicts) capList(s.verdicts, STORY_CAPS.verdicts, 'last');
-    if (s.choices && Object.keys(s.choices).length > STORY_CAPS.choices) s.choices = Object.fromEntries(Object.entries(s.choices).slice(-STORY_CAPS.choices));
+    if (Array.isArray(s.verdicts)) capList(s.verdicts, STORY_CAPS.verdicts, 'last');
+    if (isObj(s.choices)) {
+      clipRecord(s.choices, 40, 'city.story.choices', dropped);
+      if (Object.keys(s.choices).length > STORY_CAPS.choices) s.choices = Object.fromEntries(Object.entries(s.choices).slice(-STORY_CAPS.choices));
+    }
     dropInvalid(s, storyShape, 'city.story', dropped, { cue: cueSchema, sideLog: sideLogSchema, verdicts: verdictSchema });
   }
   for (const o of state.objects) {
-    if (o.past) {
+    if (!isObj(o)) continue;
+    if (Array.isArray(o.past)) {
       capList(o.past, STORY_CAPS.past, 'last');
-      for (const p of o.past) p.name = clip(p.name, 70);
+      for (const p of o.past) if (isObj(p)) p.name = clip(p.name, 70);
     }
-    if (o.creature?.follows !== undefined && !(typeof o.creature.follows === 'string' && o.creature.follows.length <= 80)) {
+    if (isObj(o.creature) && o.creature.follows !== undefined && !(typeof o.creature.follows === 'string' && o.creature.follows.length <= 80)) {
       o.creature.follows = undefined;
       dropped.push(`object ${o.id}.creature.follows`);
     }
     dropInvalid(o, objectStoryShape, `object ${o.id}`, dropped, { past: pastSchema });
   }
-  for (const d of state.dudes) dropInvalid(d, dudeStoryShape, `dude ${d.id}`, dropped);
-  for (const t of state.city?.townies ?? []) dropInvalid(t, townieStoryShape, `townie ${t.id}`, dropped);
-  if (state.mayor) dropInvalid(state.mayor, mayorStoryShape, 'mayor', dropped);
+  for (const d of state.dudes) if (isObj(d)) dropInvalid(d, dudeStoryShape, `dude ${d.id}`, dropped);
+  for (const t of state.city?.townies ?? []) if (isObj(t)) dropInvalid(t, townieStoryShape, `townie ${t.id}`, dropped);
+  if (isObj(state.mayor)) dropInvalid(state.mayor, mayorStoryShape, 'mayor', dropped);
   if (state.ai.story !== undefined && typeof state.ai.story !== 'boolean') {
     state.ai.story = undefined;
     dropped.push('ai.story');
   }
   return dropped;
 }
-const clip = (s: string, n: number) => (typeof s === 'string' && s.length <= n ? s : String(s).slice(0, n));
+/** The save guard's fallback if trimStory ever throws: every `city.story` field the loader would refuse goes whole. */
+export function dropBadStory(state: DudesState): string[] {
+  const dropped = dropStoryIfNotObject(state);
+  const s = state.city?.story;
+  if (s) dropInvalid(s, storyShape, 'city.story', dropped);
+  return dropped;
+}
+function dropStoryIfNotObject(state: DudesState): string[] {
+  const city = state.city;
+  if (!city || city.story === undefined || isObj(city.story)) return [];
+  delete city.story;
+  return ['city.story'];
+}
+const isObj = (x: unknown): x is object => typeof x === 'object' && x !== null && !Array.isArray(x);
+/** A string cut to `n`; anything else is left for the checks to judge. */
+const clip = <T>(s: T, n: number): T => (typeof s === 'string' && s.length > n ? (s.slice(0, n) as T) : s);
+/** Clip a record's values in place; a key the loader would refuse (over 40 long) goes alone, not the record. */
+function clipRecord(rec: Record<string, unknown>, n: number, where: string, dropped: string[]): void {
+  for (const k of Object.keys(rec)) {
+    if (k.length > 40) {
+      delete rec[k];
+      dropped.push(`${where} (a ${k.length}-character key)`);
+    } else rec[k] = clip(rec[k], n);
+  }
+}
 /** Cut a list to `max` in place, keeping its first entries or its newest. */
 function capList(list: unknown[], max: number, keep: 'first' | 'last'): void {
   if (list.length > max) list.splice(keep === 'first' ? max : 0, list.length - max);

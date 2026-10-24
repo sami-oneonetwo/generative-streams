@@ -11,7 +11,7 @@ import { Engine } from '../src/engine/engine';
 import { loadState, saveState, statePath } from '../src/engine/persistence';
 import { cityOf } from '../src/worlds/ai-dudes/city';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
-import { STORY_CAPS, freshState, stateSchema, storyOn, trimStory, type DudesState } from '../src/worlds/ai-dudes/state';
+import { STORY_CAPS, dropBadStory, freshState, stateSchema, storyOn, trimStory, type DudesState } from '../src/worlds/ai-dudes/state';
 import type { DudesScene } from '../src/shared/dudesTypes';
 import { SCENES, SCENE_IDS } from '../src/shared/scenes';
 import { STORY_SCENES } from '../src/shared/storyScenes';
@@ -177,6 +177,62 @@ test('the save guard drops a story field that still would not load, and says so'
   assert.ok(cityOf(h.state).story!.folly, 'the rest of the story stays');
   assert.ok(stateSchema.safeParse(h.state).success, 'and the save loads');
   assert.ok(h.logs.some((l) => /story: dropped .*city\.story\.scene/.test(l)), 'the log says what went');
+});
+
+test('a story in a shape the code never writes (null entries, a folly with no plaque, a list that is not one, over-long keys) still saves a file that boots', () => {
+  const { world } = harness();
+  const dir = tmpDir();
+  fs.copyFileSync(FIXTURES[0], statePath(dir, world.meta.id));
+  const engine = new Engine(world, { dataDir: dir, confidenceThreshold: 0.6, flags: { kickRepliesEnabled: false, devTimeScale: 1 } });
+  try {
+    const s = engine.state;
+    storied(s, Date.now());
+    const story = cityOf(s).story!;
+    story.sideLog!.push(null as never);
+    story.folly = { age: 0, pct: 10, startedAt: 0 } as never;
+    story.cue = 'armed' as never;
+    story.choices = { huts: 'tents', ['k'.repeat(60)]: 'yes' };
+    story.scene!.vars = { head: 'The Chief', ['v'.repeat(50)]: 'x' };
+    s.objects[0].past = [null, { age: 0, name: 'Mud Hut' }] as never;
+    const plaque = structuredClone(s);
+    cityOf(plaque).story!.folly = { age: 0, pct: 10, startedAt: 0, plaque: ['kev', null as never, 'dana'] };
+    trimStory(plaque);
+    assert.deepEqual(cityOf(plaque).story!.folly!.plaque, ['kev', 'dana'], 'a plaque loses only the name that is not one');
+
+    engine.save();
+    const back = loadState(world, dir, () => {});
+    const st = back.city!.story!;
+    assert.deepEqual(st.sideLog!.map((e) => e.name), ['kev', 'dana'], 'the null entry goes, the log stays');
+    assert.equal(st.folly, undefined, 'a folly with no plaque goes');
+    assert.equal(st.cue, undefined, 'a list that is not one goes');
+    assert.deepEqual(st.choices, { huts: 'tents' }, 'an over-long key goes alone, not every choice');
+    assert.deepEqual(st.scene!.vars, { head: 'The Chief' }, 'and the scene keeps its other vars');
+    assert.deepEqual(back.objects[0].past, [{ age: 0, name: 'Mud Hut' }]);
+    assert.equal(st.helped, true, 'the rest of the story stays');
+  } finally {
+    engine.stop();
+  }
+});
+
+test('if the save guard itself throws, the story fields the loader would refuse still go before the write', () => {
+  const { world, h } = booted(FIXTURES[0]);
+  storied(h.state, h.now);
+  const bad = structuredClone(h.state);
+  cityOf(bad).story!.scene!.beat = -1;
+  assert.deepEqual(dropBadStory(bad), ['city.story.scene'], 'the fallback drops whole fields');
+  assert.ok(cityOf(bad).story!.folly, 'and keeps the good ones');
+  cityOf(bad).story = 'junk' as never;
+  assert.deepEqual(dropBadStory(bad), ['city.story']);
+  assert.ok(stateSchema.safeParse(bad).success);
+
+  const boom = () => {
+    throw new Error('boom');
+  };
+  Object.defineProperty(cityOf(h.state).story!, 'folly', { enumerable: true, configurable: true, get: boom });
+  world.beforeSave!(h.state);
+  assert.equal(cityOf(h.state).story, undefined, 'a story nothing can read is not written');
+  assert.ok(stateSchema.safeParse(h.state).success, 'so the save loads');
+  assert.ok(h.logs.some((l) => /story: save guard failed \(boom\); dropped city\.story/.test(l)), 'the log says so');
 });
 
 test('a save cut off mid-scene boots released: no scene, no gather, no lock, the head not force-hidden', () => {
