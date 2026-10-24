@@ -303,6 +303,7 @@ function followOwner(state: DudesState, o: SafehouseObject, was: 'sit' | 'sleep'
   watch(t, owner, dt);
 
   // Away (their chatter has gone quiet) or indoors: off home to bed; or, if they went in somewhere else, a wait by the door first.
+  // The wait is only while their chatter is still here: gone quiet mid-wait, it goes home (even once they come out).
   const away = !awake(owner, now);
   if (away || owner.hidden) {
     if (t.mode === 'follow') {
@@ -310,7 +311,7 @@ function followOwner(state: DudesState, o: SafehouseObject, was: 'sit' | 'sleep'
       t.mode = away || dist(owner.position, t.bed) < PETS.homeNear ? 'home' : 'door';
       c.path = [];
     }
-    if (t.mode === 'door' && t.indoors < PETS.doorMs) {
+    if (t.mode === 'door' && !away && t.indoors < PETS.doorMs) {
       c.moving = false;
       c.rest = 'sit';
       return true;

@@ -228,6 +228,21 @@ test('indoors: at home it goes straight to bed; somewhere else it waits by the d
   kev.hidden = true;
   await tick(10_000);
   assert.equal(dog.creature?.rest, 'sleep', 'straight to bed');
+  // In somewhere else again, and his chatter goes quiet while it waits by the door, then he comes out:
+  // it doesn't sit on at that door; it goes home to bed.
+  kev.hidden = undefined;
+  kev.position = along(kev, 24);
+  kev.path = [];
+  await tick(20_000);
+  assert.ok(dist(dog.position, heelOf(h.state, kev)) < 0.3, 'with him down the street');
+  kev.hidden = true;
+  await tick(5000);
+  assert.equal(dog.creature?.rest, 'sit', 'waiting by the door');
+  kev.lastHeardAt = h.now - AWAKE_MS - 1000;
+  kev.hidden = undefined;
+  await tick(30_000);
+  assert.equal(dog.creature?.rest, 'sleep', 'home to bed while he is away');
+  assert.ok(inside(dog.position, lot.rect), 'on his lot');
 });
 
 test('one pet each: the oldest small roamer; the rest, big roamers and other people\'s builds roam as before. Old ones are adopted when Story goes ON', async () => {
