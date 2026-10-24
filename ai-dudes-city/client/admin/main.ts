@@ -317,6 +317,7 @@ function renderStoryDev(d: DudesAdminStatus | undefined): void {
   badge.className = `badge ${on ? 'ok' : 'dim'}`;
   const unbuilt = d.storyDev.filter((b) => b.card).length;
   const scene = d.town?.scene;
+  const ring = d.town?.ring;
   // Scene time, as the show runtime counts it (story/show.ts sceneTime): holds don't count, and one that is on freezes it.
   const t = scene ? Math.min(Date.now() - scene.at - (scene.shift ?? 0), scene.heldAt ?? Infinity) : 0;
   const note = $('story-note');
@@ -324,7 +325,8 @@ function renderStoryDev(d: DudesAdminStatus | undefined): void {
   setText(
     note,
     (on
-      ? `Story is ON. ${scene ? `Playing: ${scene.id}, ${clock(t / 1000)} in${scene.heldAt !== undefined ? ', held' : ''}.` : 'Nothing playing.'}`
+      ? `Story is ON. ${scene ? `Playing: ${scene.id}, ${clock(t / 1000)} in${scene.heldAt !== undefined ? ', held' : ''}.` : 'Nothing playing.'}` +
+        (ring ? (ring.started ? ' Everyone is in the ring.' : ' The Call: everyone is walking into the ring.') : '')
       : "Story is OFF: today's game. Every button refuses until Story is on.") +
       (unbuilt ? ` ${unbuilt} of ${d.storyDev.length} not built yet (dashed).` : ''),
   );

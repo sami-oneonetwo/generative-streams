@@ -110,6 +110,8 @@ export interface DudeView {
   badgesOpen?: boolean;
   /** Finders Keepers: the side they took (the ground disc and the tag's crown or flag). */
   side?: 'red' | 'gold';
+  /** Finders Keepers: called to a gathering's ring (story/gather.ts): their slot and the way they face there. A /play player's page walks with the server until it goes. */
+  gather?: { slot: GroundPoint; face: number };
   job?: {
     id: string;
     kind: JobKind;
@@ -319,6 +321,8 @@ export interface TownView {
   cast?: { id: string; role: string; tag: string }[];
   /** The age's Folly (story/folly.ts): how far (0..100) and the plaque's names. */
   folly?: { pct: number; plaque: string[] };
+  /** A gathering's ring while it holds its crowd (story/gather.ts): its centre, and whether it has started (until then they are walking in). */
+  ring?: { at: GroundPoint; started?: true };
 }
 
 export interface DudesScene {

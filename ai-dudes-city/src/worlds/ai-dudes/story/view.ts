@@ -7,6 +7,7 @@ import { storyOn, type Dude, type DudesState } from '../state';
 import { boardView, mayorStripView } from './board';
 import { castView } from './cast';
 import { follyView } from './folly';
+import { gatherView } from './gather';
 import { showView } from './show';
 import { sidesView } from './sides';
 import { spotlightView } from './spotlight';
@@ -17,10 +18,10 @@ export function storyTownView(state: DudesState, now: number): Partial<TownView>
   return { story: true, ...castView(state, now), ...follyView(state, now), ...boardView(state, now), ...spotlightView(state, now), ...showView(state, now) };
 }
 
-/** A chatter's story pieces: their side. */
+/** A chatter's story pieces: their side, and their slot in a gathering's ring. */
 export function storyDudeView(state: DudesState, d: Dude, now: number): Partial<DudeView> {
   if (!storyOn(state)) return {};
-  return sidesView(state, d, now);
+  return { ...sidesView(state, d, now), ...gatherView(d) };
 }
 
 /** The head's story pieces: put on his mark (FK-020 sets the lock), and the show strip. */

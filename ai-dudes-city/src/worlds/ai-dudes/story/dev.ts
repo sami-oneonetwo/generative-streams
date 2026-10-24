@@ -11,11 +11,12 @@ import type { StoryDevButton } from '../../../shared/dudesTypes';
 import type { SceneId } from '../../../shared/scenes';
 import { STORY_SITES } from '../../../shared/storyMap'; // hook FK-020
 import { caravanOn, playScene, resetCast } from '../caravan';
-import { ageOf, cityOf } from '../city';
+import { ageOf, cityOf, headName } from '../city';
 import { prepareHead } from '../mayor'; // hook FK-020
 import { storyOn, type DudesState } from '../state';
 import { playShow, releaseShow } from './show';
-import { FOLLY_DEV } from './folly'; // hook FK-023
+import { FOLLIES, FOLLY_DEV } from './folly'; // hook FK-023
+import { callRing } from './gather';
 
 type Ctx = WorldCtx<DudesState>;
 /** Does the thing, or says why it didn't (and then has changed nothing). */
@@ -92,6 +93,23 @@ const resetTheCast: Run = (ctx) => {
   if (cv.turn) return 'The age is turning (the band is heading home): reset the cast once the next caravan is here';
   resetCast(s, cv, ctx.now);
   ctx.log(`story: the cast reset, on their marks ${cv.stranded ? 'across the river' : 'at the town gate'} (admin, Story (dev))`);
+};
+
+/**
+ * The Call with no scene (FK-019): the head onto his mark facing the Folly (FK-020), and everyone awake
+ * into the ring in front of him under the GATHER banner, until Stop (RING.holdMs at most). Not over a
+ * story scene, and not twice.
+ */
+const gatherAll: Run = (ctx) => {
+  const s = ctx.state;
+  const playing = cityOf(s).story?.scene;
+  if (playing) return `The ${playing.id} scene is playing: Stop it first`;
+  const folly = FOLLIES[ageOf(s)] ?? FOLLIES[0];
+  const called = callRing(s, ctx.now, { banner: { title: `GATHER: ${folly.name.toUpperCase()}`, premise: `${headName(s)}'s secret build` } });
+  if (typeof called === 'string') return called;
+  prepareHead(s, STORY_SITES.headMark.at, STORY_SITES.headMark.facing, ctx.now);
+  const { called: n, away, gold, red } = called;
+  ctx.log(`story: gather (admin): ${n} called into the ring at the Folly (${gold} gold in front, ${red} red at the back${away ? `, ${away} of them away, padding the crowd` : ''}); the head is on his mark`);
 };
 
 /** Every scene Story (dev) plays, in show order. */
@@ -197,8 +215,7 @@ const PIECES: Piece[] = [
     id: 'story-gather',
     label: 'Gather at the Folly (no scene)',
     group: 'scene',
-    // hook FK-020: the head goes onto his mark, facing the Folly, until Stop; FK-019 adds the ring and swaps this run for its gather.
-    run: (ctx) => { prepareHead(ctx.state, STORY_SITES.headMark.at, STORY_SITES.headMark.facing, ctx.now); ctx.log('story: gather (admin): the head is on his mark (the ring is FK-019)'); },
+    run: gatherAll,
     buttons: [{ label: 'Gather', hint: 'The Call: everyone walks into the ring at the Folly, no scene' }],
   },
   { id: 'folly-raise', label: 'Raise the cordon', group: 'folly', run: (ctx, v) => FOLLY_DEV['folly-raise'](ctx, v), hint: "The age's Folly goes up under its tarp" }, // hook FK-023 (wrapped: FOLLY_DEV isn't there yet while this file loads)

@@ -20,6 +20,7 @@ import { CITY, CITY_BOUNDS, plotById } from '../../shared/city';
 import { MOVERS, altitudeOf, flies, setAltitude, startMoving } from './movers';
 import { runBit } from './bits';
 import { isPiloted } from './players';
+import { RING, releasing } from './story/gather';
 
 export const WALK_SPEED = 2.4; // m/s
 export const WANDER_SPEED = 1.3;
@@ -514,11 +515,17 @@ function runFollow(state: DudesState, dude: Dude, now: number): boolean {
 }
 
 export function tickDudes(state: DudesState, dt: number, now: number, rng: () => number): void {
+  const routes = { left: RING.routesPerTick };
   for (const dude of state.dudes) {
     if (dude.say && dude.say.until <= now) dude.say = undefined;
     recover(dude, now);
     if (knockedOut(dude, now)) continue; // flat on its back: nothing moves until it gets up
     if (dude.emote && dude.emote.until <= now) dude.emote = undefined;
+    // Called to a gathering's ring (FK-019): there and standing still, ahead of everything else, a player too (their builds still rise).
+    if (dude.gather && runGather(state, dude, dt, now, rng, routes)) {
+      if (isPiloted(dude.id)) pilotJobs(state, dude, dt, now);
+      continue;
+    }
     // Driven by a player (players.ts): they walk it themselves, and its builds rise without it.
     if (isPiloted(dude.id)) {
       dude.path = [];
@@ -558,6 +565,61 @@ export function tickDudes(state: DudesState, dt: number, now: number, rng: () =>
   // Finished and failed jobs have told their dude already; they leave the list.
   state.jobs = state.jobs.filter(isActive);
   if (state.effects?.length) state.effects = state.effects.filter((e) => now - e.at < 4000 || (e.until ?? 0) > now);
+}
+
+/**
+ * Called to a gathering (story/gather.ts): off to their ring slot at a run (RING.pace × walking pace,
+ * a few setting off each tick), then standing in it facing the middle, whatever they were doing, until
+ * the release lets them go (`until`, staggered). While the crowd is held, a walk somewhere else (a turn
+ * from before the Call) gives way to the slot; once it is being let go, anyone given something else to
+ * do goes straight off to do it. Returns false once they are let go.
+ */
+function runGather(state: DudesState, dude: Dude, dt: number, now: number, rng: () => number, routes: { left: number }): boolean {
+  const g = dude.gather!;
+  const end = dude.path.at(-1);
+  const elsewhere = !!end && Math.hypot(end.x - g.slot.x, end.z - g.slot.z) > 1;
+  const busy = elsewhere || !!(dude.use || dude.visit || dude.bit || dude.attack || dude.labour || dude.meet || dude.follow || dude.explore);
+  if (now >= g.until || (busy && releasing(state))) {
+    letGo(state, dude, now, rng);
+    return false;
+  }
+  if (elsewhere) dude.path = [];
+  if (!dude.path.length && Math.hypot(dude.position.x - g.slot.x, dude.position.z - g.slot.z) > RING.thereM) {
+    if (routes.left <= 0) return true;
+    routes.left--;
+    if (!walkTo(state, dude, g.slot, 'move')) [dude.path, dude.walkingFor] = [[{ ...g.slot }], 'move'];
+    // The way ends on the grid beside the slot: the last step onto it. A slot a build has gone up on since the Call is the open ground the way found.
+    const to = dude.path.at(-1);
+    const gap = to ? Math.hypot(to.x - g.slot.x, to.z - g.slot.z) : 0;
+    if (to && gap > 1) g.slot = { x: to.x, z: to.z };
+    else if (gap > 1e-6) dude.path.push({ ...g.slot });
+  }
+  if (dude.path.length) {
+    step(dude, dt, WALK_SPEED * RING.pace);
+    if (dude.path.length) return true;
+  }
+  dude.walkingFor = undefined;
+  dude.facing = g.face;
+  return true;
+}
+
+/**
+ * Out of the ring: free again a moment or two apart (an idle stagger on top of the release's), and
+ * back to the build they were putting up, its progress kept, if they were called away from one.
+ */
+function letGo(state: DudesState, dude: Dude, now: number, rng: () => number): void {
+  const g = dude.gather!;
+  dude.gather = undefined;
+  const end = dude.path.at(-1);
+  if (end && Math.hypot(end.x - g.slot.x, end.z - g.slot.z) <= 1) [dude.path, dude.walkingFor] = [[], undefined];
+  dude.idleUntil = now + 500 + rng() * 2500;
+  const job = state.jobs.find((j) => j.dudeId === dude.id && (j.status === 'walking' || j.status === 'building'));
+  if (!job || isPiloted(dude.id) || dude.path.length) return;
+  const target = job.targetId ? state.objects.find((o) => o.id === job.targetId) : undefined;
+  const at = job.position ?? target?.position;
+  const size = job.footprint ?? target?.footprint;
+  // 'walking' keeps workedMs: runJobs starts building again on arrival, where it left off.
+  job.status = at && size && workSpots(at, size, dude.position).some((p) => walkTo(state, dude, p, 'job')) ? 'walking' : 'ready';
 }
 
 /** Every dude near `from` (awake) hears what `speaker` said, for its next turn. */

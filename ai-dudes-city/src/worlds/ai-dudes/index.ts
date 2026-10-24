@@ -107,7 +107,7 @@ import {
   type Job,
 } from './state';
 import { storyDevActions, storyDevButtons } from './story/dev';
-import { gathering, hearInGather, takeQueued, tickGather } from './story/gather';
+import { gathering, hearInGather, takeQueued, tickGather, tickRing } from './story/gather';
 import { releaseShow, tickShow } from './story/show';
 import { storyDudeView } from './story/view';
 
@@ -234,6 +234,10 @@ const PARTY_GAP_MS = 5 * 60_000;
 const UNPROMPTED_CHIP_IN = 15;
 /** How long a build is remembered for spotting a repeat of it. */
 const REPEAT_MS = 5 * 60_000;
+/** A /play player called to a gathering is told once (FK-019): the server walks them, their keys wait for the release. */
+const GATHER_NOTE = "Everyone's gathering: you're walked to your place in the crowd. Talk away; walking, riding and firing come back when it's over.";
+const gatherTold = new WeakSet<object>();
+const gatherNote = (dude: Dude) => (gatherTold.has(dude.gather!) ? undefined : (gatherTold.add(dude.gather!), { note: GATHER_NOTE }));
 
 /** What a kind of place is called, for the design call: "fire pit (a café)" in the Stone Age, plain "café" today. */
 function kindFor(age: number, kind: VenueKind): string {
@@ -1304,6 +1308,12 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
             return { reply: { t: 'ko', ms: dude.ko!.until - now, position: { ...dude.position }, facing: dude.facing } };
           }
           const at = stampOf(p, msg.at, now);
+          // Called to a gathering (FK-019): the server walks them to their ring slot and the page follows;
+          // their own steps wait for the release, which starts them from where the server has them.
+          if (dude.gather) {
+            Object.assign(p, { last: { at, x: dude.position.x, z: dude.position.z }, budget: undefined, moving: false, running: false, trail: [], travel: 0 });
+            return gatherNote(dude);
+          }
           const ride = dude.riding && !dude.use ? state.objects.find((o) => o.id === dude.riding) : undefined;
           const from = p.last ?? dude.position;
           const step = clampToGround(allowedStep(p, { x, z }, at, ride ? 21 : PLAYER.run), 0.5);
@@ -1332,6 +1342,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         }
         case 'ride': {
           if (knockedOut(dude, now)) return undefined;
+          if (dude.gather) return { note: GATHER_NOTE }; // FK-019: no riding off out of the ring
           if (dude.riding && !dude.use) {
             getOff(state, dude);
             return { reply: { t: 'ride', position: { ...dude.position }, facing: dude.facing }, note: 'You got off.' };
@@ -1363,7 +1374,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
           return undefined;
         }
         case 'fire': {
-          if (knockedOut(dude, now) || dude.hidden) return undefined;
+          if (knockedOut(dude, now) || dude.hidden || dude.gather) return undefined; // FK-019: nobody fires from the ring
           const vehicle = dude.riding && !dude.use ? state.objects.find((o) => o.id === dude.riding) : undefined;
           const gun = vehicle && armedBuild(vehicle) ? 'cannon' : p.armed;
           if (!gun) return undefined;
@@ -1375,7 +1386,7 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
         }
         case 'ram': {
           const vehicle = dude.riding && !dude.use ? state.objects.find((o) => o.id === dude.riding) : undefined;
-          if (!vehicle) return undefined;
+          if (!vehicle || dude.gather) return undefined; // FK-019: nor rams (the Call has them off whatever they drove)
           // How fast it really hit: what the server saw, never more than the page says.
           const speed = Math.min(trailSpeed(p, now), Number(msg.speed) || 0);
           if (ram(state, { id: dude.id, name: dude.name, position: dude.position, facing: dude.facing, dude, vehicle }, String(msg.target ?? ''), speed, now, p.travel ?? 0)) p.travel = 0;
@@ -2123,6 +2134,8 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       // Story scenes first, whatever the caravan and town life are doing: nothing later in the tick can
       // hold a scene up, and the show never throws (its watchdog ends the scene instead).
       if (storyOn(ctx.state)) tickShow(ctx.state, now, ctx.log);
+      // Then a Call's ring (FK-019): latecomers to the back, the start (which plays its scene), the release's end.
+      if (storyOn(ctx.state)) tickRing(ctx.state, now, ctx.log);
       tickGather(ctx.state, ctx.log);
       tickCity(ctx.state, dt, now, ctx.rng);
       tickSpotlight(ctx.state, now, ctx.rng);

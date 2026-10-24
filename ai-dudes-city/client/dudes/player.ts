@@ -68,10 +68,11 @@ export function createPlayer(el: (id: string) => HTMLElement, getState: () => Du
   /** Knocked out until this page time: no walking, stars overhead. */
   let koUntil = 0;
   const knocked = () => performance.now() < koUntil;
+  let gathered = false; // hook FK-019: walked into a gathering's ring by the server: the page follows, its keys wait for the release
   /** The thumb stick (phones): forward and right, -1..1 each, camera-relative like WASD. */
   const stick = { f: 0, r: 0, on: false };
   function fireNow(at?: { x: number; z: number }): boolean {
-    if (knocked()) return false;
+    if (knocked() || gathered) return false; // hook FK-019
     const turned = shoot({ ...arms, ride, x, z, facing }, send, at);
     if (turned === undefined) return false;
     arms.lastShot = performance.now();
@@ -368,7 +369,7 @@ export function createPlayer(el: (id: string) => HTMLElement, getState: () => Du
   function frame(dt: number, yaw: number) {
     let f = 0,
       r = 0;
-    const out = knocked();
+    const out = knocked() || gathered; // hook FK-019
     if (!typing() && id && !out) {
       if (keys.has('w') || keys.has('arrowup')) f += 1;
       if (keys.has('s') || keys.has('arrowdown')) f -= 1;
@@ -433,6 +434,10 @@ export function createPlayer(el: (id: string) => HTMLElement, getState: () => Du
       } else if (!blocked(x + dx, z)) x += dx;
       else if (!blocked(x, z + dz)) z += dz;
     }
+    const me = gathered ? getState()?.dudes.find((d) => d.id === id) : undefined; // hook FK-019: after where the server walks them, at a run
+    const gap = me ? Math.hypot(me.position.x - x, me.position.z - z) : 0; // hook FK-019
+    if (me && gap > 0.05) [x, z, facing, moving] = [x + ((me.position.x - x) / gap) * Math.min(gap, RUN * dt), z + ((me.position.z - z) / gap) * Math.min(gap, RUN * dt), Math.atan2(me.position.x - x, me.position.z - z), true]; // hook FK-019
+    else if (me) facing = me.facing; // hook FK-019
     const b = TOWN_GROUND; // hook FK-078
     x = Math.max(b.minX + 0.5, Math.min(b.maxX - 0.5, x));
     z = Math.max(b.minZ + 0.5, Math.min(b.maxZ - 0.5, z));
@@ -451,6 +456,7 @@ export function createPlayer(el: (id: string) => HTMLElement, getState: () => Du
     if (!id) return;
     const me = s.dudes.find((d) => d.id === id);
     if (!me) return;
+    gathered = !!me.gather; // hook FK-019
     // Knocked out (the server's word, in case its note went astray): lie still until it says.
     if (me.ko && me.ko > serverNow && !knocked()) {
       koUntil = performance.now() + (me.ko - serverNow);

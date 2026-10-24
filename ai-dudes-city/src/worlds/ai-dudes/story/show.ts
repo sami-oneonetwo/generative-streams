@@ -11,7 +11,8 @@
 // `town.scene` is gone), and an alert goes in the log. The show never throws into the world's tick.
 //
 // The same release runs at every boot (index.ts `start`), at Story OFF and Stop (story/dev.ts), and at
-// FK-037's panic key.
+// FK-037's panic key. A scene that ends as written lets its crowd go a few at a time instead (endShow,
+// FK-019's staggered release).
 import type { WorldCtx } from '../../../engine/world';
 import type { TownView } from '../../../shared/dudesTypes';
 import { LOCK_SLACK_MS, STEP_FORWARD, type Beat, type Scene } from '../../../shared/scenes';
@@ -19,6 +20,7 @@ import { STORY_SCENES } from '../../../shared/storyScenes';
 import { ageOf } from '../city';
 import type { DudesState, StorySceneState, Townie } from '../state';
 import { castIn, castTownie } from './cast';
+import { dropRing, releaseRing, ringView } from './gather';
 
 type Log = WorldCtx<DudesState>['log'];
 
@@ -115,8 +117,8 @@ export function tickShow(state: DudesState, now: number, log: Log): void {
       }
     }
     if (t < scene.ms) return;
-    // The end, as written: everyone it held is let go (FK-019 staggers the gathering's release here).
-    const n = releaseShow(state);
+    // The end, as written: the head is free, and the crowd goes a few at a time (FK-019).
+    const n = endShow(state, now);
     log(`story: the ${sc.id} scene ended${n > 1 ? `; let go of ${n - 1} held thing${n === 2 ? '' : 's'}` : ''}`);
   } catch (e) {
     panicShow(state, `the show runtime threw: ${why(e)}`, log);
@@ -144,14 +146,16 @@ export function panicShow(state: DudesState, reason: string, log: Log): number {
 
 /**
  * What the show puts on the page: the story scene playing, as `scene`. Spread after the caravan's
- * (story/view.ts), so it plays ahead of today's scene; the page plays it once FK-124 lands. FK-021 adds
- * the banner, the prompt and the NOW card.
+ * (story/view.ts), so it plays ahead of today's scene; the page plays it once FK-124 lands. A Call's
+ * ring and its banner come with it (FK-019; FK-021 draws the banner); FK-021 and FK-022 add the
+ * prompt, the NOW card and the title card.
  */
 export function showView(state: DudesState, _now: number): Partial<TownView> {
   const sc = state.city?.story?.scene;
-  if (!sc || !storyScene(sc.id)) return {};
+  const ring = ringView(state);
+  if (!sc || !storyScene(sc.id)) return ring;
   const vars = sc.vars && Object.keys(sc.vars).length ? { vars: { ...sc.vars } } : {};
-  return { scene: { id: sc.id, at: sc.at, shift: sc.shift, ...(sc.heldAt !== undefined ? { heldAt: sc.heldAt } : {}), ...vars } };
+  return { ...ring, scene: { id: sc.id, at: sc.at, shift: sc.shift, ...(sc.heldAt !== undefined ? { heldAt: sc.heldAt } : {}), ...vars } };
 }
 
 /**
@@ -166,11 +170,37 @@ export function releaseShow(state: DudesState): number {
     story.scene = undefined;
     n++;
   }
+  dropRing(state);
   for (const d of state.dudes)
     if (d.gather) {
-      d.gather = undefined;
+      // Nobody keeps walking into a ring that is gone (their path was the way to their slot).
+      Object.assign(d, { gather: undefined, path: [], walkingFor: undefined });
       n++;
     }
+  const m = state.mayor;
+  if (m?.lock) {
+    m.lock = undefined;
+    n++;
+  }
+  if (m?.forcedHidden) {
+    m.forcedHidden = undefined;
+    n++;
+  }
+  return n;
+}
+
+/**
+ * A scene's end as written: the scene goes, the head gets his WASD and his visibility back, and the
+ * crowd is let go a few at a time over the next seconds (story/gather.ts releaseRing), never as one
+ * block. Returns how many things it let go, as releaseShow counts them.
+ */
+export function endShow(state: DudesState, now: number): number {
+  let n = releaseRing(state, now);
+  const story = state.city?.story;
+  if (story?.scene) {
+    story.scene = undefined;
+    n++;
+  }
   const m = state.mayor;
   if (m?.lock) {
     m.lock = undefined;
