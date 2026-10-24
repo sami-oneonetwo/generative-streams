@@ -239,7 +239,8 @@ function buildScenery(scene: THREE.Scene, parent: THREE.Group, ageIndex: number)
   }
   // hook FK-023: park trees on the Folly's plot (a little round it) go in a group of their own, hidden while Story is on.
   const follyRect = STORY_SITES.folly.rect; // hook FK-023
-  const follyTrees = yard.filter((p) => p.x > follyRect.minX - 2 && p.x < follyRect.maxX + 2 && p.z > follyRect.minZ - 2 && p.z < follyRect.maxZ + 2); // hook FK-023
+  const fire = STORY_SITES.wrenFire.at; // Wren's rally fire: keep its circle clear too, so no tree blocks the rally shot
+  const follyTrees = yard.filter((p) => (p.x > follyRect.minX - 2 && p.x < follyRect.maxX + 2 && p.z > follyRect.minZ - 2 && p.z < follyRect.maxZ + 2) || Math.hypot(p.x - fire.x, p.z - fire.z) < 12); // hook FK-023
   for (const p of follyTrees) yard.splice(yard.indexOf(p), 1); // hook FK-023
 
   // --- the river east of the ring road, its banks, and the path out to the camp across it ---
