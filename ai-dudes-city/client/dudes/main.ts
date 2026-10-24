@@ -16,7 +16,8 @@ import { LOCAL_SHOT, createOperator, type LocalShot } from './operator';
 import { createPlayer } from './player';
 import { createPlansLayer } from './plans';
 import { createAudio } from './audio';
-import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type MayorView, type ServerMsg } from './types';
+import { feedLines, fitWords } from './feed';
+import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
 import { PITCH_DEFAULT, SCENES, fillLine, sceneLine, scenePose, type CamPose } from '../../src/shared/scenes';
@@ -593,6 +594,35 @@ function start() {
     if (el('happening-clock').textContent !== text) el('happening-clock').textContent = text;
   }
   let feedKey = '';
+  /** The lines on show, uncut; and whether they have been cut to fit the row the feed has now. */
+  let feedShown: FeedItem[] = [];
+  let feedFit = false;
+  const feedMeasure = document.createElement('canvas').getContext('2d');
+  addEventListener('resize', () => (feedFit = false));
+  document.fonts?.addEventListener('loadingdone', () => (feedFit = false));
+  /**
+   * Cut each line too long for its row at a word, with an ellipsis (CSS's own ellipsis cuts "Find the p…").
+   * False while the feed is not drawn (hidden by a style): it is tried again on the next snapshot.
+   */
+  function fitFeed(box: HTMLElement): boolean {
+    const lines = [...box.children] as HTMLElement[];
+    if (!lines.length) return true;
+    if (!box.clientWidth) return false;
+    lines.forEach((line, i) => (line.textContent = feedShown[i]?.text ?? ''));
+    // Every read, then every write: one layout.
+    const over = lines.filter((line) => line.scrollWidth > line.clientWidth).map((line) => ({ line, room: line.clientWidth - 1, full: line.scrollWidth }));
+    if (!over.length || !feedMeasure) return true;
+    const cs = getComputedStyle(box);
+    feedMeasure.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    const width = (t: string) => feedMeasure.measureText(t).width;
+    for (const { line, room, full } of over) {
+      const text = line.textContent ?? '';
+      // The canvas and the page measure at different scales (zoom on stream); the line's own overflow converts.
+      const fits = (room / full) * width(text);
+      line.textContent = fitWords(text, (t) => width(t) <= fits);
+    }
+    return true;
+  }
   /** A small panel of rows (knockouts, chat wants), rebuilt only when its rows change. */
   function rows(id: string, list: { text: string; note?: string; cls?: string }[]) {
     const box = el(`${id}-rows`);
@@ -622,12 +652,14 @@ function start() {
       'scores',
       (s.scores ?? []).filter((r) => r.kos > 0).slice(0, 5).map((r) => ({ text: r.name, note: String(r.kos) })),
     );
-    // On stream only the last three lines: phones can read three.
-    const feed = (s.feed ?? []).slice(streamMode ? -3 : -5);
+    // On stream only the last three lines: phones can read three. Each once, and none of the operator's.
+    const feed = feedLines(s.feed ?? [], s.town?.head, streamMode ? 3 : 5);
     const key = feed.map((f) => `${f.at}:${f.text}`).join('|');
+    const box = el('feed');
     if (key !== feedKey) {
       feedKey = key;
-      const box = el('feed');
+      feedShown = feed;
+      feedFit = false;
       box.replaceChildren(
         ...feed.map((item, i) => {
           const line = document.createElement('div');
@@ -639,6 +671,7 @@ function start() {
       );
       box.hidden = !feed.length;
     }
+    if (!feedFit) feedFit = fitFeed(box);
     // Only a problem shows down here: the AI paused, out of calls or offline.
     const ai = s.ai;
     const out = ai.enforced && ai.callsRemaining <= 0;
