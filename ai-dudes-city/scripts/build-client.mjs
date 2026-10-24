@@ -9,6 +9,8 @@ const watch = process.argv.includes('--watch');
 mkdirSync('public', { recursive: true });
 const PAGES = { 'client/admin/index.html': 'public/admin.html', 'client/dudes/index.html': 'public/dudes.html' };
 for (const [from, to] of Object.entries(PAGES)) cpSync(from, to);
+// The story HUD's fonts (Fredoka and Nunito woff2 with their OFL texts), served as /fonts/… (FK-009).
+cpSync('client/dudes/fonts', 'public/fonts', { recursive: true });
 
 /** @type {import('esbuild').BuildOptions} */
 const options = {

@@ -18,6 +18,7 @@ import { createPlansLayer } from './plans';
 import { createAudio } from './audio';
 import { feedLines, fitWords } from './feed';
 import { createStats } from './stats'; // hook FK-065
+import { setStoryLook, storyLook } from './sticker';
 import { CITY_BOUNDS, shortRef, type DudeView, type DudesScene, type Emote, type FeedItem, type MayorView, type ServerMsg } from './types';
 import { AGES, MODERN, NO_AGE, ageStyle } from '../../src/shared/ages';
 import { emoteNames } from '../../src/shared/emotes';
@@ -114,6 +115,7 @@ const CAM_FAR = 12;
 function start() {
   document.body.classList.toggle('stream', streamMode);
   document.documentElement.style.setProperty('--ui-scale', String(uiScale));
+  setStoryLook(storyLook(undefined, params)); // a `?demo=` page is in the story look from the start
   const scene = new THREE.Scene(),
     renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
@@ -968,6 +970,8 @@ function start() {
     environment.setAge(next.town?.sandbox ? MODERN : age);
     objects.setAge(next.town?.sandbox ? NO_AGE : age);
     environment.town(next.town);
+    // Finders Keepers: the story look while Story is ON; back to today's panels the moment it goes off.
+    setStoryLook(storyLook(next.town?.story, params));
     renderCaravan(next.town?.caravan, next.town?.age);
     playLine(msg.play);
     objects.syncCommitted(next.objects);
