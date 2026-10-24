@@ -2,9 +2,20 @@
 // each with its role in the game, the tile it is shown on, and the room it has. The ages come from
 // src/shared/ages.ts. Sami's notes (2026-10-20) are the brief every design and critique answers to.
 // Nothing here runs in the game; it feeds design/astra.ts and the board renderer.
-import { AGE_IDS, type AgeId } from '../src/shared/ages';
+import { AGES, AGE_IDS, type AgeId } from '../src/shared/ages';
+import { CITY, CITY_BOUNDS, RIVER, isPark } from '../src/shared/city';
 
 export { AGE_IDS, type AgeId };
+
+/** The town in numbers, from src/shared/city.ts, so the brief every astra call gets can't drift from the real map again. */
+const TOWN = (() => {
+  const blocks: [number, number][] = [];
+  for (let bx = -CITY.rings; bx <= CITY.rings; bx++) for (let bz = -CITY.rings; bz <= CITY.rings; bz++) blocks.push([bx, bz]);
+  const parks = blocks.filter(([bx, bz]) => isPark(bx, bz)).length;
+  return { homes: blocks.length - parks - 1, parks, lots: CITY.cells * CITY.cells - 1, across: Math.round(CITY_BOUNDS.maxX - CITY_BOUNDS.minX) };
+})();
+/** What AI DUDES is, for every design call's system prompt: the town as it really is laid out, the six ages and the look. */
+export const WORLD = `AI DUDES is a livestreamed town game on Kick: every chatter has a small blocky character with a ${CITY.plot} m lot in a small shared town about ${TOWN.across} m across: ${TOWN.homes} home blocks round the town square, each block ${TOWN.lots} lots round a green courtyard, ${TOWN.parks ? `a little park in each of the ${TOWN.parks} corner blocks, ` : ''}roads between the blocks and a ring road round the outside. The square in the middle has a centrepiece where its paths cross and four community lots round it; a ${RIVER.width} m river runs past the east ring road with a caravan camp across it. The town lives through six ages, moving on as chat helps it grow: ${AGES.map((a, i) => `${i + 1}. ${a.name} (the head is the ${a.head.title})`).join('; ')}. Caravans per age: mammoth herders, river traders on barges, a travelling court (knight, jester, minstrel), railway barons by train, a coach of tourists, a scrap convoy across the wasteland. Every build and every piece of the town changes with the age; things built in one age transform into the next age's version (same footprint, same purpose). The look is chunky low-poly toy-like 3D seen from above at about 40°, bright and readable on a stream.`;
 
 /** How a cell's ground is laid before the element's own parts go on it (the renderer draws these from the age's surfaces). */
 export type Tile =
@@ -59,7 +70,7 @@ export const ELEMENTS: Element[] = [
     half: 6,
     height: 3,
     brief:
-      'An unclaimed 16 m lot waiting for a newcomer. The parts are the marker that says "free to claim" (today a red FOR SALE sign on a post; in the Stone Age sticks and mud, a cairn or a hide on a pole). Stand it near the front (+z edge, around z 4.5, x 4.5). It must read as "available" from far away without words, though a board with a painted mark is fine. Add a little rough ground clutter. 4–20 parts.',
+      `An unclaimed ${CITY.plot} m lot waiting for a newcomer. The parts are the marker that says "free to claim" (today a red FOR SALE sign on a post; in the Stone Age sticks and mud, a cairn or a hide on a pole). Stand it near the front (+z edge, around z 4.5, x 4.5). It must read as "available" from far away without words, though a board with a painted mark is fine. Add a little rough ground clutter. 4–20 parts.`,
   },
   {
     id: 'lot-claimed',

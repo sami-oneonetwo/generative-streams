@@ -1,17 +1,22 @@
 // Renders the design board from design/spec into design/out/r<round>/ (sheets, street corners, cells, boards).
-//   node design/render.mjs <round> [ages=stone,bronze,…]
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+//   node design/render.mjs <round> [ages=stone,bronze,…] [--only board-life,sheet-stone,cells]
+// --only keeps just the named images (a name, or a folder such as "cells"); everything is still drawn,
+// since the boards are made from the cells. Run from ai-dudes-city. NOBUILD=1 skips rebuilding the renderer.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { launch } from './browser.mjs';
 
-const require = createRequire(path.resolve('scripts/x.mjs'));
-const { chromium } = require('../../noodle-shop/.claude/preview-tools/node_modules/playwright');
-const round = process.argv[2] ?? '0';
+const args = process.argv.slice(2);
+const flag = (name) => (args.includes(`--${name}`) ? args.splice(args.indexOf(`--${name}`), 2)[1] : undefined);
+const keep = (flag('only') ?? '').split(',').filter(Boolean);
+const wanted = (name) => !keep.length || keep.some((k) => name === k || name === `${k}.png` || name.startsWith(`${k}/`));
+const round = args[0] ?? '0';
 const AGE_IDS = ['stone', 'bronze', 'medieval', 'industrial', 'modern', 'future'];
-const only = (process.argv[3] ?? '').split(',').filter(Boolean);
+const only = (args[1] ?? '').split(',').filter(Boolean);
 const out = path.resolve(`design/out/r${round}`);
-mkdirSync(path.join(out, 'cells'), { recursive: true });
+mkdirSync(out, { recursive: true });
+const started = Date.now();
 
 if (!process.env.NOBUILD) execFileSync('node', ['design/build.mjs'], { stdio: 'inherit' });
 // The catalogue is TypeScript: read it through tsx.
@@ -26,14 +31,18 @@ const ages = AGE_IDS.filter((a) => !only.length || only.includes(a)).map((id) =>
   return { id, name: bible.name ?? id, bible, elements: specs };
 });
 
-const browser = await chromium.launch({ headless: true, channel: 'chrome', args: ['--use-angle=metal', '--enable-gpu'] });
+const browser = await launch();
 const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));
 await page.goto('file://' + path.resolve('design/board/index.html'));
 await page.waitForFunction(() => typeof window.renderBoard === 'function');
 const images = await page.evaluate((data) => window.renderBoard(data), { title: 'AI DUDES', ages, elements });
-for (const [name, url] of Object.entries(images)) writeFileSync(path.join(out, name), Buffer.from(url.split(',')[1], 'base64'));
+const saved = Object.keys(images).filter(wanted);
+for (const name of saved) {
+  mkdirSync(path.dirname(path.join(out, name)), { recursive: true });
+  writeFileSync(path.join(out, name), Buffer.from(images[name].split(',')[1], 'base64'));
+}
 await browser.close();
 const missing = ages.flatMap((a) => elements.filter((e) => !a.elements[e.id]).map((e) => `${a.id}/${e.id}`));
-console.log(`round ${round}: ${Object.keys(images).length} images in ${out}${missing.length ? `; missing specs: ${missing.join(', ')}` : ''}${errors.length ? `; page errors: ${errors.join(' | ')}` : ''}`);
+console.log(`round ${round}: ${saved.length} images in ${out} (${((Date.now() - started) / 1000).toFixed(0)} s)${missing.length ? `; missing specs: ${missing.join(', ')}` : ''}${errors.length ? `; page errors: ${errors.join(' | ')}` : ''}`);

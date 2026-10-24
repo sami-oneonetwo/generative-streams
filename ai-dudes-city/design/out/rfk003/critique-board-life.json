@@ -1,0 +1,478 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The first five ages have convincing material changes and strong toy-like silhouettes, but reserved story colours leak into unrelated characters and props, while the Wasteland reads as a tidy brown replacement town rather than the ruined Modern Age. The sheet also needs clearer caravan identities, demonstrable footprint continuity and a separate phone-scale presentation before it can serve as an approved production bible.",
+  "problems": [
+    "Restore story-colour ownership: the medieval breadmaker, King's red cloak, gold-and-blue caravan master, gold-jacket tourist guide and red modern hatchback confuse the faction code. Reserve #B3262E for established Wren-side assets and #FFC633 for the head's side; keep ordinary brick, clay and wood visibly distinct from those colours.",
+    "Rebuild the Wasteland home, café, tower and vehicle from their Modern counterparts. Preserve their footprint and recognizable structural features, then add missing sections, mismatched repairs, exposed structure and salvaged parts instead of replacing everything with orderly brown forms.",
+    "Separate the Wasteland residents, Overseer and convoy boss through silhouette and value. They currently share nearly identical brown-green clothing, headgear and small equipment, and merge with their bases.",
+    "Make the caravan roles visible without captions: the Stone leader needs a mammoth-herding cue, the medieval leader needs travelling-court identity, the Industrial leader needs unmistakable railway authority, and the Wasteland leader needs convoy equipment.",
+    "The full board will not read at 390 px wide: each model becomes only a few dozen pixels across and labels disappear. Supply age-by-age phone cards and isolated colour/greyscale thumbnails at actual gameplay size.",
+    "The independently framed circular plinths conceal metric scale and transformation continuity. Add 12 m lot outlines, a consistent 1.8 m reference figure and aligned before/after overlays for each build family.",
+    "Reduce the Bronze café's scattered multicoloured tabletop pieces and the medieval King's competing costume colours to four dominant colour families per asset.",
+    "The sheet describes town infrastructure but does not show it. Approval of Sami's mud roads, stick-and-mud signs, Stone bonfire, irregular woodland, medieval cobbles and Wasteland fire barrels requires a separate environment render."
+  ],
+  "elements": [
+    {
+      "id": "board-presentation",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The eight-column, six-row layout is useful for desktop comparison but unreadable at phone width.",
+        "Independent framing prevents reliable comparison of character, dog, vehicle and building scale.",
+        "No footprint overlays demonstrate that transformations preserve occupied ground."
+      ],
+      "fix": "Keep this overview, but add one phone-width card per age, consistent-scale asset views, 12 m lot boundaries and 1.8 m figures beside buildings and vehicles."
+    },
+    {
+      "id": "stone-flintworker",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the blocky hide layers and shoulder tool; keep the tool separated from the head silhouette in gameplay views."
+    },
+    {
+      "id": "stone-gatherer",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the contrasting grass cape and large carried vessel; preserve their simple shapes when reducing detail."
+    },
+    {
+      "id": "stone-chief",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the oversized antler silhouette and comic vanity; use a small story-gold ownership accent rather than turning the bone headdress gold."
+    },
+    {
+      "id": "stone-caravan-leader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The shell collar and staff communicate a traveller or shaman, not specifically a mammoth herder.",
+        "The collar is more readable than any caravan-specific equipment."
+      ],
+      "fix": "Add one oversized mammoth-herding attribute, such as a coiled lead rope and shaggy pack with a tusk-shaped toggle; keep it distinct from the Chief's antlers."
+    },
+    {
+      "id": "stone-home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the hide shelter, irregular stone footing and rough-stick entrance marker; avoid introducing a rectangular signboard."
+    },
+    {
+      "id": "stone-cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the hide canopy, communal broth hearth and log seating; consolidate the smallest food props into a few readable clusters."
+    },
+    {
+      "id": "stone-tower",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The rock-and-scaffold silhouette fits the age, but the repeated ladders and platforms form a dense central stripe.",
+        "Thin supports and tiny rooftop props carry too much of the lodging identity."
+      ],
+      "fix": "Use three broad rock terraces with clearly supported timber decks, fewer thicker ladders and one large hide sleeping shelter visible from the camera."
+    },
+    {
+      "id": "stone-wolf-dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the low body, pointed ears and grey-tawny coat; maintain a clear gap between the legs and belly."
+    },
+    {
+      "id": "stone-sledge",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the runner-based transport and rough timber construction; thicken the tow connections enough to survive stream reduction."
+    },
+    {
+      "id": "bronze-water-carrier",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the head-carried vessel as the primary occupational silhouette and keep the garment palette restrained."
+    },
+    {
+      "id": "bronze-field-tender",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the long agricultural tool and pale wrap; preserve separation between the tool shaft and body."
+    },
+    {
+      "id": "bronze-high-priest",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the large sun staff and pale ceremonial robe; this is an appropriate place for the head's story-gold accent."
+    },
+    {
+      "id": "bronze-river-trader",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The red-and-yellow mantle introduces competing story-colour signals without establishing allegiance.",
+        "The small carried goods do not make river trade unmistakable."
+      ],
+      "fix": "Use indigo, flax, leather and muted bronze, then add a bold paddle or rope coil with a sealed trading jar; reserve story red only if this character is explicitly Wren-side."
+    },
+    {
+      "id": "bronze-home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the mudbrick terraces, flat roof and reed shade; retain the courtyard within the fixed home-lot boundary."
+    },
+    {
+      "id": "bronze-cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Numerous differently coloured bowls, cushions and tabletop pieces fragment the courtyard.",
+        "The serving function depends on small props that disappear at phone size."
+      ],
+      "fix": "Limit the asset to mudbrick, reed tan, indigo and a dark neutral; replace scattered tiny servings with three large communal bowls and a clear hearth."
+    },
+    {
+      "id": "bronze-tower",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the stepped mudbrick mass and exterior access; keep terrace parapets thick and readable."
+    },
+    {
+      "id": "bronze-hound",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the lean body, upright ears and high tail; verify its shoulder height beside the shared human reference."
+    },
+    {
+      "id": "bronze-cart",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the solid wooden wheels and donkey traction; shift decorative red trim toward neutral leather or indigo unless faction ownership is intended."
+    },
+    {
+      "id": "medieval-carpenter",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the green tunic and broad workman silhouette; keep any tool large enough to distinguish from a belt ornament."
+    },
+    {
+      "id": "medieval-breadmaker",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The large red garment assigns an ordinary resident Wren-side visual identity.",
+        "The breadmaking cue is much smaller than the faction-like colour block."
+      ],
+      "fix": "Change the garment to muted plum or slate, keep the pale apron and enlarge one carried loaf."
+    },
+    {
+      "id": "medieval-king",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The red cloak puts Wren's colour on her opposing head.",
+        "Red, blue, white, gold and dark trim compete instead of creating one dominant identity."
+      ],
+      "fix": "Replace the red cloak with deep blue, simplify trim to ivory and charcoal, and retain story gold on the crown and one broad royal emblem."
+    },
+    {
+      "id": "medieval-caravan-leader",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "Gold costume panels and gold luggage read as the head's faction.",
+        "The hooded traveller with a chest does not clearly represent the specified travelling court."
+      ],
+      "fix": "Choose a court role explicitly: give the leader a large lute, a split jester hood or a knightly shield silhouette, using blue, flax and leather rather than story gold."
+    },
+    {
+      "id": "medieval-home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the strong tiled roof and timber frame; keep paving as irregular stones rather than adding a modern kerbed sidewalk."
+    },
+    {
+      "id": "medieval-cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the open cookshop frontage, broad counter and rough benches; enlarge one food display instead of adding more small items."
+    },
+    {
+      "id": "medieval-tower",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the jettied timber-storey silhouette and dark roof; simplify minor framing only where it becomes visual noise."
+    },
+    {
+      "id": "medieval-mastiff",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the broad muzzle and heavy chest as the age-specific breed cues."
+    },
+    {
+      "id": "medieval-wagon",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the blue canvas arch, horse and wooden undercarriage; verify the shafts connect cleanly at the final model scale."
+    },
+    {
+      "id": "industrial-mechanic",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the cap, apron and dark carried kit; keep the kit distinct from the leg silhouette."
+    },
+    {
+      "id": "industrial-clerk",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the waistcoat-like colour blocking and pale document prop; avoid adding tiny buttons as essential role cues."
+    },
+    {
+      "id": "industrial-alderman",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the absurdly tall hat and broad civic chain; the gold appropriately identifies the head."
+    },
+    {
+      "id": "industrial-railway-baron",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The pale coat and small suitcase could describe several occupations.",
+        "Nothing in the silhouette clearly communicates railway wealth or a train caravan."
+      ],
+      "fix": "Add a broad railway-company cap or rolled route map and a large station-clock-shaped watch; keep ordinary metal trim muted brass rather than story gold."
+    },
+    {
+      "id": "industrial-home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the brick frontage, slate roof and chimney; distinguish the brick material from flat faction-red paint."
+    },
+    {
+      "id": "industrial-cafe",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the glazed tea-room frontage and rooflights; reduce outdoor table clutter before shrinking the asset."
+    },
+    {
+      "id": "industrial-tower",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Preserve the brick shaft, masonry base and copper crown; retain broad floor divisions rather than adding finer window grids."
+    },
+    {
+      "id": "industrial-hound",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the dark coat and pale muzzle and feet; ensure the dark ears remain distinguishable from the head."
+    },
+    {
+      "id": "industrial-brougham",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The bright yellow roof edging and wheel accents echo the head's gold on an otherwise unassigned vehicle.",
+        "The red-and-gold body treatment suggests official ownership without stating it."
+      ],
+      "fix": "Use charcoal, bottle green, dark wood and subdued metal for a civilian brougham, or explicitly designate this as the Alderman's carriage and remove opposing story-red decoration."
+    },
+    {
+      "id": "modern-plant-keeper",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the teal top and clearly carried plant; make the pot neutral clay rather than a saturated story-red accent."
+    },
+    {
+      "id": "modern-neighbour",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the canvas jacket and dark trousers; preserve contrast between the handheld item and torso."
+    },
+    {
+      "id": "modern-mayor",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The red ribbon places the opposing story colour at the centre of the Mayor's ceremonial action.",
+        "The ribbon-cutting joke is clear, but the faction ownership is not."
+      ],
+      "fix": "Make the ribbon story gold and the oversized scissors pale steel with a dark handle; retain the comic self-important ceremony."
+    },
+    {
+      "id": "modern-tour-guide",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The gold jacket and yellow flag make the tourist guide read as the Mayor's side.",
+        "The red neck accent adds the opposing faction colour to the same character."
+      ],
+      "fix": "Use a teal jacket, cream hat, blue luggage and a white tour pennant; keep the raised flag and suitcase as the tourist-role silhouette."
+    },
+    {
+      "id": "modern-home",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the clean suburban massing, porch and restrained grey-blue palette; record this structure as the source mesh for the Wasteland home."
+    },
+    {
+      "id": "modern-cafe",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Bright yellow parasols introduce a strong gold-like signal on an ordinary business.",
+        "Roof equipment, cup sign, awning, furniture and planting compete at small size."
+      ],
+      "fix": "Change parasols to cream, group the rooftop machinery into one simple unit and retain the oversized cup as the single dominant café identifier."
+    },
+    {
+      "id": "modern-tower",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Keep the stepped glass silhouette and broad floor bands; use this exact footprint and structural stack for the Wasteland transformation."
+    },
+    {
+      "id": "modern-dog",
+      "score": 8,
+      "ok": true,
+      "problems": [],
+      "fix": "Retain the readable blue harness and friendly compact proportions; check its size against the same 1.8 m person used for all other dogs."
+    },
+    {
+      "id": "modern-hatchback",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The saturated red body gives an ordinary example car the strongest Wren-side signal in the row."
+      ],
+      "fix": "Repaint the body slate blue or desaturated teal while retaining the black glazing, pale lights and compact silhouette."
+    },
+    {
+      "id": "wasteland-repair-hand",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "Brown clothing, skin, equipment and ground have insufficient value separation.",
+        "The small carried tool is not a strong repair-role silhouette."
+      ],
+      "fix": "Use a pale patched apron over charcoal clothing and give the character one oversized salvaged wrench with a clearly separated handle."
+    },
+    {
+      "id": "wasteland-seed-keeper",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The outfit closely matches the other Wasteland figures.",
+        "The seed-keeping role depends on detail too small to read."
+      ],
+      "fix": "Give the character a broad cloth hood and a pale seed satchel with one protected green sprout; keep the palette muted but distinct from the repair hand."
+    },
+    {
+      "id": "wasteland-overseer",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The cap, brown-green clothing and small chest equipment resemble an ordinary scavenger.",
+        "The salvage-key title is not expressed through a readable prop or comic vanity."
+      ],
+      "fix": "Add an oversized key-ring ceremonial chain, a ridiculous salvaged office badge and one controlled story-gold plate over a dark coat."
+    },
+    {
+      "id": "wasteland-convoy-boss",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The silhouette is almost interchangeable with the Overseer and residents.",
+        "The advertised pennant coat is not legible, and convoy leadership has no bold visual cue."
+      ],
+      "fix": "Use a long asymmetrical patched coat, a large coiled tow cable and a pale road pennant; use story red only if this is explicitly a Wren-side leader."
+    },
+    {
+      "id": "wasteland-home",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The tidy timber shack does not visibly descend from the Modern home.",
+        "Regular roof panels, intact walls and orderly planting suggest a rustic house rather than post-collapse repair.",
+        "Its brown values merge with the base."
+      ],
+      "fix": "Preserve the Modern home's porch, foundation and surviving blue-grey wall section; break part of the roof and bridge it with pale corrugated scrap, exposed rafters and mismatched bracing."
+    },
+    {
+      "id": "wasteland-cafe",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The pitched-roof wooden shop loses the Modern café's flat roof, glazing and recognizable cup identity.",
+        "Uniform brown construction is too complete and orderly for salvaged rebuilding."
+      ],
+      "fix": "Keep the Modern café's slab, counter opening and damaged cup sign; replace missing glass with irregular shutters, add one barrel stove and use pale sheet metal against dark surviving structure."
+    },
+    {
+      "id": "wasteland-tower",
+      "score": 6,
+      "ok": false,
+      "problems": [
+        "The uniformly brown rectangular stack does not preserve the Modern tower's stepped silhouette.",
+        "Repeated intact floors and regular bracing make it look purpose-built rather than repaired ruins."
+      ],
+      "fix": "Retain the stepped concrete frame and a few dusty blue glass panels; remove unequal facade sections, expose floor edges and add asymmetrical scrap platforms with visibly supported braces."
+    },
+    {
+      "id": "wasteland-dog",
+      "score": 7,
+      "ok": false,
+      "problems": [
+        "The tan coat and olive pack merge with the dusty base.",
+        "The pack reads as a single rigid box rather than repaired carrying gear."
+      ],
+      "fix": "Add a pale muzzle and chest, darken the harness, and make two unequal panniers with one oversized cloth patch."
+    },
+    {
+      "id": "wasteland-car",
+      "score": 5,
+      "ok": false,
+      "problems": [
+        "The intact olive utility vehicle reads as a new military-style truck, not the previous hatchback rebuilt from ruins.",
+        "Large clean panels, matching wheels and a complete cabin lack visible salvage history."
+      ],
+      "fix": "Keep the Modern hatchback's wheelbase and cabin outline; add one mismatched door, a bolted scrap hood, a salvaged roof rack and visibly repaired body edges without spikes or neon."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": false,
+    "storyColours": false,
+    "funny": true
+  }
+}

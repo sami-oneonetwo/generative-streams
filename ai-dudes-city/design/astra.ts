@@ -12,6 +12,13 @@
 //   npx tsx design/astra.ts revise-bibles <round>          fold the round's world-rule notes into the bibles
 //   npx tsx design/astra.ts outfits <age|all> [round]          garment kits for the rigged figures (revise from out/o<round>/notes-<age>.json)
 //   npx tsx design/astra.ts critique-outfits <age|all> <round>  astra looks at out/o<round>/outfits-<age>.png
+//   npx tsx design/astra.ts critique-image <png…> [--brief "what it is"] [--age <age>] [--effort low|medium|high]
+//                                                          the critique on any image: critique-<name>.json beside it
+// Finders Keepers (design/story.ts; --notes "…" [--image <png>] revises what is there instead of starting over):
+//   npx tsx design/astra.ts folly <age> [1 2 3]            the head's Folly, three takes: spec/folly/<age>.json
+//   npx tsx design/astra.ts folly <age> pick <n>           make take n the one the game reads (no call)
+//   npx tsx design/astra.ts cast <age> [roles…]            the band and the head on the shipped kits: spec/cast/<age>.json
+//   npx tsx design/astra.ts pets [ids…|kits] [--age <age>] pets through the game's own prompt + the six age kits: spec/pets/
 //   npx tsx design/astra.ts spend                          what the board has cost so far
 //
 // Env: DESIGN_MODEL (default openai/gpt-6-astra), DESIGN_BUDGET_USD (default 100), DESIGN_CONCURRENCY (6).
@@ -20,7 +27,11 @@ import path from 'node:path';
 import { AGES, AGE_IDS, ageStyle, type AgeId } from '../src/shared/ages';
 import { DESIGN_SYSTEM, designMessage } from '../src/worlds/ai-dudes/design';
 import { validateDesign } from '../src/worlds/ai-dudes/blueprint';
-import { BASE_FIGURE, ELEMENTS, ENGINE_RULES, SAMI_NOTES, elementById, type Element } from './catalogue';
+import { BASE_FIGURE, ELEMENTS, ENGINE_RULES, SAMI_NOTES, WORLD, elementById, type Element } from './catalogue';
+import { CAST, CAST_ROLES, FOLLIES, FOLLY_TAKES, HAT_LADDER, PET, PETS, PET_ANCHORS, PET_BRANCH, PET_KITS, PET_SPEC, STORY, STORY_TEXT, castIn, checkFolly, cleanParts, cleanPetKits, composeCast, petChecks, type CastLook, type CastRole, type FollySpec } from './story';
+import { ACCESSORIES, HATS } from '../src/shared/dudesTypes';
+import type { Blueprint } from '../src/shared/objectTypes';
+import type { AgeOutfits } from '../src/shared/outfits';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname));
 const SPEC = path.join(ROOT, 'spec');
@@ -59,9 +70,10 @@ interface CallOpts {
   effort?: 'low' | 'medium' | 'high';
 }
 async function astra(o: CallOpts): Promise<unknown> {
-  if (spent() >= BUDGET) throw new Error(`design budget spent ($${spent().toFixed(2)} of $${BUDGET}); raise DESIGN_BUDGET_USD to go on`);
   let last: unknown;
   for (let attempt = 0; attempt < 3; attempt++) {
+    // Checked before every attempt, so a retry never runs past the budget either.
+    if (spent() >= BUDGET) throw new Error(`design budget spent ($${spent().toFixed(2)} of $${BUDGET}); raise DESIGN_BUDGET_USD to go on`);
     const started = Date.now();
     try {
       const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -86,7 +98,9 @@ async function astra(o: CallOpts): Promise<unknown> {
       const text = body.choices?.[0]?.message?.content ?? '';
       const m = text.match(/\{[\s\S]*\}/);
       if (!m) throw new Error(`no JSON in reply: ${text.slice(0, 200)}`);
-      return JSON.parse(m[0]);
+      const json = JSON.parse(m[0]);
+      console.log(`[${o.label}] $${(body.usage?.cost ?? 0).toFixed(3)}, ${((Date.now() - started) / 1000).toFixed(0)} s`);
+      return json;
     } catch (e) {
       last = e;
       console.warn(`[${o.label}] attempt ${attempt + 1} failed: ${(e as Error).message}`);
@@ -133,7 +147,7 @@ const BIBLE_SHAPE = `{"id":"stone|bronze|medieval|industrial|modern|future","nam
 "palette":["8–14 #rrggbb colours the age's things are made of"],"materials":["…"],"avoid":["things that must never appear in this age"],
 "designDirection":"3–5 sentences the game's design call gets so ANY chatter request (a skyscraper, a dog, a car, a café) is made the age's way, with two or three concrete examples"}`;
 
-const WORLD = `AI DUDES is a livestreamed town game on Kick: every chatter has a small blocky character with a 22 m lot in a shared town (a 3×3 grid of big blocks, each eight lots round a green courtyard, with roads between them, a town square in the middle with four community lots, a river past the east ring road with a caravan camp across it). The town lives through six ages, moving on as chat helps it grow: ${AGES.map((a, i) => `${i + 1}. ${a.name} (the head is the ${a.head.title})`).join('; ')}. Caravans per age: mammoth herders, river traders on barges, a travelling court (knight, jester, minstrel), railway barons by train, a coach of tourists, a scrap convoy across the wasteland. Every build and every piece of the town changes with the age; things built in one age transform into the next age's version (same footprint, same purpose). The look is chunky low-poly toy-like 3D seen from above at about 40°, bright and readable on a stream.`;
+// WORLD (what AI DUDES is and how the town is laid out) comes from the catalogue, built from src/shared/city.ts.
 
 async function bibles(): Promise<void> {
   const previous = AGE_IDS.map((a) => readJson(bibleFile(a))).filter(Boolean);
@@ -192,20 +206,12 @@ const TILE_TEXT: Record<Element['tile'], string> = {
 export function checkSpec(spec: ElementSpec, e: Element): string[] {
   const issues: string[] = [];
   if (!Array.isArray(spec.parts) || !spec.parts.length) return ['no parts'];
-  if (spec.parts.length > 160) {
-    issues.push(`${spec.parts.length} parts (max 160)`);
-    spec.parts = spec.parts.slice(0, 160);
-  }
+  if (spec.parts.length > 160) issues.push(`${spec.parts.length} parts (max 160)`);
+  const { parts, fixed: bad } = cleanParts(spec.parts, 160);
+  spec.parts = parts;
   let out = 0,
-    sunk = 0,
-    bad = 0;
+    sunk = 0;
   for (const p of spec.parts) {
-    if (!['box', 'cylinder', 'sphere', 'cone'].includes(p.shape)) (p.shape = 'box'), bad++;
-    const v3 = (a: unknown, d: number) => (Array.isArray(a) && a.length === 3 && a.every((n) => Number.isFinite(Number(n))) ? a.map(Number) : [d, d, d]);
-    p.position = v3(p.position, 0);
-    p.size = v3(p.size, 0.3).map((n) => Math.max(0.02, Math.abs(n)));
-    p.rotation = v3(p.rotation, 0);
-    if (!/^#[0-9a-f]{6}$/i.test(p.color ?? '')) (p.color = '#8f8a82'), bad++;
     const r = Math.max(p.size[0], p.size[2]) / 2;
     if (Math.abs(p.position[0]) + r > e.half + 0.6 || Math.abs(p.position[2]) + r > e.half + 0.6) out++;
     if (p.position[1] - p.size[1] / 2 < -0.15 && !p.rotation.some((x) => Math.abs(x) > 0.2)) sunk++;
@@ -261,7 +267,9 @@ async function build(age: AgeId, e: Element): Promise<void> {
 
 // ---- critique --------------------------------------------------------------------------------------
 const CRITIQUE_SHAPE = `{"verdict":"pass"|"revise","score":1-10,"summary":"two sentences","elements":[{"id":"element id","score":1-10,"ok":true|false,"problems":["…"],"fix":"concrete instruction for the redesign"}],"bible":{"ok":true|false,"changes":["world-rule changes, if any"]}}`;
-const RUBRIC = `Judge as a demanding art director, against: (1) age fidelity: is every piece unmistakably this age, never today's town recoloured (Sami's notes are hard requirements); (2) readability: does it read at stream distance from this camera, bold silhouette, clear colour contrast, right scale next to a 1.8 m person; (3) coherence: does every piece agree with the age's bible and each other; (4) craft: floating or sunk parts, ugly intersections, blobby or too-few parts, symmetry where nature would be irregular. Score each piece 1–10; anything under 8 is "ok":false with specific problems and a concrete fix. "verdict":"pass" only when every piece is 8 or more.`;
+const RUBRIC_POINTS = `Judge as a demanding art director, against: (1) age fidelity: is every piece unmistakably this age, never today's town recoloured (Sami's notes are hard requirements); (2) readability: does it read at stream distance from this camera, bold silhouette, clear colour contrast, right scale next to a 1.8 m person; (3) coherence: does every piece agree with the age's bible and each other; (4) craft: floating or sunk parts, ugly intersections, blobby or too-few parts, symmetry where nature would be irregular`;
+const RUBRIC_SCORE = `Score each piece 1–10; anything under 8 is "ok":false with specific problems and a concrete fix. "verdict":"pass" only when every piece is 8 or more.`;
+const RUBRIC = `${RUBRIC_POINTS}. ${RUBRIC_SCORE}`;
 
 async function critique(age: AgeId, round: number | string): Promise<void> {
   const dir = roundDir(round);
@@ -295,6 +303,39 @@ async function critiqueBoards(round: number | string): Promise<void> {
   });
   writeJson(path.join(dir, 'critique-boards.json'), reply);
   console.log(`critique boards r${round}: ${(reply as { verdict?: string }).verdict} ${(reply as { score?: number }).score}/10`);
+}
+
+/** The design gate (board/design-system.md §9) as a fifth point, so the critique of any image covers it too. */
+const GATE = `(5) the design gate: it still reads at phone size (390 px wide, and in greyscale); at most 4 main colours per piece; story red ${STORY.red} and story gold ${STORY.gold} only where they mean something; one funny detail`;
+const IMAGE_SCORE = `Score every piece you can see 1–10, but list only the ones under 8 (at most 8, worst first). "verdict":"pass" only when every piece is 8 or more.`;
+const IMAGE_CRITIQUE_SHAPE = `{"verdict":"pass"|"revise","score":1-10,"summary":"two sentences","problems":["at most 8, worst first, each specific enough to act on"],"elements":[{"id":"a short name for a piece under 8","score":1-10,"problems":["…"],"fix":"concrete instruction"}],"gate":{"phone":true|false,"colours":true|false,"storyColours":true|false,"funny":true|false}}`;
+interface ImageCritique {
+  brief?: string;
+  age?: AgeId;
+  effort?: CallOpts['effort'];
+}
+/**
+ * The critique on any image (a board render, an in-game shot, a HUD mock), written beside it as
+ * critique-<name>.json. Cost is mostly the answer (about $53 per million tokens out, $13 in; a big
+ * board is about 7k in), so it lists only the failing pieces, runs at medium effort and is capped at
+ * 3,500 tokens out: at most about $0.28 a board (listing all 55 pieces of the people board ran
+ * $0.37). --effort high when it matters more than the money.
+ */
+async function critiqueImage(file: string, o: ImageCritique): Promise<void> {
+  if (!/\.png$/i.test(file) || !existsSync(file)) throw new Error(`no PNG at ${file}`);
+  const reply = (await astra({
+    label: `critique-image ${path.basename(file)}`,
+    effort: o.effort ?? 'medium',
+    maxTokens: 3500,
+    system: `You are the art director of AI DUDES reviewing a render. ${WORLD}\n${STORY_TEXT}\n${RUBRIC_POINTS}; ${GATE}. ${IMAGE_SCORE}\nAnswer only JSON: ${IMAGE_CRITIQUE_SHAPE}`,
+    user: [
+      { type: 'text', text: `${o.brief ? `The image: ${o.brief}\n` : ''}${o.age ? `Age: ${ageStyle(AGE_IDS.indexOf(o.age)).name}. Bible: ${JSON.stringify(readJson(bibleFile(o.age)))}\n` : ''}Sami's notes: ${SAMI_NOTES.join(' ')}\nReview everything you can see.` },
+      png(file),
+    ],
+  })) as { verdict?: string; score?: number; summary?: string; problems?: string[] };
+  const out = path.join(path.dirname(file), `critique-${path.basename(file, path.extname(file))}.json`);
+  writeJson(out, reply);
+  console.log(`critique-image ${path.basename(file)}: ${reply.verdict} ${reply.score}/10 (${out})\n  ${reply.summary ?? ''}${(reply.problems ?? []).map((p) => `\n  - ${p}`).join('')}`);
 }
 
 // ---- revise ----------------------------------------------------------------------------------------
@@ -407,8 +448,206 @@ async function critiqueOutfits(age: AgeId, round: string): Promise<void> {
   console.log(`critique outfits ${age} o${round}: ${(reply as { verdict?: string }).verdict} ${(reply as { score?: number }).score}/10`);
 }
 
+// ---- Finders Keepers: the Follies, the cast, the pets (design/story.ts) ----------------------------
+/** Revise what is there instead of starting over: the notes to fix and, if given, the render they came from. */
+interface Revise {
+  notes?: string;
+  image?: string;
+}
+const reviseText = (r: Revise, current: unknown) => `\n\nThe current design: ${JSON.stringify(current)}\n\nReview notes to fix:\n${r.notes}\n\nReturn the complete redesign, keeping what the notes don't mention.`;
+const reviseImage = (r: Revise) => (r.image && existsSync(r.image) ? [png(r.image)] : []);
+
+// The Folly: three takes in one file; the game reads the picked one at the top (FK-023 places it).
+type Take = (FollySpec & { take: string }) | null;
+interface FollyFile extends FollySpec {
+  age: AgeId;
+  folly: string;
+  pick: number;
+  variants: Take[];
+}
+const follyFile = (age: AgeId) => path.join(SPEC, 'folly', `${age}.json`);
+function writeFolly(age: AgeId, variants: Take[], pick: number): void {
+  const at = variants[pick] ? pick : variants.findIndex(Boolean);
+  if (at < 0) throw new Error(`no ${age} Folly takes to write`);
+  const { take: _take, ...chosen } = variants[at]!;
+  writeJson(follyFile(age), { age, folly: FOLLIES[age].name, pick: at, ...chosen, variants });
+}
+function follySystem(): string {
+  return `You are the set designer for AI DUDES. ${WORLD}\n${STORY_TEXT}\nYou design the head's Folly for one age as low-poly geometry: the comic centrepiece of that age's story, unveiled on stream to the whole town. ${ENGINE_RULES}\nHero parts also carry a "tag" from the list you are given, so the engine can find them (to frame a door, raise a deck, run a belt); only those parts get one.\nAnswer only JSON: {"name":"its name","description":"one sentence","notes":"how it shows the age and lands the joke, one sentence","parts":[…]}.`;
+}
+function follyBrief(age: AgeId, take: string): string {
+  const f = FOLLIES[age],
+    a = ageStyle(AGE_IDS.indexOf(age));
+  return `Age: ${a.name}; the head is the ${a.head.title}. Its bible: ${JSON.stringify(readJson(bibleFile(age)))}
+
+The Folly: ${f.name}. ${f.brief}
+This take: ${take}
+Room: every part inside |x| ≤ ${f.half} and |z| ≤ ${f.half}, at most ${f.height} m tall, standing on y 0, at most 160 parts. The front faces +Z: the stream camera looks down from the +X +Z side, so the entrance and every hero detail face +Z. A 1.8 m person stands beside it at the Unveiling: keep human-scale details at human scale.
+Hero tags ("tag" on those parts; ${f.required.join(', ')} must each be on at least one part):
+${Object.entries(f.tags)
+  .map(([t, what]) => `- ${t}: ${what}`)
+  .join('\n')}
+Colours: story gold ${STORY.gold} only on parts tagged ${f.gold.join(' or ')}; ${f.red?.length ? `story red ${STORY.red} only on parts tagged ${f.red.join(' or ')}` : `no story red ${STORY.red} anywhere`}; everything else in the age's own palette, 4 main colours at most. One funny detail.
+
+Sami's notes: ${SAMI_NOTES.join(' ')}`;
+}
+/** The age's Folly in its three takes (or just the takes named), at high effort; --notes revises a take. */
+async function folly(age: AgeId, takes: number[], r: Revise): Promise<void> {
+  const was = readJson<FollyFile>(follyFile(age));
+  const variants: Take[] = FOLLY_TAKES.map((_, i) => was?.variants?.[i] ?? null);
+  await pool(takes.length ? takes : FOLLY_TAKES.map((_, i) => i + 1), async (n) => {
+    const take = FOLLY_TAKES[n - 1];
+    if (!take) throw new Error(`no take ${n} (1–${FOLLY_TAKES.length})`);
+    const current = r.notes ? variants[n - 1] : null;
+    const brief = follyBrief(age, take);
+    const reply = await astra({
+      label: `folly ${age} ${n}${current ? ' revise' : ''}`,
+      effort: 'high',
+      maxTokens: 40_000,
+      system: follySystem(),
+      user: current ? [{ type: 'text', text: brief + reviseText(r, { name: current.name, description: current.description, parts: current.parts, checks: current.checks }) }, ...reviseImage(r)] : brief,
+    });
+    const spec = checkFolly(age, reply);
+    variants[n - 1] = { take, ...spec };
+    console.log(`folly ${age} ${n}: ${spec.name} (${spec.parts.length} parts; tags ${Object.keys(spec.heroes).join(', ') || 'none'})${spec.checks ? ` [${spec.checks.join('; ')}]` : ''}`);
+  });
+  writeFolly(age, variants, was?.pick ?? 0);
+}
+function pickFolly(age: AgeId, n: number): void {
+  const was = readJson<FollyFile>(follyFile(age));
+  if (!was?.variants?.[n - 1]) throw new Error(`no ${age} Folly take ${n}`);
+  writeFolly(age, was.variants, n - 1);
+  console.log(`folly ${age}: take ${n} (${was.variants[n - 1]!.name}) is the one the game reads`);
+}
+
+// The cast: the band and the head, pinned on the age's shipped kits, in fixed colours (FK-016 applies it).
+const castFile = (age: AgeId) => path.join(SPEC, 'cast', `${age}.json`);
+/** The age's kits as the game ships them (src/shared/ageOutfits.json, from design/export.mjs). */
+const shippedKits = (age: AgeId) => readJson<Record<string, AgeOutfits>>(path.join(ROOT, '..', 'src', 'shared', 'ageOutfits.json'))?.[age];
+const CAST_SHAPE = `{"cast":[{"role":"${CAST_ROLES.join('|')}","name":"their outfit's name","base":0|1|2|3|"head"|"leader" (the shipped kit to pin them on),"look":{"skin":"#rrggbb","hair":"#rrggbb","shirt":"#rrggbb","pants":"#rrggbb","hat":"${HATS.join('|')}","hatColor":"#rrggbb","accessory":"${ACCESSORIES.join('|')}","accessoryColor":"#rrggbb","build":0.85-1.2},"hide":[…],"parts":[their own garment parts],"prop":{"name":"…","parts":[…]} (only where asked),"notes":"what makes them readable, one sentence"}]}`;
+function castBrief(age: AgeId, roles: CastRole[]): string {
+  const a = ageStyle(AGE_IDS.indexOf(age));
+  const bible = readJson<{ rules?: Record<string, string>; palette?: string[]; materials?: string[]; avoid?: string[] }>(bibleFile(age));
+  const kits = shippedKits(age);
+  return `Age: ${a.name}. The head is the ${a.head.title}.
+World rules for people: ${bible?.rules?.people ?? ''} Palette: ${JSON.stringify(bible?.palette ?? [])}. Materials: ${JSON.stringify(bible?.materials ?? [])}. Never: ${JSON.stringify(bible?.avoid ?? [])}.
+
+The age's shipped kits (the game draws these; pin each person on one with "base", and its role colours take that person's look): ${JSON.stringify({ kits: kits?.kits?.map((k, base) => ({ base, ...k })), head: kits?.head, leader: kits?.leader })}
+
+${RIG}
+
+Their looks are fixed colours: the game never restyles them, so choose every colour on purpose, in the age's palette, except the locked ones: red ${STORY.red} (Wren, and Ash's wrist cord), gold ${STORY.gold} (the head's sash and Kit's badge), Moss ${CAST.moss.colour}, Oak ${CAST.oak.colour}, Kit ${CAST.kit.colour}, Ash ${CAST.ash.colour}. Nobody else wears red or gold.
+Give each person 3–20 garment parts of their own over the pinned kit ("hide" the base pieces they replace). Design them on the standard figure: the game scales the whole person afterwards. Silhouettes first: they must be told apart at phone size, in greyscale, from the stream camera 40° above.
+
+The cast:
+${roles
+  .map((role) => {
+    const m = CAST[role];
+    const who = role === 'head' ? `the ${a.head.title}, hat ×${HAT_LADDER[age]}` : m.name;
+    const prop = m.props?.[age] ? ` Also a "prop": ${m.props[age]}, in real metres round their feet (x 0, z 0, ground y 0; it is not scaled), 3–16 parts in the age's materials.` : '';
+    return `- ${role} (${who}, scale ${m.scale[age]}): ${m.rule} In this age: ${m.looks[age] ?? ''}${prop}`;
+  })
+  .join('\n')}
+
+Sami's notes: ${SAMI_NOTES.join(' ')}`;
+}
+/** The age's cast (or just the roles named) in one call, so they are designed to stand apart; --notes revises them. */
+async function cast(age: AgeId, only: CastRole[], r: Revise): Promise<void> {
+  const roles = castIn(age).filter((x) => !only.length || only.includes(x));
+  if (!roles.length) throw new Error(`nobody to dress in ${age} (the cast then: ${castIn(age).join(', ')})`);
+  const kits = shippedKits(age);
+  if (!kits) throw new Error(`no shipped ${age} kits in src/shared/ageOutfits.json`);
+  const was = readJson<{ cast?: Partial<Record<CastRole, CastLook>> }>(castFile(age))?.cast ?? {};
+  const current = r.notes
+    ? roles.flatMap((x) => {
+        const c = was[x];
+        return c ? [{ role: x, name: c.outfit.name, base: c.base.split(':')[1], look: c.look, hide: c.outfit.hide, parts: c.outfit.parts.slice(c.outfit.parts.length - c.extras), prop: c.prop, checks: c.checks }] : [];
+      })
+    : [];
+  const brief = castBrief(age, roles);
+  const reply = (await astra({
+    label: `cast ${age}${only.length ? ` ${roles.join(',')}` : ''}${current.length ? ' revise' : ''}`,
+    effort: 'high',
+    maxTokens: 40_000,
+    system: `You are the costume designer for AI DUDES. ${WORLD}\n${STORY_TEXT}\nYou dress the story's cast for one age on the game's rigged figure: each person is pinned on one of the age's shipped kits and gets fixed colours and a few garment parts of their own that make them unmistakable. Answer only JSON: ${CAST_SHAPE}`,
+    user: current.length ? [{ type: 'text', text: brief + reviseText(r, current) }, ...reviseImage(r)] : brief,
+  })) as { cast?: { role?: string }[] };
+  const next = { ...was };
+  for (const role of roles) {
+    const raw = (reply.cast ?? []).find((c) => c?.role === role);
+    if (!raw) {
+      console.warn(`cast ${age}: no ${role} in the reply`);
+      continue;
+    }
+    const c = composeCast(age, role, raw, kits);
+    next[role] = c;
+    console.log(`cast ${age}/${role}: ${c.outfit.name} on ${c.base}, ${c.extras} parts of their own${c.prop ? `, ${c.prop.name}` : ''}${c.checks ? ` [${c.checks.join('; ')}]` : ''}`);
+  }
+  writeJson(castFile(age), { age, cast: Object.fromEntries(castIn(age).flatMap((x) => (next[x] ? [[x, next[x]]] : []))) });
+}
+
+// Pets: through the game's own design prompt, plus the age kits the page shows while a restyle waits (FK-027, FK-051).
+const petFile = (age: AgeId, id: string) => path.join(SPEC, 'pets', age, `${id}.json`);
+/** One pet the way a chatter's ask makes it: DESIGN_SYSTEM and designMessage with the age's shipped direction, plus the pet branch FK-070 will ship. */
+async function pet(age: AgeId, p: (typeof PETS)[number], r: Revise): Promise<void> {
+  const current = r.notes ? readJson<Blueprint>(petFile(age, p.id)) : undefined;
+  const message = designMessage({
+    dudeName: 'board',
+    persona: '',
+    request: current ? `${p.request}, as my pet. Change: ${r.notes}` : `${p.request}, as my pet`,
+    kind: 'pet',
+    age: ageStyle(AGE_IDS.indexOf(age)).design,
+    ...(current ? { target: { name: current.name, description: current.description, parts: current.parts, ...(current.animations ? { animations: current.animations } : {}), ...(current.moves ? { moves: current.moves } : {}) } } : {}),
+  });
+  const raw = await astra({ label: `pet ${age}/${p.id}${current ? ' revise' : ''}`, system: `${DESIGN_SYSTEM}\n${PET_BRANCH}`, user: current ? [{ type: 'text', text: message }, ...reviseImage(r)] : message, effort: 'medium' });
+  const d = validateDesign(raw, !!current);
+  if (d.action === 'decline') throw new Error(`declined: ${d.reply}`);
+  const checks = petChecks(d.blueprint);
+  writeJson(petFile(age, p.id), { ...d.blueprint, request: p.request, ...(checks.length ? { checks } : {}) });
+  console.log(`pet ${age}/${p.id}: ${d.blueprint.name} (${d.blueprint.parts.length} parts)${checks.length ? ` [${checks.join('; ')}]` : ''}`);
+}
+const PET_KIT_SHAPE = `{"kits":{${AGE_IDS.map((a) => `"${a}":{"name":"…","parts":[…]}`).join(',')}}}`;
+/** The six age kits in one call, so they read as one set. */
+async function petKits(r: Revise): Promise<void> {
+  const file = path.join(SPEC, 'pets', 'kits.json');
+  const current = r.notes ? readJson(file) : undefined;
+  const brief = `Design the six age kits a pet wears while its own restyle is on the way: one small touch per age that says the age at a glance, the same on every pet: ${AGE_IDS.map((a) => `${a}: ${PET_KITS[a]}`).join('; ')}.
+Pets are ${PET_SPEC}
+Design each kit for a reference pet ${PET.reference} m tall (the game scales a kit by the pet's height over ${PET.reference}). Every part hangs from an anchor, "at": "neck" is the centre of the collar at the front of the neck, "face" is the middle of the face at eye level on the front of the head; positions are metres from that anchor, +z forward, +y up. The collar itself is the game's (in the owner's side colour): add only the age's touch. 1–8 parts per kit, each between 0.04 and 0.4 m, chunky enough to read from the stream camera; the age's own materials and colours; "glow": true on lights; no story red ${STORY.red} or gold ${STORY.gold}.
+Each part is {"at":"${PET_ANCHORS.join('|')}","shape":"box|cylinder|sphere|cone","position":[x,y,z],"size":[w,h,d],"rotation":[x,y,z],"color":"#rrggbb","glow":true (lights only)}.`;
+  const reply = await astra({
+    label: `pet kits${current ? ' revise' : ''}`,
+    system: `You are the prop designer for AI DUDES. ${WORLD}\nAnswer only JSON: ${PET_KIT_SHAPE}`,
+    user: current ? [{ type: 'text', text: brief + reviseText(r, current) }, ...reviseImage(r)] : brief,
+    effort: 'medium',
+    maxTokens: 16_000,
+  });
+  const { kits, checks } = cleanPetKits(reply);
+  writeJson(file, { reference: PET.reference, anchors: { neck: 'the centre of the collar, front of the neck', face: 'the middle of the face at eye level' }, kits, ...(checks.length ? { checks } : {}) });
+  console.log(`pet kits: ${Object.entries(kits).map(([a, k]) => `${a} ${k!.name} (${k!.parts.length})`).join(', ')}${checks.length ? ` [${checks.join('; ')}]` : ''}`);
+}
+async function pets(age: AgeId, ids: string[], r: Revise): Promise<void> {
+  const unknown = ids.filter((id) => id !== 'kits' && !PETS.some((p) => p.id === id));
+  if (unknown.length) throw new Error(`no pet ${unknown.join(', ')} (${PETS.map((p) => p.id).join(', ')}, kits)`);
+  const jobs = [...PETS.map((p) => p.id), 'kits'].filter((id) => !ids.length || ids.includes(id));
+  await pool(jobs, (id) => (id === 'kits' ? petKits(r) : pet(age, PETS.find((p) => p.id === id)!, r)));
+}
+
 // ---- main ------------------------------------------------------------------------------------------
-const [cmd, a1, a2, ...rest] = process.argv.slice(2);
+// Words in order, and "--name value" flags anywhere (--notes, --image, --brief, --age, --effort).
+const args: string[] = [];
+const flags: Record<string, string> = {};
+for (let i = 2; i < process.argv.length; i++) {
+  const a = process.argv[i];
+  if (a.startsWith('--')) flags[a.slice(2)] = process.argv[++i] ?? '';
+  else args.push(a);
+}
+const [cmd, a1, a2, ...rest] = args;
+const one = (arg: string | undefined): AgeId => {
+  if (!AGE_IDS.includes(arg as AgeId)) throw new Error(`which age? ${AGE_IDS.join(', ')}`);
+  return arg as AgeId;
+};
+const revising: Revise = { ...(flags.notes ? { notes: flags.notes } : {}), ...(flags.image ? { image: path.resolve(flags.image) } : {}) };
 const pick = (list: string[] | undefined, board?: (e: Element) => boolean) => ELEMENTS.filter((e) => (board ? board(e) : true) && (!list?.length || list.includes(e.id)));
 async function main(): Promise<void> {
   switch (cmd) {
@@ -438,10 +677,29 @@ async function main(): Promise<void> {
       return pool(ages(a1), (age) => outfits(age, a2));
     case 'critique-outfits':
       return pool(ages(a1), (age) => critiqueOutfits(age, a2));
+    case 'critique-image': {
+      const files = [a1, a2, ...rest].filter(Boolean);
+      if (!files.length) throw new Error('critique-image <png…>');
+      const effort = (['low', 'medium', 'high'] as const).find((e) => e === flags.effort);
+      const age = flags.age ? one(flags.age) : undefined;
+      return pool(files, (f) => critiqueImage(path.resolve(f), { brief: flags.brief, age, effort }));
+    }
+    case 'folly':
+      return a2 === 'pick' ? pickFolly(one(a1), Number(rest[0])) : folly(one(a1), [a2, ...rest].filter(Boolean).map(Number), revising);
+    case 'cast': {
+      const roles = [a2, ...rest].filter(Boolean);
+      const bad = roles.filter((x) => !CAST_ROLES.includes(x as CastRole));
+      if (bad.length) throw new Error(`no cast role ${bad.join(', ')} (${CAST_ROLES.join(', ')})`);
+      return cast(one(a1), roles as CastRole[], revising);
+    }
+    case 'pets':
+      return pets(flags.age ? one(flags.age) : 'stone', [a1, a2, ...rest].filter(Boolean), revising);
     case 'spend':
       return void console.log(`$${spent().toFixed(2)} of $${BUDGET}`);
-    default:
-      console.log(readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(4, 14).join('\n'));
+    default: {
+      const head = readFileSync(new URL(import.meta.url), 'utf8').split('\n');
+      console.log(head.slice(4, head.indexOf('//', 4)).join('\n'));
+    }
   }
 }
 main().then(
