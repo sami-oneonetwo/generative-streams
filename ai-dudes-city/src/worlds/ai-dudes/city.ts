@@ -41,8 +41,9 @@ import { choosePlacement, clampToGround, route, workSpots } from './placement';
 import { addEffect, awake, endUse, face, reserved, step, walkTo } from './sim';
 import { moversNear } from './movers';
 import { credit } from './crier';
-import { LIMITS, nextId, pushFeed, pushLine, type City, type Dude, type DudesState, type Ledger, type Project, type Tie, type Townie, type Visit } from './state';
+import { LIMITS, nextId, pushFeed, pushLine, storyOn, type City, type Dude, type DudesState, type Ledger, type Project, type Tie, type Townie, type Visit } from './state';
 import { storyTownView } from './story/view'; // FK-001
+import { castLabel, keepsCast } from './story/cast';
 
 export const TOWN = {
   startCoins: 150,
@@ -1271,21 +1272,27 @@ export function tickTownies(state: DudesState, dt: number, now: number, rng: () 
 }
 export function townieViews(state: DudesState): DudeView[] {
   const age = ageOf(state);
-  return cityOf(state).townies.map((t) => ({
-    id: t.id,
-    name: t.name,
-    resident: true,
-    position: t.position,
-    facing: t.facing,
-    activity: t.path.length ? 'walking' : t.emote ? 'emote' : 'idle',
-    look: dressed(state, t.look, { id: t.id, ...(t.leader ? { role: 'leader' as const } : t.daughter ? { role: 'daughter' as const } : {}) }),
-    ...(t.traveller ? { traveller: true, ...(t.leader ? { title: 'leader of the travellers' } : t.daughter ? { title: daughterTitle(age) } : {}) } : {}),
-    ...(t.scale && t.scale !== 1 ? { scale: t.scale } : {}),
-    ...(t.leader ? { leader: true, ...(caravanView(state)?.asks.some((a) => a.have < a.need) ? { asking: true } : {}) } : {}),
-    ...(t.hidden ? { hidden: true } : {}),
-    ...(t.emote ? { emote: t.emote } : {}),
-    ...(t.say ? { say: t.say } : {}),
-  }));
+  const story = storyOn(state);
+  return cityOf(state).townies.map((t) => {
+    // Finders Keepers: a cast member's tag is their role ("Ash the hunter"), in their own kit (FK-014).
+    const cast = story ? castLabel(t) : undefined;
+    const dress = cast ? cast.dress : t.leader ? 'leader' : t.daughter ? 'daughter' : undefined;
+    return {
+      id: t.id,
+      name: cast?.tag ?? t.name,
+      resident: true,
+      position: t.position,
+      facing: t.facing,
+      activity: t.path.length ? 'walking' : t.emote ? 'emote' : 'idle',
+      look: dressed(state, t.look, { id: t.id, ...(dress ? { role: dress } : {}) }),
+      ...(t.traveller ? { traveller: true, ...(cast ? {} : t.leader ? { title: 'leader of the travellers' } : t.daughter ? { title: daughterTitle(age) } : {}) } : {}),
+      ...(t.scale && t.scale !== 1 ? { scale: t.scale } : {}),
+      ...(t.leader ? { leader: true, ...(caravanView(state)?.asks.some((a) => a.have < a.need) ? { asking: true } : {}) } : {}),
+      ...(t.hidden ? { hidden: true } : {}),
+      ...(t.emote ? { emote: t.emote } : {}),
+      ...(t.say ? { say: t.say } : {}),
+    };
+  });
 }
 
 // ---- what the town is talking about ---------------------------------------------------------------
@@ -1375,7 +1382,11 @@ export function tickCity(state: DudesState, dt: number, now: number, rng: () => 
   if (state.ai.townLife !== false) {
     tickTownies(state, dt, now, rng);
     tickCaravan(state, now);
-  } else cityOf(state).townies = [];
+  } else {
+    // Town life off: the residents and travellers go; with Story on the cast stay (FK-014).
+    const stays = (t: Townie) => keepsCast(state, t, ageOf(state));
+    if (!c.townies.every(stays)) c.townies = c.townies.filter(stays);
+  }
 }
 
 export function townView(state: DudesState, now: number): TownView {

@@ -9,7 +9,8 @@
 // The Stone Age opens with the band stranded across the river: the bridge is down and nobody crosses
 // until the streamer plays the opening (admin) and a share of the active chatters mend it ('help').
 // Then the travellers walk over and the first visit opens. A daughter travels with every caravan and
-// grows up age by age: the story's through-line.
+// grows up age by age: the story's through-line. With Finders Keepers' Story switch on, the band is
+// the cast (story/cast.ts): the same five in every age, spared when travellers go home.
 import { BUS_STOP, CITY_BOUNDS, PITCH, VENUES, type VenueKind } from '../../shared/city';
 import { BRIDGE, FACING_TOWN, SCENES, STEP_FORWARD, STRANDED, type SceneId } from '../../shared/scenes';
 import { LAST_AGE, ageStyle, venueName } from '../../shared/ages';
@@ -18,7 +19,8 @@ import { ageOf, cityOf, headName, projectOf, proposeWonder, setAge, startLabour,
 import { addEffect, awake } from './sim';
 import { route } from './placement';
 import { defaultLook, hashOf } from './agent';
-import { pushFeed, type DudesState, type Townie } from './state';
+import { pushFeed, storyOn, type DudesState, type Townie } from './state';
+import { castArrival, castId, castIn, isCastId, keepsCast } from './story/cast';
 import { ageHeroes, credit, creditBuilds, crierAgeTurned, crierBridgeDone, crierBridgeOpened, crierVisitDone, crierVisitOpened, tickCrier } from './crier';
 
 export type AskKind = 'build' | 'serve' | 'operate' | 'party' | 'project' | 'bridge';
@@ -156,17 +158,30 @@ const travellerLook = (name: string, age: number): DudeLook => {
   return { ...l, shirt: tints[hashOf(name + age) % tints.length] };
 };
 
-function bringTravellers(state: DudesState, age: number, now: number, strand = false): string[] {
+/** The age's band into town (those not here already), and their ids, leader first. `fresh`: a new caravan
+ * arriving, so cast members who stayed from the last one are put back on their marks too. */
+function bringTravellers(state: DudesState, age: number, now: number, strand = false, fresh = false): string[] {
   const city = cityOf(state);
   const c = caravanOf(age);
-  const names = [c.leader, daughterOf(state), ...c.travellers].slice(0, STRANDED.length);
   const stranded = !!city.caravan?.stranded || strand;
+  const spot = (i: number) => (stranded ? { ...STRANDED[i] } : { x: GATE.x, z: GATE.z + (i - 1) * 1.2 });
+  // Finders Keepers: the cast are the band, under ids of their own, so the same five come through every age (FK-014).
+  if (storyOn(state))
+    return castIn(age).map((m, i) => {
+      const t = castArrival(m, i, age, spot(i), stranded ? FACING_TOWN : -Math.PI / 2, now);
+      const was = city.townies.find((x) => x.id === t.id);
+      if (!was) city.townies.push(t);
+      // Still here from the last caravan: the same townie, on their marks and in their place for this one.
+      else if (fresh) Object.assign(was, { placeId: undefined, hidden: undefined, say: undefined, emote: undefined, leader: undefined, daughter: undefined, scale: undefined }, t);
+      return t.id;
+    });
+  const names = [c.leader, daughterOf(state), ...c.travellers].slice(0, STRANDED.length);
   const ids: string[] = [];
   names.forEach((name, i) => {
     const id = `c${hashOf(`${name}:${age}`).toString(36)}`.slice(0, 20);
     ids.push(id);
     if (city.townies.some((t) => t.id === id)) return;
-    const at = stranded ? { ...STRANDED[i] } : { x: GATE.x, z: GATE.z + (i - 1) * 1.2 };
+    const at = spot(i);
     const look = travellerLook(name, age);
     // The elder of the Stone Age band is grey.
     if (age === 0 && name === 'Old Ura') look.hair = '#c9c4ba';
@@ -186,6 +201,34 @@ function bringTravellers(state: DudesState, age: number, now: number, strand = f
     city.townies.push(t);
   });
   return ids;
+}
+
+/** The travellers go home: all but the age's cast, who stay through every age while Story is on (FK-014). */
+function sendTravellersHome(state: DudesState, age: number): void {
+  const city = cityOf(state);
+  const goes = (t: Townie) => !!t.traveller && !keepsCast(state, t, age);
+  if (city.townies.some(goes)) city.townies = city.townies.filter((t) => !goes(t));
+}
+
+/**
+ * The band follows the Story switch (FK-014): switched on, the age's cast take the travellers' places;
+ * switched off, today's band comes back. Each takes over where the one before them stood and was going,
+ * so a swap mid-visit (or mid-walk) carries on from there.
+ */
+function bandFollowsStory(state: DudesState, cv: Caravan, now: number): void {
+  const cast = castIn(cv.age).map((m) => castId(m.role));
+  if (storyOn(state) ? cv.travellers.length === cast.length && cv.travellers.every((id, i) => id === cast[i]) : !cv.travellers.some(isCastId)) return;
+  const city = cityOf(state);
+  const was = cv.travellers.map((id) => city.townies.find((t) => t.id === id));
+  sendTravellersHome(state, cv.age);
+  cv.travellers = bringTravellers(state, cv.age, now);
+  cv.travellers.forEach((id, i) => {
+    const t = city.townies.find((x) => x.id === id);
+    const w = was[i];
+    if (!t || !w || w === t) return;
+    Object.assign(t, { position: { ...w.position }, facing: w.facing, path: w.path.map((p) => ({ ...p })), doing: w.doing, placeId: w.placeId, hidden: w.hidden, until: w.until });
+  });
+  state.worldRevision++;
 }
 
 function openVisit(state: DudesState, cv: Caravan, now: number): void {
@@ -227,12 +270,12 @@ function leaderProposesWonder(state: DudesState, cv: Caravan, now: number): void
 export function startCaravan(state: DudesState, now: number, strand = ageOf(state) === 0, walkIn = false): Caravan {
   const age = ageOf(state);
   const city = cityOf(state);
-  // Last age's travellers go home.
-  city.townies = city.townies.filter((t) => !t.traveller);
+  // Last age's travellers go home (the cast stay, FK-014).
+  sendTravellersHome(state, age);
   city.scene = undefined;
   city.caravan = undefined;
   // Walking in: they start at the camp, like the stranded band, and cross the (mended) bridge.
-  const travellers = bringTravellers(state, age, now, strand || walkIn);
+  const travellers = bringTravellers(state, age, now, strand || walkIn, true);
   const cv: Caravan = { age, visit: 0, openedAt: now, asks: [], travellers, ...(strand ? { stranded: true, helpers: [] } : {}) };
   city.caravan = cv;
   state.worldRevision++;
@@ -472,7 +515,7 @@ export function nameDaughter(state: DudesState, name: string, now: number): void
   const city = cityOf(state);
   const was = daughterOf(state);
   city.daughter = name;
-  for (const t of city.townies) if (t.traveller && t.name === was) t.name = name;
+  for (const t of city.townies) if (t.traveller && !t.role && t.name === was) t.name = name;
   pushFeed(state, now, `${was === name ? name : `The girl at the river is called ${name}`}`);
 }
 
@@ -513,14 +556,15 @@ function complete(state: DudesState, cv: Caravan, now: number): void {
 export function tickCaravan(state: DudesState, now: number): void {
   const city = cityOf(state);
   if (!caravanOn(state)) {
-    // The travellers go home; the caravan's place in the age is kept for when it comes back.
-    if (city.townies.some((t) => t.traveller)) city.townies = city.townies.filter((t) => !t.traveller);
+    // The travellers go home (the cast stay); the caravan's place in the age is kept for when it comes back.
+    sendTravellersHome(state, ageOf(state));
     return;
   }
   if (!state.dudes.some((d) => awake(d, now)) && !city.caravan) return;
   let cv = city.caravan;
   // The age is turning: the scene, the goodbye, a breather, then the next caravan walks in from the camp.
   if (cv?.turn) {
+    bandFollowsStory(state, cv, now);
     tickScene(state, cv, now);
     if (cv.turn.final) return;
     if (!city.scene && !cv.turn.arriveAt) cv.turn.arriveAt = now + BREATHER_MS;
@@ -528,6 +572,7 @@ export function tickCaravan(state: DudesState, now: number): void {
     return;
   }
   if (!cv || cv.age !== ageOf(state)) cv = startCaravan(state, now);
+  bandFollowsStory(state, cv, now);
   // Travellers who wandered off (town life switched off and back) come back.
   if (cv.travellers.some((id) => !city.townies.some((t) => t.id === id)) && cv.visit < 3) bringTravellers(state, cv.age, now);
   tickScene(state, cv, now);
