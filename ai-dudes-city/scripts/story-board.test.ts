@@ -1,15 +1,17 @@
 // The Board's data (FK-011): with Story on, `town.board` carries the head's Folly in gold (this age's
 // word, its timer's %), Wren's ask in red (the caravan's ask under way: "BRIDGE · soon" until the opening
 // has played, then "BRIDGE have/need", one shift per chatter; later asks switch the word), the tally
-// of awake chatters on each side, and the ticker (the premise, the newest joiners and the latest
-// turncoat, the !play line). Story OFF sends no board. Nothing here is saved.
+// of awake chatters on each side, and the ticker (the premise, what to type, the newest joiners and the
+// latest turncoat; the page adds the !play line while the doors are open). Story OFF sends no board.
+// Nothing here is saved.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { harness } from './harness';
 import { ageOf, cityOf } from '../src/worlds/ai-dudes/city';
 import { skipVisit } from '../src/worlds/ai-dudes/caravan';
 import { AWAKE_MS } from '../src/worlds/ai-dudes/sim';
-import { BOARD, boardTicker, playSite, sideLines } from '../src/worlds/ai-dudes/story/board';
+import { BOARD, boardTicker, PICK_A_SIDE, sideLines } from '../src/worlds/ai-dudes/story/board';
+import { boardFor, demoBoard } from '../client/dudes/board';
 import { FOLLY, raiseFolly } from '../src/worlds/ai-dudes/story/folly';
 import { stateSchema, type SideLogEntry } from '../src/worlds/ai-dudes/state';
 import { SCENES } from '../src/shared/scenes';
@@ -48,7 +50,7 @@ test('before the opening: BRIDGE · soon, BIG HUT 0%, nobody on a side, the prem
   assert.deepEqual(b.gold, { word: 'BIG HUT', pct: 0 }, 'no cordon yet');
   assert.deepEqual(b.tally, { red: 0, gold: 0 });
   assert.equal(b.ticker[0], "The Chief took Wren's home", 'the premise first');
-  assert.equal(b.ticker[1], 'Red helps Wren. Gold helps the Chief.');
+  assert.equal(b.ticker[1], 'Type red or gold to pick a side', "what to type, as ?demo=board says it");
   assert.equal(b.now, undefined);
   assert.ok(stateSchema.safeParse(JSON.parse(JSON.stringify(h.state))).success, 'nothing new in the save');
 });
@@ -146,16 +148,19 @@ test('the ticker: newest joiners first, the latest turncoat kept, a person once,
   assert.deepEqual(sideLines([e(1000, 'a', 'red', undefined, '@TheRealKev'), e(500, 'b', 'gold', undefined, 'a_name_far_too_long_for_it')], now), ['A_name_far_too_long… joined gold', 'TheRealKev joined red']);
 });
 
-test('the ticker carries the !play line while the play site is set up, and keeps its words steady', async () => {
-  const { h, board } = await town(['test-kev']);
-  assert.ok(boardTicker(h.state, h.now, 'play.example.com').includes('Walk your character: play.example.com'));
-  assert.ok(!boardTicker(h.state, h.now, undefined).some((l) => l.startsWith('Walk your character')), 'no site, no line');
-  const site = playSite();
-  assert.equal(board().ticker.includes(`Walk your character: ${site}`), !!site, "the server's own site, without its scheme");
-  if (site) assert.ok(!/^https?:\/\//.test(site) && !site.endsWith('/'));
+test("the !play line is the page's, only while the /play doors are open; the ticker keeps its words steady", async () => {
+  const { h, board, view } = await town(['test-kev']);
+  assert.ok(!board().ticker.some((l) => l.startsWith('Walk your character')), 'the server never sends it, open or closed');
+  assert.equal(PICK_A_SIDE, demoBoard([]).ticker[1], 'one wording on the demo board and the real one');
+  // The page: the snapshot's `play` comes only while the doors are open (src/index.ts playInfo).
+  const open = boardFor(view(), [], '?stream=1', { url: 'https://play.example.com/' })!;
+  assert.deepEqual(open.ticker, [...board().ticker, 'Walk your character: play.example.com'], 'doors open: the line last, without its scheme');
+  assert.equal(open.gold.word, board().gold.word);
+  assert.deepEqual(boardFor(view(), [], '?stream=1')!.ticker, board().ticker, 'doors closed: no line');
+  assert.equal(boardTicker(h.state, h.now).length, board().ticker.length);
   const first = board().ticker;
   h.now += 30_000;
   assert.deepEqual(board().ticker, first, 'the same lines a moment later: the page decides what is new');
   cityOf(h.state).story = { sideLog: [{ at: h.now, id: 'test-kev', name: 'test-kev', side: 'red' }] };
-  assert.deepEqual(board().ticker.slice(0, 3), ["The Chief took Wren's home", 'Red helps Wren. Gold helps the Chief.', 'Test-kev joined red']);
+  assert.deepEqual(board().ticker, ["The Chief took Wren's home", 'Type red or gold to pick a side', 'Test-kev joined red']);
 });

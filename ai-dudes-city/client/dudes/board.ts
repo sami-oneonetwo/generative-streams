@@ -139,6 +139,8 @@ export function demoBoard(dudes: readonly DudeView[], head = 'The Chief', play?:
  * none (Story OFF: today's page). `search` is the page's query string.
  */
 export function boardFor(town: TownView | undefined, dudes: readonly DudeView[], search: string, play?: { url: string }): BoardView | undefined {
+  // hook FK-011: the server's ticker has no !play line; it rides `play`, which comes only while the /play doors are open.
+  if (town?.board && play) return { ...town.board, ticker: [...(Array.isArray(town.board.ticker) ? town.board.ticker : []), `Walk your character: ${shortUrl(play.url)}`] };
   if (town?.board) return town.board;
   if (!demoSidesOn(search)) return undefined;
   return demoBoard(dudes, town?.head, play);

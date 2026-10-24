@@ -11,12 +11,13 @@
 //   ⌈0.4 × awake chatters⌉ (1 to 8), one shift per chatter. A later ask switches the word by itself
 //   (FK-129's story jobs add theirs to RED_WORDS); between asks it reads "NEXT JOB · soon".
 // - The tally: awake chatters on each side this age (sides.ts sideNow; FK-012 sets the sides).
-// - The ticker: the premise for whoever just arrived, the newest joiners and the latest turncoat from
-//   `city.story.sideLog`, and the !play line that lived in the invite panel. The page shows one line
-//   at a time, 20 s each, and lets a new line cut in (FK-010), so this sends the whole list and keeps
-//   each line's words stable while it stands.
+// - The ticker: the premise for whoever just arrived, what to type (the same words as `?demo=board`),
+//   and the newest joiners and the latest turncoat from `city.story.sideLog`. The !play line that lived
+//   in the invite panel is the page's: it adds it from the snapshot's `play`, which src/index.ts sends
+//   only while the /play doors are open (client/dudes/board.ts boardFor). The page shows one line at a
+//   time, 20 s each, and lets a new line cut in (FK-010), so this sends the whole list and keeps each
+//   line's words stable while it stands.
 // Only while Story is on (story/view.ts). Zero AI.
-import { config } from '../../../config';
 import type { BoardView, MayorView, TownView } from '../../../shared/dudesTypes';
 import { caravanOf, caravanOn, type CaravanAsk } from '../caravan';
 import { ageOf, cityOf, headName } from '../city';
@@ -60,7 +61,7 @@ export function boardOf(state: DudesState, now: number): BoardView {
     const side = sideNow(state, d);
     if (side && awake(d, now)) tally[side]++;
   }
-  return { gold: goldBar(state), red: redBar(state), tally, ticker: boardTicker(state, now, playSite()) };
+  return { gold: goldBar(state), red: redBar(state), tally, ticker: boardTicker(state, now) };
 }
 
 /** The head's Folly: this age's word, and how far its timer has filled it (whole percent, as `town.folly`, so 100 means done). */
@@ -85,12 +86,12 @@ function redBar(state: DudesState): BoardView['red'] {
 const redWord = (ask: CaravanAsk, age: number) =>
   Object.hasOwn(RED_WORDS, ask.id) ? RED_WORDS[ask.id] : (ask.kind === 'project' ? caravanOf(age).wonder.replace(/^the /i, '') : ask.id).toUpperCase();
 
-/** The ticker's lines, in the order the page goes round them. `play`: the play site's address (none: no line). */
-export function boardTicker(state: DudesState, now: number, play: string | undefined): string[] {
-  const head = headName(state);
-  const wren = CAST.wren.name;
-  const lines = [`${head} took ${wren}'s home`, `Red helps ${wren}. Gold helps ${head.replace(/^The /, 'the ')}.`, ...sideLines(cityOf(state).story?.sideLog ?? [], now)];
-  if (play) lines.push(`Walk your character: ${play}`);
+/** The ticker's call to action, word for word as `?demo=board`'s (client/dudes/board.ts demoBoard). */
+export const PICK_A_SIDE = 'Type red or gold to pick a side';
+
+/** The ticker's lines, in the order the page goes round them (the page adds the !play line while the doors are open). */
+export function boardTicker(state: DudesState, now: number): string[] {
+  const lines = [`${headName(state)} took ${CAST.wren.name}'s home`, PICK_A_SIDE, ...sideLines(cityOf(state).story?.sideLog ?? [], now)];
   return [...new Set(lines)];
 }
 
@@ -117,13 +118,6 @@ function who(name: string): string {
   const n = name.trim().replace(/^@+/, '');
   const cut = n.length > BOARD.nameMax ? `${n.slice(0, BOARD.nameMax - 1)}…` : n;
   return cut === cut.toLowerCase() ? cut.charAt(0).toUpperCase() + cut.slice(1) : cut;
-}
-
-/** Where chatters walk their own character, without the scheme, while the /play site is set up (its login
- * secret and address, as the snapshot's play line needs; the doors are the server's, src/index.ts). */
-export function playSite(): string | undefined {
-  if (!config.PLAY_SECRET || !config.PLAY_URL) return undefined;
-  return config.PLAY_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
 }
 
 /** The show strip on the operator page (`show`). */
