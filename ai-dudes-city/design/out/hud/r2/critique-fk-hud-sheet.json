@@ -1,0 +1,45 @@
+{
+  "verdict": "revise",
+  "score": 7,
+  "summary": "The kit is substantially more coherent: the Wonder has one command, story colours mostly communicate allegiance cleanly, and the Chief’s subtitle supplies the joke. Remaining weaknesses are the Board’s changing text contrast, the rally’s understated interaction, and contradictory engineering instructions.",
+  "problems": [
+    "The Board puts cream lettering across moving gold, red and dark fill boundaries; the gold sections lose contrast at phone size and in greyscale.",
+    "The rally buries “Type us” inside dialogue while its response pips sit far away, weakening the connection between the command and joining Wren.",
+    "The engineering sheet still specifies 5 px outlines for chatter tags and internal badges, contradicting the required 6 px system, and retains a “type coming” chip despite the forced gathering requiring no input."
+  ],
+  "elements": [
+    {
+      "id": "board",
+      "score": 7,
+      "problems": [
+        "Cream text crosses the gold progress fill in “BIG HUT 72%” and “GOLDEN ME 8%”, producing weak local contrast.",
+        "Progress boundaries run through lettering and numerals, making their readability dependent on the current percentage."
+      ],
+      "fix": "Keep labels and values on a fixed ink backing inside each pill, with progress visible around or beneath that backing. Alternatively, give every cream glyph a consistent ink keyline; test both gold-heavy and nearly empty states at 390 px and in greyscale."
+    },
+    {
+      "id": "rally",
+      "score": 7,
+      "problems": [
+        "“Type us” receives the same sentence styling as Wren’s dialogue instead of the established command-chip treatment.",
+        "The distant pip strip does not clearly explain that this particular command fills a pip and joins red."
+      ],
+      "fix": "Keep “Him or us?” as Wren’s dialogue, but render “type us” as a red, flag-marked command pill within the same subtitle assembly. Place the pip strip immediately above that assembly and animate the next pip from the command on a successful join, without adding another text layer."
+    },
+    {
+      "id": "engineer-kit",
+      "score": 7,
+      "problems": [
+        "The outline note explicitly permits 5 px chatter-tag and badge strokes despite the locked 6 px requirement.",
+        "The “type coming” chip introduces an unnecessary gathering command into a kit whose Call is automatic."
+      ],
+      "fix": "Specify 6 px ink outlines for all tags, pills, cards and enclosed badges, and update the illustrated assets to match. Remove “type coming” from this kit and document GATHER as an automatic event with no chat command; keep these implementation notes on the spec sheet."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": true,
+    "storyColours": true,
+    "funny": true
+  }
+}

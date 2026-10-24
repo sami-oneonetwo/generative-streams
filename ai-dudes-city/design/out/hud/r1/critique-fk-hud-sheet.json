@@ -1,0 +1,100 @@
+{
+  "verdict": "revise",
+  "score": 6,
+  "summary": "The kit has a convincing toy-like voice, clear faction identities and a genuinely funny monument plaque. It needs another hierarchy and phone-size pass: competing commands, miniature detail and several overloaded cards undermine an otherwise strong foundation.",
+  "problems": [
+    "Wren asks viewers to type “us”, while the Board and NOW card teach “red”; use one command consistently.",
+    "THE WONDER offers three commands and places its dark title across changing fill colours; simplify the interaction and isolate the label.",
+    "The returning-home card uses faction gold as a generic selection colour, contains tiny architectural detail and leaves a debug-looking address label visible.",
+    "The kit notes are unreadable at phone size, specify conflicting outline weights and introduce extra grey swatches beyond the locked palette.",
+    "The reveal requests a rating without making the input obvious, while its tiny rating blocks add unreadable detail.",
+    "The hero plaque stacks title, attribution and names above another subtitle layer; reduce the simultaneous reading load.",
+    "The Board's tiny tug markings and crowded counter assembly will collapse under compression; simplify that assembly without enlarging the top strip.",
+    "GATHER announces an event but does not clearly distinguish a chat command from a passive heading; expose the intended action."
+  ],
+  "elements": [
+    {
+      "id": "wrens-rally",
+      "score": 4,
+      "problems": [
+        "“Him or us? Type us.” contradicts the established “type red” instruction.",
+        "The fire meter repeats miniature flame drawings inside small pips; the detail is unlikely to survive phone scaling.",
+        "Gold in the leading flame can read as the Chief's involvement in Wren's rally."
+      ],
+      "fix": "Change the sentence to “Him or us? Type red.” Use a red flag as the meter anchor, solid red filled pips and dust empty pips, with cream or ink separation that remains clear in greyscale."
+    },
+    {
+      "id": "wonder-board",
+      "score": 5,
+      "problems": [
+        "“type help”, “type gold” and “type red” compete within one compact piece.",
+        "The dark WONDER lettering loses contrast where the background becomes grey.",
+        "Title, command/counter row and ticker create three reading bands."
+      ],
+      "fix": "Choose one interaction model: retain the two faction commands and remove “type help”, or show only the help command. Put the title on a stable cream label, preserve crown/gold and flag/red contribution markers, and suppress the ticker during this state."
+    },
+    {
+      "id": "returning-home",
+      "score": 5,
+      "problems": [
+        "The selected age icon uses story gold for ordinary navigation rather than the Chief or his property.",
+        "Small building silhouettes, dotted borders and multiple icon colours make the age sequence difficult to parse.",
+        "The tiny “test-nia” address label appears to be a HUD debug remnant."
+      ],
+      "fix": "Use cream and an ink outline for the current age, dust for future ages and simplified silhouettes within a four-colour limit. Enlarge the meaningful age states, remove the debug label, and present “NIA'S HOME” plus one concise progression line."
+    },
+    {
+      "id": "kit-sheet",
+      "score": 5,
+      "problems": [
+        "Specification notes are far below the 54 px reading minimum if this is delivered as a stream frame.",
+        "The notes prescribe 5 px icon lines alongside 6 px component outlines.",
+        "Separate red-grey and gold-grey swatches expand the stated locked palette."
+      ],
+      "fix": "Move production notes to a separate readable specification page; keep this frame as a clean visual inventory. Standardise ink outlines to 6 px, replace auxiliary greys with dust, and label approved swatches at 54 px minimum wherever labels must remain on stream."
+    },
+    {
+      "id": "reveal-rating",
+      "score": 6,
+      "problems": [
+        "“RATE IT” and “5.0” do not explain what viewers should type.",
+        "The ten tiny blocks become visual noise at phone size.",
+        "The large reveal title, rating heading and rating value create competing text levels."
+      ],
+      "fix": "Stage the reveal title first, then replace it with the rating interaction. Give the tile an explicit “type 1–10” instruction and one large aggregate score; remove the miniature block row or replace it with a large pictorial reaction."
+    },
+    {
+      "id": "hero-plaque",
+      "score": 6,
+      "problems": [
+        "The plaque contains a title, two-line attribution and contributor list while a full subtitle also demands attention.",
+        "The contributor line is packed close to the plaque's inner border."
+      ],
+      "fix": "Keep the crown, monument title and funny “built by friends of the Chief” credit on the plaque, with more internal padding. Move contributor names to a later credit beat and show the dialogue before or after the plaque-reading beat, not simultaneously."
+    },
+    {
+      "id": "free-play-board",
+      "score": 7,
+      "problems": [
+        "Dense diagonal rope marks, a small central knot and tightly packed counters produce more texture than useful information at phone size.",
+        "The bars, command row and ticker create a third text band competing with the town labels."
+      ],
+      "fix": "Within the existing 1240 px strip, replace rope hatching with two clean faction spans and a larger, unmistakable knot. Equalise counter and chip spacing, retain 54 px minimum functional text, and show ticker messages by temporarily replacing a row rather than adding another."
+    },
+    {
+      "id": "gather-call",
+      "score": 7,
+      "problems": [
+        "GATHER looks actionable, but the banner never explicitly identifies the chat input.",
+        "The subtitle spends the secondary reading layer on context rather than participation."
+      ],
+      "fix": "Keep “GATHER: THE UNVEILING” and the countdown, but replace the secondary sentence with the kit's cream “type coming” chip. Keep the banner within the 1240 px strip and use only two text levels."
+    }
+  ],
+  "gate": {
+    "phone": false,
+    "colours": false,
+    "storyColours": false,
+    "funny": true
+  }
+}

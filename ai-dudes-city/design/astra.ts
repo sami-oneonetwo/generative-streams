@@ -12,8 +12,9 @@
 //   npx tsx design/astra.ts revise-bibles <round>          fold the round's world-rule notes into the bibles
 //   npx tsx design/astra.ts outfits <age|all> [round]          garment kits for the rigged figures (revise from out/o<round>/notes-<age>.json)
 //   npx tsx design/astra.ts critique-outfits <age|all> <round>  astra looks at out/o<round>/outfits-<age>.png
-//   npx tsx design/astra.ts critique-image <png…> [--brief "what it is"] [--age <age>] [--effort low|medium|high]
+//   npx tsx design/astra.ts critique-image <png…> [--brief "what it is"] [--age <age>] [--effort low|medium|high] [--hud 1]
 //                                                          the critique on any image: critique-<name>.json beside it
+//                                                          (--hud 1: a HUD mock, judged on story.ts's HUD_RUBRIC)
 // Finders Keepers (design/story.ts; --notes "…" [--image <png>] revises what is there instead of starting over):
 //   npx tsx design/astra.ts folly <age> [1 2 3]            the head's Folly, three takes: spec/folly/<age>.json
 //   npx tsx design/astra.ts folly <age> pick <n>           make take n the one the game reads (no call)
@@ -28,7 +29,7 @@ import { AGES, AGE_IDS, ageStyle, type AgeId } from '../src/shared/ages';
 import { DESIGN_SYSTEM, designMessage } from '../src/worlds/ai-dudes/design';
 import { validateDesign } from '../src/worlds/ai-dudes/blueprint';
 import { BASE_FIGURE, ELEMENTS, ENGINE_RULES, SAMI_NOTES, WORLD, elementById, type Element } from './catalogue';
-import { CAST, CAST_ROLES, FOLLIES, FOLLY_TAKES, HAT_LADDER, PET, PETS, PET_ANCHORS, PET_BRANCH, PET_KITS, PET_SPEC, STORY, STORY_TEXT, castIn, checkFolly, cleanParts, cleanPetKits, composeCast, petChecks, type CastLook, type CastRole, type FollySpec } from './story';
+import { CAST, CAST_ROLES, FOLLIES, FOLLY_TAKES, HAT_LADDER, HUD_RUBRIC, PET, PETS, PET_ANCHORS, PET_BRANCH, PET_KITS, PET_SPEC, STORY, STORY_TEXT, castIn, checkFolly, cleanParts, cleanPetKits, composeCast, petChecks, type CastLook, type CastRole, type FollySpec } from './story';
 import { ACCESSORIES, HATS } from '../src/shared/dudesTypes';
 import type { Blueprint } from '../src/shared/objectTypes';
 import type { AgeOutfits } from '../src/shared/outfits';
@@ -313,6 +314,8 @@ interface ImageCritique {
   brief?: string;
   age?: AgeId;
   effort?: CallOpts['effort'];
+  /** A HUD mock: judged on the HUD rubric (story.ts) instead of the world one, without the map and Sami's world notes. */
+  hud?: boolean;
 }
 /**
  * The critique on any image (a board render, an in-game shot, a HUD mock), written beside it as
@@ -327,9 +330,11 @@ async function critiqueImage(file: string, o: ImageCritique): Promise<void> {
     label: `critique-image ${path.basename(file)}`,
     effort: o.effort ?? 'medium',
     maxTokens: 3500,
-    system: `You are the art director of AI DUDES reviewing a render. ${WORLD}\n${STORY_TEXT}\n${RUBRIC_POINTS}; ${GATE}. ${IMAGE_SCORE}\nAnswer only JSON: ${IMAGE_CRITIQUE_SHAPE}`,
+    system: o.hud
+      ? `You are the art director of AI DUDES reviewing a HUD mock. ${STORY_TEXT}\n${HUD_RUBRIC}; ${GATE}. ${IMAGE_SCORE}\nAnswer only JSON: ${IMAGE_CRITIQUE_SHAPE}`
+      : `You are the art director of AI DUDES reviewing a render. ${WORLD}\n${STORY_TEXT}\n${RUBRIC_POINTS}; ${GATE}. ${IMAGE_SCORE}\nAnswer only JSON: ${IMAGE_CRITIQUE_SHAPE}`,
     user: [
-      { type: 'text', text: `${o.brief ? `The image: ${o.brief}\n` : ''}${o.age ? `Age: ${ageStyle(AGE_IDS.indexOf(o.age)).name}. Bible: ${JSON.stringify(readJson(bibleFile(o.age)))}\n` : ''}Sami's notes: ${SAMI_NOTES.join(' ')}\nReview everything you can see.` },
+      { type: 'text', text: `${o.brief ? `The image: ${o.brief}\n` : ''}${o.age ? `Age: ${ageStyle(AGE_IDS.indexOf(o.age)).name}. Bible: ${JSON.stringify(readJson(bibleFile(o.age)))}\n` : ''}${o.hud ? '' : `Sami's notes: ${SAMI_NOTES.join(' ')}\n`}Review everything you can see.` },
       png(file),
     ],
   })) as { verdict?: string; score?: number; summary?: string; problems?: string[] };
@@ -682,7 +687,7 @@ async function main(): Promise<void> {
       if (!files.length) throw new Error('critique-image <png…>');
       const effort = (['low', 'medium', 'high'] as const).find((e) => e === flags.effort);
       const age = flags.age ? one(flags.age) : undefined;
-      return pool(files, (f) => critiqueImage(path.resolve(f), { brief: flags.brief, age, effort }));
+      return pool(files, (f) => critiqueImage(path.resolve(f), { brief: flags.brief, age, effort, hud: 'hud' in flags }));
     }
     case 'folly':
       return a2 === 'pick' ? pickFolly(one(a1), Number(rest[0])) : folly(one(a1), [a2, ...rest].filter(Boolean).map(Number), revising);

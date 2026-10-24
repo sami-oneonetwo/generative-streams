@@ -47,6 +47,12 @@ const same = (a: string, b: string) => a.trim().toLowerCase() === b.toLowerCase(
  */
 export const STORY_TEXT = `The story (Finders Keepers): the town's head (the streamer's character: ${AGES.map((a) => a.head.title).join(', ')}, one title per age) keeps building monuments to himself on other people's ground: one Folly per age, put up under a tarp behind a gold cordon and unveiled to the whole town, and it stays standing for the rest of the run as evidence against him. He is a vain, funny idiot, never cruel: his selfishness is in what he builds. The travelling band whose camp he took (Wren, her father Ash, Old Moss, Oak the builder and the boy Kit) keep count; Wren leads them. Story colours are locked and mean one thing each: red ${STORY.red} is Wren and her side, gold ${STORY.gold} is the head, his side and his Folly. Nothing else uses them as a main colour.`;
 
+/**
+ * How a HUD mock is judged (`critique-image --hud`: FK-005, FK-137, FK-138): as stickers on the glass,
+ * against board/design-system.md, not as world pieces. The town under the HUD is a real game frame.
+ */
+export const HUD_RUBRIC = `Judge the HUD as a demanding UI art director, against the "Sticker Toy" design system; the town under it is a real game frame and is not under review. (1) Legibility: every piece reads on a 390 px wide phone (a 1920×1080 frame shown at about 0.2) and through stream compression; nothing that has to be read is under 54 px at 1920 (chatter name tags are 40 px on purpose). (2) Consistency: the same pills (radius = height / 2) and radius-28 cards, 6 px ink outlines, hard 0 8px 0 shadows, two fonts (Fredoka for words, names and numbers; Nunito for sentences), one palette: red ${STORY.red}, gold ${STORY.gold}, ink #1E1914, cream #FFF6E0, dust #8C8577 and the cast colours. (3) Clarity: each piece says one thing, the word to type is obvious, a scene frame never has more than two text layers, chat's answers show as pictures; crown = gold and flag = red everywhere. (4) Playfulness and craft: crisp and toy-like, even spacing and alignment, nothing clipped, crowded or covering what the shot is about`;
+
 // ---- parts -----------------------------------------------------------------------------------------
 /** A board part: the game's primitive, plus a light flag and, on story pieces, a hero tag the engine finds it by. */
 export interface StoryPart extends Primitive {

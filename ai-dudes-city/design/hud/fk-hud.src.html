@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finders Keepers · the HUD sticker kit (FK-005 mock)</title>
+<!--
+  FK-005: every story HUD piece in the Sticker Toy look (board/design-system.md), drawn at stream size
+  (1920×1080 design px) over real town shots from a demo server (design/hud/town-shot.js). It is the
+  visual spec for FK-009, FK-010, FK-021, FK-022 and FK-131: sizes, colours, outlines and spacing here
+  are the numbers to build to.
+
+  This is the source. `npx tsx design/hud/build.ts` inlines the fonts and town shots into
+  design/hud/fk-hud.html, the one file that ships (copied to public/fk-hud.html for /fk-hud.html).
+
+  URL knobs: ?only=<frame id> one frame alone · ?sheet=<n> frames n across (default 2) · ?grey=1 greyscale (the
+  design gate's phone check) · ?still=1 no pop-ins and no ticker crossfade. hudAudit() in the console
+  lists any text under the size rules and the text layers in each scene frame.
+-->
+<style>
+@font-face{font-family:Fredoka;font-weight:600;font-display:block;src:url(fonts/fredoka-600-latin.woff2) format('woff2')}
+@font-face{font-family:Fredoka;font-weight:700;font-display:block;src:url(fonts/fredoka-700-latin.woff2) format('woff2')}
+@font-face{font-family:Nunito;font-weight:800;font-display:block;src:url(fonts/nunito-800-latin.woff2) format('woff2')}
+
+/* Tokens: the same names as FK-009's client/dudes/index.html. Story red and gold are locked (design-system §2). */
+:root{
+  --red:#B3262E;--red-deep:#7A1419;--gold:#FFC633;--gold-deep:#A86E00;--ink:#1E1914;--ink92:#1E1914eb;--cream:#FFF6E0;--dust:#8C8577;
+  --moss:#4E8A3A;--oak:#E8762B;--kit:#2F6FD0;--ash:#6E7680;--wren:var(--red);
+  --display:Fredoka,'Trebuchet MS',sans-serif;--text:Nunito,'Segoe UI',sans-serif;
+  --line:6px solid var(--ink);--drop:0 8px 0 #0006;--shine:linear-gradient(#ffffff38,#ffffff38) top/100% 24% no-repeat;
+  --bg-band:url(town-band.webp);--bg-bridge:url(town-bridge.webp);--bg-lots:url(town-lots.webp);
+  --k:1;
+}
+*{box-sizing:border-box}
+html{background:#14100d}
+body{margin:0;color:var(--cream);font:800 15px/1.45 var(--text);-webkit-font-smoothing:antialiased}
+
+/* ---- the page around the frames (not HUD: sized for whoever is reading the page) ---- */
+.view{position:relative;width:calc(1920px * var(--k));height:calc(1080px * var(--k));overflow:hidden}
+.frame{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform:scale(var(--k));transform-origin:0 0;
+  background:var(--bg) var(--bgx,0px) var(--bgy,0px)/var(--bgs,1920px) auto no-repeat #4d6b32}
+.cap{display:flex;gap:.6em;align-items:baseline;padding:.55em .9em 1.6em;color:#d9cfb8;font-size:clamp(12px,1.1vw,17px);line-height:1.35}
+.cap b{font:700 1.05em/1 var(--display);color:var(--gold);white-space:nowrap}
+.cap span{opacity:.85}
+body.sheet main{display:grid;grid-template-columns:repeat(var(--cols),1fr)}
+/* On a phone and on the contact sheet the frames speak for themselves: just the titles. */
+body.sheet .cap span,body.sheet footer{display:none}body.sheet .cap{padding:.3em .7em .8em}
+@media (max-width:700px){.cap span{display:none}.cap{padding:.35em .8em 1em}}
+body.only .cap,body.only footer{display:none}
+body.grey .frame{filter:grayscale(1)}
+footer{padding:1em .9em 3em;color:#bfb49c;font-size:clamp(12px,1vw,15px);max-width:70em}
+footer h1{font:700 1.6em/1.1 var(--display);color:var(--cream);margin:0 0 .4em}
+
+/* ---- shared sticker shapes (design-system §4: pills, radius-28 cards, 6 px ink outline, 0 8px 0 hard shadow) ---- */
+.pill{border:var(--line);border-radius:999px;box-shadow:var(--drop)}
+.card{border:var(--line);border-radius:28px;box-shadow:var(--drop)}
+.ink{background:var(--ink92);color:var(--cream)}
+.chip{display:inline-flex;align-items:center;gap:14px;height:78px;padding:0 30px;font:700 54px/1 var(--display);white-space:nowrap}
+.chip.big{height:92px;padding:0 38px;font-size:64px;gap:16px}
+.chip.gold{background:var(--gold);color:var(--ink)}.chip.red{background:var(--red);color:var(--cream)}
+.chip.cream{background:var(--cream);color:var(--ink)}.chip.dust{background:var(--dust);color:var(--ink)}
+.chip svg{width:52px;height:52px;flex:none}.chip.big svg{width:62px;height:62px}
+.badge{display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:var(--cream);border:var(--line);flex:none}
+.badge svg{width:54px;height:54px}
+.badge.gold{background:var(--gold)}.badge.red{background:var(--red)}
+.num{display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:var(--cream);color:var(--ink);font:700 64px/1 var(--display);flex:none}
+
+/* ---- the top strip: the Board in free play, the GATHER banner during a Call, nothing in scenes ---- */
+.strip{position:absolute;left:340px;top:24px;width:1240px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.bars{display:flex;gap:20px;width:100%}
+.bar{position:relative;flex:1;height:96px;background:var(--ink92);overflow:hidden}
+.bar .fill{position:absolute;top:0;bottom:0;background:var(--shine),var(--gold)}
+.bar.gold .fill{left:0;width:calc(var(--fill) * 100%)}
+.bar.red .fill{right:0;width:calc(var(--fill) * 100%);background:var(--shine),var(--red)}
+/* A cream leading edge, so the fill's end shows in greyscale too: red and the ink track are close in grey (none at 0 or 100%). */
+.bar.gold .fill{border-right:5px solid var(--cream)}.bar.red .fill{border-left:5px solid var(--cream)}
+.bar .lab{position:absolute;inset:0;display:flex;align-items:center;gap:16px;padding:0 20px 0 98px;font:700 64px/1 var(--display);white-space:nowrap}
+/* A bar holds 480 px of label: "GOLDEN ME 8%" at 64 px. A label that doesn't fit drops to 54 px and loses its
+   tracking (.long), which holds "BUST WORKS 100%"; so a Board word is 10 letters at most (the Modern Folly
+   is GOLF, not GOLF COURSE). */
+.bar .lab.long{font-size:54px;letter-spacing:0}
+.bar .lab b{font-weight:600}
+.bar.red .lab{justify-content:flex-end;padding:0 98px 0 20px}
+/* The word is cream with an ink keyline (as the title card and THE WONDER), so it reads the same over the
+   fill, the track and the edge between them, at any percentage and in greyscale. */
+.bar .lab,.wonder .lab .word{color:var(--cream);-webkit-text-stroke:16px var(--ink);paint-order:stroke fill;letter-spacing:.025em}
+.bar .badge{position:absolute;top:4px}.bar.gold .badge{left:4px}.bar.red .badge{right:4px}
+/* The tug line: gold from the left, red from the right, meeting at the knot (gold's share of the sided
+   chatters). Two flat spans (a rope's hatching turns to mush at phone size); the tick marks half way; the
+   knot's eyes look at whoever leads. */
+.tug{display:flex;align-items:center;gap:18px;width:100%}
+.rope{position:relative;flex:1;height:78px}
+.cord{position:absolute;left:0;right:0;top:20px;height:38px;border:var(--line);border-radius:19px;overflow:hidden;box-shadow:var(--drop);
+  background:var(--shine),var(--red)}
+.cord i{position:absolute;left:0;top:0;bottom:0;width:calc(var(--p) * 100%);background:var(--shine),var(--gold)}
+.rope .mid{position:absolute;left:50%;top:6px;width:8px;height:66px;margin-left:-4px;border-radius:4px;background:var(--cream);border:3px solid var(--ink)}
+.knot{position:absolute;left:calc(var(--p) * 100%);top:-4px;width:86px;height:86px;margin-left:-43px;border-radius:50%;background:var(--cream);border:var(--line);box-shadow:var(--drop)}
+.knot::before,.knot::after{content:'';position:absolute;top:22px;width:14px;height:21px;border-radius:7px;background:var(--ink);transform:translateX(calc(var(--look,0) * 7px))}
+.knot::before{left:20px}.knot::after{right:20px}
+.knot u{position:absolute;left:24px;right:24px;bottom:13px;height:10px;border-bottom:6px solid var(--ink);border-radius:0 0 12px 12px}
+.ticker{position:relative;display:inline-flex;align-items:center;gap:18px;height:84px;padding:0 40px 0 8px;font:800 54px/1 var(--text);white-space:nowrap}
+.ticker .badge{width:62px;height:62px}.ticker .badge svg{width:44px;height:44px}
+.ticker .line{display:inline-flex;align-items:center;gap:18px}
+/* The ticker is the one thing that moves at rest: a crossfade every 20 s (shown faster here: every 5 s). */
+.ticker .line+.line{position:absolute;left:8px;top:0;bottom:0}
+body:not(.still) .ticker .line{animation:tick 15s infinite both}
+body:not(.still) .ticker .line:nth-child(2){animation-delay:5s}body:not(.still) .ticker .line:nth-child(3){animation-delay:10s}
+body.still .ticker .line+.line{display:none}
+@keyframes tick{0%{opacity:0}3%,30%{opacity:1}33.3%,100%{opacity:0}}
+/* With THE WONDER up, "type help" is the one command: the tug keeps the tally, its ends turn to plain side badges. */
+.tug .badge{width:78px;height:78px;border-width:6px}
+.gather{width:1240px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:24px;row-gap:4px;padding:18px 26px 24px 22px}
+.gather .badge{width:104px;height:104px;grid-row:span 2}.gather .badge svg{width:74px;height:74px}
+.gather h2{margin:0;font:700 72px/1.05 var(--display);white-space:nowrap}
+.gather p{margin:0;font:800 54px/1.1 var(--text);color:var(--cream)}
+.gather .chip{grid-row:span 2;align-self:center}
+/* THE WONDER: the two bars become one; gold from the left, red from the right by who put in what, grey the rest. */
+.wonder{position:relative;width:1240px;height:96px;background:var(--dust);overflow:hidden}
+.wonder .fg,.wonder .fr{position:absolute;top:0;bottom:0}
+.wonder .fg{left:0;width:calc(var(--by-gold) * 100%);background:var(--shine),var(--gold)}
+.wonder .fr{right:0;width:calc(var(--by-red) * 100%);background:var(--shine),var(--red)}
+.wonder .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:22px;font:700 64px/1 var(--display);white-space:nowrap}
+.wonder .lab .chip{height:72px;box-shadow:none}
+.wonder .badge{position:absolute;top:4px}.wonder .badge.at-l{left:4px}.wonder .badge.at-r{right:4px}
+
+/* ---- in the world: tags over heads, discs under feet (positions from the town shot) ---- */
+.tag{position:absolute;transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:12px;white-space:nowrap;
+  border:var(--line);border-radius:999px;box-shadow:var(--drop)}
+.tag.cast,.tag.head{height:76px;padding:0 30px;font:700 54px/1 var(--display)}
+.tag.cast svg,.tag.head svg{width:50px;height:50px}
+.tag.cast.has-icon{padding-left:10px}.tag.head{padding-left:10px}
+.tag .badge{width:56px;height:56px}.tag .badge svg{width:40px;height:40px}
+.tag.wren{background:var(--red);color:var(--cream)}.tag.ash{background:var(--ash);color:var(--cream)}
+.tag.moss{background:var(--moss);color:var(--cream)}.tag.oak{background:var(--oak);color:var(--ink)}.tag.kit{background:var(--kit);color:var(--cream)}
+.tag.head{background:var(--gold);color:var(--ink)}
+/* Chatter tags: 40 px, the one exception to the 54 px rule (a name identifies, it doesn't instruct). */
+.tag.chatter{height:62px;padding:0 24px;font:600 40px/1 var(--display);background:var(--ink92);color:var(--cream)}
+.tag.chatter.sided{padding-left:6px}
+.tag.chatter .badge{width:46px;height:46px}.tag.chatter .badge svg{width:32px;height:32px}
+/* The side disc: 1.3 m on the ground, a sticker rim of 0.1 m cream then 0.05 m ink (here at the shot's px per metre). */
+.disc{position:absolute;width:calc(1.3px * var(--m));height:calc(0.66px * var(--m));transform:translate(-50%,-50%);border-radius:50%;
+  box-shadow:0 0 0 calc(.1px * var(--m)) var(--cream),0 0 0 calc(.15px * var(--m)) var(--ink)}
+.disc.gold{background:var(--gold)}.disc.red{background:var(--red)}
+/* Feet stand on the disc: the same town shot, cut to the legs, laid back over it. */
+.feet{position:absolute;background:var(--bg) var(--fx) var(--fy)/1920px auto no-repeat}
+
+/* ---- scenes: 7vh letterbox (76 px at 1080), the HUD and tags gone ---- */
+.lb::before,.lb::after{content:'';position:absolute;left:0;right:0;height:76px;background:var(--ink);z-index:5}
+.lb::before{top:0}.lb::after{bottom:0}
+.sub{position:absolute;left:0;right:0;bottom:0;height:76px;z-index:6;display:flex;align-items:center;justify-content:center;gap:22px}
+.sub .chip{height:66px;padding:0 26px 0 8px;box-shadow:none;gap:10px}
+.sub .chip:has(> svg){padding-left:16px}
+.sub .chip svg{width:44px;height:44px}
+.sub .line{font:800 58px/1 var(--text);color:var(--cream);white-space:nowrap}
+.titlecard{position:absolute;left:0;right:0;top:118px;z-index:4;text-align:center;font:700 140px/1 var(--display);letter-spacing:.015em;text-transform:uppercase;
+  color:var(--gold);-webkit-text-stroke:20px var(--ink);paint-order:stroke fill;text-shadow:0 10px 0 #0006}
+.rate{position:absolute;right:110px;bottom:120px;width:400px;padding:22px 24px 26px;background:var(--cream);color:var(--ink);text-align:center;z-index:4}
+.rate .k{font:700 54px/1 var(--display);letter-spacing:.04em}
+.rate .n{font:700 160px/.92 var(--display);margin:12px 0 18px}
+.rate .chip{box-shadow:none}
+.plaque{position:absolute;left:96px;top:150px;width:660px;padding:36px 50px 48px;text-align:center;color:var(--ink);z-index:4;
+  background:var(--gold);box-shadow:var(--drop),inset 0 0 0 12px var(--gold),inset 0 0 0 18px var(--gold-deep)}
+.plaque .crest{display:grid;place-items:center;width:110px;height:110px;margin:-4px auto 8px;border-radius:50%;background:var(--gold-deep);border:var(--line)}
+.plaque .crest svg{width:80px;height:80px}
+.plaque p{margin:6px 0 18px;font:700 54px/1.05 var(--display);text-transform:uppercase}
+.plaque .names{font:700 64px/1.15 var(--display);text-transform:uppercase}
+.plaque .rivet{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--gold-deep);border:4px solid var(--ink)}
+.pips{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);display:flex;align-items:center;gap:16px;padding:12px 30px 12px 12px;z-index:4}
+.pips .badge{width:84px;height:84px}.pips .badge svg{width:62px;height:62px}
+.pips i{display:grid;place-items:center;width:66px;height:66px;border-radius:50%;border:6px dashed var(--dust)}
+.pips i.on{background:var(--red);border:6px solid var(--cream)}
+.pips i.on svg{width:46px;height:46px}
+.now{position:absolute;left:50%;top:612px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:22px;padding:42px 64px 40px;z-index:4}
+.now .word{font:700 96px/1 var(--display);white-space:nowrap}
+.now .tab{position:absolute;left:-30px;top:-40px;rotate:-7deg}
+.home{position:absolute;left:60px;bottom:64px;display:flex;flex-direction:column;gap:14px;padding:26px 36px 30px;z-index:4}
+.home h3{margin:0;font:700 64px/1 var(--display);white-space:nowrap}
+.home p{margin:0;font:800 54px/1 var(--text);white-space:nowrap}
+.home .ages{display:flex;align-items:center;gap:16px;margin-top:8px}
+.home .ages i{display:grid;place-items:center;width:88px;height:88px;border-radius:22px;border:var(--line);background:var(--cream);color:var(--ink);--cut:var(--cream)}
+.home .ages i.cur{width:116px;height:116px;border-radius:28px;border-width:6px;box-shadow:0 0 0 5px var(--cream)}
+.home .ages i.later{background:transparent;border:6px dashed var(--dust);color:var(--dust);--cut:var(--ink)}
+.home .ages svg{width:60px;height:60px}.home .ages i.cur svg{width:84px;height:84px}
+
+/* ---- the kit sheet ---- */
+.kitbg{position:absolute;inset:0;background:var(--bg-band) 0 0/1920px auto;filter:brightness(.38) saturate(.6)}
+.kit{position:absolute;inset:0;padding:48px 60px}
+.kit .note{font:800 26px/1.2 var(--text);color:var(--cream);opacity:.85}
+.kit .note b{font-family:var(--display);color:var(--cream);font-weight:700}
+.kit .row{position:absolute;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.kit .row.note{display:block}
+.sw{display:flex;flex-direction:column;align-items:center;gap:6px}
+.sw i{display:block;width:96px;height:64px;border-radius:16px;border:var(--line)}
+.sw.grey i{filter:grayscale(1)}
+
+/* Pop-in 0.85 -> 1.06 -> 1 over 300 ms (design-system §4), once on load; nothing else moves at rest. */
+body:not(.still) .pop{animation:pop .3s ease-out both}
+@keyframes pop{0%{scale:.85;opacity:0}60%{scale:1.06;opacity:1}100%{scale:1}}
+@media (prefers-reduced-motion:reduce){.pop,.ticker .line{animation:none!important}.ticker .line+.line{display:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- crown = gold, pennant flag = red, everywhere (design-system §2). 64-unit boxes, 5-unit ink lines. -->
+    <symbol id="crown" viewBox="0 0 64 64"><path d="M9 49 6 20l15 12 11-20 11 20 15-12-3 29z" fill="#FFC633" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/><path d="M9 49h46" stroke="#1E1914" stroke-width="5"/><g fill="#FFF6E0" stroke="#1E1914" stroke-width="4"><circle cx="6" cy="18" r="4.5"/><circle cx="32" cy="10" r="4.5"/><circle cx="58" cy="18" r="4.5"/></g><circle cx="32" cy="38" r="5" fill="#B3262E" stroke="#1E1914" stroke-width="3.5" opacity="0"/></symbol>
+    <symbol id="flag" viewBox="0 0 64 64"><path d="M15 7v52" stroke="#1E1914" stroke-width="7" stroke-linecap="round"/><path d="M18 9c12 2 26 6 40 12-13 6-27 10-40 14z" fill="#B3262E" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="flag-cream" viewBox="0 0 64 64"><path d="M15 7v52" stroke="#1E1914" stroke-width="7" stroke-linecap="round"/><path d="M18 9c12 2 26 6 40 12-13 6-27 10-40 14z" fill="#FFF6E0" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="bell" viewBox="0 0 64 64"><path d="M32 8c-11 0-17 9-17 20v9l-6 9h46l-6-9v-9c0-11-6-20-17-20z" fill="#FFC633" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/><circle cx="32" cy="52" r="6" fill="#FFF6E0" stroke="#1E1914" stroke-width="4.5"/><path d="M32 3v6" stroke="#1E1914" stroke-width="5" stroke-linecap="round"/><path d="M5 22c1-6 4-10 8-13M59 22c-1-6-4-10-8-13" fill="none" stroke="#1E1914" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="fire" viewBox="0 0 64 64"><path d="M33 5c3 11 17 16 17 32 0 11-8 20-18 20S14 48 14 38c0-8 5-13 9-16 0 6 3 9 6 9-2-9 0-18 4-26z" fill="#B3262E" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/><path d="M32 33c4 5 9 7 9 14 0 5-4 9-9 9s-9-4-9-8c0-6 6-8 9-15z" fill="#FFF6E0" stroke="#1E1914" stroke-width="4" stroke-linejoin="round"/><path d="M8 59h48" stroke="#1E1914" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="flame" viewBox="0 0 64 64"><path d="M33 4c3 12 18 17 18 33 0 12-8 22-19 22S13 50 13 39c0-9 6-14 10-17 0 7 3 10 7 10-2-10 0-20 3-28z" fill="#FFF6E0" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="eye" viewBox="0 0 64 64"><path d="M4 32c8-12 17-18 28-18s20 6 28 18c-8 12-17 18-28 18S12 44 4 32z" fill="#FFF6E0" stroke="#1E1914" stroke-width="5" stroke-linejoin="round"/><circle cx="32" cy="32" r="9" fill="#1E1914"/></symbol>
+    <symbol id="hand" viewBox="0 0 64 64"><path d="M20 58c-6-6-11-14-11-20 0-3 4-4 6-2l5 6V14c0-3 5-3 5 0v18-24c0-3 6-3 6 0v24-22c0-3 6-3 6 0v22-17c0-3 6-3 6 0v29c0 7-3 12-6 14z" fill="#FFF6E0" stroke="#1E1914" stroke-width="4.5" stroke-linejoin="round"/></symbol>
+    <!-- the "your home through the ages" stamps: one silhouette per age -->
+    <symbol id="age-stone" viewBox="0 0 64 64"><path d="M6 54c0-22 12-36 26-36s26 14 26 36z" fill="currentColor"/><path d="M32 18 26 6M32 18l7-11" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M24 54V42c0-5 4-8 8-8s8 3 8 8v12z" style="fill:var(--cut)"/></symbol>
+    <symbol id="age-bronze" viewBox="0 0 64 64"><path d="M4 26 32 8l28 18zM9 26h46v30H9z" fill="currentColor"/><path d="M16 31h7v20h-7zM41 31h7v20h-7zM27 56V40h10v16z" style="fill:var(--cut)"/></symbol>
+    <symbol id="age-medieval" viewBox="0 0 64 64"><path d="M10 58V16h9v8h8v-8h10v8h8v-8h9v42z" fill="currentColor"/><path d="M25 58V45c0-4 3-7 7-7s7 3 7 7v13z" style="fill:var(--cut)"/></symbol>
+    <symbol id="age-industrial" viewBox="0 0 64 64"><path d="M4 58V32l13-9v9l13-9v9l13-9v35zM45 58V8h12v50z" fill="currentColor"/><path d="M11 40h9v8h-9zM27 40h9v8h-9z" style="fill:var(--cut)"/></symbol>
+    <symbol id="age-modern" viewBox="0 0 64 64"><path d="M14 60V6h36v54z" fill="currentColor"/><path d="M21 13h8v7h-8zM35 13h8v7h-8zM21 26h8v7h-8zM35 26h8v7h-8zM21 39h8v7h-8zM35 39h8v7h-8zM28 60v-8h8v8z" style="fill:var(--cut)"/></symbol>
+    <symbol id="age-wasteland" viewBox="0 0 64 64"><path d="M4 56c0-17 12-28 28-28s28 11 28 28z" fill="currentColor"/><path d="M41 30 50 8" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="8" r="5" fill="currentColor"/><path d="M24 56V46c0-4 4-7 8-7s8 3 8 7v10z" style="fill:var(--cut)"/></symbol>
+  </defs>
+</svg>
+
+<main>
+<!-- 1 ─ FREE PLAY: the Board, tags, discs ─────────────────────────────────────────────────── -->
+<section id="free" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-band)">
+  <!-- discs under the sided chatters' feet (the band shot is ~67.5 px per metre); kev's tag is decluttered under Wren's -->
+  <i class="disc red"  style="left:1160px;top:752px;--m:67.5"></i>
+  <i class="disc red"  style="left:1470px;top:766px;--m:67.5"></i>
+  <i class="disc gold" style="left:1443px;top:890px;--m:67.5"></i>
+  <i class="feet" style="left:1140px;top:705px;width:40px;height:55px;--bg:var(--bg-band);--fx:-1140px;--fy:-705px"></i>
+  <i class="feet" style="left:1426px;top:842px;width:36px;height:56px;--bg:var(--bg-band);--fx:-1426px;--fy:-842px"></i>
+  <span class="tag cast wren has-icon pop" style="left:1248px;top:666px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
+  <span class="tag chatter sided pop" style="left:1476px;top:662px"><span class="badge"><svg><use href="#flag"/></svg></span>bo</span>
+  <span class="tag chatter sided pop" style="left:1445px;top:784px"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span>
+  <span class="tag chatter pop" style="left:1268px;top:792px">nia</span>
+  <div class="strip">
+    <div class="bars">
+      <div class="bar gold pill pop" style="--fill:.72"><i class="fill"></i><span class="lab">BIG HUT <b>72%</b></span><span class="badge"><svg><use href="#crown"/></svg></span></div>
+      <div class="bar red pill pop" style="--fill:.375"><i class="fill"></i><span class="lab">BRIDGE <b>3/8</b></span><span class="badge"><svg><use href="#flag"/></svg></span></div>
+    </div>
+    <div class="tug pop" style="--p:.636">
+      <span class="chip gold pill">type gold</span><span class="num pill">7</span>
+      <span class="rope"><span class="cord"><i></i></span><i class="mid"></i><i class="knot" style="--look:-1"><u></u></i></span>
+      <span class="num pill">4</span><span class="chip red pill">type red</span>
+    </div>
+    <div class="ticker ink pill pop">
+      <span class="line"><span class="badge"><svg><use href="#flag"/></svg></span>Kev crossed to red</span>
+      <span class="line"><span class="badge"><svg><use href="#crown"/></svg></span>Dana joined gold</span>
+      <span class="line"><span class="badge"><svg><use href="#flame"/></svg></span>The Chief took Wren's home</span>
+    </div>
+  </div>
+</div></div>
+<p class="cap"><b>1 · Free play</b><span>The Board: gold BIG HUT 72% left with the crown, red BRIDGE 3/8 right with the flag, each filling toward the middle, the words cream with an ink keyline so they read at any fill; the tug line (gold 7, red 4, the knot looks at who leads); the ticker. Wren's cast tag (54 px), chatter tags (40 px) with crown or flag, side discs under the sided chatters. Kev's tag is decluttered under Wren's, as the game does; his red disc still says his side.</span></p></section>
+
+<!-- 2 ─ THE CALL: the GATHER banner takes the strip ──────────────────────────────────────── -->
+<section id="call" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-bridge)">
+  <span class="tag cast wren has-icon pop" style="left:1519px;top:752px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
+  <span class="tag chatter sided pop" style="left:1640px;top:842px"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span>
+  <div class="strip">
+    <div class="gather card ink pop">
+      <span class="badge gold"><svg><use href="#bell"/></svg></span>
+      <h2>GATHER: THE UNVEILING</h2>
+      <span class="chip gold pill big">0:25</span>
+      <p>The Chief's secret build</p>
+    </div>
+  </div>
+</div></div>
+<p class="cap"><b>2 · The Call</b><span>GATHER banner in the top strip in place of the Board for the 25 s Call: bell, 72 px title, the countdown chip, a 4-word premise at 54 px. Free play carries on under it (tags still up); the beam and the walk are in the world.</span></p></section>
+
+<!-- 3 ─ THE REVEAL (U3): title card + RATE IT ───────────────────────────────────────────── -->
+<section id="reveal" class="v"><div class="view"><div class="frame lb" data-scene="1" style="--bg:var(--bg-lots)">
+  <div class="titlecard pop" data-layer>THE CHIEF'S BIG HUT</div>
+  <div class="rate card pop" data-layer>
+    <div class="k">RATE IT</div>
+    <div class="n">5.0</div>
+    <span class="chip ink pill">type 1–10</span>
+  </div>
+</div></div>
+<p class="cap"><b>3 · The reveal (U3)</b><span>Letterbox 76 px a bar. Title card 140 px caps, gold with a 10 px ink stroke (gold because it's his). The RATE IT tile pops in a beat after the title: the 160 px live average, one decimal ("7" and "3" make 5.0), and what to type. Two text layers.</span></p></section>
+
+<!-- 4 ─ THE HERO SHOT (U4): plaque card + subtitle ──────────────────────────────────────── -->
+<section id="plaque" class="v"><div class="view"><div class="frame lb" data-scene="1" style="--bg:var(--bg-bridge)">
+  <div class="plaque card pop" data-layer>
+    <i class="rivet" style="left:20px;top:20px"></i><i class="rivet" style="right:20px;top:20px"></i><i class="rivet" style="left:20px;bottom:20px"></i><i class="rivet" style="right:20px;bottom:20px"></i>
+    <div class="crest"><svg><use href="#crown"/></svg></div>
+    <p>Friends of<br>the Chief</p>
+    <div class="names">Dana<br>Bo · Juno</div>
+  </div>
+  <div class="sub" data-layer><span class="chip gold pill"><span class="badge" style="width:54px;height:54px"><svg style="width:38px;height:38px"><use href="#crown"/></svg></span>THE CHIEF</span><span class="line">A hut fit for a Chief. One Chief.</span></div>
+</div></div>
+<p class="cap"><b>4 · The hero shot (U4)</b><span>The plaque card: a gold plate with a crown emboss and the plaque names, big, for Sami to read out (the build's name already had its title card). Subtitle inside the bottom bar: speaker chip 54 px in the speaker's colour, one line of 58 px, ≤ 42 characters. Two text layers.</span></p></section>
+
+<!-- 5 ─ THE RALLY: pips at Wren's fire + subtitle ───────────────────────────────────────── -->
+<section id="rally" class="v"><div class="view"><div class="frame lb" data-scene="1" style="--bg:var(--bg-band)">
+  <div class="pips ink pill pop"><span class="badge"><svg><use href="#fire"/></svg></span><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i class="on"><svg><use href="#flame"/></svg></i><i></i><i></i><i></i></div>
+  <div class="sub" data-layer><span class="chip red pill"><span class="badge" style="width:54px;height:54px"><svg style="width:38px;height:38px"><use href="#flag"/></svg></span>WREN</span><span class="line">Him or us?</span><span class="chip red pill"><svg><use href="#flag-cream"/></svg>type us</span></div>
+</div></div>
+<p class="cap"><b>5 · The rally</b><span>Wren asks "Him or us?" with the command in its own chip; each "us" lights the next red pip right above it and joins red, so the answer is a picture. One text layer. On /mayor meanwhile, Sami sees only the grey ON STREAM chip (kit sheet).</span></p></section>
+
+<!-- 6 ─ THE NOW CARD: after every scene ──────────────────────────────────────────────────── -->
+<section id="now" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-bridge)">
+  <div class="now card ink pop">
+    <span class="tab chip cream pill">NOW</span>
+    <span class="word">MEND THE BRIDGE</span>
+    <span class="chip red pill big"><svg><use href="#flag-cream"/></svg>type red</span>
+  </div>
+</div></div>
+<p class="cap"><b>6 · The NOW card</b><span>Centre-lower for 6 s as the letterbox goes out: the next job at 96 px and the word to type in a 64 px chip. The Board comes back when it goes, so only one text layer is up.</span></p></section>
+
+<!-- 7 ─ THE WONDER: the bars merge ───────────────────────────────────────────────────────── -->
+<section id="wonder" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-band)">
+  <!-- discs under the sided chatters' feet (the band shot is ~67.5 px per metre); kev's tag is decluttered under Wren's -->
+  <i class="disc red"  style="left:1160px;top:752px;--m:67.5"></i>
+  <i class="disc red"  style="left:1470px;top:766px;--m:67.5"></i>
+  <i class="disc gold" style="left:1443px;top:890px;--m:67.5"></i>
+  <i class="feet" style="left:1140px;top:705px;width:40px;height:55px;--bg:var(--bg-band);--fx:-1140px;--fy:-705px"></i>
+  <i class="feet" style="left:1426px;top:842px;width:36px;height:56px;--bg:var(--bg-band);--fx:-1426px;--fy:-842px"></i>
+  <span class="tag cast wren has-icon" style="left:1248px;top:666px"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span>
+  <span class="tag chatter sided" style="left:1476px;top:662px"><span class="badge"><svg><use href="#flag"/></svg></span>bo</span>
+  <span class="tag chatter sided" style="left:1445px;top:784px"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span>
+  <span class="tag chatter" style="left:1268px;top:792px">nia</span>
+  <div class="strip">
+    <div class="wonder pill pop" style="--by-gold:.38;--by-red:.27">
+      <i class="fg"></i><i class="fr"></i>
+      <span class="lab"><span class="word">THE WONDER</span><span class="chip cream pill">type help</span></span>
+      <span class="badge at-l"><svg><use href="#crown"/></svg></span><span class="badge at-r"><svg><use href="#flag"/></svg></span>
+    </div>
+    <div class="tug pop" style="--p:.5">
+      <span class="badge gold"><svg><use href="#crown"/></svg></span><span class="num pill">6</span>
+      <span class="rope"><span class="cord"><i></i></span><i class="mid"></i><i class="knot"><u></u></i></span>
+      <span class="num pill">6</span><span class="badge red"><svg><use href="#flag-cream"/></svg></span>
+    </div>
+    <div class="ticker ink pill pop"><span class="line"><span class="badge"><svg><use href="#hand"/></svg></span>Everyone builds the Furnace</span></div>
+  </div>
+</div></div>
+<p class="cap"><b>7 · THE WONDER</b><span>In the last stretch the two bars merge into one 1240 px pill: gold fills from the left and red from the right by who put in what (38% · 27%), grey for the rest (neutrals and what's left to build). The label is cream with an ink stroke, like the title card, so it reads on all three. "type help" is the one command: the tug line keeps the tally with plain side badges at its ends; at 6–6 the knot looks straight out.</span></p></section>
+
+<!-- 8 ─ YOUR HOME THROUGH THE AGES ───────────────────────────────────────────────────────── -->
+<section id="home" class="v"><div class="view"><div class="frame" style="--bg:var(--bg-lots)">
+  <span class="tag chatter pop" style="left:1500px;top:912px">nia</span>
+  <div class="home card ink pop">
+    <h3>NIA'S HOME</h3>
+    <p>Mud Hut → Bronze Villa</p>
+    <div class="ages"><i><svg><use href="#age-stone"/></svg></i><i class="cur"><svg><use href="#age-bronze"/></svg></i><i class="later"><svg><use href="#age-medieval"/></svg></i><i class="later"><svg><use href="#age-industrial"/></svg></i><i class="later"><svg><use href="#age-modern"/></svg></i><i class="later"><svg><use href="#age-wasteland"/></svg></i></div>
+  </div>
+  <div class="strip">
+    <div class="bars">
+      <div class="bar gold pill" style="--fill:.08"><i class="fill"></i><span class="lab">GOLDEN ME <b>8%</b></span><span class="badge"><svg><use href="#crown"/></svg></span></div>
+      <div class="bar red pill" style="--fill:.5"><i class="fill"></i><span class="lab">HEALER <b>1/2</b></span><span class="badge"><svg><use href="#flag"/></svg></span></div>
+    </div>
+  </div>
+</div></div>
+<p class="cap"><b>8 · Your home through the ages</b><span>On a returning chatter's first line in a new age (here stream 2, Bronze): the home card, one stamp per age (past cream, now bigger, later dashed; no story colours), while the camera holds on the home for 6 s. The Board stays up, here with Bronze's jobs: GOLDEN ME has just started (8%, its fill still under the crown) and the healer's hut is half done. (The "test-nia" sign is the game's own lot sign, in the world.)</span></p></section>
+
+<!-- 9 ─ THE KIT SHEET ─────────────────────────────────────────────────────────────────────── -->
+<section id="kit" class="v"><div class="view"><div class="frame"><div class="kitbg"></div><div class="kit">
+  <div class="row" style="left:60px;top:44px"><span class="tag head" style="position:static;transform:none"><span class="badge"><svg><use href="#crown"/></svg></span>THE CHIEF</span><span class="tag cast wren has-icon" style="position:static;transform:none"><span class="badge"><svg><use href="#flag"/></svg></span>WREN</span><span class="tag cast ash" style="position:static;transform:none">ASH THE HUNTER</span><span class="tag cast moss" style="position:static;transform:none">OLD MOSS</span></div>
+  <div class="row" style="left:60px;top:150px"><span class="tag cast oak" style="position:static;transform:none">OAK THE BUILDER</span><span class="tag cast kit" style="position:static;transform:none">KIT</span><span class="tag chatter sided" style="position:static;transform:none"><span class="badge gold"><svg><use href="#crown"/></svg></span>dana</span><span class="tag chatter sided" style="position:static;transform:none"><span class="badge"><svg><use href="#flag"/></svg></span>kev</span><span class="tag chatter" style="position:static;transform:none">nia</span></div>
+  <div class="row note" style="left:60px;top:246px">Head and cast tags 54 px (head gold, never red; cast in their locked colours) · chatter tags 40 px, crown or flag only once they pick a side.</div>
+  <div class="row" style="left:60px;top:304px"><span class="chip gold pill">type gold</span><span class="chip red pill">type red</span><span class="chip cream pill">type help</span><span class="chip ink pill" style="background:var(--ink92);color:var(--cream)"><svg><use href="#fire"/></svg>type coming</span><span class="chip dust pill"><svg><use href="#eye"/></svg>ON STREAM</span></div>
+  <div class="row note" style="left:60px;top:404px">Command chips 54 px (64 px on the NOW card). <b>type coming</b> answers Wren's whistle (the rally banner); a town gathering needs no command. <b>ON STREAM</b> is /mayor only: grey, no instruction, during rallies. Board words: 10 letters at most (64 px, 54 px once the count is long).</div>
+  <div class="row" style="left:60px;top:470px">
+    <span class="sw"><i style="background:var(--red)"></i><span class="note">RED #B3262E</span></span>
+    <span class="sw"><i style="background:var(--gold)"></i><span class="note">GOLD #FFC633</span></span>
+    <span class="sw"><i style="background:var(--ink)"></i><span class="note">INK #1E1914</span></span>
+    <span class="sw"><i style="background:var(--cream)"></i><span class="note">CREAM</span></span>
+    <span class="sw"><i style="background:var(--dust)"></i><span class="note">DUST</span></span>
+    <span class="sw grey"><i style="background:var(--red)"></i><span class="note">red in grey</span></span>
+    <span class="sw grey"><i style="background:var(--gold)"></i><span class="note">gold in grey</span></span>
+    <span class="sw"><i style="background:var(--moss)"></i><span class="note">Moss</span></span>
+    <span class="sw"><i style="background:var(--oak)"></i><span class="note">Oak</span></span>
+    <span class="sw"><i style="background:var(--kit)"></i><span class="note">Kit</span></span>
+    <span class="sw"><i style="background:var(--ash)"></i><span class="note">Ash</span></span>
+  </div>
+  <div class="row note" style="left:60px;top:604px;max-width:1100px">Red L* 40 against gold L* 83: apart in greyscale and for colourblind viewers, and always with the icon (crown = gold, flag = red). Cream on red 6.0:1, ink on gold 11:1; never red text on ink (2.7:1).</div>
+  <div class="row" style="left:60px;top:700px">
+    <span class="badge"><svg><use href="#crown"/></svg></span><span class="badge"><svg><use href="#flag"/></svg></span><span class="badge"><svg><use href="#bell"/></svg></span><span class="badge"><svg><use href="#fire"/></svg></span><span class="badge red"><svg><use href="#flame"/></svg></span><span class="badge"><svg><use href="#eye"/></svg></span><span class="badge"><svg><use href="#hand"/></svg></span>
+    <svg viewBox="0 0 200 110" style="width:220px;height:120px"><ellipse cx="100" cy="55" rx="94" ry="48" fill="#1E1914"/><ellipse cx="100" cy="55" rx="90" ry="45" fill="#FFF6E0"/><ellipse cx="100" cy="55" rx="82" ry="40" fill="#FFC633"/></svg>
+    <svg viewBox="0 0 200 110" style="width:220px;height:120px"><ellipse cx="100" cy="55" rx="94" ry="48" fill="#1E1914"/><ellipse cx="100" cy="55" rx="90" ry="45" fill="#FFF6E0"/><ellipse cx="100" cy="55" rx="82" ry="40" fill="#B3262E"/></svg>
+  </div>
+  <div class="row note" style="left:60px;top:840px;max-width:1800px">6 px ink outline on everything: pills, cards, tags and the badges inside them. Icons sit on cream stickers. Side disc 1.3 m on the ground: 0.1 m cream then 0.05 m ink rim; neutrals get none. Shapes: pills (radius = height / 2), cards radius 28, 6 px ink outline, hard shadow 0 8px 0 #0006. Pop-in 0.85 → 1.06 → 1 over 300 ms; nothing moves at rest but the ticker's crossfade (every 20 s).</div>
+  <div class="row note" style="left:60px;top:930px;max-width:1800px"><b>Fredoka 600/700</b> words, names and numbers · <b>Nunito 800</b> sentences (ticker, premise, subtitles). Sizes at 1920×1080: title 140 · RATE IT 160 · NOW 96 + 64 · gather 72 + 54 · Board 64, chips 54, tallies 64 · ticker 54 · subtitle 58 · tags 54 / 40. Nothing to be read under 54 px.</div>
+</div></div></div>
+<p class="cap"><b>9 · The kit</b><span>A spec sheet for the engineers, not a stream frame (its notes are small on purpose): every tag and chip, the ON STREAM chip for /mayor, the palette with its greyscale check, the icons, the side discs and the rules.</span></p></section>
+</main>
+
+<footer>
+  <h1>Finders Keepers · the HUD sticker kit</h1>
+  FK-005 mock, 2026-10-24, from board/design-system.md. Every frame is drawn at stream size (1920×1080) and scaled to this page; on a phone each frame is 390 px wide, which is how Kick shows the stream there. Town shots: a Stone demo world (Lane C's demo server), the band at the broken bridge standing in for the cast. Fonts: Fredoka and Nunito (SIL OFL, Fontsource 5.3.0). Add <code>?grey=1</code> for the greyscale check, <code>?sheet=3</code> for three across, <code>?only=wonder</code> for one frame.
+</footer>
+
+<script>
+// Fit every 1920×1080 frame to the page width (half of it two across), and the URL knobs.
+const q = new URLSearchParams(location.search);
+const only = q.get('only');
+document.body.classList.toggle('sheet', q.has('sheet'));
+document.body.classList.toggle('grey', q.get('grey') === '1');
+document.body.classList.toggle('still', q.has('still') || q.has('only'));
+if (only) {
+  document.body.classList.add('only');
+  for (const s of document.querySelectorAll('section.v')) s.hidden = s.id !== only;
+}
+const cols = q.has('sheet') ? Math.max(1, Number(q.get('sheet')) || 2) : 1;
+document.documentElement.style.setProperty('--cols', String(cols));
+const fit = () => document.documentElement.style.setProperty('--k', String(document.documentElement.clientWidth / cols / 1920));
+addEventListener('resize', fit);
+fit();
+
+/**
+ * The size and layer rules, checked on the page as drawn: any text under 54 design px (40 for chatter
+ * tags; the kit sheet's notes are annotations, not HUD), any text that overflows its piece or the
+ * frame, and how many text layers each scene frame has (the rule: two at most).
+ */
+window.hudAudit = () => {
+  const small = [], overflow = [], layers = {};
+  for (const f of document.querySelectorAll('.frame')) {
+    const id = f.closest('section').id;
+    const walk = document.createTreeWalker(f, NodeFilter.SHOW_TEXT);
+    for (let n; (n = walk.nextNode()); ) {
+      const text = n.textContent.trim();
+      const el = n.parentElement;
+      if (!text || el.closest('.note')) continue;
+      const size = parseFloat(getComputedStyle(el).fontSize);
+      const min = el.closest('.tag.chatter') ? 40 : 54;
+      if (size < min) small.push(`${id}: "${text.slice(0, 32)}" ${size}px`);
+    }
+    const box = f.getBoundingClientRect(), k = box.width / 1920;
+    for (const el of f.querySelectorAll('.lab,.word,.line,h2,h3,p,.titlecard,.chip,.tag')) {
+      if (el.closest('.note') || !el.getClientRects().length) continue;
+      const r = el.getBoundingClientRect();
+      if (el.scrollWidth > el.clientWidth + 1 && !el.classList.contains('lab')) overflow.push(`${id}: "${el.textContent.trim().slice(0, 32)}" ${el.scrollWidth}>${el.clientWidth}`);
+      if (r.left < box.left - 1 || r.right > box.right + 1 || r.top < box.top - 1 || r.bottom > box.bottom + 1) overflow.push(`${id}: "${el.textContent.trim().slice(0, 32)}" leaves the frame`);
+      if (el.classList.contains('lab')) {
+        // A bar's label spans the bar, so measure what it holds: its children on one line, plus its padding.
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const cs = getComputedStyle(el);
+        const need = range.getBoundingClientRect().width / k + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        if (need > el.clientWidth + 1) overflow.push(`${id}: "${el.textContent.trim().slice(0, 32)}" ${Math.round(need)}>${el.clientWidth}`);
+      }
+    }
+    if (f.dataset.scene) layers[id] = [...f.querySelectorAll('[data-layer]')].filter((e) => e.textContent.trim()).length;
+  }
+  return { small, overflow, layers };
+};
+</script>
+</body>
+</html>

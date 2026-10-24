@@ -699,3 +699,5 @@
 {"at":"2026-10-24T03:52:01.965Z","label":"critique-image board-life.png","model":"openai/gpt-6-astra","ms":46294,"cost":0.1823518,"in":6943,"out":1705,"ok":true}
 {"at":"2026-10-24T04:11:33.573Z","label":"critique-image board-life.png","model":"openai/gpt-6-astra","ms":52454,"cost":0.19497905,"in":7348,"out":1842,"ok":true}
 {"at":"2026-10-24T04:12:34.975Z","label":"critique-image outfits-board.png","model":"openai/gpt-6-astra","ms":56818,"cost":0.1734478,"in":5263,"out":1957,"ok":true}
+{"at":"2026-10-24T06:41:35.988Z","label":"critique-image fk-hud-sheet.png","model":"openai/gpt-6-astra","ms":51248,"cost":0.1678298,"in":3883,"out":2196,"ok":true}
+{"at":"2026-10-24T06:53:35.115Z","label":"critique-image fk-hud-sheet.png","model":"openai/gpt-6-astra","ms":47079,"cost":0.14163455,"in":3978,"out":1678,"ok":true}
