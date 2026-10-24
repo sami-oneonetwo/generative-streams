@@ -147,8 +147,10 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     cx = 0,
     cz = 9;
   // On his mark for a scene (the server's `lock`), and whether the stream sees him (`visible` is H's own say).
+  // `ruled`: the show decides whether he is seen (on his mark, a flashback), so H's own say comes apart.
   // `hAt`: when H was last pressed; for a moment after, a view the server sent before it heard H still says the old.
   let lock: MayorView['lock'],
+    ruled = false,
     shown = true,
     hAt = -Infinity;
 
@@ -329,7 +331,7 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
     if (k === 'h') {
       visible = !visible;
       hAt = performance.now();
-      if (!lock) shown = visible; // the server agrees a moment later (unless the show has him hidden)
+      if (!ruled) shown = visible; // the server agrees a moment later (unless the show decides)
       send({ t: 'visible', on: visible });
       renderFollow();
       return;
@@ -522,19 +524,24 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
   }
   /** The show's hold on him: the lock coming (the camera back on him, the weapon gone) and going, and whether he is seen. */
   function onMark(view: MayorView) {
-    const was = lock;
+    const was = lock,
+      wasRuled = ruled;
     lock = view.lock;
-    // Just after H, a view sent before the server heard it still has the old say: the page's own stands.
-    const seen = !lock && performance.now() - hAt < H_HEARD_MS ? visible : !view.hidden;
-    if (!!was === !!lock && seen === shown) return;
+    ruled = view.ownHidden !== undefined;
+    // Just after H, a view sent before the server heard it still has the old say: the page's own stands
+    // (unless the show decides, when the stream sees what the server says).
+    const heard = performance.now() - hAt >= H_HEARD_MS;
+    const seen = ruled || heard ? !view.hidden : visible;
+    // H's own say from the server while the show decides and as it lets go (this page may have opened mid-scene).
+    const own = (ruled || wasRuled) && heard ? (ruled ? !view.ownHidden : seen) : visible;
+    if (!!was === !!lock && seen === shown && own === visible) return;
     if (lock && !was) {
       free = false;
       arms.armed = undefined; // the server put it away
       [x, z, facing] = [lock.at.x, lock.at.z, lock.facing];
       lastSent = 0;
     }
-    // Let go: whatever the stream shows now is H's own say again (this page may have opened mid-scene).
-    if (was && !lock) visible = seen;
+    visible = own;
     shown = seen;
     renderFollow();
   }
@@ -574,7 +581,9 @@ export function createOperator(el: (id: string) => HTMLElement, getState: () => 
         facing = m.facing;
         follow = m.follow;
         focusId = m.focus;
-        visible = shown = !m.hidden;
+        shown = !m.hidden;
+        visible = m.ownHidden === undefined ? shown : !m.ownHidden;
+        ruled = m.ownHidden !== undefined;
         lock = m.lock;
         ride = m.riding;
         alt = altWant = m.riding?.altitude ?? 0;

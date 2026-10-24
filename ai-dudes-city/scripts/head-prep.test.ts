@@ -62,6 +62,7 @@ test('the Call puts him on his mark: off the donkey, weapon away, shown whatever
   assert.deepEqual(view.lock, { at: MARK.at, facing: MARK.facing }, '/mayor hears of the lock');
   assert.equal(view.hidden, undefined, 'shown, though H hid him');
   assert.equal(m.hidden, true, 'H’s own say is kept');
+  assert.equal(view.ownHidden, true, 'and /mayor hears it apart, for its status row and the release');
   const figure = world.buildScene(h.state, { now: h.now } as never).dudes.find((d) => d.mayor);
   assert.ok(figure && near(figure.position, MARK.at), 'the stream draws him on the mark');
 });
@@ -103,6 +104,7 @@ test('the release: he walks again from the mark, and H’s say holds again', asy
   assert.equal(view.lock, undefined, 'WASD is his');
   assert.ok(near(view.position, { x: MARK.at.x - 1, z: MARK.at.z }), 'he walks');
   assert.equal(view.hidden, true, 'hidden again, as H said');
+  assert.equal(view.ownHidden, undefined, 'H decides again');
   assert.ok(mayorInput(h.state, { t: 'arm', weapon: 'blaster' }, h.now) && m.armed === 'blaster', 'G works again');
   // FK-001's release (boot, Story OFF, Stop) lets him go the same way.
   prepareHead(h.state, MARK.at, MARK.facing, h.now);
@@ -120,10 +122,12 @@ test('forcedHidden (the Intro’s flashback): out of sight whatever the page ask
   mayorInput(h.state, { t: 'visible', on: true }, h.now);
   assert.equal(headHidden(h.state, m), true);
   assert.equal(mayorView(h.state, h.now).hidden, true, 'the page sees him hidden');
+  assert.equal(mayorView(h.state, h.now).ownHidden, false, 'though H shows him (a page opened now knows, and so does the next H)');
   assert.deepEqual(mayorDudeView(h.state, h.now), [], 'the stream doesn’t draw him');
   assert.equal(mayorInput(h.state, { t: 'say', text: 'psst' }, h.now), undefined, 'nor hears him');
   forceHeadHidden(h.state, false, h.now);
   assert.equal(mayorView(h.state, h.now).hidden, undefined, 'back as H says');
+  assert.equal(mayorView(h.state, h.now).ownHidden, undefined);
   forceHeadHidden(h.state, true, h.now);
   prepareHead(h.state, MARK.at, MARK.facing, h.now);
   assert.equal(m.forcedHidden, undefined, 'the Call shows him');
@@ -139,6 +143,7 @@ test('Story OFF ignores a lock and a hiding left in the save: he walks, rides an
   assert.ok(near(view.position, { x: FAR.x + 3, z: FAR.z }), 'he walks');
   assert.equal(view.hidden, undefined, 'and shows');
   assert.equal(view.lock, undefined);
+  assert.equal(view.ownHidden, undefined, 'H decides, as today');
   assert.ok(mayorInput(h.state, { t: 'ride' }, h.now), 'and gets off the donkey');
 });
 
@@ -178,4 +183,18 @@ test('chatters’ bits see him as the stream does: on his mark though H hid him,
   assert.ok(mayorSpot(h.state, h.now), 'out and about');
   forceHeadHidden(h.state, true, h.now);
   assert.equal(mayorSpot(h.state, h.now), undefined, 'the flashback hides him from bits too');
+});
+
+test('Story (dev) → Gather puts him on his mark, off the donkey, the weapon away; Stop lets him go', async () => {
+  const { h, m, world, ctx } = await outRiding();
+  const press = (id: string) => world.adminActions!.find((a) => a.id === id)!.run(ctx) || undefined;
+  assert.match(press('story-gather') ?? 'ran', /^Story is off/, 'Story OFF: today’s game');
+  assert.equal(m.lock, undefined);
+  press('story-on');
+  assert.equal(press('story-gather'), undefined);
+  const view = mayorView(h.state, h.now);
+  assert.ok(near(view.position, MARK.at) && view.facing === MARK.facing && view.lock, 'on his mark, facing the tarp');
+  assert.ok(!view.riding && !view.armed && !view.hidden, 'off the donkey, the weapon away, shown');
+  assert.equal(press('story-stop'), undefined);
+  assert.equal(m.lock, undefined, 'Stop gives him his WASD back');
 });

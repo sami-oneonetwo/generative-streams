@@ -226,6 +226,8 @@ export interface MayorView {
   show?: MayorShowView;
   /** Finders Keepers: put on his mark for a scene; the operator page ignores WASD until it goes. */
   lock?: { at: GroundPoint; facing: number };
+  /** Finders Keepers: H's own say while the show decides whether he is seen (on his mark, a flashback); `hidden` is the show's. */
+  ownHidden?: boolean; // hook FK-020
 }
 
 /**

@@ -640,6 +640,8 @@ export function mayorView(state: DudesState, now: number): MayorView {
     ...(m.focus ? { focus: m.focus } : {}),
     live: live(m, now),
     ...(headHidden(state, m) ? { hidden: true } : {}),
+    // While the show overrides H, the page still needs H's own say: for its status row, and for after.
+    ...(storyOn(state) && (m.forcedHidden || m.lock) ? { ownHidden: !!m.hidden } : {}),
     ...(ridingView(state, m) ? { riding: ridingView(state, m) } : {}),
     ...(m.audio ? { audio: m.audio } : {}),
     ...(m.armed ? { armed: m.armed } : {}),
