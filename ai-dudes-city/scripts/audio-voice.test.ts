@@ -64,7 +64,7 @@ const spot = (d: number): XZ => ({ x: CAM.x + d * 0.6, z: CAM.z + d * 0.8 });
 interface Rig {
   audio: AudioHandles;
   ctx: FakeContext;
-  /** The nodes createAudio() made, by what they are: out, compressor, master, music, sfx, ambience, reverb, the rest by kind. */
+  /** The nodes createAudio() made, by what they are: out, compressor, master, music, sfx, ambience, voice, reverb, the rest by kind. */
   names: Map<FakeNode, string>;
   /** What createAudio() itself asked for. */
   setup: Ev[];
@@ -100,14 +100,21 @@ function rig(): Rig {
   const master = comp && into(comp).find((n) => n.kind === 'gain');
   if (comp) names.set(comp, 'compressor');
   if (master) names.set(master, 'master');
-  // A bus is the gain that follows its level: nudge each level and see which gain moves.
+  // A bus is the gain that follows its level: nudge each level and see which gain moves. The sfx
+  // level moves two (FK-162): the effects' bus, which the engines' drone is wired into here, and the
+  // voices' own, which nothing is until a line is said.
   const gains = ctx.nodes.filter((n) => n.kind === 'gain');
   for (const bus of ['music', 'sfx', 'ambience'] as const) {
     const before = gains.map((n) => target(r, n)?.[0]);
     audio.levels({ [bus]: LEVELS[bus] / 2 + 0.01 });
     const moved = gains.filter((n, i) => target(r, n)?.[0] !== before[i]);
     audio.levels({ [bus]: LEVELS[bus] });
-    if (moved.length === 1) names.set(moved[0], bus);
+    if (bus !== 'sfx' && moved.length === 1) names.set(moved[0], bus);
+    const fed = moved.filter((n) => ctx.nodes.some((m) => m.out.includes(n)));
+    if (bus === 'sfx' && moved.length === 2 && fed.length === 1) {
+      names.set(fed[0], 'sfx');
+      names.set(moved.find((n) => n !== fed[0])!, 'voice');
+    }
   }
   const reverb = ctx.nodes.find((n) => n.kind === 'convolver');
   if (reverb) names.set(reverb, 'reverb');
@@ -282,9 +289,21 @@ function peaksAt(r: Rig, half: number, d: number | undefined): [number, number] 
   return b.length ? [b.find(tri)!.peak, b.find(sine)!.peak] : [0, 0];
 }
 
+/**
+ * The record calls the voices' bus 'sfx': the blips were on the sfx bus when Sami approved them
+ * (FK-157). Since FK-162 they have a bus of their own, made just as the sfx bus is (the twin test
+ * below), so the record and its hash are what they were: the proof that the split changed nothing.
+ * The effects' bus carries no blip, so it is in no row of the record.
+ */
+const AS_APPROVED = new Map([
+  ['voice', 'sfx'],
+  ['sfx', 'effects'],
+]);
+
 /** Everything above in one record. Its hash is what Sami approves. */
 function golden() {
   const r = rig();
+  for (const [n, name] of r.names) r.names.set(n, AS_APPROVED.get(name) ?? name);
   const sfx = named(r, 'sfx');
   // Node by node, so the order createAudio() happens to make them in doesn't matter.
   const chain = {
@@ -413,7 +432,7 @@ pin("each syllable jitters ×0.85–1.30 around its voice and glides up ×1.25 o
   close(b.glide, 0.82, 'Math.random 0.5 glides down');
 });
 
-pin('a triangle at 0.07 and a sine at 0.025, both dry, straight onto the sfx bus', () => {
+pin("a triangle at 0.07 and a sine at 0.025, both dry, straight onto the voices' own bus", () => {
   const r = rig();
   const { evs, blips } = say(r, 5, 'hello there friend');
   assert.deepEqual(
@@ -424,19 +443,19 @@ pin('a triangle at 0.07 and a sine at 0.025, both dry, straight onto the sfx bus
   for (const b of blips) {
     assert.equal(b.peak, b.wave === 'triangle' ? 0.07 : 0.025, `the ${b.wave}'s level`);
     assert.deepEqual(b.via, ['gain'], `the ${b.wave} goes only into its own gain`);
-    assert.deepEqual(b.to, ['sfx'], `the ${b.wave}'s gain goes only to the sfx bus (dry: nothing to the reverb)`);
+    assert.deepEqual(b.to, ['voice'], `the ${b.wave}'s gain goes only to the voices' bus (dry: nothing to the reverb; nothing to the effects' bus)`);
   }
   assert.deepEqual(blips.map((b) => b.wave), Array(3).fill(['triangle', 'sine']).flat());
 });
 
-pin('the voice path: the sfx bus at its level × 0.7, the master at 0.9, the compressor at −14 dB and 6:1', () => {
+pin("the voice path: the voices' bus at the sfx level × 0.7, the master at 0.9, the compressor at −14 dB and 6:1", () => {
   const r = rig();
-  const sfx = named(r, 'sfx'),
+  const voice = named(r, 'voice'),
     master = named(r, 'master'),
     comp = named(r, 'compressor');
-  assert.ok(sfx && master && comp, 'the sfx bus, master and compressor are all there');
+  assert.ok(voice && master && comp, "the voices' bus, master and compressor are all there");
   const outOf = (n: FakeNode) => n.out.map((o) => r.names.get(o));
-  assert.deepEqual(outOf(sfx), ['master'], 'the sfx bus feeds the master');
+  assert.deepEqual(outOf(voice), ['master'], "the voices' bus feeds the master");
   assert.deepEqual(outOf(master), ['compressor'], 'the master feeds the compressor');
   assert.deepEqual(outOf(comp), ['out'], 'the compressor feeds the speakers');
   const set = (n: FakeNode) => r.setup.filter((e) => e.node === n && e.op.endsWith('.value')).map((e) => [e.op, e.v]);
@@ -445,13 +464,36 @@ pin('the voice path: the sfx bus at its level × 0.7, the master at 0.9, the com
     ['threshold.value', -14],
     ['ratio.value', 6],
   ]);
-  const [level, tc] = target(r, sfx)!;
-  close(level, 0.8 * 0.7, "the sfx bus at the stream page's 0.8");
+  const [level, tc] = target(r, voice)!;
+  close(level, 0.8 * 0.7, "the voices' bus at the stream page's sfx level, 0.8");
   close(tc, 0.1, 'settling in 0.1 s');
   r.audio.levels({ sfx: 1 });
-  close(target(r, sfx)![0], 0.7, 'the sfx bus at full');
+  close(target(r, voice)![0], 0.7, "the voices' bus at full");
   // So a syllable's triangle reaches the compressor at 0.07 × 0.56 × 0.9 at the stream's default level.
   close(0.07 * level * 0.9, 0.03528, 'a syllable into the compressor');
+});
+
+pin("the voices' bus is the sfx bus's twin (FK-162): made the same way, at the same level, and N on /mayor (sfx 0) mutes both", () => {
+  const r = rig();
+  const sfx = named(r, 'sfx'),
+    voice = named(r, 'voice');
+  assert.ok(sfx && voice, "two buses follow the sfx level: the effects' and the voices'");
+  const made = (n: FakeNode) => rows(r, r.setup.filter((e) => e.node === n), 0).map((row) => row.slice(1));
+  assert.deepEqual(made(voice), made(sfx), "the voices' bus is made just as the effects' is");
+  assert.deepEqual(made(voice), [
+    ['create', 'gain'],
+    ['connect', 'master'],
+    ['gain.setTargetAtTime', 0.56, 0, 0.1],
+  ]);
+  // The stream page's level, full, a quarter, and N on /mayor (the operator's sfx at 0, main.ts).
+  for (const x of [0.8, 1, 0.25, 0]) {
+    r.audio.levels({ sfx: x });
+    assert.deepEqual(target(r, voice), target(r, sfx), `sfx ${x}: the voices follow the effects`);
+    close(target(r, voice)![0], x * 0.7, `sfx ${x}: the voices' bus`);
+  }
+  // The music and the ambience leave the voices alone.
+  r.audio.levels({ sfx: 0.8, music: 0, ambience: 0 });
+  close(target(r, voice)![0], 0.56, "music and ambience at 0: the voices' bus stays at 0.56");
 });
 
 pin("400 ms per speaker: a line inside it is dropped, another speaker isn't held up, a line nobody hears doesn't count", () => {

@@ -6,10 +6,14 @@
 //             then; a new progression and sometimes a new key every sixteen bars. Quiet, so it sits
 //             under the streamer's voice.
 //   ambience  birdsong, a soft town hum, the fountain when the camera is near the square.
-//   effects   speech as cheerful gibberish blips (each character its own pitch), coins changing
-//             hands, hammering while things go up, a chime when they are done, a doorbell for a new
-//             neighbour, a fanfare and cheering for a grand opening, a sting for a troublemaker,
-//             car engines and the odd bray, pops and booms. Quieter the further from the camera.
+//   effects   coins changing hands, hammering while things go up, a chime when they are done, a
+//             doorbell for a new neighbour, a fanfare and cheering for a grand opening, a sting for a
+//             troublemaker, car engines and the odd bray, pops and booms. Quieter the further from
+//             the camera.
+//   voices    speech as cheerful gibberish blips, each character its own pitch, also quieter with
+//             distance. A bus of their own at exactly the effects' level (FK-162), so the effects
+//             can be ducked or reworked without touching them; the effects' level (N on /mayor)
+//             still turns both up and down together.
 //
 // Browsers only start sound after a click or a key (OBS's browser source does not wait); until
 // then everything here is silently skipped.
@@ -18,10 +22,11 @@
 // seeded random and a clock of its own play the same sound every time, for the sound board (/sounds),
 // the offline render and level check, and the fingerprints Sami approves. CUES lists every sound.
 
-export type Bus = 'music' | 'sfx' | 'ambience';
+/** The mixer's buses. 'voice' carries speech() alone, at the sfx level (FK-162); no cue plays on it. */
+export type Bus = 'music' | 'sfx' | 'ambience' | 'voice';
 export interface AudioLevels {
   music: number; // 0..1
-  sfx: number;
+  sfx: number; // the effects and, at the same level, the voices
   ambience: number;
 }
 export interface AudioHandles {
@@ -80,7 +85,7 @@ type At = { x: number; z: number };
 export interface Cue {
   /** The handle it calls, with the pose, kind or bed after a colon ('play:strum', 'beds:fountain'); the clock's two parts are 'music' and 'birds'. */
   name: string;
-  /** The bus it is heard on (a reverb send skips the bus: see tone()). */
+  /** The bus it is heard on (a reverb send skips the bus: see tone()). Never 'voice': that is the blips' alone. */
   bus: Bus;
   /** Whether `at` matters: a placed sound fades with distance from where the camera looks. */
   placed: boolean;
@@ -127,12 +132,15 @@ function town(ctx: AudioContext | OfflineAudioContext, initial: AudioLevels, opt
   comp.threshold.value = -14;
   comp.ratio.value = 6;
   master.connect(comp).connect(ctx.destination);
-  const buses: Record<Bus, GainNode> = { music: ctx.createGain(), sfx: ctx.createGain(), ambience: ctx.createGain() };
+  const buses: Record<Bus, GainNode> = { music: ctx.createGain(), sfx: ctx.createGain(), ambience: ctx.createGain(), voice: ctx.createGain() };
   for (const b of Object.values(buses)) b.connect(master);
   const levels: AudioLevels = { ...initial };
   const applyLevels = () => {
     buses.music.gain.setTargetAtTime(levels.music * 0.32, ctx.currentTime, 0.3);
     buses.sfx.gain.setTargetAtTime(levels.sfx * 0.7, ctx.currentTime, 0.1);
+    // The voices' bus is the sfx bus's twin (the blips were on the sfx bus until FK-162): the same
+    // level, the same glide, so they sound just as Sami approved them and N mutes them with the effects.
+    buses.voice.gain.setTargetAtTime(levels.sfx * 0.7, ctx.currentTime, 0.1);
     buses.ambience.gain.setTargetAtTime(levels.ambience * 0.5, ctx.currentTime, 0.3);
   };
   applyLevels();
@@ -363,8 +371,8 @@ function town(ctx: AudioContext | OfflineAudioContext, initial: AudioLevels, opt
       for (let i = 0; i < words; i++) {
         const f = base * (0.85 + rand() * 0.45);
         const d = 0.07 + rand() * 0.06;
-        tone(f, t, d, { type: 'triangle', gain: 0.07 * v, attack: 0.01, glideTo: f * (rand() < 0.5 ? 1.25 : 0.82) });
-        tone(f * 2, t, d * 0.8, { type: 'sine', gain: 0.025 * v, attack: 0.01 });
+        tone(f, t, d, { type: 'triangle', gain: 0.07 * v, attack: 0.01, glideTo: f * (rand() < 0.5 ? 1.25 : 0.82), bus: 'voice' });
+        tone(f * 2, t, d * 0.8, { type: 'sine', gain: 0.025 * v, attack: 0.01, bus: 'voice' });
         t += d + 0.03 + rand() * 0.05;
       }
     },

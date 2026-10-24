@@ -39,10 +39,12 @@ interface Made {
   /** What it asked of the page: timers (never started here) and the events it listens for. */
   timers: { tick: () => void; ms: number }[];
   listeners: string[];
+  /** The nodes createAudio() itself made. */
+  setup: FakeNode[];
 }
 /** createAudio() on a fake offline context (or `ctx`) with a seeded random and a clock of its own, the camera at the origin. */
 function make(seed: number, ctx: FakeContext = new FakeOfflineContext()): Made {
-  const m: Made = { ctx, ms: 10_000, timers: [], listeners: [], audio: undefined as unknown as AudioHandles };
+  const m: Made = { ctx, ms: 10_000, timers: [], listeners: [], setup: [], audio: undefined as unknown as AudioHandles };
   const g = globalThis as unknown as Record<string, unknown>;
   const keep = { addEventListener: g.addEventListener, setInterval: g.setInterval };
   g.setInterval = (tick: () => void, ms: number) => m.timers.push({ tick, ms });
@@ -55,6 +57,7 @@ function make(seed: number, ctx: FakeContext = new FakeOfflineContext()): Made {
       else g[k] = v;
     }
   }
+  m.setup = ctx.nodes.slice();
   m.audio.listen(0, 0, 20);
   return m;
 }
@@ -80,20 +83,32 @@ function heard(m: Made, fn: (a: AudioHandles) => void): Ev[] {
 }
 const play = (m: Made, cue: Cue, at = cue.placed ? HERE : undefined) => heard(m, (a) => cue.play(a, at));
 
-/** The three buses, found by what they do: nudge a level and see which gain follows. */
+/** The level a gain was last told to settle at. */
+function target(m: Made, n: FakeNode) {
+  for (let i = m.ctx.log.length - 1; i >= 0; i--) if (m.ctx.log[i].node === n && m.ctx.log[i].op === 'gain.setTargetAtTime') return m.ctx.log[i].v;
+}
+/**
+ * The four buses, found by what they do: nudge a level and see which gains follow. The sfx level moves
+ * two (FK-162): the effects' bus, which the engines' drone is wired into at set-up, and the voices' own,
+ * which nothing createAudio() made is wired into.
+ */
 function buses(m: Made): Map<FakeNode, Bus> {
   const found = new Map<FakeNode, Bus>();
   const gains = m.ctx.nodes.filter((n) => n.kind === 'gain');
-  const target = (n: FakeNode) => {
-    for (let i = m.ctx.log.length - 1; i >= 0; i--) if (m.ctx.log[i].node === n && m.ctx.log[i].op === 'gain.setTargetAtTime') return m.ctx.log[i].v;
-  };
   for (const bus of ['music', 'sfx', 'ambience'] as const) {
-    const before = gains.map(target);
+    const before = gains.map((n) => target(m, n));
     heard(m, (a) => a.levels({ [bus]: 0.123 }));
-    const moved = gains.filter((n, i) => target(n) !== before[i]);
-    assert.equal(moved.length, 1, `levels({ ${bus} }) moves one gain`);
-    found.set(moved[0], bus);
+    const moved = gains.filter((n, i) => target(m, n) !== before[i]);
     heard(m, (a) => a.levels(LEVELS));
+    if (bus !== 'sfx') {
+      assert.equal(moved.length, 1, `levels({ ${bus} }) moves one gain`);
+      found.set(moved[0], bus);
+      continue;
+    }
+    const fed = moved.filter((n) => m.setup.some((s) => s.out.includes(n)));
+    assert.ok(moved.length === 2 && fed.length === 1, "levels({ sfx }) moves two gains: the effects' bus and the voices' bus, which nothing is wired into at set-up");
+    found.set(fed[0], 'sfx');
+    found.set(moved.find((n) => n !== fed[0])!, 'voice');
   }
   return found;
 }
@@ -186,6 +201,46 @@ test('each cue is heard on the bus it names, and a placed cue fades out of earsh
     assert.deepEqual(busesHeard(evs, buses(m)), [cue.bus], `${cue.name} is heard on ${cue.bus}`);
     if (cue.placed) assert.equal(play(make(7), cue, FAR).length, 0, `${cue.name}: silent out of earshot`);
   }
+});
+
+test('speech() plays into the voice bus alone and no cue does; levels({ sfx: 0 }) silences both (FK-162)', () => {
+  /** Where a call plays into: the nodes its connections reach that it didn't make itself, by bus or kind. */
+  const into = (evs: Ev[], bus: Map<FakeNode, Bus>) => {
+    const own = new Set(evs.filter((e) => e.op === 'create').map((e) => e.node));
+    const outside = evs.flatMap((e) => (e.op === 'connect' && e.v instanceof FakeNode && !own.has(e.v) ? [e.v] : []));
+    return [...new Set(outside.map((n) => bus.get(n) ?? n.kind))].sort();
+  };
+  const busNode = (bus: Map<FakeNode, Bus>, b: Bus) => [...bus].find(([, x]) => x === b)![0];
+  const m = make(7);
+  const bus = buses(m);
+  assert.deepEqual([...bus.values()].sort(), ['ambience', 'music', 'sfx', 'voice']);
+  const voice = busNode(bus, 'voice'),
+    sfx = busNode(bus, 'sfx');
+  assert.ok(voice.out.length === 1 && voice.out[0] === sfx.out[0] && sfx.out.length === 1, 'the voice bus feeds the master the sfx bus feeds, beside it (not through it)');
+  for (const [text, at] of [
+    ['hello there friend', HERE],
+    ['Hello! Welcome to my town!', undefined],
+  ] as const) {
+    m.ms += 1000;
+    const line = heard(m, (a) => a.speech(4, text, at));
+    assert.ok(line.length > 0, `"${text}" plays`);
+    assert.deepEqual(into(line, bus), ['voice'], `"${text}" plays into the voice bus and nothing else (no reverb send, not the sfx bus)`);
+    assert.deepEqual(busesHeard(line, bus), ['voice']);
+  }
+  for (const cue of CUES) {
+    const c = make(7);
+    const evs = play(c, cue);
+    const theirs = buses(c);
+    assert.ok(evs.length > 0 && !into(evs, theirs).includes('voice'), `${cue.name} keeps off the voice bus`);
+    assert.ok(!c.ctx.nodes.some((n) => n.out.includes(busNode(theirs, 'voice'))), `${cue.name}: nothing at all is wired into the voice bus`);
+  }
+  // N on /mayor sets the operator's sfx to 0, and the stream page passes it on: both buses go quiet,
+  // just as the one sfx bus did; the music and the ambience don't move.
+  const levels = () => Object.fromEntries([...bus].map(([n, b]) => [b, target(m, n)]));
+  heard(m, (a) => a.levels({ sfx: 0 }));
+  assert.deepEqual(levels(), { music: LEVELS.music * 0.32, sfx: 0, ambience: LEVELS.ambience * 0.5, voice: 0 });
+  heard(m, (a) => a.levels({ sfx: LEVELS.sfx }));
+  assert.deepEqual(levels(), { music: LEVELS.music * 0.32, sfx: LEVELS.sfx * 0.7, ambience: LEVELS.ambience * 0.5, voice: LEVELS.sfx * 0.7 });
 });
 
 test('the music cue is 32 bars of the town tune, and ahead() schedules the bars that start in its window', () => {
