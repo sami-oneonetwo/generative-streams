@@ -150,8 +150,11 @@ export const demoShowOn = (search: string): boolean => new URLSearchParams(searc
 
 /** `?demo=show`'s round, in ms from the page's start, over and over: the Call, the scene, the NOW card, a breather. */
 export const DEMO = { every: 20_000, call: 1500, scene: 6500, sceneMs: 4500 } as const;
-/** The demo's title card, in scene time: over the head's line, so the scene shows its two text layers. */
-const DEMO_TITLE = { at: 200, ms: 2300 } as const;
+/**
+ * The demo's title card, in scene time: once the letterbox is in and the strip has faded (0.9 s), over the
+ * head's line, so the scene shows its two text layers.
+ */
+const DEMO_TITLE = { at: 900, ms: 2000 } as const;
 
 /** The demo's scene: no shots (the camera holds where it is, as at a reveal) and two lines, the head's and Wren's. */
 export const DEMO_SCENE: Scene = {
@@ -159,8 +162,8 @@ export const DEMO_SCENE: Scene = {
   ms: DEMO.sceneMs,
   shots: [],
   lines: [
-    { at: 300, ms: 2200, who: '{head}', text: 'Behold! A hut fit for me. Only me.' },
-    { at: 2600, ms: 1900, who: 'Wren', text: 'That was our fire.' },
+    { at: 1000, ms: 1900, who: '{head}', text: 'Behold! A hut fit for me. Only me.' },
+    { at: 3000, ms: 1500, who: 'Wren', text: 'That was our fire.' },
   ],
   beats: [],
 };
