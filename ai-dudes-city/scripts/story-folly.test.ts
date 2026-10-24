@@ -2,7 +2,8 @@
 // plot in the SE corner park; the bar fills on its own (100% in 40 min) and Story (dev) can set it;
 // gold's names go on its plaque, first joiners first, up to the cap; no build lands on the plot or the
 // crowd's ring; it takes no damage under wraps or unveiled, and no age turn restyles it; Story OFF
-// takes it off the map and Story ON puts it back, so Story OFF is today's town.
+// takes it off the map and its lines off the feed, and Story ON puts it back as it was, even after a
+// restart, so Story OFF is today's town.
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -13,8 +14,8 @@ import { damageBuild } from '../src/worlds/ai-dudes/damage';
 import { startHappening } from '../src/worlds/ai-dudes/events';
 import { mayorInput } from '../src/worlds/ai-dudes/mayor';
 import { placeJob, reserved } from '../src/worlds/ai-dudes/sim';
-import { FOLLY, FOLLY_DEV, follyOf, raiseFolly, unveilFolly } from '../src/worlds/ai-dudes/story/folly';
-import { STORY_CAPS, stateSchema, trimStory, type Job } from '../src/worlds/ai-dudes/state';
+import { FOLLY, FOLLY_DEV, follyOf, raiseFolly, tickFolly, unveilFolly } from '../src/worlds/ai-dudes/story/folly';
+import { LIMITS, STORY_CAPS, pushFeed, stateSchema, trimStory, type Job } from '../src/worlds/ai-dudes/state';
 import { STORY_RECTS, STORY_SITES } from '../src/shared/storyMap';
 import { BLOCK_HALF, CITY, PITCH } from '../src/shared/city';
 import { footprint, overlaps } from '../src/shared/layout';
@@ -242,7 +243,7 @@ test("an age turn keeps the Folly as it was built; the next age's goes up in its
   assert.deepEqual(view().folly, { pct: 0, plaque: [] }, "Bronze's bar from 0");
 });
 
-test('Story OFF takes the Folly off the map, Story ON puts it back as it was; after a restart it goes back up under wraps', async () => {
+test('Story OFF takes the Folly off the map, Story ON puts it back as it was; after a restart too, unveiled (its plaque closed) or under wraps', async () => {
   const { h, tick, view, dev, folly } = await storyTown();
   dev('folly-raise');
   dev('folly-progress', 30);
@@ -264,19 +265,107 @@ test('Story OFF takes the Folly off the map, Story ON puts it back as it was; af
   assert.equal(follyOf(h.state), o, 'Story ON: the same Folly back');
   assert.equal(o.silhouette, undefined, 'still unveiled');
   assert.deepEqual(view().folly, { pct: 30, plaque: ['di'] });
-  // A restart while Story is off keeps the count and the plaque, not the build: Story ON raises it again, under wraps.
-  h.state.ai.story = false;
-  await tick(1000);
-  h.state = JSON.parse(JSON.stringify(h.state));
-  await tick(1000);
-  h.state.ai.story = true;
-  await tick(1000);
-  const again = follyOf(h.state)!;
-  assert.ok(again && again.silhouette, 'back up, under wraps');
+  // A restart while Story is off keeps the count, the plaque and the unveiling, not the build: Story ON stands it again as it was.
+  const restart = async () => {
+    h.state.ai.story = false;
+    await tick(1000);
+    h.state = stateSchema.parse(JSON.parse(JSON.stringify(h.state)));
+    await tick(1000);
+    h.state.ai.story = true;
+    await tick(1000);
+    return follyOf(h.state)!;
+  };
+  let again = await restart();
+  assert.ok(again && !again.silhouette, 'back up, still unveiled');
   assert.deepEqual(again.position, STORY_SITES.folly.at);
   assert.equal(h.state.objects.filter((x) => x.folly).length, 1, 'one of it');
-  assert.equal(Math.floor(folly()!.pct), 30);
+  assert.equal(folly()!.pct, 30);
   assert.deepEqual(folly()!.plaque, ['di']);
+  // Unveiled, its plaque is closed and its bar stands still: a gold joiner now isn't carved.
+  Object.assign(h.state.dudes[0], { side: 'gold', sideAge: 0 });
+  await tick(60_000, 5000);
+  assert.deepEqual(folly()!.plaque, ['di'], 'nothing carved after the Unveiling');
+  assert.equal(folly()!.pct, 30, 'the bar stands still');
+  // Re-tarped, it comes back under wraps after a restart, and the bar and the plaque carry on.
+  assert.equal(dev('folly-retarp'), undefined);
+  again = await restart();
+  assert.ok(again && again.silhouette, 'back up, under wraps');
+  assert.equal(Math.floor(folly()!.pct), 30);
+  assert.deepEqual(folly()!.plaque, ['di', 'kim']);
+});
+
+test("Story OFF takes the Folly's own lines off the feed, and leaves the rest", async () => {
+  const { h, tick, dev } = await storyTown();
+  dev('folly-raise');
+  pushFeed(h.state, h.now, 'kim built The Big Hut');
+  unveilFolly(h.state, h.now);
+  setAge(h.state, 1, h.now);
+  dev('folly-raise');
+  const lines = () => h.state.feed.map((f) => f.text);
+  assert.ok(lines().some((t) => /cordon goes up/.test(t)) && lines().some((t) => / unveils The Big Hut!$/.test(t)) && lines().some((t) => /^The Big Hut comes down to make way for The Golden Me$/.test(t)));
+  const before = lines().length;
+  h.state.ai.story = false;
+  await tick(1000);
+  assert.ok(!lines().some((t) => /cordon goes up| unveils The Big Hut!|make way for/.test(t)), `no story lines: ${JSON.stringify(lines())}`);
+  assert.ok(lines().includes('kim built The Big Hut'), "a chatter's own build of that name stays");
+  assert.equal(lines().length, before - 4, 'two cordons, one unveil, one making way');
+});
+
+test('a full town: no cordon goes up, and Story ON puts nothing back past the save’s limit', async () => {
+  const { h, dev } = await storyTown();
+  const filler = (i: number): SafehouseObject => ({
+    id: `bfill${i}`,
+    revision: 1,
+    blueprint: { name: 'Post', description: '', parts: [{ shape: 'box', position: [0, 0.5, 0], size: [0.3, 1, 0.3], rotation: [0, 0, 0], color: '#886644' }] },
+    position: { x: -40 + (i % 40) * 0.5, z: -40 + Math.floor(i / 40) * 0.5 },
+    footprint: { width: 0.3, depth: 0.3 },
+    createdBy: 'kim',
+    editedBy: 'kim',
+    createdAt: h.now,
+  });
+  const fill = () => {
+    for (let i = 0; h.state.objects.length < LIMITS.objects; i++) h.state.objects.push(filler(i));
+  };
+  const switchTo = (on: boolean) => {
+    h.state.ai.story = on;
+    tickFolly(h.state, 100, h.now);
+  };
+  const full = h.state.objects.length;
+  fill();
+  assert.equal(dev('folly-raise'), 'The town is full: no room for the Folly');
+  assert.equal(follyOf(h.state), undefined);
+  h.state.objects = h.state.objects.slice(0, full);
+  assert.equal(dev('folly-raise'), undefined);
+  switchTo(false);
+  fill();
+  switchTo(true);
+  assert.equal(h.state.objects.length, LIMITS.objects, 'not one past the limit');
+  assert.equal(follyOf(h.state), undefined, 'no room for it');
+  assert.ok(loads(h.state), 'the save takes it');
+  h.state.objects = h.state.objects.slice(0, full);
+  switchTo(false);
+  switchTo(true);
+  assert.ok(follyOf(h.state)?.silhouette, 'room again: back up under wraps');
+});
+
+test('raising the cordon moves a build on its way up on the plot (placed while Story was off), and its builder goes there', async () => {
+  const { h, tick, dev } = await storyTown(false);
+  const kim = h.state.dudes[0];
+  const job = { id: 'jtent', dudeId: kim.id, kind: 'build', request: 'a big tent', anchor: { ...STORY_SITES.folly.at }, status: 'ready', createdAt: h.now, blueprint: { name: 'Big tent', description: '', parts: [{ shape: 'box', position: [0, 1, 0], size: [6, 2, 6], rotation: [0, 0, 0], color: '#aa8866' }] } } as Job;
+  placeJob(h.state, job);
+  const onPlot = () => overlaps(footprint(job.position!, job.footprint!.width, job.footprint!.depth), STORY_SITES.folly.rect);
+  assert.ok(onPlot(), 'Story off: placed on the park, as today');
+  h.state.jobs.push(job);
+  await tick(500);
+  assert.equal(job.status, 'walking', 'kim is on the way');
+  h.state.ai.story = true;
+  await tick(500);
+  assert.equal(dev('folly-raise'), undefined);
+  assert.ok(!onPlot(), `moved off the plot: ${JSON.stringify(job.position)}`);
+  assert.equal(job.status, 'ready', 'kim starts over at the new spot');
+  await tick(60_000);
+  const tent = h.state.objects.find((o) => o.blueprint.name === 'Big tent');
+  assert.ok(tent && !overlaps(rectOf(tent), rectOf(follyOf(h.state)!)), `the tent went up beside the Folly, not in it: ${JSON.stringify(tent?.position)}`);
 });
 
 test('raiseFolly refuses with Story off and changes nothing', () => {

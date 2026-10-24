@@ -816,7 +816,7 @@ export interface Story {
   /** The bridge stands whole (the Intro's flashback, before it collapses). */
   bridgeIntact?: boolean;
   /** The age's Folly (story/folly.ts): how far it is (0..100), since when, and the names on its plaque, first joiners first. */
-  folly?: { age: number; pct: number; startedAt: number; plaque: string[] };
+  folly?: { age: number; pct: number; startedAt: number; plaque: string[]; unveiled?: boolean }; // hook FK-023: `unveiled` outlasts Story OFF and a restart
   cue?: StoryCue[];
   sideLog?: SideLogEntry[];
   /** Each age's verdict: the side that led its tally. */
@@ -835,7 +835,7 @@ const storyShape = {
     .object({ id: z.string().max(40), at: z.number(), shift: z.number(), heldAt: z.number().optional(), beat: z.number().int().min(0), vars: z.record(z.string().max(40), z.string().max(160)) })
     .optional(),
   bridgeIntact: z.boolean().optional(),
-  folly: z.object({ age: z.number().int().min(0).max(5), pct: z.number().min(0).max(100), startedAt: z.number(), plaque: z.array(z.string().max(40)).max(STORY_CAPS.plaque) }).optional(),
+  folly: z.object({ age: z.number().int().min(0).max(5), pct: z.number().min(0).max(100), startedAt: z.number(), plaque: z.array(z.string().max(40)).max(STORY_CAPS.plaque), unveiled: z.boolean().optional() }).optional(), // hook FK-023
   cue: z.array(cueSchema).max(STORY_CAPS.cue).optional(),
   sideLog: z.array(sideLogSchema).max(STORY_CAPS.sideLog).optional(),
   verdicts: z.array(verdictSchema).max(STORY_CAPS.verdicts).optional(),

@@ -9,7 +9,8 @@
 // so Sami's beat never waits on gold helpers. The Unveiling's `unveil` beat (FK-025) takes the tarp
 // off; after that it is still unbreakable (damage.ts) and never restyled (city.ts queueRestyles).
 // While Story is on its plot and the crowd's ring take no build (sim.ts reserved()). Story OFF takes
-// it off the map and Story ON puts it back, so Story OFF is today's town. Zero AI.
+// it off the map (and its lines off the feed) and Story ON puts it back, unveiled or not as the save
+// says, so Story OFF is today's town. Zero AI.
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { WorldCtx } from '../../../engine/world';
@@ -22,8 +23,8 @@ import { STORY_SITES } from '../../../shared/storyMap';
 import { blueprintBounds, blueprintSchema, fitBlueprint, measureBlueprint } from '../blueprint';
 import { ageOf, cityOf, headName, stampAge } from '../city';
 import { choosePlacement, workSpots } from '../placement';
-import { reserved } from '../sim';
-import { STORY_CAPS, nextId, pushFeed, storyOn, type Dude, type DudesState, type Story } from '../state';
+import { isActive, reserved } from '../sim';
+import { LIMITS, STORY_CAPS, nextId, pushFeed, storyOn, type Dude, type DudesState, type Story } from '../state';
 
 export const FOLLY = {
   /** Its plot's id, as WONDER.plot is the Wonder's: never handed out, never in allPlots. */
@@ -130,9 +131,12 @@ export function raiseFolly(state: DudesState, now: number): string | undefined {
   const age = ageOf(state);
   const up = follyOf(state, age);
   if (up) return `The cordon is already up: ${up.blueprint.name} ${up.silhouette ? 'is under wraps' : 'stands unveiled'}`;
+  if (state.objects.length >= LIMITS.objects) return 'The town is full: no room for the Folly';
   const story = (cityOf(state).story ??= {});
-  // A new age's Folly starts from nothing; this age's, put back up (after the head took it down), keeps its count and plaque.
+  // A new age's Folly starts from nothing; this age's, put back up (after the head took it down), keeps
+  // its count and plaque, and goes up under wraps for another Unveiling.
   if (story.folly?.age !== age) story.folly = { age, pct: 0, startedAt: now, plaque: [] };
+  delete story.folly.unveiled;
   standFolly(state, age, now);
   pushFeed(state, now, `${headName(state)}'s cordon goes up by the old camp: KEEP OUT. SOMETHING AMAZING.`);
   return undefined;
@@ -156,7 +160,8 @@ export function unveilFolly(state: DudesState, now: number): string | undefined 
   if (!o.silhouette) return `${o.blueprint.name} is already unveiled`;
   delete o.silhouette;
   const f = follyNow(state);
-  if (f) f.pct = 100;
+  // Saved, so a restart with Story off brings it back unveiled, with its plaque closed.
+  if (f) Object.assign(f, { pct: 100, unveiled: true });
   state.worldRevision++;
   pushFeed(state, now, `${headName(state)} unveils ${o.blueprint.name}!`);
   return undefined;
@@ -169,12 +174,14 @@ export function retarpFolly(state: DudesState): string | undefined {
   if (!o) return 'No Folly stands in this age: raise the cordon first';
   if (o.silhouette) return `${o.blueprint.name} is already under wraps`;
   o.silhouette = true;
+  const f = follyNow(state);
+  if (f) delete f.unveiled;
   state.worldRevision++;
   return undefined;
 }
 
-/** The age's Folly as a build on its plot, under wraps, with room made for it. */
-function standFolly(state: DudesState, age: number, now: number): SafehouseObject {
+/** The age's Folly as a build on its plot (under wraps, but for one unveiled before a restart), with room made for it. */
+function standFolly(state: DudesState, age: number, now: number, unveiled = false): SafehouseObject {
   const lot = follyLot();
   const blueprint = follyBlueprint(age);
   const o: SafehouseObject = {
@@ -188,7 +195,7 @@ function standFolly(state: DudesState, age: number, now: number): SafehouseObjec
     createdAt: now,
     civic: true,
     folly: AGE_IDS[age],
-    silhouette: true,
+    ...(unveiled ? {} : { silhouette: true }),
   };
   stampAge(state, o);
   makeRoom(state, o, now);
@@ -198,8 +205,8 @@ function standFolly(state: DudesState, age: number, now: number): SafehouseObjec
 }
 /**
  * Room on the plot: an earlier age's Folly on the same spot comes down (FK-079 gives each age a spot
- * of its own), anything else standing there moves to the nearest free ground (it can only be there
- * from before Story was on), and nobody is left standing inside.
+ * of its own), anything else standing there, or on its way up there, moves to the nearest free ground
+ * (it can only be there from before Story was on), and nobody is left standing inside.
  */
 function makeRoom(state: DudesState, folly: SafehouseObject, now: number): void {
   const plot = follyLot().rect;
@@ -215,6 +222,16 @@ function makeRoom(state: DudesState, folly: SafehouseObject, now: number): void 
       if (x.driven) x.driven = { ...x.driven, at: to };
     } catch {
       // Nowhere free in town: it stays where it is.
+    }
+  }
+  // An off-lot build in flight, placed on the plot while Story was off: new ground, and its builder starts over there.
+  for (const j of state.jobs.filter((j) => j.kind === 'build' && !j.plot && j.position && j.footprint && isActive(j))) {
+    if (!overlaps(footprint(j.position!, j.footprint!.width, j.footprint!.depth), plot)) continue;
+    try {
+      j.position = choosePlacement(j.footprint!, state.objects, j.position!, [...reserved(state, j.id), plot]);
+      if (j.status === 'walking' || j.status === 'building') j.status = 'ready';
+    } catch {
+      // Nowhere free in town: it goes up where it was placed.
     }
   }
   const inside = footprint(folly.position, folly.footprint.width + 0.6, folly.footprint.depth + 0.6);
@@ -244,7 +261,7 @@ export function tickFolly(state: DudesState, dt: number, now: number): void {
   if (was === false) unstow(state, now);
   const f = follyNow(state);
   // Unveiled (or taken down): its count and its plaque are done.
-  if (!f || !follyOf(state)?.silhouette) return;
+  if (!f || f.unveiled || !follyOf(state)?.silhouette) return;
   if (f.pct < 100) {
     const next = f.pct + (dt / FOLLY.fillMs) * 100;
     // Thousands of small steps add up a hair short of the end: within a nanopercent is full.
@@ -252,25 +269,31 @@ export function tickFolly(state: DudesState, dt: number, now: number): void {
   }
   carve(state, f);
 }
-/** Story OFF: every Folly off the map (its count and plaque stay in the save). */
+/** The Folly's own feed lines (the cordon going up, the unveil, an earlier Folly making way): Story OFF takes them off, so its feed is today's. */
+const NAMES = FOLLIES.map((f) => f.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+const FEED_LINES = new RegExp(`'s cordon goes up by the old camp: KEEP OUT\\. SOMETHING AMAZING\\.$| unveils (${NAMES})!$|^(${NAMES}) comes down to make way for (${NAMES})$`);
+/** Story OFF: every Folly off the map and its lines off the feed (its count, plaque and unveiling stay in the save). */
 function stow(state: DudesState): void {
   stowed.set(state, [...(stowed.get(state) ?? []), ...state.objects.filter((o) => o.folly)]);
   state.objects = state.objects.filter((o) => !o.folly);
+  state.feed = state.feed.filter((l) => !FEED_LINES.test(l.text));
   state.worldRevision++;
 }
 /**
  * Story ON again: the Follies come back as they were. After a restart with Story off nothing was kept,
- * so this age's goes back up from its count and plaque, under wraps.
+ * so this age's goes back up from its count and plaque, unveiled if it was. Not into a full town
+ * (the save refuses more than LIMITS.objects): the next Story ON tries again.
  */
 function unstow(state: DudesState, now: number): void {
   const back = stowed.get(state) ?? [];
   stowed.delete(state);
   for (const o of back) {
+    if (state.objects.length >= LIMITS.objects) break;
     makeRoom(state, o, now);
     state.objects.push(o);
   }
   const f = follyNow(state);
-  if (f && !follyOf(state)) standFolly(state, f.age, now);
+  if (f && !follyOf(state) && state.objects.length < LIMITS.objects) standFolly(state, f.age, now, f.unveiled);
   state.worldRevision++;
 }
 
