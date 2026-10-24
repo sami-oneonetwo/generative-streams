@@ -61,12 +61,14 @@ export interface Beat {
   ms?: number;
 }
 export interface Scene {
-  id: SceneId;
+  /** The caravan's are SceneIds; a story scene (shared/storyScenes.ts) has its own. */
+  id: string;
   ms: number;
   shots: Shot[];
   lines: Line[];
   beats: Beat[];
 }
+/** The caravan's scenes. Saved in `city.scene`, so this list never gains or loses one: story scenes have their own ids and save. */
 export type SceneId = 'opening' | 'crossing' | 'ageTurn' | 'arrival' | 'finale';
 export const SCENE_IDS: SceneId[] = ['opening', 'crossing', 'ageTurn', 'arrival', 'finale'];
 
@@ -74,8 +76,11 @@ const lead = STRANDED[0];
 /** Between the leader (once stepped forward) and the daughter, at chest height. */
 const pair: [number, number, number] = [(lead.x - STEP_FORWARD + STRANDED[1].x) / 2, 0.95, (lead.z + STRANDED[1].z) / 2];
 
-/** The names are the age's caravan's; the page fills them in from the caravan board (`{leader}`). */
-export const SCENES: Record<SceneId, Scene> = {
+/**
+ * The names are the age's caravan's; the page fills them in from the caravan board (`{leader}`).
+ * Looked up by any id the town view carries: one that isn't here (a story scene's) comes out undefined.
+ */
+export const SCENES: Record<SceneId, Scene> & { readonly [id: string]: Scene | undefined } = {
   opening: {
     id: 'opening',
     ms: 34_000,

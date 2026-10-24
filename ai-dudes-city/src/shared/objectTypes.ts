@@ -144,6 +144,8 @@ export interface CreatureState {
   /** ai-dudes city, a car on the road grid: the intersection it is heading for, and the one it came from ("i,j"). */
   node?: string;
   prevNode?: string;
+  /** ai-dudes Finders Keepers, a pet: the chatter (dude id) it trails instead of roaming. */
+  follows?: string; // hook FK-001
 }
 export interface SafehouseObject {
   id: string;
@@ -188,6 +190,9 @@ export interface SafehouseObject {
   free?: boolean;
   /** ai-dudes: the landmark before the group reaches it, drawn as a dark shape in the mist. */
   silhouette?: boolean;
+  /** ai-dudes Finders Keepers: the age's Folly (`stone` …), and what this build was in earlier ages, oldest first. */
+  folly?: string; // hook FK-001
+  past?: { age: number; name: string }[]; // hook FK-001
   /** What the piece is for (closed vocabulary); rules and idle behaviour find pieces by these. */
   uses?: Use[];
   /** Behaviour as data, run by rules.ts every tick for a creature; at most a handful per object. */

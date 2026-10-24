@@ -28,6 +28,14 @@ export const LIMITS = {
   say: 240,
 };
 
+/**
+ * Finders Keepers' saved lists (FK-001). The loader refuses a save with a list over its max, so
+ * `trimStory` cuts every one back to these before each save: names on the Folly's plaque, the side
+ * joins the ticker reads, a build's earlier ages, the show's beat queue, one verdict an age, and the
+ * story's choices (keys).
+ */
+export const STORY_CAPS = { plaque: 40, sideLog: 50, past: 6, cue: 20, verdicts: 6, choices: 20 } as const;
+
 const point = z.object({ x: z.number().finite(), z: z.number().finite() });
 const needsSchema = z.object(Object.fromEntries(NEEDS.map((n) => [n, z.number().min(0).max(100)])) as Record<(typeof NEEDS)[number], z.ZodNumber>) as unknown as z.ZodType<Needs>;
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/);
@@ -44,6 +52,14 @@ export const lookSchema: z.ZodType<DudeLook> = z.object({
   height: z.number().min(0.85).max(1.15),
   build: z.number().min(0.85).max(1.2),
 });
+
+const pastSchema = z.object({ age: z.number().int().min(0).max(5), name: z.string().max(70) });
+/** Finders Keepers on a build: a Folly (`stone` …), under wraps until it is unveiled, and what it was in earlier ages, oldest first. */
+const objectStoryShape = {
+  folly: z.string().max(20).optional(),
+  silhouette: z.boolean().optional(),
+  past: z.array(pastSchema).max(STORY_CAPS.past).optional(),
+};
 
 export const objectSchema: z.ZodType<SafehouseObject> = z.object({
   id: z.string(),
@@ -86,8 +102,10 @@ export const objectSchema: z.ZodType<SafehouseObject> = z.object({
       altitude: z.number().finite().optional(),
       node: z.string().max(12).optional(),
       prevNode: z.string().max(12).optional(),
+      follows: z.string().max(80).optional(), // a pet: trails this chatter (Finders Keepers)
     })
     .optional(),
+  ...objectStoryShape,
 }) as unknown as z.ZodType<SafehouseObject>;
 
 export interface Line {
@@ -169,7 +187,31 @@ export interface Dude {
   nextShotAt?: number;
   /** Who this character has history with (city.ts `tieWith`), by the other dude's id: a small capped ledger. */
   ties?: Record<string, Tie>;
+  // ---- Finders Keepers (state.ai.story; every field below is set only while Story is on) ----
+  /** The side they took by typing `red` or `gold` (story/sides.ts), and the age they took it in: one switch per age. */
+  side?: Side;
+  sideAge?: number;
+  /** The last age the chatter spoke in: their first line in a new age spotlights their home (story/spotlight.ts). */
+  seenAge?: number;
+  /** Called to a gathering (story/gather.ts): their ring slot, the way to face there, and when it lets them go. */
+  gather?: Gather;
 }
+
+/** The two sides of Finders Keepers: Wren's band (red) and the head's friends (gold). */
+export const SIDES = ['red', 'gold'] as const;
+export type Side = (typeof SIDES)[number];
+
+export interface Gather {
+  slot: GroundPoint;
+  face: number;
+  until: number;
+}
+const dudeStoryShape = {
+  side: z.enum(SIDES).optional(),
+  sideAge: z.number().int().min(0).max(5).optional(),
+  seenAge: z.number().int().min(0).max(5).optional(),
+  gather: z.object({ slot: point, face: z.number().finite(), until: z.number() }).optional(),
+};
 
 /** One side of two characters' history: they came to your places, you went to theirs, gifts, hits, projects built together. */
 export interface Tie {
@@ -280,6 +322,7 @@ const dudeSchema: z.ZodType<Dude> = z.object({
       z.object({ came: z.number().min(0), went: z.number().min(0), gifts: z.number().min(0), hits: z.number().min(0), together: z.number().min(0), at: z.number() }),
     )
     .optional(),
+  ...dudeStoryShape,
 });
 
 /** A build in flight for one dude: designed (in parallel with everyone else's), walked to, put up. */
@@ -349,6 +392,8 @@ export interface AiSettings {
   caravan?: boolean;
   /** The age themes apply (shared/ages.ts): builds made and drawn the age's way, period names and clothes. Off is the theme-free sandbox world. */
   themes?: boolean;
+  /** Finders Keepers (docs/story-bible-2026-10-24.md) runs: sides, the Folly, the show. OFF unless set: absent is today's game. */
+  story?: boolean;
   paused: boolean;
   /** The rolling budget applies (budget.ts). Off: calls are still counted, never refused. */
   enforced: boolean;
@@ -467,6 +512,10 @@ export interface Mayor {
   ask?: { text: string; at: number; sent?: boolean };
   aide?: { asked: string; reply: string; ok: boolean; at: number };
   lastInputAt: number;
+  /** Finders Keepers: put on his mark for a scene (where, facing which way, since when); the operator page's WASD waits for the release. */
+  lock?: { at: GroundPoint; facing: number; since: number };
+  /** Finders Keepers: hidden by the show (the Intro's flashback), whatever the operator page asks. */
+  forcedHidden?: boolean;
 }
 export const mayorLookSchema = z.object({
   skin: hex.optional(),
@@ -482,6 +531,10 @@ export const mayorLookSchema = z.object({
   costume: z.boolean().optional(),
 });
 export type MayorLook = z.infer<typeof mayorLookSchema>;
+const mayorStoryShape = {
+  lock: z.object({ at: point, facing: z.number().finite(), since: z.number() }).optional(),
+  forcedHidden: z.boolean().optional(),
+};
 const mayorSchema: z.ZodType<Mayor> = z.object({
   position: point,
   facing: z.number().finite(),
@@ -504,6 +557,7 @@ const mayorSchema: z.ZodType<Mayor> = z.object({
   ask: z.object({ text: z.string().max(400), at: z.number(), sent: z.boolean().optional() }).optional(),
   aide: z.object({ asked: z.string().max(400), reply: z.string().max(600), ok: z.boolean(), at: z.number() }).optional(),
   lastInputAt: z.number(),
+  ...mayorStoryShape,
 });
 
 // ---- the town (city.ts) ---------------------------------------------------------------------------
@@ -627,7 +681,10 @@ export interface Townie {
   daughter?: boolean;
   /** Drawn this much bigger or smaller (the daughter is a small child in the Stone Age). */
   scale?: number;
+  /** Finders Keepers: one of the band who stays through every age (story/cast.ts: `wren`, `ash`, `moss`, `oak`, `kit`). */
+  role?: string;
 }
+const townieStoryShape = { role: z.string().max(20).optional() };
 const townieSchema: z.ZodType<Townie> = z.object({
   id: z.string().max(20),
   name: z.string().max(40),
@@ -647,6 +704,7 @@ const townieSchema: z.ZodType<Townie> = z.object({
   leader: z.boolean().optional(),
   daughter: z.boolean().optional(),
   scale: z.number().min(0.3).max(3).optional(),
+  ...townieStoryShape,
 });
 const caravanSchema = z.object({
   age: z.number().int().min(0).max(5),
@@ -719,7 +777,76 @@ export interface City {
   daughter?: string;
   /** Each finished age's top three on the Crier's board (names), for the finale's roll call. */
   heroes?: { age: number; names: string[] }[];
+  /** Finders Keepers (state.ai.story): the show, the Folly, the sides. */
+  story?: Story;
 }
+
+// ---- Finders Keepers (FK-001) ---------------------------------------------------------------------
+// Every field is optional, so a save written with these loads on code from before them (zod drops
+// what it doesn't know). Ids and states are strings, never a saved enum, so a new scene or beat state
+// never makes an older build refuse the save. Lists are capped (STORY_CAPS) and trimmed before saving.
+/** A story scene playing (story/show.ts). Held scenes keep `at` and add up `shift` instead, so the page's shots keep their start pose. */
+export interface StorySceneState {
+  /** A story scene's id (shared/storyScenes.ts), never one of the saved `city.scene` ids. */
+  id: string;
+  at: number;
+  /** Milliseconds of holds so far: scene time is now − at − shift. */
+  shift: number;
+  /** Scene time the current hold froze at, while one is on. */
+  heldAt?: number;
+  beat: number;
+  vars: Record<string, string>;
+}
+/** One beat in the show's queue (story/beats.ts): `locked`, `armed`, `firing` or `done`. */
+export interface StoryCue {
+  id: string;
+  state: string;
+  at?: number;
+}
+/** Someone took a side (or crossed to the other one: `from`), for the ticker. */
+export interface SideLogEntry {
+  at: number;
+  id: string;
+  name: string;
+  side: Side;
+  from?: Side;
+}
+export interface Story {
+  scene?: StorySceneState;
+  /** The bridge stands whole (the Intro's flashback, before it collapses). */
+  bridgeIntact?: boolean;
+  /** The age's Folly (story/folly.ts): how far it is (0..100), since when, and the names on its plaque, first joiners first. */
+  folly?: { age: number; pct: number; startedAt: number; plaque: string[] };
+  cue?: StoryCue[];
+  sideLog?: SideLogEntry[];
+  /** Each age's verdict: the side that led its tally. */
+  verdicts?: { age: number; side: Side }[];
+  /** The head gave the bronze in the Ask. */
+  helped?: boolean;
+  /** Choices the story remembers (`huts` …), by name. */
+  choices?: Record<string, string>;
+}
+const cueSchema = z.object({ id: z.string().max(40), state: z.string().max(12), at: z.number().optional() });
+const sideLogSchema = z.object({ at: z.number(), id: z.string().max(80), name: z.string().max(40), side: z.enum(SIDES), from: z.enum(SIDES).optional() });
+const verdictSchema = z.object({ age: z.number().int().min(0).max(5), side: z.enum(SIDES) });
+/** Field by field, so the save guard (trimStory) can drop one bad field rather than the story. */
+const storyShape = {
+  scene: z
+    .object({ id: z.string().max(40), at: z.number(), shift: z.number(), heldAt: z.number().optional(), beat: z.number().int().min(0), vars: z.record(z.string().max(40), z.string().max(160)) })
+    .optional(),
+  bridgeIntact: z.boolean().optional(),
+  folly: z.object({ age: z.number().int().min(0).max(5), pct: z.number().min(0).max(100), startedAt: z.number(), plaque: z.array(z.string().max(40)).max(STORY_CAPS.plaque) }).optional(),
+  cue: z.array(cueSchema).max(STORY_CAPS.cue).optional(),
+  sideLog: z.array(sideLogSchema).max(STORY_CAPS.sideLog).optional(),
+  verdicts: z.array(verdictSchema).max(STORY_CAPS.verdicts).optional(),
+  helped: z.boolean().optional(),
+  choices: z
+    .record(z.string().max(40), z.string().max(40))
+    .refine((c) => Object.keys(c).length <= STORY_CAPS.choices, `at most ${STORY_CAPS.choices} story choices`)
+    .optional(),
+};
+const storySchema: z.ZodType<Story> = z.object(storyShape);
+
 export const citySchema: z.ZodType<City> = z.object({
   layout: z.number().int().optional(),
   name: z.string().max(40),
@@ -739,6 +866,7 @@ export const citySchema: z.ZodType<City> = z.object({
   scene: z.object({ id: z.enum(SCENE_IDS as [SceneId, ...SceneId[]]), at: z.number(), beat: z.number().int().min(0), vars: z.record(z.string(), z.string().max(160)).optional() }).optional(),
   daughter: z.string().max(40).optional(),
   heroes: z.array(z.object({ age: z.number().int().min(0).max(5), names: z.array(z.string().max(40)).max(3) })).max(6).optional(),
+  story: storySchema.optional(),
   crier: z
     .object({
       age: z.number().int().min(0).max(5),
@@ -770,6 +898,7 @@ export const stateSchema: z.ZodType<DudesState> = z.object({
     destruction: z.boolean().optional(),
     caravan: z.boolean().optional(),
     themes: z.boolean().optional(),
+    story: z.boolean().optional(),
     paused: z.boolean(),
     enforced: z.boolean(),
     callsRemaining: z.number().int().nonnegative(),
@@ -846,6 +975,83 @@ export function pushFeed(state: DudesState, now: number, text: string): void {
 export function pushLine<T>(list: T[], item: T, cap: number): void {
   list.push(item);
   while (list.length > cap) list.shift();
+}
+
+// ---- Finders Keepers: the switch and the save guard ------------------------------------------------
+/** Finders Keepers runs. OFF unless the operator switched it on, so every save from before it is today's game. */
+export const storyOn = (state: DudesState): boolean => state.ai.story === true;
+
+/**
+ * Run before every save (the world's `beforeSave`): cut Finders Keepers' lists back to STORY_CAPS and
+ * clip their names, then check each story field the way the loader will. The loader refuses a save
+ * that breaks the schema (engine/persistence.ts), and a town that won't boot is worse than a lost
+ * plaque: a list loses the entries that would not load, any other bad field goes. Returns what had to
+ * go, for the log (trims and clips are routine and silent).
+ */
+export function trimStory(state: DudesState): string[] {
+  const dropped: string[] = [];
+  const s = state.city?.story;
+  if (s) {
+    if (s.folly) {
+      // The first names carved stay: a late joiner past the plaque's 40 is the one left off.
+      capList(s.folly.plaque, STORY_CAPS.plaque, 'first');
+      s.folly.plaque.forEach((n, i, list) => (list[i] = clip(n, 40)));
+      s.folly.pct = Math.max(0, Math.min(100, s.folly.pct));
+    }
+    if (s.scene?.vars) for (const [k, v] of Object.entries(s.scene.vars)) s.scene.vars[k] = clip(v, 160);
+    // The beat queue keeps its order; the logs keep their newest.
+    if (s.cue) capList(s.cue, STORY_CAPS.cue, 'first');
+    if (s.sideLog) {
+      capList(s.sideLog, STORY_CAPS.sideLog, 'last');
+      for (const e of s.sideLog) e.name = clip(e.name, 40);
+    }
+    if (s.verdicts) capList(s.verdicts, STORY_CAPS.verdicts, 'last');
+    if (s.choices && Object.keys(s.choices).length > STORY_CAPS.choices) s.choices = Object.fromEntries(Object.entries(s.choices).slice(-STORY_CAPS.choices));
+    dropInvalid(s, storyShape, 'city.story', dropped, { cue: cueSchema, sideLog: sideLogSchema, verdicts: verdictSchema });
+  }
+  for (const o of state.objects) {
+    if (o.past) {
+      capList(o.past, STORY_CAPS.past, 'last');
+      for (const p of o.past) p.name = clip(p.name, 70);
+    }
+    if (o.creature?.follows !== undefined && !(typeof o.creature.follows === 'string' && o.creature.follows.length <= 80)) {
+      o.creature.follows = undefined;
+      dropped.push(`object ${o.id}.creature.follows`);
+    }
+    dropInvalid(o, objectStoryShape, `object ${o.id}`, dropped, { past: pastSchema });
+  }
+  for (const d of state.dudes) dropInvalid(d, dudeStoryShape, `dude ${d.id}`, dropped);
+  for (const t of state.city?.townies ?? []) dropInvalid(t, townieStoryShape, `townie ${t.id}`, dropped);
+  if (state.mayor) dropInvalid(state.mayor, mayorStoryShape, 'mayor', dropped);
+  if (state.ai.story !== undefined && typeof state.ai.story !== 'boolean') {
+    state.ai.story = undefined;
+    dropped.push('ai.story');
+  }
+  return dropped;
+}
+const clip = (s: string, n: number) => (typeof s === 'string' && s.length <= n ? s : String(s).slice(0, n));
+/** Cut a list to `max` in place, keeping its first entries or its newest. */
+function capList(list: unknown[], max: number, keep: 'first' | 'last'): void {
+  if (list.length > max) list.splice(keep === 'first' ? max : 0, list.length - max);
+}
+/** Each story field present that the loader would refuse: a list keeps the entries that load (`entries`), anything else goes. */
+function dropInvalid(target: object, shape: Record<string, z.ZodType>, where: string, dropped: string[], entries: Record<string, z.ZodType> = {}): void {
+  const t = target as Record<string, unknown>;
+  for (const key of Object.keys(shape)) {
+    const value = t[key];
+    if (value === undefined || shape[key].safeParse(value).success) continue;
+    const entry = entries[key];
+    if (entry && Array.isArray(value)) {
+      const good = value.filter((x) => entry.safeParse(x).success);
+      if (shape[key].safeParse(good).success) {
+        t[key] = good;
+        dropped.push(`${where}.${key} (${value.length - good.length} of ${value.length})`);
+        continue;
+      }
+    }
+    delete t[key];
+    dropped.push(`${where}.${key}`);
+  }
 }
 
 // ---- troublemakers (events.ts) --------------------------------------------------------------------

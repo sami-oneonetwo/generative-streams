@@ -1,0 +1,618 @@
+{
+  "version": 1,
+  "createdAt": 1792796293241,
+  "dudes": [
+    {
+      "id": "kick:28683256",
+      "name": "Sami",
+      "createdAt": 1792802318454,
+      "lastHeardAt": 1792802318454,
+      "lastTurnAt": 1792803212652,
+      "turns": 8,
+      "persona": "Sami is curious and easygoing, the type to show up somewhere new and take it in before making plans. They're dressed practically for the Stone Age life and seem ready to figure out what this place is all about. Quick to laugh off minor troubles and keen to understand how things work.",
+      "title": "the newcomer",
+      "look": {
+        "skin": "#d8a07a",
+        "shirt": "#e2d8c3",
+        "pants": "#6a5a43",
+        "hair": "#d9c27a",
+        "hat": "bucket",
+        "hatColor": "#b04a7a",
+        "accessory": "none",
+        "accessoryColor": "#c4402f",
+        "height": 0.92,
+        "build": 1
+      },
+      "memory": [
+        "Sticky Ug steals hats",
+        "My hat is in the pile of stolen hats",
+        "The Chief swears like a hunter",
+        "Got my bucket hat back from the pile",
+        "Sticky Ug stole my hat twice in one day",
+        "The Chief has a colourful way with words",
+        "Stone Age town, everything's made of stone and bone",
+        "Sticky Ug stole my hat twice in one day",
+        "Need to find my bucket hat at the pile again",
+        "Sticky Ug is relentless—hit me twice already",
+        "The Chief swears like a hunter at everything",
+        "Stone Age town: everything's stone, bone, hides",
+        "Town needs somewhere to eat and a park",
+        "Sticky Ug stole my hat three times in one day",
+        "The Chief swears a lot",
+        "Town needs food and a park"
+      ],
+      "history": [
+        {
+          "from": "dude",
+          "text": "That's twice Sticky Ug's come for my hat now. I'm starting to think I've got a target on my head. At least the pile's still here—let me see what I can salvage this time.",
+          "at": 1792802834176
+        },
+        {
+          "from": "world",
+          "text": "you got your hat back",
+          "at": 1792802859740
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792802911784
+        },
+        {
+          "from": "dude",
+          "text": "Twice in one day. That hat thief's got a real grudge. Still, it's quiet now—maybe time to actually see what there is to do around here before Sticky Ug decides my bucket's the crown jewel of his collection.",
+          "at": 1792803029357
+        },
+        {
+          "from": "world",
+          "text": "Sticky Ug just stole your hat and ran off with it.",
+          "at": 1792803210046
+        },
+        {
+          "from": "world",
+          "text": "Sticky Ug dumped the stolen hats in a \"Pile of stolen hats\". Use it (any way) to get yours back.",
+          "at": 1792803210546
+        },
+        {
+          "from": "dude",
+          "text": "Third time's the charm, I guess. That hat thief's got commitment, I'll give him that. Maybe I should just start wearing it around my neck.",
+          "at": 1792803212652
+        },
+        {
+          "from": "world",
+          "text": "you got your hat back",
+          "at": 1792803229563
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792803270101
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792803973765
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792806486595
+        },
+        {
+          "from": "world",
+          "text": "you grabbed a bite at the market stall for §4",
+          "at": 1792808471957
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792808724193
+        },
+        {
+          "from": "world",
+          "text": "you sat by the fountain",
+          "at": 1792811513247
+        }
+      ],
+      "inbox": [],
+      "overheard": [],
+      "position": {
+        "x": -1.1197011760789406,
+        "z": -32.144536112631194
+      },
+      "facing": -0.7533871673594934,
+      "path": [],
+      "idleUntil": 1792813125461.7195,
+      "coins": 155,
+      "needs": {
+        "hunger": 58.85210000006969,
+        "energy": 62.31126000001172,
+        "fun": 61.62251999999245,
+        "social": 88.25775666667015
+      },
+      "plot": "q0_-1_0_1",
+      "nudges": [
+        "Sticky Ug dumped the stolen hats in a \"Pile of stolen hats\". Use it (any way) to get yours back."
+      ]
+    }
+  ],
+  "objects": [],
+  "jobs": [],
+  "feed": [
+    {
+      "at": 1792799154322,
+      "text": "The Chief: Hi"
+    },
+    {
+      "at": 1792800447433,
+      "text": "The Chief: cool"
+    },
+    {
+      "at": 1792802318454,
+      "text": "Sami moved into 9 Elm Street"
+    },
+    {
+      "at": 1792802318793,
+      "text": "The Mammoth Herders are stuck across the river: the bridge is down"
+    },
+    {
+      "at": 1792802484916,
+      "text": "Sticky Ug is stealing hats. Find the pile to get yours back."
+    },
+    {
+      "at": 1792802529342,
+      "text": "The Chief: fuck"
+    },
+    {
+      "at": 1792802786182,
+      "text": "Sticky Ug is stealing hats. Find the pile to get yours back."
+    },
+    {
+      "at": 1792803193030,
+      "text": "Sticky Ug is stealing hats. Find the pile to get yours back."
+    },
+    {
+      "at": 1792812404523,
+      "text": "Fernley Green is in the Wasteland now"
+    },
+    {
+      "at": 1792812404616,
+      "text": "the Scrap Convoy have made camp across the river"
+    },
+    {
+      "at": 1792812404616,
+      "text": "Road Boss Mara of the Scrap Convoy: The convoy has run dry. Food, clean water, anything. Feed us and we'll park the rigs."
+    }
+  ],
+  "ai": {
+    "paused": false,
+    "enforced": true,
+    "callsRemaining": 500,
+    "callsUsed": 9,
+    "bucket": {
+      "agent": 300,
+      "design": 22.5,
+      "at": 1792813114462
+    },
+    "minutes": [
+      [
+        29880038,
+        1,
+        0
+      ],
+      [
+        29880041,
+        1,
+        1
+      ],
+      [
+        29880042,
+        1,
+        0
+      ],
+      [
+        29880045,
+        1,
+        0
+      ],
+      [
+        29880046,
+        1,
+        0
+      ],
+      [
+        29880047,
+        1,
+        0
+      ],
+      [
+        29880050,
+        1,
+        0
+      ],
+      [
+        29880053,
+        1,
+        0
+      ]
+    ]
+  },
+  "worldRevision": 10,
+  "nextId": 8,
+  "listener": {
+    "backfilled": true,
+    "buffer": [],
+    "wishes": [],
+    "tips": [],
+    "lastRunAt": 0,
+    "runs": 0
+  },
+  "nextHappeningAt": 1792813234462,
+  "city": {
+    "layout": 3,
+    "name": "Fernley Green",
+    "plots": {
+      "q0_-1_0_1": {
+        "owner": "kick:28683256",
+        "coOwners": [],
+        "claimedAt": 1792802318454
+      }
+    },
+    "done": [],
+    "stats": {},
+    "townies": [
+      {
+        "id": "t1n2424p",
+        "name": "Mrs Okafor",
+        "look": {
+          "skin": "#e0ac85",
+          "shirt": "#e2d8c3",
+          "pants": "#38503e",
+          "hair": "#5a3a22",
+          "hat": "none",
+          "hatColor": "#d9a23a",
+          "accessory": "none",
+          "accessoryColor": "#2f8f8a",
+          "height": 1.04,
+          "build": 1
+        },
+        "position": {
+          "x": -0.9894999999999997,
+          "z": 7
+        },
+        "facing": 1.5707963267948966,
+        "path": [
+          {
+            "x": -0.5,
+            "z": 7
+          },
+          {
+            "x": -0.5,
+            "z": 24
+          }
+        ],
+        "doing": "stroll",
+        "placeId": "town:fountain",
+        "until": 1792813163529.3042,
+        "last": "town:fountain"
+      },
+      {
+        "id": "t1hvm93i",
+        "name": "Old Tom",
+        "look": {
+          "skin": "#f5d6c0",
+          "shirt": "#d9a23a",
+          "pants": "#6a5a43",
+          "hair": "#5a3a22",
+          "hat": "bucket",
+          "hatColor": "#7d4fa3",
+          "accessory": "none",
+          "accessoryColor": "#b04a7a",
+          "height": 1.08,
+          "build": 1
+        },
+        "position": {
+          "x": -5.761408694055495,
+          "z": -6.942236892775199
+        },
+        "facing": 0.593066349878354,
+        "path": [
+          {
+            "x": -3.3200000000000003,
+            "z": -3.3200000000000003
+          }
+        ],
+        "doing": "going",
+        "placeId": "town:fountain",
+        "until": 1792813082273.889,
+        "last": "town:market"
+      },
+      {
+        "id": "t1n6zdaw",
+        "name": "Priya",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#5a6b7a",
+          "pants": "#3a4a5e",
+          "hair": "#d9c27a",
+          "hat": "none",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#3f6fb0",
+          "height": 0.92,
+          "build": 1
+        },
+        "position": {
+          "x": -6.180111122930046,
+          "z": -18.800782083303233
+        },
+        "facing": -2.9751408879911923,
+        "path": [],
+        "doing": "stroll",
+        "placeId": "town:market",
+        "until": 1792813119948.5225,
+        "last": "town:market"
+      },
+      {
+        "id": "tg71boc",
+        "name": "Dev",
+        "look": {
+          "skin": "#7a4b2a",
+          "shirt": "#e2d8c3",
+          "pants": "#4b4038",
+          "hair": "#a8743a",
+          "hat": "none",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#e07a4a",
+          "height": 0.9600000000000001,
+          "build": 1
+        },
+        "position": {
+          "x": -14.193230046361066,
+          "z": 7.25077177159716
+        },
+        "facing": 1.9540444126959204,
+        "path": [
+          {
+            "x": -6.096040249628882,
+            "z": 3.986115357004531
+          }
+        ],
+        "doing": "chat",
+        "placeId": "town:fountain",
+        "until": 1792813120456,
+        "last": "town:fountain",
+        "say": {
+          "text": "This town could do with a park or a garden.",
+          "until": 1792813117956
+        }
+      },
+      {
+        "id": "t7690ps",
+        "name": "Nana Rose",
+        "look": {
+          "skin": "#f1c9a5",
+          "shirt": "#b04a7a",
+          "pants": "#3a4a5e",
+          "hair": "#1d1d1d",
+          "hat": "tophat",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#5a6b7a",
+          "height": 0.9600000000000001,
+          "build": 1
+        },
+        "position": {
+          "x": -10.150848804986284,
+          "z": 3.5
+        },
+        "facing": -1.5707963267948966,
+        "path": [
+          {
+            "x": -11,
+            "z": 3.5
+          },
+          {
+            "x": -11,
+            "z": 21
+          }
+        ],
+        "doing": "stroll",
+        "placeId": "town:fountain",
+        "until": 1792813163101.8208,
+        "last": "town:fountain"
+      },
+      {
+        "id": "cason3u",
+        "name": "Road Boss Mara",
+        "look": {
+          "skin": "#a26a42",
+          "shirt": "#8a3f5a",
+          "pants": "#5c3d3d",
+          "hair": "#7a7a7a",
+          "hat": "propeller",
+          "hatColor": "#e07a4a",
+          "accessory": "none",
+          "accessoryColor": "#b04a7a",
+          "height": 1,
+          "build": 1
+        },
+        "position": {
+          "x": 4.1,
+          "z": 4.1
+        },
+        "facing": -2.356194490192345,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792813116253.0005,
+        "traveller": true,
+        "leader": true,
+        "say": {
+          "text": "We still need: Build or do up a place to eat (0/1); Feed 2 of the travellers at your places to eat (0/2)",
+          "until": 1792813121960
+        }
+      },
+      {
+        "id": "cjetc0z",
+        "name": "Ama",
+        "look": {
+          "skin": "#f5d6c0",
+          "shirt": "#3f6f8a",
+          "pants": "#5c3d3d",
+          "hair": "#2b2018",
+          "hat": "none",
+          "hatColor": "#d9a23a",
+          "accessory": "none",
+          "accessoryColor": "#4f8a4b",
+          "height": 0.92,
+          "build": 1
+        },
+        "position": {
+          "x": 6.2,
+          "z": 0.4
+        },
+        "facing": -1.6352231662204502,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792813117402.8303,
+        "traveller": true,
+        "daughter": true,
+        "scale": 1,
+        "emote": {
+          "pose": "point",
+          "until": 1792813115960
+        }
+      },
+      {
+        "id": "cpfnzxy",
+        "name": "Rust",
+        "look": {
+          "skin": "#d8a07a",
+          "shirt": "#8a3f5a",
+          "pants": "#5c3d3d",
+          "hair": "#7a7a7a",
+          "hat": "none",
+          "hatColor": "#d9a23a",
+          "accessory": "none",
+          "accessoryColor": "#7d4fa3",
+          "height": 1.04,
+          "build": 1
+        },
+        "position": {
+          "x": 0.6,
+          "z": 7.6
+        },
+        "facing": -3.0628086926006493,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792813119237.308,
+        "traveller": true
+      },
+      {
+        "id": "c1cgehys",
+        "name": "Patch",
+        "look": {
+          "skin": "#e0ac85",
+          "shirt": "#8a5a3c",
+          "pants": "#5c3d3d",
+          "hair": "#d9c27a",
+          "hat": "none",
+          "hatColor": "#4f8a4b",
+          "accessory": "none",
+          "accessoryColor": "#7d4fa3",
+          "height": 0.9600000000000001,
+          "build": 1
+        },
+        "position": {
+          "x": 4.1,
+          "z": 4.1
+        },
+        "facing": -2.356194490192345,
+        "path": [],
+        "doing": "stroll",
+        "until": 1792813116132.2805,
+        "traveller": true
+      }
+    ],
+    "unmet": {
+      "rest": 1
+    },
+    "nextProjectId": 1,
+    "age": 5,
+    "caravan": {
+      "age": 5,
+      "visit": 0,
+      "openedAt": 1792812404616,
+      "asks": [
+        {
+          "id": "food",
+          "kind": "build",
+          "venues": [
+            "restaurant",
+            "cafe",
+            "bakery",
+            "market"
+          ],
+          "label": "Build or do up a place to eat (mess hall, ration counter…)",
+          "need": 1,
+          "have": 0
+        },
+        {
+          "id": "fed",
+          "kind": "serve",
+          "venues": [
+            "restaurant",
+            "cafe",
+            "bakery",
+            "market"
+          ],
+          "label": "Feed 2 of the travellers at your places to eat",
+          "need": 2,
+          "have": 0
+        }
+      ],
+      "travellers": [
+        "cason3u",
+        "cjetc0z",
+        "cpfnzxy",
+        "c1cgehys"
+      ],
+      "seen": [],
+      "revs": {}
+    },
+    "paidMinute": 29880218,
+    "crier": {
+      "age": 5,
+      "tally": {},
+      "visit": {},
+      "builds": [],
+      "out": [],
+      "spotAt": 1792813543262.3518,
+      "nudgeAt": 1792812404616
+    },
+    "restyle": {
+      "age": 5,
+      "ids": []
+    }
+  },
+  "mayor": {
+    "position": {
+      "x": -5.512505996979792,
+      "z": 11.04415177550259
+    },
+    "facing": 2.2207963267948965,
+    "moving": false,
+    "running": false,
+    "cam": {
+      "yaw": 0.65,
+      "half": 16,
+      "x": -5.512505996979792,
+      "z": 11.04415177550259
+    },
+    "follow": false,
+    "lastInputAt": 1792811820443
+  },
+  "npcs": [],
+  "hatPiles": {},
+  "effects": []
+}

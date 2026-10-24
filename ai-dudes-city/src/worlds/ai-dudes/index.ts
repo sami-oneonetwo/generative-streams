@@ -97,10 +97,13 @@ import {
   pushLine,
   resetState,
   stateSchema,
+  trimStory,
   type Dude,
   type DudesState,
   type Job,
 } from './state';
+import { releaseShow } from './story/show';
+import { storyDudeView } from './story/view';
 
 export interface DudesOptions {
   agent: AgentFn;
@@ -1510,6 +1513,8 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
             },
           }
         : {}),
+      // Finders Keepers: their side. Nothing while Story is off.
+      ...storyDudeView(state, d, now),
     };
   }
 
@@ -1993,6 +1998,15 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       return resetState(previous, now, opts.allowance);
     },
     migrate: (raw) => raw as DudesState,
+    // Finders Keepers' lists back under their caps before every save: a save over a max would not boot.
+    beforeSave(state) {
+      try {
+        const dropped = trimStory(state);
+        if (dropped.length) live?.log(`story: dropped ${dropped.join(', ')} before saving (would not have loaded)`, 'alert');
+      } catch (e) {
+        live?.log(`story: save guard failed: ${(e as Error).message}`, 'alert');
+      }
+    },
     start(ctx) {
       live = ctx;
       // A save laid out on an older street plan moves onto this one first (relayout.ts).
@@ -2008,6 +2022,9 @@ export function createAiDudesWorld(opts: DudesOptions): WorldModule<DudesState> 
       for (const d of ctx.state.dudes) if (!lotsOf(ctx.state, d).length && !d.rentsAt) claimLot(ctx.state, d, ctx.now);
       // Designs that were out when the process stopped are asked again; everything else resumes as saved.
       for (const job of ctx.state.jobs) if (job.status === 'designing') job.status = 'queued';
+      // A show cut off mid-scene never comes back frozen: the scene ends, gatherings and the head's lock go (Story on or off).
+      const released = releaseShow(ctx.state);
+      if (released) ctx.log(`story: released ${released} held thing${released === 1 ? '' : 's'} from before the restart (scene, gatherings, the head's lock)`);
       const heard = backfill(ctx.state, opts.readChatLog?.() ?? []);
       if (heard) ctx.log(`listener: read back ${heard} lines from earlier chat`);
       ctx.log(

@@ -155,6 +155,7 @@ export interface WorldModule<S> {
   // settings (cost controls) that a reset should not silently undo.
   reset?(previous: S, now: number): S;
   migrate(raw: unknown, fromVersion: number): S; // snapshot upgrades across stateVersion bumps
+  beforeSave?(state: S): void; // tidy state into what stateSchema will load again (capped lists); hook FK-001
   intents: IntentDef<S>[];
   fallbackIntent: string; // 'ask' — used below the confidence threshold / on classifier failure
   chatThrottleMs?: number; // worlds with durable admission may handle their own visible cooldown

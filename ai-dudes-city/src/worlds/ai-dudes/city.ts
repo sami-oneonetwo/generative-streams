@@ -42,6 +42,7 @@ import { addEffect, awake, endUse, face, reserved, step, walkTo } from './sim';
 import { moversNear } from './movers';
 import { credit } from './crier';
 import { LIMITS, nextId, pushFeed, pushLine, type City, type Dude, type DudesState, type Ledger, type Project, type Tie, type Townie, type Visit } from './state';
+import { storyTownView } from './story/view'; // FK-001
 
 export const TOWN = {
   startCoins: 150,
@@ -1405,6 +1406,8 @@ export function townView(state: DudesState, now: number): TownView {
     ...(p ? { project: { name: p.name ?? p.what.slice(0, 40), status: p.status, coins: p.coins, coinsNeed: p.coinsNeed, work: Math.round(p.work), workNeed: p.workNeed, plot: p.plot, ...(projectPreview(state) ? { preview: projectPreview(state)!.object } : {}) } } : {}),
     ...(c.party ? { party: { title: c.party.title, at: c.party.at, until: c.party.until } } : {}),
     places: Object.fromEntries(Object.entries(c.stats).filter(([id]) => state.objects.some((o) => o.id === id)).map(([id, st]) => [id, [st.visits, st.coins] as [number, number]])),
+    // Finders Keepers' pieces, last: a story scene overrides the caravan's. Nothing while Story is off (FK-001).
+    ...storyTownView(state, now),
   };
 }
 

@@ -21,6 +21,8 @@ import { armedBuild, fire, ram } from './weapons';
 import { LIMITS, nextId, pushFeed, pushLine, type DudesState, type Job, type Mayor } from './state';
 import { nudge } from './events';
 import { renewed } from './damage';
+import { onShowInput, type ShowInput } from './story/beats'; // FK-001
+import { storyMayorView } from './story/view'; // FK-001
 
 export const MAYOR = {
   name: 'The Mayor',
@@ -79,7 +81,9 @@ export type MayorInput =
   /** Pick up a weapon (or put it away: none), fire it (at a point he clicked, or straight ahead), or drive into a build. */
   | { t: 'arm'; weapon: string }
   | { t: 'fire'; aim?: { x: number; z: number } }
-  | { t: 'ram'; target: string; speed: number };
+  | { t: 'ram'; target: string; speed: number }
+  /** Finders Keepers' show keys (Tab, the cue lines, GO …): handed to story/beats.ts, whose kinds they are. */
+  | ShowInput;
 
 export function mayorOf(state: DudesState, now: number): Mayor {
   return (state.mayor ??= { position: { x: 0, z: 9 }, facing: Math.PI, moving: false, follow: true, cam: { yaw: 0.65, half: 14 }, lastInputAt: now - MAYOR.liveMs - 1 });
@@ -233,6 +237,9 @@ export function mayorInput(state: DudesState, raw: unknown, now: number): { view
         m.say = undefined;
         m.emote = undefined;
       }
+      break;
+    case 'show':
+      if (typeof msg.k !== 'string' || !onShowInput(state, msg, now)) return undefined;
       break;
     default:
       return undefined;
@@ -557,6 +564,8 @@ export function mayorView(state: DudesState, now: number): MayorView {
     ...(m.armed ? { armed: m.armed } : {}),
     ...(m.moved ? { moved: m.moved } : {}),
     ...(m.aide ? { aide: { asked: m.aide.asked, reply: m.aide.reply, ok: m.aide.ok, at: m.aide.at, thinking: !!m.ask } } : {}),
+    // Finders Keepers: the lock on his mark and the show strip. Nothing while Story is off (FK-001).
+    ...storyMayorView(state, now),
   };
 }
 function ridingView(state: DudesState, m: Mayor): MayorView['riding'] {

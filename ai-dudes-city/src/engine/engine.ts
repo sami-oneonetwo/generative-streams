@@ -328,6 +328,7 @@ export class Engine<S> {
   }
 
   save(): void {
+    this.world.beforeSave?.(this.state); // hook FK-001
     saveState(this.world, this.dataDir, this.state);
   }
 

@@ -108,6 +108,8 @@ export interface DudeView {
   badges?: [string, number][];
   /** Show every badge (the chatter asked to see them) rather than the newest few. */
   badgesOpen?: boolean;
+  /** Finders Keepers: the side they took (the ground disc and the tag's crown or flag). */
+  side?: 'red' | 'gold';
   job?: {
     id: string;
     kind: JobKind;
@@ -220,6 +222,60 @@ export interface MayorView {
   moved?: number;
   /** The aide's last wish and answer, for the operator page; `thinking` while its model call is out. */
   aide?: { asked: string; reply: string; ok: boolean; at: number; thinking: boolean };
+  /** Finders Keepers: the show strip on the operator page (story/board.ts). */
+  show?: MayorShowView;
+  /** Finders Keepers: put on his mark for a scene; the operator page ignores WASD until it goes. */
+  lock?: { at: GroundPoint; facing: number };
+}
+
+/**
+ * The operator page's show strip (Finders Keepers): the next beat and its lamp (`locked`, `armed`,
+ * `firing`, or `scene` while one plays), why it is locked ("folly 72%"), the three cue-card lines,
+ * the plaque names to read out, the shot under way, and the ON STREAM chip.
+ */
+export interface MayorShowView {
+  next?: string;
+  state?: string;
+  why?: string;
+  cue?: string[];
+  plaque?: string[];
+  shot?: { n: number; of: number; t: number };
+  chip?: string;
+}
+
+/** The Board across the top of the stream with Finders Keepers on (story/board.ts): the two bars, the tug line's tally, the ticker. */
+export interface BoardView {
+  /** The head's Folly: "BIG HUT", how far (0..100). */
+  gold: { word: string; pct: number };
+  /** Wren's ask: "BRIDGE", and how many of how many; no count yet reads "BRIDGE · soon". */
+  red: { word: string; have?: number; need?: number };
+  /** Awake chatters on each side. */
+  tally: { red: number; gold: number };
+  /** Lines for the ticker, one shown at a time. */
+  ticker: string[];
+  /** The NOW line under the bars, when there is one. */
+  now?: string;
+  /** THE WONDER once its visit is open: how far, and the red and gold shares of what went in (0..1). */
+  wonder?: { word: string; pct: number; red: number; gold: number };
+}
+
+/** The show's on-screen pieces (story/show.ts): the Call's banner, a prompt tile, the NOW card, a title card. Times are server time. */
+export interface ShowView {
+  /** "GATHER: THE UNVEILING", its few-word premise, and when the Call runs out. */
+  banner?: { title: string; premise?: string; until: number };
+  /** What chat is asked to type in a scene: `rate` (the live average), `pips` (one per "us"), `candles`. */
+  prompt?: { kind: string; label: string; value?: number; count?: number };
+  /** After a scene: one big word and the chip that says what to type ("type red"). */
+  now?: { word: string; chip?: string; side?: 'red' | 'gold'; until: number };
+  title?: { text: string; until: number };
+}
+
+/** A chatter's home through the ages (story/spotlight.ts): whose, which build, its name in every age so far. */
+export interface SpotlightView {
+  owner: string;
+  objectId: string;
+  names: string[];
+  until?: number;
 }
 
 /** The town for the page: who has which lot, named districts, what is popular, the project, a party. */
@@ -232,8 +288,11 @@ export interface TownView {
   head: string;
   /** The age's caravan and what its leader asks of the town (caravan.ts), for the board on screen. */
   caravan?: { name: string; leader: string; visit: number; of: number; problem: string; asks: { label: string; have: number; need: number }[]; between?: boolean; stranded?: boolean };
-  /** A cutscene playing (shared/scenes.ts): which, and when it started (server time). */
-  scene?: { id: import('./scenes').SceneId; at: number; leader?: string; vars?: Record<string, string> };
+  /**
+   * A cutscene playing (shared/scenes.ts, or a story scene in shared/storyScenes.ts): which, and when it
+   * started (server time). A held story scene adds up `shift` and freezes at `heldAt` (scene time).
+   */
+  scene?: { id: string; at: number; leader?: string; vars?: Record<string, string>; shift?: number; heldAt?: number };
   /** A Wonder stands (or is going up) on its spot in the middle of the square: the centrepiece makes way. */
   wonder?: boolean;
   /** The river bridge is down: how far it has been mended (0..1). Absent when it stands whole. */
@@ -248,6 +307,16 @@ export interface TownView {
   party?: { title: string; at: GroundPoint; until: number };
   /** Visits and takings per place (build id → [visits, coins]), for the inspect panel. */
   places?: Record<string, [number, number]>;
+  // ---- Finders Keepers: present only while it runs (story/view.ts) ----
+  /** Finders Keepers is on: the page shows the story HUD instead of today's panels. */
+  story?: true;
+  board?: BoardView;
+  show?: ShowView;
+  spotlight?: SpotlightView;
+  /** The band who stay through every age (story/cast.ts): their townie ids and the role on their tag ("Ash the hunter"). */
+  cast?: { id: string; role: string; tag: string }[];
+  /** The age's Folly (story/folly.ts): how far (0..100) and the plaque's names. */
+  folly?: { pct: number; plaque: string[] };
 }
 
 export interface DudesScene {
