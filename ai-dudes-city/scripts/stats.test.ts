@@ -117,7 +117,7 @@ test('the rows: rounded for a glance, the budget beside them, nothing flagged wh
   assert.deepEqual(
     rows.map((r) => [r.label, r.value, r.note]),
     [
-      ['fps', '60', '6.0 ms · worst 12'],
+      ['fps', '60', 'page 6.0 ms · worst 12'],
       ['draws', '1,234', 'of 1,500'],
       ['tris', '412k', ''],
       ['walking', '4', 'of 11 in frame'],

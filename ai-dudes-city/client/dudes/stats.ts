@@ -55,7 +55,8 @@ export interface Tally {
 }
 export interface StatsSample extends Tally {
   fps: number;
-  /** The page's own work per frame (ms): the mean and the worst over the window. */
+  /** The page's own work per frame (ms): the mean and the worst over the window. CPU time in the page only:
+   *  the GPU and the compositor show in fps, not here. */
   ms: number;
   worst: number;
   /** Per frame, averaged over the window. */
@@ -140,7 +141,7 @@ export function statsRows(s: StatsSample, budget = STATS_BUDGET): StatsRow[] {
   if (s.kinds.ridden) kinds.push(`ridden ${s.kinds.ridden}`);
   const overKind = (['drive', 'fly', 'roam'] as const).some((k) => s.kinds[k] > budget.moving[k]);
   return [
-    { label: 'fps', value: s.fps < 10 ? s.fps.toFixed(1) : String(Math.round(s.fps)), note: `${s.ms.toFixed(1)} ms · worst ${Math.round(s.worst)}`, over: s.ms > budget.frameMs },
+    { label: 'fps', value: s.fps < 10 ? s.fps.toFixed(1) : String(Math.round(s.fps)), note: `page ${s.ms.toFixed(1)} ms · worst ${Math.round(s.worst)}`, over: s.ms > budget.frameMs },
     { label: 'draws', value: thousands(s.draws), note: `of ${thousands(budget.draws)}`, over: s.draws > budget.draws },
     { label: 'tris', value: short(s.tris), note: '', over: false },
     { label: 'walking', value: String(s.walking), note: `of ${s.people} in frame`, over: s.walking > budget.walkersInFrame },
